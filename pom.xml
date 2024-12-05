@@ -17,6 +17,7 @@
     <description>mini-mq</description>
 
     <modules>
+        <module>domain</module>
     </modules>
 
     <properties>
