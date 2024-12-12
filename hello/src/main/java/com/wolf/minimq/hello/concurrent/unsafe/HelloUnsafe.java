@@ -1,4 +1,4 @@
-package com.wolf.minimq.hello.unsafe;
+package com.wolf.minimq.hello.concurrent.unsafe;
 
 import java.lang.reflect.Field;
 import sun.misc.Unsafe;

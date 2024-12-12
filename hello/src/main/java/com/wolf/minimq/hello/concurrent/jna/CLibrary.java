@@ -1,4 +1,4 @@
-package com.wolf.minimq.hello.jna;
+package com.wolf.minimq.hello.concurrent.jna;
 
 import com.sun.jna.Library;
 import com.sun.jna.Native;
