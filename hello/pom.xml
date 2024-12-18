@@ -21,18 +21,6 @@
             <groupId>com.wolf</groupId>
             <artifactId>common</artifactId>
         </dependency>
-
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-<!--        <dependency>-->
-<!--            <groupId>net.java.dev.jna</groupId>-->
-<!--            <artifactId>jna-platform</artifactId>-->
-<!--        </dependency>-->
-
     </dependencies>
 
 </project>
