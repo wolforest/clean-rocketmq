@@ -1,7 +1,7 @@
 package com.wolf.minimq.domain.service.store;
 
 import com.wolf.minimq.domain.vo.AppendResult;
-import com.wolf.minimq.domain.vo.SelectResult;
+import com.wolf.minimq.domain.vo.SelectedMappedBuffer;
 import java.nio.ByteBuffer;
 import java.nio.MappedByteBuffer;
 
@@ -80,7 +80,7 @@ public interface MappedFile {
      * @param size the size of the returned subregion
      * @return a {@code SelectResult} instance contains the selected slice
      */
-    SelectResult select(int pos, int size);
+    SelectedMappedBuffer select(int pos, int size);
 
     /**
      * Selects a slice of the mapped byte buffer's subregion behind the mapped file,
@@ -89,7 +89,7 @@ public interface MappedFile {
      * @param pos the given position
      * @return a {@code SelectResult} instance contains the selected slice
      */
-    SelectResult select(int pos);
+    SelectedMappedBuffer select(int pos);
 
 
 

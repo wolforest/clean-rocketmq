@@ -1,6 +1,5 @@
 package com.wolf.minimq.domain.vo;
 
-import com.wolf.minimq.domain.enums.AppendStatus;
 import com.wolf.minimq.domain.service.store.MappedFile;
 import java.io.Serializable;
 import java.nio.ByteBuffer;
@@ -13,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class SelectResult implements Serializable {
+public class SelectedMappedBuffer implements Serializable {
     private long startOffset;
     private ByteBuffer byteBuffer;
     private int size;
