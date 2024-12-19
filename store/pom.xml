@@ -21,6 +21,11 @@
             <groupId>com.wolf</groupId>
             <artifactId>common</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.wolf.minimq</groupId>
+            <artifactId>domain</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

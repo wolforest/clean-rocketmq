@@ -21,7 +21,25 @@
     </modules>
 
     <properties>
+        <mini-mq.version>1.0.0-SNAPSHOT</mini-mq.version>
     </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.wolf.minimq</groupId>
+                <artifactId>domain</artifactId>
+                <version>${mini-mq.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.wolf.minimq</groupId>
+                <artifactId>store</artifactId>
+                <version>${mini-mq.version}</version>
+            </dependency>
+
+        </dependencies>
+
+    </dependencyManagement>
 
     <dependencies>
     </dependencies>
