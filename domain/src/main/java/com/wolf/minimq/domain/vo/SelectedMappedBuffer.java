@@ -1,6 +1,6 @@
 package com.wolf.minimq.domain.vo;
 
-import com.wolf.minimq.domain.service.store.MappedFile;
+import com.wolf.minimq.domain.service.store.infra.MappedFile;
 import java.io.Serializable;
 import java.nio.ByteBuffer;
 import lombok.AllArgsConstructor;

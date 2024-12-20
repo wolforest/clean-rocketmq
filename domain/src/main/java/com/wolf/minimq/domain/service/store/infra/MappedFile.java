@@ -1,4 +1,4 @@
-package com.wolf.minimq.domain.service.store;
+package com.wolf.minimq.domain.service.store.infra;
 
 import com.wolf.minimq.domain.vo.AppendResult;
 import com.wolf.minimq.domain.vo.SelectedMappedBuffer;
