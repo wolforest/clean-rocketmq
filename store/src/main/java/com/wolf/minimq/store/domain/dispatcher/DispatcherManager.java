@@ -1,8 +1,8 @@
-package com.wolf.minimq.store.domain.timer;
+package com.wolf.minimq.store.domain.dispatcher;
 
-import com.wolf.minimq.domain.service.store.Timer;
+import com.wolf.common.convention.service.Lifecycle;
 
-public class DefaultTimer implements Timer {
+public class DispatcherManager implements Lifecycle {
     @Override
     public void start() {
 

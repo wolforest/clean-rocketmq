@@ -1,8 +1,8 @@
 package com.wolf.minimq.store.domain.index;
 
-import com.wolf.minimq.domain.service.store.IndexService;
+import com.wolf.common.convention.service.Lifecycle;
 
-public class DefaultIndexService implements IndexService {
+public class IndexManager implements Lifecycle {
     @Override
     public void start() {
 

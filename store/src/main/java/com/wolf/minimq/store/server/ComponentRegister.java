@@ -1,16 +1,11 @@
 package com.wolf.minimq.store.server;
 
 import com.wolf.common.convention.service.LifecycleManager;
-import com.wolf.minimq.domain.service.store.CommitLog;
-import com.wolf.minimq.domain.service.store.ConsumeQueue;
-import com.wolf.minimq.domain.service.store.Dispatcher;
-import com.wolf.minimq.domain.service.store.IndexService;
-import com.wolf.minimq.domain.service.store.Timer;
-import com.wolf.minimq.store.domain.commitlog.DefaultCommitLog;
-import com.wolf.minimq.store.domain.dispatcher.DefaultDispatcher;
-import com.wolf.minimq.store.domain.index.DefaultIndexService;
-import com.wolf.minimq.store.domain.queue.DefaultConsumeQueue;
-import com.wolf.minimq.store.domain.timer.DefaultTimer;
+import com.wolf.minimq.store.domain.commitlog.CommitLogManager;
+import com.wolf.minimq.store.domain.dispatcher.DispatcherManager;
+import com.wolf.minimq.store.domain.index.IndexManager;
+import com.wolf.minimq.store.domain.queue.ConsumeQueueManager;
+import com.wolf.minimq.store.domain.timer.TimerManager;
 
 public class ComponentRegister {
     private final LifecycleManager manager = new LifecycleManager();
@@ -32,33 +27,33 @@ public class ComponentRegister {
     }
 
     private void registerCommitLog() {
-        CommitLog component = new DefaultCommitLog();
+        CommitLogManager component = new CommitLogManager();
         manager.register(component);
-        StoreContext.register(component, CommitLog.class);
+        StoreContext.register(component, CommitLogManager.class);
     }
 
     private void registerDispatcher() {
-        Dispatcher component = new DefaultDispatcher();
+        DispatcherManager component = new DispatcherManager();
         manager.register(component);
-        StoreContext.register(component, Dispatcher.class);
+        StoreContext.register(component, DispatcherManager.class);
     }
 
     private void registerConsumeQueue() {
-        ConsumeQueue component = new DefaultConsumeQueue();
+        ConsumeQueueManager component = new ConsumeQueueManager();
         manager.register(component);
-        StoreContext.register(component, ConsumeQueue.class);
+        StoreContext.register(component, ConsumeQueueManager.class);
     }
 
     private void registerIndexService() {
-        IndexService component = new DefaultIndexService();
+        IndexManager component = new IndexManager();
         manager.register(component);
-        StoreContext.register(component, IndexService.class);
+        StoreContext.register(component, IndexManager.class);
     }
 
     private void registerTimer() {
-        Timer component = new DefaultTimer();
+        TimerManager component = new TimerManager();
         manager.register(component);
-        StoreContext.register(component, Timer.class);
+        StoreContext.register(component, TimerManager.class);
     }
 
 

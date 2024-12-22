@@ -1,9 +1,8 @@
-package com.wolf.minimq.store.domain.commitlog;
+package com.wolf.minimq.store.domain.queue;
 
-import com.wolf.minimq.domain.service.store.CommitLog;
+import com.wolf.common.convention.service.Lifecycle;
 
-public class DefaultCommitLog implements CommitLog {
-
+public class ConsumeQueueManager implements Lifecycle {
     @Override
     public void start() {
 
