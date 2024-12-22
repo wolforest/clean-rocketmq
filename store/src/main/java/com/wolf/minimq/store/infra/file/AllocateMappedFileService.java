@@ -21,7 +21,7 @@ public class AllocateMappedFileService extends ServiceThread implements Lifecycl
 
     @Override
     public State getState() {
-        return null;
+        return State.RUNNING;
     }
 
     @Override
