@@ -26,4 +26,12 @@ public class ContextInitializer {
         StoreContext.register(new TimerConfig());
     }
 
+    private void initializeMonitor() {
+        if (null == argument.getMonitorContext()) {
+            return;
+        }
+
+        StoreContext.MONITOR = argument.getMonitorContext();
+    }
+
 }

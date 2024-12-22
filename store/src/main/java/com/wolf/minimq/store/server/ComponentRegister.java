@@ -4,7 +4,7 @@ import com.wolf.common.convention.service.LifecycleManager;
 import com.wolf.minimq.store.domain.commitlog.CommitLogManager;
 import com.wolf.minimq.store.domain.dispatcher.DispatcherManager;
 import com.wolf.minimq.store.domain.index.IndexManager;
-import com.wolf.minimq.store.domain.queue.ConsumeQueueManager;
+import com.wolf.minimq.store.domain.queue.MessageQueueManager;
 import com.wolf.minimq.store.domain.timer.TimerManager;
 
 public class ComponentRegister {
@@ -39,9 +39,9 @@ public class ComponentRegister {
     }
 
     private void registerConsumeQueue() {
-        ConsumeQueueManager component = new ConsumeQueueManager();
+        MessageQueueManager component = new MessageQueueManager();
         manager.register(component);
-        StoreContext.register(component, ConsumeQueueManager.class);
+        StoreContext.register(component, MessageQueueManager.class);
     }
 
     private void registerIndexService() {

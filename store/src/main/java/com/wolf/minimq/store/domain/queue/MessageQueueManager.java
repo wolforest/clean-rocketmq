@@ -1,24 +1,31 @@
 package com.wolf.minimq.store.domain.queue;
 
-import com.wolf.minimq.domain.vo.MessageContext;
-import com.wolf.minimq.domain.vo.EnqueueResult;
-import java.util.concurrent.CompletableFuture;
+import com.wolf.common.convention.service.Lifecycle;
+import com.wolf.minimq.store.server.StoreContext;
 
-public class MessageQueueManager {
-    /**
-     * enqueue single/multi message
-     *  - assign consumeQueue offset
-     *  - append commitLog
-     *  - increase consumeQueue offset
-     *
-     * @param context messageContext
-     * @return EnqueueResult
-     */
-    public EnqueueResult enqueue(MessageContext context) {
-        return null;
+public class MessageQueueManager implements Lifecycle {
+    @Override
+    public void start() {
+
     }
 
-    public CompletableFuture<EnqueueResult> enqueueAsync(MessageContext context) {
+    @Override
+    public void shutdown() {
+
+    }
+
+    @Override
+    public void initialize() {
+        StoreContext.register(new MessageQueueDomainService());
+    }
+
+    @Override
+    public void cleanup() {
+
+    }
+
+    @Override
+    public State getState() {
         return null;
     }
 }

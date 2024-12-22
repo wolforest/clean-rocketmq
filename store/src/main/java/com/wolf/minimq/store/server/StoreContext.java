@@ -8,7 +8,7 @@ import com.wolf.common.convention.container.ApplicationContext;
 public class StoreContext {
     public static final ApplicationContext APPLICATION = new ApplicationContext();
     public static final ApplicationContext API = new ApplicationContext();
-    public static final ApplicationContext MONITOR = new ApplicationContext();
+    public static ApplicationContext MONITOR = new ApplicationContext();
 
     public static void register(Object bean) {
         APPLICATION.register(bean);
