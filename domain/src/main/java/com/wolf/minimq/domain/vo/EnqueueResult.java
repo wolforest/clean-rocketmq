@@ -1,5 +1,6 @@
 package com.wolf.minimq.domain.vo;
 
+import com.wolf.minimq.domain.enums.EnqueueStatus;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,6 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AppendMessageResult implements Serializable {
+public class EnqueueResult implements Serializable {
+    private EnqueueStatus status;
     private AppendResult appendResult;
 }

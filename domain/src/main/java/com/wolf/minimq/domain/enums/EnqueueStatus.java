@@ -1,6 +1,6 @@
 package com.wolf.minimq.domain.enums;
 
-public enum AppendMessageStatus {
+public enum EnqueueStatus {
     PUT_OK,
     FLUSH_DISK_TIMEOUT,
     FLUSH_SLAVE_TIMEOUT,
