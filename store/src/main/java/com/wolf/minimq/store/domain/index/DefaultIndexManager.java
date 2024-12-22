@@ -1,8 +1,8 @@
-package com.wolf.minimq.store.domain.dispatcher;
+package com.wolf.minimq.store.domain.index;
 
-import com.wolf.common.convention.service.Lifecycle;
+import com.wolf.minimq.domain.service.store.manager.IndexManager;
 
-public class DispatcherManager implements Lifecycle {
+public class DefaultIndexManager implements IndexManager {
     @Override
     public void start() {
 

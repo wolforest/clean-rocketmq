@@ -1,9 +1,10 @@
-package com.wolf.minimq.store.domain.queue;
+package com.wolf.minimq.store.domain.message;
 
-import com.wolf.common.convention.service.Lifecycle;
+import com.wolf.minimq.domain.service.store.manager.MessageManager;
+import com.wolf.minimq.domain.service.store.domain.MessageStore;
 import com.wolf.minimq.store.server.StoreContext;
 
-public class MessageQueueManager implements Lifecycle {
+public class DefaultMessageManager implements MessageManager {
     @Override
     public void start() {
 
@@ -16,7 +17,7 @@ public class MessageQueueManager implements Lifecycle {
 
     @Override
     public void initialize() {
-        StoreContext.register(new MessageQueueDomainService());
+        StoreContext.register(new DefaultMessageStore(), MessageStore.class);
     }
 
     @Override

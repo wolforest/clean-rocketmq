@@ -5,7 +5,7 @@ import com.wolf.minimq.domain.vo.EnqueueResult;
 import com.wolf.minimq.domain.vo.SelectedMappedBuffer;
 import java.util.List;
 
-public interface CommitLogDomainService {
+public interface CommitLog {
     EnqueueResult append(MessageContext messageContext);
 
     SelectedMappedBuffer select(long offset, int size);

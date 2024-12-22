@@ -1,13 +1,10 @@
-package com.wolf.minimq.domain.service.store.api;
+package com.wolf.minimq.domain.service.store.domain;
 
 import com.wolf.minimq.domain.vo.EnqueueResult;
 import com.wolf.minimq.domain.vo.MessageContext;
 import java.util.concurrent.CompletableFuture;
 
-/**
- * Message pub/sub APIs
- */
-public interface MessageQueueService {
+public interface MessageStore {
     EnqueueResult enqueue(MessageContext context);
     CompletableFuture<EnqueueResult> enqueueAsync(MessageContext context);
 }

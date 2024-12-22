@@ -1,20 +1,20 @@
 package com.wolf.minimq.store.api;
 
-import com.wolf.minimq.domain.service.store.api.MessageQueueService;
+import com.wolf.minimq.domain.service.store.api.MessageService;
 import com.wolf.minimq.domain.vo.EnqueueResult;
 import com.wolf.minimq.domain.vo.MessageContext;
-import com.wolf.minimq.store.domain.queue.MessageQueueDomainService;
+import com.wolf.minimq.store.domain.message.DefaultMessageStore;
 import com.wolf.minimq.store.server.StoreContext;
 import java.util.concurrent.CompletableFuture;
 
-public class MessageQueueServiceImpl implements MessageQueueService {
+public class MessageServiceImpl implements MessageService {
     @Override
     public EnqueueResult enqueue(MessageContext context) {
-        return StoreContext.getBean(MessageQueueDomainService.class).enqueue(context);
+        return StoreContext.getBean(DefaultMessageStore.class).enqueue(context);
     }
 
     @Override
     public CompletableFuture<EnqueueResult> enqueueAsync(MessageContext context) {
-        return StoreContext.getBean(MessageQueueDomainService.class).enqueueAsync(context);
+        return StoreContext.getBean(DefaultMessageStore.class).enqueueAsync(context);
     }
 }
