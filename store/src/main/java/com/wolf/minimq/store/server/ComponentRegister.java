@@ -11,6 +11,7 @@ import com.wolf.minimq.store.domain.dispatcher.DefaultDispatcherManager;
 import com.wolf.minimq.store.domain.index.DefaultIndexManager;
 import com.wolf.minimq.store.domain.message.DefaultMessageManager;
 import com.wolf.minimq.store.domain.timer.DefaultTimerManager;
+import com.wolf.minimq.store.infra.file.AllocateMappedFileService;
 
 public class ComponentRegister {
     private final LifecycleManager manager = new LifecycleManager();
@@ -28,6 +29,7 @@ public class ComponentRegister {
         registerConsumeQueue();
         registerIndexService();
         registerTimer();
+        registerAllocateMappedFileService();
 
         return this.manager;
     }
@@ -60,6 +62,12 @@ public class ComponentRegister {
         TimerManager component = new DefaultTimerManager();
         manager.register(component);
         StoreContext.register(component, TimerManager.class);
+    }
+
+    private void registerAllocateMappedFileService() {
+        AllocateMappedFileService component = new AllocateMappedFileService();
+        manager.register(component);
+        StoreContext.register(component);
     }
 
 

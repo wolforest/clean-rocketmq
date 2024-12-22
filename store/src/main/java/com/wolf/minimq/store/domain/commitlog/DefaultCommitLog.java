@@ -7,6 +7,7 @@ import com.wolf.minimq.domain.vo.SelectedMappedBuffer;
 import java.util.List;
 
 public class DefaultCommitLog implements CommitLog {
+
     @Override
     public EnqueueResult append(MessageContext messageContext) {
         return null;

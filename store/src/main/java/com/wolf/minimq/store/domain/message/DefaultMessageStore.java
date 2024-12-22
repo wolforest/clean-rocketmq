@@ -1,5 +1,6 @@
 package com.wolf.minimq.store.domain.message;
 
+import com.wolf.minimq.domain.config.StoreConfig;
 import com.wolf.minimq.domain.enums.EnqueueStatus;
 import com.wolf.minimq.domain.lock.TopicQueueLock;
 import com.wolf.minimq.domain.model.Message;
@@ -10,6 +11,7 @@ import com.wolf.minimq.domain.vo.EnqueueResult;
 import com.wolf.minimq.domain.vo.MessageContext;
 import com.wolf.minimq.store.server.StoreContext;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -31,7 +33,7 @@ public class DefaultMessageStore implements MessageStore {
      */
     @Override
     public EnqueueResult enqueue(MessageContext context) {
-        return null;
+        return waitForResult(enqueueAsync(context));
     }
 
     @Override
@@ -55,7 +57,18 @@ public class DefaultMessageStore implements MessageStore {
             topicQueueLock.unlock(topicKey);
         }
 
-        return null;
+        return CompletableFuture.completedFuture(new EnqueueResult(EnqueueStatus.UNKNOWN_ERROR));
+    }
+
+    private EnqueueResult waitForResult(CompletableFuture<EnqueueResult> future) {
+        try {
+            StoreConfig config = StoreContext.getBean(StoreConfig.class);
+            int timeout = config.getSyncFlushTimeout() + 5 * 1000;
+            return future.get(timeout, TimeUnit.MILLISECONDS);
+        } catch (Exception e) {
+            log.error("enqueue error:", e);
+            return new EnqueueResult(EnqueueStatus.UNKNOWN_ERROR);
+        }
     }
 
     private String getTopicKey(MessageContext context) {
