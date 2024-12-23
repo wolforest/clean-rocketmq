@@ -1,5 +1,6 @@
 package com.wolf.minimq.store.infra.file;
 
+import com.wolf.minimq.domain.service.store.infra.MappedFile;
 import com.wolf.minimq.domain.service.store.infra.MappedFileQueue;
 
 public class DefaultMappedFileQueue implements MappedFileQueue {
@@ -11,5 +12,30 @@ public class DefaultMappedFileQueue implements MappedFileQueue {
         this.dir = dir;
         this.fileSize = fileSize;
         this.allocateMappedFileService = allocateMappedFileService;
+    }
+
+    @Override
+    public boolean load() {
+        return false;
+    }
+
+    @Override
+    public void checkSelf() {
+
+    }
+
+    @Override
+    public MappedFile getAvailableMappedFile(int messageSize) {
+        return null;
+    }
+
+    @Override
+    public MappedFile getMappedFileByOffset(long offset) {
+        return null;
+    }
+
+    @Override
+    public MappedFile createMappedFileForOffset(long offset) {
+        return null;
     }
 }
