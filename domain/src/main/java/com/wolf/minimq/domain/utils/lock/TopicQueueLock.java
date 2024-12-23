@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-package com.wolf.minimq.domain.lock;
+package com.wolf.minimq.domain.utils.lock;
 
 import java.util.ArrayList;
 import java.util.List;

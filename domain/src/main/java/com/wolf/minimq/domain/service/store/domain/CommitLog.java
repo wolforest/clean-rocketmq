@@ -4,9 +4,10 @@ import com.wolf.minimq.domain.vo.MessageContext;
 import com.wolf.minimq.domain.vo.EnqueueResult;
 import com.wolf.minimq.domain.vo.SelectedMappedBuffer;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public interface CommitLog {
-    EnqueueResult append(MessageContext messageContext);
+    CompletableFuture<EnqueueResult> append(MessageContext messageContext);
 
     SelectedMappedBuffer select(long offset, int size);
     SelectedMappedBuffer select(long offset);

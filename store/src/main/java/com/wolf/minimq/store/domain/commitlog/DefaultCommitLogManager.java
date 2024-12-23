@@ -1,6 +1,7 @@
 package com.wolf.minimq.store.domain.commitlog;
 
 import com.wolf.minimq.domain.config.CommitLogConfig;
+import com.wolf.minimq.domain.config.MessageConfig;
 import com.wolf.minimq.domain.config.StoreConfig;
 import com.wolf.minimq.domain.service.store.domain.CommitLog;
 import com.wolf.minimq.domain.service.store.infra.MappedFileQueue;
@@ -19,16 +20,17 @@ import java.io.File;
 public class DefaultCommitLogManager implements CommitLogManager {
     private StoreConfig storeConfig;
     private CommitLogConfig commitLogConfig;
+    private MessageConfig messageConfig;
 
     private MappedFileQueue mappedFileQueue;
-    private FlushManager flushManager;
+    private final FlushManager flushManager;
 
     public DefaultCommitLogManager() {
         initConfig();
         initMappedFileQueue();
 
         flushManager = new FlushManager(commitLogConfig, mappedFileQueue);
-        CommitLog commitLog = new DefaultCommitLog(commitLogConfig, mappedFileQueue, flushManager);
+        CommitLog commitLog = new DefaultCommitLog(commitLogConfig, messageConfig, mappedFileQueue, flushManager);
         StoreContext.register(commitLog, CommitLog.class);
     }
 
@@ -61,6 +63,7 @@ public class DefaultCommitLogManager implements CommitLogManager {
     private void initConfig() {
         storeConfig = StoreContext.getBean(StoreConfig.class);
         commitLogConfig = StoreContext.getBean(CommitLogConfig.class);
+        messageConfig = StoreContext.getBean(MessageConfig.class);
     }
 
     private void initMappedFileQueue() {

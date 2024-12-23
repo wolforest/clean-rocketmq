@@ -14,38 +14,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.wolf.minimq.domain.lock;
 
-import java.util.concurrent.atomic.AtomicBoolean;
+package com.wolf.minimq.domain.enums;
 
-public class TimedLock {
-    private final AtomicBoolean lock;
-    private volatile long lockTime;
+public enum MessageType {
+    Normal_Msg("Normal"),
+    Trans_Msg_Half("Trans"),
+    Trans_msg_Commit("TransCommit"),
+    Delay_Msg("Delay"),
+    Order_Msg("Order");
 
-    public TimedLock() {
-        this.lock = new AtomicBoolean(true);
-        this.lockTime = System.currentTimeMillis();
+    private final String shortName;
+
+    MessageType(String shortName) {
+        this.shortName = shortName;
     }
 
-    public boolean tryLock() {
-        boolean ret = lock.compareAndSet(true, false);
-        if (ret) {
-            this.lockTime = System.currentTimeMillis();
-            return true;
-        } else {
-            return false;
+    public String getShortName() {
+        return shortName;
+    }
+
+    public static MessageType getByShortName(String shortName) {
+        for (MessageType msgType : MessageType.values()) {
+            if (msgType.getShortName().equals(shortName)) {
+                return msgType;
+            }
         }
-    }
-
-    public void unLock() {
-        lock.set(true);
-    }
-
-    public boolean isLock() {
-        return !lock.get();
-    }
-
-    public long getLockTime() {
-        return lockTime;
+        return Normal_Msg;
     }
 }

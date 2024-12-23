@@ -2,7 +2,7 @@ package com.wolf.minimq.store.domain.message;
 
 import com.wolf.minimq.domain.config.StoreConfig;
 import com.wolf.minimq.domain.enums.EnqueueStatus;
-import com.wolf.minimq.domain.lock.TopicQueueLock;
+import com.wolf.minimq.domain.utils.lock.TopicQueueLock;
 import com.wolf.minimq.domain.model.Message;
 import com.wolf.minimq.domain.service.store.domain.CommitLog;
 import com.wolf.minimq.domain.service.store.domain.ConsumeQueue;
@@ -39,6 +39,7 @@ public class DefaultMessageStore implements MessageStore {
     @Override
     public CompletableFuture<EnqueueResult> enqueueAsync(MessageContext context) {
         String topicKey = getTopicKey(context);
+        context.setTopicKey(topicKey);
 
         topicQueueLock.lock(topicKey);
         try {
@@ -46,11 +47,10 @@ public class DefaultMessageStore implements MessageStore {
             consumeQueue.assignOffset(context);
 
             CommitLog commitLog = StoreContext.getBean(CommitLog.class);
-            EnqueueResult result = commitLog.append(context);
+            CompletableFuture<EnqueueResult> result = commitLog.append(context);
 
-            if (result.isSuccess()) {
-                consumeQueue.increaseOffset(context);
-            }
+            consumeQueue.increaseOffset(context);
+            return result;
         } catch (Exception e) {
             return CompletableFuture.completedFuture(new EnqueueResult(EnqueueStatus.UNKNOWN_ERROR));
         } finally {

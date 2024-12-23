@@ -1,5 +1,6 @@
 package com.wolf.minimq.domain.vo;
 
+import com.wolf.minimq.domain.enums.MessageVersion;
 import com.wolf.minimq.domain.model.Message;
 import java.io.Serializable;
 import java.net.SocketAddress;
@@ -17,6 +18,7 @@ public class MessageContext implements Serializable {
      * set by MQ client
      */
     private int queueId;
+    private String topicKey;
 
     private int storeSize;
 
@@ -42,13 +44,15 @@ public class MessageContext implements Serializable {
      *  - message will send to DLG after reconsumeTimes greater than a special value
      */
     private int reconsumeTimes;
-
     private long preparedTransactionOffset;
 
     private String propertiesString;
     private long tagsCode;
-
     private ByteBuffer encodedBuff;
-
     private volatile boolean encodeCompleted;
+    private MessageVersion version = MessageVersion.V1;
+
+    public Message getMessage() {
+        return messageList.getFirst();
+    }
 }

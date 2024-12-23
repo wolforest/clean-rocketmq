@@ -14,23 +14,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.wolf.minimq.domain.lock;
+package com.wolf.minimq.domain.utils.lock;
 
-import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.atomic.AtomicBoolean;
 
-/**
- * Exclusive lock implementation to put message
- */
-public class CommitLogReentrantLock implements CommitLogLock {
-    private final ReentrantLock putMessageNormalLock = new ReentrantLock(); // NonFairSync
+public class TimedLock {
+    private final AtomicBoolean lock;
+    private volatile long lockTime;
 
-    @Override
-    public void lock() {
-        putMessageNormalLock.lock();
+    public TimedLock() {
+        this.lock = new AtomicBoolean(true);
+        this.lockTime = System.currentTimeMillis();
     }
 
-    @Override
-    public void unlock() {
-        putMessageNormalLock.unlock();
+    public boolean tryLock() {
+        boolean ret = lock.compareAndSet(true, false);
+        if (ret) {
+            this.lockTime = System.currentTimeMillis();
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public void unLock() {
+        lock.set(true);
+    }
+
+    public boolean isLock() {
+        return !lock.get();
+    }
+
+    public long getLockTime() {
+        return lockTime;
     }
 }

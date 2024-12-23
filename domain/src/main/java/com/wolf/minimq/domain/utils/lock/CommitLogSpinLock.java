@@ -14,15 +14,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.wolf.minimq.domain.lock;
+package com.wolf.minimq.domain.utils.lock;
+
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * @renamed from PutMessageLock to CommitLogLock
- * Used when trying to put message
- * used by CommitLog
+ * Spin lock Implementation to put message, suggest using this with low race conditions
  */
-public interface CommitLogLock {
-    void lock();
+public class CommitLogSpinLock implements CommitLogLock {
+    //true: Can lock, false : in lock.
+    private final AtomicBoolean putMessageSpinLock = new AtomicBoolean(true);
 
-    void unlock();
+    @Override
+    public void lock() {
+        boolean flag;
+        do {
+            flag = this.putMessageSpinLock.compareAndSet(true, false);
+        }
+        while (!flag);
+    }
+
+    @Override
+    public void unlock() {
+        this.putMessageSpinLock.compareAndSet(false, true);
+    }
 }
