@@ -39,7 +39,7 @@ public abstract class ReferenceResource {
         return false;
     }
 
-    public void shutdown(final long intervalForcibly) {
+    public void shutdown(final long interval) {
         if (this.available) {
             this.available = false;
             this.firstShutdownTimestamp = System.currentTimeMillis();
@@ -51,7 +51,7 @@ public abstract class ReferenceResource {
             return;
         }
 
-        if ((System.currentTimeMillis() - this.firstShutdownTimestamp) < intervalForcibly) {
+        if ((System.currentTimeMillis() - this.firstShutdownTimestamp) < interval) {
             return;
         }
 

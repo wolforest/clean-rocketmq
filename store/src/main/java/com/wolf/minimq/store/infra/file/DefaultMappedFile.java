@@ -159,7 +159,7 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
     }
 
     @Override
-    public boolean getData(int pos, int size, ByteBuffer byteBuffer) {
+    public boolean select(int pos, int size, ByteBuffer byteBuffer) {
         if (byteBuffer.remaining() < size) {
             return false;
         }
@@ -269,8 +269,8 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
     }
 
     @Override
-    public boolean destroy(long intervalForcibly) {
-        this.shutdown(intervalForcibly);
+    public boolean destroy(long interval) {
+        this.shutdown(interval);
         if (!this.isCleanupOver()) {
             log.warn("destroy mapped file[REF:{}] {} Failed. cleanupOver: {}", this.getRefCount(), this.fileName, this.cleanupOver);
             return false;
