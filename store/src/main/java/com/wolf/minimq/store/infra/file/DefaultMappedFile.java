@@ -1,12 +1,60 @@
 package com.wolf.minimq.store.infra.file;
 
+import com.wolf.common.util.io.DirUtil;
 import com.wolf.minimq.domain.service.store.infra.MappedFile;
 import com.wolf.minimq.domain.vo.AppendResult;
 import com.wolf.minimq.domain.vo.SelectedMappedBuffer;
+import com.wolf.minimq.store.infra.memory.TransientStorePool;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.MappedByteBuffer;
+import java.nio.channels.FileChannel;
+import java.util.concurrent.atomic.AtomicInteger;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class DefaultMappedFile implements MappedFile {
+    protected String fileName;
+    protected long offsetInFileName;
+    protected int fileSize;
+
+    protected File file;
+    protected FileChannel fileChannel;
+    protected MappedByteBuffer mappedByteBuffer;
+    protected MappedByteBuffer mappedByteBufferWaitToClean;
+
+    protected ByteBuffer writeCache;
+    protected TransientStorePool transientStorePool;
+
+    protected AtomicInteger writePosition = new AtomicInteger(0);
+    protected AtomicInteger commitPosition = new AtomicInteger(0);
+    protected AtomicInteger flushPosition = new AtomicInteger(0);
+
+    protected volatile long storeTimestamp = 0;
+    protected long startTimestamp = -1;
+    protected long stopTimestamp = -1;
+
+    public DefaultMappedFile() {}
+
+    public DefaultMappedFile(String fileName, int fileSize, TransientStorePool transientStorePool) {
+        this(fileName, fileSize);
+
+        this.writeCache = transientStorePool.borrowBuffer();
+        this.transientStorePool = transientStorePool;
+    }
+
+    public DefaultMappedFile(String fileName, int fileSize) {
+        this.fileName = fileName;
+        this.fileSize = fileSize;
+        this.file = new File(this.fileName);
+        this.offsetInFileName = Long.parseLong(this.file.getName());
+
+        DirUtil.createIfNotExists(this.file.getParent());
+    }
+
     @Override
     public String getFileName() {
         return "";
@@ -76,4 +124,25 @@ public class DefaultMappedFile implements MappedFile {
     public ByteBuffer sliceByteBuffer() {
         return null;
     }
+
+    private void initFile() throws IOException {
+        boolean ok = false;
+
+        try {
+            this.fileChannel = new RandomAccessFile(this.file, "rw").getChannel();
+            this.mappedByteBuffer = this.fileChannel.map(FileChannel.MapMode.READ_WRITE, 0, fileSize);
+            ok = true;
+        } catch (FileNotFoundException e) {
+            log.error("Failed to create file {}", this.fileName, e);
+            throw e;
+        } catch (IOException e) {
+            log.error("Failed to map file {}", this.fileName, e);
+            throw e;
+        } finally {
+            if (!ok && this.fileChannel != null) {
+                this.fileChannel.close();
+            }
+        }
+    }
+
 }
