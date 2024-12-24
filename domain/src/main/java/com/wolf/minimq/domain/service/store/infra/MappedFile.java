@@ -35,6 +35,8 @@ public interface MappedFile {
      */
     boolean isFull();
 
+    boolean hasEnoughSpace(int size);
+
     /**
      * Returns true if this {@code MappedFile} is available.
      * <p>
@@ -90,8 +92,6 @@ public interface MappedFile {
      * @return a {@code SelectResult} instance contains the selected slice
      */
     SelectedMappedBuffer select(int pos);
-
-
 
     /**
      * Flushes the data in cache to disk immediately.

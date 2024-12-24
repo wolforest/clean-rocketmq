@@ -28,6 +28,11 @@ public class DefaultMappedFile implements MappedFile {
     }
 
     @Override
+    public boolean hasEnoughSpace(int size) {
+        return false;
+    }
+
+    @Override
     public boolean isAvailable() {
         return false;
     }
