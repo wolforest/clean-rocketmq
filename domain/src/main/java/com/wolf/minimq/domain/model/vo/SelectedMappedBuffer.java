@@ -1,4 +1,4 @@
-package com.wolf.minimq.domain.vo;
+package com.wolf.minimq.domain.model.vo;
 
 import com.wolf.minimq.domain.service.store.infra.MappedFile;
 import java.io.Serializable;

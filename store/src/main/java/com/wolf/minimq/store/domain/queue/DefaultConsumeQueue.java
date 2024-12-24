@@ -1,7 +1,7 @@
 package com.wolf.minimq.store.domain.queue;
 
 import com.wolf.minimq.domain.service.store.domain.ConsumeQueue;
-import com.wolf.minimq.domain.vo.MessageContext;
+import com.wolf.minimq.domain.model.vo.MessageContext;
 
 public class DefaultConsumeQueue implements ConsumeQueue {
     @Override

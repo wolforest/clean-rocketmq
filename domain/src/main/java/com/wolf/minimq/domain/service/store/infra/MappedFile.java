@@ -1,7 +1,7 @@
 package com.wolf.minimq.domain.service.store.infra;
 
-import com.wolf.minimq.domain.vo.AppendResult;
-import com.wolf.minimq.domain.vo.SelectedMappedBuffer;
+import com.wolf.minimq.domain.model.vo.AppendResult;
+import com.wolf.minimq.domain.model.vo.SelectedMappedBuffer;
 import java.nio.ByteBuffer;
 import java.nio.MappedByteBuffer;
 

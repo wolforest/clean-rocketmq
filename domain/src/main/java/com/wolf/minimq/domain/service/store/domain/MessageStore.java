@@ -1,7 +1,7 @@
 package com.wolf.minimq.domain.service.store.domain;
 
-import com.wolf.minimq.domain.vo.EnqueueResult;
-import com.wolf.minimq.domain.vo.MessageContext;
+import com.wolf.minimq.domain.model.vo.EnqueueResult;
+import com.wolf.minimq.domain.model.vo.MessageContext;
 import java.util.concurrent.CompletableFuture;
 
 public interface MessageStore {

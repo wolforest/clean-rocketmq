@@ -3,8 +3,8 @@ package com.wolf.minimq.store.infra.file;
 import com.wolf.common.util.io.BufferUtil;
 import com.wolf.common.util.io.DirUtil;
 import com.wolf.minimq.domain.service.store.infra.MappedFile;
-import com.wolf.minimq.domain.vo.AppendResult;
-import com.wolf.minimq.domain.vo.SelectedMappedBuffer;
+import com.wolf.minimq.domain.model.vo.AppendResult;
+import com.wolf.minimq.domain.model.vo.SelectedMappedBuffer;
 import com.wolf.minimq.store.infra.memory.TransientStorePool;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -14,11 +14,13 @@ import java.nio.ByteBuffer;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.concurrent.atomic.AtomicInteger;
-import lombok.Getter;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Getter
+@Data
+@EqualsAndHashCode(callSuper = true)
 public class DefaultMappedFile extends ReferenceResource implements MappedFile {
     public static final int OS_PAGE_SIZE = 1024 * 4;
 

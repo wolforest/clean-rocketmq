@@ -1,11 +1,11 @@
-package com.wolf.minimq.domain.model;
+package com.wolf.minimq.domain.model.po;
 
 import java.io.Serializable;
 import java.net.SocketAddress;
 import lombok.Data;
 
 @Data
-public class MessageDO implements Serializable {
+public class MessagePO implements Serializable {
     private int messageLength;                  // 1
     private int magicCode;                      // 2
     private int bodyCRC;                        // 3

@@ -1,4 +1,4 @@
-package com.wolf.minimq.domain.vo;
+package com.wolf.minimq.domain.model.vo;
 
 import java.io.Serializable;
 
