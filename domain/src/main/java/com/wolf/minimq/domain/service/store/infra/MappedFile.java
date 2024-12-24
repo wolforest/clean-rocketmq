@@ -116,5 +116,32 @@ public interface MappedFile {
     ByteBuffer sliceByteBuffer();
 
 
+    /**
+     * Destroys the file and delete it from the file system.
+     *
+     * @param intervalForcibly If {@code true} then this method will destroy the file forcibly and ignore the reference
+     * @return true if success; false otherwise.
+     */
+    boolean destroy(long intervalForcibly);
+
+    /**
+     * Shutdowns the file and mark it unavailable.
+     *
+     * @param intervalForcibly If {@code true} then this method will shut down the file forcibly and ignore the reference
+     */
+    void shutdown(long intervalForcibly);
+
+    /**
+     * Decreases the reference count by {@code 1} and clean up the mapped file if the reference count reaches at
+     * {@code 0}.
+     */
+    void release();
+
+    /**
+     * Increases the reference count by {@code 1}.
+     *
+     * @return true if success; false otherwise.
+     */
+    boolean hold();
 
 }

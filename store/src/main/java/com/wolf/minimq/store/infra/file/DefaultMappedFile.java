@@ -1,5 +1,6 @@
 package com.wolf.minimq.store.infra.file;
 
+import com.wolf.common.util.io.BufferUtil;
 import com.wolf.common.util.io.DirUtil;
 import com.wolf.minimq.domain.service.store.infra.MappedFile;
 import com.wolf.minimq.domain.vo.AppendResult;
@@ -13,10 +14,14 @@ import java.nio.ByteBuffer;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.concurrent.atomic.AtomicInteger;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class DefaultMappedFile implements MappedFile {
+@Getter
+public class DefaultMappedFile extends ReferenceResource implements MappedFile {
+    public static final int OS_PAGE_SIZE = 1024 * 4;
+
     protected String fileName;
     protected long offsetInFileName;
     protected int fileSize;
@@ -57,21 +62,6 @@ public class DefaultMappedFile implements MappedFile {
     }
 
     @Override
-    public String getFileName() {
-        return this.file.getName();
-    }
-
-    @Override
-    public long getOffsetInFileName() {
-        return this.offsetInFileName;
-    }
-
-    @Override
-    public int getFileSize() {
-        return this.fileSize;
-    }
-
-    @Override
     public boolean isFull() {
         return this.fileSize == writePosition.get();
     }
@@ -79,11 +69,6 @@ public class DefaultMappedFile implements MappedFile {
     @Override
     public boolean hasEnoughSpace(int size) {
         return this.fileSize + size >= writePosition.get();
-    }
-
-    @Override
-    public boolean isAvailable() {
-        return false;
     }
 
     @Override
@@ -124,6 +109,44 @@ public class DefaultMappedFile implements MappedFile {
     @Override
     public ByteBuffer sliceByteBuffer() {
         return null;
+    }
+
+    @Override
+    public boolean cleanup(long currentRef) {
+        if (this.isAvailable()) {
+            return false;
+        }
+
+        if (this.isCleanupOver()) {
+            return true;
+        }
+
+        BufferUtil.cleanBuffer(this.mappedByteBuffer);
+        BufferUtil.cleanBuffer(this.mappedByteBufferWaitToClean);
+        this.mappedByteBufferWaitToClean = null;
+
+        return true;
+    }
+
+    @Override
+    public boolean destroy(long intervalForcibly) {
+        this.shutdown(intervalForcibly);
+        if (!this.isCleanupOver()) {
+            log.warn("destroy mapped file[REF:" + this.getRefCount() + "] " + this.fileName
+                + " Failed. cleanupOver: " + this.cleanupOver);
+            return false;
+        }
+
+        try {
+            this.fileChannel.close();
+            log.info("close file channel {} OK", this.fileName);
+
+            return this.file.delete();
+        } catch (Exception e) {
+            log.warn("close file channel {} Failed. ", this.fileName, e);
+        }
+
+        return true;
     }
 
     private void initFile() throws IOException {
