@@ -39,45 +39,46 @@ public class DefaultMappedFile implements MappedFile {
 
     public DefaultMappedFile() {}
 
-    public DefaultMappedFile(String fileName, int fileSize, TransientStorePool transientStorePool) {
+    public DefaultMappedFile(String fileName, int fileSize, TransientStorePool transientStorePool) throws IOException {
         this(fileName, fileSize);
 
         this.writeCache = transientStorePool.borrowBuffer();
         this.transientStorePool = transientStorePool;
     }
 
-    public DefaultMappedFile(String fileName, int fileSize) {
+    public DefaultMappedFile(String fileName, int fileSize) throws IOException {
         this.fileName = fileName;
         this.fileSize = fileSize;
         this.file = new File(this.fileName);
         this.offsetInFileName = Long.parseLong(this.file.getName());
 
         DirUtil.createIfNotExists(this.file.getParent());
+        this.initFile();
     }
 
     @Override
     public String getFileName() {
-        return "";
+        return this.file.getName();
     }
 
     @Override
     public long getOffsetInFileName() {
-        return 0;
+        return this.offsetInFileName;
     }
 
     @Override
     public int getFileSize() {
-        return 0;
+        return this.fileSize;
     }
 
     @Override
     public boolean isFull() {
-        return false;
+        return this.fileSize == writePosition.get();
     }
 
     @Override
     public boolean hasEnoughSpace(int size) {
-        return false;
+        return this.fileSize + size >= writePosition.get();
     }
 
     @Override
