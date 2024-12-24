@@ -19,7 +19,6 @@ public class AllocateMappedFileService extends ServiceThread implements Lifecycl
 
     private final ConcurrentMap<String, AllocateRequest> requestTable = new ConcurrentHashMap<>();
     private final PriorityBlockingQueue<AllocateRequest> requestQueue = new PriorityBlockingQueue<>();
-    private volatile boolean hasException = false;
 
     private final StoreConfig storeConfig;
 
@@ -77,29 +76,15 @@ public class AllocateMappedFileService extends ServiceThread implements Lifecycl
 
         try {
             request = requestQueue.take();
-            AllocateRequest expectedRequest = requestTable.get(request.getFilePath());
-            if (null == expectedRequest) {
-                log.warn("this mmap request expired, maybe cause timeout {} {}",
-                    request.getFilePath(), request.getFileSize());
-                return ;
-            }
-            if (expectedRequest != request) {
-                log.warn("never expected here,  maybe cause timeout {} {}, req:{}, expectedRequest:{}",
-                    request.getFilePath(), request.getFileSize(), request, expectedRequest);
-                return ;
-            }
-
-            if (request.getMappedFile() != null) {
-                return ;
+            if (!validateRequest(request)) {
+                return;
             }
 
             MappedFile mappedFile = createMappedFile(request);
             request.setMappedFile(mappedFile);
-            this.hasException = false;
             isSuccess = true;
         } catch (InterruptedException e) {
             log.warn("{} interrupted, possibly by shutdown.", this.getServiceName());
-            this.hasException = true;
         } catch (IOException e) {
             handleMmapIOException(e, request);
         } finally {
@@ -107,6 +92,22 @@ public class AllocateMappedFileService extends ServiceThread implements Lifecycl
                 request.getCountDownLatch().countDown();
             }
         }
+    }
+
+    private boolean validateRequest(AllocateRequest request) {
+        AllocateRequest expectedRequest = requestTable.get(request.getFilePath());
+        if (null == expectedRequest) {
+            log.warn("this mmap request expired, maybe cause timeout {} {}",
+                request.getFilePath(), request.getFileSize());
+            return false;
+        }
+        if (expectedRequest != request) {
+            log.warn("never expected here,  maybe cause timeout {} {}, req:{}, expectedRequest:{}",
+                request.getFilePath(), request.getFileSize(), request, expectedRequest);
+            return false;
+        }
+
+        return request.getMappedFile() == null;
     }
 
     private MappedFile createMappedFile(AllocateRequest req) throws IOException {
@@ -122,7 +123,6 @@ public class AllocateMappedFileService extends ServiceThread implements Lifecycl
 
     private void handleMmapIOException(IOException e, AllocateRequest req) {
         log.warn(this.getServiceName() + " service has exception. ", e);
-        this.hasException = true;
         if (null == req) {
             return;
         }
