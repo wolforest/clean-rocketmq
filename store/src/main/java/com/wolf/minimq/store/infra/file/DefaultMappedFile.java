@@ -87,7 +87,21 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
 
     @Override
     public AppendResult append(ByteBuffer data) {
-        return null;
+        int currentPosition = writePosition.get();
+        if ((currentPosition + data.remaining()) > this.fileSize) {
+            return AppendResult.endOfFile();
+        }
+
+        try {
+            ByteBuffer buffer = this.mappedByteBuffer.slice();
+            buffer.position(currentPosition);
+            buffer.put(data);
+
+            return AppendResult.success(currentPosition);
+        } catch (Throwable e) {
+            log.error("Error occurred when append message to mappedFile.", e);
+            return AppendResult.failure();
+        }
     }
 
     @Override
@@ -97,7 +111,16 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
             return AppendResult.endOfFile();
         }
 
-        return null;
+        try {
+            ByteBuffer buffer = this.mappedByteBuffer.slice();
+            buffer.position(currentPosition);
+            buffer.put(data, offset, length);
+
+            return AppendResult.success(currentPosition);
+        } catch (Throwable e) {
+            log.error("Error occurred when append message to mappedFile.", e);
+            return AppendResult.failure();
+        }
     }
 
     @Override
