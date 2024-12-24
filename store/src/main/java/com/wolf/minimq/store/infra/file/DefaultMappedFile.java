@@ -170,12 +170,12 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
 
         int readPosition = getWritePosition();
         if ((pos + size) > readPosition) {
-            log.warn("selectMappedBuffer request pos invalid, request pos: " + pos + ", size: " + size + ", fileFromOffset: " + this.offsetInFileName);
+            log.warn("selectMappedBuffer request pos invalid, request pos: {}, size: {}, fileFromOffset: {}", pos, size, this.offsetInFileName);
             return false;
         }
 
         if (!this.hold()) {
-            log.debug("matched, but hold failed, request pos: " + pos + ", fileFromOffset: " + this.offsetInFileName);
+            log.debug("matched, but hold failed, request pos: {}, fileFromOffset: {}", pos, this.offsetInFileName);
             return false;
         }
 
@@ -193,6 +193,34 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
     @Override
     public int flush(int flushLeastPages) {
         return 0;
+    }
+
+    @Override
+    public int commit(final int commitLeastPages) {
+        if (writeCache == null) {
+            //no need to commit data to file channel, so just regard wrotePosition as committedPosition.
+            return writePosition.get();
+        }
+
+        //no need to commit data to file channel, so just set committedPosition to wrotePosition.
+        if (transientStorePool != null && !transientStorePool.isRealCommit()) {
+            commitPosition.set(writePosition.get());
+        } else if (this.isAbleToCommit(commitLeastPages)) {
+            if (this.hold()) {
+                commit0();
+                this.release();
+            } else {
+                log.warn("in commit, hold failed, commit offset = " + commitPosition.get());
+            }
+        }
+
+        // All dirty data has been committed to FileChannel.
+        if (writeCache != null && this.transientStorePool != null && this.fileSize == commitPosition.get()) {
+            this.transientStorePool.returnBuffer(writeCache);
+            this.writeCache = null;
+        }
+
+        return commitPosition.get();
     }
 
     @Override
@@ -300,6 +328,26 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
     private void madvise(Pointer pointer, long address, long beginTime) {
         int ret = CLibrary.INSTANCE.madvise(pointer, new NativeLong(this.fileSize), CLibrary.MADV_WILLNEED);
         log.info("madvise {} {} {} ret = {} time consuming = {}", address, this.fileName, this.fileSize, ret, System.currentTimeMillis() - beginTime);
+    }
+
+    protected void commit0() {
+        int writePos = writePosition.get();
+        int lastCommittedPosition = commitPosition.get();
+
+        if (writePos - lastCommittedPosition <= 0) {
+            return;
+        }
+
+        try {
+            ByteBuffer byteBuffer = writeCache.slice();
+            byteBuffer.position(lastCommittedPosition);
+            byteBuffer.limit(writePos);
+            this.fileChannel.position(lastCommittedPosition);
+            this.fileChannel.write(byteBuffer);
+            commitPosition.set(writePos);
+        } catch (Throwable e) {
+            log.error("Error occurred when commit data to FileChannel.", e);
+        }
     }
 
 }

@@ -119,6 +119,14 @@ public interface MappedFile {
     int flush(int flushLeastPages);
 
     /**
+     * Flushes the data in the secondary cache to page cache or disk immediately.
+     *
+     * @param commitLeastPages the least pages to commit
+     * @return the committed position after the method call
+     */
+    int commit(int commitLeastPages);
+
+    /**
      * Returns the mapped byte buffer behind the mapped file.
      *
      * @return the mapped byte buffer
