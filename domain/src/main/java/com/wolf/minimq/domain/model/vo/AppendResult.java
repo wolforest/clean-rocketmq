@@ -2,8 +2,6 @@ package com.wolf.minimq.domain.model.vo;
 
 import com.wolf.minimq.domain.enums.AppendStatus;
 import java.io.Serializable;
-import java.util.Map;
-import java.util.function.Supplier;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,6 +20,25 @@ public class AppendResult implements Serializable {
     private int wroteBytes;
     // Message storage timestamp
     private long storeTimestamp;
-    // Consume queue's offset(step by one)
-    private long logicsOffset;
+
+    public static AppendResult success(long wroteOffset) {
+        return AppendResult.builder()
+            .status(AppendStatus.PUT_OK)
+            .wroteOffset(wroteOffset)
+            .build();
+    }
+
+    public static AppendResult failure() {
+        return AppendResult.builder()
+            .status(AppendStatus.UNKNOWN_ERROR)
+            .build();
+    }
+
+    public static AppendResult endOfFile() {
+        return AppendResult.builder()
+            .status(AppendStatus.END_OF_FILE)
+            .build();
+    }
+
+
 }

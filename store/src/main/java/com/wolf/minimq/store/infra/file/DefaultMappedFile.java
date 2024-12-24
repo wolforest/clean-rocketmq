@@ -74,8 +74,15 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
     }
 
     @Override
-    public boolean append(byte[] data) {
-        return false;
+    public int getWritePosition() {
+        return null == transientStorePool || !transientStorePool.isRealCommit()
+            ? this.writePosition.get()
+            : this.commitPosition.get();
+    }
+
+    @Override
+    public AppendResult append(byte[] data) {
+        return append(data, 0, data.length);
     }
 
     @Override
@@ -85,6 +92,11 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
 
     @Override
     public AppendResult append(byte[] data, int offset, int length) {
+        int currentPosition = writePosition.get();
+        if ((currentPosition + length) > this.fileSize) {
+            return AppendResult.endOfFile();
+        }
+
         return null;
     }
 

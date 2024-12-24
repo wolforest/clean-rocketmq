@@ -47,12 +47,19 @@ public interface MappedFile {
     boolean isAvailable();
 
     /**
+     * get write or commit position
+     *  - return commitPosition if using transient store pool
+     * @return writePosition | commitPosition
+     */
+    int getWritePosition();
+
+    /**
      * Appends a raw message data represents by a byte array to the current {@code MappedFile}.
      *
      * @param data the byte array to append
      * @return true if success; false otherwise.
      */
-    boolean append(byte[] data);
+    AppendResult append(byte[] data);
 
     /**
      * Appends a raw message data represents by a byte array to the current {@code MappedFile}.
