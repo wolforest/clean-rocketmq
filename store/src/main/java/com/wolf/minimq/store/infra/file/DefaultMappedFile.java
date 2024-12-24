@@ -43,10 +43,6 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
     protected AtomicInteger commitPosition = new AtomicInteger(0);
     protected AtomicInteger flushPosition = new AtomicInteger(0);
 
-    protected volatile long storeTimestamp = 0;
-    protected long startTimestamp = -1;
-    protected long stopTimestamp = -1;
-
     public DefaultMappedFile() {}
 
     public DefaultMappedFile(String fileName, int fileSize, TransientStorePool transientStorePool) throws IOException {
@@ -192,7 +188,29 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
 
     @Override
     public int flush(int flushLeastPages) {
-        return 0;
+        if (!this.isAbleToFlush(flushLeastPages)) {
+            return this.flushPosition.get();
+        }
+
+        if (!this.hold()) {
+            return this.flushPosition.get();
+        }
+
+        int position = getWritePosition();
+        try {
+            if (null != writeCache && this.fileChannel.position() != 0) {
+                this.fileChannel.force(false);
+            } else {
+                this.mappedByteBuffer.force();
+            }
+        } catch (Throwable e) {
+            log.error("Error occurred when force data to disk.", e);
+        }
+
+        this.flushPosition.set(position);
+        this.release();
+
+        return this.flushPosition.get();
     }
 
     @Override
@@ -210,7 +228,7 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
                 commit0();
                 this.release();
             } else {
-                log.warn("in commit, hold failed, commit offset = " + commitPosition.get());
+                log.warn("in commit, hold failed, commit offset = {}", commitPosition.get());
             }
         }
 
