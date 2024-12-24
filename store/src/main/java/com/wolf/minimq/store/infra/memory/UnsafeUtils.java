@@ -6,6 +6,7 @@ import sun.misc.Unsafe;
 public class UnsafeUtils {
     public static final Unsafe UNSAFE = getUnsafe();
     public static final int OS_PAGE_SIZE = 1024 * 4;
+    public static final int UNSAFE_PAGE_SIZE = getPageSize();
 
     public static Unsafe getUnsafe() {
         try {
