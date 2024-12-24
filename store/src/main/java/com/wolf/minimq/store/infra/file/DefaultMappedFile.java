@@ -163,18 +163,46 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
     }
 
     @Override
+    public boolean getData(int pos, int size, ByteBuffer byteBuffer) {
+        if (byteBuffer.remaining() < size) {
+            return false;
+        }
+
+        int readPosition = getWritePosition();
+        if ((pos + size) > readPosition) {
+            log.warn("selectMappedBuffer request pos invalid, request pos: " + pos + ", size: " + size + ", fileFromOffset: " + this.offsetInFileName);
+            return false;
+        }
+
+        if (!this.hold()) {
+            log.debug("matched, but hold failed, request pos: " + pos + ", fileFromOffset: " + this.offsetInFileName);
+            return false;
+        }
+
+        try {
+            int readNum = fileChannel.read(byteBuffer, pos);
+            return size == readNum;
+        } catch (Throwable t) {
+            log.warn("Get data failed pos:{} size:{} fileFromOffset:{}", pos, size, this.offsetInFileName);
+            return false;
+        } finally {
+            this.release();
+        }
+    }
+
+    @Override
     public int flush(int flushLeastPages) {
         return 0;
     }
 
     @Override
     public MappedByteBuffer getMappedByteBuffer() {
-        return null;
+        return mappedByteBuffer;
     }
 
     @Override
     public ByteBuffer sliceByteBuffer() {
-        return null;
+        return mappedByteBuffer.slice();
     }
 
     @Override
@@ -198,8 +226,7 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
     public boolean destroy(long intervalForcibly) {
         this.shutdown(intervalForcibly);
         if (!this.isCleanupOver()) {
-            log.warn("destroy mapped file[REF:" + this.getRefCount() + "] " + this.fileName
-                + " Failed. cleanupOver: " + this.cleanupOver);
+            log.warn("destroy mapped file[REF:{}] {} Failed. cleanupOver: {}", this.getRefCount(), this.fileName, this.cleanupOver);
             return false;
         }
 

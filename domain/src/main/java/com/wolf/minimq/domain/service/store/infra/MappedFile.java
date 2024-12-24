@@ -101,6 +101,16 @@ public interface MappedFile {
     SelectedMappedBuffer select(int pos);
 
     /**
+     * Get data from a certain pos offset with size byte
+     *
+     * @param pos a certain pos offset to get data
+     * @param size the size of data
+     * @param byteBuffer the data
+     * @return true if with data; false if no data;
+     */
+    boolean getData(int pos, int size, ByteBuffer byteBuffer);
+
+    /**
      * Flushes the data in cache to disk immediately.
      *
      * @param flushLeastPages the least pages to flush
