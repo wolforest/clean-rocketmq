@@ -44,7 +44,6 @@ public interface MappedFileQueue {
      */
     MappedFile createMappedFileForOffset(long offset);
 
-    boolean resetOffset(long offset);
     long getMinOffset();
     long getMaxOffset();
 

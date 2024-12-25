@@ -1,13 +1,13 @@
 package com.wolf.minimq.store.infra.file;
 
 import com.wolf.common.util.io.DirUtil;
+import com.wolf.common.util.io.FileUtil;
 import com.wolf.minimq.domain.service.store.infra.MappedFile;
 import com.wolf.minimq.domain.service.store.infra.MappedFileQueue;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -19,7 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class DefaultMappedFileQueue implements MappedFileQueue {
-    private final String dir;
+    private final String rootDir;
     private final int fileSize;
 
     private final AllocateMappedFileService allocateMappedFileService;
@@ -37,27 +37,20 @@ public class DefaultMappedFileQueue implements MappedFileQueue {
     @Getter
     private volatile long storeTimestamp;
 
-    public DefaultMappedFileQueue(String dir, int fileSize, AllocateMappedFileService allocateMappedFileService) {
-        this.dir = dir;
+    public DefaultMappedFileQueue(String rootDir, int fileSize, AllocateMappedFileService allocateMappedFileService) {
+        this.rootDir = rootDir;
         this.fileSize = fileSize;
         this.allocateMappedFileService = allocateMappedFileService;
     }
 
     @Override
     public boolean load() {
-        String[] paths = dir.split(DirUtil.MULTI_PATH_SEPARATOR);
-        Set<String> pathSet = new HashSet<>(Arrays.asList(paths));
-
-        List<File> files = new ArrayList<>();
-        for (String path : pathSet) {
-            File dir = new File(path);
-            File[] ls = dir.listFiles();
-            if (ls != null) {
-                Collections.addAll(files, ls);
-            }
+        File dir = new File(this.rootDir);
+        File[] ls = dir.listFiles();
+        if (ls != null) {
+            return loadFiles(Arrays.asList(ls));
         }
-
-        return loadFiles(files);
+        return true;
     }
 
     @Override
@@ -79,17 +72,25 @@ public class DefaultMappedFileQueue implements MappedFileQueue {
 
     @Override
     public void shutdown(long interval) {
-
+        for (MappedFile mf : this.mappedFiles) {
+            mf.shutdown(interval);
+        }
     }
 
     @Override
     public void destroy() {
+        for (MappedFile mf : this.mappedFiles) {
+            mf.destroy(1000 * 3);
+        }
+        this.mappedFiles.clear();
+        this.flushPosition = 0;
 
+        FileUtil.deleteQuietly(rootDir);
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return this.mappedFiles.isEmpty();
     }
 
     @Override
@@ -104,11 +105,31 @@ public class DefaultMappedFileQueue implements MappedFileQueue {
 
     @Override
     public MappedFile getFirstMappedFile() {
+        if (this.mappedFiles.isEmpty()) {
+            return null;
+        }
+
+        try {
+            return this.mappedFiles.getFirst();
+        } catch (Exception e) {
+            log.error("getFirstMappedFile has exception.", e);
+        }
+
         return null;
     }
 
     @Override
     public MappedFile getLastMappedFile() {
+        if (this.mappedFiles.isEmpty()) {
+            return null;
+        }
+
+        try {
+            return this.mappedFiles.getLast();
+        } catch (Exception e) {
+            log.error("getFirstMappedFile has exception.", e);
+        }
+
         return null;
     }
 
@@ -118,28 +139,33 @@ public class DefaultMappedFileQueue implements MappedFileQueue {
     }
 
     @Override
-    public boolean resetOffset(long offset) {
-        return false;
-    }
-
-    @Override
     public long getMinOffset() {
-        return 0;
+        MappedFile mappedFile = getFirstMappedFile();
+        if (mappedFile == null) {
+            return 0;
+        }
+
+        return mappedFile.getOffsetInFileName();
     }
 
     @Override
     public long getMaxOffset() {
-        return 0;
+        MappedFile mappedFile = getLastMappedFile();
+        if (mappedFile == null) {
+            return 0;
+        }
+
+        return mappedFile.getOffsetInFileName() + mappedFile.getWriteOrCommitPosition();
     }
 
     @Override
     public long getUnCommittedSize() {
-        return 0;
+        return getMaxOffset() - this.commitPosition;
     }
 
     @Override
     public long getUnFlushedSize() {
-        return 0;
+        return getMaxOffset() - this.flushPosition;
     }
 
     @Override
@@ -173,20 +199,29 @@ public class DefaultMappedFileQueue implements MappedFileQueue {
                 return false;
             }
 
-            try {
-                MappedFile mappedFile = new DefaultMappedFile(file.getPath(), fileSize);
-
-                mappedFile.setWritePosition(this.fileSize);
-                mappedFile.setFlushPosition(this.fileSize);
-                mappedFile.setCommitPosition(this.fileSize);
-                this.mappedFiles.add(mappedFile);
-                log.info("load {} OK", file.getPath());
-            } catch (IOException e) {
-                log.error("load file {} error", file, e);
+            boolean status = initMappedFile(file.getPath());
+            if (!status) {
                 return false;
             }
         }
         return true;
+    }
+
+    private boolean initMappedFile(String path) {
+        try {
+            MappedFile mappedFile = new DefaultMappedFile(path, this.fileSize);
+
+            mappedFile.setWritePosition(this.fileSize);
+            mappedFile.setFlushPosition(this.fileSize);
+            mappedFile.setCommitPosition(this.fileSize);
+            this.mappedFiles.add(mappedFile);
+            log.info("load {} OK", path);
+
+            return true;
+        } catch (IOException e) {
+            log.error("load file {} error", path, e);
+            return false;
+        }
     }
 
     private void checkFileOffset(MappedFile pre, MappedFile cur) {
