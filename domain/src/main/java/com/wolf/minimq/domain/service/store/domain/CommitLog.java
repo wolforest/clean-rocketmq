@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public interface CommitLog {
-    CompletableFuture<EnqueueResult> append(MessageContext messageContext);
+    CompletableFuture<EnqueueResult> insert(MessageContext messageContext);
 
     SelectedMappedBuffer select(long offset, int size);
     SelectedMappedBuffer select(long offset);

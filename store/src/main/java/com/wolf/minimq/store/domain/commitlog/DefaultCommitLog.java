@@ -48,7 +48,7 @@ public class DefaultCommitLog implements CommitLog {
     }
 
     @Override
-    public CompletableFuture<EnqueueResult> append(MessageContext messageContext) {
+    public CompletableFuture<EnqueueResult> insert(MessageContext messageContext) {
         initAppendMessage(messageContext);
 
         return null;

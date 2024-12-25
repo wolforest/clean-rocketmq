@@ -47,7 +47,7 @@ public class DefaultMessageStore implements MessageStore {
             consumeQueue.assignOffset(context);
 
             CommitLog commitLog = StoreContext.getBean(CommitLog.class);
-            CompletableFuture<EnqueueResult> result = commitLog.append(context);
+            CompletableFuture<EnqueueResult> result = commitLog.insert(context);
 
             consumeQueue.increaseOffset(context);
             return result;
