@@ -4,6 +4,7 @@ import com.wolf.common.util.io.DirUtil;
 import com.wolf.common.util.io.FileUtil;
 import com.wolf.minimq.domain.service.store.infra.MappedFile;
 import com.wolf.minimq.domain.service.store.infra.MappedFileQueue;
+import com.wolf.minimq.domain.utils.StoreUtils;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -95,11 +96,33 @@ public class DefaultMappedFileQueue implements MappedFileQueue {
 
     @Override
     public MappedFile getAvailableMappedFile(int messageSize) {
-        return null;
+        if (isEmpty()) return null;
+
+        MappedFile last = getLastMappedFile();
+        if (last.hasEnoughSpace(messageSize)) {
+            return last;
+        }
+
+        long nextOffset = last.getOffsetInFileName() + this.fileSize;
+        return createMappedFile(nextOffset);
     }
 
     @Override
     public MappedFile getMappedFileByOffset(long offset) {
+        if (isEmpty()) return null;
+        if (!isOffsetValid(offset)) return null;
+
+        MappedFile targetFile = getByIndexOfOffset(offset);
+        if (targetFile != null) {
+            return targetFile;
+        }
+
+        for (MappedFile tmpMappedFile : this.mappedFiles) {
+            if (isOffsetInFile(offset, tmpMappedFile)) {
+                return tmpMappedFile;
+            }
+        }
+
         return null;
     }
 
@@ -135,6 +158,48 @@ public class DefaultMappedFileQueue implements MappedFileQueue {
 
     @Override
     public MappedFile createMappedFileForOffset(long offset) {
+        MappedFile last = getLastMappedFile();
+        long fileOffset = -1;
+
+        if (null == last) {
+            fileOffset = offset - (offset % this.fileSize);
+        } else if (last.isFull()) {
+            fileOffset = last.getOffsetInFileName() + this.fileSize;
+        }
+
+        if (-1 == fileOffset) {
+            return createMappedFile(offset);
+        }
+
+        return last;
+    }
+
+    private MappedFile createMappedFile(long createOffset) {
+        String file = this.rootDir + File.separator + StoreUtils.offsetToFileName(createOffset);
+        String nextFile = this.rootDir + File.separator + StoreUtils.offsetToFileName(createOffset + this.fileSize);
+        MappedFile mappedFile;
+
+        if (null != allocateMappedFileService) {
+            mappedFile = allocateMappedFileService.enqueue(file, nextFile, fileSize);
+        } else {
+            mappedFile = createMappedFile(file);
+        }
+
+        if (mappedFile == null) {
+            return null;
+        }
+
+        this.mappedFiles.add(mappedFile);
+        return mappedFile;
+    }
+
+    private MappedFile createMappedFile(String file) {
+        try {
+            return new DefaultMappedFile(file, this.fileSize);
+        } catch (IOException e) {
+            log.error("create mappedFile exception", e);
+        }
+
         return null;
     }
 
@@ -170,11 +235,23 @@ public class DefaultMappedFileQueue implements MappedFileQueue {
 
     @Override
     public boolean flush(int minPages) {
+        if (isEmpty()) {
+            return true;
+        }
+
+        MappedFile mappedFile = getMappedFileByOffset(flushPosition);
+
         return false;
     }
 
     @Override
     public boolean commit(int minPages) {
+        if (isEmpty()) {
+            return true;
+        }
+
+        MappedFile mappedFile = getMappedFileByOffset(commitPosition);
+
         return false;
     }
 
@@ -236,4 +313,54 @@ public class DefaultMappedFileQueue implements MappedFileQueue {
         log.error("[BUG]The mappedFile queue's data is damaged, the adjacent mappedFile's offset don't match. pre file {}, cur file {}",
             pre.getFileName(), cur.getFileName());
     }
+
+    private MappedFile getByIndexOfOffset(long offset) {
+        MappedFile first = this.mappedFiles.getFirst();
+        MappedFile targetFile = null;
+        int index = (int) ((offset / this.fileSize) - (first.getOffsetInFileName() / this.fileSize));
+        try {
+            targetFile = this.mappedFiles.get(index);
+        } catch (Exception ignored) {
+        }
+
+        if (isOffsetInFile(offset, targetFile)) {
+            return targetFile;
+        }
+
+        return null;
+    }
+
+    private boolean isOffsetInFile(long offset, MappedFile file) {
+        if (file == null) {
+            return false;
+        }
+
+        long offsetInFileName = file.getOffsetInFileName();
+        if (offset < offsetInFileName) {
+            return false;
+        }
+
+        return offset <= offsetInFileName + this.fileSize;
+    }
+
+    private boolean isOffsetValid(long offset) {
+        MappedFile first = this.mappedFiles.getFirst();
+        MappedFile last = this.mappedFiles.getLast();
+
+        if (offset < first.getOffsetInFileName()
+            || offset > last.getOffsetInFileName() + this.fileSize) {
+
+            log.error("Offset not matched. Request offset: {}, firstOffset: {}, lastOffset: {}, mappedFileSize: {}, mappedFiles count: {}",
+                offset,
+                first.getOffsetInFileName(),
+                last.getOffsetInFileName() + this.fileSize,
+                this.fileSize,
+                this.mappedFiles.size()
+            );
+            return false;
+        }
+
+        return true;
+    }
+
 }

@@ -19,6 +19,7 @@ import java.nio.channels.FileChannel;
 import java.util.concurrent.atomic.AtomicInteger;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -42,6 +43,9 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
     protected AtomicInteger writePosition = new AtomicInteger(0);
     protected AtomicInteger commitPosition = new AtomicInteger(0);
     protected AtomicInteger flushPosition = new AtomicInteger(0);
+
+    @Getter
+    protected volatile long storeTimestamp = 0;
 
     public DefaultMappedFile() {}
 
@@ -80,12 +84,12 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
     }
 
     @Override
-    public AppendResult append(byte[] data) {
-        return append(data, 0, data.length);
+    public AppendResult insert(byte[] data) {
+        return insert(data, 0, data.length);
     }
 
     @Override
-    public AppendResult append(ByteBuffer data) {
+    public AppendResult insert(ByteBuffer data) {
         int currentPosition = writePosition.get();
         if ((currentPosition + data.remaining()) > this.fileSize) {
             return AppendResult.endOfFile();
@@ -96,6 +100,7 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
             buffer.position(currentPosition);
             buffer.put(data);
 
+            this.storeTimestamp = System.currentTimeMillis();
             return AppendResult.success(currentPosition);
         } catch (Throwable e) {
             log.error("Error occurred when append message to mappedFile.", e);
@@ -104,7 +109,7 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
     }
 
     @Override
-    public AppendResult append(byte[] data, int offset, int length) {
+    public AppendResult insert(byte[] data, int offset, int length) {
         int currentPosition = writePosition.get();
         if ((currentPosition + length) > this.fileSize) {
             return AppendResult.endOfFile();
@@ -115,6 +120,7 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
             buffer.position(currentPosition);
             buffer.put(data, offset, length);
 
+            this.storeTimestamp = System.currentTimeMillis();
             return AppendResult.success(currentPosition);
         } catch (Throwable e) {
             log.error("Error occurred when append message to mappedFile.", e);

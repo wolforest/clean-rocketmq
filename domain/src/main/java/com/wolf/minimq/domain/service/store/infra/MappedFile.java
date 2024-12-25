@@ -58,7 +58,7 @@ public interface MappedFile {
      * @param data the byte array to append
      * @return AppendResult
      */
-    AppendResult append(byte[] data);
+    AppendResult insert(byte[] data);
 
     /**
      * Appends a raw message data represents by a byte array to the current {@code MappedFile}.
@@ -66,7 +66,7 @@ public interface MappedFile {
      * @param data the byte buffer to append
      * @return AppendResult
      */
-    AppendResult append(ByteBuffer data);
+    AppendResult insert(ByteBuffer data);
 
     /**
      * Appends a raw message data represents by a byte array to the current {@code MappedFile},
@@ -77,7 +77,7 @@ public interface MappedFile {
      * @param length the number of bytes to be read from the given array
      * @return AppendResult
      */
-    AppendResult append(byte[] data, int offset, int length);
+    AppendResult insert(byte[] data, int offset, int length);
 
     /**
      * Selects a slice of the mapped byte buffer's subregion behind the mapped file,
@@ -181,4 +181,5 @@ public interface MappedFile {
     int getCommitPosition();
     void setCommitPosition(int commitPosition);
 
+    long getStoreTimestamp();
 }
