@@ -235,24 +235,39 @@ public class DefaultMappedFileQueue implements MappedFileQueue {
 
     @Override
     public boolean flush(int minPages) {
-        if (isEmpty()) {
+        MappedFile mappedFile = getByOffsetOrReturnFirst(flushPosition);
+        if (mappedFile == null) {
             return true;
         }
 
-        MappedFile mappedFile = getMappedFileByOffset(flushPosition);
+        long timestamp = mappedFile.getStoreTimestamp();
+        int offset = mappedFile.flush(minPages);
+        long position = mappedFile.getOffsetInFileName() + offset;
 
-        return false;
+        boolean result = position == this.flushPosition;
+        this.flushPosition = position;
+
+        if (0 == minPages) {
+            this.storeTimestamp = timestamp;
+        }
+
+        return result;
     }
 
     @Override
     public boolean commit(int minPages) {
-        if (isEmpty()) {
+        MappedFile mappedFile = getByOffsetOrReturnFirst(commitPosition);
+        if (mappedFile == null) {
             return true;
         }
 
-        MappedFile mappedFile = getMappedFileByOffset(commitPosition);
+        int offset = mappedFile.commit(minPages);
+        long position = mappedFile.getOffsetInFileName() + offset;
 
-        return false;
+        boolean result = position == this.commitPosition;
+        this.commitPosition = position;
+
+        return result;
     }
 
     protected boolean loadFiles(List<File> files) {
@@ -299,6 +314,17 @@ public class DefaultMappedFileQueue implements MappedFileQueue {
             log.error("load file {} error", path, e);
             return false;
         }
+    }
+
+    private MappedFile getByOffsetOrReturnFirst(long offset) {
+        if (isEmpty()) return null;
+
+        MappedFile mappedFile = getMappedFileByOffset(offset);
+        if (mappedFile == null) {
+            mappedFile = getFirstMappedFile();
+        }
+
+        return mappedFile;
     }
 
     private void checkFileOffset(MappedFile pre, MappedFile cur) {
