@@ -1,6 +1,5 @@
 package com.wolf.minimq.store.infra.file;
 
-import com.wolf.common.util.io.DirUtil;
 import com.wolf.common.util.io.FileUtil;
 import com.wolf.minimq.domain.service.store.infra.MappedFile;
 import com.wolf.minimq.domain.service.store.infra.MappedFileQueue;
@@ -10,10 +9,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +21,6 @@ public class DefaultMappedFileQueue implements MappedFileQueue {
     private final int fileSize;
 
     private final AllocateMappedFileService allocateMappedFileService;
-
     private final CopyOnWriteArrayList<MappedFile> mappedFiles = new CopyOnWriteArrayList<>();
 
     @Getter
