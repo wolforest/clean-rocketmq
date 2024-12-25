@@ -73,7 +73,7 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
     }
 
     @Override
-    public int getWritePosition() {
+    public int getWriteOrCommitPosition() {
         return null == transientPool || !transientPool.isRealCommit()
             ? this.writePosition.get()
             : this.commitPosition.get();
@@ -124,7 +124,7 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
 
     @Override
     public SelectedMappedBuffer select(int pos, int size) {
-        int dataPosition = getWritePosition();
+        int dataPosition = getWriteOrCommitPosition();
         if ((pos + size) > dataPosition) {
             return null;
         }
@@ -149,7 +149,7 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
 
     @Override
     public SelectedMappedBuffer select(int pos) {
-        int dataPosition = getWritePosition();
+        int dataPosition = getWriteOrCommitPosition();
         if (pos >= dataPosition || pos < 0) {
             return null;
         }
@@ -164,7 +164,7 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
             return false;
         }
 
-        int readPosition = getWritePosition();
+        int readPosition = getWriteOrCommitPosition();
         if ((pos + size) > readPosition) {
             log.warn("selectMappedBuffer request pos invalid, request pos: {}, size: {}, fileFromOffset: {}", pos, size, this.offsetInFileName);
             return false;
@@ -196,7 +196,7 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
             return this.flushPosition.get();
         }
 
-        int position = getWritePosition();
+        int position = getWriteOrCommitPosition();
         try {
             if (null != writeCache && this.fileChannel.position() != 0) {
                 this.fileChannel.force(false);
@@ -269,23 +269,22 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
     }
 
     @Override
-    public boolean destroy(long interval) {
+    public void destroy(long interval) {
         this.shutdown(interval);
         if (!this.isCleanupOver()) {
             log.warn("destroy mapped file[REF:{}] {} Failed. cleanupOver: {}", this.getRefCount(), this.fileName, this.cleanupOver);
-            return false;
+            return;
         }
 
         try {
             this.fileChannel.close();
             log.info("close file channel {} OK", this.fileName);
 
-            return this.file.delete();
+            this.file.delete();
         } catch (Exception e) {
             log.warn("close file channel {} Failed. ", this.fileName, e);
         }
 
-        return true;
     }
 
     private void initFile() throws IOException {
@@ -325,7 +324,7 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
 
     private boolean isAbleToFlush(final int flushLeastPages) {
         int flush = flushPosition.get();
-        int write = getWritePosition();
+        int write = getWriteOrCommitPosition();
 
         if (this.isFull()) {
             return true;
@@ -366,6 +365,36 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
         } catch (Throwable e) {
             log.error("Error occurred when commit data to FileChannel.", e);
         }
+    }
+
+    @Override
+    public int getWritePosition() {
+        return writePosition.get();
+    }
+
+    @Override
+    public void setWritePosition(int writePosition) {
+        this.writePosition.set(writePosition);
+    }
+
+    @Override
+    public int getCommitPosition() {
+        return commitPosition.get();
+    }
+
+    @Override
+    public void setCommitPosition(int commitPosition) {
+        this.commitPosition.set(commitPosition);
+    }
+
+    @Override
+    public int getFlushPosition() {
+        return this.flushPosition.get();
+    }
+
+    @Override
+    public void setFlushPosition(int flushPosition) {
+        this.flushPosition.set(flushPosition);
     }
 
 }

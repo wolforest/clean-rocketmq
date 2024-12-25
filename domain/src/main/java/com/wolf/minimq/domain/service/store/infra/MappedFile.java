@@ -51,12 +51,6 @@ public interface MappedFile {
      */
     boolean isAvailable();
 
-    /**
-     * get write or commit position
-     *  - return commitPosition if using transient store pool
-     * @return writePosition | commitPosition
-     */
-    int getWritePosition();
 
     /**
      * Appends a raw message data represents by a byte array to the current {@code MappedFile}.
@@ -144,14 +138,12 @@ public interface MappedFile {
      */
     ByteBuffer sliceByteBuffer();
 
-
     /**
      * Destroys the file and delete it from the file system.
      *
      * @param interval If {@code true} then this method will destroy the file forcibly and ignore the reference
-     * @return true if success; false otherwise.
      */
-    boolean destroy(long interval);
+    void destroy(long interval);
 
     /**
      * Shutdowns the file and mark it unavailable.
@@ -172,5 +164,21 @@ public interface MappedFile {
      * @return true if success; false otherwise.
      */
     boolean hold();
+
+    /**
+     * get write or commit position
+     *  - return commitPosition if using transient store pool
+     * @return writePosition | commitPosition
+     */
+    int getWriteOrCommitPosition();
+
+    int getWritePosition();
+    void setWritePosition(int writePosition);
+
+    int getFlushPosition();
+    void setFlushPosition(int flushPosition);
+
+    int getCommitPosition();
+    void setCommitPosition(int commitPosition);
 
 }
