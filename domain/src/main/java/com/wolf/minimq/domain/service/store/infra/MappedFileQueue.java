@@ -3,6 +3,10 @@ package com.wolf.minimq.domain.service.store.infra;
 public interface MappedFileQueue {
     boolean load();
     void checkSelf();
+    void shutdown(long interval);
+    void destroy();
+
+    boolean isEmpty();
 
     /**
      * get or create available MappedFile
@@ -22,10 +26,36 @@ public interface MappedFileQueue {
     MappedFile getMappedFileByOffset(long offset);
 
     /**
+     *
+     * @return mappedFile | null
+     */
+    MappedFile getFirstMappedFile();
+
+    /**
+     *
+     * @return mappedFile | null
+     */
+    MappedFile getLastMappedFile();
+
+    /**
      * create or find mappedFile contains offset
      * @param offset offset
      * @return MappedFile
      */
     MappedFile createMappedFileForOffset(long offset);
+
+    boolean resetOffset(long offset);
+    long getMinOffset();
+    long getMaxOffset();
+
+    long getCommitPosition();
+    long getFlushPosition();
+    long getStoreTimestamp();
+
+    long getUnCommittedSize();
+    long getUnFlushedSize();
+
+    boolean flush(int minPages);
+    boolean commit(int minPages);
 
 }
