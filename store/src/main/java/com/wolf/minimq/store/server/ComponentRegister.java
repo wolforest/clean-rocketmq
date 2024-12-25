@@ -1,6 +1,7 @@
 package com.wolf.minimq.store.server;
 
 import com.wolf.common.convention.service.LifecycleManager;
+import com.wolf.minimq.domain.config.StoreConfig;
 import com.wolf.minimq.domain.service.store.manager.CommitLogManager;
 import com.wolf.minimq.domain.service.store.manager.DispatcherManager;
 import com.wolf.minimq.domain.service.store.manager.IndexManager;
@@ -12,6 +13,7 @@ import com.wolf.minimq.store.domain.index.DefaultIndexManager;
 import com.wolf.minimq.store.domain.message.DefaultMessageManager;
 import com.wolf.minimq.store.domain.timer.DefaultTimerManager;
 import com.wolf.minimq.store.infra.file.AllocateMappedFileService;
+import com.wolf.minimq.store.infra.memory.TransientPool;
 
 public class ComponentRegister {
     private final LifecycleManager manager = new LifecycleManager();
@@ -65,10 +67,16 @@ public class ComponentRegister {
     }
 
     private void registerAllocateMappedFileService() {
-        AllocateMappedFileService component = new AllocateMappedFileService();
+        StoreConfig storeConfig = StoreContext.getBean(StoreConfig.class);
+        TransientPool transientPool = null;
+        if (storeConfig.isEnableTransientPool()) {
+            transientPool = new TransientPool(storeConfig.getTransientPoolSize(), storeConfig.getTransientFileSize());
+            manager.register(transientPool);
+            StoreContext.register(transientPool);
+        }
+
+        AllocateMappedFileService component = new AllocateMappedFileService(storeConfig, transientPool);
         manager.register(component);
         StoreContext.register(component);
     }
-
-
 }

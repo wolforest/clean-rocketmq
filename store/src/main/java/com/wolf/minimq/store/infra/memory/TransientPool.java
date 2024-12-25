@@ -18,20 +18,24 @@ package com.wolf.minimq.store.infra.memory;
 
 import com.sun.jna.NativeLong;
 import com.sun.jna.Pointer;
+import com.wolf.common.convention.service.Lifecycle;
 import java.nio.ByteBuffer;
 import java.util.Deque;
 import java.util.concurrent.ConcurrentLinkedDeque;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import sun.nio.ch.DirectBuffer;
 
 @Slf4j
-public class TransientStorePool {
+public class TransientPool implements Lifecycle {
     private final int poolSize;
     private final int fileSize;
     private final Deque<ByteBuffer> availableBuffers;
+    @Getter @Setter
     private volatile boolean isRealCommit = true;
 
-    public TransientStorePool(final int poolSize, final int fileSize) {
+    public TransientPool(final int poolSize, final int fileSize) {
         this.poolSize = poolSize;
         this.fileSize = fileSize;
         this.availableBuffers = new ConcurrentLinkedDeque<>();
@@ -40,7 +44,8 @@ public class TransientStorePool {
     /**
      * It's a heavy init method.
      */
-    public void init() {
+    @Override
+    public void start() {
         for (int i = 0; i < poolSize; i++) {
             ByteBuffer byteBuffer = ByteBuffer.allocateDirect(fileSize);
 
@@ -52,13 +57,16 @@ public class TransientStorePool {
         }
     }
 
-    public void destroy() {
+    @Override
+    public void shutdown() {
         for (ByteBuffer byteBuffer : availableBuffers) {
             final long address = ((DirectBuffer) byteBuffer).address();
             Pointer pointer = new Pointer(address);
             CLibrary.INSTANCE.munlock(pointer, new NativeLong(fileSize));
         }
     }
+
+
 
     public void returnBuffer(ByteBuffer byteBuffer) {
         byteBuffer.position(0);
@@ -78,11 +86,18 @@ public class TransientStorePool {
         return availableBuffers.size();
     }
 
-    public boolean isRealCommit() {
-        return isRealCommit;
+    @Override
+    public void initialize() {
+
     }
 
-    public void setRealCommit(boolean realCommit) {
-        isRealCommit = realCommit;
+    @Override
+    public void cleanup() {
+
+    }
+
+    @Override
+    public State getState() {
+        return State.RUNNING;
     }
 }

@@ -8,7 +8,7 @@ import com.wolf.minimq.domain.service.store.infra.MappedFile;
 import com.wolf.minimq.domain.model.vo.AppendResult;
 import com.wolf.minimq.domain.model.vo.SelectedMappedBuffer;
 import com.wolf.minimq.store.infra.memory.CLibrary;
-import com.wolf.minimq.store.infra.memory.TransientStorePool;
+import com.wolf.minimq.store.infra.memory.TransientPool;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -37,7 +37,7 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
     protected MappedByteBuffer mappedByteBufferWaitToClean;
 
     protected ByteBuffer writeCache;
-    protected TransientStorePool transientStorePool;
+    protected TransientPool transientPool;
 
     protected AtomicInteger writePosition = new AtomicInteger(0);
     protected AtomicInteger commitPosition = new AtomicInteger(0);
@@ -45,11 +45,11 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
 
     public DefaultMappedFile() {}
 
-    public DefaultMappedFile(String fileName, int fileSize, TransientStorePool transientStorePool) throws IOException {
+    public DefaultMappedFile(String fileName, int fileSize, TransientPool transientPool) throws IOException {
         this(fileName, fileSize);
 
-        this.writeCache = transientStorePool.borrowBuffer();
-        this.transientStorePool = transientStorePool;
+        this.writeCache = transientPool.borrowBuffer();
+        this.transientPool = transientPool;
     }
 
     public DefaultMappedFile(String fileName, int fileSize) throws IOException {
@@ -74,7 +74,7 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
 
     @Override
     public int getWritePosition() {
-        return null == transientStorePool || !transientStorePool.isRealCommit()
+        return null == transientPool || !transientPool.isRealCommit()
             ? this.writePosition.get()
             : this.commitPosition.get();
     }
@@ -221,7 +221,7 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
         }
 
         //no need to commit data to file channel, so just set committedPosition to wrotePosition.
-        if (transientStorePool != null && !transientStorePool.isRealCommit()) {
+        if (transientPool != null && !transientPool.isRealCommit()) {
             commitPosition.set(writePosition.get());
         } else if (this.isAbleToCommit(commitLeastPages)) {
             if (this.hold()) {
@@ -233,8 +233,8 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
         }
 
         // All dirty data has been committed to FileChannel.
-        if (writeCache != null && this.transientStorePool != null && this.fileSize == commitPosition.get()) {
-            this.transientStorePool.returnBuffer(writeCache);
+        if (writeCache != null && this.transientPool != null && this.fileSize == commitPosition.get()) {
+            this.transientPool.returnBuffer(writeCache);
             this.writeCache = null;
         }
 

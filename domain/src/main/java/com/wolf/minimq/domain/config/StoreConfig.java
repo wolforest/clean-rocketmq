@@ -10,4 +10,7 @@ public class StoreConfig implements Serializable {
     private String rootDir = System.getProperty("user.home") + File.separator + "store";
 
     private boolean enableTransientPool = false;
+    private int transientPoolSize = 5;
+    private int transientFileSize = 100 * 1024 * 1024;
+
 }

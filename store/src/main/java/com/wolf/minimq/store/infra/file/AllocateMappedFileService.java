@@ -5,7 +5,7 @@ import com.wolf.common.lang.concurrent.ServiceThread;
 import com.wolf.common.util.lang.ThreadUtil;
 import com.wolf.minimq.domain.config.StoreConfig;
 import com.wolf.minimq.domain.service.store.infra.MappedFile;
-import com.wolf.minimq.store.infra.memory.TransientStorePool;
+import com.wolf.minimq.store.infra.memory.TransientPool;
 import com.wolf.minimq.store.server.StoreContext;
 import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
@@ -21,15 +21,32 @@ public class AllocateMappedFileService extends ServiceThread implements Lifecycl
     private final PriorityBlockingQueue<AllocateRequest> requestQueue = new PriorityBlockingQueue<>();
 
     private final StoreConfig storeConfig;
+    private final TransientPool transientPool;
 
-    public AllocateMappedFileService(StoreConfig storeConfig) {
+    public AllocateMappedFileService(StoreConfig storeConfig, TransientPool transientPool) {
         this.storeConfig = storeConfig;
+        this.transientPool = transientPool;
     }
 
     @Override
     public String getServiceName() {
         return AllocateMappedFileService.class.getSimpleName();
     }
+
+    @Override
+    public void run() {
+        log.info("{} service started", this.getServiceName());
+
+        while (!this.isStopped()) {
+            this.allocate();
+        }
+        log.info("{} service end", this.getServiceName());
+    }
+
+    public MappedFile enqueue(String path, String nextPath, int fileSize) {
+        return null;
+    }
+
 
     @Override
     public void initialize() {
@@ -46,15 +63,7 @@ public class AllocateMappedFileService extends ServiceThread implements Lifecycl
         return State.RUNNING;
     }
 
-    @Override
-    public void run() {
-        log.info("{} service started", this.getServiceName());
 
-        while (!this.isStopped()) {
-            this.allocate();
-        }
-        log.info("{} service end", this.getServiceName());
-    }
 
     @Override
     public void shutdown() {
@@ -86,11 +95,9 @@ public class AllocateMappedFileService extends ServiceThread implements Lifecycl
         } catch (InterruptedException e) {
             log.warn("{} interrupted, possibly by shutdown.", this.getServiceName());
         } catch (IOException e) {
-            handleMmapIOException(e, request);
+            handleAllocateIOException(e, request);
         } finally {
-            if (request != null && !isSuccess) {
-                request.getCountDownLatch().countDown();
-            }
+            countDownRequest(request, isSuccess);
         }
     }
 
@@ -113,7 +120,7 @@ public class AllocateMappedFileService extends ServiceThread implements Lifecycl
     private MappedFile createMappedFile(AllocateRequest req) throws IOException {
         MappedFile mappedFile;
         if (storeConfig.isEnableTransientPool()) {
-            TransientStorePool pool = StoreContext.getBean(TransientStorePool.class);
+            TransientPool pool = StoreContext.getBean(TransientPool.class);
             mappedFile = new DefaultMappedFile(req.getFilePath(), req.getFileSize(), pool);
         } else {
             mappedFile = new DefaultMappedFile(req.getFilePath(), req.getFileSize());
@@ -121,14 +128,26 @@ public class AllocateMappedFileService extends ServiceThread implements Lifecycl
         return mappedFile;
     }
 
-    private void handleMmapIOException(IOException e, AllocateRequest req) {
-        log.warn(this.getServiceName() + " service has exception. ", e);
+    private void handleAllocateIOException(IOException e, AllocateRequest req) {
+        log.warn("{} service has exception. ", this.getServiceName(), e);
         if (null == req) {
             return;
         }
 
         requestQueue.offer(req);
         ThreadUtil.sleep(1);
+    }
+
+    private void countDownRequest(AllocateRequest request, boolean isSuccess) {
+        if (request == null) {
+            return;
+        }
+
+        if (isSuccess) {
+            return;
+        }
+
+        request.getCountDownLatch().countDown();
     }
 
 }
