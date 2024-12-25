@@ -6,11 +6,11 @@ import com.wolf.common.util.lang.ThreadUtil;
 import com.wolf.minimq.domain.config.StoreConfig;
 import com.wolf.minimq.domain.service.store.infra.MappedFile;
 import com.wolf.minimq.store.infra.memory.TransientPool;
-import com.wolf.minimq.store.server.StoreContext;
 import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.PriorityBlockingQueue;
+import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -22,6 +22,7 @@ public class AllocateMappedFileService extends ServiceThread implements Lifecycl
 
     private final StoreConfig storeConfig;
     private final TransientPool transientPool;
+    private volatile boolean hasException = false;
 
     public AllocateMappedFileService(StoreConfig storeConfig, TransientPool transientPool) {
         this.storeConfig = storeConfig;
@@ -44,26 +45,22 @@ public class AllocateMappedFileService extends ServiceThread implements Lifecycl
     }
 
     public MappedFile enqueue(String path, String nextPath, int fileSize) {
-        return null;
+        int limit = getEnqueueLimit();
+
+        if (!enqueueRequest(path, fileSize, limit)) {
+            return null;
+        }
+
+        limit--;
+        enqueueRequest(nextPath, fileSize, limit);
+
+        if (hasException) {
+            log.warn("{} service has exception. so return null", this.getServiceName());
+            return null;
+        }
+
+        return waitAndReturnMappedFile(path);
     }
-
-
-    @Override
-    public void initialize() {
-
-    }
-
-    @Override
-    public void cleanup() {
-
-    }
-
-    @Override
-    public State getState() {
-        return State.RUNNING;
-    }
-
-
 
     @Override
     public void shutdown() {
@@ -79,6 +76,73 @@ public class AllocateMappedFileService extends ServiceThread implements Lifecycl
         }
     }
 
+    @Override
+    public void initialize() {
+    }
+
+    @Override
+    public void cleanup() {
+    }
+
+    @Override
+    public State getState() {
+        return State.RUNNING;
+    }
+
+    private MappedFile waitAndReturnMappedFile(String path) {
+        AllocateRequest result = this.requestTable.get(path);
+        if (result == null) {
+            log.error("find preallocate mmap failed, this never happen");
+            return null;
+        }
+
+        try {
+            boolean waitOK = result.getCountDownLatch().await(WAIT_TIMEOUT, TimeUnit.MILLISECONDS);
+            if (!waitOK) {
+                log.warn("create mmap timeout {} {}", result.getFilePath(), result.getFileSize());
+                return null;
+            }
+
+            this.requestTable.remove(path);
+            return result.getMappedFile();
+        } catch (InterruptedException e) {
+            log.warn("{} service has exception. ", this.getServiceName(), e);
+        }
+
+        return null;
+    }
+
+    private boolean enqueueRequest(String path, int fileSize, int limit) {
+        AllocateRequest request = new AllocateRequest(path, fileSize);
+        boolean status = this.requestTable.putIfAbsent(path, request) == null;
+        if (!status) {
+            return true;
+        }
+
+        if (limit <= 0) {
+            log.warn("[NOTIFY]TransientStorePool is not enough, so create mapped file error, " +
+                "RequestQueueSize : {}, StorePoolSize: {}", this.requestQueue.size(), transientPool.availableBufferNums());
+            this.requestTable.remove(path);
+            return false;
+        }
+
+        this.requestQueue.offer(request);
+        return true;
+    }
+
+    private int getEnqueueLimit() {
+        int limit = 2;
+        if (!storeConfig.isEnableTransientPool()) {
+            return limit;
+        }
+
+        if (storeConfig.isFastFailIfNotExistInTransientPool()) {
+            limit = transientPool.availableBufferNums() - this.requestTable.size();
+        }
+
+        return limit;
+    }
+
     private void allocate() {
         boolean isSuccess = false;
         AllocateRequest request = null;
@@ -91,9 +155,12 @@ public class AllocateMappedFileService extends ServiceThread implements Lifecycl
 
             MappedFile mappedFile = createMappedFile(request);
             request.setMappedFile(mappedFile);
+
+            this.hasException = false;
             isSuccess = true;
         } catch (InterruptedException e) {
             log.warn("{} interrupted, possibly by shutdown.", this.getServiceName());
+            this.hasException = true;
         } catch (IOException e) {
             handleAllocateIOException(e, request);
         } finally {
@@ -118,18 +185,16 @@ public class AllocateMappedFileService extends ServiceThread implements Lifecycl
     }
 
     private MappedFile createMappedFile(AllocateRequest req) throws IOException {
-        MappedFile mappedFile;
-        if (storeConfig.isEnableTransientPool()) {
-            TransientPool pool = StoreContext.getBean(TransientPool.class);
-            mappedFile = new DefaultMappedFile(req.getFilePath(), req.getFileSize(), pool);
-        } else {
-            mappedFile = new DefaultMappedFile(req.getFilePath(), req.getFileSize());
+        if (null != transientPool) {
+            return new DefaultMappedFile(req.getFilePath(), req.getFileSize(), transientPool);
         }
-        return mappedFile;
+
+        return new DefaultMappedFile(req.getFilePath(), req.getFileSize());
     }
 
     private void handleAllocateIOException(IOException e, AllocateRequest req) {
         log.warn("{} service has exception. ", this.getServiceName(), e);
+        this.hasException = true;
         if (null == req) {
             return;
         }

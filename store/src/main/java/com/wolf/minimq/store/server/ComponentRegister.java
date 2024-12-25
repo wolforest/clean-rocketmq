@@ -31,7 +31,7 @@ public class ComponentRegister {
         registerConsumeQueue();
         registerIndexService();
         registerTimer();
-        registerAllocateMappedFileService();
+        registerMappedFileService();
 
         return this.manager;
     }
@@ -66,7 +66,7 @@ public class ComponentRegister {
         StoreContext.register(component, TimerManager.class);
     }
 
-    private void registerAllocateMappedFileService() {
+    private void registerMappedFileService() {
         StoreConfig storeConfig = StoreContext.getBean(StoreConfig.class);
         TransientPool transientPool = null;
         if (storeConfig.isEnableTransientPool()) {

@@ -66,8 +66,6 @@ public class TransientPool implements Lifecycle {
         }
     }
 
-
-
     public void returnBuffer(ByteBuffer byteBuffer) {
         byteBuffer.position(0);
         byteBuffer.limit(fileSize);
