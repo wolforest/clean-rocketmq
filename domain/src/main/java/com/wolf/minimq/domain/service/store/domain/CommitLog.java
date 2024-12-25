@@ -13,5 +13,10 @@ public interface CommitLog {
     SelectedMappedBuffer select(long offset);
     List<SelectedMappedBuffer> selectAll(long offset, int size);
 
+    long getMinOffset();
+    long getMaxOffset();
+
+    long getFlushPosition();
+    long getUnFlushedSize();
 
 }

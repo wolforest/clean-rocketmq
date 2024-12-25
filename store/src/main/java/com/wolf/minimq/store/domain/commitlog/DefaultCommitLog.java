@@ -81,6 +81,26 @@ public class DefaultCommitLog implements CommitLog {
         return List.of();
     }
 
+    @Override
+    public long getMinOffset() {
+        return mappedFileQueue.getMinOffset();
+    }
+
+    @Override
+    public long getMaxOffset() {
+        return mappedFileQueue.getMaxOffset();
+    }
+
+    @Override
+    public long getFlushPosition() {
+        return mappedFileQueue.getFlushPosition();
+    }
+
+    @Override
+    public long getUnFlushedSize() {
+        return mappedFileQueue.getUnFlushedSize();
+    }
+
     private void initLocalEncoder() {
         localEncoder = ThreadLocal.withInitial(
             () -> new EnqueueThreadLocal(messageConfig)
