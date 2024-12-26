@@ -21,7 +21,10 @@ public class ContextInitializer {
     }
 
     private void initializeConfig() {
-        StoreContext.register(new StoreConfig());
+        StoreConfig storeConfig = new StoreConfig();
+        StorePath.setRootPath(storeConfig.getRootDir());
+
+        StoreContext.register(storeConfig);
         StoreContext.register(new CommitLogConfig());
         StoreContext.register(new TimerConfig());
     }

@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 public class StoreConfig implements Serializable {
     private int syncFlushTimeout = 5 * 1000;
-    private String rootDir = System.getProperty("user.home") + File.separator + "store";
+    private String rootDir = System.getProperty("user.home") + File.separator + "mq";
 
     private boolean enableTransientPool = false;
     private int transientPoolSize = 5;
