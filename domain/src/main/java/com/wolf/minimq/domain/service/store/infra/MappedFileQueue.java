@@ -8,6 +8,8 @@ public interface MappedFileQueue {
 
     boolean isEmpty();
 
+    void setFileMode(int mode);
+
     /**
      * get or create available MappedFile
      * which available space > messageSize

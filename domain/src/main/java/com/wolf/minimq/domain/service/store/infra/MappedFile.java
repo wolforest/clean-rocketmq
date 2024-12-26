@@ -51,6 +51,7 @@ public interface MappedFile {
      */
     boolean isAvailable();
 
+    int setFileMode(int mode);
 
     /**
      * Appends a raw message data represents by a byte array to the current {@code MappedFile}.

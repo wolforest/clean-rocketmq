@@ -91,6 +91,11 @@ public class DefaultMappedFileQueue implements MappedFileQueue {
     }
 
     @Override
+    public void setFileMode(int mode) {
+        this.mappedFiles.forEach(mf -> mf.setFileMode(mode));
+    }
+
+    @Override
     public MappedFile getAvailableMappedFile(int messageSize) {
         if (isEmpty()) return null;
 

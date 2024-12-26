@@ -9,6 +9,7 @@ import com.wolf.minimq.domain.service.store.manager.CommitLogManager;
 import com.wolf.minimq.store.domain.commitlog.flush.FlushManager;
 import com.wolf.minimq.store.infra.file.AllocateMappedFileService;
 import com.wolf.minimq.store.infra.file.DefaultMappedFileQueue;
+import com.wolf.minimq.store.infra.memory.CLibrary;
 import com.wolf.minimq.store.server.StoreContext;
 import java.io.File;
 
@@ -36,8 +37,9 @@ public class DefaultCommitLogManager implements CommitLogManager {
 
     @Override
     public void initialize() {
-        //mappedFileQueue.load
-        //mappedFileQueue.checkSelf
+        mappedFileQueue.load();
+        mappedFileQueue.setFileMode(CLibrary.MADV_RANDOM);
+        mappedFileQueue.checkSelf();
     }
 
     @Override
