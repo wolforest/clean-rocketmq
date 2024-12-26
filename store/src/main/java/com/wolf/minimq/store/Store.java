@@ -2,10 +2,12 @@ package com.wolf.minimq.store;
 
 import com.wolf.common.convention.service.Lifecycle;
 import com.wolf.common.convention.service.LifecycleManager;
+import com.wolf.minimq.domain.utils.lock.ApplicationLock;
 import com.wolf.minimq.store.server.APIRegister;
 import com.wolf.minimq.store.server.ContextInitializer;
 import com.wolf.minimq.store.server.ComponentRegister;
 import com.wolf.minimq.store.server.StoreArgument;
+import com.wolf.minimq.store.server.StorePath;
 import lombok.NonNull;
 
 /**
@@ -24,6 +26,7 @@ public class Store implements Lifecycle {
 
     private State state = State.INITIALIZING;
     private LifecycleManager componentManager;
+    private ApplicationLock applicationLock;
 
     public Store(@NonNull StoreArgument argument) {
         this.argument = argument;
@@ -38,6 +41,7 @@ public class Store implements Lifecycle {
         APIRegister.register();
 
         this.componentManager.initialize();
+        applicationLock = new ApplicationLock(StorePath.getLockFile());
     }
 
     @Override
@@ -53,6 +57,8 @@ public class Store implements Lifecycle {
     @Override
     public void start() {
         this.state = State.STARTING;
+        applicationLock.lock();
+
         this.componentManager.start();
         this.state = State.RUNNING;
     }
@@ -61,6 +67,7 @@ public class Store implements Lifecycle {
     public void shutdown() {
         this.state = State.SHUTTING_DOWN;
         this.componentManager.shutdown();
+        applicationLock.unlock();
         this.state = State.TERMINATED;
     }
 }

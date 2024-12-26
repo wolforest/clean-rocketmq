@@ -25,22 +25,26 @@ public class StorePath {
         ROOT_PATH = rootPath;
     }
 
-    public static String getStorePathConsumeQueue() {
+    public static String getCommitLogPath() {
+        return ROOT_PATH + File.separator + "commitlog";
+    }
+
+    public static String getConsumeQueuePath() {
         return ROOT_PATH + File.separator + "consumequeue";
     }
 
-    public static String getStorePathConsumeQueueExt() {
+    public static String getConsumeQueueExtPath() {
         return ROOT_PATH + File.separator + "consumequeue_ext";
     }
-    public static String getStorePathBatchConsumeQueue() {
+    public static String getBatchConsumeQueuePath() {
         return ROOT_PATH + File.separator + "batchconsumequeue";
     }
 
-    public static String getStorePathIndex() {
+    public static String getIndexPath() {
         return ROOT_PATH + File.separator + "index";
     }
 
-    public static String getStoreCheckpoint() {
+    public static String getCheckpointPath() {
         return ROOT_PATH + File.separator + "checkpoint";
     }
 
@@ -52,15 +56,15 @@ public class StorePath {
         return ROOT_PATH + File.separator + "lock";
     }
 
-    public static String getDelayOffsetStorePath() {
+    public static String getDelayOffsetPath() {
         return ROOT_PATH + File.separator + "config" + File.separator + "delayOffset.json";
     }
 
-    public static String getTranStateTableStorePath() {
+    public static String getTransactionStateTablePath() {
         return ROOT_PATH + File.separator + "transaction" + File.separator + "statetable";
     }
 
-    public static String getTranRedoLogStorePath() {
+    public static String getTransactionRedoLogPath() {
         return ROOT_PATH + File.separator + "transaction" + File.separator + "redolog";
     }
 
