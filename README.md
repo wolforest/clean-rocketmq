@@ -1,4 +1,4 @@
-# min-mq
+# min-rocketmq
 this is a learning software, base on and for RocketMQ.
 
 * algorithms used in MQ

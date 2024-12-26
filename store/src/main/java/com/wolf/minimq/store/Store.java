@@ -8,6 +8,8 @@ import com.wolf.minimq.store.server.APIRegister;
 import com.wolf.minimq.store.server.ContextInitializer;
 import com.wolf.minimq.store.server.ComponentRegister;
 import com.wolf.minimq.store.server.StoreArgument;
+import com.wolf.minimq.store.server.StoreCheckpoint;
+import com.wolf.minimq.store.server.StoreContext;
 import com.wolf.minimq.store.server.StorePath;
 import lombok.NonNull;
 
@@ -43,9 +45,15 @@ public class Store implements Lifecycle {
         this.componentManager = ComponentRegister.register();
         APIRegister.register();
 
-        this.componentManager.initialize();
         applicationLock = new ApplicationLock(StorePath.getLockFile());
         pidLock = new PIDLock(StorePath.getLockFile());
+
+        boolean lastExitOk = !pidLock.isLocked();
+        StoreCheckpoint checkpoint = new StoreCheckpoint(StorePath.getCheckpointPath());
+        checkpoint.setNormalExit(lastExitOk);
+        StoreContext.CHECK_POINT = checkpoint;
+
+        this.componentManager.initialize();
     }
 
     @Override
