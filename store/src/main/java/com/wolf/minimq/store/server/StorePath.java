@@ -16,6 +16,7 @@
  */
 package com.wolf.minimq.store.server;
 
+import com.wolf.common.util.io.DirUtil;
 import java.io.File;
 
 public class StorePath {
@@ -23,6 +24,13 @@ public class StorePath {
 
     public static void setRootPath(String rootPath) {
         ROOT_PATH = rootPath;
+    }
+
+    public static void initPath() {
+        DirUtil.createIfNotExists(ROOT_PATH);
+        DirUtil.createIfNotExists(getCommitLogPath());
+        DirUtil.createIfNotExists(getConsumeQueuePath());
+        DirUtil.createIfNotExists(getIndexPath());
     }
 
     public static String getCommitLogPath() {

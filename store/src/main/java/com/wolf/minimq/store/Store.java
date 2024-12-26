@@ -3,6 +3,7 @@ package com.wolf.minimq.store;
 import com.wolf.common.convention.service.Lifecycle;
 import com.wolf.common.convention.service.LifecycleManager;
 import com.wolf.minimq.domain.utils.lock.ApplicationLock;
+import com.wolf.minimq.domain.utils.lock.PIDLock;
 import com.wolf.minimq.store.server.APIRegister;
 import com.wolf.minimq.store.server.ContextInitializer;
 import com.wolf.minimq.store.server.ComponentRegister;
@@ -26,7 +27,9 @@ public class Store implements Lifecycle {
 
     private State state = State.INITIALIZING;
     private LifecycleManager componentManager;
+
     private ApplicationLock applicationLock;
+    private PIDLock pidLock;
 
     public Store(@NonNull StoreArgument argument) {
         this.argument = argument;
@@ -42,6 +45,7 @@ public class Store implements Lifecycle {
 
         this.componentManager.initialize();
         applicationLock = new ApplicationLock(StorePath.getLockFile());
+        pidLock = new PIDLock(StorePath.getLockFile());
     }
 
     @Override
@@ -58,8 +62,8 @@ public class Store implements Lifecycle {
     public void start() {
         this.state = State.STARTING;
         applicationLock.lock();
-
         this.componentManager.start();
+        pidLock.lock();
         this.state = State.RUNNING;
     }
 
@@ -68,6 +72,7 @@ public class Store implements Lifecycle {
         this.state = State.SHUTTING_DOWN;
         this.componentManager.shutdown();
         applicationLock.unlock();
+        pidLock.unlock();
         this.state = State.TERMINATED;
     }
 }

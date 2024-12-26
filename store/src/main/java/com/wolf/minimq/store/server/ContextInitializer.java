@@ -23,6 +23,7 @@ public class ContextInitializer {
     private void initializeConfig() {
         StoreConfig storeConfig = new StoreConfig();
         StorePath.setRootPath(storeConfig.getRootDir());
+        StorePath.initPath();
 
         StoreContext.register(storeConfig);
         StoreContext.register(new CommitLogConfig());
