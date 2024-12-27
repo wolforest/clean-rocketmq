@@ -1,6 +1,6 @@
 package com.wolf.minimq.domain.model.dto;
 
-import com.wolf.minimq.domain.enums.AppendStatus;
+import com.wolf.minimq.domain.enums.InsertStatus;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AppendResult implements Serializable {
     // Return code
-    private AppendStatus status;
+    private InsertStatus status;
     // Where to start writing
     private long wroteOffset;
     // Write Bytes
@@ -23,20 +23,20 @@ public class AppendResult implements Serializable {
 
     public static AppendResult success(long wroteOffset) {
         return AppendResult.builder()
-            .status(AppendStatus.PUT_OK)
+            .status(InsertStatus.PUT_OK)
             .wroteOffset(wroteOffset)
             .build();
     }
 
     public static AppendResult failure() {
         return AppendResult.builder()
-            .status(AppendStatus.UNKNOWN_ERROR)
+            .status(InsertStatus.UNKNOWN_ERROR)
             .build();
     }
 
     public static AppendResult endOfFile() {
         return AppendResult.builder()
-            .status(AppendStatus.END_OF_FILE)
+            .status(InsertStatus.END_OF_FILE)
             .build();
     }
 
