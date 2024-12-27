@@ -1,4 +1,4 @@
-package com.wolf.minimq.domain.model.vo;
+package com.wolf.minimq.domain.model.dto;
 
 import com.wolf.minimq.domain.enums.AppendStatus;
 import java.io.Serializable;

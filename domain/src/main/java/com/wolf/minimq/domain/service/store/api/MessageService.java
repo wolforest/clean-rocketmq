@@ -1,7 +1,7 @@
 package com.wolf.minimq.domain.service.store.api;
 
-import com.wolf.minimq.domain.model.vo.EnqueueResult;
-import com.wolf.minimq.domain.model.vo.MessageContext;
+import com.wolf.minimq.domain.model.dto.EnqueueResult;
+import com.wolf.minimq.domain.model.dto.MessageContext;
 import java.util.concurrent.CompletableFuture;
 
 /**

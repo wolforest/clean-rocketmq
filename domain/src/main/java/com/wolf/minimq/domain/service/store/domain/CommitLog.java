@@ -1,8 +1,8 @@
 package com.wolf.minimq.domain.service.store.domain;
 
-import com.wolf.minimq.domain.model.vo.MessageContext;
-import com.wolf.minimq.domain.model.vo.EnqueueResult;
-import com.wolf.minimq.domain.model.vo.SelectedMappedBuffer;
+import com.wolf.minimq.domain.model.dto.MessageContext;
+import com.wolf.minimq.domain.model.dto.EnqueueResult;
+import com.wolf.minimq.domain.model.dto.SelectedMappedBuffer;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
