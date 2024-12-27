@@ -48,12 +48,15 @@ public class Store implements Lifecycle {
         applicationLock = new ApplicationLock(StorePath.getLockFile());
         pidLock = new PIDLock(StorePath.getLockFile());
 
+        this.initCheckPoint();
+        this.componentManager.initialize();
+    }
+
+    private void initCheckPoint() {
         boolean lastExitOk = !pidLock.isLocked();
         StoreCheckpoint checkpoint = new StoreCheckpoint(StorePath.getCheckpointPath());
         checkpoint.setNormalExit(lastExitOk);
         StoreContext.CHECK_POINT = checkpoint;
-
-        this.componentManager.initialize();
     }
 
     @Override
