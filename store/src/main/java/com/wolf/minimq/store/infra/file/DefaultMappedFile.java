@@ -78,7 +78,7 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
     }
 
     @Override
-    public int setFileMode(int mode) {
+    public void setFileMode(int mode) {
         long address = ((DirectBuffer) mappedByteBuffer).address();
         int madvise = CLibrary.INSTANCE.madvise(
             new Pointer(address), new NativeLong(fileSize), mode
@@ -89,7 +89,6 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
                 fileName, madvise, mode);
         }
 
-        return madvise;
     }
 
     @Override
@@ -181,7 +180,7 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
     }
 
     @Override
-    public boolean select(int pos, int size, ByteBuffer byteBuffer) {
+    public boolean selectFromChannel(int pos, int size, ByteBuffer byteBuffer) {
         if (byteBuffer.remaining() < size) {
             return false;
         }

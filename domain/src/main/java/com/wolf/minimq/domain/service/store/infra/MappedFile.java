@@ -51,7 +51,7 @@ public interface MappedFile {
      */
     boolean isAvailable();
 
-    int setFileMode(int mode);
+    void setFileMode(int mode);
 
     /**
      * Appends a raw message data represents by a byte array to the current {@code MappedFile}.
@@ -100,14 +100,15 @@ public interface MappedFile {
     SelectedMappedBuffer select(int pos);
 
     /**
-     * Get data from a certain pos offset with size byte
+     * Get data from FileChannel with pos, size to input ByteBuffer
+     * for timer message, which may read data not in page cache
      *
      * @param pos a certain pos offset to get data
      * @param size the size of data
      * @param byteBuffer the data
      * @return true if with data; false if no data;
      */
-    boolean select(int pos, int size, ByteBuffer byteBuffer);
+    boolean selectFromChannel(int pos, int size, ByteBuffer byteBuffer);
 
     /**
      * Flushes the data in cache to disk immediately.
