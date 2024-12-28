@@ -1,4 +1,4 @@
-package com.wolf.minimq.hello.concurrent.jna;
+package com.wolf.minimq.hello.java.jna;
 
 public class HelloJNA {
     public int abs(int i) {

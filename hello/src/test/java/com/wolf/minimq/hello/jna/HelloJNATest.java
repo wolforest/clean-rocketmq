@@ -1,6 +1,6 @@
 package com.wolf.minimq.hello.jna;
 
-import com.wolf.minimq.hello.concurrent.jna.HelloJNA;
+import com.wolf.minimq.hello.java.jna.HelloJNA;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 

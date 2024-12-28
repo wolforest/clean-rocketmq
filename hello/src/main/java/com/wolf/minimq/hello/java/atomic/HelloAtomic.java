@@ -1,4 +1,4 @@
-package com.wolf.minimq.hello.concurrent.atomic;
+package com.wolf.minimq.hello.java.atomic;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
