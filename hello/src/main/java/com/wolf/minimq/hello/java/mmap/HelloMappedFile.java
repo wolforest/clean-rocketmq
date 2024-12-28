@@ -49,17 +49,6 @@ public class HelloMappedFile {
         } finally {
             release(mappedByteBuffer, channel, file);
         }
-    } public void release(MappedByteBuffer mappedByteBuffer, FileChannel channel, File file) throws IOException {
-        if (mappedByteBuffer != null) {
-            mappedByteBuffer.clear();
-        }
-
-        if (channel != null) {
-            channel.close();
-        }
-        if (file != null) {
-            file.delete();
-        }
     }
 
     public void write(MappedByteBuffer mappedByteBuffer, int count) throws IOException {
@@ -82,17 +71,28 @@ public class HelloMappedFile {
 
         for (int i = 0; i < count; i++) {
             bufferResult.clear();
-
             int startOffset = RandomUtil.randomInt(maxOffset);
-            for (int j = 0; j < bufferResult.capacity(); j++) {
-                bufferResult.put(mappedByteBuffer.get(startOffset + j));
-            }
+
+            mappedByteBuffer.position(startOffset);
+            mappedByteBuffer.get(bufferResult.array(), 0, bufferResult.capacity());
         }
 
-        bufferResult.flip();
         byte[] bytes = new byte[bufferResult.limit()];
         bufferResult.get(bytes);
         log.info("read data from channel: \n{}", new String(bytes, StandardCharsets.UTF_8));
+    }
+
+    public void release(MappedByteBuffer mappedByteBuffer, FileChannel channel, File file) throws IOException {
+        if (mappedByteBuffer != null) {
+            mappedByteBuffer.clear();
+        }
+
+        if (channel != null) {
+            channel.close();
+        }
+        if (file != null) {
+            file.delete();
+        }
     }
 
     private File createTmpFile() throws IOException {
