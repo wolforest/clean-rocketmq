@@ -7,11 +7,11 @@ import java.io.IOException;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class PIDLock {
+public class AbortLock {
     private final String filePath;
     private final File file;
 
-    public PIDLock(String filePath) {
+    public AbortLock(String filePath) {
         this.filePath = filePath;
         this.file = new File(filePath);
     }

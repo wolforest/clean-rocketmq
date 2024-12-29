@@ -3,7 +3,7 @@ package com.wolf.minimq.store;
 import com.wolf.common.convention.service.Lifecycle;
 import com.wolf.common.convention.service.LifecycleManager;
 import com.wolf.minimq.domain.utils.lock.ApplicationLock;
-import com.wolf.minimq.domain.utils.lock.PIDLock;
+import com.wolf.minimq.domain.utils.lock.AbortLock;
 import com.wolf.minimq.store.server.APIRegister;
 import com.wolf.minimq.store.server.ContextInitializer;
 import com.wolf.minimq.store.server.ComponentRegister;
@@ -31,7 +31,7 @@ public class Store implements Lifecycle {
     private LifecycleManager componentManager;
 
     private ApplicationLock applicationLock;
-    private PIDLock pidLock;
+    private AbortLock abortLock;
 
     public Store(@NonNull StoreArgument argument) {
         this.argument = argument;
@@ -46,14 +46,14 @@ public class Store implements Lifecycle {
         APIRegister.register();
 
         applicationLock = new ApplicationLock(StorePath.getLockFile());
-        pidLock = new PIDLock(StorePath.getLockFile());
+        abortLock = new AbortLock(StorePath.getAbortFile());
 
         this.initCheckPoint();
         this.componentManager.initialize();
     }
 
     private void initCheckPoint() {
-        boolean lastExitOk = !pidLock.isLocked();
+        boolean lastExitOk = !abortLock.isLocked();
         StoreCheckpoint checkpoint = new StoreCheckpoint(StorePath.getCheckpointPath());
         checkpoint.setNormalExit(lastExitOk);
         StoreContext.CHECK_POINT = checkpoint;
@@ -74,7 +74,7 @@ public class Store implements Lifecycle {
         this.state = State.STARTING;
         applicationLock.lock();
         this.componentManager.start();
-        pidLock.lock();
+        abortLock.lock();
         this.state = State.RUNNING;
     }
 
@@ -83,7 +83,7 @@ public class Store implements Lifecycle {
         this.state = State.SHUTTING_DOWN;
         this.componentManager.shutdown();
         applicationLock.unlock();
-        pidLock.unlock();
+        abortLock.unlock();
         this.state = State.TERMINATED;
     }
 }
