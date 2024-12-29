@@ -16,7 +16,7 @@ import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -27,6 +27,10 @@ import lombok.extern.slf4j.Slf4j;
 @EqualsAndHashCode(callSuper = true)
 public class DefaultMappedFile extends ReferenceResource implements MappedFile {
     public static final int OS_PAGE_SIZE = 1024 * 4;
+
+    protected static final AtomicIntegerFieldUpdater<DefaultMappedFile> WRITE_POSITION_UPDATER = AtomicIntegerFieldUpdater.newUpdater(DefaultMappedFile.class, "writePosition");
+    protected static final AtomicIntegerFieldUpdater<DefaultMappedFile> COMMIT_POSITION_UPDATER = AtomicIntegerFieldUpdater.newUpdater(DefaultMappedFile.class, "commitPosition");
+    protected static final AtomicIntegerFieldUpdater<DefaultMappedFile> FLUSH_POSITION_UPDATER = AtomicIntegerFieldUpdater.newUpdater(DefaultMappedFile.class, "flushPosition");
 
     protected String fileName;
     protected long offsetInFileName;
@@ -40,9 +44,9 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
     protected ByteBuffer writeCache;
     protected TransientPool transientPool;
 
-    protected AtomicInteger writePosition = new AtomicInteger(0);
-    protected AtomicInteger commitPosition = new AtomicInteger(0);
-    protected AtomicInteger flushPosition = new AtomicInteger(0);
+    protected volatile int writePosition  = 0;
+    protected volatile int commitPosition = 0;
+    protected volatile int flushPosition  = 0;
 
     @Getter
     protected volatile long storeTimestamp = 0;
@@ -68,12 +72,12 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
 
     @Override
     public boolean isFull() {
-        return this.fileSize == writePosition.get();
+        return this.fileSize == WRITE_POSITION_UPDATER.get(this);
     }
 
     @Override
     public boolean hasEnoughSpace(int size) {
-        return this.fileSize + size >= writePosition.get();
+        return this.fileSize + size >= WRITE_POSITION_UPDATER.get(this);
     }
 
     @Override
@@ -93,8 +97,8 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
     @Override
     public int getWriteOrCommitPosition() {
         return null == transientPool || !transientPool.isRealCommit()
-            ? this.writePosition.get()
-            : this.commitPosition.get();
+            ? WRITE_POSITION_UPDATER.get(this)
+            : COMMIT_POSITION_UPDATER.get(this);
     }
 
     @Override
@@ -104,7 +108,7 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
 
     @Override
     public AppendResult insert(ByteBuffer data) {
-        int currentPosition = writePosition.get();
+        int currentPosition = WRITE_POSITION_UPDATER.get(this);
         if ((currentPosition + data.remaining()) > this.fileSize) {
             return AppendResult.endOfFile();
         }
@@ -124,7 +128,7 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
 
     @Override
     public AppendResult insert(byte[] data, int offset, int length) {
-        int currentPosition = writePosition.get();
+        int currentPosition = WRITE_POSITION_UPDATER.get(this);
         if ((currentPosition + length) > this.fileSize) {
             return AppendResult.endOfFile();
         }
@@ -209,11 +213,11 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
     @Override
     public int flush(int flushLeastPages) {
         if (!this.isAbleToFlush(flushLeastPages)) {
-            return this.flushPosition.get();
+            return FLUSH_POSITION_UPDATER.get(this);
         }
 
         if (!this.hold()) {
-            return this.flushPosition.get();
+            return FLUSH_POSITION_UPDATER.get(this);
         }
 
         int position = getWriteOrCommitPosition();
@@ -227,38 +231,38 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
             log.error("Error occurred when force data to disk.", e);
         }
 
-        this.flushPosition.set(position);
+        FLUSH_POSITION_UPDATER.set(this, position);
         this.release();
 
-        return this.flushPosition.get();
+        return FLUSH_POSITION_UPDATER.get(this);
     }
 
     @Override
     public int commit(final int commitLeastPages) {
         if (writeCache == null) {
             //no need to commit data to file channel, so just regard wrotePosition as committedPosition.
-            return writePosition.get();
+            return WRITE_POSITION_UPDATER.get(this);
         }
 
         //no need to commit data to file channel, so just set committedPosition to wrotePosition.
         if (transientPool != null && !transientPool.isRealCommit()) {
-            commitPosition.set(writePosition.get());
+            COMMIT_POSITION_UPDATER.set(this, WRITE_POSITION_UPDATER.get(this));
         } else if (this.isAbleToCommit(commitLeastPages)) {
             if (this.hold()) {
                 commit0();
                 this.release();
             } else {
-                log.warn("in commit, hold failed, commit offset = {}", commitPosition.get());
+                log.warn("in commit, hold failed, commit offset = {}", COMMIT_POSITION_UPDATER.get(this));
             }
         }
 
         // All dirty data has been committed to FileChannel.
-        if (writeCache != null && this.transientPool != null && this.fileSize == commitPosition.get()) {
+        if (writeCache != null && this.transientPool != null && this.fileSize == COMMIT_POSITION_UPDATER.get(this)) {
             this.transientPool.returnBuffer(writeCache);
             this.writeCache = null;
         }
 
-        return commitPosition.get();
+        return COMMIT_POSITION_UPDATER.get(this);
     }
 
     @Override
@@ -328,8 +332,8 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
     }
 
     private boolean isAbleToCommit(final int commitLeastPages) {
-        int commit = commitPosition.get();
-        int write = writePosition.get();
+        int commit = COMMIT_POSITION_UPDATER.get(this);
+        int write = WRITE_POSITION_UPDATER.get(this);
 
         if (this.isFull()) {
             return true;
@@ -343,7 +347,7 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
     }
 
     private boolean isAbleToFlush(final int flushLeastPages) {
-        int flush = flushPosition.get();
+        int flush = FLUSH_POSITION_UPDATER.get(this);
         int write = getWriteOrCommitPosition();
 
         if (this.isFull()) {
@@ -368,8 +372,8 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
     }
 
     protected void commit0() {
-        int writePos = writePosition.get();
-        int lastCommittedPosition = commitPosition.get();
+        int writePos = WRITE_POSITION_UPDATER.get(this);
+        int lastCommittedPosition = COMMIT_POSITION_UPDATER.get(this);
 
         if (writePos - lastCommittedPosition <= 0) {
             return;
@@ -381,7 +385,7 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
             byteBuffer.limit(writePos);
             this.fileChannel.position(lastCommittedPosition);
             this.fileChannel.write(byteBuffer);
-            commitPosition.set(writePos);
+            COMMIT_POSITION_UPDATER.set(this, writePos);
         } catch (Throwable e) {
             log.error("Error occurred when commit data to FileChannel.", e);
         }
@@ -389,32 +393,32 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
 
     @Override
     public int getWritePosition() {
-        return writePosition.get();
+        return WRITE_POSITION_UPDATER.get(this);
     }
 
     @Override
     public void setWritePosition(int writePosition) {
-        this.writePosition.set(writePosition);
+        WRITE_POSITION_UPDATER.set(this, writePosition);
     }
 
     @Override
     public int getCommitPosition() {
-        return commitPosition.get();
+        return COMMIT_POSITION_UPDATER.get(this);
     }
 
     @Override
     public void setCommitPosition(int commitPosition) {
-        this.commitPosition.set(commitPosition);
+        COMMIT_POSITION_UPDATER.set(this, commitPosition);
     }
 
     @Override
     public int getFlushPosition() {
-        return this.flushPosition.get();
+        return FLUSH_POSITION_UPDATER.get(this);
     }
 
     @Override
     public void setFlushPosition(int flushPosition) {
-        this.flushPosition.set(flushPosition);
+        FLUSH_POSITION_UPDATER.set(this, flushPosition);
     }
 
 }
