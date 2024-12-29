@@ -1,15 +1,29 @@
 package com.wolf.minimq.hello.java.atomic;
 
+import com.wolf.common.lang.system.MemoryRecoder;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class AtomicMemoryTest {
     private static final int COUNT = 10_000_000;
 
     public static void main(String[] args) {
+        MemoryRecoder memoryRecoder = new MemoryRecoder();
+
+        memoryRecoder.start();
+        for (int i = 0; i < COUNT; i++) {
+            new VolatileObject();
+        }
+        memoryRecoder.record("AtomicIntegerFieldUpdater");
+
         for (int i = 0; i < COUNT; i++) {
             new AtomicObject();
         }
+        memoryRecoder.record("AtomicInteger");
+
+        log.info("{}", memoryRecoder);
     }
 
     static class AtomicObject {
