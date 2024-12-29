@@ -2,8 +2,8 @@ package com.wolf.minimq.store;
 
 import com.wolf.common.convention.service.Lifecycle;
 import com.wolf.common.convention.service.LifecycleManager;
-import com.wolf.minimq.domain.utils.lock.ApplicationLock;
-import com.wolf.minimq.domain.utils.lock.AbortLock;
+import com.wolf.minimq.domain.utils.lock.StartupLock;
+import com.wolf.minimq.domain.utils.lock.ShutdownLock;
 import com.wolf.minimq.store.server.APIRegister;
 import com.wolf.minimq.store.server.ContextInitializer;
 import com.wolf.minimq.store.server.ComponentRegister;
@@ -30,8 +30,8 @@ public class Store implements Lifecycle {
     private State state = State.INITIALIZING;
     private LifecycleManager componentManager;
 
-    private ApplicationLock applicationLock;
-    private AbortLock abortLock;
+    private StartupLock startupLock;
+    private ShutdownLock shutdownLock;
 
     public Store(@NonNull StoreArgument argument) {
         this.argument = argument;
@@ -45,15 +45,15 @@ public class Store implements Lifecycle {
         this.componentManager = ComponentRegister.register();
         APIRegister.register();
 
-        applicationLock = new ApplicationLock(StorePath.getLockFile());
-        abortLock = new AbortLock(StorePath.getAbortFile());
+        startupLock = new StartupLock(StorePath.getLockFile());
+        shutdownLock = new ShutdownLock(StorePath.getAbortFile());
 
         this.initCheckPoint();
         this.componentManager.initialize();
     }
 
     private void initCheckPoint() {
-        boolean lastExitOk = !abortLock.isLocked();
+        boolean lastExitOk = !shutdownLock.isLocked();
         StoreCheckpoint checkpoint = new StoreCheckpoint(StorePath.getCheckpointPath());
         checkpoint.setNormalExit(lastExitOk);
         StoreContext.CHECK_POINT = checkpoint;
@@ -72,9 +72,9 @@ public class Store implements Lifecycle {
     @Override
     public void start() {
         this.state = State.STARTING;
-        applicationLock.lock();
+        startupLock.lock();
         this.componentManager.start();
-        abortLock.lock();
+        shutdownLock.lock();
         this.state = State.RUNNING;
     }
 
@@ -82,8 +82,8 @@ public class Store implements Lifecycle {
     public void shutdown() {
         this.state = State.SHUTTING_DOWN;
         this.componentManager.shutdown();
-        applicationLock.unlock();
-        abortLock.unlock();
+        startupLock.unlock();
+        shutdownLock.unlock();
         this.state = State.TERMINATED;
     }
 }

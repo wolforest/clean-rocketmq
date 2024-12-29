@@ -7,11 +7,11 @@ import java.nio.ByteBuffer;
 import java.nio.channels.FileLock;
 import java.nio.charset.StandardCharsets;
 
-public class ApplicationLock {
+public class StartupLock {
     private final RandomAccessFile lockFile;
     private FileLock lock;
 
-    public ApplicationLock(String filePath) {
+    public StartupLock(String filePath) {
         File file = new File(filePath);
         try {
             lockFile = new RandomAccessFile(file, "rw");
