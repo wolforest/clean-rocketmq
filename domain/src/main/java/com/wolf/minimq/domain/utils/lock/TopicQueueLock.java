@@ -30,16 +30,13 @@ public class TopicQueueLock {
     private final List<Lock> lockList;
 
     public TopicQueueLock() {
-        this.size = 32;
-        this.lockList = new ArrayList<>(32);
-        for (int i = 0; i < this.size; i++) {
-            this.lockList.add(new ReentrantLock());
-        }
+        this(32);
     }
 
     public TopicQueueLock(int size) {
         this.size = size;
         this.lockList = new ArrayList<>(size);
+
         for (int i = 0; i < this.size; i++) {
             this.lockList.add(new ReentrantLock());
         }
@@ -52,12 +49,14 @@ public class TopicQueueLock {
      * @param topicQueueKey: topic - queueId
      */
     public void lock(String topicQueueKey) {
-        Lock lock = this.lockList.get((topicQueueKey.hashCode() & 0x7fffffff) % this.size);
+        int index = (topicQueueKey.hashCode() & 0x7fffffff) % this.size;
+        Lock lock = this.lockList.get(index);
         lock.lock();
     }
 
     public void unlock(String topicQueueKey) {
-        Lock lock = this.lockList.get((topicQueueKey.hashCode() & 0x7fffffff) % this.size);
+        int index = (topicQueueKey.hashCode() & 0x7fffffff) % this.size;
+        Lock lock = this.lockList.get(index);
         lock.unlock();
     }
 }

@@ -17,9 +17,11 @@
 package com.wolf.minimq.domain.utils.lock;
 
 import java.util.concurrent.atomic.AtomicBoolean;
+import lombok.Getter;
 
 public class TimedLock {
     private final AtomicBoolean lock;
+    @Getter
     private volatile long lockTime;
 
     public TimedLock() {
@@ -29,23 +31,20 @@ public class TimedLock {
 
     public boolean tryLock() {
         boolean ret = lock.compareAndSet(true, false);
-        if (ret) {
-            this.lockTime = System.currentTimeMillis();
-            return true;
-        } else {
+        if (!ret) {
             return false;
         }
+
+        this.lockTime = System.currentTimeMillis();
+        return true;
     }
 
     public void unLock() {
         lock.set(true);
     }
 
-    public boolean isLock() {
+    public boolean isLocked() {
         return !lock.get();
     }
 
-    public long getLockTime() {
-        return lockTime;
-    }
 }
