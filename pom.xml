@@ -17,7 +17,10 @@
     <description>mini-mq</description>
 
     <modules>
+        <module>hello</module>
         <module>domain</module>
+        <module>store</module>
+        <module>broker</module>
     </modules>
 
     <properties>

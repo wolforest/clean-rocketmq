@@ -21,7 +21,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import sun.nio.ch.DirectBuffer;
 
 @Slf4j
 @Data
@@ -79,7 +78,7 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
 
     @Override
     public void setFileMode(int mode) {
-        long address = ((DirectBuffer) mappedByteBuffer).address();
+        long address = BufferUtil.directBufferAddress(mappedByteBuffer);
         int madvise = CLibrary.INSTANCE.madvise(
             new Pointer(address), new NativeLong(fileSize), mode
         );

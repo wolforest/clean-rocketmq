@@ -33,7 +33,7 @@ public class HelloMappedFile {
             mappedByteBuffer = channel.map(FileChannel.MapMode.READ_WRITE, 0, fileSize);
             Timer timer = new Timer();
 
-            timer.begin();
+            timer.start();
             write(mappedByteBuffer, count);
             timer.record("MappedByteBufferWrite");
 

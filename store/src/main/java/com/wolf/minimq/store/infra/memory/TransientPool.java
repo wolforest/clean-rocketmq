@@ -19,13 +19,13 @@ package com.wolf.minimq.store.infra.memory;
 import com.sun.jna.NativeLong;
 import com.sun.jna.Pointer;
 import com.wolf.common.convention.service.Lifecycle;
+import com.wolf.common.util.io.BufferUtil;
 import java.nio.ByteBuffer;
 import java.util.Deque;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import sun.nio.ch.DirectBuffer;
 
 @Slf4j
 public class TransientPool implements Lifecycle {
@@ -34,6 +34,9 @@ public class TransientPool implements Lifecycle {
     private final Deque<ByteBuffer> availableBuffers;
     @Getter @Setter
     private volatile boolean isRealCommit = true;
+
+    public static void main(String[] args) {
+    }
 
     public TransientPool(final int poolSize, final int fileSize) {
         this.poolSize = poolSize;
@@ -49,7 +52,7 @@ public class TransientPool implements Lifecycle {
         for (int i = 0; i < poolSize; i++) {
             ByteBuffer byteBuffer = ByteBuffer.allocateDirect(fileSize);
 
-            final long address = ((DirectBuffer) byteBuffer).address();
+            long address = BufferUtil.directBufferAddress(byteBuffer);
             Pointer pointer = new Pointer(address);
             CLibrary.INSTANCE.mlock(pointer, new NativeLong(fileSize));
 
@@ -60,7 +63,7 @@ public class TransientPool implements Lifecycle {
     @Override
     public void shutdown() {
         for (ByteBuffer byteBuffer : availableBuffers) {
-            final long address = ((DirectBuffer) byteBuffer).address();
+            long address = BufferUtil.directBufferAddress(byteBuffer);
             Pointer pointer = new Pointer(address);
             CLibrary.INSTANCE.munlock(pointer, new NativeLong(fileSize));
         }

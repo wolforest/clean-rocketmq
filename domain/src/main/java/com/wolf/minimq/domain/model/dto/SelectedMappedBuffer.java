@@ -17,5 +17,6 @@ public class SelectedMappedBuffer implements Serializable {
     private ByteBuffer byteBuffer;
     private int size;
     protected MappedFile mappedFile;
+    @Builder.Default
     private boolean isInCache = true;
 }

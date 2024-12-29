@@ -56,8 +56,6 @@ public class DefaultMessageStore implements MessageStore {
         } finally {
             topicQueueLock.unlock(topicKey);
         }
-
-        return CompletableFuture.completedFuture(new EnqueueResult(EnqueueStatus.UNKNOWN_ERROR));
     }
 
     private EnqueueResult waitForResult(CompletableFuture<EnqueueResult> future) {

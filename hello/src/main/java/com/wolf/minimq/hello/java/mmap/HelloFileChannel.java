@@ -27,7 +27,7 @@ public class HelloFileChannel {
             channel = randomAccessFile.getChannel();
             Timer timer = new Timer();
 
-            timer.begin();
+            timer.start();
             write(channel, count);
             timer.record("FileChannelWrite");
 

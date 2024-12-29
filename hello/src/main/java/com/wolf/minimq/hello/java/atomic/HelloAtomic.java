@@ -29,7 +29,7 @@ public class HelloAtomic {
         HelloAtomic helloAtomic = new HelloAtomic();
 
         Timer timer = new Timer();
-        timer.begin();
+        timer.start();
 
         testAtomic(helloAtomic);
         timer.record("Atomic");
