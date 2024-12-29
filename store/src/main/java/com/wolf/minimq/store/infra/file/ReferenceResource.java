@@ -16,11 +16,15 @@
  */
 package com.wolf.minimq.store.infra.file;
 
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.AtomicLongFieldUpdater;
 import lombok.Getter;
 
 public abstract class ReferenceResource {
-    protected final AtomicLong refCount = new AtomicLong(1);
+    protected static final AtomicLongFieldUpdater<ReferenceResource> REF_COUNT_UPDATER =
+        AtomicLongFieldUpdater.newUpdater(ReferenceResource.class, "refCount");
+
+    protected volatile long refCount = 1;
+
     @Getter
     protected volatile boolean available = true;
     protected volatile boolean cleanupOver = false;
@@ -31,11 +35,11 @@ public abstract class ReferenceResource {
             return false;
         }
 
-        if (this.refCount.getAndIncrement() > 0) {
+        if (REF_COUNT_UPDATER.getAndIncrement(this) > 0) {
             return true;
         }
 
-        this.refCount.getAndDecrement();
+        REF_COUNT_UPDATER.getAndDecrement(this);
         return false;
     }
 
@@ -55,12 +59,12 @@ public abstract class ReferenceResource {
             return;
         }
 
-        this.refCount.set(-1000 - this.getRefCount());
+        REF_COUNT_UPDATER.set(this, -1000 - REF_COUNT_UPDATER.get(this));
         this.release();
     }
 
     public void release() {
-        long value = this.refCount.decrementAndGet();
+        long value = REF_COUNT_UPDATER.decrementAndGet(this);
         if (value > 0)
             return;
 
@@ -70,12 +74,12 @@ public abstract class ReferenceResource {
     }
 
     public long getRefCount() {
-        return this.refCount.get();
+        return REF_COUNT_UPDATER.get(this);
     }
 
     public abstract boolean cleanup(final long currentRef);
 
     public boolean isCleanupOver() {
-        return this.refCount.get() <= 0 && this.cleanupOver;
+        return REF_COUNT_UPDATER.get(this) <= 0 && this.cleanupOver;
     }
 }
