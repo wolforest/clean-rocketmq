@@ -16,6 +16,7 @@
  */
 package com.wolf.minimq.domain.model.dto;
 
+import java.io.Serializable;
 import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -38,7 +39,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CommitLogEvent {
+public class CommitLogEvent implements Serializable {
     private String topic;
     private int queueId;
     private long commitLogOffset;
