@@ -32,8 +32,6 @@ public class DefaultCommitLog implements CommitLog {
 
     private final CommitLogLock lock;
     private ThreadLocal<EnqueueThreadLocal> localEncoder;
-    @Getter @Setter
-    private volatile long confirmOffset = -1L;
 
     public DefaultCommitLog(
         CommitLogConfig commitLogConfig,

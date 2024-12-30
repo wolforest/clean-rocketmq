@@ -3,12 +3,12 @@ package com.wolf.minimq.store.server;
 import com.wolf.common.convention.service.LifecycleManager;
 import com.wolf.minimq.domain.config.StoreConfig;
 import com.wolf.minimq.domain.service.store.manager.CommitLogManager;
-import com.wolf.minimq.domain.service.store.manager.DispatcherManager;
+import com.wolf.minimq.domain.service.store.manager.CommitLogDispatcherManager;
 import com.wolf.minimq.domain.service.store.manager.IndexManager;
 import com.wolf.minimq.domain.service.store.manager.MessageManager;
 import com.wolf.minimq.domain.service.store.manager.TimerManager;
 import com.wolf.minimq.store.domain.commitlog.DefaultCommitLogManager;
-import com.wolf.minimq.store.domain.dispatcher.DefaultDispatcherManager;
+import com.wolf.minimq.store.domain.dispatcher.DefaultCommitLogDispatcherManager;
 import com.wolf.minimq.store.domain.index.DefaultIndexManager;
 import com.wolf.minimq.store.domain.message.DefaultMessageManager;
 import com.wolf.minimq.store.domain.timer.DefaultTimerManager;
@@ -43,9 +43,9 @@ public class ComponentRegister {
     }
 
     private void registerDispatcher() {
-        DispatcherManager component = new DefaultDispatcherManager();
+        CommitLogDispatcherManager component = new DefaultCommitLogDispatcherManager();
         manager.register(component);
-        StoreContext.register(component, DispatcherManager.class);
+        StoreContext.register(component, CommitLogDispatcherManager.class);
     }
 
     private void registerConsumeQueue() {

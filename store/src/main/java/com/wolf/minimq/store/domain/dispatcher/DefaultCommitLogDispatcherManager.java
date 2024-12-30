@@ -1,8 +1,10 @@
 package com.wolf.minimq.store.domain.dispatcher;
 
-import com.wolf.minimq.domain.service.store.manager.DispatcherManager;
+import com.wolf.minimq.domain.service.store.manager.CommitLogDispatcherManager;
 
-public class DefaultDispatcherManager implements DispatcherManager {
+public class DefaultCommitLogDispatcherManager implements CommitLogDispatcherManager {
+
+
     @Override
     public void start() {
 
