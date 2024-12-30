@@ -42,21 +42,38 @@ public class Store implements Lifecycle {
         this.argument.validate();
         ContextInitializer.init(argument);
 
-        this.componentManager = ComponentRegister.register();
-        APIRegister.register();
-
         startupLock = new StartupLock(StorePath.getLockFile());
         shutdownLock = new ShutdownLock(StorePath.getAbortFile());
 
+        this.componentManager = ComponentRegister.register();
+        APIRegister.register();
         this.initCheckPoint();
+
         this.componentManager.initialize();
     }
 
-    private void initCheckPoint() {
-        boolean lastExitOk = !shutdownLock.isLocked();
-        StoreCheckpoint checkpoint = new StoreCheckpoint(StorePath.getCheckpointPath());
-        checkpoint.setNormalExit(lastExitOk);
-        StoreContext.CHECK_POINT = checkpoint;
+    @Override
+    public void start() {
+        this.state = State.STARTING;
+        startupLock.lock();
+
+        this.componentManager.start();
+
+        shutdownLock.lock();
+        this.state = State.RUNNING;
+    }
+
+    @Override
+    public void shutdown() {
+        this.state = State.SHUTTING_DOWN;
+
+        this.componentManager.shutdown();
+        this.cleanup();
+
+        startupLock.unlock();
+        shutdownLock.unlock();
+
+        this.state = State.TERMINATED;
     }
 
     @Override
@@ -69,21 +86,10 @@ public class Store implements Lifecycle {
         return this.state;
     }
 
-    @Override
-    public void start() {
-        this.state = State.STARTING;
-        startupLock.lock();
-        this.componentManager.start();
-        shutdownLock.lock();
-        this.state = State.RUNNING;
-    }
-
-    @Override
-    public void shutdown() {
-        this.state = State.SHUTTING_DOWN;
-        this.componentManager.shutdown();
-        startupLock.unlock();
-        shutdownLock.unlock();
-        this.state = State.TERMINATED;
+    private void initCheckPoint() {
+        boolean lastExitOk = !shutdownLock.isLocked();
+        StoreCheckpoint checkpoint = new StoreCheckpoint(StorePath.getCheckpointPath());
+        checkpoint.setNormalExit(lastExitOk);
+        StoreContext.CHECK_POINT = checkpoint;
     }
 }
