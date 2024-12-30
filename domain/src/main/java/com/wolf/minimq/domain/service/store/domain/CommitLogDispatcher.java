@@ -6,6 +6,6 @@ public interface CommitLogDispatcher {
     long getStartOffset();
     void setStartOffset(long offset);
 
-    void registerConsumer(CommitLogConsumer consumer);
+    void registerHandler(CommitLogHandler handler);
     void dispatch(CommitLogEvent event);
 }

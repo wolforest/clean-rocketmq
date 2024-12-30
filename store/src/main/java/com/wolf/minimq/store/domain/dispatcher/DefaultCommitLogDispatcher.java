@@ -3,7 +3,7 @@ package com.wolf.minimq.store.domain.dispatcher;
 import com.wolf.common.lang.concurrent.ServiceThread;
 import com.wolf.minimq.domain.model.dto.CommitLogEvent;
 import com.wolf.minimq.domain.service.store.domain.CommitLog;
-import com.wolf.minimq.domain.service.store.domain.CommitLogConsumer;
+import com.wolf.minimq.domain.service.store.domain.CommitLogHandler;
 import com.wolf.minimq.domain.service.store.domain.CommitLogDispatcher;
 import java.util.ArrayList;
 import lombok.Getter;
@@ -17,7 +17,7 @@ public class DefaultCommitLogDispatcher extends ServiceThread  implements Commit
     @Getter @Setter
     private volatile long startOffset = -1L;
 
-    private final ArrayList<CommitLogConsumer> consumerList = new ArrayList<>();
+    private final ArrayList<CommitLogHandler> consumerList = new ArrayList<>();
 
     private final CommitLog commitLog;
 
@@ -26,8 +26,8 @@ public class DefaultCommitLogDispatcher extends ServiceThread  implements Commit
     }
 
     @Override
-    public void registerConsumer(CommitLogConsumer consumer) {
-        consumerList.addLast(consumer);
+    public void registerHandler(CommitLogHandler handler) {
+        consumerList.addLast(handler);
     }
 
     @Override
@@ -41,8 +41,8 @@ public class DefaultCommitLogDispatcher extends ServiceThread  implements Commit
             return;
         }
 
-        for (CommitLogConsumer consumer : consumerList) {
-            consumer.consume(event);
+        for (CommitLogHandler consumer : consumerList) {
+            consumer.handle(event);
         }
     }
 
