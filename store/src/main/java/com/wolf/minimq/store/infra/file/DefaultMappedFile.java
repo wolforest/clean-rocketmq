@@ -17,14 +17,10 @@ import java.nio.ByteBuffer;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Data
-@EqualsAndHashCode(callSuper = true)
 public class DefaultMappedFile extends ReferenceResource implements MappedFile {
     public static final int OS_PAGE_SIZE = 1024 * 4;
 
@@ -32,8 +28,11 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
     protected static final AtomicIntegerFieldUpdater<DefaultMappedFile> COMMIT_POSITION_UPDATER = AtomicIntegerFieldUpdater.newUpdater(DefaultMappedFile.class, "commitPosition");
     protected static final AtomicIntegerFieldUpdater<DefaultMappedFile> FLUSH_POSITION_UPDATER = AtomicIntegerFieldUpdater.newUpdater(DefaultMappedFile.class, "flushPosition");
 
+    @Getter
     protected String fileName;
+    @Getter
     protected long offsetInFileName;
+    @Getter
     protected int fileSize;
 
     protected File file;

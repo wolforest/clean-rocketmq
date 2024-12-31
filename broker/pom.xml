@@ -26,6 +26,10 @@
             <groupId>com.wolf.minimq</groupId>
             <artifactId>domain</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.wolf.minimq</groupId>
+            <artifactId>store</artifactId>
+        </dependency>
     </dependencies>
 
 </project>
