@@ -8,7 +8,7 @@ import com.wolf.minimq.domain.service.store.domain.CommitLog;
 import com.wolf.minimq.domain.service.store.domain.ConsumeQueue;
 import com.wolf.minimq.domain.service.store.domain.MessageStore;
 import com.wolf.minimq.domain.model.dto.EnqueueResult;
-import com.wolf.minimq.domain.model.dto.MessageContext;
+import com.wolf.minimq.domain.model.dto.MessageContainer;
 import com.wolf.minimq.store.server.StoreContext;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
@@ -32,12 +32,12 @@ public class DefaultMessageStore implements MessageStore {
      * @return EnqueueResult
      */
     @Override
-    public EnqueueResult enqueue(MessageContext context) {
+    public EnqueueResult enqueue(MessageContainer context) {
         return waitForResult(enqueueAsync(context));
     }
 
     @Override
-    public CompletableFuture<EnqueueResult> enqueueAsync(MessageContext context) {
+    public CompletableFuture<EnqueueResult> enqueueAsync(MessageContainer context) {
         String topicKey = getTopicKey(context);
         context.setTopicKey(topicKey);
 
@@ -69,7 +69,7 @@ public class DefaultMessageStore implements MessageStore {
         }
     }
 
-    private String getTopicKey(MessageContext context) {
+    private String getTopicKey(MessageContainer context) {
         Message message = context.getMessageList().getFirst();
         return message.getTopic() + '-' + context.getQueueId();
     }

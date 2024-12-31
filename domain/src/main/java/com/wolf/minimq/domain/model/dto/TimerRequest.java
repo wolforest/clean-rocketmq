@@ -59,7 +59,7 @@ public class TimerRequest implements Serializable {
     /**
      * timer task related msg
      */
-    private MessageContext messageContext;
+    private MessageContainer messageContainer;
 
     //optional would be a good choice, but it relies on JDK 8
     private CountDownLatch latch;
@@ -79,7 +79,7 @@ public class TimerRequest implements Serializable {
             ", delayTime=" + delayTime +
             ", enqueueTime=" + enqueueTime +
             ", magic=" + magic +
-            ", msg=" + messageContext +
+            ", msg=" + messageContainer +
             ", latch=" + latch +
             ", released=" + released +
             ", succ=" + success +

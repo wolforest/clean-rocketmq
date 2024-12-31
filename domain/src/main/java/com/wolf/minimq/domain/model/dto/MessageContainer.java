@@ -10,7 +10,7 @@ import java.util.List;
 import lombok.Data;
 
 @Data
-public class MessageContext implements Serializable {
+public class MessageContainer implements Serializable {
     private List<Message> messageList = new ArrayList<>();
 
     private String brokerName;

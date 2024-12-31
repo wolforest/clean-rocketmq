@@ -10,13 +10,11 @@ import com.wolf.minimq.domain.model.Message;
 import com.wolf.minimq.domain.service.store.domain.CommitLog;
 import com.wolf.minimq.domain.service.store.infra.MappedFileQueue;
 import com.wolf.minimq.domain.model.dto.EnqueueResult;
-import com.wolf.minimq.domain.model.dto.MessageContext;
+import com.wolf.minimq.domain.model.dto.MessageContainer;
 import com.wolf.minimq.domain.model.dto.SelectedMappedBuffer;
 import com.wolf.minimq.store.domain.commitlog.flush.FlushManager;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import lombok.Getter;
-import lombok.Setter;
 
 /**
  * depend on:
@@ -50,13 +48,13 @@ public class DefaultCommitLog implements CommitLog {
     }
 
     @Override
-    public CompletableFuture<EnqueueResult> insert(MessageContext messageContext) {
-        initAppendMessage(messageContext);
+    public CompletableFuture<EnqueueResult> insert(MessageContainer messageContainer) {
+        initAppendMessage(messageContainer);
 
         return null;
     }
 
-    private void initAppendMessage(MessageContext context) {
+    private void initAppendMessage(MessageContainer context) {
         Message message = context.getMessage();
 
         context.setStoreTimestamp(System.currentTimeMillis());

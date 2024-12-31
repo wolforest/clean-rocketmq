@@ -4,7 +4,7 @@ import com.wolf.minimq.domain.config.MessageConfig;
 import com.wolf.minimq.domain.enums.EnqueueStatus;
 import com.wolf.minimq.domain.model.Message;
 import com.wolf.minimq.domain.model.dto.EnqueueResult;
-import com.wolf.minimq.domain.model.dto.MessageContext;
+import com.wolf.minimq.domain.model.dto.MessageContainer;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.buffer.UnpooledByteBufAllocator;
@@ -25,10 +25,10 @@ public class MessageEncoder {
         buffer = allocator.directBuffer(messageConfig.getMaxSize());
     }
 
-    public EnqueueResult encode(MessageContext messageContext) {
+    public EnqueueResult encode(MessageContainer messageContainer) {
         buffer.clear();
 
-        Message message = messageContext.getMessage();
+        Message message = messageContainer.getMessage();
 
         byte[] properties = null;
         int propertiesLen = 0;
@@ -37,7 +37,7 @@ public class MessageEncoder {
         int topicLen = topic.length;
         int bodyLen = message.getBody().length;
         int messageLen = MessageUtils.calculateMessageLength(
-            messageContext.getVersion(), bodyLen, topicLen, propertiesLen
+            messageContainer.getVersion(), bodyLen, topicLen, propertiesLen
         );
 
         if (messageLen > messageConfig.getMaxSize() || bodyLen > messageConfig.getMaxBodySize()) {
