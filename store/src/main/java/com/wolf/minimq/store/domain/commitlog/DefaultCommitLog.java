@@ -90,7 +90,7 @@ public class DefaultCommitLog implements CommitLog {
     }
 
     @Override
-    public long getFlushPosition() {
+    public long getFlushedOffset() {
         return mappedFileQueue.getFlushPosition();
     }
 

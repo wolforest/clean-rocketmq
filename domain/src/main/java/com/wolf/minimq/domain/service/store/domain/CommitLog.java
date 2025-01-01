@@ -27,7 +27,16 @@ public interface CommitLog {
      */
     long getMaxOffset();
 
-    long getFlushPosition();
+    /**
+     * get flushed offset
+     * @return flushedPosition of the mappedFileQueue
+     */
+    long getFlushedOffset();
+
+    /**
+     * get unFlushed size
+     * @return unFlushedSize of the mappedFileQueue
+     */
     long getUnFlushedSize();
 
 }
