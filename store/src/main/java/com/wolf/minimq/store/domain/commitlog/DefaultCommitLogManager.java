@@ -10,6 +10,7 @@ import com.wolf.minimq.store.domain.commitlog.flush.FlushManager;
 import com.wolf.minimq.store.infra.file.AllocateMappedFileService;
 import com.wolf.minimq.store.infra.file.DefaultMappedFileQueue;
 import com.wolf.minimq.store.infra.memory.CLibrary;
+import com.wolf.minimq.store.server.StoreCheckpoint;
 import com.wolf.minimq.store.server.StoreContext;
 import java.io.File;
 
@@ -30,7 +31,9 @@ public class DefaultCommitLogManager implements CommitLogManager {
         initConfig();
         initMappedFileQueue();
 
-        flushManager = new FlushManager(commitLogConfig, mappedFileQueue);
+        StoreCheckpoint checkpoint = StoreContext.getBean(StoreCheckpoint.class);
+        flushManager = new FlushManager(commitLogConfig, mappedFileQueue, checkpoint);
+
         CommitLog commitLog = new DefaultCommitLog(commitLogConfig, messageConfig, mappedFileQueue, flushManager);
         StoreContext.register(commitLog, CommitLog.class);
     }
