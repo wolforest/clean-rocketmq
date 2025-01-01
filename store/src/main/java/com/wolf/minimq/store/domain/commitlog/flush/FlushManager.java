@@ -6,7 +6,7 @@ import com.wolf.minimq.domain.enums.EnqueueStatus;
 import com.wolf.minimq.domain.enums.FlushType;
 import com.wolf.minimq.domain.service.store.infra.MappedFileQueue;
 import com.wolf.minimq.domain.model.dto.EnqueueResult;
-import com.wolf.minimq.domain.model.dto.MessageContainer;
+import com.wolf.minimq.domain.model.bo.MessageContainer;
 import java.util.concurrent.CompletableFuture;
 
 /**

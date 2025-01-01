@@ -1,4 +1,4 @@
-package com.wolf.minimq.domain.model.dto;
+package com.wolf.minimq.domain.model.bo;
 
 import com.wolf.minimq.domain.enums.MessageVersion;
 import com.wolf.minimq.domain.model.Message;
@@ -46,10 +46,6 @@ public class MessageContainer implements Serializable {
     private int reconsumeTimes;
     private long preparedTransactionOffset;
 
-    private String propertiesString;
-    private long tagsCode;
-    private ByteBuffer encodedBuff;
-    private volatile boolean encodeCompleted;
     private MessageVersion version = MessageVersion.V1;
 
     public Message getMessage() {

@@ -16,6 +16,7 @@
  */
 package com.wolf.minimq.domain.model.dto;
 
+import com.wolf.minimq.domain.model.bo.MessageContainer;
 import java.io.Serializable;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
