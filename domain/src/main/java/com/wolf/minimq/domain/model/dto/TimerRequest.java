@@ -16,7 +16,7 @@
  */
 package com.wolf.minimq.domain.model.dto;
 
-import com.wolf.minimq.domain.model.bo.MessageContainer;
+import com.wolf.minimq.domain.model.bo.MessageBO;
 import java.io.Serializable;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
@@ -60,7 +60,7 @@ public class TimerRequest implements Serializable {
     /**
      * timer task related msg
      */
-    private MessageContainer messageContainer;
+    private MessageBO messageBO;
 
     //optional would be a good choice, but it relies on JDK 8
     private CountDownLatch latch;
@@ -80,7 +80,7 @@ public class TimerRequest implements Serializable {
             ", delayTime=" + delayTime +
             ", enqueueTime=" + enqueueTime +
             ", magic=" + magic +
-            ", msg=" + messageContainer +
+            ", msg=" + messageBO +
             ", latch=" + latch +
             ", released=" + released +
             ", succ=" + success +

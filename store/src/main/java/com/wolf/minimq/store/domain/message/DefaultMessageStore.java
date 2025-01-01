@@ -8,7 +8,7 @@ import com.wolf.minimq.domain.service.store.domain.CommitLog;
 import com.wolf.minimq.domain.service.store.domain.ConsumeQueue;
 import com.wolf.minimq.domain.service.store.domain.MessageStore;
 import com.wolf.minimq.domain.model.dto.EnqueueResult;
-import com.wolf.minimq.domain.model.bo.MessageContainer;
+import com.wolf.minimq.domain.model.bo.MessageBO;
 import com.wolf.minimq.store.server.StoreContext;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
@@ -28,28 +28,28 @@ public class DefaultMessageStore implements MessageStore {
      *  - append commitLog
      *  - increase consumeQueue offset
      *
-     * @param context messageContext
+     * @param messageBO messageContext
      * @return EnqueueResult
      */
     @Override
-    public EnqueueResult enqueue(MessageContainer context) {
-        return waitForResult(enqueueAsync(context));
+    public EnqueueResult enqueue(MessageBO messageBO) {
+        return waitForResult(enqueueAsync(messageBO));
     }
 
     @Override
-    public CompletableFuture<EnqueueResult> enqueueAsync(MessageContainer context) {
-        String topicKey = getTopicKey(context);
-        context.setTopicKey(topicKey);
+    public CompletableFuture<EnqueueResult> enqueueAsync(MessageBO messageBO) {
+        String topicKey = getTopicKey(messageBO);
+        messageBO.setTopicKey(topicKey);
 
         topicQueueLock.lock(topicKey);
         try {
             ConsumeQueue consumeQueue = StoreContext.getBean(ConsumeQueue.class);
-            consumeQueue.assignOffset(context);
+            consumeQueue.assignOffset(messageBO);
 
             CommitLog commitLog = StoreContext.getBean(CommitLog.class);
-            CompletableFuture<EnqueueResult> result = commitLog.insert(context);
+            CompletableFuture<EnqueueResult> result = commitLog.insert(messageBO);
 
-            consumeQueue.increaseOffset(context);
+            consumeQueue.increaseOffset(messageBO);
             return result;
         } catch (Exception e) {
             return CompletableFuture.completedFuture(new EnqueueResult(EnqueueStatus.UNKNOWN_ERROR));
@@ -69,8 +69,7 @@ public class DefaultMessageStore implements MessageStore {
         }
     }
 
-    private String getTopicKey(MessageContainer context) {
-        Message message = context.getMessageList().getFirst();
-        return message.getTopic() + '-' + context.getQueueId();
+    private String getTopicKey(MessageBO messageBO) {
+        return messageBO.getTopic() + '-' + messageBO.getQueueId();
     }
 }

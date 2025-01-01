@@ -10,7 +10,7 @@ import com.wolf.minimq.domain.model.Message;
 import com.wolf.minimq.domain.service.store.domain.CommitLog;
 import com.wolf.minimq.domain.service.store.infra.MappedFileQueue;
 import com.wolf.minimq.domain.model.dto.EnqueueResult;
-import com.wolf.minimq.domain.model.bo.MessageContainer;
+import com.wolf.minimq.domain.model.bo.MessageBO;
 import com.wolf.minimq.domain.model.dto.SelectedMappedBuffer;
 import com.wolf.minimq.store.domain.commitlog.flush.FlushManager;
 import java.util.List;
@@ -48,21 +48,19 @@ public class DefaultCommitLog implements CommitLog {
     }
 
     @Override
-    public CompletableFuture<EnqueueResult> insert(MessageContainer messageContainer) {
-        initAppendMessage(messageContainer);
+    public CompletableFuture<EnqueueResult> insert(MessageBO messageBO) {
+        initAppendMessage(messageBO);
 
         return null;
     }
 
-    private void initAppendMessage(MessageContainer context) {
-        Message message = context.getMessage();
+    private void initAppendMessage(MessageBO messageBO) {
+        messageBO.setStoreTimestamp(System.currentTimeMillis());
+        messageBO.setBodyCRC(HashUtil.crc32(messageBO.getBody()));
 
-        context.setStoreTimestamp(System.currentTimeMillis());
-        context.setBodyCRC(HashUtil.crc32(message.getBody()));
-
-        context.setVersion(MessageVersion.V1);
-        if (message.getTopic().length() > Byte.MAX_VALUE) {
-            context.setVersion(MessageVersion.V2);
+        messageBO.setVersion(MessageVersion.V1);
+        if (messageBO.getTopic().length() > Byte.MAX_VALUE) {
+            messageBO.setVersion(MessageVersion.V2);
         }
     }
 

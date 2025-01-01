@@ -7,17 +7,16 @@ import java.net.SocketAddress;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 public class MessageBO extends Message implements Serializable {
     private String brokerName;
     /**
@@ -52,6 +51,5 @@ public class MessageBO extends Message implements Serializable {
     private int reconsumeTimes;
     private long preparedTransactionOffset;
 
-    @Builder.Default
     private MessageVersion version = MessageVersion.V1;
 }

@@ -6,7 +6,7 @@ import com.wolf.minimq.domain.enums.EnqueueStatus;
 import com.wolf.minimq.domain.enums.FlushType;
 import com.wolf.minimq.domain.service.store.infra.MappedFileQueue;
 import com.wolf.minimq.domain.model.dto.EnqueueResult;
-import com.wolf.minimq.domain.model.bo.MessageContainer;
+import com.wolf.minimq.domain.model.bo.MessageBO;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -38,7 +38,7 @@ public class FlushManager implements Lifecycle {
         }
     }
 
-    public CompletableFuture<EnqueueStatus> flush(EnqueueResult result, MessageContainer context) {
+    public CompletableFuture<EnqueueStatus> flush(EnqueueResult result, MessageBO messageBO) {
         return null;
     }
 

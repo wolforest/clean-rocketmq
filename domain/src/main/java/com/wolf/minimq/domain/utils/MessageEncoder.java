@@ -4,7 +4,7 @@ import com.wolf.minimq.domain.config.MessageConfig;
 import com.wolf.minimq.domain.enums.EnqueueStatus;
 import com.wolf.minimq.domain.model.Message;
 import com.wolf.minimq.domain.model.dto.EnqueueResult;
-import com.wolf.minimq.domain.model.bo.MessageContainer;
+import com.wolf.minimq.domain.model.bo.MessageBO;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.buffer.UnpooledByteBufAllocator;
@@ -25,19 +25,17 @@ public class MessageEncoder {
         buffer = allocator.directBuffer(messageConfig.getMaxSize());
     }
 
-    public EnqueueResult encode(MessageContainer messageContainer) {
+    public EnqueueResult encode(MessageBO messageBO) {
         buffer.clear();
-
-        Message message = messageContainer.getMessage();
 
         byte[] properties = null;
         int propertiesLen = 0;
 
-        byte[] topic = message.getTopic().getBytes(StandardCharsets.UTF_8);
+        byte[] topic = messageBO.getTopic().getBytes(StandardCharsets.UTF_8);
         int topicLen = topic.length;
-        int bodyLen = message.getBody().length;
+        int bodyLen = messageBO.getBody().length;
         int messageLen = MessageUtils.calculateMessageLength(
-            messageContainer.getVersion(), bodyLen, topicLen, propertiesLen
+            messageBO.getVersion(), bodyLen, topicLen, propertiesLen
         );
 
         if (messageLen > messageConfig.getMaxSize() || bodyLen > messageConfig.getMaxBodySize()) {

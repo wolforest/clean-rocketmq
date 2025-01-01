@@ -4,12 +4,17 @@ import com.wolf.minimq.domain.enums.MessageVersion;
 import com.wolf.minimq.domain.model.Message;
 import java.io.Serializable;
 import java.net.SocketAddress;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class MessageContainer implements Serializable {
     private List<Message> messageList = new ArrayList<>();
 
@@ -46,9 +51,6 @@ public class MessageContainer implements Serializable {
     private int reconsumeTimes;
     private long preparedTransactionOffset;
 
+    @Builder.Default
     private MessageVersion version = MessageVersion.V1;
-
-    public Message getMessage() {
-        return messageList.getFirst();
-    }
 }
