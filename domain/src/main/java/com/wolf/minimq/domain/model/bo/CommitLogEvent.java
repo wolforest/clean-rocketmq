@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.wolf.minimq.domain.model.dto;
+package com.wolf.minimq.domain.model.bo;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -40,35 +40,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CommitLogEvent implements Serializable {
-    private String topic;
-    private int queueId;
-    private long commitLogOffset;
-    private int msgSize;
-    /**
-     * from message.propertiesMap, possible key are below:
-     *    1. MessageConst.PROPERTY_TAGS
-     *    2. MessageConst.PROPERTY_DELAY_TIME_LEVEL
-     */
-    private long tagsCode;
-    private long storeTimestamp;
-    private long consumeQueueOffset;
-    /**
-     * message unique key
-     * stored in message.properties["UNIQ_KEY"]
-     * MessageConst.PROPERTY_UNIQ_CLIENT_MESSAGE_ID_KEYIDX = "UNIQ_KEY"
-     */
-    private String uniqKey;
-    /**
-     * message keys
-     * stored in message.properties["KEYS"]
-     * MessageConst.PROPERTY_KEYS = "KEYS"
-     */
-    private String keys;
-    private boolean success;
+    private MessageBO messageBO;
 
-    private int sysFlag;
-    private long preparedTransactionOffset;
-    private Map<String, String> propertiesMap;
     private byte[] bitMap;
 
     //the buffer size maybe larger than the msg size if the message is wrapped by something
@@ -81,17 +54,4 @@ public class CommitLogEvent implements Serializable {
     private long nextReputFromOffset = -1;
     private String offsetId;
 
-    @Override
-    public String toString() {
-        return "DispatchRequest{" +
-                "topic='" + topic + '\'' +
-                ", queueId=" + queueId +
-                ", commitLogOffset=" + commitLogOffset +
-                ", msgSize=" + msgSize +
-                ", success=" + success +
-                ", msgBaseOffset=" + msgBaseOffset +
-                ", batchSize=" + batchSize +
-                ", nextReputFromOffset=" + nextReputFromOffset +
-            '}';
-    }
 }

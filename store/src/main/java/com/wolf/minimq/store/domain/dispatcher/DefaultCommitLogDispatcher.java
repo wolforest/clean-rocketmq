@@ -2,7 +2,7 @@ package com.wolf.minimq.store.domain.dispatcher;
 
 import com.wolf.common.lang.concurrent.ServiceThread;
 import com.wolf.common.util.lang.ThreadUtil;
-import com.wolf.minimq.domain.model.dto.CommitLogEvent;
+import com.wolf.minimq.domain.model.bo.CommitLogEvent;
 import com.wolf.minimq.domain.service.store.domain.CommitLog;
 import com.wolf.minimq.domain.service.store.domain.CommitLogHandler;
 import com.wolf.minimq.domain.service.store.domain.CommitLogDispatcher;

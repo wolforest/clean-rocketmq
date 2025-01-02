@@ -1,7 +1,6 @@
 package com.wolf.minimq.domain.model.bo;
 
 import com.wolf.minimq.domain.enums.MessageVersion;
-import com.wolf.minimq.domain.model.Message;
 import java.io.Serializable;
 import java.net.SocketAddress;
 import java.util.ArrayList;
@@ -16,7 +15,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MessageContainer implements Serializable {
-    private List<Message> messageList = new ArrayList<>();
+    private List<MessageBO> messageList = new ArrayList<>();
 
     private String brokerName;
     /**

@@ -1,6 +1,6 @@
 package com.wolf.minimq.domain.service.store.domain;
 
-import com.wolf.minimq.domain.model.dto.CommitLogEvent;
+import com.wolf.minimq.domain.model.bo.CommitLogEvent;
 
 public interface CommitLogDispatcher {
     long getDispatchedOffset();
