@@ -65,18 +65,8 @@ public class DefaultCommitLog implements CommitLog {
     }
 
     @Override
-    public SelectedMappedBuffer select(long offset, int size) {
-        return null;
-    }
-
-    @Override
     public SelectedMappedBuffer select(long offset) {
         return null;
-    }
-
-    @Override
-    public List<SelectedMappedBuffer> selectAll(long offset, int size) {
-        return List.of();
     }
 
     @Override

@@ -9,9 +9,7 @@ import java.util.concurrent.CompletableFuture;
 public interface CommitLog {
     CompletableFuture<EnqueueResult> insert(MessageBO messageBO);
 
-    SelectedMappedBuffer select(long offset, int size);
     SelectedMappedBuffer select(long offset);
-    List<SelectedMappedBuffer> selectAll(long offset, int size);
 
     /**
      * get min offset, which is the start offset of the first mappedFile

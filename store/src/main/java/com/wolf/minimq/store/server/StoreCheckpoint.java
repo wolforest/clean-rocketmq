@@ -43,13 +43,14 @@ public class StoreCheckpoint {
     private volatile long logicsMsgTimestamp = 0;
     @Getter @Setter
     private volatile long indexMsgTimestamp = 0;
+
     @Getter @Setter
-    private volatile long masterFlushedOffset = 0;
+    private volatile long masterOffset = 0;
     /**
      * confirmed commitLog offset
      */
     @Getter @Setter
-    private volatile long confirmPhyOffset = 0;
+    private volatile long commitLogOffset = 0;
 
     public StoreCheckpoint(final String scpPath) {
         File file = new File(scpPath);
@@ -68,14 +69,14 @@ public class StoreCheckpoint {
             this.physicMsgTimestamp = this.mappedByteBuffer.getLong(0);
             this.logicsMsgTimestamp = this.mappedByteBuffer.getLong(8);
             this.indexMsgTimestamp = this.mappedByteBuffer.getLong(16);
-            this.masterFlushedOffset = this.mappedByteBuffer.getLong(24);
-            this.confirmPhyOffset = this.mappedByteBuffer.getLong(32);
+            this.masterOffset = this.mappedByteBuffer.getLong(24);
+            this.commitLogOffset = this.mappedByteBuffer.getLong(32);
 
             log.info("store checkpoint file physicMsgTimestamp {}, {}", this.physicMsgTimestamp, DateUtil.asLocalDateTime(this.physicMsgTimestamp));
             log.info("store checkpoint file logicsMsgTimestamp {}, {}", this.logicsMsgTimestamp, DateUtil.asLocalDateTime(this.logicsMsgTimestamp));
             log.info("store checkpoint file indexMsgTimestamp {}, {}", this.indexMsgTimestamp, DateUtil.asLocalDateTime(this.indexMsgTimestamp));
-            log.info("store checkpoint file masterFlushedOffset {}", this.masterFlushedOffset);
-            log.info("store checkpoint file confirmPhyOffset {}", this.confirmPhyOffset);
+            log.info("store checkpoint file masterFlushedOffset {}", this.masterOffset);
+            log.info("store checkpoint file confirmPhyOffset {}", this.commitLogOffset);
         } else {
             log.info("store checkpoint file not exists, {}", scpPath);
         }
@@ -98,8 +99,8 @@ public class StoreCheckpoint {
         this.mappedByteBuffer.putLong(0, this.physicMsgTimestamp);
         this.mappedByteBuffer.putLong(8, this.logicsMsgTimestamp);
         this.mappedByteBuffer.putLong(16, this.indexMsgTimestamp);
-        this.mappedByteBuffer.putLong(24, this.masterFlushedOffset);
-        this.mappedByteBuffer.putLong(32, this.confirmPhyOffset);
+        this.mappedByteBuffer.putLong(24, this.masterOffset);
+        this.mappedByteBuffer.putLong(32, this.commitLogOffset);
         this.mappedByteBuffer.force();
     }
 
