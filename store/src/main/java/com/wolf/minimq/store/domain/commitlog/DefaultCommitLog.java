@@ -1,9 +1,14 @@
 package com.wolf.minimq.store.domain.commitlog;
 
 import com.wolf.common.util.encrypt.HashUtil;
+import com.wolf.common.util.lang.SystemUtil;
 import com.wolf.minimq.domain.config.CommitLogConfig;
 import com.wolf.minimq.domain.config.MessageConfig;
 import com.wolf.minimq.domain.enums.MessageVersion;
+import com.wolf.minimq.domain.exception.InvalidMessageException;
+import com.wolf.minimq.domain.model.dto.InsertResult;
+import com.wolf.minimq.domain.service.store.infra.MappedFile;
+import com.wolf.minimq.domain.utils.MessageEncoder;
 import com.wolf.minimq.domain.utils.lock.CommitLogLock;
 import com.wolf.minimq.domain.utils.lock.CommitLogReentrantLock;
 import com.wolf.minimq.domain.service.store.domain.CommitLog;
@@ -12,6 +17,9 @@ import com.wolf.minimq.domain.model.dto.EnqueueResult;
 import com.wolf.minimq.domain.model.bo.MessageBO;
 import com.wolf.minimq.store.domain.commitlog.flush.FlushManager;
 import com.wolf.minimq.store.domain.commitlog.vo.EnqueueThreadLocal;
+import com.wolf.minimq.store.domain.commitlog.vo.InsertContext;
+import com.wolf.minimq.store.infra.memory.CLibrary;
+import java.nio.ByteBuffer;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -47,13 +55,56 @@ public class DefaultCommitLog implements CommitLog {
 
     @Override
     public CompletableFuture<EnqueueResult> insert(MessageBO messageBO) {
-        initMessage(messageBO);
+        InsertContext context = initContext(messageBO);
+        MessageEncoder encoder = context.getEncoder();
+        MappedFile mappedFile = context.getMappedFile();
 
+        this.lock.lock();
+        try {
+            long commitLogOffset = mappedFile.getOffsetInFileName() + mappedFile.getWritePosition();
+            messageBO.setCommitLogOffset(commitLogOffset);
+
+            InsertResult insertResult = mappedFile.insert(encoder.encode());
+            CompletableFuture<EnqueueResult> insertError = formatInsertResult(insertResult, context);
+            if (insertError != null) {
+                return insertError;
+            }
+
+            return handleFlush(insertResult, context);
+        } catch (InvalidMessageException messageException) {
+            return CompletableFuture.completedFuture(new EnqueueResult(messageException.getStatus()));
+        } finally {
+            this.lock.unlock();
+        }
+    }
+
+    private CompletableFuture<EnqueueResult> handleFlush(InsertResult insertResult, InsertContext context) {
         return null;
     }
 
+    private CompletableFuture<EnqueueResult> formatInsertResult(InsertResult insertResult, InsertContext context) {
+        return null;
+    }
+
+    private InsertContext initContext(MessageBO messageBO) {
+        initMessage(messageBO);
+
+        long now = System.currentTimeMillis();
+        messageBO.setStoreTimestamp(now);
+
+        MessageEncoder encoder = localEncoder.get().getEncoder(messageBO);
+        MappedFile mappedFile = mappedFileQueue.getAvailableMappedFile(encoder.getMessageLength());
+        mappedFile.setFileMode(CLibrary.MADV_RANDOM);
+
+        return InsertContext.builder()
+            .now(now)
+            .messageBO(messageBO)
+            .encoder(encoder)
+            .mappedFile(mappedFile)
+            .build();
+    }
+
     private void initMessage(MessageBO messageBO) {
-        messageBO.setStoreTimestamp(System.currentTimeMillis());
         messageBO.setBodyCRC(HashUtil.crc32(messageBO.getBody()));
 
         messageBO.setVersion(MessageVersion.V1);

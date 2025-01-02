@@ -97,7 +97,7 @@ public class DefaultMappedFileQueue implements MappedFileQueue {
 
     @Override
     public MappedFile getAvailableMappedFile(int messageSize) {
-        if (isEmpty()) return null;
+        if (isEmpty()) return createMappedFile(0);
 
         MappedFile last = getLastMappedFile();
         if (last.hasEnoughSpace(messageSize)) {

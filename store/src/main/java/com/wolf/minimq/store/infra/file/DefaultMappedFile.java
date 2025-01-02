@@ -81,6 +81,7 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
 
     @Override
     public void setFileMode(int mode) {
+        // add not windows check
         long address = BufferUtil.directBufferAddress(mappedByteBuffer);
         int madvise = CLibrary.INSTANCE.madvise(
             new Pointer(address), new NativeLong(fileSize), mode

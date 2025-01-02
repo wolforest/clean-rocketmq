@@ -21,6 +21,10 @@ public class InsertResult implements Serializable {
     // Message storage timestamp
     private long storeTimestamp;
 
+    public boolean isSuccess() {
+        return InsertStatus.PUT_OK.equals(status);
+    }
+
     public static InsertResult success(long wroteOffset) {
         return InsertResult.builder()
             .status(InsertStatus.PUT_OK)

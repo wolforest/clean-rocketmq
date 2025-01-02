@@ -19,6 +19,7 @@ package com.wolf.minimq.store.domain.commitlog.vo;
 import com.wolf.minimq.domain.model.bo.MessageBO;
 import com.wolf.minimq.domain.model.dto.EnqueueResult;
 import com.wolf.minimq.domain.service.store.infra.MappedFile;
+import com.wolf.minimq.domain.utils.MessageEncoder;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,16 +31,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class InsertContext implements Serializable {
+    private long now;
     private MessageBO messageBO;
     @Builder.Default
     private EnqueueResult result = null;
-    private String topicQueueKey;
     @Builder.Default
     private long elapsedTimeInLock = 0;
     private MappedFile mappedFile;
-    private long currOffset;
+    private long currentOffset;
 
-    private int needAckNums;
-    private boolean needHandleHA;
-
+    private MessageEncoder encoder;
 }

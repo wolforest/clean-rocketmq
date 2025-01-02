@@ -23,8 +23,8 @@ public class MessageUtils {
             + storeHostAddressLength //STORE_HOST_ADDRESS
             + 4 //RECONSUME_TIMES
             + 8 //Prepared Transaction Offset
-            + 4 + (Math.max(bodyLength, 0)) //BODY
+            + 4 + bodyLength //BODY
             + messageVersion.getTopicLengthSize() + topicLength //TOPIC
-            + 2 + (Math.max(propertiesLength, 0)); //propertiesLength
+            + 2 + propertiesLength; //propertiesLength
     }
 }

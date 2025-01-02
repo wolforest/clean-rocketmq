@@ -22,15 +22,15 @@ import java.util.concurrent.locks.ReentrantLock;
  * Exclusive lock implementation to put message
  */
 public class CommitLogReentrantLock implements CommitLogLock {
-    private final ReentrantLock putMessageNormalLock = new ReentrantLock(); // NonFairSync
+    private final ReentrantLock lock = new ReentrantLock(); // NonFairSync
 
     @Override
     public void lock() {
-        putMessageNormalLock.lock();
+        lock.lock();
     }
 
     @Override
     public void unlock() {
-        putMessageNormalLock.unlock();
+        lock.unlock();
     }
 }
