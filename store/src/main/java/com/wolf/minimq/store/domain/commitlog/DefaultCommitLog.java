@@ -65,7 +65,7 @@ public class DefaultCommitLog implements CommitLog {
     }
 
     @Override
-    public SelectedMappedBuffer select(long offset) {
+    public MessageBO select(long offset) {
         return null;
     }
 
