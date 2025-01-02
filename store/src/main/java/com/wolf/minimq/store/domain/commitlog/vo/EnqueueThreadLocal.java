@@ -1,4 +1,4 @@
-package com.wolf.minimq.store.domain.commitlog;
+package com.wolf.minimq.store.domain.commitlog.vo;
 
 import com.wolf.minimq.domain.config.MessageConfig;
 import com.wolf.minimq.domain.utils.MessageEncoder;

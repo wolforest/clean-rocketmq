@@ -6,14 +6,12 @@ import com.wolf.minimq.domain.config.MessageConfig;
 import com.wolf.minimq.domain.enums.MessageVersion;
 import com.wolf.minimq.domain.utils.lock.CommitLogLock;
 import com.wolf.minimq.domain.utils.lock.CommitLogReentrantLock;
-import com.wolf.minimq.domain.model.Message;
 import com.wolf.minimq.domain.service.store.domain.CommitLog;
 import com.wolf.minimq.domain.service.store.infra.MappedFileQueue;
 import com.wolf.minimq.domain.model.dto.EnqueueResult;
 import com.wolf.minimq.domain.model.bo.MessageBO;
-import com.wolf.minimq.domain.model.dto.SelectedMappedBuffer;
 import com.wolf.minimq.store.domain.commitlog.flush.FlushManager;
-import java.util.List;
+import com.wolf.minimq.store.domain.commitlog.vo.EnqueueThreadLocal;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -49,12 +47,12 @@ public class DefaultCommitLog implements CommitLog {
 
     @Override
     public CompletableFuture<EnqueueResult> insert(MessageBO messageBO) {
-        initAppendMessage(messageBO);
+        initMessage(messageBO);
 
         return null;
     }
 
-    private void initAppendMessage(MessageBO messageBO) {
+    private void initMessage(MessageBO messageBO) {
         messageBO.setStoreTimestamp(System.currentTimeMillis());
         messageBO.setBodyCRC(HashUtil.crc32(messageBO.getBody()));
 
