@@ -33,7 +33,7 @@ public class DefaultCommitLog implements CommitLog {
     private final MappedFileQueue mappedFileQueue;
     private final FlushManager flushManager;
 
-    private final CommitLogLock lock;
+    private final CommitLogLock commitLogLock;
     private ThreadLocal<EnqueueThreadLocal> localEncoder;
 
     public DefaultCommitLog(
@@ -48,7 +48,7 @@ public class DefaultCommitLog implements CommitLog {
         this.mappedFileQueue = mappedFileQueue;
         this.flushManager = flushManager;
 
-        this.lock = new CommitLogReentrantLock();
+        this.commitLogLock = new CommitLogReentrantLock();
         initLocalEncoder();
     }
 
@@ -56,7 +56,7 @@ public class DefaultCommitLog implements CommitLog {
     public CompletableFuture<EnqueueResult> insert(MessageBO messageBO) {
         InsertContext context = initContext(messageBO);
 
-        this.lock.lock();
+        this.commitLogLock.lock();
         try {
             MappedFile mappedFile = getMappedFile(context.getEncoder());
             assignCommitLogOffset(messageBO, mappedFile);
@@ -68,7 +68,7 @@ public class DefaultCommitLog implements CommitLog {
         } catch (EnqueueErrorException messageException) {
             return CompletableFuture.completedFuture(new EnqueueResult(messageException.getStatus()));
         } finally {
-            this.lock.unlock();
+            this.commitLogLock.unlock();
         }
     }
 
