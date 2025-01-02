@@ -1,6 +1,6 @@
 package com.wolf.minimq.domain.service.store.infra;
 
-import com.wolf.minimq.domain.model.dto.AppendResult;
+import com.wolf.minimq.domain.model.dto.InsertResult;
 import com.wolf.minimq.domain.model.dto.SelectedMappedBuffer;
 import java.nio.ByteBuffer;
 import java.nio.MappedByteBuffer;
@@ -59,7 +59,7 @@ public interface MappedFile {
      * @param data the byte array to append
      * @return AppendResult
      */
-    AppendResult insert(byte[] data);
+    InsertResult insert(byte[] data);
 
     /**
      * Appends a raw message data represents by a byte array to the current {@code MappedFile}.
@@ -67,7 +67,7 @@ public interface MappedFile {
      * @param data the byte buffer to append
      * @return AppendResult
      */
-    AppendResult insert(ByteBuffer data);
+    InsertResult insert(ByteBuffer data);
 
     /**
      * Appends a raw message data represents by a byte array to the current {@code MappedFile},
@@ -78,7 +78,7 @@ public interface MappedFile {
      * @param length the number of bytes to be read from the given array
      * @return AppendResult
      */
-    AppendResult insert(byte[] data, int offset, int length);
+    InsertResult insert(byte[] data, int offset, int length);
 
     /**
      * Selects a slice of the mapped byte buffer's subregion behind the mapped file,

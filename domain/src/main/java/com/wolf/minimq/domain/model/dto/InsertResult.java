@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AppendResult implements Serializable {
+public class InsertResult implements Serializable {
     // Return code
     private InsertStatus status;
     // Where to start writing
@@ -21,21 +21,21 @@ public class AppendResult implements Serializable {
     // Message storage timestamp
     private long storeTimestamp;
 
-    public static AppendResult success(long wroteOffset) {
-        return AppendResult.builder()
+    public static InsertResult success(long wroteOffset) {
+        return InsertResult.builder()
             .status(InsertStatus.PUT_OK)
             .wroteOffset(wroteOffset)
             .build();
     }
 
-    public static AppendResult failure() {
-        return AppendResult.builder()
+    public static InsertResult failure() {
+        return InsertResult.builder()
             .status(InsertStatus.UNKNOWN_ERROR)
             .build();
     }
 
-    public static AppendResult endOfFile() {
-        return AppendResult.builder()
+    public static InsertResult endOfFile() {
+        return InsertResult.builder()
             .status(InsertStatus.END_OF_FILE)
             .build();
     }

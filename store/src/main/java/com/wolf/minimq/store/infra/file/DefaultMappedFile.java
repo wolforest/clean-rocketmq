@@ -5,7 +5,7 @@ import com.sun.jna.Pointer;
 import com.wolf.common.util.io.BufferUtil;
 import com.wolf.common.util.io.DirUtil;
 import com.wolf.minimq.domain.service.store.infra.MappedFile;
-import com.wolf.minimq.domain.model.dto.AppendResult;
+import com.wolf.minimq.domain.model.dto.InsertResult;
 import com.wolf.minimq.domain.model.dto.SelectedMappedBuffer;
 import com.wolf.minimq.store.infra.memory.CLibrary;
 import com.wolf.minimq.store.infra.memory.TransientPool;
@@ -101,15 +101,15 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
     }
 
     @Override
-    public AppendResult insert(byte[] data) {
+    public InsertResult insert(byte[] data) {
         return insert(data, 0, data.length);
     }
 
     @Override
-    public AppendResult insert(ByteBuffer data) {
+    public InsertResult insert(ByteBuffer data) {
         int currentPosition = WRITE_POSITION_UPDATER.get(this);
         if ((currentPosition + data.remaining()) > this.fileSize) {
-            return AppendResult.endOfFile();
+            return InsertResult.endOfFile();
         }
 
         try {
@@ -118,18 +118,18 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
             buffer.put(data);
 
             this.storeTimestamp = System.currentTimeMillis();
-            return AppendResult.success(currentPosition);
+            return InsertResult.success(currentPosition);
         } catch (Throwable e) {
             log.error("Error occurred when append message to mappedFile.", e);
-            return AppendResult.failure();
+            return InsertResult.failure();
         }
     }
 
     @Override
-    public AppendResult insert(byte[] data, int offset, int length) {
+    public InsertResult insert(byte[] data, int offset, int length) {
         int currentPosition = WRITE_POSITION_UPDATER.get(this);
         if ((currentPosition + length) > this.fileSize) {
-            return AppendResult.endOfFile();
+            return InsertResult.endOfFile();
         }
 
         try {
@@ -138,10 +138,10 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
             buffer.put(data, offset, length);
 
             this.storeTimestamp = System.currentTimeMillis();
-            return AppendResult.success(currentPosition);
+            return InsertResult.success(currentPosition);
         } catch (Throwable e) {
             log.error("Error occurred when append message to mappedFile.", e);
-            return AppendResult.failure();
+            return InsertResult.failure();
         }
     }
 

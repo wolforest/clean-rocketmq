@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class EnqueueResult implements Serializable {
     private EnqueueStatus status;
-    private AppendResult appendResult;
+    private InsertResult insertResult;
 
     public EnqueueResult(EnqueueStatus status) {
         this.status = status;
