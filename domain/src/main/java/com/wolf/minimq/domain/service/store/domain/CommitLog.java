@@ -9,6 +9,8 @@ import java.util.concurrent.CompletableFuture;
 public interface CommitLog {
     CompletableFuture<EnqueueResult> insert(MessageBO messageBO);
 
+    MessageBO select(long offset, int size);
+
     MessageBO select(long offset);
 
     /**

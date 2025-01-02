@@ -1,5 +1,6 @@
 package com.wolf.minimq.domain.model.bo;
 
+import com.wolf.minimq.domain.enums.MessageStatus;
 import com.wolf.minimq.domain.enums.MessageVersion;
 import com.wolf.minimq.domain.model.Message;
 import java.io.Serializable;
@@ -18,6 +19,8 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class MessageBO extends Message implements Serializable {
+    private MessageStatus status;
+
     private String brokerName;
     /**
      * set by MQ client
@@ -52,4 +55,8 @@ public class MessageBO extends Message implements Serializable {
     private long preparedTransactionOffset;
 
     private MessageVersion version = MessageVersion.V1;
+
+    public boolean isValid() {
+        return MessageStatus.FOUND.equals(status);
+    }
 }

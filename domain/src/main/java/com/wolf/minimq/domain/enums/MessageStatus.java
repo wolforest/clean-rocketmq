@@ -16,7 +16,7 @@
  */
 package com.wolf.minimq.domain.enums;
 
-public enum SelectStatus {
+public enum MessageStatus {
 
     FOUND,
 

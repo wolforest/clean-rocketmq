@@ -70,6 +70,11 @@ public class DefaultCommitLog implements CommitLog {
     }
 
     @Override
+    public MessageBO select(long offset, int size) {
+        return null;
+    }
+
+    @Override
     public long getMinOffset() {
         return mappedFileQueue.getMinOffset();
     }
