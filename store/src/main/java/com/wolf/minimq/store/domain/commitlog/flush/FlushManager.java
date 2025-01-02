@@ -45,7 +45,7 @@ public class FlushManager implements Lifecycle {
         }
     }
 
-    public CompletableFuture<EnqueueStatus> flush(EnqueueResult result, MessageBO messageBO) {
+    public CompletableFuture<EnqueueResult> flush(EnqueueResult result, MessageBO messageBO) {
         return null;
     }
 

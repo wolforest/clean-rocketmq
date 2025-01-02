@@ -85,7 +85,10 @@ public class DefaultCommitLog implements CommitLog {
     }
 
     private CompletableFuture<EnqueueResult> handleFlush(InsertResult insertResult, InsertContext context) {
-        return null;
+        EnqueueResult enqueueResult = EnqueueResult.builder()
+            .insertResult(insertResult)
+            .build();
+        return flushManager.flush(enqueueResult, context.getMessageBO());
     }
 
     private void handleInsertError(InsertResult insertResult) {
