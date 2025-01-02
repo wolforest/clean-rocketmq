@@ -7,7 +7,9 @@ import com.wolf.minimq.domain.enums.EnqueueStatus;
 import com.wolf.minimq.domain.enums.MessageVersion;
 import com.wolf.minimq.domain.exception.EnqueueErrorException;
 import com.wolf.minimq.domain.model.dto.InsertResult;
+import com.wolf.minimq.domain.model.dto.SelectedMappedBuffer;
 import com.wolf.minimq.domain.service.store.infra.MappedFile;
+import com.wolf.minimq.domain.utils.MessageDecoder;
 import com.wolf.minimq.domain.utils.MessageEncoder;
 import com.wolf.minimq.domain.utils.lock.CommitLogLock;
 import com.wolf.minimq.domain.utils.lock.CommitLogReentrantLock;
@@ -72,63 +74,39 @@ public class DefaultCommitLog implements CommitLog {
         }
     }
 
-    private void assignCommitLogOffset(MessageBO messageBO, MappedFile mappedFile) {
-        long commitLogOffset = mappedFile.getOffsetInFileName() + mappedFile.getWritePosition();
-        messageBO.setCommitLogOffset(commitLogOffset);
-    }
-
-    private MappedFile getMappedFile(MessageEncoder encoder) {
-        MappedFile mappedFile = mappedFileQueue.getAvailableMappedFile(encoder.getMessageLength());
-        mappedFile.setFileMode(CLibrary.MADV_RANDOM);
-
-        return mappedFile;
-    }
-
-    private CompletableFuture<EnqueueResult> handleFlush(InsertResult insertResult, InsertContext context) {
-        EnqueueResult enqueueResult = EnqueueResult.builder()
-            .insertResult(insertResult)
-            .build();
-        return flushManager.flush(enqueueResult, context.getMessageBO());
-    }
-
-    private void handleInsertError(InsertResult insertResult) {
-        switch (insertResult.getStatus()) {
-            case END_OF_FILE -> throw new EnqueueErrorException(EnqueueStatus.END_OF_FILE);
-            case MESSAGE_SIZE_EXCEEDED, PROPERTIES_SIZE_EXCEEDED -> throw new EnqueueErrorException(EnqueueStatus.MESSAGE_ILLEGAL);
-            default -> throw new EnqueueErrorException(EnqueueStatus.UNKNOWN_ERROR);
+    @Override
+    public MessageBO select(long offset, int size) {
+        MappedFile mappedFile = mappedFileQueue.getMappedFileByOffset(offset);
+        if (mappedFile == null) {
+            return null;
         }
-    }
 
-    private InsertContext initContext(MessageBO messageBO) {
-        initMessage(messageBO);
-
-        long now = System.currentTimeMillis();
-        messageBO.setStoreTimestamp(now);
-
-        return InsertContext.builder()
-            .now(now)
-            .messageBO(messageBO)
-            .encoder(localEncoder.get().getEncoder(messageBO))
-            .build();
-    }
-
-    private void initMessage(MessageBO messageBO) {
-        messageBO.setBodyCRC(HashUtil.crc32(messageBO.getBody()));
-
-        messageBO.setVersion(MessageVersion.V1);
-        if (messageBO.getTopic().length() > Byte.MAX_VALUE) {
-            messageBO.setVersion(MessageVersion.V2);
+        int position = (int) (offset % commitLogConfig.getFileSize());
+        SelectedMappedBuffer buffer = mappedFile.select(position, size);
+        if (buffer == null) {
+            return null;
         }
+
+        return MessageDecoder.decode(buffer.getByteBuffer());
     }
 
     @Override
     public MessageBO select(long offset) {
-        return null;
-    }
+        MappedFile mappedFile = mappedFileQueue.getMappedFileByOffset(offset);
+        if (mappedFile == null) {
+            return null;
+        }
 
-    @Override
-    public MessageBO select(long offset, int size) {
-        return null;
+        int position = (int) (offset % commitLogConfig.getFileSize());
+        SelectedMappedBuffer buffer = mappedFile.select(position);
+        if (buffer == null) {
+            return null;
+        }
+
+        int size = buffer.getByteBuffer().getInt();
+        buffer.getByteBuffer().limit(size);
+
+        return MessageDecoder.decode(buffer.getByteBuffer());
     }
 
     @Override
@@ -156,4 +134,55 @@ public class DefaultCommitLog implements CommitLog {
             () -> new EnqueueThreadLocal(messageConfig)
         );
     }
+
+    private InsertContext initContext(MessageBO messageBO) {
+        initMessage(messageBO);
+
+        long now = System.currentTimeMillis();
+        messageBO.setStoreTimestamp(now);
+
+        return InsertContext.builder()
+            .now(now)
+            .messageBO(messageBO)
+            .encoder(localEncoder.get().getEncoder(messageBO))
+            .build();
+    }
+
+    private void initMessage(MessageBO messageBO) {
+        messageBO.setBodyCRC(HashUtil.crc32(messageBO.getBody()));
+
+        messageBO.setVersion(MessageVersion.V1);
+        if (messageBO.getTopic().length() > Byte.MAX_VALUE) {
+            messageBO.setVersion(MessageVersion.V2);
+        }
+    }
+
+    private MappedFile getMappedFile(MessageEncoder encoder) {
+        MappedFile mappedFile = mappedFileQueue.getAvailableMappedFile(encoder.getMessageLength());
+        mappedFile.setFileMode(CLibrary.MADV_RANDOM);
+
+        return mappedFile;
+    }
+
+    private void assignCommitLogOffset(MessageBO messageBO, MappedFile mappedFile) {
+        long commitLogOffset = mappedFile.getOffsetInFileName() + mappedFile.getWritePosition();
+        messageBO.setCommitLogOffset(commitLogOffset);
+    }
+
+    private void handleInsertError(InsertResult insertResult) {
+        switch (insertResult.getStatus()) {
+            case END_OF_FILE -> throw new EnqueueErrorException(EnqueueStatus.END_OF_FILE);
+            case MESSAGE_SIZE_EXCEEDED, PROPERTIES_SIZE_EXCEEDED -> throw new EnqueueErrorException(EnqueueStatus.MESSAGE_ILLEGAL);
+            default -> throw new EnqueueErrorException(EnqueueStatus.UNKNOWN_ERROR);
+        }
+    }
+
+    private CompletableFuture<EnqueueResult> handleFlush(InsertResult insertResult, InsertContext context) {
+        EnqueueResult enqueueResult = EnqueueResult.builder()
+            .insertResult(insertResult)
+            .build();
+        return flushManager.flush(enqueueResult, context.getMessageBO());
+    }
+
+
 }
