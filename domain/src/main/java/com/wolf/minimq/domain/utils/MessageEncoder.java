@@ -2,9 +2,7 @@ package com.wolf.minimq.domain.utils;
 
 import com.wolf.minimq.domain.config.MessageConfig;
 import com.wolf.minimq.domain.enums.EnqueueStatus;
-import com.wolf.minimq.domain.exception.InvalidMessageException;
-import com.wolf.minimq.domain.model.Message;
-import com.wolf.minimq.domain.model.dto.EnqueueResult;
+import com.wolf.minimq.domain.exception.EnqueueErrorException;
 import com.wolf.minimq.domain.model.bo.MessageBO;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
@@ -49,7 +47,7 @@ public class MessageEncoder {
         );
 
         if (messageLength > messageConfig.getMaxSize() || bodyLen > messageConfig.getMaxBodySize()) {
-            throw new InvalidMessageException(EnqueueStatus.MESSAGE_ILLEGAL);
+            throw new EnqueueErrorException(EnqueueStatus.MESSAGE_ILLEGAL);
         }
 
         return getByteBuffer();

@@ -5,10 +5,10 @@ import com.wolf.minimq.domain.enums.EnqueueStatus;
 import lombok.Getter;
 
 @Getter
-public class InvalidMessageException extends BusinessException {
+public class EnqueueErrorException extends BusinessException {
     private EnqueueStatus status = EnqueueStatus.UNKNOWN_ERROR;
 
-    public InvalidMessageException(EnqueueStatus status) {
+    public EnqueueErrorException(EnqueueStatus status) {
         this.status = status;
     }
 }

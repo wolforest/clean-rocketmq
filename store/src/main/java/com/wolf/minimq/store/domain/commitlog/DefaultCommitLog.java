@@ -1,11 +1,11 @@
 package com.wolf.minimq.store.domain.commitlog;
 
 import com.wolf.common.util.encrypt.HashUtil;
-import com.wolf.common.util.lang.SystemUtil;
 import com.wolf.minimq.domain.config.CommitLogConfig;
 import com.wolf.minimq.domain.config.MessageConfig;
+import com.wolf.minimq.domain.enums.EnqueueStatus;
 import com.wolf.minimq.domain.enums.MessageVersion;
-import com.wolf.minimq.domain.exception.InvalidMessageException;
+import com.wolf.minimq.domain.exception.EnqueueErrorException;
 import com.wolf.minimq.domain.model.dto.InsertResult;
 import com.wolf.minimq.domain.service.store.infra.MappedFile;
 import com.wolf.minimq.domain.utils.MessageEncoder;
@@ -19,7 +19,6 @@ import com.wolf.minimq.store.domain.commitlog.flush.FlushManager;
 import com.wolf.minimq.store.domain.commitlog.vo.EnqueueThreadLocal;
 import com.wolf.minimq.store.domain.commitlog.vo.InsertContext;
 import com.wolf.minimq.store.infra.memory.CLibrary;
-import java.nio.ByteBuffer;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -56,34 +55,45 @@ public class DefaultCommitLog implements CommitLog {
     @Override
     public CompletableFuture<EnqueueResult> insert(MessageBO messageBO) {
         InsertContext context = initContext(messageBO);
-        MessageEncoder encoder = context.getEncoder();
-        MappedFile mappedFile = context.getMappedFile();
 
         this.lock.lock();
         try {
-            long commitLogOffset = mappedFile.getOffsetInFileName() + mappedFile.getWritePosition();
-            messageBO.setCommitLogOffset(commitLogOffset);
+            MappedFile mappedFile = getMappedFile(context.getEncoder());
+            assignCommitLogOffset(messageBO, mappedFile);
 
-            InsertResult insertResult = mappedFile.insert(encoder.encode());
-            CompletableFuture<EnqueueResult> insertError = formatInsertResult(insertResult, context);
-            if (insertError != null) {
-                return insertError;
-            }
+            InsertResult insertResult = mappedFile.insert(context.getEncoder().encode());
+            handleInsertError(insertResult);
 
             return handleFlush(insertResult, context);
-        } catch (InvalidMessageException messageException) {
+        } catch (EnqueueErrorException messageException) {
             return CompletableFuture.completedFuture(new EnqueueResult(messageException.getStatus()));
         } finally {
             this.lock.unlock();
         }
     }
 
+    private void assignCommitLogOffset(MessageBO messageBO, MappedFile mappedFile) {
+        long commitLogOffset = mappedFile.getOffsetInFileName() + mappedFile.getWritePosition();
+        messageBO.setCommitLogOffset(commitLogOffset);
+    }
+
+    private MappedFile getMappedFile(MessageEncoder encoder) {
+        MappedFile mappedFile = mappedFileQueue.getAvailableMappedFile(encoder.getMessageLength());
+        mappedFile.setFileMode(CLibrary.MADV_RANDOM);
+
+        return mappedFile;
+    }
+
     private CompletableFuture<EnqueueResult> handleFlush(InsertResult insertResult, InsertContext context) {
         return null;
     }
 
-    private CompletableFuture<EnqueueResult> formatInsertResult(InsertResult insertResult, InsertContext context) {
-        return null;
+    private void handleInsertError(InsertResult insertResult) {
+        switch (insertResult.getStatus()) {
+            case END_OF_FILE -> throw new EnqueueErrorException(EnqueueStatus.END_OF_FILE);
+            case MESSAGE_SIZE_EXCEEDED, PROPERTIES_SIZE_EXCEEDED -> throw new EnqueueErrorException(EnqueueStatus.MESSAGE_ILLEGAL);
+            default -> throw new EnqueueErrorException(EnqueueStatus.UNKNOWN_ERROR);
+        }
     }
 
     private InsertContext initContext(MessageBO messageBO) {
@@ -92,15 +102,10 @@ public class DefaultCommitLog implements CommitLog {
         long now = System.currentTimeMillis();
         messageBO.setStoreTimestamp(now);
 
-        MessageEncoder encoder = localEncoder.get().getEncoder(messageBO);
-        MappedFile mappedFile = mappedFileQueue.getAvailableMappedFile(encoder.getMessageLength());
-        mappedFile.setFileMode(CLibrary.MADV_RANDOM);
-
         return InsertContext.builder()
             .now(now)
             .messageBO(messageBO)
-            .encoder(encoder)
-            .mappedFile(mappedFile)
+            .encoder(localEncoder.get().getEncoder(messageBO))
             .build();
     }
 

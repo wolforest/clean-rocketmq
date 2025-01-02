@@ -38,7 +38,6 @@ public class InsertContext implements Serializable {
     @Builder.Default
     private long elapsedTimeInLock = 0;
     private MappedFile mappedFile;
-    private long currentOffset;
 
     private MessageEncoder encoder;
 }
