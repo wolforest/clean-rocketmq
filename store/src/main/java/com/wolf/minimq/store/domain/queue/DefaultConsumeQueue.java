@@ -5,6 +5,7 @@ import com.wolf.minimq.domain.model.bo.QueueUnit;
 import com.wolf.minimq.domain.service.store.domain.ConsumeQueue;
 import com.wolf.minimq.domain.model.bo.MessageBO;
 import com.wolf.minimq.domain.service.store.domain.QueueStore;
+import com.wolf.minimq.store.domain.queue.store.QueueStoreManager;
 import java.util.List;
 
 public class DefaultConsumeQueue implements ConsumeQueue {
