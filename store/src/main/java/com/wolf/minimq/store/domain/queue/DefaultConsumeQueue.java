@@ -4,22 +4,30 @@ import com.wolf.minimq.domain.model.bo.CommitLogEvent;
 import com.wolf.minimq.domain.model.bo.QueueUnit;
 import com.wolf.minimq.domain.service.store.domain.ConsumeQueue;
 import com.wolf.minimq.domain.model.bo.MessageBO;
+import com.wolf.minimq.domain.service.store.domain.QueueStore;
 import java.util.List;
 
 public class DefaultConsumeQueue implements ConsumeQueue {
+    private final QueueStoreManager queueStoreManager;
+
+    public DefaultConsumeQueue(QueueStoreManager queueStoreManager) {
+        this.queueStoreManager = queueStoreManager;
+    }
+
     @Override
     public void enqueue(CommitLogEvent event) {
-
+        getQueueStore(event.getMessageBO().getTopic(), event.getMessageBO()
+            .getQueueId()).enqueue(event);
     }
 
     @Override
     public QueueUnit fetch(String topic, int queueId, long offset) {
-        return null;
+        return getQueueStore(topic, queueId).fetch(offset);
     }
 
     @Override
     public List<QueueUnit> fetch(String topic, int queueId, long offset, int num) {
-        return List.of();
+        return getQueueStore(topic, queueId).fetch(offset, num);
     }
 
     @Override
@@ -34,11 +42,15 @@ public class DefaultConsumeQueue implements ConsumeQueue {
 
     @Override
     public long getMinOffset(String topic, int queueId) {
-        return 0L;
+        return getQueueStore(topic, queueId).getMinOffset();
     }
 
     @Override
     public long getMaxOffset(String topic, int queueId) {
-        return 0L;
+        return getQueueStore(topic, queueId).getMaxOffset();
+    }
+
+    private QueueStore getQueueStore(String topic, int queueId) {
+        return queueStoreManager.get(topic, queueId);
     }
 }

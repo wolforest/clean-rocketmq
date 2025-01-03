@@ -12,7 +12,8 @@ public class DefaultConsumeQueueManager implements ConsumeQueueManager {
         QueueCommitLogHandler handler = new QueueCommitLogHandler();
         dispatcher.registerHandler(handler);
 
-        StoreContext.register(new DefaultConsumeQueue(), ConsumeQueue.class);
+        QueueStoreManager queueStoreManager = new QueueStoreManager();
+        StoreContext.register(new DefaultConsumeQueue(queueStoreManager), ConsumeQueue.class);
     }
 
     @Override
