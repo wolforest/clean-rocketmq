@@ -61,7 +61,7 @@ public class DefaultCommitLog implements CommitLog {
         this.commitLogLock.lock();
         try {
             MappedFile mappedFile = getMappedFile(context.getEncoder());
-            assignCommitLogOffset(messageBO, mappedFile);
+            assignOffset(messageBO, mappedFile);
 
             InsertResult insertResult = mappedFile.insert(context.getEncoder().encode());
             handleInsertError(insertResult);
@@ -164,7 +164,7 @@ public class DefaultCommitLog implements CommitLog {
         return mappedFile;
     }
 
-    private void assignCommitLogOffset(MessageBO messageBO, MappedFile mappedFile) {
+    private void assignOffset(MessageBO messageBO, MappedFile mappedFile) {
         long commitLogOffset = mappedFile.getOffsetInFileName() + mappedFile.getWritePosition();
         messageBO.setCommitLogOffset(commitLogOffset);
     }
