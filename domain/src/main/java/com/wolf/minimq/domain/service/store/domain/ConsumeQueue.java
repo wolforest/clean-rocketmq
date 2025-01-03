@@ -13,6 +13,6 @@ public interface ConsumeQueue {
     void assignOffset(MessageBO messageBO);
     void increaseOffset(MessageBO messageBO);
 
-    Long getMinOffset(String topic, int queueId);
-    Long getMaxOffset(String topic, int queueId);
+    long getMinOffset(String topic, int queueId);
+    long getMaxOffset(String topic, int queueId);
 }

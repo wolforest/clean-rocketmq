@@ -33,12 +33,12 @@ public class DefaultConsumeQueue implements ConsumeQueue {
     }
 
     @Override
-    public Long getMinOffset(String topic, int queueId) {
-        return 0;
+    public long getMinOffset(String topic, int queueId) {
+        return 0L;
     }
 
     @Override
-    public Long getMaxOffset(String topic, int queueId) {
-        return 0;
+    public long getMaxOffset(String topic, int queueId) {
+        return 0L;
     }
 }
