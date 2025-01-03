@@ -42,16 +42,6 @@ import lombok.NoArgsConstructor;
 public class CommitLogEvent implements Serializable {
     private MessageBO messageBO;
 
+    // filter info
     private byte[] bitMap;
-
-    //the buffer size maybe larger than the msg size if the message is wrapped by something
-    private int bufferSize = -1;
-
-    // for batch consume queue
-    private long  msgBaseOffset = -1;
-    private short batchSize = 1;
-
-    private long nextReputFromOffset = -1;
-    private String offsetId;
-
 }
