@@ -5,13 +5,13 @@ import com.wolf.common.util.lang.JSONUtil;
 import com.wolf.common.util.lang.StringUtil;
 import com.wolf.minimq.domain.model.Topic;
 import com.wolf.minimq.domain.model.meta.TopicTable;
-import com.wolf.minimq.domain.service.store.domain.meta.TopicManager;
+import com.wolf.minimq.domain.service.store.domain.meta.TopicStore;
 
-public class DefaultTopicManager implements TopicManager {
+public class DefaultTopicStore implements TopicStore {
     private final String storePath;
     private TopicTable topicTable;
 
-    public DefaultTopicManager(String storePath) {
+    public DefaultTopicStore(String storePath) {
         this.storePath = storePath;
     }
 
@@ -48,7 +48,8 @@ public class DefaultTopicManager implements TopicManager {
     }
 
     private void initTopicTable() {
-
+        SystemTopicRegister Register = new SystemTopicRegister(this);
+        Register.register();
     }
 
     private void decodeTopicTable(String data) {

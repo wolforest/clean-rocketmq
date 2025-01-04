@@ -76,7 +76,7 @@ public class StorePath {
         return ROOT_PATH + File.separator + "transaction" + File.separator + "redolog";
     }
 
-    public static String getTopicConfigPath() {
+    public static String getTopicPath() {
         return ROOT_PATH + File.separator + "config" + File.separator + "topics.json";
     }
 
