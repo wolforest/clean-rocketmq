@@ -12,7 +12,7 @@ public class QueueStoreManager {
 
     public QueueStore get(String topic, int queueId) {
         if (!topicStore.exists(topic)) {
-            return null;
+            return FackQueueStore.singleton();
         }
 
         return null;
