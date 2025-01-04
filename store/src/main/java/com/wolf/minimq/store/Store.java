@@ -4,7 +4,6 @@ import com.wolf.common.convention.service.Lifecycle;
 import com.wolf.common.convention.service.LifecycleManager;
 import com.wolf.minimq.domain.utils.lock.StartupLock;
 import com.wolf.minimq.domain.utils.lock.ShutdownLock;
-import com.wolf.minimq.store.server.APIRegister;
 import com.wolf.minimq.store.server.ContextInitializer;
 import com.wolf.minimq.store.server.ComponentRegister;
 import com.wolf.minimq.store.server.StoreArgument;
