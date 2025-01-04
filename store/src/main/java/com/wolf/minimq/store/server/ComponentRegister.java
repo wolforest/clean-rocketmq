@@ -6,11 +6,13 @@ import com.wolf.minimq.domain.service.store.manager.CommitLogManager;
 import com.wolf.minimq.domain.service.store.manager.CommitLogDispatcherManager;
 import com.wolf.minimq.domain.service.store.manager.IndexManager;
 import com.wolf.minimq.domain.service.store.manager.MessageManager;
+import com.wolf.minimq.domain.service.store.manager.MetaManager;
 import com.wolf.minimq.domain.service.store.manager.TimerManager;
 import com.wolf.minimq.store.domain.commitlog.DefaultCommitLogManager;
 import com.wolf.minimq.store.domain.dispatcher.DefaultCommitLogDispatcherManager;
 import com.wolf.minimq.store.domain.index.DefaultIndexManager;
 import com.wolf.minimq.store.domain.message.DefaultMessageManager;
+import com.wolf.minimq.store.domain.meta.DefaultMetaManager;
 import com.wolf.minimq.store.domain.timer.DefaultTimerManager;
 import com.wolf.minimq.store.infra.file.AllocateMappedFileService;
 import com.wolf.minimq.store.infra.memory.TransientPool;
@@ -26,6 +28,7 @@ public class ComponentRegister {
     }
 
     public LifecycleManager execute() {
+        registerMeta();
         registerCommitLog();
         registerDispatcher();
         registerConsumeQueue();
@@ -34,6 +37,12 @@ public class ComponentRegister {
         registerMappedFileService();
 
         return this.manager;
+    }
+
+    private void registerMeta() {
+        MetaManager component = new DefaultMetaManager();
+        manager.register(component);
+        StoreContext.register(component, MetaManager.class);
     }
 
     private void registerCommitLog() {

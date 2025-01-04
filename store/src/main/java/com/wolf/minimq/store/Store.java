@@ -44,9 +44,9 @@ public class Store implements Lifecycle {
         startupLock = new StartupLock(StorePath.getLockFile());
         shutdownLock = new ShutdownLock(StorePath.getAbortFile());
 
-        this.componentManager = ComponentRegister.register();
         this.initCheckPoint();
 
+        this.componentManager = ComponentRegister.register();
         this.componentManager.initialize();
     }
 
