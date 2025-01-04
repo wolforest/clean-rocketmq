@@ -5,6 +5,7 @@ import com.wolf.minimq.domain.model.bo.QueueUnit;
 import com.wolf.minimq.domain.service.store.domain.ConsumeQueue;
 import com.wolf.minimq.domain.model.bo.MessageBO;
 import com.wolf.minimq.domain.service.store.domain.QueueStore;
+import com.wolf.minimq.domain.service.store.domain.meta.TopicStore;
 import com.wolf.minimq.store.domain.queue.store.QueueStoreManager;
 import java.util.List;
 
@@ -17,8 +18,10 @@ public class DefaultConsumeQueue implements ConsumeQueue {
 
     @Override
     public void enqueue(CommitLogEvent event) {
-        getQueueStore(event.getMessageBO().getTopic(), event.getMessageBO()
-            .getQueueId()).enqueue(event);
+        String topic = event.getMessageBO().getTopic();
+        int queueId = event.getMessageBO().getQueueId();
+
+        getQueueStore(topic, queueId).enqueue(event);
     }
 
     @Override

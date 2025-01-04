@@ -16,6 +16,15 @@ public class DefaultTopicStore implements TopicStore {
     }
 
     @Override
+    public boolean exists(String topicName) {
+        if (null == topicTable) {
+            return false;
+        }
+
+        return topicTable.exists(topicName);
+    }
+
+    @Override
     public Topic getTopic(String topicName) {
         return null;
     }

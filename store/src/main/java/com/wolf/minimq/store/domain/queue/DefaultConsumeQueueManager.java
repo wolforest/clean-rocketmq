@@ -2,6 +2,7 @@ package com.wolf.minimq.store.domain.queue;
 
 import com.wolf.minimq.domain.service.store.domain.CommitLogDispatcher;
 import com.wolf.minimq.domain.service.store.domain.ConsumeQueue;
+import com.wolf.minimq.domain.service.store.domain.meta.TopicStore;
 import com.wolf.minimq.domain.service.store.manager.ConsumeQueueManager;
 import com.wolf.minimq.store.domain.queue.store.QueueStoreManager;
 import com.wolf.minimq.store.server.StoreContext;
@@ -13,8 +14,11 @@ public class DefaultConsumeQueueManager implements ConsumeQueueManager {
         QueueCommitLogHandler handler = new QueueCommitLogHandler();
         dispatcher.registerHandler(handler);
 
-        QueueStoreManager queueStoreManager = new QueueStoreManager();
-        StoreContext.register(new DefaultConsumeQueue(queueStoreManager), ConsumeQueue.class);
+        TopicStore topicStore = StoreContext.getBean(TopicStore.class);
+        QueueStoreManager queueStoreManager = new QueueStoreManager(topicStore);
+        ConsumeQueue consumeQueue = new DefaultConsumeQueue(queueStoreManager);
+
+        StoreContext.register(consumeQueue, ConsumeQueue.class);
     }
 
     @Override
