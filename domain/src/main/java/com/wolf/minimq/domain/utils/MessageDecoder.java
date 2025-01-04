@@ -126,20 +126,20 @@ public class MessageDecoder {
                 byte[] properties = new byte[propertiesLength];
                 byteBuffer.get(properties);
                 String propertiesString = new String(properties, StandardCharsets.UTF_8);
-                if (!isSetPropertiesString) {
-                    Map<String, String> map = string2messageProperties(propertiesString);
-                    msgExt.setProperties(map);
-                } else {
-                    Map<String, String> map = string2messageProperties(propertiesString);
-                    map.put("propertiesString", propertiesString);
-                    msgExt.setProperties(map);
-                }
+//                if (!isSetPropertiesString) {
+//                    Map<String, String> map = string2messageProperties(propertiesString);
+//                    msgExt.setProperties(map);
+//                } else {
+//                    Map<String, String> map = string2messageProperties(propertiesString);
+//                    map.put("propertiesString", propertiesString);
+//                    msgExt.setProperties(map);
+//                }
             }
 
             int msgIDLength = storehostIPLength + 4 + 8;
             ByteBuffer byteBufferMsgId = ByteBuffer.allocate(msgIDLength);
-            String msgId = createMessageId(byteBufferMsgId, msgExt.getStoreHost(), msgExt.getCommitLogOffset());
-            msgExt.setMsgId(msgId);
+//            String msgId = createMessageId(byteBufferMsgId, msgExt.getStoreHost(), msgExt.getCommitLogOffset());
+//            msgExt.setMsgId(msgId);
 
             return msgExt;
         } catch (Exception e) {
@@ -156,8 +156,8 @@ public class MessageDecoder {
 
         input.put(addr);
         input.putLong(offset);
-
-        return StringUtils.bytes2string(input.array());
+        return null;
+//        return StringUtils.bytes2string(input.array());
     }
 
 }

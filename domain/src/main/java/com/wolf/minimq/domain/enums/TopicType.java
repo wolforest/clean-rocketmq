@@ -17,10 +17,9 @@
 
 package com.wolf.minimq.domain.enums;
 
-import com.google.common.collect.Sets;
-import java.util.Map;
-import java.util.Set;
+import lombok.Getter;
 
+@Getter
 public enum TopicType {
     UNSPECIFIED("UNSPECIFIED"),
     NORMAL("NORMAL"),
@@ -30,34 +29,9 @@ public enum TopicType {
     MIXED("MIXED");
 
     private final String value;
+
     TopicType(String value) {
         this.value = value;
     }
 
-    public static Set<String> topicMessageTypeSet() {
-        return Sets.newHashSet(UNSPECIFIED.value, NORMAL.value, FIFO.value, DELAY.value, TRANSACTION.value, MIXED.value);
-    }
-
-    public String getValue() {
-        return value;
-    }
-
-    public static TopicType parseFromMessageProperty(Map<String, String> messageProperty) {
-        String isTrans = messageProperty.get(MessageConst.PROPERTY_TRANSACTION_PREPARED);
-        String isTransValue = "true";
-        if (isTransValue.equals(isTrans)) {
-            return TopicType.TRANSACTION;
-        } else if (messageProperty.get(MessageConst.PROPERTY_DELAY_TIME_LEVEL) != null
-            || messageProperty.get(MessageConst.PROPERTY_TIMER_DELIVER_MS) != null
-            || messageProperty.get(MessageConst.PROPERTY_TIMER_DELAY_SEC) != null) {
-            return TopicType.DELAY;
-        } else if (messageProperty.get(MessageConst.PROPERTY_SHARDING_KEY) != null) {
-            return TopicType.FIFO;
-        }
-        return TopicType.NORMAL;
-    }
-
-    public String getMetricsValue() {
-        return value.toLowerCase();
-    }
 }

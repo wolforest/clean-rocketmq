@@ -29,7 +29,7 @@ public class ShutdownLock {
             if (pid < 0) {
                 pid = 0;
             }
-            FileUtil.writeToFile(Long.toString(pid), file);
+            FileUtil.writeString(Long.toString(pid), file);
         } catch (IOException e) {
             throw new com.wolf.common.lang.exception.io.IOException(e.getMessage());
         }

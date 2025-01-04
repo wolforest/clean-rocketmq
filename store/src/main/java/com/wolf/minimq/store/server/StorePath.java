@@ -76,4 +76,45 @@ public class StorePath {
         return ROOT_PATH + File.separator + "transaction" + File.separator + "redolog";
     }
 
+    public static String getTopicConfigPath() {
+        return ROOT_PATH + File.separator + "config" + File.separator + "topics.json";
+    }
+
+    public static String getTopicQueueMappingPath() {
+        return ROOT_PATH + File.separator + "config" + File.separator + "topicQueueMapping.json";
+    }
+
+    public static String getConsumerOffsetPath() {
+        return ROOT_PATH + File.separator + "config" + File.separator + "consumerOffset.json";
+    }
+
+    public static String getLmqConsumerOffsetPath() {
+        return ROOT_PATH + File.separator + "config" + File.separator + "lmqConsumerOffset.json";
+    }
+
+    public static String getConsumerOrderInfoPath() {
+        return ROOT_PATH + File.separator + "config" + File.separator + "consumerOrderInfo.json";
+    }
+
+    public static String getSubscriptionGroupPath() {
+        return ROOT_PATH + File.separator + "config" + File.separator + "subscriptionGroup.json";
+    }
+    public static String getTimerCheckPath() {
+        return ROOT_PATH + File.separator + "config" + File.separator + "timercheck";
+    }
+    public static String getTimerMetricsPath() {
+        return ROOT_PATH + File.separator + "config" + File.separator + "timermetrics";
+    }
+    public static String getTransactionMetricsPath() {
+        return ROOT_PATH + File.separator + "config" + File.separator + "transactionMetrics";
+    }
+
+    public static String getConsumerFilterPath() {
+        return ROOT_PATH + File.separator + "config" + File.separator + "consumerFilter.json";
+    }
+
+    public static String getMessageRequestModePath() {
+        return ROOT_PATH + File.separator + "config" + File.separator + "messageRequestMode.json";
+    }
+
 }

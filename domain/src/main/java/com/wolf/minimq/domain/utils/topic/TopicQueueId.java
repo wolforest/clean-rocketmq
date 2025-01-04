@@ -16,7 +16,7 @@
  */
 package com.wolf.minimq.domain.utils.topic;
 
-import com.google.common.base.Objects;
+import com.wolf.common.util.lang.BeanUtil;
 
 public class TopicQueueId {
     private final String topic;
@@ -28,7 +28,7 @@ public class TopicQueueId {
         this.topic = topic;
         this.queueId = queueId;
 
-        this.hash = Objects.hashCode(topic, queueId);
+        this.hash = BeanUtil.hashCode(topic, queueId);
     }
 
     @Override
@@ -38,7 +38,7 @@ public class TopicQueueId {
         if (o == null || getClass() != o.getClass())
             return false;
         TopicQueueId broker = (TopicQueueId) o;
-        return queueId == broker.queueId && Objects.equal(topic, broker.topic);
+        return queueId == broker.queueId && BeanUtil.equals(topic, broker.topic);
     }
 
     @Override
