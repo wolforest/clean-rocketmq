@@ -9,18 +9,32 @@ import java.util.concurrent.ConcurrentMap;
 public class ConsumeQueueFactory {
     private static final int TOPIC_MAP_SIZE = 32;
     private static final int QUEUE_MAP_SIZE = 128;
+
     private final TopicStore topicStore;
+    private final ConsumeQueueFlusher flusher;
+    private final ConsumeQueueLoader loader;
     /**
      * consume queue map, structure:
      * - topic
      *  - queueId
      *    - consumeQueue
      */
-    protected final ConcurrentMap<String/* topic */, ConcurrentMap<Integer/* queueId */, ConsumeQueue>> topicMap;
+    protected final ConcurrentMap<String, ConcurrentMap<Integer, ConsumeQueue>> topicMap;
 
-    public ConsumeQueueFactory(TopicStore topicStore) {
+    public ConsumeQueueFactory(
+        TopicStore topicStore,
+        ConsumeQueueFlusher flusher,
+        ConsumeQueueLoader loader
+    ) {
         this.topicStore = topicStore;
+        this.flusher = flusher;
+        this.loader = loader;
+
         this.topicMap = new ConcurrentHashMap<>(TOPIC_MAP_SIZE);
+    }
+
+    public void createAll() {
+
     }
 
     public ConsumeQueue getOrCreate(String topic, int queueId) {

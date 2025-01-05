@@ -4,6 +4,7 @@ import com.wolf.minimq.domain.enums.QueueType;
 import com.wolf.minimq.domain.model.bo.CommitLogEvent;
 import com.wolf.minimq.domain.model.bo.QueueUnit;
 import com.wolf.minimq.domain.service.store.domain.ConsumeQueue;
+import com.wolf.minimq.domain.service.store.infra.MappedFileQueue;
 import java.util.List;
 import lombok.Getter;
 
@@ -12,6 +13,9 @@ public class DefaultConsumeQueue implements ConsumeQueue {
     private final String topic;
     @Getter
     private final int queueId;
+    @Getter
+    private MappedFileQueue mappedFileQueue;
+
     private final String rootPath;
     private final int fileSize;
 

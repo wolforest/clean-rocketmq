@@ -3,6 +3,7 @@ package com.wolf.minimq.domain.service.store.domain;
 import com.wolf.minimq.domain.enums.QueueType;
 import com.wolf.minimq.domain.model.bo.CommitLogEvent;
 import com.wolf.minimq.domain.model.bo.QueueUnit;
+import com.wolf.minimq.domain.service.store.infra.MappedFileQueue;
 import java.util.List;
 
 public interface ConsumeQueue {
@@ -18,4 +19,6 @@ public interface ConsumeQueue {
     long getMaxOffset();
     long getCurrentOffset();
     long increaseOffset();
+
+    MappedFileQueue getMappedFileQueue();
 }
