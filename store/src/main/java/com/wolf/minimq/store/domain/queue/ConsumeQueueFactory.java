@@ -68,6 +68,11 @@ public class ConsumeQueueFactory {
         ConsumeQueue queue = createConsumeQueue(topic, queueId);
         ConsumeQueue result = queueMap.putIfAbsent(queueId, queue);
 
+        if (result == null) {
+            loader.register(queue);
+            flusher.register(queue);
+        }
+
         return result == null ? queue : result;
     }
 

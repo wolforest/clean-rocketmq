@@ -7,14 +7,13 @@ import com.wolf.minimq.domain.service.store.manager.ConsumeQueueManager;
 import com.wolf.minimq.store.server.StoreContext;
 
 public class DefaultConsumeQueueManager implements ConsumeQueueManager {
-    private ConsumeQueueLoader loader;
     private ConsumeQueueFlusher flusher;
 
     @Override
     public void initialize() {
         TopicStore topicStore = StoreContext.getBean(TopicStore.class);
         flusher = new ConsumeQueueFlusher();
-        loader = new ConsumeQueueLoader();
+        ConsumeQueueLoader loader = new ConsumeQueueLoader();
 
         ConsumeQueueFactory consumeQueueFactory = new ConsumeQueueFactory(topicStore, flusher, loader);
         consumeQueueFactory.createAll();
@@ -31,15 +30,13 @@ public class DefaultConsumeQueueManager implements ConsumeQueueManager {
 
     @Override
     public void start() {
-
+        flusher.start();
     }
 
     @Override
     public void shutdown() {
-
+        flusher.shutdown();
     }
-
-
 
     @Override
     public void cleanup() {
@@ -48,6 +45,6 @@ public class DefaultConsumeQueueManager implements ConsumeQueueManager {
 
     @Override
     public State getState() {
-        return null;
+        return State.RUNNING;
     }
 }
