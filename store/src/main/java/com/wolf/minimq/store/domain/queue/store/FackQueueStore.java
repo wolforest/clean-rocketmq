@@ -4,11 +4,14 @@ import com.wolf.minimq.domain.model.bo.CommitLogEvent;
 import com.wolf.minimq.domain.model.bo.QueueUnit;
 import com.wolf.minimq.domain.service.store.domain.QueueStore;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class FackQueueStore implements QueueStore {
     public static final FackQueueStore INSTANCE = new FackQueueStore();
 
     public static FackQueueStore singleton() {
+        log.error("no such queue store");
         return INSTANCE;
     }
 

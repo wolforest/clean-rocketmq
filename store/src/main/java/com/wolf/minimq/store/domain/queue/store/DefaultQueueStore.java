@@ -1,19 +1,30 @@
 package com.wolf.minimq.store.domain.queue.store;
 
+import com.wolf.minimq.domain.enums.QueueType;
 import com.wolf.minimq.domain.model.bo.CommitLogEvent;
 import com.wolf.minimq.domain.model.bo.QueueUnit;
 import com.wolf.minimq.domain.service.store.domain.QueueStore;
 import java.util.List;
+import lombok.Getter;
 
 public class DefaultQueueStore implements QueueStore {
-    @Override
-    public String getTopic() {
-        return "";
+    @Getter
+    private final String topic;
+    @Getter
+    private final int queueId;
+    private final String rootPath;
+    private final int fileSize;
+
+    public DefaultQueueStore(String topic, int queueId, String rootPath, int fileSize) {
+        this.topic = topic;
+        this.queueId = queueId;
+        this.rootPath = rootPath;
+        this.fileSize = fileSize;
     }
 
     @Override
-    public int getQueueId() {
-        return 0;
+    public QueueType getQueueType() {
+        return QueueType.DEFAULT;
     }
 
     @Override

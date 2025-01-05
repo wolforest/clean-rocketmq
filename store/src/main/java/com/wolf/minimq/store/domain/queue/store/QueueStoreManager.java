@@ -18,7 +18,4 @@ public class QueueStoreManager {
         return null;
     }
 
-    public QueueStore getOrCreate(String topic, int queueId) {
-        return null;
-    }
 }

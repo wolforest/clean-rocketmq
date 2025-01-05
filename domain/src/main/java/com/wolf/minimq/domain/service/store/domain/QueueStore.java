@@ -1,10 +1,12 @@
 package com.wolf.minimq.domain.service.store.domain;
 
+import com.wolf.minimq.domain.enums.QueueType;
 import com.wolf.minimq.domain.model.bo.CommitLogEvent;
 import com.wolf.minimq.domain.model.bo.QueueUnit;
 import java.util.List;
 
 public interface QueueStore {
+    QueueType getQueueType();
     String getTopic();
     int getQueueId();
 
