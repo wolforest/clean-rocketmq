@@ -2,13 +2,13 @@ package com.wolf.minimq.store.domain.queue;
 
 import com.wolf.minimq.domain.model.bo.CommitLogEvent;
 import com.wolf.minimq.domain.service.store.domain.CommitLogHandler;
-import com.wolf.minimq.domain.service.store.domain.ConsumeQueue;
+import com.wolf.minimq.domain.service.store.domain.ConsumeQueueStore;
 
 public class QueueCommitLogHandler implements CommitLogHandler {
-    private final ConsumeQueue consumeQueue;
+    private final ConsumeQueueStore consumeQueueStore;
 
-    public QueueCommitLogHandler(ConsumeQueue consumeQueue) {
-        this.consumeQueue = consumeQueue;
+    public QueueCommitLogHandler(ConsumeQueueStore consumeQueueStore) {
+        this.consumeQueueStore = consumeQueueStore;
     }
 
     @Override

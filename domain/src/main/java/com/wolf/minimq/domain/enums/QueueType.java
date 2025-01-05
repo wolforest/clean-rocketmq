@@ -20,5 +20,6 @@ package com.wolf.minimq.domain.enums;
 public enum QueueType {
     DEFAULT,
     BATCH,
-    ROCKSDB
+    ROCKSDB,
+    ERROR,
 }

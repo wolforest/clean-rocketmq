@@ -1,18 +1,24 @@
-package com.wolf.minimq.store.domain.queue.store;
+package com.wolf.minimq.store.domain.queue;
 
+import com.wolf.minimq.domain.enums.QueueType;
 import com.wolf.minimq.domain.model.bo.CommitLogEvent;
 import com.wolf.minimq.domain.model.bo.QueueUnit;
-import com.wolf.minimq.domain.service.store.domain.QueueStore;
+import com.wolf.minimq.domain.service.store.domain.ConsumeQueue;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class FackQueueStore implements QueueStore {
-    public static final FackQueueStore INSTANCE = new FackQueueStore();
+public class ErrorConsumeQueue implements ConsumeQueue {
+    public static final ErrorConsumeQueue INSTANCE = new ErrorConsumeQueue();
 
-    public static FackQueueStore singleton() {
+    public static ErrorConsumeQueue singleton() {
         log.error("no such queue store");
         return INSTANCE;
+    }
+
+    @Override
+    public QueueType getQueueType() {
+        return QueueType.ERROR;
     }
 
     @Override

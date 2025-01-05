@@ -1,23 +1,22 @@
 package com.wolf.minimq.store.domain.queue;
 
 import com.wolf.minimq.domain.service.store.domain.CommitLogDispatcher;
-import com.wolf.minimq.domain.service.store.domain.ConsumeQueue;
+import com.wolf.minimq.domain.service.store.domain.ConsumeQueueStore;
 import com.wolf.minimq.domain.service.store.domain.meta.TopicStore;
 import com.wolf.minimq.domain.service.store.manager.ConsumeQueueManager;
-import com.wolf.minimq.store.domain.queue.store.QueueStoreManager;
 import com.wolf.minimq.store.server.StoreContext;
 
 public class DefaultConsumeQueueManager implements ConsumeQueueManager {
     @Override
     public void initialize() {
         TopicStore topicStore = StoreContext.getBean(TopicStore.class);
-        QueueStoreManager queueStoreManager = new QueueStoreManager(topicStore);
+        ConsumeQueueFactory consumeQueueFactory = new ConsumeQueueFactory(topicStore);
 
-        ConsumeQueue consumeQueue = new DefaultConsumeQueue(queueStoreManager);
-        StoreContext.register(consumeQueue, ConsumeQueue.class);
+        ConsumeQueueStore consumeQueueStore = new DefaultConsumeQueueStore(consumeQueueFactory);
+        StoreContext.register(consumeQueueStore, ConsumeQueueStore.class);
 
         CommitLogDispatcher dispatcher = StoreContext.getBean(CommitLogDispatcher.class);
-        QueueCommitLogHandler handler = new QueueCommitLogHandler(consumeQueue);
+        QueueCommitLogHandler handler = new QueueCommitLogHandler(consumeQueueStore);
         dispatcher.registerHandler(handler);
     }
 
