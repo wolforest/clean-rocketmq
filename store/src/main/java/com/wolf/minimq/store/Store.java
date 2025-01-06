@@ -2,6 +2,7 @@ package com.wolf.minimq.store;
 
 import com.wolf.common.convention.service.Lifecycle;
 import com.wolf.common.convention.service.LifecycleManager;
+import com.wolf.minimq.domain.config.StoreConfig;
 import com.wolf.minimq.domain.utils.lock.StartupLock;
 import com.wolf.minimq.domain.utils.lock.ShutdownLock;
 import com.wolf.minimq.store.server.ContextInitializer;
@@ -10,6 +11,7 @@ import com.wolf.minimq.store.server.StoreArgument;
 import com.wolf.minimq.store.server.StoreCheckpoint;
 import com.wolf.minimq.store.server.StoreContext;
 import com.wolf.minimq.store.server.StorePath;
+import com.wolf.minimq.store.server.StoreScheduler;
 import lombok.NonNull;
 
 /**
@@ -44,6 +46,7 @@ public class Store implements Lifecycle {
         startupLock = new StartupLock(StorePath.getLockFile());
         shutdownLock = new ShutdownLock(StorePath.getAbortFile());
 
+        this.initScheduler();
         this.initCheckPoint();
 
         this.componentManager = ComponentRegister.register();
@@ -66,7 +69,9 @@ public class Store implements Lifecycle {
         this.state = State.SHUTTING_DOWN;
 
         this.componentManager.shutdown();
-        this.cleanup();
+
+        StoreContext.getScheduler().shutdown();
+        StoreContext.getCheckPoint().shutdown();
 
         startupLock.unlock();
         shutdownLock.unlock();
@@ -84,12 +89,18 @@ public class Store implements Lifecycle {
         return this.state;
     }
 
+    private void initScheduler() {
+        StoreConfig storeConfig = StoreContext.getBean(StoreConfig.class);
+        StoreScheduler scheduler = new StoreScheduler(storeConfig);
+        StoreContext.setScheduler(scheduler);
+    }
+
     private void initCheckPoint() {
         boolean isShutdownSuccessful = !shutdownLock.isLocked();
 
         StoreCheckpoint checkpoint = new StoreCheckpoint(StorePath.getCheckpointPath());
         checkpoint.setShutdownSuccessful(isShutdownSuccessful);
 
-        StoreContext.CHECK_POINT = checkpoint;
+        StoreContext.setCheckPoint(checkpoint);
     }
 }

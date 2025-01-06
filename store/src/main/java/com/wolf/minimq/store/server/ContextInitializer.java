@@ -1,6 +1,8 @@
 package com.wolf.minimq.store.server;
 
 import com.wolf.minimq.domain.config.CommitLogConfig;
+import com.wolf.minimq.domain.config.ConsumeQueueConfig;
+import com.wolf.minimq.domain.config.MessageConfig;
 import com.wolf.minimq.domain.config.StoreConfig;
 import com.wolf.minimq.domain.config.TimerConfig;
 
@@ -18,6 +20,7 @@ public class ContextInitializer {
 
     public void initialize() {
         initializeConfig();
+        initializeMonitor();
     }
 
     private void initializeConfig() {
@@ -26,7 +29,9 @@ public class ContextInitializer {
         StorePath.initPath();
 
         StoreContext.register(storeConfig);
+        StoreContext.register(new MessageConfig());
         StoreContext.register(new CommitLogConfig());
+        StoreContext.register(new ConsumeQueueConfig());
         StoreContext.register(new TimerConfig());
     }
 
