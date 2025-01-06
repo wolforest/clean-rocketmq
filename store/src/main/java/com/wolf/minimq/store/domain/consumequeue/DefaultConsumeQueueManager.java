@@ -9,30 +9,23 @@ import com.wolf.minimq.store.server.StoreContext;
 import com.wolf.minimq.store.server.StorePath;
 
 public class DefaultConsumeQueueManager implements ConsumeQueueManager {
+    ConsumeQueueConfig consumeQueueConfig;
     private ConsumeQueueFlusher flusher;
+    private ConsumeQueueLoader loader;
 
     @Override
     public void initialize() {
-        TopicStore topicStore = StoreContext.getBean(TopicStore.class);
-
-        ConsumeQueueConfig consumeQueueConfig = StoreContext.getBean(ConsumeQueueConfig.class);
+        consumeQueueConfig = StoreContext.getBean(ConsumeQueueConfig.class);
         consumeQueueConfig.setRootPath(StorePath.getConsumeQueuePath());
 
         flusher = new ConsumeQueueFlusher(StoreContext.getCheckPoint(), consumeQueueConfig);
-        ConsumeQueueLoader loader = new ConsumeQueueLoader(consumeQueueConfig);
+        loader = new ConsumeQueueLoader(consumeQueueConfig);
 
-        ConsumeQueueFactory consumeQueueFactory = new ConsumeQueueFactory(consumeQueueConfig, topicStore);
-        consumeQueueFactory.addCreateHook(flusher);
-        consumeQueueFactory.addCreateHook(loader);
-        consumeQueueFactory.createAll();
-
+        ConsumeQueueFactory consumeQueueFactory = initConsumeQueueFactory();
         ConsumeQueueStore consumeQueueStore = new DefaultConsumeQueueStore(consumeQueueFactory);
         StoreContext.register(consumeQueueStore, ConsumeQueueStore.class);
 
-        CommitLogDispatcher dispatcher = StoreContext.getBean(CommitLogDispatcher.class);
-        QueueCommitLogHandler handler = new QueueCommitLogHandler(consumeQueueStore);
-        dispatcher.registerHandler(handler);
-
+        registerDispatchHandler(consumeQueueStore);
         loader.load();
     }
 
@@ -54,5 +47,22 @@ public class DefaultConsumeQueueManager implements ConsumeQueueManager {
     @Override
     public State getState() {
         return State.RUNNING;
+    }
+
+    private void registerDispatchHandler(ConsumeQueueStore consumeQueueStore) {
+        CommitLogDispatcher dispatcher = StoreContext.getBean(CommitLogDispatcher.class);
+        QueueCommitLogHandler handler = new QueueCommitLogHandler(consumeQueueStore);
+        dispatcher.registerHandler(handler);
+    }
+
+    private ConsumeQueueFactory initConsumeQueueFactory() {
+        TopicStore topicStore = StoreContext.getBean(TopicStore.class);
+        ConsumeQueueFactory consumeQueueFactory = new ConsumeQueueFactory(consumeQueueConfig, topicStore);
+
+        consumeQueueFactory.addCreateHook(flusher);
+        consumeQueueFactory.addCreateHook(loader);
+
+        consumeQueueFactory.createAll();
+        return consumeQueueFactory;
     }
 }
