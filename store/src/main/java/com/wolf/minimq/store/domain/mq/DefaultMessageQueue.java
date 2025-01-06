@@ -1,11 +1,11 @@
-package com.wolf.minimq.store.domain.message;
+package com.wolf.minimq.store.domain.mq;
 
 import com.wolf.minimq.domain.config.StoreConfig;
 import com.wolf.minimq.domain.enums.EnqueueStatus;
 import com.wolf.minimq.domain.utils.lock.TopicQueueLock;
 import com.wolf.minimq.domain.service.store.domain.CommitLog;
 import com.wolf.minimq.domain.service.store.domain.ConsumeQueueStore;
-import com.wolf.minimq.domain.service.store.domain.MessageStore;
+import com.wolf.minimq.domain.service.store.domain.MessageQueue;
 import com.wolf.minimq.domain.model.dto.EnqueueResult;
 import com.wolf.minimq.domain.model.bo.MessageBO;
 import com.wolf.minimq.store.server.StoreContext;
@@ -14,10 +14,10 @@ import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class DefaultMessageStore implements MessageStore {
+public class DefaultMessageQueue implements MessageQueue {
     private final TopicQueueLock topicQueueLock;
 
-    public DefaultMessageStore() {
+    public DefaultMessageQueue() {
         this.topicQueueLock = new TopicQueueLock();
     }
 

@@ -5,13 +5,13 @@ import com.wolf.minimq.domain.config.StoreConfig;
 import com.wolf.minimq.domain.service.store.manager.CommitLogManager;
 import com.wolf.minimq.domain.service.store.manager.CommitLogDispatcherManager;
 import com.wolf.minimq.domain.service.store.manager.IndexManager;
-import com.wolf.minimq.domain.service.store.manager.MessageManager;
+import com.wolf.minimq.domain.service.store.manager.MessageQueueManager;
 import com.wolf.minimq.domain.service.store.manager.MetaManager;
 import com.wolf.minimq.domain.service.store.manager.TimerManager;
 import com.wolf.minimq.store.domain.commitlog.DefaultCommitLogManager;
 import com.wolf.minimq.store.domain.dispatcher.DefaultCommitLogDispatcherManager;
 import com.wolf.minimq.store.domain.index.DefaultIndexManager;
-import com.wolf.minimq.store.domain.message.DefaultMessageManager;
+import com.wolf.minimq.store.domain.mq.DefaultMessageQueueManager;
 import com.wolf.minimq.store.domain.meta.DefaultMetaManager;
 import com.wolf.minimq.store.domain.timer.DefaultTimerManager;
 import com.wolf.minimq.store.infra.file.AllocateMappedFileService;
@@ -58,9 +58,9 @@ public class ComponentRegister {
     }
 
     private void registerConsumeQueue() {
-        MessageManager component = new DefaultMessageManager();
+        MessageQueueManager component = new DefaultMessageQueueManager();
         manager.register(component);
-        StoreContext.register(component, MessageManager.class);
+        StoreContext.register(component, MessageQueueManager.class);
     }
 
     private void registerIndexService() {

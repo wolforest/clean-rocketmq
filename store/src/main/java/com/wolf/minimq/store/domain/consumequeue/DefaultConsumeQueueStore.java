@@ -1,4 +1,4 @@
-package com.wolf.minimq.store.domain.queue;
+package com.wolf.minimq.store.domain.consumequeue;
 
 import com.wolf.minimq.domain.model.bo.CommitLogEvent;
 import com.wolf.minimq.domain.model.bo.QueueUnit;

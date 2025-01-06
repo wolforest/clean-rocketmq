@@ -1,34 +1,34 @@
-package com.wolf.minimq.store.domain.queue;
+package com.wolf.minimq.store.domain.consumequeue;
 
 import com.wolf.minimq.domain.enums.QueueType;
 import com.wolf.minimq.domain.model.bo.CommitLogEvent;
 import com.wolf.minimq.domain.model.bo.QueueUnit;
 import com.wolf.minimq.domain.service.store.domain.ConsumeQueue;
-import com.wolf.minimq.domain.service.store.infra.MappedFileQueue;
 import java.util.List;
-import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
-public class DefaultConsumeQueue implements ConsumeQueue {
-    @Getter
-    private final String topic;
-    @Getter
-    private final int queueId;
-    @Getter
-    private MappedFileQueue mappedFileQueue;
+@Slf4j
+public class ErrorConsumeQueue implements ConsumeQueue {
+    public static final ErrorConsumeQueue INSTANCE = new ErrorConsumeQueue();
 
-    private final String rootPath;
-    private final int fileSize;
-
-    public DefaultConsumeQueue(String topic, int queueId, String rootPath, int fileSize) {
-        this.topic = topic;
-        this.queueId = queueId;
-        this.rootPath = rootPath;
-        this.fileSize = fileSize;
+    public static ErrorConsumeQueue singleton() {
+        log.error("no such queue store");
+        return INSTANCE;
     }
 
     @Override
     public QueueType getQueueType() {
-        return QueueType.DEFAULT;
+        return QueueType.ERROR;
+    }
+
+    @Override
+    public String getTopic() {
+        return "NO_SUCH_TOPIC";
+    }
+
+    @Override
+    public int getQueueId() {
+        return 0;
     }
 
     @Override

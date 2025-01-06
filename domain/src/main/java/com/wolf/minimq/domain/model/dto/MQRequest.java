@@ -1,4 +1,4 @@
-package com.wolf.minimq.domain.model;
+package com.wolf.minimq.domain.model.dto;
 
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
@@ -10,13 +10,13 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class MessageQueue implements Comparable<MessageQueue>, Serializable {
+public class MQRequest implements Comparable<MQRequest>, Serializable {
     private String topic;
     private String brokerName;
     private int queueId;
 
     @Override
-    public int compareTo(MessageQueue o) {
+    public int compareTo(MQRequest o) {
         int topicDiff = this.topic.compareTo(o.topic);
         if (topicDiff != 0) {
             return topicDiff;

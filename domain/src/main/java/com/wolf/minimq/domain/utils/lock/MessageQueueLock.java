@@ -16,7 +16,7 @@
  */
 package com.wolf.minimq.domain.utils.lock;
 
-import com.wolf.minimq.domain.model.MessageQueue;
+import com.wolf.minimq.domain.model.dto.MQRequest;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -27,14 +27,14 @@ import java.util.concurrent.ConcurrentMap;
  *  - at the same time
  */
 public class MessageQueueLock {
-    private final ConcurrentMap<MessageQueue, ConcurrentMap<Integer, Object>> lockMap =
+    private final ConcurrentMap<MQRequest, ConcurrentMap<Integer, Object>> lockMap =
         new ConcurrentHashMap<>(32);
 
-    public Object getLock(final MessageQueue mq) {
+    public Object getLock(final MQRequest mq) {
         return getLock(mq, -1);
     }
 
-    public Object getLock(final MessageQueue mq, final int shardingKey) {
+    public Object getLock(final MQRequest mq, final int shardingKey) {
         ConcurrentMap<Integer, Object> objMap = getLockMap(mq);
         return getLockByKey(objMap, shardingKey);
     }
@@ -54,7 +54,7 @@ public class MessageQueueLock {
         return lock;
     }
 
-    private ConcurrentMap<Integer, Object> getLockMap(final MessageQueue mq) {
+    private ConcurrentMap<Integer, Object> getLockMap(final MQRequest mq) {
         ConcurrentMap<Integer, Object> objMap = this.lockMap.get(mq);
         if (null != objMap) {
             return objMap;
