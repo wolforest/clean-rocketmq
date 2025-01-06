@@ -1,12 +1,20 @@
 package com.wolf.minimq.store.domain.consumequeue;
 
+import com.wolf.minimq.domain.config.ConsumeQueueConfig;
 import com.wolf.minimq.domain.service.store.domain.ConsumeQueue;
 import com.wolf.minimq.domain.service.store.infra.MappedFileQueue;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-public class ConsumeQueueLoader {
+public class ConsumeQueueLoader implements ConsumeQueueRegister {
+    private final ConsumeQueueConfig config;
+
     private final Set<ConsumeQueue> queueSet = new LinkedHashSet<>(128);
+
+    public ConsumeQueueLoader(ConsumeQueueConfig config) {
+        this.config = config;
+    }
+    @Override
     public void register(ConsumeQueue queue) {
         queueSet.add(queue);
     }

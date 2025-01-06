@@ -1,18 +1,22 @@
 package com.wolf.minimq.store.domain.consumequeue;
 
+import com.wolf.minimq.domain.config.ConsumeQueueConfig;
 import com.wolf.minimq.domain.service.store.domain.ConsumeQueue;
 import com.wolf.minimq.domain.service.store.domain.meta.TopicStore;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-public class ConsumeQueueFactory {
+public class ConsumeQueueFactory implements ConsumeQueueRegister {
     private static final int TOPIC_MAP_SIZE = 32;
     private static final int QUEUE_MAP_SIZE = 128;
 
+    private final ConsumeQueueConfig config;
     private final TopicStore topicStore;
-    private final ConsumeQueueFlusher flusher;
-    private final ConsumeQueueLoader loader;
+
+    private final List<ConsumeQueueRegister> createHooks = new ArrayList<>();
     /**
      * consume queue map, structure:
      * - topic
@@ -21,14 +25,9 @@ public class ConsumeQueueFactory {
      */
     protected final ConcurrentMap<String, ConcurrentMap<Integer, ConsumeQueue>> topicMap;
 
-    public ConsumeQueueFactory(
-        TopicStore topicStore,
-        ConsumeQueueFlusher flusher,
-        ConsumeQueueLoader loader
-    ) {
+    public ConsumeQueueFactory(ConsumeQueueConfig config, TopicStore topicStore) {
+        this.config = config;
         this.topicStore = topicStore;
-        this.flusher = flusher;
-        this.loader = loader;
 
         this.topicMap = new ConcurrentHashMap<>(TOPIC_MAP_SIZE);
     }
@@ -69,11 +68,22 @@ public class ConsumeQueueFactory {
         ConsumeQueue result = queueMap.putIfAbsent(queueId, queue);
 
         if (result == null) {
-            loader.register(queue);
-            flusher.register(queue);
+            register(queue);
         }
 
         return result == null ? queue : result;
+    }
+
+    public void addCreateHook(ConsumeQueueRegister hook) {
+        createHooks.add(hook);
+    }
+
+    public void register(ConsumeQueue queue) {
+        if (createHooks.isEmpty()) return;
+
+        for (ConsumeQueueRegister hook : createHooks) {
+            hook.register(queue);
+        }
     }
 
     private ConsumeQueue createConsumeQueue(String topic, int queueId) {

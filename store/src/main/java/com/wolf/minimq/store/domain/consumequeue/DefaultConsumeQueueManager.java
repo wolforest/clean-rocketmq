@@ -6,6 +6,7 @@ import com.wolf.minimq.domain.service.store.domain.ConsumeQueueStore;
 import com.wolf.minimq.domain.service.store.domain.meta.TopicStore;
 import com.wolf.minimq.domain.service.store.manager.ConsumeQueueManager;
 import com.wolf.minimq.store.server.StoreContext;
+import com.wolf.minimq.store.server.StorePath;
 
 public class DefaultConsumeQueueManager implements ConsumeQueueManager {
     private ConsumeQueueFlusher flusher;
@@ -13,11 +14,16 @@ public class DefaultConsumeQueueManager implements ConsumeQueueManager {
     @Override
     public void initialize() {
         TopicStore topicStore = StoreContext.getBean(TopicStore.class);
-        ConsumeQueueConfig consumeQueueConfig = StoreContext.getBean(ConsumeQueueConfig.class);
-        flusher = new ConsumeQueueFlusher(consumeQueueConfig);
-        ConsumeQueueLoader loader = new ConsumeQueueLoader();
 
-        ConsumeQueueFactory consumeQueueFactory = new ConsumeQueueFactory(topicStore, flusher, loader);
+        ConsumeQueueConfig consumeQueueConfig = StoreContext.getBean(ConsumeQueueConfig.class);
+        consumeQueueConfig.setRootPath(StorePath.getConsumeQueuePath());
+
+        flusher = new ConsumeQueueFlusher(StoreContext.getCheckPoint(), consumeQueueConfig);
+        ConsumeQueueLoader loader = new ConsumeQueueLoader(consumeQueueConfig);
+
+        ConsumeQueueFactory consumeQueueFactory = new ConsumeQueueFactory(consumeQueueConfig, topicStore);
+        consumeQueueFactory.addCreateHook(flusher);
+        consumeQueueFactory.addCreateHook(loader);
         consumeQueueFactory.createAll();
 
         ConsumeQueueStore consumeQueueStore = new DefaultConsumeQueueStore(consumeQueueFactory);

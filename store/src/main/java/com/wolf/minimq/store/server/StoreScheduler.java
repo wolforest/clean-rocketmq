@@ -45,12 +45,16 @@ public class StoreScheduler {
 
     public void shutdown() {
         service.shutdown();
-        int shutdownTimeout = storeConfig.getSchedulerShutdownTimeout();
+
         try {
+            int shutdownTimeout = storeConfig.getSchedulerShutdownTimeout();
             boolean status = service.awaitTermination(shutdownTimeout, defaultUnit);
+
             if (!status) {
                 log.error("shutdown store scheduler failed");
             }
+
+            Thread.sleep(3 * 1000);
         } catch (InterruptedException e) {
             log.error("shutdown store scheduler error", e);
         }

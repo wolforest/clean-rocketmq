@@ -12,4 +12,6 @@ public class ConsumeQueueConfig implements Serializable {
     private int minFlushPages = 2;
     private int flushInterval = 1000;
     private int flushAllInterval = 1000 * 60;
+
+    private String rootPath;
 }

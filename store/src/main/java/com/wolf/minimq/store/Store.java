@@ -17,7 +17,7 @@ import lombok.NonNull;
 /**
  * gateway of store module
  *  - start()
- *
+ *  - ...
  *  input:
  *   - StoreConfig
  *   - monitor context

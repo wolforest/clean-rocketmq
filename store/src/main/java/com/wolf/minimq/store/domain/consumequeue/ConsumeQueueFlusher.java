@@ -10,16 +10,19 @@ import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class ConsumeQueueFlusher extends ServiceThread {
+public class ConsumeQueueFlusher extends ServiceThread implements ConsumeQueueRegister {
     private final ConsumeQueueConfig config;
+    private final StoreCheckpoint checkpoint;
 
     private long lastFlushTime = 0;
     private final Set<ConsumeQueue> queueSet = new LinkedHashSet<>(128);
 
-    public ConsumeQueueFlusher(ConsumeQueueConfig config) {
+    public ConsumeQueueFlusher(StoreCheckpoint checkpoint, ConsumeQueueConfig config) {
         this.config = config;
+        this.checkpoint = checkpoint;
     }
 
+    @Override
     public void register(ConsumeQueue queue) {
         queueSet.add(queue);
     }
@@ -62,6 +65,7 @@ public class ConsumeQueueFlusher extends ServiceThread {
         }
 
         lastFlushTime = now;
+        checkpoint.setConsumeQueueFlushTime(now);
     }
 
 
