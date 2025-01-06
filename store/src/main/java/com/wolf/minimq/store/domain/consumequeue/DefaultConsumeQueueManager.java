@@ -1,5 +1,6 @@
 package com.wolf.minimq.store.domain.consumequeue;
 
+import com.wolf.minimq.domain.config.ConsumeQueueConfig;
 import com.wolf.minimq.domain.service.store.domain.CommitLogDispatcher;
 import com.wolf.minimq.domain.service.store.domain.ConsumeQueueStore;
 import com.wolf.minimq.domain.service.store.domain.meta.TopicStore;
@@ -12,7 +13,8 @@ public class DefaultConsumeQueueManager implements ConsumeQueueManager {
     @Override
     public void initialize() {
         TopicStore topicStore = StoreContext.getBean(TopicStore.class);
-        flusher = new ConsumeQueueFlusher();
+        ConsumeQueueConfig consumeQueueConfig = StoreContext.getBean(ConsumeQueueConfig.class);
+        flusher = new ConsumeQueueFlusher(consumeQueueConfig);
         ConsumeQueueLoader loader = new ConsumeQueueLoader();
 
         ConsumeQueueFactory consumeQueueFactory = new ConsumeQueueFactory(topicStore, flusher, loader);

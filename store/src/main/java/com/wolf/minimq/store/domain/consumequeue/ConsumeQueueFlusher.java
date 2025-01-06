@@ -11,13 +11,12 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class ConsumeQueueFlusher extends ServiceThread {
-    private final Set<ConsumeQueue> queueSet = new LinkedHashSet<>(128);
-
-    private final StoreCheckpoint checkpoint;
     private final ConsumeQueueConfig config;
 
-    public ConsumeQueueFlusher(StoreCheckpoint checkpoint, ConsumeQueueConfig config) {
-        this.checkpoint = checkpoint;
+    private long lastFlushTime = 0;
+    private final Set<ConsumeQueue> queueSet = new LinkedHashSet<>(128);
+
+    public ConsumeQueueFlusher(ConsumeQueueConfig config) {
         this.config = config;
     }
 
@@ -50,11 +49,19 @@ public class ConsumeQueueFlusher extends ServiceThread {
     private void flush() {
         if (queueSet.isEmpty()) return;
 
-        int flushPages = config.getMinFlushPages();
-        queueSet.forEach(queue -> {
+        long now = System.currentTimeMillis();
+        int minFlushPages = config.getMinFlushPages();
+
+        if (now - lastFlushTime >= config.getFlushInterval()) {
+            minFlushPages = 0;
+        }
+
+        for (ConsumeQueue queue : queueSet) {
             MappedFileQueue mappedFileQueue = queue.getMappedFileQueue();
-            mappedFileQueue.flush(flushPages);
-        });
+            mappedFileQueue.flush(minFlushPages);
+        }
+
+        lastFlushTime = now;
     }
 
 
