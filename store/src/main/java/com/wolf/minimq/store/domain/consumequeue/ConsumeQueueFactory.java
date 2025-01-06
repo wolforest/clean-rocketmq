@@ -3,6 +3,7 @@ package com.wolf.minimq.store.domain.consumequeue;
 import com.wolf.minimq.domain.config.ConsumeQueueConfig;
 import com.wolf.minimq.domain.service.store.domain.ConsumeQueue;
 import com.wolf.minimq.domain.service.store.domain.meta.TopicStore;
+import com.wolf.minimq.store.server.StoreCheckpoint;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +16,7 @@ public class ConsumeQueueFactory implements ConsumeQueueRegister {
 
     private final ConsumeQueueConfig config;
     private final TopicStore topicStore;
+    private final StoreCheckpoint checkpoint;
 
     private final List<ConsumeQueueRegister> createHooks = new ArrayList<>();
     /**
@@ -25,9 +27,10 @@ public class ConsumeQueueFactory implements ConsumeQueueRegister {
      */
     protected final ConcurrentMap<String, ConcurrentMap<Integer, ConsumeQueue>> topicMap;
 
-    public ConsumeQueueFactory(ConsumeQueueConfig config, TopicStore topicStore) {
+    public ConsumeQueueFactory(ConsumeQueueConfig config, TopicStore topicStore, StoreCheckpoint checkpoint) {
         this.config = config;
         this.topicStore = topicStore;
+        this.checkpoint = checkpoint;
 
         this.topicMap = new ConcurrentHashMap<>(TOPIC_MAP_SIZE);
     }

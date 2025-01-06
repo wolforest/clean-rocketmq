@@ -17,7 +17,6 @@
 package com.wolf.minimq.domain.model.bo;
 
 import java.io.Serializable;
-import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

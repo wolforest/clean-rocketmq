@@ -34,6 +34,10 @@ public class DefaultMappedFileQueue implements MappedFileQueue {
     @Getter
     private volatile long storeTimestamp;
 
+    public DefaultMappedFileQueue(String rootDir, int fileSize) {
+        this(rootDir, fileSize, null);
+    }
+
     public DefaultMappedFileQueue(String rootDir, int fileSize, AllocateMappedFileService allocateMappedFileService) {
         this.rootDir = rootDir;
         this.fileSize = fileSize;

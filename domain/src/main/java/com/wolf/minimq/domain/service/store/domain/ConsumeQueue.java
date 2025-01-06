@@ -17,7 +17,6 @@ public interface ConsumeQueue {
 
     long getMinOffset();
     long getMaxOffset();
-    long getCurrentOffset();
     long increaseOffset();
 
     MappedFileQueue getMappedFileQueue();

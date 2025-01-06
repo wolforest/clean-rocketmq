@@ -57,7 +57,7 @@ public class DefaultConsumeQueueManager implements ConsumeQueueManager {
 
     private ConsumeQueueFactory initConsumeQueueFactory() {
         TopicStore topicStore = StoreContext.getBean(TopicStore.class);
-        ConsumeQueueFactory consumeQueueFactory = new ConsumeQueueFactory(consumeQueueConfig, topicStore);
+        ConsumeQueueFactory consumeQueueFactory = new ConsumeQueueFactory(consumeQueueConfig, topicStore, StoreContext.getCheckPoint());
 
         consumeQueueFactory.addCreateHook(flusher);
         consumeQueueFactory.addCreateHook(loader);

@@ -65,7 +65,9 @@ public class ConsumeQueueFlusher extends ServiceThread implements ConsumeQueueRe
         }
 
         lastFlushTime = now;
-        checkpoint.setConsumeQueueFlushTime(now);
+        if (minFlushPages == 0) {
+            checkpoint.flush();
+        }
     }
 
 
