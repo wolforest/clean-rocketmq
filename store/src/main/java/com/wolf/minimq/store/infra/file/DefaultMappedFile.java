@@ -211,8 +211,8 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
     }
 
     @Override
-    public int flush(int flushLeastPages) {
-        if (!this.isAbleToFlush(flushLeastPages)) {
+    public int flush(int minPages) {
+        if (!this.isAbleToFlush(minPages)) {
             return FLUSH_POSITION_UPDATER.get(this);
         }
 
@@ -238,7 +238,7 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
     }
 
     @Override
-    public int commit(final int commitLeastPages) {
+    public int commit(final int minPages) {
         if (writeCache == null) {
             //no need to commit data to file channel, so just regard wrotePosition as committedPosition.
             return WRITE_POSITION_UPDATER.get(this);
@@ -247,12 +247,12 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
         //no need to commit data to file channel, so just set committedPosition to wrotePosition.
         if (transientPool != null && !transientPool.isRealCommit()) {
             COMMIT_POSITION_UPDATER.set(this, WRITE_POSITION_UPDATER.get(this));
-        } else if (this.isAbleToCommit(commitLeastPages)) {
+        } else if (this.isAbleToCommit(minPages)) {
             if (this.hold()) {
                 commit0();
                 this.release();
             } else {
-                log.warn("in commit, hold failed, commit offset = {}", COMMIT_POSITION_UPDATER.get(this));
+                log.warn("hold failed while commit, commit offset = {}", COMMIT_POSITION_UPDATER.get(this));
             }
         }
 
@@ -346,19 +346,19 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
         return write > commit;
     }
 
-    private boolean isAbleToFlush(final int flushLeastPages) {
-        int flush = FLUSH_POSITION_UPDATER.get(this);
-        int write = getWriteOrCommitPosition();
+    private boolean isAbleToFlush(final int minPages) {
+        int flushPosition = FLUSH_POSITION_UPDATER.get(this);
+        int writePosition = getWriteOrCommitPosition();
 
         if (this.isFull()) {
             return true;
         }
 
-        if (flushLeastPages > 0) {
-            return ((write / OS_PAGE_SIZE) - (flush / OS_PAGE_SIZE)) >= flushLeastPages;
+        if (minPages > 0) {
+            return (writePosition - flushPosition) / OS_PAGE_SIZE >= minPages;
         }
 
-        return write > flush;
+        return writePosition > flushPosition;
     }
 
     private void mlock(Pointer pointer, long address, long beginTime) {

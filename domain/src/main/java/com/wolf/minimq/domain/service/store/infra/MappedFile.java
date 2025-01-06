@@ -112,19 +112,26 @@ public interface MappedFile {
 
     /**
      * Flushes the data in cache to disk immediately.
+     * if minPages is 0:
+     *  - flush all data in cache
+     *  - and store the timestamp
+     * if minPages greater than 0:
+     *  - if the cache size is greater than minPages * pageSize
+     *      - flush data in cache
+     *  - else do nothing
      *
-     * @param flushLeastPages the least pages to flush
+     * @param minPages the min pages to flush
      * @return the flushed position after the method call
      */
-    int flush(int flushLeastPages);
+    int flush(int minPages);
 
     /**
      * Flushes the data in the secondary cache to page cache or disk immediately.
      *
-     * @param commitLeastPages the least pages to commit
+     * @param minPages the least pages to commit
      * @return the committed position after the method call
      */
-    int commit(int commitLeastPages);
+    int commit(int minPages);
 
     /**
      * Returns the mapped byte buffer behind the mapped file.

@@ -74,7 +74,7 @@ public class DefaultCommitLogManager implements CommitLogManager {
     private void initMappedFileQueue() {
         String dir = storeConfig.getRootDir()
             + File.separator
-            + commitLogConfig.getDir()
+            + commitLogConfig.getDirName()
             + File.separator;
 
         AllocateMappedFileService allocateService = StoreContext.getBean(AllocateMappedFileService.class);

@@ -85,9 +85,11 @@ public class Store implements Lifecycle {
     }
 
     private void initCheckPoint() {
-        boolean lastExitOk = !shutdownLock.isLocked();
+        boolean isShutdownSuccessful = !shutdownLock.isLocked();
+
         StoreCheckpoint checkpoint = new StoreCheckpoint(StorePath.getCheckpointPath());
-        checkpoint.setNormalExit(lastExitOk);
+        checkpoint.setShutdownSuccessful(isShutdownSuccessful);
+
         StoreContext.CHECK_POINT = checkpoint;
     }
 }
