@@ -163,13 +163,20 @@ public class DefaultMappedFileQueue implements MappedFileQueue {
 
     @Override
     public MappedFile getMappedFileForOffset(long offset) {
-        MappedFile last = getLastMappedFile();
         long fileOffset = -1;
-
+        MappedFile last = getLastMappedFile();
         if (null == last) {
-            fileOffset = offset - (offset % this.fileSize);
-        } else if (last.isFull()) {
+            fileOffset = offset - (offset % fileSize);
+            return createMappedFile(fileOffset);
+        }
+
+        if (offset >= last.getOffsetInFileName() && offset <= last.getOffsetInFileName() + fileSize) {
+
+        }
+
+        if (last.isFull()) {
             fileOffset = last.getOffsetInFileName() + this.fileSize;
+            createMappedFile(fileOffset);
         }
 
         if (-1 == fileOffset) {

@@ -80,6 +80,17 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
     }
 
     @Override
+    public boolean hasEnoughSpace(int offset, int size) {
+        return containsOffset(offset) && hasEnoughSpace(size);
+    }
+
+    @Override
+    public boolean containsOffset(int offset) {
+        return offset >= this.offsetInFileName
+            && offset < this.offsetInFileName + this.fileSize;
+    }
+
+    @Override
     public void setFileMode(int mode) {
         // add not windows check
         long address = BufferUtil.directBufferAddress(mappedByteBuffer);

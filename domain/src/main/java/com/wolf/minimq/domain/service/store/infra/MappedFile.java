@@ -42,6 +42,10 @@ public interface MappedFile {
      */
     boolean hasEnoughSpace(int size);
 
+    boolean hasEnoughSpace(int offset, int size);
+
+    boolean containsOffset(int offset);
+
     /**
      * Returns true if this {@code MappedFile} is available.
      * <p>

@@ -20,7 +20,7 @@ public interface MappedFileQueue {
     MappedFile getMappedFileForSize(int messageSize);
 
     /**
-     * create or find mappedFile contains offset
+     * get or create mappedFile contains offset
      * @param offset offset
      * @return MappedFile
      */

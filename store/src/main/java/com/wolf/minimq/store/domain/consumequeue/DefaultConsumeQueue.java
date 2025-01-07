@@ -57,6 +57,8 @@ public class DefaultConsumeQueue implements ConsumeQueue {
                 return;
             }
         }
+
+        log.error("[BUG]consume queue can not write, {} {}", this.topic, this.queueId);
     }
 
     private boolean insert(CommitLogEvent event) {
@@ -71,7 +73,9 @@ public class DefaultConsumeQueue implements ConsumeQueue {
     }
 
     private void warmMappedFile(MappedFile mappedFile, long queueIndex, long queueOffset) {
-
+        if (0 == queueIndex || 0 != mappedFile.getWritePosition()) {
+            return;
+        }
     }
 
     private void setWriteBuffer(CommitLogEvent event) {
