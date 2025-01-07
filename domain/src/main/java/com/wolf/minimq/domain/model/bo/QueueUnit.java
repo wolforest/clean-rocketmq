@@ -36,5 +36,9 @@ public class QueueUnit implements Serializable {
     private long tagsCode;
     private ByteBuffer buffer;
 
-
+    public boolean isValid() {
+        return commitLogOffset != 0
+            && messageSize != Integer.MAX_VALUE
+            && tagsCode != 0;
+    }
 }
