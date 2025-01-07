@@ -181,7 +181,8 @@ public class DefaultMappedFileQueue implements MappedFileQueue {
         return createMappedFile(fileOffset);
     }
 
-    private MappedFile createMappedFile(long createOffset) {
+    @Override
+    public MappedFile createMappedFile(long createOffset) {
         String file = this.rootDir + File.separator + StoreUtils.offsetToFileName(createOffset);
         String nextFile = this.rootDir + File.separator + StoreUtils.offsetToFileName(createOffset + this.fileSize);
         MappedFile mappedFile;

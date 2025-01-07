@@ -163,18 +163,27 @@ public class DefaultConsumeQueue implements ConsumeQueue {
             return true;
         }
 
-        MappedFile mappedFile = mappedFileQueue.getMappedFileForOffset(offset);
+        MappedFile mappedFile = getMappedFile(messageBO.getQueueOffset(), offset);
         if (mappedFile == null) {
             return false;
         }
-
-        initMappedFile(mappedFile, messageBO.getQueueOffset(), messageBO.getCommitLogOffset());
 
         setWriteBuffer(event);
         mappedFile.insert(writeBuffer);
         return true;
     }
 
+    /**
+     * validate queue offset
+     *  - if mappedFileQueue is empty, return true
+     *  - if mappedFileQueue is not empty, the offset should be
+     *      - in the range of the last MappedFile
+     *      - or in the next last MappedFile
+     *
+     * @param queueIndex queueUnit index
+     * @param queueOffset queue offset
+     * @return true | false
+     */
     private boolean validateOffset(long queueIndex, long queueOffset) {
         if (0 == queueIndex) {
             return true;
@@ -186,10 +195,39 @@ public class DefaultConsumeQueue implements ConsumeQueue {
         }
 
         if (last.containsOffset(queueOffset)) {
-            return true;
+            return !last.isFull();
         }
 
-        return queueOffset <= last.getOffsetInFileName() + last.getFileSize();
+        if (queueOffset < last.getOffsetInFileName()) {
+            return false;
+        }
+
+        return queueOffset <= last.getOffsetInFileName() + last.getFileSize() * 2L;
+    }
+
+    /**
+     * get MappedFile by queue index and offset
+     * if the MappedFile exists, return it
+     * else create a new MappedFile and init it
+     *
+     * @param queueIndex queueUnit index
+     * @param queueOffset queue offset
+     * @return mappedFile
+     */
+    private MappedFile getMappedFile(long queueIndex, long queueOffset) {
+        MappedFile last = mappedFileQueue.getLastMappedFile();
+        if (last != null && last.containsOffset(queueOffset)) {
+            return last;
+        }
+
+        long fileOffset = queueOffset - queueOffset % config.getFileSize();
+        MappedFile file = mappedFileQueue.createMappedFile(fileOffset);
+        if (file == null) {
+            return null;
+        }
+
+        initMappedFile(file, queueIndex, queueOffset);
+        return file;
     }
 
     private void initMappedFile(MappedFile mappedFile, long queueIndex, long queueOffset) {

@@ -10,6 +10,8 @@ public interface MappedFileQueue {
 
     void setFileMode(int mode);
 
+    MappedFile createMappedFile(long createOffset);
+
     /**
      * get or create available MappedFile
      * which available space > messageSize
