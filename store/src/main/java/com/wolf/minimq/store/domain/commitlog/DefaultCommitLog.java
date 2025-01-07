@@ -158,7 +158,7 @@ public class DefaultCommitLog implements CommitLog {
     }
 
     private MappedFile getMappedFile(MessageEncoder encoder) {
-        MappedFile mappedFile = mappedFileQueue.getAvailableMappedFile(encoder.getMessageLength());
+        MappedFile mappedFile = mappedFileQueue.getMappedFileForSize(encoder.getMessageLength());
         mappedFile.setFileMode(CLibrary.MADV_RANDOM);
 
         return mappedFile;

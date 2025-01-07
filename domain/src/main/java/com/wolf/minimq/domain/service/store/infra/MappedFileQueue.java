@@ -17,7 +17,14 @@ public interface MappedFileQueue {
      * @param messageSize messageSize
      * @return mappedFile
      */
-    MappedFile getAvailableMappedFile(int messageSize);
+    MappedFile getMappedFileForSize(int messageSize);
+
+    /**
+     * create or find mappedFile contains offset
+     * @param offset offset
+     * @return MappedFile
+     */
+    MappedFile getMappedFileForOffset(long offset);
 
     /**
      * get the mappedFile contains the offset
@@ -39,12 +46,6 @@ public interface MappedFileQueue {
      */
     MappedFile getLastMappedFile();
 
-    /**
-     * create or find mappedFile contains offset
-     * @param offset offset
-     * @return MappedFile
-     */
-    MappedFile createMappedFileForOffset(long offset);
 
     long getMinOffset();
     long getMaxOffset();

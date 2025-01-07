@@ -3,6 +3,7 @@ package com.wolf.minimq.store.domain.consumequeue;
 import com.wolf.minimq.domain.config.ConsumeQueueConfig;
 import com.wolf.minimq.domain.enums.QueueType;
 import com.wolf.minimq.domain.model.bo.CommitLogEvent;
+import com.wolf.minimq.domain.model.bo.MessageBO;
 import com.wolf.minimq.domain.model.bo.QueueUnit;
 import com.wolf.minimq.domain.model.dto.SelectedMappedBuffer;
 import com.wolf.minimq.domain.service.store.domain.ConsumeQueue;
@@ -59,8 +60,27 @@ public class DefaultConsumeQueue implements ConsumeQueue {
     }
 
     private boolean insert(CommitLogEvent event) {
+        setWriteBuffer(event);
+        long offset = event.getMessageBO().getQueueOffset() * config.getUnitSize();
+        MappedFile mappedFile = mappedFileQueue.getMappedFileForOffset(offset);
+        if (mappedFile == null) {
+            return false;
+        }
 
         return true;
+    }
+
+    private void warmMappedFile(MappedFile mappedFile, long queueIndex, long queueOffset) {
+
+    }
+
+    private void setWriteBuffer(CommitLogEvent event) {
+        MessageBO messageBO = event.getMessageBO();
+        this.writeBuffer.flip();
+        this.writeBuffer.limit(config.getUnitSize());
+        this.writeBuffer.putLong(messageBO.getCommitLogOffset());
+        this.writeBuffer.putInt(messageBO.getStoreSize());
+        this.writeBuffer.putLong(messageBO.getTagsCode());
     }
 
     private void postEnqueue(CommitLogEvent event) {
