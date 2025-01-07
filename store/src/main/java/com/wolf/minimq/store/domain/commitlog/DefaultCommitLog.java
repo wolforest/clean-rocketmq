@@ -87,7 +87,10 @@ public class DefaultCommitLog implements CommitLog {
             return null;
         }
 
-        return MessageDecoder.decode(buffer.getByteBuffer());
+        MessageBO messageBO = MessageDecoder.decode(buffer.getByteBuffer());
+        buffer.release();
+
+        return messageBO;
     }
 
     @Override
@@ -106,7 +109,10 @@ public class DefaultCommitLog implements CommitLog {
         int size = buffer.getByteBuffer().getInt();
         buffer.getByteBuffer().limit(size);
 
-        return MessageDecoder.decode(buffer.getByteBuffer());
+        MessageBO messageBO = MessageDecoder.decode(buffer.getByteBuffer());
+        buffer.release();
+
+        return messageBO;
     }
 
     @Override

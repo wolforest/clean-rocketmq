@@ -19,4 +19,18 @@ public class SelectedMappedBuffer implements Serializable {
     protected MappedFile mappedFile;
     @Builder.Default
     private boolean isInCache = true;
+
+
+    public synchronized void release() {
+        if (this.mappedFile == null) {
+            return;
+        }
+
+        this.mappedFile.release();
+        this.mappedFile = null;
+    }
+
+    public synchronized boolean hasReleased() {
+        return null == this.mappedFile;
+    }
 }

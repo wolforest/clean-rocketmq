@@ -1,5 +1,6 @@
 package com.wolf.minimq.domain.service.store.infra;
 
+import com.wolf.minimq.domain.enums.FlushType;
 import com.wolf.minimq.domain.model.dto.InsertResult;
 import com.wolf.minimq.domain.model.dto.SelectedMappedBuffer;
 import java.nio.ByteBuffer;
@@ -42,9 +43,9 @@ public interface MappedFile {
      */
     boolean hasEnoughSpace(int size);
 
-    boolean hasEnoughSpace(int offset, int size);
+    boolean hasEnoughSpace(long offset, int size);
 
-    boolean containsOffset(int offset);
+    boolean containsOffset(long offset);
 
     /**
      * Returns true if this {@code MappedFile} is available.
@@ -150,6 +151,10 @@ public interface MappedFile {
      * @return the slice of the mapped byte buffer
      */
     ByteBuffer sliceByteBuffer();
+
+    void warm(int size);
+
+    void warm(FlushType flushType, int size);
 
     /**
      * Destroys the file and delete it from the file system.

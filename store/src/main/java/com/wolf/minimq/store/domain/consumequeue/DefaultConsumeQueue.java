@@ -103,12 +103,15 @@ public class DefaultConsumeQueue implements ConsumeQueue {
             return null;
         }
 
-        return QueueUnit.builder()
+        QueueUnit unit = QueueUnit.builder()
             .queueOffset(offset)
             .commitLogOffset(buffer.getByteBuffer().getLong())
             .messageSize(buffer.getByteBuffer().getInt())
             .tagsCode(buffer.getByteBuffer().getLong())
             .build();
+
+        buffer.release();
+        return unit;
     }
 
     @Override
@@ -140,6 +143,7 @@ public class DefaultConsumeQueue implements ConsumeQueue {
             offset += config.getUnitSize();
         }
 
+        buffer.release();
         return result;
     }
 

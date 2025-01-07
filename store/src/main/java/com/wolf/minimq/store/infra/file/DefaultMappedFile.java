@@ -4,6 +4,7 @@ import com.sun.jna.NativeLong;
 import com.sun.jna.Pointer;
 import com.wolf.common.util.io.BufferUtil;
 import com.wolf.common.util.io.DirUtil;
+import com.wolf.minimq.domain.enums.FlushType;
 import com.wolf.minimq.domain.service.store.infra.MappedFile;
 import com.wolf.minimq.domain.model.dto.InsertResult;
 import com.wolf.minimq.domain.model.dto.SelectedMappedBuffer;
@@ -80,12 +81,12 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
     }
 
     @Override
-    public boolean hasEnoughSpace(int offset, int size) {
+    public boolean hasEnoughSpace(long offset, int size) {
         return containsOffset(offset) && hasEnoughSpace(size);
     }
 
     @Override
-    public boolean containsOffset(int offset) {
+    public boolean containsOffset(long offset) {
         return offset >= this.offsetInFileName
             && offset < this.offsetInFileName + this.fileSize;
     }
@@ -284,6 +285,23 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
     @Override
     public ByteBuffer sliceByteBuffer() {
         return mappedByteBuffer.slice();
+    }
+
+    @Override
+    public void warm(int size) {
+        warm(FlushType.ASYNC, size);
+    }
+
+    @Override
+    public void warm(FlushType flushType, int size) {
+        ByteBuffer byteBuffer = this.mappedByteBuffer.slice();
+        for (int i = 0; i < size; i++) {
+            byteBuffer.put((byte)0);
+        }
+
+        if (flushType == FlushType.SYNC) {
+            this.mappedByteBuffer.force();
+        }
     }
 
     @Override
