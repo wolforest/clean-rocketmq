@@ -1,7 +1,12 @@
 package com.wolf.minimq.domain.model.bo;
 
+import com.wolf.common.util.collection.MapUtil;
+import com.wolf.common.util.lang.StringUtil;
+import com.wolf.minimq.domain.constant.SysFlag;
+import com.wolf.minimq.domain.enums.MessageConst;
 import com.wolf.minimq.domain.enums.MessageStatus;
 import com.wolf.minimq.domain.enums.MessageVersion;
+import com.wolf.minimq.domain.enums.TagType;
 import com.wolf.minimq.domain.model.Message;
 import java.io.Serializable;
 import java.net.SocketAddress;
@@ -27,7 +32,6 @@ public class MessageBO extends Message implements Serializable {
      */
     private int queueId;
     private String topicKey;
-
     private int storeSize;
 
     /**
@@ -58,5 +62,26 @@ public class MessageBO extends Message implements Serializable {
 
     public boolean isValid() {
         return MessageStatus.FOUND.equals(status);
+    }
+
+    public long getTagsCode() {
+        if (MapUtil.isEmpty(this.getProperties())) {
+            return 0;
+        }
+
+        String tags = this.getProperties().get(MessageConst.PROPERTY_TAGS);
+        if (StringUtil.isBlank(tags)) {
+            return 0;
+        }
+
+        return tags.hashCode();
+    }
+
+    public TagType getTagType() {
+        if ((this.sysFlag & SysFlag.MULTI_TAGS_FLAG) == SysFlag.MULTI_TAGS_FLAG) {
+            return TagType.MULTI_TAG;
+        }
+
+        return TagType.SINGLE_TAG;
     }
 }
