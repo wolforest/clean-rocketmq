@@ -37,12 +37,12 @@ public class ErrorConsumeQueue implements ConsumeQueue {
     }
 
     @Override
-    public QueueUnit fetch(long offset) {
+    public QueueUnit fetch(long index) {
         return null;
     }
 
     @Override
-    public List<QueueUnit> fetch(long offset, int num) {
+    public List<QueueUnit> fetch(long index, int num) {
         return List.of();
     }
 

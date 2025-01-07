@@ -30,8 +30,8 @@ import lombok.NoArgsConstructor;
 public class QueueUnit implements Serializable {
     private long queueOffset;
 
-    private long position;
-    private int size;
+    private long commitLogOffset;
+    private int messageSize;
 
     private long tagsCode;
     private ByteBuffer buffer;

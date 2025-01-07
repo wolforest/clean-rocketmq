@@ -12,8 +12,8 @@ public interface ConsumeQueue {
     int getQueueId();
 
     void enqueue(CommitLogEvent event);
-    QueueUnit fetch(long offset);
-    List<QueueUnit> fetch(long offset, int num);
+    QueueUnit fetch(long index);
+    List<QueueUnit> fetch(long index, int num);
 
     long getMinOffset();
     long getMaxOffset();

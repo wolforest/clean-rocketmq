@@ -4,12 +4,15 @@ import com.wolf.minimq.domain.config.ConsumeQueueConfig;
 import com.wolf.minimq.domain.enums.QueueType;
 import com.wolf.minimq.domain.model.bo.CommitLogEvent;
 import com.wolf.minimq.domain.model.bo.QueueUnit;
+import com.wolf.minimq.domain.model.dto.SelectedMappedBuffer;
 import com.wolf.minimq.domain.service.store.domain.ConsumeQueue;
+import com.wolf.minimq.domain.service.store.infra.MappedFile;
 import com.wolf.minimq.domain.service.store.infra.MappedFileQueue;
 import com.wolf.minimq.store.infra.file.DefaultMappedFileQueue;
 import com.wolf.minimq.store.server.StoreCheckpoint;
 import java.io.File;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -65,13 +68,55 @@ public class DefaultConsumeQueue implements ConsumeQueue {
     }
 
     @Override
-    public QueueUnit fetch(long offset) {
-        return null;
+    public QueueUnit fetch(long index) {
+        long offset = index * config.getUnitSize();
+        if (offset <= minOffset) {
+            return null;
+        }
+
+        SelectedMappedBuffer buffer = select(offset);
+        if (buffer == null) {
+            return null;
+        }
+
+        return QueueUnit.builder()
+            .queueOffset(offset)
+            .commitLogOffset(buffer.getByteBuffer().getLong())
+            .messageSize(buffer.getByteBuffer().getInt())
+            .tagsCode(buffer.getByteBuffer().getLong())
+            .build();
     }
 
     @Override
-    public List<QueueUnit> fetch(long offset, int num) {
-        return List.of();
+    public List<QueueUnit> fetch(long index, int num) {
+        long offset = index * config.getUnitSize();
+        if (offset <= minOffset) {
+            return List.of();
+        }
+
+        SelectedMappedBuffer buffer = select(offset);
+        if (buffer == null) {
+            return List.of();
+        }
+
+        List<QueueUnit> result = new ArrayList<>(num);
+        for (int i = 0; i < num; i++) {
+            if (!buffer.getByteBuffer().hasRemaining()) {
+                break;
+            }
+
+            QueueUnit unit = QueueUnit.builder()
+                .queueOffset(offset)
+                .commitLogOffset(buffer.getByteBuffer().getLong())
+                .messageSize(buffer.getByteBuffer().getInt())
+                .tagsCode(buffer.getByteBuffer().getLong())
+                .build();
+
+            result.add(unit);
+            offset += config.getUnitSize();
+        }
+
+        return result;
     }
 
     @Override
@@ -96,6 +141,16 @@ public class DefaultConsumeQueue implements ConsumeQueue {
             + File.separator
             + queueId;
         this.mappedFileQueue = new DefaultMappedFileQueue(path, config.getFileSize());
+    }
+
+    private SelectedMappedBuffer select(long offset) {
+        MappedFile mappedFile = mappedFileQueue.getMappedFileByOffset(offset);
+        if (mappedFile == null) {
+            return null;
+        }
+
+        int position = (int)(offset % config.getFileSize());
+        return mappedFile.select(position);
     }
 
 }
