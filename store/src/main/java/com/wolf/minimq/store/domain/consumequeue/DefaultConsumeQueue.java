@@ -65,80 +65,6 @@ public class DefaultConsumeQueue implements ConsumeQueue {
         log.error("[BUG]consume queue can not write, {} {}", this.topic, this.queueId);
     }
 
-    private boolean insert(CommitLogEvent event) {
-        MessageBO messageBO = event.getMessageBO();
-
-        long offset = messageBO.getQueueOffset() * config.getUnitSize();
-        if (!validateOffset(messageBO.getQueueOffset(), offset)) {
-            return true;
-        }
-
-        MappedFile mappedFile = mappedFileQueue.getMappedFileForOffset(offset);
-        if (mappedFile == null) {
-            return false;
-        }
-
-        initMappedFile(mappedFile, messageBO.getQueueOffset(), messageBO.getCommitLogOffset());
-
-        setWriteBuffer(event);
-        mappedFile.insert(writeBuffer);
-        return true;
-    }
-
-    private boolean validateOffset(long queueIndex, long queueOffset) {
-        if (0 == queueIndex) {
-            return true;
-        }
-
-        MappedFile last = mappedFileQueue.getLastMappedFile();
-        if (last == null) {
-            return true;
-        }
-
-        if (last.containsOffset(queueOffset)) {
-            return true;
-        }
-
-        return queueOffset <= last.getOffsetInFileName() + last.getFileSize();
-    }
-
-    private void initMappedFile(MappedFile mappedFile, long queueIndex, long queueOffset) {
-        if (0 == queueIndex || 0 != mappedFile.getWritePosition()) {
-            return;
-        }
-
-        if (0 == minOffset || queueOffset < minOffset) {
-            minOffset = queueOffset;
-        }
-
-        preFillBlank(mappedFile, queueOffset);
-    }
-
-    private void preFillBlank(final MappedFile mappedFile, final long size) {
-        ByteBuffer byteBuffer = ByteBuffer.allocate(config.getUnitSize());
-        byteBuffer.putLong(0L);
-        byteBuffer.putInt(Integer.MAX_VALUE);
-        byteBuffer.putLong(0L);
-
-        int until = (int) (size % mappedFile.getFileSize());
-        for (int i = 0; i < until; i += config.getUnitSize()) {
-            mappedFile.insert(byteBuffer.array());
-        }
-    }
-
-    private void setWriteBuffer(CommitLogEvent event) {
-        MessageBO messageBO = event.getMessageBO();
-        this.writeBuffer.flip();
-        this.writeBuffer.limit(config.getUnitSize());
-        this.writeBuffer.putLong(messageBO.getCommitLogOffset());
-        this.writeBuffer.putInt(messageBO.getStoreSize());
-        this.writeBuffer.putLong(messageBO.getTagsCode());
-    }
-
-    private void postEnqueue(CommitLogEvent event) {
-        checkpoint.setConsumeQueueFlushTime(event.getMessageBO().getStoreTimestamp());
-    }
-
     @Override
     public QueueUnit fetch(long index) {
         long offset = index * config.getUnitSize();
@@ -227,6 +153,80 @@ public class DefaultConsumeQueue implements ConsumeQueue {
 
         int position = (int)(offset % config.getFileSize());
         return mappedFile.select(position);
+    }
+
+    private boolean insert(CommitLogEvent event) {
+        MessageBO messageBO = event.getMessageBO();
+
+        long offset = messageBO.getQueueOffset() * config.getUnitSize();
+        if (!validateOffset(messageBO.getQueueOffset(), offset)) {
+            return true;
+        }
+
+        MappedFile mappedFile = mappedFileQueue.getMappedFileForOffset(offset);
+        if (mappedFile == null) {
+            return false;
+        }
+
+        initMappedFile(mappedFile, messageBO.getQueueOffset(), messageBO.getCommitLogOffset());
+
+        setWriteBuffer(event);
+        mappedFile.insert(writeBuffer);
+        return true;
+    }
+
+    private boolean validateOffset(long queueIndex, long queueOffset) {
+        if (0 == queueIndex) {
+            return true;
+        }
+
+        MappedFile last = mappedFileQueue.getLastMappedFile();
+        if (last == null) {
+            return true;
+        }
+
+        if (last.containsOffset(queueOffset)) {
+            return true;
+        }
+
+        return queueOffset <= last.getOffsetInFileName() + last.getFileSize();
+    }
+
+    private void initMappedFile(MappedFile mappedFile, long queueIndex, long queueOffset) {
+        if (0 == queueIndex || 0 != mappedFile.getWritePosition()) {
+            return;
+        }
+
+        if (0 == minOffset || queueOffset < minOffset) {
+            minOffset = queueOffset;
+        }
+
+        preFillBlank(mappedFile, queueOffset);
+    }
+
+    private void preFillBlank(final MappedFile mappedFile, final long size) {
+        ByteBuffer byteBuffer = ByteBuffer.allocate(config.getUnitSize());
+        byteBuffer.putLong(0L);
+        byteBuffer.putInt(Integer.MAX_VALUE);
+        byteBuffer.putLong(0L);
+
+        int until = (int) (size % mappedFile.getFileSize());
+        for (int i = 0; i < until; i += config.getUnitSize()) {
+            mappedFile.insert(byteBuffer.array());
+        }
+    }
+
+    private void setWriteBuffer(CommitLogEvent event) {
+        MessageBO messageBO = event.getMessageBO();
+        this.writeBuffer.flip();
+        this.writeBuffer.limit(config.getUnitSize());
+        this.writeBuffer.putLong(messageBO.getCommitLogOffset());
+        this.writeBuffer.putInt(messageBO.getStoreSize());
+        this.writeBuffer.putLong(messageBO.getTagsCode());
+    }
+
+    private void postEnqueue(CommitLogEvent event) {
+        checkpoint.setConsumeQueueFlushTime(event.getMessageBO().getStoreTimestamp());
     }
 
 }
