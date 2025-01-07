@@ -166,16 +166,11 @@ public class DefaultMappedFileQueue implements MappedFileQueue {
         long fileOffset = -1;
         MappedFile last = getLastMappedFile();
 
+        // if offset greater than max offset of last mappedFile
+        // this will cause service can't restart
         if (null == last || !last.containsOffset(offset)) {
-            int startOffset = (int) offset % fileSize;
-            fileOffset = offset - startOffset;
-            MappedFile result = createMappedFile(fileOffset);
-
-            if (startOffset > 0) {
-                result.warm(startOffset);
-            }
-
-            return result;
+            fileOffset = offset - offset % fileSize;
+            return createMappedFile(fileOffset);
         }
 
         if (!last.isFull()) {

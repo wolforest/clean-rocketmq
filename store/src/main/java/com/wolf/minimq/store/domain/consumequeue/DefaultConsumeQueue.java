@@ -1,5 +1,6 @@
 package com.wolf.minimq.store.domain.consumequeue;
 
+import com.wolf.common.util.lang.ThreadUtil;
 import com.wolf.minimq.domain.config.ConsumeQueueConfig;
 import com.wolf.minimq.domain.enums.QueueType;
 import com.wolf.minimq.domain.model.bo.CommitLogEvent;
@@ -26,11 +27,11 @@ public class DefaultConsumeQueue implements ConsumeQueue {
     private final int queueId;
     @Getter
     private MappedFileQueue mappedFileQueue;
+
     private final ConsumeQueueConfig config;
     private final StoreCheckpoint checkpoint;
     private final ByteBuffer writeBuffer;
 
-    private long maxOffset = -1;
     private volatile long minOffset = 0;
 
     public DefaultConsumeQueue(String topic, int queueId, ConsumeQueueConfig config, StoreCheckpoint checkpoint) {
@@ -56,25 +57,72 @@ public class DefaultConsumeQueue implements ConsumeQueue {
                 postEnqueue(event);
                 return;
             }
+
+            log.warn("[BUG]ConsumeQueue.enqueue failed, retry {} times", i);
+            ThreadUtil.sleep(1000);
         }
 
         log.error("[BUG]consume queue can not write, {} {}", this.topic, this.queueId);
     }
 
     private boolean insert(CommitLogEvent event) {
-        setWriteBuffer(event);
-        long offset = event.getMessageBO().getQueueOffset() * config.getUnitSize();
+        MessageBO messageBO = event.getMessageBO();
+
+        long offset = messageBO.getQueueOffset() * config.getUnitSize();
+        if (!validateOffset(messageBO.getQueueOffset(), offset)) {
+            return true;
+        }
+
         MappedFile mappedFile = mappedFileQueue.getMappedFileForOffset(offset);
         if (mappedFile == null) {
             return false;
         }
 
+        initMappedFile(mappedFile, messageBO.getQueueOffset(), messageBO.getCommitLogOffset());
+
+        setWriteBuffer(event);
+        mappedFile.insert(writeBuffer);
         return true;
     }
 
-    private void warmMappedFile(MappedFile mappedFile, long queueIndex, long queueOffset) {
+    private boolean validateOffset(long queueIndex, long queueOffset) {
+        if (0 == queueIndex) {
+            return true;
+        }
+
+        MappedFile last = mappedFileQueue.getLastMappedFile();
+        if (last == null) {
+            return true;
+        }
+
+        if (last.containsOffset(queueOffset)) {
+            return true;
+        }
+
+        return queueOffset <= last.getOffsetInFileName() + last.getFileSize();
+    }
+
+    private void initMappedFile(MappedFile mappedFile, long queueIndex, long queueOffset) {
         if (0 == queueIndex || 0 != mappedFile.getWritePosition()) {
             return;
+        }
+
+        if (0 == minOffset || queueOffset < minOffset) {
+            minOffset = queueOffset;
+        }
+
+        preFillBlank(mappedFile, queueOffset);
+    }
+
+    private void preFillBlank(final MappedFile mappedFile, final long size) {
+        ByteBuffer byteBuffer = ByteBuffer.allocate(config.getUnitSize());
+        byteBuffer.putLong(0L);
+        byteBuffer.putInt(Integer.MAX_VALUE);
+        byteBuffer.putLong(0L);
+
+        int until = (int) (size % mappedFile.getFileSize());
+        for (int i = 0; i < until; i += config.getUnitSize()) {
+            mappedFile.insert(byteBuffer.array());
         }
     }
 
@@ -154,7 +202,7 @@ public class DefaultConsumeQueue implements ConsumeQueue {
 
     @Override
     public long getMaxOffset() {
-        return this.maxOffset;
+        return this.mappedFileQueue.getMaxOffset();
     }
 
     @Override
