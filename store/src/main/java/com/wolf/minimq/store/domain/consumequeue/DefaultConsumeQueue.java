@@ -16,11 +16,16 @@ import java.io.File;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLongFieldUpdater;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class DefaultConsumeQueue implements ConsumeQueue {
+    private static final AtomicLongFieldUpdater<DefaultConsumeQueue> MAX_OFFSET_UPDATER = AtomicLongFieldUpdater.newUpdater(DefaultConsumeQueue.class, "maxOffset");
+    private static final AtomicLongFieldUpdater<DefaultConsumeQueue> MIN_OFFSET_UPDATER = AtomicLongFieldUpdater.newUpdater(DefaultConsumeQueue.class, "minOffset");
+
     @Getter
     private final String topic;
     @Getter
@@ -32,7 +37,11 @@ public class DefaultConsumeQueue implements ConsumeQueue {
     private final StoreCheckpoint checkpoint;
     private final ByteBuffer writeBuffer;
 
+    @Getter @Setter
+    private long maxCommitLogOffset = 0L;
+
     private volatile long minOffset = 0;
+    private volatile long maxOffset = 0;
 
     public DefaultConsumeQueue(String topic, int queueId, ConsumeQueueConfig config, StoreCheckpoint checkpoint) {
         this.topic = topic;
@@ -68,7 +77,7 @@ public class DefaultConsumeQueue implements ConsumeQueue {
     @Override
     public QueueUnit fetch(long index) {
         long offset = index * config.getUnitSize();
-        if (offset <= minOffset) {
+        if (offset <= MIN_OFFSET_UPDATER.get(this)) {
             return null;
         }
 
@@ -77,13 +86,7 @@ public class DefaultConsumeQueue implements ConsumeQueue {
             return null;
         }
 
-        QueueUnit unit = QueueUnit.builder()
-            .queueOffset(offset)
-            .commitLogOffset(buffer.getByteBuffer().getLong())
-            .messageSize(buffer.getByteBuffer().getInt())
-            .tagsCode(buffer.getByteBuffer().getLong())
-            .build();
-
+        QueueUnit unit = createQueueUnit(offset, buffer);
         buffer.release();
         return unit;
     }
@@ -91,7 +94,7 @@ public class DefaultConsumeQueue implements ConsumeQueue {
     @Override
     public List<QueueUnit> fetch(long index, int num) {
         long offset = index * config.getUnitSize();
-        if (offset <= minOffset) {
+        if (offset <= MIN_OFFSET_UPDATER.get(this)) {
             return List.of();
         }
 
@@ -106,13 +109,7 @@ public class DefaultConsumeQueue implements ConsumeQueue {
                 break;
             }
 
-            QueueUnit unit = QueueUnit.builder()
-                .queueOffset(offset)
-                .commitLogOffset(buffer.getByteBuffer().getLong())
-                .messageSize(buffer.getByteBuffer().getInt())
-                .tagsCode(buffer.getByteBuffer().getLong())
-                .build();
-
+            QueueUnit unit = createQueueUnit(offset, buffer);
             result.add(unit);
             offset += config.getUnitSize();
         }
@@ -123,17 +120,36 @@ public class DefaultConsumeQueue implements ConsumeQueue {
 
     @Override
     public long getMinOffset() {
-        return this.minOffset;
+        return MIN_OFFSET_UPDATER.get(this);
+    }
+
+    @Override
+    public void setMinOffset(long offset) {
+        MIN_OFFSET_UPDATER.set(this, offset);
+    }
+
+    @Override
+    public void setMaxOffset(long maxOffset) {
+        MAX_OFFSET_UPDATER.set(this, maxOffset);
     }
 
     @Override
     public long getMaxOffset() {
-        return this.mappedFileQueue.getMaxOffset();
+        return MAX_OFFSET_UPDATER.get(this);
     }
 
     @Override
     public long increaseOffset() {
-        return 0;
+        return MAX_OFFSET_UPDATER.addAndGet(this, 1);
+    }
+
+    private QueueUnit createQueueUnit(long offset, SelectedMappedBuffer buffer) {
+        return QueueUnit.builder()
+            .queueOffset(offset)
+            .commitLogOffset(buffer.getByteBuffer().getLong())
+            .messageSize(buffer.getByteBuffer().getInt())
+            .tagsCode(buffer.getByteBuffer().getLong())
+            .build();
     }
 
     private void initMappedFileQueue() {
@@ -235,9 +251,9 @@ public class DefaultConsumeQueue implements ConsumeQueue {
             return;
         }
 
-        if (0 == minOffset || queueOffset < minOffset) {
-            minOffset = queueOffset;
-        }
+//        if (0 == MIN_OFFSET_UPDATER.get(this) || queueOffset < MIN_OFFSET_UPDATER.get(this)) {
+//            MIN_OFFSET_UPDATER.set(this, queueOffset);
+//        }
 
         preFillBlank(mappedFile, queueOffset);
     }
@@ -263,7 +279,16 @@ public class DefaultConsumeQueue implements ConsumeQueue {
         this.writeBuffer.putLong(messageBO.getTagsCode());
     }
 
+    /**
+     * set maxCommitLogOffset and checkpoint info
+     * @param event commitLogEvent
+     */
     private void postEnqueue(CommitLogEvent event) {
+        long offset = event.getMessageBO().getCommitLogOffset() + event.getMessageBO().getStoreSize();
+        if (offset > maxCommitLogOffset) {
+            maxCommitLogOffset = offset;
+        }
+
         checkpoint.setConsumeQueueFlushTime(event.getMessageBO().getStoreTimestamp());
     }
 

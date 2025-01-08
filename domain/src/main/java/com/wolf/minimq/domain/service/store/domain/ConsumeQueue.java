@@ -16,7 +16,11 @@ public interface ConsumeQueue {
     List<QueueUnit> fetch(long index, int num);
 
     long getMinOffset();
+    void setMinOffset(long offset);
     long getMaxOffset();
+    void setMaxOffset(long maxOffset);
+    long getMaxCommitLogOffset();
+    void setMaxCommitLogOffset(long maxCommitLogOffset);
     long increaseOffset();
 
     MappedFileQueue getMappedFileQueue();

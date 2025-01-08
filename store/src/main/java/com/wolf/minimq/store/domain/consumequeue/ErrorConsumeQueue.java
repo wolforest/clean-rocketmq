@@ -4,6 +4,7 @@ import com.wolf.minimq.domain.enums.QueueType;
 import com.wolf.minimq.domain.model.bo.CommitLogEvent;
 import com.wolf.minimq.domain.model.bo.QueueUnit;
 import com.wolf.minimq.domain.service.store.domain.ConsumeQueue;
+import com.wolf.minimq.domain.service.store.infra.MappedFileQueue;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 
@@ -52,17 +53,37 @@ public class ErrorConsumeQueue implements ConsumeQueue {
     }
 
     @Override
+    public void setMinOffset(long offset) {
+
+    }
+
+    @Override
     public long getMaxOffset() {
         return 0;
     }
 
     @Override
-    public long getCurrentOffset() {
+    public void setMaxOffset(long maxOffset) {
+
+    }
+
+    @Override
+    public long getMaxCommitLogOffset() {
         return 0;
+    }
+
+    @Override
+    public void setMaxCommitLogOffset(long maxCommitLogOffset) {
+
     }
 
     @Override
     public long increaseOffset() {
         return 0;
+    }
+
+    @Override
+    public MappedFileQueue getMappedFileQueue() {
+        return null;
     }
 }
