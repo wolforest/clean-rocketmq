@@ -38,11 +38,11 @@ public class StoreCheckpoint {
     private boolean shutdownSuccessful = true;
 
     @Getter @Setter
-    private volatile long commitLogFlushTime = 0;
+    private volatile long commitLogStoreTime = 0;
     @Getter @Setter
-    private volatile long consumeQueueFlushTime = 0;
+    private volatile long consumeQueueStoreTime = 0;
     @Getter @Setter
-    private volatile long indexFlushTime = 0;
+    private volatile long indexStoreTime = 0;
 
     @Getter @Setter
     private volatile long masterOffset = 0;
@@ -50,7 +50,7 @@ public class StoreCheckpoint {
      * confirmed commitLog offset
      */
     @Getter @Setter
-    private volatile long commitLogOffset = 0;
+    private volatile long confirmOffset = 0;
 
     public StoreCheckpoint(final String scpPath) {
         File file = new File(scpPath);
@@ -66,17 +66,17 @@ public class StoreCheckpoint {
 
         if (fileExists) {
             log.info("store checkpoint file exists, {}", scpPath);
-            this.commitLogFlushTime = this.mappedByteBuffer.getLong(0);
-            this.consumeQueueFlushTime = this.mappedByteBuffer.getLong(8);
-            this.indexFlushTime = this.mappedByteBuffer.getLong(16);
+            this.commitLogStoreTime = this.mappedByteBuffer.getLong(0);
+            this.consumeQueueStoreTime = this.mappedByteBuffer.getLong(8);
+            this.indexStoreTime = this.mappedByteBuffer.getLong(16);
             this.masterOffset = this.mappedByteBuffer.getLong(24);
-            this.commitLogOffset = this.mappedByteBuffer.getLong(32);
+            this.confirmOffset = this.mappedByteBuffer.getLong(32);
 
-            log.info("store checkpoint file physicMsgTimestamp {}, {}", this.commitLogFlushTime, DateUtil.asLocalDateTime(this.commitLogFlushTime));
-            log.info("store checkpoint file logicsMsgTimestamp {}, {}", this.consumeQueueFlushTime, DateUtil.asLocalDateTime(this.consumeQueueFlushTime));
-            log.info("store checkpoint file indexMsgTimestamp {}, {}", this.indexFlushTime, DateUtil.asLocalDateTime(this.indexFlushTime));
+            log.info("store checkpoint file commitLogStoreTime {}, {}", this.commitLogStoreTime, DateUtil.asLocalDateTime(this.commitLogStoreTime));
+            log.info("store checkpoint file consumeQueueStoreTime {}, {}", this.consumeQueueStoreTime, DateUtil.asLocalDateTime(this.consumeQueueStoreTime));
+            log.info("store checkpoint file indexStoreTime {}, {}", this.indexStoreTime, DateUtil.asLocalDateTime(this.indexStoreTime));
             log.info("store checkpoint file masterFlushedOffset {}", this.masterOffset);
-            log.info("store checkpoint file confirmPhyOffset {}", this.commitLogOffset);
+            log.info("store checkpoint file confirmOffset {}", this.confirmOffset);
         } else {
             log.info("store checkpoint file not exists, {}", scpPath);
         }
@@ -96,20 +96,20 @@ public class StoreCheckpoint {
     }
 
     public void flush() {
-        this.mappedByteBuffer.putLong(0, this.commitLogFlushTime);
-        this.mappedByteBuffer.putLong(8, this.consumeQueueFlushTime);
-        this.mappedByteBuffer.putLong(16, this.indexFlushTime);
+        this.mappedByteBuffer.putLong(0, this.commitLogStoreTime);
+        this.mappedByteBuffer.putLong(8, this.consumeQueueStoreTime);
+        this.mappedByteBuffer.putLong(16, this.indexStoreTime);
         this.mappedByteBuffer.putLong(24, this.masterOffset);
-        this.mappedByteBuffer.putLong(32, this.commitLogOffset);
+        this.mappedByteBuffer.putLong(32, this.confirmOffset);
         this.mappedByteBuffer.force();
     }
 
     public long getMinTimestampIndex() {
-        return Math.min(this.getMinTimestamp(), this.indexFlushTime);
+        return Math.min(this.getMinTimestamp(), this.indexStoreTime);
     }
 
     public long getMinTimestamp() {
-        long min = Math.min(this.commitLogFlushTime, this.consumeQueueFlushTime);
+        long min = Math.min(this.commitLogStoreTime, this.consumeQueueStoreTime);
 
         min -= 1000 * 3;
         if (min < 0) {
