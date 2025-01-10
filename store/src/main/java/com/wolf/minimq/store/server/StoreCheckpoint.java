@@ -16,107 +16,154 @@
  */
 package com.wolf.minimq.store.server;
 
-import com.wolf.common.util.io.BufferUtil;
-import com.wolf.common.util.time.DateUtil;
-import com.wolf.minimq.store.infra.file.DefaultMappedFile;
+import com.wolf.common.util.io.FileUtil;
+import com.wolf.common.util.lang.BeanUtil;
+import com.wolf.common.util.lang.JSONUtil;
+import com.wolf.common.util.lang.StringUtil;
+import com.wolf.minimq.domain.model.checkpoint.CheckPoint;
+import com.wolf.minimq.domain.model.checkpoint.Offset;
 import java.io.File;
-import java.io.IOException;
-import java.io.RandomAccessFile;
-import java.nio.MappedByteBuffer;
-import java.nio.channels.FileChannel;
-import java.nio.channels.FileChannel.MapMode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class StoreCheckpoint {
-    private final FileChannel fileChannel;
-    private final MappedByteBuffer mappedByteBuffer;
+public class StoreCheckpoint implements CheckPoint {
+    private static final String MIN_OFFSET_FILE = "minOffset.json";
+    private static final String MAX_OFFSET_FILE = "maxOffset.json";
+    private static final String TRY_SUFFIX = ".try";
+    private static final String COMMIT_SUFFIX = ".commit";
+
+    private final String minOffsetPath;
+    private final String maxOffsetPath;
+
+    private Offset minOffset = new Offset();
+    private Offset minCopy;
+    private Offset maxOffset = new Offset();
 
     @Getter @Setter
     private boolean shutdownSuccessful = true;
 
-    @Getter @Setter
-    private volatile long commitLogStoreTime = 0;
-    @Getter @Setter
-    private volatile long consumeQueueStoreTime = 0;
-    @Getter @Setter
-    private volatile long indexStoreTime = 0;
+    public StoreCheckpoint(String storePath) {
+        this.minOffsetPath = storePath + File.separator + MIN_OFFSET_FILE;
+        this.maxOffsetPath = storePath + File.separator + MAX_OFFSET_FILE;
+    }
 
-    @Getter @Setter
-    private volatile long masterOffset = 0;
-    /**
-     * confirmed commitLog offset
-     */
-    @Getter @Setter
-    private volatile long confirmOffset = 0;
+    @Override
+    public void load() {
+        loadMinOffset();
+        loadMaxOffset();
+    }
 
-    public StoreCheckpoint(final String scpPath) {
-        File file = new File(scpPath);
-        boolean fileExists = file.exists();
+    @Override
+    public void save() {
+        this.saveMaxOffset();
+    }
 
-        try {
-            RandomAccessFile randomAccessFile = new RandomAccessFile(file, "rw");
-            this.fileChannel = randomAccessFile.getChannel();
-            this.mappedByteBuffer = fileChannel.map(MapMode.READ_WRITE, 0, DefaultMappedFile.OS_PAGE_SIZE);
-        } catch (IOException e) {
-            throw new com.wolf.common.lang.exception.io.IOException(e.getMessage());
+    @Override
+    public Offset getMinOffset() {
+        return minOffset.deepCopy();
+    }
+
+    @Override
+    public synchronized Offset tryMinOffset() {
+        String commitPath = minOffsetPath + COMMIT_SUFFIX;
+        if (FileUtil.exists(commitPath)) {
+            commitMinOffset();
         }
 
-        if (fileExists) {
-            log.info("store checkpoint file exists, {}", scpPath);
-            this.commitLogStoreTime = this.mappedByteBuffer.getLong(0);
-            this.consumeQueueStoreTime = this.mappedByteBuffer.getLong(8);
-            this.indexStoreTime = this.mappedByteBuffer.getLong(16);
-            this.masterOffset = this.mappedByteBuffer.getLong(24);
-            this.confirmOffset = this.mappedByteBuffer.getLong(32);
+        if (minCopy != null) {
+            return minCopy;
+        }
+        String tryPath = minOffsetPath + TRY_SUFFIX;
+        if (FileUtil.exists(tryPath)) {
+            FileUtil.delete(tryPath);
+        }
 
-            log.info("store checkpoint file commitLogStoreTime {}, {}", this.commitLogStoreTime, DateUtil.asLocalDateTime(this.commitLogStoreTime));
-            log.info("store checkpoint file consumeQueueStoreTime {}, {}", this.consumeQueueStoreTime, DateUtil.asLocalDateTime(this.consumeQueueStoreTime));
-            log.info("store checkpoint file indexStoreTime {}, {}", this.indexStoreTime, DateUtil.asLocalDateTime(this.indexStoreTime));
-            log.info("store checkpoint file masterFlushedOffset {}", this.masterOffset);
-            log.info("store checkpoint file confirmOffset {}", this.confirmOffset);
-        } else {
-            log.info("store checkpoint file not exists, {}", scpPath);
+        Offset tmp = minOffset.deepCopy();
+        String data = JSONUtil.toJSONString(tmp);
+        FileUtil.stringToFile(data, tryPath);
+
+        minCopy = tmp;
+
+        return minCopy;
+    }
+
+    @Override
+    public synchronized void commitMinOffset() {
+        String tryPath = minOffsetPath + TRY_SUFFIX;
+        String commitPath = minOffsetPath + COMMIT_SUFFIX;
+
+        if (!FileUtil.exists(tryPath) && !FileUtil.exists(commitPath)) {
+            return;
+        }
+
+        if (FileUtil.exists(tryPath)) {
+            FileUtil.rename(tryPath, commitPath);
+        }
+
+        if (null != this.minCopy) {
+            this.minOffset = this.minCopy;
+            this.minCopy = null;
+        }
+
+        String data = JSONUtil.toJSONString(this.minOffset);
+        FileUtil.stringToFile(data, commitPath);
+
+        FileUtil.rename(commitPath, minOffsetPath);
+    }
+
+    @Override
+    public synchronized void cancelMinOffset() {
+        String tryPath = minOffsetPath + TRY_SUFFIX;
+        String commitPath = minOffsetPath + COMMIT_SUFFIX;
+
+        this.minCopy = null;
+
+        if (FileUtil.exists(tryPath)) {
+            FileUtil.delete(tryPath);
+        }
+
+        if (FileUtil.exists(commitPath)) {
+            FileUtil.delete(commitPath);
         }
     }
 
-    public void shutdown() {
-        this.flush();
-
-        // unmap mappedByteBuffer
-        BufferUtil.cleanBuffer(this.mappedByteBuffer);
-
-        try {
-            this.fileChannel.close();
-        } catch (IOException e) {
-            log.error("Failed to properly close the channel", e);
-        }
+    @Override
+    public Offset getMaxOffset() {
+        return maxOffset;
     }
 
-    public void flush() {
-        this.mappedByteBuffer.putLong(0, this.commitLogStoreTime);
-        this.mappedByteBuffer.putLong(8, this.consumeQueueStoreTime);
-        this.mappedByteBuffer.putLong(16, this.indexStoreTime);
-        this.mappedByteBuffer.putLong(24, this.masterOffset);
-        this.mappedByteBuffer.putLong(32, this.confirmOffset);
-        this.mappedByteBuffer.force();
+    @Override
+    public void saveMaxOffset() {
+        String data = JSONUtil.toJSONString(maxOffset);
+        FileUtil.stringToFile(data, maxOffsetPath);
     }
 
-    public long getMinTimestampIndex() {
-        return Math.min(this.getMinTimestamp(), this.indexStoreTime);
-    }
-
-    public long getMinTimestamp() {
-        long min = Math.min(this.commitLogStoreTime, this.consumeQueueStoreTime);
-
-        min -= 1000 * 3;
-        if (min < 0) {
-            min = 0;
+    private void loadMinOffset() {
+        if (!FileUtil.exists(minOffsetPath)) {
+            return;
         }
 
-        return min;
+        String data = FileUtil.readString(minOffsetPath);
+        if (StringUtil.isBlank(data)) {
+            return;
+        }
+
+        minOffset = JSONUtil.parse(data, Offset.class);
+    }
+
+    private void loadMaxOffset() {
+        if (!FileUtil.exists(maxOffsetPath)) {
+            return;
+        }
+
+        String data = FileUtil.readString(maxOffsetPath);
+        if (StringUtil.isBlank(data)) {
+            return;
+        }
+
+        maxOffset = JSONUtil.parse(data, Offset.class);
     }
 
 }

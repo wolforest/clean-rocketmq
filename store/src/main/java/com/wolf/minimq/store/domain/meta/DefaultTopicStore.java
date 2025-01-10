@@ -41,19 +41,19 @@ public class DefaultTopicStore implements TopicStore {
 
     @Override
     public void load() {
-        if (!FileUtil.isFileExists(storePath)) {
+        if (!FileUtil.exists(storePath)) {
             initTopicTable();
             return;
         }
 
-        String data = FileUtil.readString(storePath);
+        String data = FileUtil.fileToString(storePath);
         decodeTopicTable(data);
     }
 
     @Override
     public void persist() {
         String data = JSONUtil.toJSONString(topicTable);
-        FileUtil.writeString(storePath, data);
+        FileUtil.stringToFile(data, storePath);
     }
 
     private void initTopicTable() {

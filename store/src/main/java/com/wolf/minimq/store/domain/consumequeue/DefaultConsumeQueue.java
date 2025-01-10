@@ -294,7 +294,6 @@ public class DefaultConsumeQueue implements ConsumeQueue {
             maxCommitLogOffset = offset;
         }
 
-        checkpoint.setConsumeQueueStoreTime(event.getMessageBO().getStoreTimestamp());
     }
 
 }

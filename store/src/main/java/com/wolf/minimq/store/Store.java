@@ -71,7 +71,7 @@ public class Store implements Lifecycle {
         this.componentManager.shutdown();
 
         StoreContext.getScheduler().shutdown();
-        StoreContext.getCheckPoint().shutdown();
+        StoreContext.getCheckPoint().save();
 
         startupLock.unlock();
         shutdownLock.unlock();
