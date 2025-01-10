@@ -17,7 +17,6 @@
 package com.wolf.minimq.store.server;
 
 import com.wolf.common.util.io.FileUtil;
-import com.wolf.common.util.lang.BeanUtil;
 import com.wolf.common.util.lang.JSONUtil;
 import com.wolf.common.util.lang.StringUtil;
 import com.wolf.minimq.domain.model.checkpoint.CheckPoint;
@@ -42,7 +41,9 @@ public class StoreCheckpoint implements CheckPoint {
     private Offset maxOffset = new Offset();
 
     @Getter @Setter
-    private boolean shutdownSuccessful = true;
+    private boolean shutdownSuccessful = false;
+    private boolean minOffsetLoaded = false;
+    private boolean maxOffsetLoaded = false;
 
     public StoreCheckpoint(String storePath) {
         this.minOffsetPath = storePath + File.separator + MIN_OFFSET_FILE;
@@ -62,7 +63,15 @@ public class StoreCheckpoint implements CheckPoint {
 
     @Override
     public Offset getMinOffset() {
-        return minOffset.deepCopy();
+        if (!minOffsetLoaded) {
+            return null;
+        }
+
+        if (minCopy != null) {
+            return minCopy;
+        }
+        minCopy = minOffset.deepCopy();
+        return minCopy;
     }
 
     @Override
@@ -131,6 +140,10 @@ public class StoreCheckpoint implements CheckPoint {
 
     @Override
     public Offset getMaxOffset() {
+        if (!maxOffsetLoaded) {
+            return null;
+        }
+
         return maxOffset;
     }
 
@@ -142,6 +155,7 @@ public class StoreCheckpoint implements CheckPoint {
 
     private void loadMinOffset() {
         if (!FileUtil.exists(minOffsetPath)) {
+            minOffsetLoaded = false;
             return;
         }
 
@@ -151,10 +165,12 @@ public class StoreCheckpoint implements CheckPoint {
         }
 
         minOffset = JSONUtil.parse(data, Offset.class);
+        minOffsetLoaded = true;
     }
 
     private void loadMaxOffset() {
         if (!FileUtil.exists(maxOffsetPath)) {
+            maxOffsetLoaded = false;
             return;
         }
 
@@ -164,6 +180,7 @@ public class StoreCheckpoint implements CheckPoint {
         }
 
         maxOffset = JSONUtil.parse(data, Offset.class);
+        maxOffsetLoaded = true;
     }
 
 }
