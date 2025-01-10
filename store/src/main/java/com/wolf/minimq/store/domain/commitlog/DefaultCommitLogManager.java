@@ -26,6 +26,7 @@ public class DefaultCommitLogManager implements CommitLogManager {
 
     private MappedFileQueue mappedFileQueue;
     private final FlushManager flushManager;
+    private CommitLogRecovery commitLogRecovery;
 
     public DefaultCommitLogManager() {
         initConfig();
@@ -36,6 +37,8 @@ public class DefaultCommitLogManager implements CommitLogManager {
 
         CommitLog commitLog = new DefaultCommitLog(commitLogConfig, messageConfig, mappedFileQueue, flushManager);
         StoreContext.register(commitLog, CommitLog.class);
+
+        commitLogRecovery = new CommitLogRecovery(commitLog, checkpoint);
     }
 
     @Override
@@ -43,6 +46,8 @@ public class DefaultCommitLogManager implements CommitLogManager {
         mappedFileQueue.load();
         mappedFileQueue.setFileMode(CLibrary.MADV_RANDOM);
         mappedFileQueue.checkSelf();
+
+        commitLogRecovery.recover();
     }
 
     @Override

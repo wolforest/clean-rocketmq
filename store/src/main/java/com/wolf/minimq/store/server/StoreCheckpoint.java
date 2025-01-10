@@ -84,6 +84,7 @@ public class StoreCheckpoint implements CheckPoint {
         if (minCopy != null) {
             return minCopy;
         }
+
         String tryPath = minOffsetPath + TRY_SUFFIX;
         if (FileUtil.exists(tryPath)) {
             FileUtil.delete(tryPath);
