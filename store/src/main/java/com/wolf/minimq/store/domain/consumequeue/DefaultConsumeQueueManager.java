@@ -29,9 +29,10 @@ public class DefaultConsumeQueueManager implements ConsumeQueueManager {
         ConsumeQueueStore consumeQueueStore = new DefaultConsumeQueueStore(consumeQueueFactory);
         StoreContext.register(consumeQueueStore, ConsumeQueueStore.class);
 
-        registerDispatchHandler(consumeQueueStore);
         loader.load();
         recovery.recover();
+
+        registerDispatchHandler(consumeQueueStore);
     }
 
     @Override
