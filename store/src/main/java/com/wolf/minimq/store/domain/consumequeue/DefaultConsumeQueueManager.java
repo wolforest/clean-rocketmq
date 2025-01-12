@@ -31,6 +31,7 @@ public class DefaultConsumeQueueManager implements ConsumeQueueManager {
 
         registerDispatchHandler(consumeQueueStore);
         loader.load();
+        recovery.recover();
     }
 
     @Override
