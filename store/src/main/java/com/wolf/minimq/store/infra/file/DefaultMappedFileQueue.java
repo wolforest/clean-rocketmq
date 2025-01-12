@@ -110,7 +110,7 @@ public class DefaultMappedFileQueue implements MappedFileQueue {
         if (isEmpty()) return createMappedFile(0);
 
         MappedFile last = getLastMappedFile();
-        if (last.hasEnoughSpace(messageSize)) {
+        if (last.hasSpace(messageSize)) {
             return last;
         }
 
@@ -343,10 +343,7 @@ public class DefaultMappedFileQueue implements MappedFileQueue {
     private boolean initMappedFile(String path) {
         try {
             MappedFile mappedFile = new DefaultMappedFile(path, this.fileSize);
-
-            mappedFile.setWritePosition(this.fileSize);
-            mappedFile.setFlushPosition(this.fileSize);
-            mappedFile.setCommitPosition(this.fileSize);
+            mappedFile.setInsertPosition(this.fileSize);
             this.mappedFiles.add(mappedFile);
             log.info("load {} OK", path);
 

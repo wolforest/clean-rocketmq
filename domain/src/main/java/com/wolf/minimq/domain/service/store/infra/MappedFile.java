@@ -16,19 +16,19 @@ public interface MappedFile {
     String getFileName();
 
     /**
+     * Returns the file size of the {@code MappedFile}.
+     *
+     * @return the file size
+     */
+    int getFileSize();
+
+    /**
      * Returns the global offset of the current {code MappedFile}, it's a long value of the file name.
      *
      * @return the min offset of this file
      */
     long getMinOffset();
     long getMaxOffset();
-
-    /**
-     * Returns the file size of the {@code MappedFile}.
-     *
-     * @return the file size
-     */
-    int getFileSize();
 
     /**
      * Returns true if this {@code MappedFile} is full and no new messages can be added.
@@ -42,9 +42,7 @@ public interface MappedFile {
      * @param size size needed
      * @return true if file has enough space
      */
-    boolean hasEnoughSpace(int size);
-
-    boolean hasEnoughSpace(long offset, int size);
+    boolean hasSpace(int size);
 
     boolean containsOffset(long offset);
 
@@ -192,15 +190,6 @@ public interface MappedFile {
     int getInsertPosition();
     void setInsertPosition(int insertPosition);
     void setInsertOffset(long insertOffset);
-
-    int getWritePosition();
-    void setWritePosition(int writePosition);
-
-    int getFlushPosition();
-    void setFlushPosition(int flushPosition);
-
-    int getCommitPosition();
-    void setCommitPosition(int commitPosition);
 
     long getStoreTimestamp();
 }

@@ -79,19 +79,13 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
     }
 
     @Override
-    public boolean hasEnoughSpace(int size) {
+    public boolean hasSpace(int size) {
         return this.fileSize + size >= WRITE_POSITION_UPDATER.get(this);
     }
 
     @Override
-    public boolean hasEnoughSpace(long offset, int size) {
-        return containsOffset(offset) && hasEnoughSpace(size);
-    }
-
-    @Override
     public boolean containsOffset(long offset) {
-        return offset >= this.minOffset
-            && offset < this.maxOffset;
+        return offset >= this.minOffset && offset < this.maxOffset;
     }
 
     @Override
@@ -106,7 +100,6 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
             log.error("setFileMode error fileName: {}, madvise: {}, mode:{}",
                 fileName, madvise, mode);
         }
-
     }
 
     @Override
@@ -434,36 +427,6 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
         } catch (Throwable e) {
             log.error("Error occurred when commit data to FileChannel.", e);
         }
-    }
-
-    @Override
-    public int getWritePosition() {
-        return WRITE_POSITION_UPDATER.get(this);
-    }
-
-    @Override
-    public void setWritePosition(int writePosition) {
-        WRITE_POSITION_UPDATER.set(this, writePosition);
-    }
-
-    @Override
-    public int getCommitPosition() {
-        return COMMIT_POSITION_UPDATER.get(this);
-    }
-
-    @Override
-    public void setCommitPosition(int commitPosition) {
-        COMMIT_POSITION_UPDATER.set(this, commitPosition);
-    }
-
-    @Override
-    public int getFlushPosition() {
-        return FLUSH_POSITION_UPDATER.get(this);
-    }
-
-    @Override
-    public void setFlushPosition(int flushPosition) {
-        FLUSH_POSITION_UPDATER.set(this, flushPosition);
     }
 
 }

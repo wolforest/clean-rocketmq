@@ -67,8 +67,8 @@ public class CommitLogRecovery {
         List<MappedFile> mappedFiles = mappedFileQueue.getMappedFiles();
 
         Long maxOffset = null;
-        MappedFile lastValidFile = null;
         boolean findMaxOffset = false;
+        MappedFile lastValidFile = null;
         List<MappedFile> dirtyFiles = new ArrayList<>();
 
         /*
@@ -89,7 +89,7 @@ public class CommitLogRecovery {
                 continue;
             }
 
-            // scan the MappedFile from startOffset or from the start of the file
+            // scan the MappedFile from startOffset or the start of the file
             Long processOffset = mappedFile.containsOffset(startOffset)
                 ? startOffset
                 : mappedFile.getMinOffset();
@@ -110,7 +110,6 @@ public class CommitLogRecovery {
         if (null != lastValidFile && null != maxOffset) {
             lastValidFile.setInsertOffset(maxOffset);
         }
-
         mappedFileQueue.removeMappedFiles(dirtyFiles);
     }
 

@@ -252,7 +252,7 @@ public class DefaultConsumeQueue implements ConsumeQueue {
     }
 
     private void initMappedFile(MappedFile mappedFile, long queueIndex, long queueOffset) {
-        if (0 == queueIndex || 0 != mappedFile.getWritePosition()) {
+        if (0 == queueIndex || 0 != mappedFile.getInsertPosition()) {
             return;
         }
 
