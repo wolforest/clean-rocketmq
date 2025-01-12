@@ -25,9 +25,12 @@ import lombok.extern.slf4j.Slf4j;
 public class DefaultMappedFile extends ReferenceResource implements MappedFile {
     public static final int OS_PAGE_SIZE = 1024 * 4;
 
-    protected static final AtomicIntegerFieldUpdater<DefaultMappedFile> WRITE_POSITION_UPDATER = AtomicIntegerFieldUpdater.newUpdater(DefaultMappedFile.class, "writePosition");
-    protected static final AtomicIntegerFieldUpdater<DefaultMappedFile> COMMIT_POSITION_UPDATER = AtomicIntegerFieldUpdater.newUpdater(DefaultMappedFile.class, "commitPosition");
-    protected static final AtomicIntegerFieldUpdater<DefaultMappedFile> FLUSH_POSITION_UPDATER = AtomicIntegerFieldUpdater.newUpdater(DefaultMappedFile.class, "flushPosition");
+    protected static final AtomicIntegerFieldUpdater<DefaultMappedFile> WRITE_POSITION_UPDATER
+        = AtomicIntegerFieldUpdater.newUpdater(DefaultMappedFile.class, "writePosition");
+    protected static final AtomicIntegerFieldUpdater<DefaultMappedFile> COMMIT_POSITION_UPDATER
+        = AtomicIntegerFieldUpdater.newUpdater(DefaultMappedFile.class, "commitPosition");
+    protected static final AtomicIntegerFieldUpdater<DefaultMappedFile> FLUSH_POSITION_UPDATER
+        = AtomicIntegerFieldUpdater.newUpdater(DefaultMappedFile.class, "flushPosition");
 
     @Getter
     protected String fileName;
@@ -80,7 +83,7 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
 
     @Override
     public boolean hasSpace(int size) {
-        return this.fileSize + size >= WRITE_POSITION_UPDATER.get(this);
+        return WRITE_POSITION_UPDATER.get(this) + size < this.fileSize;
     }
 
     @Override
