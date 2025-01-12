@@ -10,7 +10,7 @@ import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class ConsumeQueueFlusher extends ServiceThread implements ConsumeQueueRegister {
+public class ConsumeQueueFlusher extends ServiceThread implements ConsumeQueueRegistry {
     private final ConsumeQueueConfig config;
     private final StoreCheckpoint checkpoint;
 

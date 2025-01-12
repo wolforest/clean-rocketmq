@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-public class ConsumeQueueFactory implements ConsumeQueueRegister {
+public class ConsumeQueueFactory implements ConsumeQueueRegistry {
     private static final int TOPIC_MAP_SIZE = 32;
     private static final int QUEUE_MAP_SIZE = 128;
 
@@ -18,7 +18,7 @@ public class ConsumeQueueFactory implements ConsumeQueueRegister {
     private final TopicStore topicStore;
     private final StoreCheckpoint checkpoint;
 
-    private final List<ConsumeQueueRegister> createHooks = new ArrayList<>();
+    private final List<ConsumeQueueRegistry> createHooks = new ArrayList<>();
     /**
      * consume queue map, structure:
      * - topic
@@ -77,14 +77,14 @@ public class ConsumeQueueFactory implements ConsumeQueueRegister {
         return result == null ? queue : result;
     }
 
-    public void addCreateHook(ConsumeQueueRegister hook) {
+    public void addCreateHook(ConsumeQueueRegistry hook) {
         createHooks.add(hook);
     }
 
     public void register(ConsumeQueue queue) {
         if (createHooks.isEmpty()) return;
 
-        for (ConsumeQueueRegister hook : createHooks) {
+        for (ConsumeQueueRegistry hook : createHooks) {
             hook.register(queue);
         }
     }

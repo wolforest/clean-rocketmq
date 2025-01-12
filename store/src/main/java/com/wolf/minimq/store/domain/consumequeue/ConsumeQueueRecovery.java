@@ -6,12 +6,12 @@ import com.wolf.minimq.domain.service.store.infra.MappedFileQueue;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-public class ConsumeQueueLoader implements ConsumeQueueRegistry {
+public class ConsumeQueueRecovery implements ConsumeQueueRegistry {
     private final ConsumeQueueConfig config;
 
     private final Set<ConsumeQueue> queueSet = new LinkedHashSet<>(128);
 
-    public ConsumeQueueLoader(ConsumeQueueConfig config) {
+    public ConsumeQueueRecovery(ConsumeQueueConfig config) {
         this.config = config;
     }
     @Override
@@ -19,13 +19,14 @@ public class ConsumeQueueLoader implements ConsumeQueueRegistry {
         queueSet.add(queue);
     }
 
-    public void load() {
+    public void recover() {
         if (queueSet.isEmpty()) return;
 
         queueSet.forEach(queue -> {
-            MappedFileQueue mappedFileQueue = queue.getMappedFileQueue();
-            mappedFileQueue.load();
-            mappedFileQueue.checkSelf();
+            recoverQueue(queue);
         });
+    }
+
+    private void recoverQueue(ConsumeQueue queue) {
     }
 }
