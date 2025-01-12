@@ -72,14 +72,17 @@ public class CommitLogRecovery {
         List<MappedFile> dirtyFiles = new ArrayList<>();
 
         /*
-         * find max offset by scanning all mapped files
-         *  and remove all files after max offset.
-         *  find the last valid mappedFile
-         *  - if it is the last in queue do nothing
-         *  - else remove the files after it
-         *
+         * find max offset and remove all files after max offset.
+         *  the last valid mappedFile maybe
+         *  - the last in queue
+         *  - not the last, then all files after it are dirty files
          */
         for (MappedFile mappedFile : mappedFiles) {
+            // skip the file before startOffset
+            if (mappedFile.getOffsetInFileName() + mappedFile.getFileSize() < startOffset) {
+                continue;
+            }
+
             // remove all files after max offset
             if (findMaxOffset) {
                 dirtyFiles.add(mappedFile);
