@@ -11,23 +11,16 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class DefaultConsumeQueueManager implements ConsumeQueueManager {
-    ConsumeQueueConfig consumeQueueConfig;
+    private ConsumeQueueConfig consumeQueueConfig;
     private ConsumeQueueFlusher flusher;
     private ConsumeQueueLoader loader;
     private ConsumeQueueRecovery recovery;
+    private ConsumeQueueStore consumeQueueStore;
 
     @Override
     public void initialize() {
-        consumeQueueConfig = StoreContext.getBean(ConsumeQueueConfig.class);
-        consumeQueueConfig.setRootPath(StorePath.getConsumeQueuePath());
-
-        flusher = new ConsumeQueueFlusher(consumeQueueConfig, StoreContext.getCheckPoint());
-        loader = new ConsumeQueueLoader(consumeQueueConfig);
-        recovery = new ConsumeQueueRecovery(consumeQueueConfig, StoreContext.getCheckPoint());
-
-        ConsumeQueueFactory consumeQueueFactory = initConsumeQueueFactory();
-        ConsumeQueueStore consumeQueueStore = new DefaultConsumeQueueStore(consumeQueueFactory);
-        StoreContext.register(consumeQueueStore, ConsumeQueueStore.class);
+        initConfig();
+        initObjects();
 
         loader.load();
         recovery.recover();
@@ -55,10 +48,19 @@ public class DefaultConsumeQueueManager implements ConsumeQueueManager {
         return State.RUNNING;
     }
 
-    private void registerDispatchHandler(ConsumeQueueStore consumeQueueStore) {
-        CommitLogDispatcher dispatcher = StoreContext.getBean(CommitLogDispatcher.class);
-        QueueCommitLogHandler handler = new QueueCommitLogHandler(consumeQueueStore);
-        dispatcher.registerHandler(handler);
+    private void initConfig() {
+        consumeQueueConfig = StoreContext.getBean(ConsumeQueueConfig.class);
+        consumeQueueConfig.setRootPath(StorePath.getConsumeQueuePath());
+    }
+
+    private void initObjects() {
+        flusher = new ConsumeQueueFlusher(consumeQueueConfig, StoreContext.getCheckPoint());
+        loader = new ConsumeQueueLoader(consumeQueueConfig);
+        recovery = new ConsumeQueueRecovery(consumeQueueConfig, StoreContext.getCheckPoint());
+
+        ConsumeQueueFactory consumeQueueFactory = initConsumeQueueFactory();
+        consumeQueueStore = new DefaultConsumeQueueStore(consumeQueueFactory);
+        StoreContext.register(consumeQueueStore, ConsumeQueueStore.class);
     }
 
     private ConsumeQueueFactory initConsumeQueueFactory() {
@@ -71,5 +73,11 @@ public class DefaultConsumeQueueManager implements ConsumeQueueManager {
 
         consumeQueueFactory.createAll();
         return consumeQueueFactory;
+    }
+
+    private void registerDispatchHandler(ConsumeQueueStore consumeQueueStore) {
+        CommitLogDispatcher dispatcher = StoreContext.getBean(CommitLogDispatcher.class);
+        QueueCommitLogHandler handler = new QueueCommitLogHandler(consumeQueueStore);
+        dispatcher.registerHandler(handler);
     }
 }
