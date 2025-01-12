@@ -120,7 +120,7 @@ public class DefaultConsumeQueue implements ConsumeQueue {
 
     @Override
     public long getMinOffset() {
-        return MIN_OFFSET_UPDATER.get(this);
+        return mappedFileQueue.getMinOffset();
     }
 
     @Override

@@ -107,10 +107,23 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
     }
 
     @Override
-    public int getWriteOrCommitPosition() {
+    public int getInsertPosition() {
         return null == transientPool || !transientPool.isRealCommit()
             ? WRITE_POSITION_UPDATER.get(this)
             : COMMIT_POSITION_UPDATER.get(this);
+    }
+
+    @Override
+    public void setInsertOffset(long insertOffset) {
+        int position = (int) insertOffset % this.fileSize;
+        setInsertPosition(position);
+    }
+
+    @Override
+    public void setInsertPosition(int insertPosition) {
+        WRITE_POSITION_UPDATER.set(this, insertPosition);
+        COMMIT_POSITION_UPDATER.set(this, insertPosition);
+        FLUSH_POSITION_UPDATER.set(this, insertPosition);
     }
 
     @Override
@@ -160,7 +173,7 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
 
     @Override
     public SelectedMappedBuffer select(int pos, int size) {
-        int dataPosition = getWriteOrCommitPosition();
+        int dataPosition = getInsertPosition();
         if ((pos + size) > dataPosition) {
             return null;
         }
@@ -185,7 +198,7 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
 
     @Override
     public SelectedMappedBuffer select(int pos) {
-        int dataPosition = getWriteOrCommitPosition();
+        int dataPosition = getInsertPosition();
         if (pos >= dataPosition || pos < 0) {
             return null;
         }
@@ -200,7 +213,7 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
             return false;
         }
 
-        int readPosition = getWriteOrCommitPosition();
+        int readPosition = getInsertPosition();
         if ((pos + size) > readPosition) {
             log.warn("selectMappedBuffer request pos invalid, request pos: {}, size: {}, fileFromOffset: {}", pos, size, this.offsetInFileName);
             return false;
@@ -232,7 +245,7 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
             return FLUSH_POSITION_UPDATER.get(this);
         }
 
-        int position = getWriteOrCommitPosition();
+        int position = getInsertPosition();
         try {
             if (null != writeCache && this.fileChannel.position() != 0) {
                 this.fileChannel.force(false);
@@ -377,7 +390,7 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
 
     private boolean isAbleToFlush(final int minPages) {
         int flushPosition = FLUSH_POSITION_UPDATER.get(this);
-        int writePosition = getWriteOrCommitPosition();
+        int writePosition = getInsertPosition();
 
         if (this.isFull()) {
             return true;

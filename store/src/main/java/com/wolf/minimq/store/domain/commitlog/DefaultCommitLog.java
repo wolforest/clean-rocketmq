@@ -22,6 +22,7 @@ import com.wolf.minimq.store.domain.commitlog.vo.EnqueueThreadLocal;
 import com.wolf.minimq.store.domain.commitlog.vo.InsertContext;
 import com.wolf.minimq.store.infra.memory.CLibrary;
 import java.util.concurrent.CompletableFuture;
+import lombok.Getter;
 
 /**
  * depend on:
@@ -32,9 +33,10 @@ import java.util.concurrent.CompletableFuture;
 public class DefaultCommitLog implements CommitLog {
     private final CommitLogConfig commitLogConfig;
     private final MessageConfig messageConfig;
-    private final MappedFileQueue mappedFileQueue;
     private final FlushManager flushManager;
 
+    @Getter
+    private final MappedFileQueue mappedFileQueue;
     private final CommitLogLock commitLogLock;
     private ThreadLocal<EnqueueThreadLocal> localEncoder;
 

@@ -21,6 +21,7 @@ public class DefaultMappedFileQueue implements MappedFileQueue {
     private final int fileSize;
 
     private final AllocateMappedFileService allocateMappedFileService;
+    @Getter
     private final CopyOnWriteArrayList<MappedFile> mappedFiles = new CopyOnWriteArrayList<>();
 
     @Getter
@@ -92,6 +93,11 @@ public class DefaultMappedFileQueue implements MappedFileQueue {
     @Override
     public boolean isEmpty() {
         return this.mappedFiles.isEmpty();
+    }
+
+    @Override
+    public int size() {
+        return this.mappedFiles.size();
     }
 
     @Override
@@ -201,6 +207,33 @@ public class DefaultMappedFileQueue implements MappedFileQueue {
         return mappedFile;
     }
 
+    @Override
+    public void removeMappedFile(MappedFile mappedFile) {
+        if (!this.mappedFiles.contains(mappedFile)) {
+            return;
+        }
+
+        if (this.mappedFiles.remove(mappedFile)) {
+            mappedFile.destroy(1000 * 3);
+        }
+    }
+
+    @Override
+    public void removeMappedFiles(List<MappedFile> files) {
+        for (MappedFile mappedFile : files) {
+            removeMappedFile(mappedFile);
+        }
+    }
+
+    @Override
+    public MappedFile getMappedFileByIndex(int index) {
+        if (index > size()) {
+            return null;
+        }
+
+        return this.mappedFiles.get(index);
+    }
+
     private MappedFile createMappedFile(String file) {
         try {
             return new DefaultMappedFile(file, this.fileSize);
@@ -228,7 +261,7 @@ public class DefaultMappedFileQueue implements MappedFileQueue {
             return 0;
         }
 
-        return mappedFile.getOffsetInFileName() + mappedFile.getWriteOrCommitPosition();
+        return mappedFile.getOffsetInFileName() + mappedFile.getInsertPosition();
     }
 
     @Override

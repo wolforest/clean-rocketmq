@@ -64,6 +64,10 @@ public class MessageBO extends Message implements Serializable {
         return MessageStatus.FOUND.equals(status);
     }
 
+    public boolean isEmpty() {
+        return 0 == this.storeSize;
+    }
+
     public long getTagsCode() {
         if (MapUtil.isEmpty(this.getProperties())) {
             return 0;

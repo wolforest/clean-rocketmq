@@ -188,7 +188,9 @@ public interface MappedFile {
      *  - return commitPosition if using transient store pool
      * @return writePosition | commitPosition
      */
-    int getWriteOrCommitPosition();
+    int getInsertPosition();
+    void setInsertPosition(int insertPosition);
+    void setInsertOffset(long insertOffset);
 
     int getWritePosition();
     void setWritePosition(int writePosition);
