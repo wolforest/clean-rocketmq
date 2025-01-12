@@ -32,7 +32,9 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
     @Getter
     protected String fileName;
     @Getter
-    protected long offsetInFileName;
+    protected long minOffset;
+    @Getter
+    protected long maxOffset;
     @Getter
     protected int fileSize;
 
@@ -64,7 +66,8 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
         this.fileName = fileName;
         this.fileSize = fileSize;
         this.file = new File(this.fileName);
-        this.offsetInFileName = Long.parseLong(this.file.getName());
+        this.minOffset = Long.parseLong(this.file.getName());
+        this.maxOffset = this.minOffset + this.fileSize;
 
         DirUtil.createIfNotExists(this.file.getParent());
         this.initFile();
@@ -87,8 +90,8 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
 
     @Override
     public boolean containsOffset(long offset) {
-        return offset >= this.offsetInFileName
-            && offset < this.offsetInFileName + this.fileSize;
+        return offset >= this.minOffset
+            && offset < this.maxOffset;
     }
 
     @Override
@@ -189,7 +192,7 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
         newBuffer.limit(size);
 
         return SelectedMappedBuffer.builder()
-            .startOffset(this.offsetInFileName + pos)
+            .startOffset(this.minOffset + pos)
             .byteBuffer(newBuffer)
             .size(size)
             .mappedFile(this)
@@ -215,12 +218,12 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
 
         int readPosition = getInsertPosition();
         if ((pos + size) > readPosition) {
-            log.warn("selectMappedBuffer request pos invalid, request pos: {}, size: {}, fileFromOffset: {}", pos, size, this.offsetInFileName);
+            log.warn("selectMappedBuffer request pos invalid, request pos: {}, size: {}, fileFromOffset: {}", pos, size, this.minOffset);
             return false;
         }
 
         if (!this.hold()) {
-            log.debug("matched, but hold failed, request pos: {}, fileFromOffset: {}", pos, this.offsetInFileName);
+            log.debug("matched, but hold failed, request pos: {}, fileFromOffset: {}", pos, this.minOffset);
             return false;
         }
 
@@ -228,7 +231,7 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
             int readNum = fileChannel.read(byteBuffer, pos);
             return size == readNum;
         } catch (Throwable t) {
-            log.warn("Get data failed pos:{} size:{} fileFromOffset:{}", pos, size, this.offsetInFileName);
+            log.warn("Get data failed pos:{} size:{} fileFromOffset:{}", pos, size, this.minOffset);
             return false;
         } finally {
             this.release();

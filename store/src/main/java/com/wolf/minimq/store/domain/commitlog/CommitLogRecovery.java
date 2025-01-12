@@ -79,7 +79,7 @@ public class CommitLogRecovery {
          */
         for (MappedFile mappedFile : mappedFiles) {
             // skip the file before startOffset
-            if (mappedFile.getOffsetInFileName() + mappedFile.getFileSize() < startOffset) {
+            if (mappedFile.getMaxOffset() < startOffset) {
                 continue;
             }
 
@@ -92,7 +92,7 @@ public class CommitLogRecovery {
             // scan the MappedFile from startOffset or from the start of the file
             Long processOffset = mappedFile.containsOffset(startOffset)
                 ? startOffset
-                : mappedFile.getOffsetInFileName();
+                : mappedFile.getMinOffset();
             Long maxOffsetInFile = findMaxOffsetInFile(mappedFile, processOffset);
 
             // find max offset in file if the mappedFile is valid
@@ -127,13 +127,13 @@ public class CommitLogRecovery {
             return;
         }
 
-        recoverFromOffset(mappedFile.getOffsetInFileName());
+        recoverFromOffset(mappedFile.getMinOffset());
     }
 
     private Long findMaxOffsetInFile(MappedFile mappedFile, Long startOffset) {
         Long maxOffset = null;
         MessageBO messageBO;
-        for (long processOffset = startOffset; processOffset < mappedFile.getOffsetInFileName() + mappedFile.getFileSize(); ) {
+        for (long processOffset = startOffset; processOffset < mappedFile.getMaxOffset(); ) {
             messageBO = commitLog.select(processOffset);
             if (null == messageBO) {
                 log.error("invalid commitLog offset: {}", processOffset);

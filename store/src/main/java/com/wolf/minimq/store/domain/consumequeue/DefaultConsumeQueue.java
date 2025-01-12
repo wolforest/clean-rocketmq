@@ -214,11 +214,11 @@ public class DefaultConsumeQueue implements ConsumeQueue {
             return !last.isFull();
         }
 
-        if (queueOffset < last.getOffsetInFileName()) {
+        if (queueOffset < last.getMinOffset()) {
             return false;
         }
 
-        return queueOffset <= last.getOffsetInFileName() + last.getFileSize() * 2L;
+        return queueOffset <= last.getMinOffset() + last.getFileSize() * 2L;
     }
 
     /**

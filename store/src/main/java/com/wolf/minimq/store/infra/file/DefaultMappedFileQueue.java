@@ -114,7 +114,7 @@ public class DefaultMappedFileQueue implements MappedFileQueue {
             return last;
         }
 
-        long nextOffset = last.getOffsetInFileName() + this.fileSize;
+        long nextOffset = last.getMinOffset() + this.fileSize;
         return createMappedFile(nextOffset);
     }
 
@@ -183,7 +183,7 @@ public class DefaultMappedFileQueue implements MappedFileQueue {
             return last;
         }
 
-        fileOffset = last.getOffsetInFileName() + this.fileSize;
+        fileOffset = last.getMinOffset() + this.fileSize;
         return createMappedFile(fileOffset);
     }
 
@@ -251,7 +251,7 @@ public class DefaultMappedFileQueue implements MappedFileQueue {
             return 0;
         }
 
-        return mappedFile.getOffsetInFileName();
+        return mappedFile.getMinOffset();
     }
 
     @Override
@@ -261,7 +261,7 @@ public class DefaultMappedFileQueue implements MappedFileQueue {
             return 0;
         }
 
-        return mappedFile.getOffsetInFileName() + mappedFile.getInsertPosition();
+        return mappedFile.getMinOffset() + mappedFile.getInsertPosition();
     }
 
     @Override
@@ -283,7 +283,7 @@ public class DefaultMappedFileQueue implements MappedFileQueue {
 
         long timestamp = mappedFile.getStoreTimestamp();
         int offset = mappedFile.flush(minPages);
-        long position = mappedFile.getOffsetInFileName() + offset;
+        long position = mappedFile.getMinOffset() + offset;
 
         boolean result = position == this.flushPosition;
         this.flushPosition = position;
@@ -303,7 +303,7 @@ public class DefaultMappedFileQueue implements MappedFileQueue {
         }
 
         int offset = mappedFile.commit(minPages);
-        long position = mappedFile.getOffsetInFileName() + offset;
+        long position = mappedFile.getMinOffset() + offset;
 
         boolean result = position == this.commitPosition;
         this.commitPosition = position;
@@ -373,7 +373,7 @@ public class DefaultMappedFileQueue implements MappedFileQueue {
             return;
         }
 
-        if (cur.getOffsetInFileName() - pre.getOffsetInFileName() == this.fileSize) {
+        if (cur.getMinOffset() - pre.getMinOffset() == this.fileSize) {
             return;
         }
 
@@ -384,7 +384,7 @@ public class DefaultMappedFileQueue implements MappedFileQueue {
     private MappedFile getByIndexOfOffset(long offset) {
         MappedFile first = this.mappedFiles.getFirst();
         MappedFile targetFile = null;
-        int index = (int) ((offset / this.fileSize) - (first.getOffsetInFileName() / this.fileSize));
+        int index = (int) ((offset / this.fileSize) - (first.getMinOffset() / this.fileSize));
         try {
             targetFile = this.mappedFiles.get(index);
         } catch (Exception ignored) {
@@ -402,7 +402,7 @@ public class DefaultMappedFileQueue implements MappedFileQueue {
             return false;
         }
 
-        long offsetInFileName = file.getOffsetInFileName();
+        long offsetInFileName = file.getMinOffset();
         if (offset < offsetInFileName) {
             return false;
         }
@@ -414,13 +414,13 @@ public class DefaultMappedFileQueue implements MappedFileQueue {
         MappedFile first = this.mappedFiles.getFirst();
         MappedFile last = this.mappedFiles.getLast();
 
-        if (offset < first.getOffsetInFileName()
-            || offset > last.getOffsetInFileName() + this.fileSize) {
+        if (offset < first.getMinOffset()
+            || offset > last.getMinOffset() + this.fileSize) {
 
             log.error("Offset not matched. Request offset: {}, firstOffset: {}, lastOffset: {}, mappedFileSize: {}, mappedFiles count: {}",
                 offset,
-                first.getOffsetInFileName(),
-                last.getOffsetInFileName() + this.fileSize,
+                first.getMinOffset(),
+                last.getMinOffset() + this.fileSize,
                 this.fileSize,
                 this.mappedFiles.size()
             );

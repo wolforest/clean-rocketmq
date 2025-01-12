@@ -18,9 +18,10 @@ public interface MappedFile {
     /**
      * Returns the global offset of the current {code MappedFile}, it's a long value of the file name.
      *
-     * @return the offset of this file
+     * @return the min offset of this file
      */
-    long getOffsetInFileName();
+    long getMinOffset();
+    long getMaxOffset();
 
     /**
      * Returns the file size of the {@code MappedFile}.
