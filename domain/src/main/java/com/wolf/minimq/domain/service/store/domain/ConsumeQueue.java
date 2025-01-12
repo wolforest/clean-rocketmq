@@ -10,6 +10,7 @@ public interface ConsumeQueue {
     QueueType getQueueType();
     String getTopic();
     int getQueueId();
+    int getUnitSize();
 
     void enqueue(CommitLogEvent event);
     QueueUnit fetch(long index);

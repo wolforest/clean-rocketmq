@@ -7,19 +7,23 @@ import com.wolf.minimq.domain.service.store.domain.meta.TopicStore;
 import com.wolf.minimq.domain.service.store.manager.ConsumeQueueManager;
 import com.wolf.minimq.store.server.StoreContext;
 import com.wolf.minimq.store.server.StorePath;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class DefaultConsumeQueueManager implements ConsumeQueueManager {
     ConsumeQueueConfig consumeQueueConfig;
     private ConsumeQueueFlusher flusher;
     private ConsumeQueueLoader loader;
+    private ConsumeQueueRecovery recovery;
 
     @Override
     public void initialize() {
         consumeQueueConfig = StoreContext.getBean(ConsumeQueueConfig.class);
         consumeQueueConfig.setRootPath(StorePath.getConsumeQueuePath());
 
-        flusher = new ConsumeQueueFlusher(StoreContext.getCheckPoint(), consumeQueueConfig);
+        flusher = new ConsumeQueueFlusher(consumeQueueConfig, StoreContext.getCheckPoint());
         loader = new ConsumeQueueLoader(consumeQueueConfig);
+        recovery = new ConsumeQueueRecovery(consumeQueueConfig, StoreContext.getCheckPoint());
 
         ConsumeQueueFactory consumeQueueFactory = initConsumeQueueFactory();
         ConsumeQueueStore consumeQueueStore = new DefaultConsumeQueueStore(consumeQueueFactory);
@@ -61,6 +65,7 @@ public class DefaultConsumeQueueManager implements ConsumeQueueManager {
 
         consumeQueueFactory.addCreateHook(flusher);
         consumeQueueFactory.addCreateHook(loader);
+        consumeQueueFactory.addCreateHook(recovery);
 
         consumeQueueFactory.createAll();
         return consumeQueueFactory;

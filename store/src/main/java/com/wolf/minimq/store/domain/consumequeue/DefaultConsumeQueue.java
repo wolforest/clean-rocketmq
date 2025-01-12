@@ -59,6 +59,11 @@ public class DefaultConsumeQueue implements ConsumeQueue {
     }
 
     @Override
+    public int getUnitSize() {
+        return config.getUnitSize();
+    }
+
+    @Override
     public void enqueue(CommitLogEvent event) {
         for (int i = 0; i < config.getMaxEnqueueRetry(); i++) {
             boolean success = insert(event);
@@ -149,6 +154,7 @@ public class DefaultConsumeQueue implements ConsumeQueue {
             .commitLogOffset(buffer.getByteBuffer().getLong())
             .messageSize(buffer.getByteBuffer().getInt())
             .tagsCode(buffer.getByteBuffer().getLong())
+            .unitSize(config.getUnitSize())
             .build();
     }
 

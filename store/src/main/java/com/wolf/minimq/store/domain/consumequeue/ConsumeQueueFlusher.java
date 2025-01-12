@@ -17,7 +17,7 @@ public class ConsumeQueueFlusher extends ServiceThread implements ConsumeQueueRe
     private long lastFlushTime = 0;
     private final Set<ConsumeQueue> queueSet = new LinkedHashSet<>(128);
 
-    public ConsumeQueueFlusher(StoreCheckpoint checkpoint, ConsumeQueueConfig config) {
+    public ConsumeQueueFlusher(ConsumeQueueConfig config, StoreCheckpoint checkpoint) {
         this.config = config;
         this.checkpoint = checkpoint;
     }
