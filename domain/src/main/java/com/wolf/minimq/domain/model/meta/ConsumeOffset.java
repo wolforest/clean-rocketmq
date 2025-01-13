@@ -8,7 +8,7 @@ import java.util.concurrent.ConcurrentMap;
 import lombok.Data;
 
 @Data
-public class ConsumerOffset implements Serializable {
+public class ConsumeOffset implements Serializable {
 
     private ConcurrentMap<String, ConcurrentMap<Integer, Long>> offsetMap
         = new ConcurrentHashMap<>(512);

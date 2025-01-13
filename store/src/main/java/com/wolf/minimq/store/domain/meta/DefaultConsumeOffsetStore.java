@@ -3,30 +3,30 @@ package com.wolf.minimq.store.domain.meta;
 import com.wolf.common.util.io.FileUtil;
 import com.wolf.common.util.lang.JSONUtil;
 import com.wolf.common.util.lang.StringUtil;
-import com.wolf.minimq.domain.model.meta.ConsumerOffset;
-import com.wolf.minimq.domain.service.store.domain.meta.ConsumerOffsetStore;
+import com.wolf.minimq.domain.model.meta.ConsumeOffset;
+import com.wolf.minimq.domain.service.store.domain.meta.ConsumeOffsetStore;
 
-public class DefaultConsumerOffsetStore implements ConsumerOffsetStore {
+public class DefaultConsumeOffsetStore implements ConsumeOffsetStore {
     private final String storePath;
-    private ConsumerOffset consumerOffset;
+    private ConsumeOffset consumeOffset;
 
-    public DefaultConsumerOffsetStore(String storePath) {
+    public DefaultConsumeOffsetStore(String storePath) {
         this.storePath = storePath;
     }
 
     @Override
     public Long getOffset(String group, String topic, int queueId) {
-        return consumerOffset.getOffset(group, topic, queueId);
+        return consumeOffset.getOffset(group, topic, queueId);
     }
 
     @Override
     public Long getAndRemove(String group, String topic, int queueId) {
-        return consumerOffset.getAndRemove(group, topic, queueId);
+        return consumeOffset.getAndRemove(group, topic, queueId);
     }
 
     @Override
     public void putOffset(String group, String topic, int queueId, long offset) {
-        consumerOffset.putOffset(group, topic, queueId, offset);
+        consumeOffset.putOffset(group, topic, queueId, offset);
     }
 
     @Override
@@ -42,16 +42,16 @@ public class DefaultConsumerOffsetStore implements ConsumerOffsetStore {
 
     @Override
     public void store() {
-        String data = JSONUtil.toJSONString(consumerOffset);
+        String data = JSONUtil.toJSONString(consumeOffset);
         FileUtil.stringToFile(data, storePath);
     }
 
     private void init() {
-        if (consumerOffset != null) {
+        if (consumeOffset != null) {
             return;
         }
 
-        this.consumerOffset = new ConsumerOffset();
+        this.consumeOffset = new ConsumeOffset();
     }
 
     private void decode(String data) {
@@ -60,6 +60,6 @@ public class DefaultConsumerOffsetStore implements ConsumerOffsetStore {
             return;
         }
 
-        this.consumerOffset = JSONUtil.parse(data, ConsumerOffset.class);
+        this.consumeOffset = JSONUtil.parse(data, ConsumeOffset.class);
     }
 }

@@ -1,7 +1,7 @@
 package com.wolf.minimq.store.domain.meta;
 
 import com.wolf.minimq.domain.service.store.api.TopicService;
-import com.wolf.minimq.domain.service.store.domain.meta.ConsumerOffsetStore;
+import com.wolf.minimq.domain.service.store.domain.meta.ConsumeOffsetStore;
 import com.wolf.minimq.domain.service.store.domain.meta.TopicStore;
 import com.wolf.minimq.domain.service.store.manager.MetaManager;
 import com.wolf.minimq.store.api.TopicServiceImpl;
@@ -47,6 +47,6 @@ public class DefaultMetaManager implements MetaManager {
     }
 
     private void initConsumerOffset() {
-        ConsumerOffsetStore consumerOffsetStore = new DefaultConsumerOffsetStore(StorePath.getConsumerOffsetPath());
+        ConsumeOffsetStore consumeOffsetStore = new DefaultConsumeOffsetStore(StorePath.getConsumerOffsetPath());
     }
 }
