@@ -51,7 +51,7 @@ public class DefaultTopicStore implements TopicStore {
     }
 
     @Override
-    public void persist() {
+    public void store() {
         String data = JSONUtil.toJSONString(topicTable);
         FileUtil.stringToFile(data, storePath);
     }
