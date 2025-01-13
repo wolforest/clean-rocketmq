@@ -25,6 +25,7 @@ import java.util.concurrent.ConcurrentMap;
  *  - each queue
  *  - only consumed by one thread
  *  - at the same time
+ *  - used in client
  */
 public class MessageQueueLock {
     private final ConcurrentMap<MQRequest, ConcurrentMap<Integer, Object>> lockMap =
