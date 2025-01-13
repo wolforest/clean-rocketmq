@@ -25,15 +25,15 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  * lock topic@queueId for assignOffset/increaseOffset
  */
-public class TopicQueueLock {
+public class ConsumeQueueLock {
     private final int size;
     private final List<Lock> lockList;
 
-    public TopicQueueLock() {
+    public ConsumeQueueLock() {
         this(32);
     }
 
-    public TopicQueueLock(int size) {
+    public ConsumeQueueLock(int size) {
         this.size = size;
         this.lockList = new ArrayList<>(size);
 
