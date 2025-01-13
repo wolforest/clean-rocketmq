@@ -80,7 +80,7 @@ public class DefaultConsumeQueue implements ConsumeQueue {
     }
 
     @Override
-    public QueueUnit fetch(long index) {
+    public QueueUnit get(long index) {
         long offset = index * config.getUnitSize();
         if (offset <= MIN_OFFSET_UPDATER.get(this)) {
             return null;
@@ -97,7 +97,7 @@ public class DefaultConsumeQueue implements ConsumeQueue {
     }
 
     @Override
-    public List<QueueUnit> fetch(long index, int num) {
+    public List<QueueUnit> get(long index, int num) {
         long offset = index * config.getUnitSize();
         if (offset <= MIN_OFFSET_UPDATER.get(this)) {
             return List.of();

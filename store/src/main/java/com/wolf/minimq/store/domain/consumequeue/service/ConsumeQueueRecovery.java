@@ -74,7 +74,7 @@ public class ConsumeQueueRecovery implements ConsumeQueueRegistry {
             return;
         }
 
-        QueueUnit unit = queue.fetch(maxOffset);
+        QueueUnit unit = queue.get(maxOffset);
         if (unit == null) {
             log.error("[bug] can't find QueueUnit for offset: {}", maxOffset);
             return;
@@ -150,7 +150,7 @@ public class ConsumeQueueRecovery implements ConsumeQueueRegistry {
             : mappedFile.getMinOffset();
 
         while (processOffset < mappedFile.getMaxOffset()) {
-            tmp = queue.fetch(processOffset);
+            tmp = queue.get(processOffset);
             //dirty file, this should never happen
             if (null == tmp) {
                 log.error("invalid commitLog offset: {}", processOffset);

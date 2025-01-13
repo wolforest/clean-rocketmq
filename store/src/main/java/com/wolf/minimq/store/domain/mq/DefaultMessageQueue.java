@@ -3,6 +3,7 @@ package com.wolf.minimq.store.domain.mq;
 import com.wolf.minimq.domain.config.MessageConfig;
 import com.wolf.minimq.domain.config.StoreConfig;
 import com.wolf.minimq.domain.enums.EnqueueStatus;
+import com.wolf.minimq.domain.model.dto.GetResult;
 import com.wolf.minimq.domain.utils.lock.TopicQueueLock;
 import com.wolf.minimq.domain.service.store.domain.CommitLog;
 import com.wolf.minimq.domain.service.store.domain.ConsumeQueueStore;
@@ -10,6 +11,7 @@ import com.wolf.minimq.domain.service.store.domain.MessageQueue;
 import com.wolf.minimq.domain.model.dto.EnqueueResult;
 import com.wolf.minimq.domain.model.bo.MessageBO;
 import com.wolf.minimq.store.server.StoreContext;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
@@ -60,6 +62,16 @@ public class DefaultMessageQueue implements MessageQueue {
         } finally {
             topicQueueLock.unlock(messageBO.getTopic(), messageBO.getQueueId());
         }
+    }
+
+    @Override
+    public GetResult get(String topic, int queueId, long offset) {
+        return null;
+    }
+
+    @Override
+    public GetResult get(String topic, int queueId, long offset, int num) {
+        return null;
     }
 
     private EnqueueResult waitForResult(CompletableFuture<EnqueueResult> future) {

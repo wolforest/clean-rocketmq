@@ -24,13 +24,13 @@ public class DefaultConsumeQueueStore implements ConsumeQueueStore {
     }
 
     @Override
-    public QueueUnit fetch(String topic, int queueId, long offset) {
-        return getQueueStore(topic, queueId).fetch(offset);
+    public QueueUnit get(String topic, int queueId, long offset) {
+        return getQueueStore(topic, queueId).get(offset);
     }
 
     @Override
-    public List<QueueUnit> fetch(String topic, int queueId, long offset, int num) {
-        return getQueueStore(topic, queueId).fetch(offset, num);
+    public List<QueueUnit> get(String topic, int queueId, long offset, int num) {
+        return getQueueStore(topic, queueId).get(offset, num);
     }
 
     @Override

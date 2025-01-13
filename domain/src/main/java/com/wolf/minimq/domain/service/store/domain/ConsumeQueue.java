@@ -13,8 +13,8 @@ public interface ConsumeQueue {
     int getUnitSize();
 
     void enqueue(CommitLogEvent event);
-    QueueUnit fetch(long index);
-    List<QueueUnit> fetch(long index, int num);
+    QueueUnit get(long index);
+    List<QueueUnit> get(long index, int num);
 
     long getMinOffset();
     void setMinOffset(long offset);

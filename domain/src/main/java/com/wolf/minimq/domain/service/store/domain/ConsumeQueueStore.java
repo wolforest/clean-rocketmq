@@ -7,8 +7,8 @@ import java.util.List;
 
 public interface ConsumeQueueStore {
     void enqueue(CommitLogEvent event);
-    QueueUnit fetch(String topic, int queueId, long offset);
-    List<QueueUnit> fetch(String topic, int queueId, long offset, int num);
+    QueueUnit get(String topic, int queueId, long offset);
+    List<QueueUnit> get(String topic, int queueId, long offset, int num);
 
     void assignOffset(MessageBO messageBO);
     void increaseOffset(MessageBO messageBO);
