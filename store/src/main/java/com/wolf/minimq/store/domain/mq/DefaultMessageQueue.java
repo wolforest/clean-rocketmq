@@ -1,5 +1,6 @@
 package com.wolf.minimq.store.domain.mq;
 
+import com.wolf.minimq.domain.config.MessageConfig;
 import com.wolf.minimq.domain.config.StoreConfig;
 import com.wolf.minimq.domain.enums.EnqueueStatus;
 import com.wolf.minimq.domain.utils.lock.TopicQueueLock;
@@ -16,8 +17,19 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class DefaultMessageQueue implements MessageQueue {
     private final TopicQueueLock topicQueueLock;
+    private final MessageConfig messageConfig;
+    private final ConsumeQueueStore consumeQueueStore;
+    private final CommitLog commitLog;
 
-    public DefaultMessageQueue() {
+    public DefaultMessageQueue(
+        MessageConfig messageConfig,
+        CommitLog commitLog,
+        ConsumeQueueStore consumeQueueStore) {
+
+        this.messageConfig = messageConfig;
+        this.commitLog = commitLog;
+        this.consumeQueueStore = consumeQueueStore;
+
         this.topicQueueLock = new TopicQueueLock();
     }
 
@@ -37,23 +49,16 @@ public class DefaultMessageQueue implements MessageQueue {
 
     @Override
     public CompletableFuture<EnqueueResult> enqueueAsync(MessageBO messageBO) {
-        String topicKey = getTopicKey(messageBO);
-        messageBO.setTopicKey(topicKey);
-
-        topicQueueLock.lock(topicKey);
+        topicQueueLock.lock(messageBO.getTopic(), messageBO.getQueueId());
         try {
-            ConsumeQueueStore consumeQueueStore = StoreContext.getBean(ConsumeQueueStore.class);
             consumeQueueStore.assignOffset(messageBO);
-
-            CommitLog commitLog = StoreContext.getBean(CommitLog.class);
             CompletableFuture<EnqueueResult> result = commitLog.insert(messageBO);
-
             consumeQueueStore.increaseOffset(messageBO);
             return result;
         } catch (Exception e) {
             return CompletableFuture.completedFuture(new EnqueueResult(EnqueueStatus.UNKNOWN_ERROR));
         } finally {
-            topicQueueLock.unlock(topicKey);
+            topicQueueLock.unlock(messageBO.getTopic(), messageBO.getQueueId());
         }
     }
 
@@ -66,9 +71,5 @@ public class DefaultMessageQueue implements MessageQueue {
             log.error("enqueue error:", e);
             return new EnqueueResult(EnqueueStatus.UNKNOWN_ERROR);
         }
-    }
-
-    private String getTopicKey(MessageBO messageBO) {
-        return messageBO.getTopic() + '-' + messageBO.getQueueId();
     }
 }
