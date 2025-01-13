@@ -26,7 +26,7 @@ public class DefaultCommitLogManager implements CommitLogManager {
 
     private MappedFileQueue mappedFileQueue;
     private final FlushManager flushManager;
-    private CommitLogRecovery commitLogRecovery;
+    private final CommitLogRecovery commitLogRecovery;
 
     public DefaultCommitLogManager() {
         initConfig();

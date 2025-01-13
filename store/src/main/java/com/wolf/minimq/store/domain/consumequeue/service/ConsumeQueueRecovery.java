@@ -1,13 +1,13 @@
-package com.wolf.minimq.store.domain.consumequeue;
+package com.wolf.minimq.store.domain.consumequeue.service;
 
 import com.wolf.minimq.domain.config.ConsumeQueueConfig;
 import com.wolf.minimq.domain.model.bo.QueueUnit;
 import com.wolf.minimq.domain.model.checkpoint.CheckPoint;
 import com.wolf.minimq.domain.model.checkpoint.Offset;
-import com.wolf.minimq.domain.model.dto.SelectedMappedBuffer;
 import com.wolf.minimq.domain.service.store.domain.ConsumeQueue;
 import com.wolf.minimq.domain.service.store.infra.MappedFile;
 import com.wolf.minimq.domain.service.store.infra.MappedFileQueue;
+import com.wolf.minimq.store.domain.consumequeue.queue.ConsumeQueueRegistry;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;

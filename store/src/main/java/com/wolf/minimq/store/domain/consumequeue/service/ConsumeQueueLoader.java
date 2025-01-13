@@ -1,8 +1,9 @@
-package com.wolf.minimq.store.domain.consumequeue;
+package com.wolf.minimq.store.domain.consumequeue.service;
 
 import com.wolf.minimq.domain.config.ConsumeQueueConfig;
 import com.wolf.minimq.domain.service.store.domain.ConsumeQueue;
 import com.wolf.minimq.domain.service.store.infra.MappedFileQueue;
+import com.wolf.minimq.store.domain.consumequeue.queue.ConsumeQueueRegistry;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;

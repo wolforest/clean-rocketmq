@@ -1,4 +1,4 @@
-package com.wolf.minimq.store.domain.consumequeue;
+package com.wolf.minimq.store.domain.consumequeue.queue;
 
 import com.wolf.common.util.lang.ThreadUtil;
 import com.wolf.minimq.domain.config.ConsumeQueueConfig;

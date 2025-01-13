@@ -13,6 +13,6 @@ public class QueueCommitLogHandler implements CommitLogHandler {
 
     @Override
     public void handle(CommitLogEvent event) {
-
+        consumeQueueStore.enqueue(event);
     }
 }
