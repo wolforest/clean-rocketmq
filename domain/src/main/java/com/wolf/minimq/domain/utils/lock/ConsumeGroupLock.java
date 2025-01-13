@@ -31,6 +31,14 @@ public class ConsumeGroupLock extends ServiceThread {
         }
     }
 
+    public void lock(String group, String topic, int queueId) {
+        while (true) {
+            if (tryLock(group, topic, queueId)) {
+                break;
+            }
+        }
+    }
+
     public boolean tryLock(String group, String topic, int queueId) {
         String key = createKey(group, topic, queueId);
         TimedLock lock = getLock(key);
