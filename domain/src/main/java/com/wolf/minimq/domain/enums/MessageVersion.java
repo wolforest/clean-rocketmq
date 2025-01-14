@@ -16,6 +16,7 @@
  */
 package com.wolf.minimq.domain.enums;
 
+import com.wolf.minimq.domain.constant.MessageConst;
 import java.nio.ByteBuffer;
 
 public enum MessageVersion {
