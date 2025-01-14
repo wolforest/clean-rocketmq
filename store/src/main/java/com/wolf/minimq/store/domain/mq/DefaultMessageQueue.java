@@ -1,8 +1,10 @@
 package com.wolf.minimq.store.domain.mq;
 
+import com.wolf.common.util.collection.CollectionUtil;
 import com.wolf.minimq.domain.config.MessageConfig;
 import com.wolf.minimq.domain.config.StoreConfig;
 import com.wolf.minimq.domain.enums.EnqueueStatus;
+import com.wolf.minimq.domain.model.dto.GetRequest;
 import com.wolf.minimq.domain.model.dto.GetResult;
 import com.wolf.minimq.domain.utils.lock.ConsumeQueueLock;
 import com.wolf.minimq.domain.service.store.domain.CommitLog;
@@ -11,6 +13,7 @@ import com.wolf.minimq.domain.service.store.domain.MessageQueue;
 import com.wolf.minimq.domain.model.dto.EnqueueResult;
 import com.wolf.minimq.domain.model.bo.MessageBO;
 import com.wolf.minimq.store.server.StoreContext;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
@@ -65,12 +68,37 @@ public class DefaultMessageQueue implements MessageQueue {
 
     @Override
     public GetResult get(String topic, int queueId, long offset) {
-        return null;
+        return get(topic, queueId, offset, 1);
     }
 
     @Override
     public GetResult get(String topic, int queueId, long offset, int num) {
+        GetRequest request = GetRequest.builder()
+            .topic(topic)
+            .queueId(queueId)
+            .offset(offset)
+            .num(num)
+            .build();
+        return get(request);
+    }
+
+    @Override
+    public GetResult get(GetRequest request) {
         return null;
+    }
+
+    @Override
+    public MessageBO getMessage(String topic, int queueId, long offset) {
+        List<MessageBO> messageList = getMessage(topic, queueId, offset, 1);
+
+        return CollectionUtil.isEmpty(messageList)
+            ? null
+            : messageList.getFirst();
+    }
+
+    @Override
+    public List<MessageBO> getMessage(String topic, int queueId, long offset, int num) {
+        return List.of();
     }
 
     private EnqueueResult waitForResult(CompletableFuture<EnqueueResult> future) {

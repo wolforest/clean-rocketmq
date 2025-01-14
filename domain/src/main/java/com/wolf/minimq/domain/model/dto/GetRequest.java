@@ -17,5 +17,8 @@ public class GetRequest implements Serializable {
 
     @Builder.Default
     private int num = 1;
+    private int maxSize;
+
+    private Object filter;
 }
 
