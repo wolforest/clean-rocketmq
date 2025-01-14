@@ -7,4 +7,6 @@ import lombok.Data;
 public class MessageConfig implements Serializable {
     private int maxSize;
     private int maxBodySize;
+
+    private int maxGetSize;
 }

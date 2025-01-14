@@ -79,6 +79,7 @@ public class DefaultMessageQueue implements MessageQueue {
             .queueId(queueId)
             .offset(offset)
             .num(num)
+            .maxSize(messageConfig.getMaxSize())
             .build();
         return get(request);
     }
