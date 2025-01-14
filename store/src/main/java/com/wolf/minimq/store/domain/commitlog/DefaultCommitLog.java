@@ -6,6 +6,7 @@ import com.wolf.minimq.domain.config.MessageConfig;
 import com.wolf.minimq.domain.enums.EnqueueStatus;
 import com.wolf.minimq.domain.enums.MessageVersion;
 import com.wolf.minimq.domain.exception.EnqueueErrorException;
+import com.wolf.minimq.domain.model.dto.FlushResult;
 import com.wolf.minimq.domain.model.dto.InsertResult;
 import com.wolf.minimq.domain.model.dto.SelectedMappedBuffer;
 import com.wolf.minimq.domain.service.store.infra.MappedFile;
@@ -57,7 +58,7 @@ public class DefaultCommitLog implements CommitLog {
     }
 
     @Override
-    public CompletableFuture<EnqueueResult> insert(MessageBO messageBO) {
+    public FlushResult insert(MessageBO messageBO) {
         InsertContext context = initContext(messageBO);
 
         this.commitLogLock.lock();
@@ -70,7 +71,7 @@ public class DefaultCommitLog implements CommitLog {
 
             return handleFlush(insertResult, context);
         } catch (EnqueueErrorException messageException) {
-            return CompletableFuture.completedFuture(new EnqueueResult(messageException.getStatus()));
+            return FlushResult.failure(messageException.getStatus());
         } finally {
             this.commitLogLock.unlock();
         }
@@ -185,11 +186,8 @@ public class DefaultCommitLog implements CommitLog {
         }
     }
 
-    private CompletableFuture<EnqueueResult> handleFlush(InsertResult insertResult, InsertContext context) {
-        EnqueueResult enqueueResult = EnqueueResult.builder()
-            .insertResult(insertResult)
-            .build();
-        return flushManager.flush(enqueueResult, context.getMessageBO());
+    private FlushResult handleFlush(InsertResult insertResult, InsertContext context) {
+        return flushManager.flush(insertResult, context.getMessageBO());
     }
 
 

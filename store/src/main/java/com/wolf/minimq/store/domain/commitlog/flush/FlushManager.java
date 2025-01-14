@@ -4,6 +4,8 @@ import com.wolf.common.convention.service.Lifecycle;
 import com.wolf.minimq.domain.config.CommitLogConfig;
 import com.wolf.minimq.domain.enums.EnqueueStatus;
 import com.wolf.minimq.domain.enums.FlushType;
+import com.wolf.minimq.domain.model.dto.FlushResult;
+import com.wolf.minimq.domain.model.dto.InsertResult;
 import com.wolf.minimq.domain.service.store.infra.MappedFileQueue;
 import com.wolf.minimq.domain.model.dto.EnqueueResult;
 import com.wolf.minimq.domain.model.bo.MessageBO;
@@ -45,7 +47,7 @@ public class FlushManager implements Lifecycle {
         }
     }
 
-    public CompletableFuture<EnqueueResult> flush(EnqueueResult result, MessageBO messageBO) {
+    public FlushResult flush(InsertResult insertResult, MessageBO messageBO) {
         return null;
     }
 

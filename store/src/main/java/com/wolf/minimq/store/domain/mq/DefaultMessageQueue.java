@@ -5,6 +5,7 @@ import com.wolf.minimq.domain.config.MessageConfig;
 import com.wolf.minimq.domain.config.StoreConfig;
 import com.wolf.minimq.domain.enums.EnqueueStatus;
 import com.wolf.minimq.domain.model.bo.QueueUnit;
+import com.wolf.minimq.domain.model.dto.FlushResult;
 import com.wolf.minimq.domain.model.dto.GetRequest;
 import com.wolf.minimq.domain.model.dto.GetResult;
 import com.wolf.minimq.domain.utils.lock.ConsumeQueueLock;
@@ -59,10 +60,13 @@ public class DefaultMessageQueue implements MessageQueue {
             long queueOffset = consumeQueueStore.assignOffset(messageBO.getTopic(), messageBO.getQueueId());
             messageBO.setQueueOffset(queueOffset);
 
-            CompletableFuture<EnqueueResult> result = commitLog.insert(messageBO);
+            FlushResult result = commitLog.insert(messageBO);
 
-            consumeQueueStore.increaseOffset(messageBO.getTopic(), messageBO.getQueueId());
-            return result;
+            if (result.isInsertSuccess()) {
+                consumeQueueStore.increaseOffset(messageBO.getTopic(), messageBO.getQueueId());
+            }
+
+            return result.getFlushFuture();
         } catch (Exception e) {
             return CompletableFuture.completedFuture(new EnqueueResult(EnqueueStatus.UNKNOWN_ERROR));
         } finally {
