@@ -4,6 +4,7 @@ import com.wolf.common.util.collection.CollectionUtil;
 import com.wolf.minimq.domain.config.MessageConfig;
 import com.wolf.minimq.domain.config.StoreConfig;
 import com.wolf.minimq.domain.enums.EnqueueStatus;
+import com.wolf.minimq.domain.enums.FlushStatus;
 import com.wolf.minimq.domain.model.bo.QueueUnit;
 import com.wolf.minimq.domain.model.dto.FlushResult;
 import com.wolf.minimq.domain.model.dto.GetRequest;
@@ -69,7 +70,7 @@ public class DefaultMessageQueue implements MessageQueue {
 
             return result.getFlushFuture();
         } catch (Exception e) {
-            return CompletableFuture.completedFuture(new EnqueueResult(EnqueueStatus.UNKNOWN_ERROR));
+            return CompletableFuture.completedFuture(EnqueueResult.failure());
         } finally {
             consumeQueueLock.unlock(messageBO.getTopic(), messageBO.getQueueId());
         }
@@ -142,7 +143,7 @@ public class DefaultMessageQueue implements MessageQueue {
             return future.get(timeout, TimeUnit.MILLISECONDS);
         } catch (Exception e) {
             log.error("enqueue error:", e);
-            return new EnqueueResult(EnqueueStatus.UNKNOWN_ERROR);
+            return EnqueueResult.failure();
         }
     }
 }

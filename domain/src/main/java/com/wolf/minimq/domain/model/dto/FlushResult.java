@@ -13,14 +13,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FlushResult implements Serializable {
-    private EnqueueStatus status;
     @Builder.Default
     private InsertResult insertResult = null;
     @Builder.Default
     private CompletableFuture<EnqueueResult> flushFuture = null;
 
-    public FlushResult(EnqueueStatus status, InsertResult insertResult) {
-        this.status = status;
+    public FlushResult(InsertResult insertResult) {
         this.insertResult = insertResult;
     }
 
@@ -34,8 +32,8 @@ public class FlushResult implements Serializable {
 
     public static FlushResult success(InsertResult insertResult) {
         return FlushResult.builder()
-            .status(EnqueueStatus.PUT_OK)
             .insertResult(insertResult)
+            .flushFuture(CompletableFuture.completedFuture(EnqueueResult.success(insertResult)))
             .build();
     }
 
@@ -44,7 +42,7 @@ public class FlushResult implements Serializable {
     }
     public static FlushResult failure(EnqueueStatus status) {
         return FlushResult.builder()
-            .status(status)
+            .flushFuture(CompletableFuture.completedFuture(EnqueueResult.failure()))
             .build();
     }
 }

@@ -3,12 +3,14 @@ package com.wolf.minimq.store.domain.commitlog.flush;
 import com.wolf.common.convention.service.Lifecycle;
 import com.wolf.minimq.domain.config.CommitLogConfig;
 import com.wolf.minimq.domain.enums.EnqueueStatus;
+import com.wolf.minimq.domain.enums.FlushStatus;
 import com.wolf.minimq.domain.enums.FlushType;
+import com.wolf.minimq.domain.model.dto.EnqueueResult;
 import com.wolf.minimq.domain.model.dto.FlushResult;
 import com.wolf.minimq.domain.model.dto.InsertResult;
 import com.wolf.minimq.domain.service.store.infra.MappedFileQueue;
-import com.wolf.minimq.domain.model.dto.EnqueueResult;
 import com.wolf.minimq.domain.model.bo.MessageBO;
+import com.wolf.minimq.store.domain.commitlog.vo.GroupCommitRequest;
 import com.wolf.minimq.store.server.StoreCheckpoint;
 import java.util.concurrent.CompletableFuture;
 
@@ -48,8 +50,62 @@ public class FlushManager implements Lifecycle {
     }
 
     public FlushResult flush(InsertResult insertResult, MessageBO messageBO) {
-        return null;
+        if (FlushType.SYNC.equals(commitLogConfig.getFlushType())) {
+            return syncFlush(insertResult, messageBO);
+        }
+
+        return asyncFlush(insertResult);
     }
+
+    private FlushResult syncFlush(InsertResult insertResult, MessageBO messageBO) {
+        if (!messageBO.isWaitStore()) {
+            flushService.wakeup();
+            return FlushResult.success(insertResult);
+        }
+
+        GroupCommitRequest request = createGroupCommitRequest(insertResult);
+        GroupCommitService service = (GroupCommitService) flushService;
+
+        service.addRequest(request);
+        flushWatcher.addRequest(request);
+
+        return formatResult(insertResult, request);
+    }
+
+    private FlushResult formatResult(InsertResult insertResult, GroupCommitRequest request) {
+        CompletableFuture<EnqueueResult> result = request.future()
+            .thenApplyAsync(
+                flushStatus -> EnqueueResult.builder()
+                    .status(flushStatus)
+                    .insertResult(insertResult)
+                    .build()
+            );
+
+        return FlushResult.builder()
+            .insertResult(insertResult)
+            .flushFuture(result)
+            .build();
+    }
+
+    private GroupCommitRequest createGroupCommitRequest(InsertResult insertResult) {
+        long nextOffset = insertResult.getWroteOffset() + insertResult.getWroteBytes();
+        long deadLine = System.nanoTime() + commitLogConfig.getFlushTimeout();
+
+        return GroupCommitRequest.builder()
+            .nextOffset(nextOffset)
+            .deadLine(deadLine)
+            .build();
+    }
+
+    private FlushResult asyncFlush(InsertResult insertResult) {
+        if (commitLogConfig.isEnableWriteCache()) {
+            commitService.wakeup();
+        } else {
+            flushService.wakeup();
+        }
+        return FlushResult.success(insertResult);
+    }
+
 
     @Override
     public void initialize() {

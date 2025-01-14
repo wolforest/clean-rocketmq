@@ -16,7 +16,7 @@ public interface MappedFileQueue {
 
     MappedFile createMappedFile(long createOffset);
 
-    ArrayList<MappedFile> getMappedFiles();
+    List<MappedFile> getMappedFiles();
 
     void removeMappedFile(MappedFile mappedFile);
     void removeMappedFiles(List<MappedFile> files);

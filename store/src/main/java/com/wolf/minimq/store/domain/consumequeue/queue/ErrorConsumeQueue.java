@@ -33,6 +33,11 @@ public class ErrorConsumeQueue implements ConsumeQueue {
     }
 
     @Override
+    public int getUnitSize() {
+        return 0;
+    }
+
+    @Override
     public void enqueue(CommitLogEvent event) {
 
     }

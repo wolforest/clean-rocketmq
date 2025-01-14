@@ -17,6 +17,7 @@ public class CommitLogConfig implements Serializable {
     private int minFlushPages = 4;
     private int flushInterval = 200;
     private int flushAllInterval = 1000 * 10;
+    private int flushTimeout = 1000 * 5;
 
     private int minCommitPages = 4;
     private int commitInterval = 200;

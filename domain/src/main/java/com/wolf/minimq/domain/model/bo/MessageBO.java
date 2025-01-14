@@ -10,8 +10,6 @@ import com.wolf.minimq.domain.enums.TagType;
 import com.wolf.minimq.domain.model.Message;
 import java.io.Serializable;
 import java.net.SocketAddress;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -87,5 +85,18 @@ public class MessageBO extends Message implements Serializable {
         }
 
         return TagType.SINGLE_TAG;
+    }
+
+    public boolean isWaitStore() {
+        String result = this.getProperty(MessageConst.PROPERTY_WAIT_STORE_MSG_OK);
+        if (null == result) {
+            return true;
+        }
+
+        return Boolean.parseBoolean(result);
+    }
+
+    public void setWaitStore(boolean waitStoreMsgOK) {
+        this.putProperty(MessageConst.PROPERTY_WAIT_STORE_MSG_OK, Boolean.toString(waitStoreMsgOK));
     }
 }
