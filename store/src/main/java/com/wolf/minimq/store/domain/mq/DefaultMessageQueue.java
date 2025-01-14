@@ -56,9 +56,12 @@ public class DefaultMessageQueue implements MessageQueue {
     public CompletableFuture<EnqueueResult> enqueueAsync(MessageBO messageBO) {
         consumeQueueLock.lock(messageBO.getTopic(), messageBO.getQueueId());
         try {
-            consumeQueueStore.assignOffset(messageBO);
+            long queueOffset = consumeQueueStore.assignOffset(messageBO.getTopic(), messageBO.getQueueId());
+            messageBO.setQueueOffset(queueOffset);
+
             CompletableFuture<EnqueueResult> result = commitLog.insert(messageBO);
-            consumeQueueStore.increaseOffset(messageBO);
+
+            consumeQueueStore.increaseOffset(messageBO.getTopic(), messageBO.getQueueId());
             return result;
         } catch (Exception e) {
             return CompletableFuture.completedFuture(new EnqueueResult(EnqueueStatus.UNKNOWN_ERROR));

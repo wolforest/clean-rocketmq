@@ -34,12 +34,12 @@ public class DefaultConsumeQueueStore implements ConsumeQueueStore {
     }
 
     @Override
-    public void assignOffset(MessageBO messageBO) {
-
+    public long assignOffset(String topic, int queueId) {
+        return 0L;
     }
 
     @Override
-    public void increaseOffset(MessageBO messageBO) {
+    public void increaseOffset(String topic, int queueId) {
 
     }
 

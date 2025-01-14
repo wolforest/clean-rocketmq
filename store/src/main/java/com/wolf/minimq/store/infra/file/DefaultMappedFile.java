@@ -300,12 +300,12 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
     }
 
     @Override
-    public void warm(int size) {
-        warm(FlushType.ASYNC, size);
+    public void warmup(int size) {
+        warmup(FlushType.ASYNC, size);
     }
 
     @Override
-    public void warm(FlushType flushType, int size) {
+    public void warmup(FlushType flushType, int size) {
         ByteBuffer byteBuffer = this.mappedByteBuffer.slice();
         for (int i = 0; i < size; i++) {
             byteBuffer.put((byte)0);

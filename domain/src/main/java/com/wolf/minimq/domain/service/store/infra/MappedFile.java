@@ -151,9 +151,9 @@ public interface MappedFile {
      */
     ByteBuffer sliceByteBuffer();
 
-    void warm(int size);
+    void warmup(int size);
 
-    void warm(FlushType flushType, int size);
+    void warmup(FlushType flushType, int size);
 
     /**
      * Destroys the file and delete it from the file system.
