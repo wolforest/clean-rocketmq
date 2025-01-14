@@ -13,11 +13,20 @@ import lombok.NonNull;
 
 @Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
 public class GetResult implements Serializable {
     private MessageStatus status;
     private List<MessageBO> messageList;
+
+    public GetResult() {
+        this.status = MessageStatus.NO_MATCHED_MESSAGE;
+        this.messageList = new ArrayList<>();
+    }
+
+    public void addMessage(@NonNull MessageBO messageBO) {
+        status = messageBO.getStatus();
+        messageList.add(messageBO);
+    }
 
     public static GetResult success(List<MessageBO> messageList) {
         return GetResult.builder()
@@ -31,18 +40,6 @@ public class GetResult implements Serializable {
             .status(MessageStatus.NO_MATCHED_MESSAGE)
             .messageList(List.of())
             .build();
-    }
-
-    public static GetResult newInstance() {
-        return GetResult.builder()
-            .status(MessageStatus.NO_MATCHED_MESSAGE)
-            .messageList(new ArrayList<>())
-            .build();
-    }
-
-    public void addMessage(@NonNull MessageBO messageBO) {
-        status = messageBO.getStatus();
-        messageList.add(messageBO);
     }
 }
 

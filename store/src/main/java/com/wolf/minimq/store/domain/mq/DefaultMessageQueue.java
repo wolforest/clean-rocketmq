@@ -18,6 +18,7 @@ import com.wolf.minimq.store.server.StoreContext;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -104,8 +105,8 @@ public class DefaultMessageQueue implements MessageQueue {
         return getByUnitList(unitList);
     }
 
-    private GetResult getByUnitList(List<QueueUnit> unitList) {
-        GetResult result = GetResult.newInstance();
+    private GetResult getByUnitList(@NonNull List<QueueUnit> unitList) {
+        GetResult result = new GetResult();
         MessageBO messageBO;
         for (QueueUnit unit : unitList) {
             messageBO = commitLog.select(unit.getCommitLogOffset(), unit.getUnitSize());
