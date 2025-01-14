@@ -5,7 +5,7 @@ import com.wolf.minimq.domain.config.CommitLogConfig;
 import com.wolf.minimq.domain.config.MessageConfig;
 import com.wolf.minimq.domain.enums.EnqueueStatus;
 import com.wolf.minimq.domain.enums.MessageVersion;
-import com.wolf.minimq.domain.exception.EnqueueErrorException;
+import com.wolf.minimq.domain.exception.EnqueueException;
 import com.wolf.minimq.domain.model.dto.FlushResult;
 import com.wolf.minimq.domain.model.dto.InsertResult;
 import com.wolf.minimq.domain.model.dto.SelectedMappedBuffer;
@@ -16,13 +16,11 @@ import com.wolf.minimq.domain.utils.lock.CommitLogLock;
 import com.wolf.minimq.domain.utils.lock.CommitLogReentrantLock;
 import com.wolf.minimq.domain.service.store.domain.CommitLog;
 import com.wolf.minimq.domain.service.store.infra.MappedFileQueue;
-import com.wolf.minimq.domain.model.dto.EnqueueResult;
 import com.wolf.minimq.domain.model.bo.MessageBO;
 import com.wolf.minimq.store.domain.commitlog.flush.FlushManager;
 import com.wolf.minimq.store.domain.commitlog.vo.EnqueueThreadLocal;
 import com.wolf.minimq.store.domain.commitlog.vo.InsertContext;
 import com.wolf.minimq.store.infra.memory.CLibrary;
-import java.util.concurrent.CompletableFuture;
 import lombok.Getter;
 
 /**
@@ -70,7 +68,7 @@ public class DefaultCommitLog implements CommitLog {
             handleInsertError(insertResult);
 
             return handleFlush(insertResult, context);
-        } catch (EnqueueErrorException messageException) {
+        } catch (EnqueueException messageException) {
             return FlushResult.failure(messageException.getStatus());
         } finally {
             this.commitLogLock.unlock();
@@ -180,9 +178,9 @@ public class DefaultCommitLog implements CommitLog {
 
     private void handleInsertError(InsertResult insertResult) {
         switch (insertResult.getStatus()) {
-            case END_OF_FILE -> throw new EnqueueErrorException(EnqueueStatus.END_OF_FILE);
-            case MESSAGE_SIZE_EXCEEDED, PROPERTIES_SIZE_EXCEEDED -> throw new EnqueueErrorException(EnqueueStatus.MESSAGE_ILLEGAL);
-            default -> throw new EnqueueErrorException(EnqueueStatus.UNKNOWN_ERROR);
+            case END_OF_FILE -> throw new EnqueueException(EnqueueStatus.END_OF_FILE);
+            case MESSAGE_SIZE_EXCEEDED, PROPERTIES_SIZE_EXCEEDED -> throw new EnqueueException(EnqueueStatus.MESSAGE_ILLEGAL);
+            default -> throw new EnqueueException(EnqueueStatus.UNKNOWN_ERROR);
         }
     }
 

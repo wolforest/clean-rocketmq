@@ -1,7 +1,6 @@
 package com.wolf.minimq.domain.exception;
 
 import com.wolf.common.lang.exception.BusinessException;
-import com.wolf.minimq.domain.enums.EnqueueStatus;
 import lombok.Getter;
 
 @Getter

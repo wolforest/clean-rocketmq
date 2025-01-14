@@ -16,7 +16,7 @@
  */
 package com.wolf.minimq.store.domain.commitlog.vo;
 
-import com.wolf.minimq.domain.enums.FlushStatus;
+import com.wolf.minimq.domain.enums.EnqueueStatus;
 import java.io.Serializable;
 import java.util.concurrent.CompletableFuture;
 import lombok.AllArgsConstructor;
@@ -34,7 +34,7 @@ public class GroupCommitRequest implements Serializable {
      * Indicate the GroupCommitRequest result: true or false
      */
     @Builder.Default
-    private CompletableFuture<FlushStatus> flushOKFuture = new CompletableFuture<>();
+    private CompletableFuture<EnqueueStatus> flushOKFuture = new CompletableFuture<>();
     /**
      * slave nums, in controller mode: -1
      */
@@ -43,11 +43,11 @@ public class GroupCommitRequest implements Serializable {
 
     private long deadLine;
 
-    public void wakeup(FlushStatus status) {
+    public void wakeup(EnqueueStatus status) {
         this.flushOKFuture.complete(status);
     }
 
-    public CompletableFuture<FlushStatus> future() {
+    public CompletableFuture<EnqueueStatus> future() {
         return flushOKFuture;
     }
 }

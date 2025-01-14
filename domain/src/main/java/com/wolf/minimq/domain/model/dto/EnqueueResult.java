@@ -1,7 +1,6 @@
 package com.wolf.minimq.domain.model.dto;
 
 import com.wolf.minimq.domain.enums.EnqueueStatus;
-import com.wolf.minimq.domain.enums.FlushStatus;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,22 +12,26 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class EnqueueResult implements Serializable {
-    private FlushStatus status;
+    private EnqueueStatus status;
     private InsertResult insertResult;
 
-    public EnqueueResult(FlushStatus status) {
+    public EnqueueResult(EnqueueStatus status) {
         this.status = status;
     }
 
     public boolean isSuccess() {
-        return FlushStatus.PUT_OK.equals(status);
+        return EnqueueStatus.PUT_OK.equals(status);
     }
 
     public static EnqueueResult success(InsertResult insertResult) {
-        return new EnqueueResult(FlushStatus.PUT_OK, insertResult);
+        return new EnqueueResult(EnqueueStatus.PUT_OK, insertResult);
     }
 
     public static EnqueueResult failure() {
-        return new EnqueueResult(FlushStatus.UNKNOWN_ERROR);
+        return new EnqueueResult(EnqueueStatus.UNKNOWN_ERROR);
+    }
+
+    public static EnqueueResult failure(EnqueueStatus status) {
+        return new EnqueueResult(status);
     }
 }

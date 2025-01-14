@@ -2,8 +2,6 @@ package com.wolf.minimq.store.domain.commitlog.flush;
 
 import com.wolf.common.convention.service.Lifecycle;
 import com.wolf.minimq.domain.config.CommitLogConfig;
-import com.wolf.minimq.domain.enums.EnqueueStatus;
-import com.wolf.minimq.domain.enums.FlushStatus;
 import com.wolf.minimq.domain.enums.FlushType;
 import com.wolf.minimq.domain.model.dto.EnqueueResult;
 import com.wolf.minimq.domain.model.dto.FlushResult;

@@ -42,7 +42,7 @@ public class FlushResult implements Serializable {
     }
     public static FlushResult failure(EnqueueStatus status) {
         return FlushResult.builder()
-            .flushFuture(CompletableFuture.completedFuture(EnqueueResult.failure()))
+            .flushFuture(CompletableFuture.completedFuture(EnqueueResult.failure(status)))
             .build();
     }
 }

@@ -3,8 +3,6 @@ package com.wolf.minimq.store.domain.mq;
 import com.wolf.common.util.collection.CollectionUtil;
 import com.wolf.minimq.domain.config.MessageConfig;
 import com.wolf.minimq.domain.config.StoreConfig;
-import com.wolf.minimq.domain.enums.EnqueueStatus;
-import com.wolf.minimq.domain.enums.FlushStatus;
 import com.wolf.minimq.domain.model.bo.QueueUnit;
 import com.wolf.minimq.domain.model.dto.FlushResult;
 import com.wolf.minimq.domain.model.dto.GetRequest;
