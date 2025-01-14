@@ -191,5 +191,8 @@ public interface MappedFile {
     void setInsertPosition(int insertPosition);
     void setInsertOffset(long insertOffset);
 
+    int getWritePosition();
+    int getFlushPosition();
+    int getCommitPosition();
     long getStoreTimestamp();
 }

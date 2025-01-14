@@ -432,4 +432,19 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
         }
     }
 
+    @Override
+    public int getWritePosition() {
+        return WRITE_POSITION_UPDATER.get(this);
+    }
+
+    @Override
+    public int getCommitPosition() {
+        return COMMIT_POSITION_UPDATER.get(this);
+    }
+
+    @Override
+    public int getFlushPosition() {
+        return FLUSH_POSITION_UPDATER.get(this);
+    }
+
 }
