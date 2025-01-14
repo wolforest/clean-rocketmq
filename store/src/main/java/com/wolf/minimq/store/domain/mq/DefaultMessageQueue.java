@@ -4,6 +4,7 @@ import com.wolf.common.util.collection.CollectionUtil;
 import com.wolf.minimq.domain.config.MessageConfig;
 import com.wolf.minimq.domain.config.StoreConfig;
 import com.wolf.minimq.domain.enums.EnqueueStatus;
+import com.wolf.minimq.domain.model.bo.QueueUnit;
 import com.wolf.minimq.domain.model.dto.GetRequest;
 import com.wolf.minimq.domain.model.dto.GetResult;
 import com.wolf.minimq.domain.utils.lock.ConsumeQueueLock;
@@ -84,7 +85,30 @@ public class DefaultMessageQueue implements MessageQueue {
 
     @Override
     public GetResult get(GetRequest request) {
-        return null;
+        List<QueueUnit> unitList = consumeQueueStore.get(
+            request.getTopic(), request.getQueueId(), request.getOffset(), request.getNum()
+        );
+
+        if (CollectionUtil.isEmpty(unitList)) {
+            return GetResult.notFound();
+        }
+
+        return getByUnitList(unitList);
+    }
+
+    private GetResult getByUnitList(List<QueueUnit> unitList) {
+        GetResult result = GetResult.newInstance();
+        MessageBO messageBO;
+        for (QueueUnit unit : unitList) {
+            messageBO = commitLog.select(unit.getCommitLogOffset(), unit.getUnitSize());
+            if (messageBO == null) {
+                continue;
+            }
+
+            result.addMessage(messageBO);
+        }
+
+        return result;
     }
 
     @Override
@@ -98,7 +122,8 @@ public class DefaultMessageQueue implements MessageQueue {
 
     @Override
     public List<MessageBO> getMessage(String topic, int queueId, long offset, int num) {
-        return List.of();
+        GetResult result = get(topic, queueId, offset, num);
+        return result.getMessageList();
     }
 
     private EnqueueResult waitForResult(CompletableFuture<EnqueueResult> future) {
