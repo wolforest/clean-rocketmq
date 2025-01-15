@@ -4,6 +4,7 @@ import com.wolf.common.util.encrypt.HashUtil;
 import com.wolf.minimq.domain.config.CommitLogConfig;
 import com.wolf.minimq.domain.config.MessageConfig;
 import com.wolf.minimq.domain.enums.EnqueueStatus;
+import com.wolf.minimq.domain.enums.InsertStatus;
 import com.wolf.minimq.domain.enums.MessageVersion;
 import com.wolf.minimq.domain.exception.EnqueueException;
 import com.wolf.minimq.domain.model.dto.InsertFuture;
@@ -22,6 +23,7 @@ import com.wolf.minimq.store.domain.commitlog.vo.EnqueueThreadLocal;
 import com.wolf.minimq.store.domain.commitlog.vo.InsertContext;
 import com.wolf.minimq.store.infra.memory.CLibrary;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * depend on:
@@ -29,6 +31,7 @@ import lombok.Getter;
  *  - MappedFileQueue
  *  - FlushManager
  */
+@Slf4j
 public class DefaultCommitLog implements CommitLog {
     private final CommitLogConfig commitLogConfig;
     private final MessageConfig messageConfig;
@@ -61,7 +64,7 @@ public class DefaultCommitLog implements CommitLog {
 
         this.commitLogLock.lock();
         try {
-            MappedFile mappedFile = getMappedFile(context.getEncoder());
+            MappedFile mappedFile = getMappedFile(context.getEncoder().getMessageLength());
             assignOffset(messageBO, mappedFile);
 
             InsertResult insertResult = mappedFile.insert(context.getEncoder().encode());
@@ -70,6 +73,24 @@ public class DefaultCommitLog implements CommitLog {
             return handleFlush(insertResult, context);
         } catch (EnqueueException messageException) {
             return InsertFuture.failure(messageException.getStatus());
+        } finally {
+            this.commitLogLock.unlock();
+        }
+    }
+
+    @Override
+    public InsertResult insert(long offset, byte[] data, int start, int size) {
+        this.commitLogLock.lock();
+        try {
+            MappedFile mappedFile = mappedFileQueue.getMappedFileByOffset(offset);
+            if (mappedFile == null) {
+                return InsertResult.failure();
+            }
+
+            return mappedFile.insert(data, start, size);
+        } catch (Exception e) {
+            log.error("commitLog insert error", e);
+            return InsertResult.failure();
         } finally {
             this.commitLogLock.unlock();
         }
@@ -96,13 +117,7 @@ public class DefaultCommitLog implements CommitLog {
 
     @Override
     public MessageBO select(long offset) {
-        MappedFile mappedFile = mappedFileQueue.getMappedFileByOffset(offset);
-        if (mappedFile == null) {
-            return null;
-        }
-
-        int position = (int) (offset % commitLogConfig.getFileSize());
-        SelectedMappedBuffer buffer = mappedFile.select(position);
+        SelectedMappedBuffer buffer = selectBuffer(offset);
         if (buffer == null) {
             return null;
         }
@@ -114,6 +129,17 @@ public class DefaultCommitLog implements CommitLog {
         buffer.release();
 
         return messageBO;
+    }
+
+    @Override
+    public SelectedMappedBuffer selectBuffer(long offset) {
+        MappedFile mappedFile = mappedFileQueue.getMappedFileByOffset(offset);
+        if (mappedFile == null) {
+            return null;
+        }
+
+        int position = (int) (offset % commitLogConfig.getFileSize());
+        return mappedFile.select(position);
     }
 
     @Override
@@ -135,6 +161,10 @@ public class DefaultCommitLog implements CommitLog {
     public long getUnFlushedSize() {
         return mappedFileQueue.getUnFlushedSize();
     }
+
+
+
+
 
     private void initLocalEncoder() {
         localEncoder = ThreadLocal.withInitial(
@@ -164,8 +194,8 @@ public class DefaultCommitLog implements CommitLog {
         }
     }
 
-    private MappedFile getMappedFile(MessageEncoder encoder) {
-        MappedFile mappedFile = mappedFileQueue.getMappedFileForSize(encoder.getMessageLength());
+    private MappedFile getMappedFile(int size) {
+        MappedFile mappedFile = mappedFileQueue.getMappedFileForSize(size);
         mappedFile.setFileMode(CLibrary.MADV_RANDOM);
 
         return mappedFile;
