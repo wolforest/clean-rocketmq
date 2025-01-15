@@ -4,11 +4,13 @@ import com.wolf.common.convention.service.LifecycleManager;
 import com.wolf.minimq.domain.config.StoreConfig;
 import com.wolf.minimq.domain.service.store.manager.CommitLogManager;
 import com.wolf.minimq.domain.service.store.manager.CommitLogDispatcherManager;
+import com.wolf.minimq.domain.service.store.manager.ConsumeQueueManager;
 import com.wolf.minimq.domain.service.store.manager.IndexManager;
 import com.wolf.minimq.domain.service.store.manager.MessageQueueManager;
 import com.wolf.minimq.domain.service.store.manager.MetaManager;
 import com.wolf.minimq.domain.service.store.manager.TimerManager;
 import com.wolf.minimq.store.domain.commitlog.DefaultCommitLogManager;
+import com.wolf.minimq.store.domain.consumequeue.DefaultConsumeQueueManager;
 import com.wolf.minimq.store.domain.dispatcher.DefaultCommitLogDispatcherManager;
 import com.wolf.minimq.store.domain.index.DefaultIndexManager;
 import com.wolf.minimq.store.domain.mq.DefaultMessageQueueManager;
@@ -28,13 +30,17 @@ public class ComponentRegister {
     }
 
     public LifecycleManager execute() {
+        registerMappedFileService();
+
         registerMeta();
         registerCommitLog();
         registerDispatcher();
+
         registerConsumeQueue();
         registerIndexService();
+
+        registerMessageQueue();
         registerTimer();
-        registerMappedFileService();
 
         return this.manager;
     }
@@ -42,37 +48,36 @@ public class ComponentRegister {
     private void registerMeta() {
         MetaManager component = new DefaultMetaManager();
         manager.register(component);
-        StoreContext.register(component, MetaManager.class);
     }
 
     private void registerCommitLog() {
         CommitLogManager component = new DefaultCommitLogManager();
         manager.register(component);
-        StoreContext.register(component, CommitLogManager.class);
     }
 
     private void registerDispatcher() {
         CommitLogDispatcherManager component = new DefaultCommitLogDispatcherManager();
         manager.register(component);
-        StoreContext.register(component, CommitLogDispatcherManager.class);
     }
 
     private void registerConsumeQueue() {
+        ConsumeQueueManager component = new DefaultConsumeQueueManager();
+        manager.register(component);
+    }
+
+    private void registerMessageQueue() {
         MessageQueueManager component = new DefaultMessageQueueManager();
         manager.register(component);
-        StoreContext.register(component, MessageQueueManager.class);
     }
 
     private void registerIndexService() {
         IndexManager component = new DefaultIndexManager();
         manager.register(component);
-        StoreContext.register(component, IndexManager.class);
     }
 
     private void registerTimer() {
         TimerManager component = new DefaultTimerManager();
         manager.register(component);
-        StoreContext.register(component, TimerManager.class);
     }
 
     private void registerMappedFileService() {
