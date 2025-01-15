@@ -30,7 +30,6 @@ public class FlushWatcher extends ServiceThread {
             }
             monitorRequest(request);
         }
-
     }
 
     private GroupCommitRequest takeRequest() {
@@ -52,21 +51,17 @@ public class FlushWatcher extends ServiceThread {
             }
 
             // To avoid frequent thread switching, replace future.get with sleep here,
-            long sleepTime = (request.getDeadLine() - now) / 1_000_000;
-            sleepTime = Math.min(10, sleepTime);
-            if (sleepTime == 0) {
-                request.wakeup(EnqueueStatus.FLUSH_DISK_TIMEOUT);
-                break;
-            }
-
-            try {
-                Thread.sleep(sleepTime);
-            } catch (InterruptedException e) {
-                log.warn("An exception occurred while waiting for flushing disk to complete. this may caused by shutdown");
+            long sleepTime = calculateSleepTime(request, now);
+            if (!ThreadUtil.sleep(sleepTime)) {
+                log.warn("An exception occurred while waiting for flushing disk. this may caused by shutdown");
                 break;
             }
         }
     }
 
+    private long calculateSleepTime(GroupCommitRequest request, long now) {
+        long sleepTime = (request.getDeadLine() - now) / 1_000_000;
+        return Math.min(10, sleepTime);
+    }
 
 }
