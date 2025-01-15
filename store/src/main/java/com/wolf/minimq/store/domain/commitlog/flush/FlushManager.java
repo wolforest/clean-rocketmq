@@ -7,10 +7,8 @@ import com.wolf.minimq.domain.model.checkpoint.CheckPoint;
 import com.wolf.minimq.domain.model.dto.EnqueueResult;
 import com.wolf.minimq.domain.model.dto.InsertFuture;
 import com.wolf.minimq.domain.model.dto.InsertResult;
-import com.wolf.minimq.domain.service.store.infra.MappedFileQueue;
 import com.wolf.minimq.domain.model.bo.MessageBO;
 import com.wolf.minimq.store.domain.commitlog.vo.GroupCommitRequest;
-import com.wolf.minimq.store.server.StoreCheckpoint;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -23,7 +21,6 @@ public class FlushManager implements Lifecycle {
     private State state = State.INITIALIZING;
 
     private final CommitLogConfig commitLogConfig;
-    private final MappedFileQueue mappedFileQueue;
     private final CheckPoint storeCheckPoint;
 
     private final FlushService commitService;
@@ -32,14 +29,12 @@ public class FlushManager implements Lifecycle {
 
     public FlushManager(
         CommitLogConfig commitLogConfig,
-        MappedFileQueue mappedFileQueue,
         CheckPoint checkPoint) {
         this.commitLogConfig = commitLogConfig;
-        this.mappedFileQueue = mappedFileQueue;
         this.storeCheckPoint = checkPoint;
 
         this.flushWatcher = new FlushWatcher();
-        this.commitService = new GroupCommitService();
+        this.commitService = new RealTimeCommitService();
 
         if (FlushType.SYNC.equals(commitLogConfig.getFlushType())) {
             this.flushService = new RealTimeFlushService();
@@ -71,6 +66,15 @@ public class FlushManager implements Lifecycle {
         return formatResult(insertResult, request);
     }
 
+    private InsertFuture asyncFlush(InsertResult insertResult) {
+        if (commitLogConfig.isEnableWriteCache()) {
+            commitService.wakeup();
+        } else {
+            flushService.wakeup();
+        }
+        return InsertFuture.success(insertResult);
+    }
+
     private InsertFuture formatResult(InsertResult insertResult, GroupCommitRequest request) {
         CompletableFuture<EnqueueResult> result = request.future()
             .thenApplyAsync(
@@ -95,16 +99,6 @@ public class FlushManager implements Lifecycle {
             .deadLine(deadLine)
             .build();
     }
-
-    private InsertFuture asyncFlush(InsertResult insertResult) {
-        if (commitLogConfig.isEnableWriteCache()) {
-            commitService.wakeup();
-        } else {
-            flushService.wakeup();
-        }
-        return InsertFuture.success(insertResult);
-    }
-
 
     @Override
     public void initialize() {

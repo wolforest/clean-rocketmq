@@ -1,7 +1,8 @@
 package com.wolf.minimq.store.domain.commitlog.flush;
 
-import com.wolf.minimq.store.domain.commitlog.vo.GroupCommitRequest;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class RealTimeFlushService extends FlushService {
     @Override
     public String getServiceName() {

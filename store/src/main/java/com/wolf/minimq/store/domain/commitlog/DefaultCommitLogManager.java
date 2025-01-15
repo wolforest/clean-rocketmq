@@ -81,7 +81,7 @@ public class DefaultCommitLogManager implements CommitLogManager {
 
     private void initCommitLog() {
         checkpoint = StoreContext.getBean(StoreCheckpoint.class);
-        flushManager = new FlushManager(commitLogConfig, mappedFileQueue, checkpoint);
+        flushManager = new FlushManager(commitLogConfig, checkpoint);
 
         commitLog = new DefaultCommitLog(commitLogConfig, messageConfig, mappedFileQueue, flushManager);
         StoreContext.register(commitLog, CommitLog.class);

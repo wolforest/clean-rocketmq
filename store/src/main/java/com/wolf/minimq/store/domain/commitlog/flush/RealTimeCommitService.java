@@ -2,10 +2,10 @@ package com.wolf.minimq.store.domain.commitlog.flush;
 
 import com.wolf.minimq.store.domain.commitlog.vo.GroupCommitRequest;
 
-public class GroupCommitService extends FlushService {
+public class RealTimeCommitService extends FlushService {
     @Override
     public String getServiceName() {
-        return GroupCommitService.class.getSimpleName();
+        return RealTimeCommitService.class.getSimpleName();
     }
 
     @Override
