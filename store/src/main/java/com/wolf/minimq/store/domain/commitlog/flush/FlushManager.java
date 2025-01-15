@@ -3,6 +3,7 @@ package com.wolf.minimq.store.domain.commitlog.flush;
 import com.wolf.common.convention.service.Lifecycle;
 import com.wolf.minimq.domain.config.CommitLogConfig;
 import com.wolf.minimq.domain.enums.FlushType;
+import com.wolf.minimq.domain.model.checkpoint.CheckPoint;
 import com.wolf.minimq.domain.model.dto.EnqueueResult;
 import com.wolf.minimq.domain.model.dto.InsertFuture;
 import com.wolf.minimq.domain.model.dto.InsertResult;
@@ -23,7 +24,7 @@ public class FlushManager implements Lifecycle {
 
     private final CommitLogConfig commitLogConfig;
     private final MappedFileQueue mappedFileQueue;
-    private final StoreCheckpoint storeCheckPoint;
+    private final CheckPoint storeCheckPoint;
 
     private final FlushService commitService;
     private final FlushService flushService;
@@ -32,10 +33,10 @@ public class FlushManager implements Lifecycle {
     public FlushManager(
         CommitLogConfig commitLogConfig,
         MappedFileQueue mappedFileQueue,
-        StoreCheckpoint storeCheckpoint) {
+        CheckPoint checkPoint) {
         this.commitLogConfig = commitLogConfig;
         this.mappedFileQueue = mappedFileQueue;
-        this.storeCheckPoint = storeCheckpoint;
+        this.storeCheckPoint = checkPoint;
 
         this.flushWatcher = new FlushWatcher();
         this.commitService = new GroupCommitService();

@@ -3,6 +3,7 @@ package com.wolf.minimq.store.domain.commitlog;
 import com.wolf.minimq.domain.config.CommitLogConfig;
 import com.wolf.minimq.domain.config.MessageConfig;
 import com.wolf.minimq.domain.config.StoreConfig;
+import com.wolf.minimq.domain.model.checkpoint.CheckPoint;
 import com.wolf.minimq.domain.service.store.api.CommitLogService;
 import com.wolf.minimq.domain.service.store.domain.CommitLog;
 import com.wolf.minimq.domain.service.store.infra.MappedFileQueue;
@@ -27,33 +28,21 @@ public class DefaultCommitLogManager implements CommitLogManager {
     private MessageConfig messageConfig;
 
     private MappedFileQueue mappedFileQueue;
-    private final CommitLog commitLog;
-    private final FlushManager flushManager;
-    private final CommitLogRecovery commitLogRecovery;
+    private CommitLog commitLog;
+    private FlushManager flushManager;
+    private CheckPoint checkpoint;
 
     public DefaultCommitLogManager() {
         initConfig();
         initMappedFileQueue();
-
-        StoreCheckpoint checkpoint = StoreContext.getBean(StoreCheckpoint.class);
-        flushManager = new FlushManager(commitLogConfig, mappedFileQueue, checkpoint);
-
-        commitLog = new DefaultCommitLog(commitLogConfig, messageConfig, mappedFileQueue, flushManager);
-        StoreContext.register(commitLog, CommitLog.class);
-
-        commitLogRecovery = new CommitLogRecovery(commitLog, checkpoint);
+        initCommitLog();
     }
 
     @Override
     public void initialize() {
-        mappedFileQueue.load();
-        mappedFileQueue.setFileMode(CLibrary.MADV_RANDOM);
-        mappedFileQueue.checkSelf();
-
-        commitLogRecovery.recover();
-
-        CommitLogService api = new CommitLogServiceImpl(commitLog);
-        StoreContext.registerAPI(api, CommitLogService.class);
+        load();
+        recover();
+        registerAPI();
     }
 
     @Override
@@ -91,4 +80,29 @@ public class DefaultCommitLogManager implements CommitLogManager {
         AllocateMappedFileService allocateService = StoreContext.getBean(AllocateMappedFileService.class);
         this.mappedFileQueue = new DefaultMappedFileQueue(dir, commitLogConfig.getFileSize(), allocateService);
     }
+
+    private void initCommitLog() {
+        checkpoint = StoreContext.getBean(StoreCheckpoint.class);
+        flushManager = new FlushManager(commitLogConfig, mappedFileQueue, checkpoint);
+
+        commitLog = new DefaultCommitLog(commitLogConfig, messageConfig, mappedFileQueue, flushManager);
+        StoreContext.register(commitLog, CommitLog.class);
+    }
+
+    private void load() {
+        mappedFileQueue.load();
+        mappedFileQueue.setFileMode(CLibrary.MADV_RANDOM);
+        mappedFileQueue.checkSelf();
+    }
+
+    private void recover() {
+        CommitLogRecovery commitLogRecovery = new CommitLogRecovery(commitLog, checkpoint);
+        commitLogRecovery.recover();
+    }
+
+    private void registerAPI() {
+        CommitLogService api = new CommitLogServiceImpl(commitLog);
+        StoreContext.registerAPI(api, CommitLogService.class);
+    }
+
 }
