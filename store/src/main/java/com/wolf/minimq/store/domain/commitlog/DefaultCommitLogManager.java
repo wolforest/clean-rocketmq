@@ -3,9 +3,11 @@ package com.wolf.minimq.store.domain.commitlog;
 import com.wolf.minimq.domain.config.CommitLogConfig;
 import com.wolf.minimq.domain.config.MessageConfig;
 import com.wolf.minimq.domain.config.StoreConfig;
+import com.wolf.minimq.domain.service.store.api.CommitLogService;
 import com.wolf.minimq.domain.service.store.domain.CommitLog;
 import com.wolf.minimq.domain.service.store.infra.MappedFileQueue;
 import com.wolf.minimq.domain.service.store.manager.CommitLogManager;
+import com.wolf.minimq.store.api.CommitLogServiceImpl;
 import com.wolf.minimq.store.domain.commitlog.flush.FlushManager;
 import com.wolf.minimq.store.infra.file.AllocateMappedFileService;
 import com.wolf.minimq.store.infra.file.DefaultMappedFileQueue;
@@ -25,6 +27,7 @@ public class DefaultCommitLogManager implements CommitLogManager {
     private MessageConfig messageConfig;
 
     private MappedFileQueue mappedFileQueue;
+    private final CommitLog commitLog;
     private final FlushManager flushManager;
     private final CommitLogRecovery commitLogRecovery;
 
@@ -35,7 +38,7 @@ public class DefaultCommitLogManager implements CommitLogManager {
         StoreCheckpoint checkpoint = StoreContext.getBean(StoreCheckpoint.class);
         flushManager = new FlushManager(commitLogConfig, mappedFileQueue, checkpoint);
 
-        CommitLog commitLog = new DefaultCommitLog(commitLogConfig, messageConfig, mappedFileQueue, flushManager);
+        commitLog = new DefaultCommitLog(commitLogConfig, messageConfig, mappedFileQueue, flushManager);
         StoreContext.register(commitLog, CommitLog.class);
 
         commitLogRecovery = new CommitLogRecovery(commitLog, checkpoint);
@@ -48,6 +51,9 @@ public class DefaultCommitLogManager implements CommitLogManager {
         mappedFileQueue.checkSelf();
 
         commitLogRecovery.recover();
+
+        CommitLogService api = new CommitLogServiceImpl(commitLog);
+        StoreContext.registerAPI(api, CommitLogService.class);
     }
 
     @Override
