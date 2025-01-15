@@ -1,13 +1,13 @@
 package com.wolf.minimq.domain.service.store.domain;
 
 import com.wolf.minimq.domain.model.bo.MessageBO;
-import com.wolf.minimq.domain.model.dto.FlushResult;
+import com.wolf.minimq.domain.model.dto.InsertFuture;
 import com.wolf.minimq.domain.service.store.infra.MappedFileQueue;
 
 public interface CommitLog {
     MappedFileQueue getMappedFileQueue();
 
-    FlushResult insert(MessageBO messageBO);
+    InsertFuture insert(MessageBO messageBO);
 
     MessageBO select(long offset, int size);
 

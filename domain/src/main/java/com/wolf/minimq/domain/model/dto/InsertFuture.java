@@ -12,13 +12,13 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class FlushResult implements Serializable {
+public class InsertFuture implements Serializable {
     @Builder.Default
     private InsertResult insertResult = null;
     @Builder.Default
-    private CompletableFuture<EnqueueResult> flushFuture = null;
+    private CompletableFuture<EnqueueResult> future = null;
 
-    public FlushResult(InsertResult insertResult) {
+    public InsertFuture(InsertResult insertResult) {
         this.insertResult = insertResult;
     }
 
@@ -30,19 +30,19 @@ public class FlushResult implements Serializable {
         return insertResult.isSuccess();
     }
 
-    public static FlushResult success(InsertResult insertResult) {
-        return FlushResult.builder()
+    public static InsertFuture success(InsertResult insertResult) {
+        return InsertFuture.builder()
             .insertResult(insertResult)
-            .flushFuture(CompletableFuture.completedFuture(EnqueueResult.success(insertResult)))
+            .future(CompletableFuture.completedFuture(EnqueueResult.success(insertResult)))
             .build();
     }
 
-    public static FlushResult failure() {
+    public static InsertFuture failure() {
         return failure(EnqueueStatus.UNKNOWN_ERROR);
     }
-    public static FlushResult failure(EnqueueStatus status) {
-        return FlushResult.builder()
-            .flushFuture(CompletableFuture.completedFuture(EnqueueResult.failure(status)))
+    public static InsertFuture failure(EnqueueStatus status) {
+        return InsertFuture.builder()
+            .future(CompletableFuture.completedFuture(EnqueueResult.failure(status)))
             .build();
     }
 }

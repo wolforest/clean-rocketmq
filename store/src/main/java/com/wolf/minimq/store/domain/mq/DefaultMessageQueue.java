@@ -4,7 +4,7 @@ import com.wolf.common.util.collection.CollectionUtil;
 import com.wolf.minimq.domain.config.MessageConfig;
 import com.wolf.minimq.domain.config.StoreConfig;
 import com.wolf.minimq.domain.model.bo.QueueUnit;
-import com.wolf.minimq.domain.model.dto.FlushResult;
+import com.wolf.minimq.domain.model.dto.InsertFuture;
 import com.wolf.minimq.domain.model.dto.GetRequest;
 import com.wolf.minimq.domain.model.dto.GetResult;
 import com.wolf.minimq.domain.utils.lock.ConsumeQueueLock;
@@ -60,13 +60,13 @@ public class DefaultMessageQueue implements MessageQueue {
             long queueOffset = consumeQueueStore.assignOffset(messageBO.getTopic(), messageBO.getQueueId());
             messageBO.setQueueOffset(queueOffset);
 
-            FlushResult result = commitLog.insert(messageBO);
+            InsertFuture result = commitLog.insert(messageBO);
 
             if (result.isInsertSuccess()) {
                 consumeQueueStore.increaseOffset(messageBO.getTopic(), messageBO.getQueueId());
             }
 
-            return result.getFlushFuture();
+            return result.getFuture();
         } catch (Exception e) {
             return CompletableFuture.completedFuture(EnqueueResult.failure());
         } finally {

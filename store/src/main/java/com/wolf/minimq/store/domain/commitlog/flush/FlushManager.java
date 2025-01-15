@@ -4,7 +4,7 @@ import com.wolf.common.convention.service.Lifecycle;
 import com.wolf.minimq.domain.config.CommitLogConfig;
 import com.wolf.minimq.domain.enums.FlushType;
 import com.wolf.minimq.domain.model.dto.EnqueueResult;
-import com.wolf.minimq.domain.model.dto.FlushResult;
+import com.wolf.minimq.domain.model.dto.InsertFuture;
 import com.wolf.minimq.domain.model.dto.InsertResult;
 import com.wolf.minimq.domain.service.store.infra.MappedFileQueue;
 import com.wolf.minimq.domain.model.bo.MessageBO;
@@ -47,7 +47,7 @@ public class FlushManager implements Lifecycle {
         }
     }
 
-    public FlushResult flush(InsertResult insertResult, MessageBO messageBO) {
+    public InsertFuture flush(InsertResult insertResult, MessageBO messageBO) {
         if (FlushType.SYNC.equals(commitLogConfig.getFlushType())) {
             return syncFlush(insertResult, messageBO);
         }
@@ -55,14 +55,14 @@ public class FlushManager implements Lifecycle {
         return asyncFlush(insertResult);
     }
 
-    private FlushResult syncFlush(InsertResult insertResult, MessageBO messageBO) {
+    private InsertFuture syncFlush(InsertResult insertResult, MessageBO messageBO) {
         if (!messageBO.isWaitStore()) {
             flushService.wakeup();
-            return FlushResult.success(insertResult);
+            return InsertFuture.success(insertResult);
         }
 
         GroupCommitRequest request = createGroupCommitRequest(insertResult);
-        GroupCommitService service = (GroupCommitService) flushService;
+        GroupFlushService service = (GroupFlushService) flushService;
 
         service.addRequest(request);
         flushWatcher.addRequest(request);
@@ -70,7 +70,7 @@ public class FlushManager implements Lifecycle {
         return formatResult(insertResult, request);
     }
 
-    private FlushResult formatResult(InsertResult insertResult, GroupCommitRequest request) {
+    private InsertFuture formatResult(InsertResult insertResult, GroupCommitRequest request) {
         CompletableFuture<EnqueueResult> result = request.future()
             .thenApplyAsync(
                 flushStatus -> EnqueueResult.builder()
@@ -79,9 +79,9 @@ public class FlushManager implements Lifecycle {
                     .build()
             );
 
-        return FlushResult.builder()
+        return InsertFuture.builder()
             .insertResult(insertResult)
-            .flushFuture(result)
+            .future(result)
             .build();
     }
 
@@ -95,13 +95,13 @@ public class FlushManager implements Lifecycle {
             .build();
     }
 
-    private FlushResult asyncFlush(InsertResult insertResult) {
+    private InsertFuture asyncFlush(InsertResult insertResult) {
         if (commitLogConfig.isEnableWriteCache()) {
             commitService.wakeup();
         } else {
             flushService.wakeup();
         }
-        return FlushResult.success(insertResult);
+        return InsertFuture.success(insertResult);
     }
 
 
