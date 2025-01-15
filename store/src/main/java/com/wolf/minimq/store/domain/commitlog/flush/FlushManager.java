@@ -8,6 +8,7 @@ import com.wolf.minimq.domain.model.dto.EnqueueResult;
 import com.wolf.minimq.domain.model.dto.InsertFuture;
 import com.wolf.minimq.domain.model.dto.InsertResult;
 import com.wolf.minimq.domain.model.bo.MessageBO;
+import com.wolf.minimq.domain.service.store.infra.MappedFileQueue;
 import com.wolf.minimq.store.domain.commitlog.vo.GroupCommitRequest;
 import java.util.concurrent.CompletableFuture;
 
@@ -21,7 +22,8 @@ public class FlushManager implements Lifecycle {
     private State state = State.INITIALIZING;
 
     private final CommitLogConfig commitLogConfig;
-    private final CheckPoint storeCheckPoint;
+    private final CheckPoint checkPoint;
+    private final MappedFileQueue mappedFileQueue;
 
     private final FlushService commitService;
     private final FlushService flushService;
@@ -29,9 +31,11 @@ public class FlushManager implements Lifecycle {
 
     public FlushManager(
         CommitLogConfig commitLogConfig,
+        MappedFileQueue mappedFileQueue,
         CheckPoint checkPoint) {
         this.commitLogConfig = commitLogConfig;
-        this.storeCheckPoint = checkPoint;
+        this.checkPoint = checkPoint;
+        this.mappedFileQueue = mappedFileQueue;
 
         this.flushWatcher = new FlushWatcher();
         this.commitService = new RealTimeCommitService();
@@ -39,7 +43,7 @@ public class FlushManager implements Lifecycle {
         if (FlushType.SYNC.equals(commitLogConfig.getFlushType())) {
             this.flushService = new RealTimeFlushService();
         } else {
-            this.flushService = new GroupFlushService();
+            this.flushService = new GroupFlushService(mappedFileQueue, checkPoint);
         }
     }
 
