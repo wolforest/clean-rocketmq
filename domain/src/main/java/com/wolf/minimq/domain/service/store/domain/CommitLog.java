@@ -11,7 +11,6 @@ public interface CommitLog {
 
     InsertFuture insert(MessageBO messageBO);
 
-
     MessageBO select(long offset, int size);
 
     MessageBO select(long offset);
