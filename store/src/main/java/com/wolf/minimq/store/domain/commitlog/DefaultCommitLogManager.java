@@ -32,14 +32,12 @@ public class DefaultCommitLogManager implements CommitLogManager {
     private FlushManager flushManager;
     private CheckPoint checkpoint;
 
-    public DefaultCommitLogManager() {
+    @Override
+    public void initialize() {
         initConfig();
         initMappedFileQueue();
         initCommitLog();
-    }
 
-    @Override
-    public void initialize() {
         load();
         recover();
         registerAPI();

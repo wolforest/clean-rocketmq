@@ -24,12 +24,12 @@ public class DefaultConsumeQueueManager implements ConsumeQueueManager {
     @Override
     public void initialize() {
         initConfig();
-        initObjects();
+        initConsumeQueue();
 
         loader.load();
         recovery.recover();
 
-        registerDispatchHandler(consumeQueueStore);
+        registerDispatchHandler();
     }
 
     @Override
@@ -57,7 +57,7 @@ public class DefaultConsumeQueueManager implements ConsumeQueueManager {
         consumeQueueConfig.setRootPath(StorePath.getConsumeQueuePath());
     }
 
-    private void initObjects() {
+    private void initConsumeQueue() {
         flusher = new ConsumeQueueFlusher(consumeQueueConfig, StoreContext.getCheckPoint());
         loader = new ConsumeQueueLoader(consumeQueueConfig);
         recovery = new ConsumeQueueRecovery(consumeQueueConfig, StoreContext.getCheckPoint());
@@ -79,7 +79,7 @@ public class DefaultConsumeQueueManager implements ConsumeQueueManager {
         return consumeQueueFactory;
     }
 
-    private void registerDispatchHandler(ConsumeQueueStore consumeQueueStore) {
+    private void registerDispatchHandler() {
         CommitLogDispatcher dispatcher = StoreContext.getBean(CommitLogDispatcher.class);
         QueueCommitLogHandler handler = new QueueCommitLogHandler(consumeQueueStore);
         dispatcher.registerHandler(handler);
