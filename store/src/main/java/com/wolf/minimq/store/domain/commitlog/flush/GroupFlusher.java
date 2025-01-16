@@ -54,7 +54,7 @@ public class GroupFlusher extends Flusher {
             try {
                 await(10);
                 swapRequests();
-                doCommit();
+                flush();
             } catch (Exception e) {
                 log.warn("{} service has exception. ", this.getServiceName(), e);
             }
@@ -63,7 +63,7 @@ public class GroupFlusher extends Flusher {
         ThreadUtil.sleep(10, "GroupCommitService Exception, ");
 
         swapRequests();
-        doCommit();
+        flush();
     }
 
     private void swapRequests() {
@@ -77,42 +77,53 @@ public class GroupFlusher extends Flusher {
         }
     }
 
-    private void forceCommit() {
+    private void forceFlush() {
         // Because of individual messages is set to not sync flush, it
         // will come to this process
         mappedFileQueue.flush(0);
         checkPoint.getMaxOffset().setCommitLogOffset(maxOffset);
     }
 
-    private void doCommit() {
+    private void flush() {
         if (this.requestsRead.isEmpty()) {
-            forceCommit();
+            forceFlush();
             return;
         }
 
         long tmpOffset = this.maxOffset;
         for (GroupCommitRequest req : this.requestsRead) {
-            // There may be a message in the next file, so a maximum of
-            // two times the flush
-            boolean flushOK = mappedFileQueue.getFlushPosition() >= req.getNextOffset();
-            for (int i = 0; i < 2 && !flushOK; i++) {
-                mappedFileQueue.flush(0);
-                flushOK = mappedFileQueue.getFlushPosition() >= req.getNextOffset();
-            }
-
-            EnqueueStatus status = flushOK
-                ? EnqueueStatus.PUT_OK :
-                EnqueueStatus.FLUSH_DISK_TIMEOUT;
-            req.wakeup(status);
+            boolean flushOK = flush(req);
+            wakeupRequest(req, flushOK);
 
             if (flushOK && req.getOffset() > tmpOffset) {
                 tmpOffset = req.getOffset();
             }
         }
+
         // write check point
         checkPoint.getMaxOffset().setCommitLogOffset(tmpOffset);
-
         this.requestsRead = new LinkedList<>();
+    }
+
+    private boolean flush(GroupCommitRequest request) {
+        boolean flushOK = mappedFileQueue.getFlushPosition() >= request.getNextOffset();
+
+        // There may be a message in the next file, so a maximum of
+        // two times the flush
+        for (int i = 0; i < 2 && !flushOK; i++) {
+            mappedFileQueue.flush(0);
+            flushOK = mappedFileQueue.getFlushPosition() >= request.getNextOffset();
+        }
+
+        return flushOK;
+    }
+
+    private void wakeupRequest(GroupCommitRequest request, boolean flushOK) {
+        EnqueueStatus status = flushOK
+            ? EnqueueStatus.PUT_OK :
+            EnqueueStatus.FLUSH_DISK_TIMEOUT;
+
+        request.wakeup(status);
     }
 
 }

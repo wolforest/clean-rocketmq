@@ -48,6 +48,7 @@ public class IntervalFlusher extends Flusher {
     private void flush() {
         try {
             sleepOrWait();
+
             int minFlushPages = getMinFlushPages();
             mappedFileQueue.flush(minFlushPages);
 
@@ -56,6 +57,15 @@ public class IntervalFlusher extends Flusher {
             }
         } catch (Exception e) {
             log.warn("{} service run flush error", getServiceName(), e);
+        }
+    }
+
+    private void sleepOrWait() throws InterruptedException {
+        int interval = commitLogConfig.getFlushInterval();
+        if (commitLogConfig.isEnableFlushSleep()) {
+            Thread.sleep(interval);
+        } else {
+            await(interval);
         }
     }
 
@@ -71,15 +81,6 @@ public class IntervalFlusher extends Flusher {
         return minFlushPages;
     }
 
-    private void sleepOrWait() throws InterruptedException {
-        int interval = commitLogConfig.getFlushInterval();
-        if (commitLogConfig.isEnableFlushSleep()) {
-            Thread.sleep(interval);
-        } else {
-            await(interval);
-        }
-    }
-
     private void forceFlush() {
         boolean result = false;
         for (int i = 0; i < RETRY_TIMES && !result; i++) {
@@ -90,6 +91,5 @@ public class IntervalFlusher extends Flusher {
 
         checkPoint.getMaxOffset().setCommitLogOffset(maxOffset);
     }
-
 
 }
