@@ -29,6 +29,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GroupCommitRequest implements Serializable {
+    private long offset;
     private long nextOffset;
     /**
      * Indicate the GroupCommitRequest result: true or false

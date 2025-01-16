@@ -11,23 +11,25 @@ import java.util.LinkedList;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class GroupFlushService extends FlushService {
+public class GroupFlusher extends Flusher {
     private static final long FLUSH_JOIN_TIME = 5 * 60 * 1000;
 
-    private volatile LinkedList<GroupCommitRequest> requestsWrite = new LinkedList<>();
-    private volatile LinkedList<GroupCommitRequest> requestsRead = new LinkedList<>();
-    private final CommitLogLock lock = new CommitLogSpinLock();
     private final MappedFileQueue mappedFileQueue;
     private final CheckPoint checkPoint;
 
-    public GroupFlushService(MappedFileQueue mappedFileQueue, CheckPoint checkPoint) {
+    private volatile LinkedList<GroupCommitRequest> requestsWrite = new LinkedList<>();
+    private volatile LinkedList<GroupCommitRequest> requestsRead = new LinkedList<>();
+
+    private final CommitLogLock lock = new CommitLogSpinLock();
+
+    public GroupFlusher(MappedFileQueue mappedFileQueue, CheckPoint checkPoint) {
         this.mappedFileQueue = mappedFileQueue;
         this.checkPoint = checkPoint;
     }
 
     @Override
     public String getServiceName() {
-        return GroupFlushService.class.getSimpleName();
+        return GroupFlusher.class.getSimpleName();
     }
 
     @Override
@@ -35,6 +37,7 @@ public class GroupFlushService extends FlushService {
         return FLUSH_JOIN_TIME;
     }
 
+    @Override
     public void addRequest(GroupCommitRequest request) {
         lock.lock();
         try {
@@ -74,15 +77,20 @@ public class GroupFlushService extends FlushService {
         }
     }
 
+    private void forceCommit() {
+        // Because of individual messages is set to not sync flush, it
+        // will come to this process
+        mappedFileQueue.flush(0);
+        checkPoint.getMaxOffset().setCommitLogOffset(maxOffset);
+    }
+
     private void doCommit() {
         if (this.requestsRead.isEmpty()) {
-            // Because of individual messages is set to not sync flush, it
-            // will come to this process
-            mappedFileQueue.flush(0);
+            forceCommit();
             return;
         }
 
-        long maxOffset = 0L;
+        long tmpOffset = this.maxOffset;
         for (GroupCommitRequest req : this.requestsRead) {
             // There may be a message in the next file, so a maximum of
             // two times the flush
@@ -92,17 +100,19 @@ public class GroupFlushService extends FlushService {
                 flushOK = mappedFileQueue.getFlushPosition() >= req.getNextOffset();
             }
 
-            req.wakeup(flushOK ? EnqueueStatus.PUT_OK : EnqueueStatus.FLUSH_DISK_TIMEOUT);
-            if (!flushOK && req.getNextOffset() > maxOffset) {
-                maxOffset = req.getNextOffset();
+            EnqueueStatus status = flushOK
+                ? EnqueueStatus.PUT_OK :
+                EnqueueStatus.FLUSH_DISK_TIMEOUT;
+            req.wakeup(status);
+
+            if (flushOK && req.getOffset() > tmpOffset) {
+                tmpOffset = req.getOffset();
             }
         }
         // write check point
-        checkPoint.getMaxOffset().setCommitLogOffset(maxOffset);
+        checkPoint.getMaxOffset().setCommitLogOffset(tmpOffset);
 
         this.requestsRead = new LinkedList<>();
-
     }
-
 
 }

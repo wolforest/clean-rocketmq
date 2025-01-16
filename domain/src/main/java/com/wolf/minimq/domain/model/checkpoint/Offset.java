@@ -5,14 +5,41 @@ import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
 public class Offset implements Serializable {
     private volatile long commitLogOffset;
     private volatile long dispatchedOffset;
     private volatile long indexOffset;
 
+    @Setter
     private ConcurrentMap<String, ArrayList<Long>> topicOffsetMap = new ConcurrentHashMap<>(16);
+
+    public void setCommitLogOffset(long commitLogOffset) {
+        if (commitLogOffset < this.commitLogOffset) {
+            return;
+        }
+
+        this.commitLogOffset = commitLogOffset;
+    }
+
+    public void setDispatchedOffset(long dispatchedOffset) {
+        if (dispatchedOffset < this.dispatchedOffset) {
+            return;
+        }
+
+        this.dispatchedOffset = dispatchedOffset;
+    }
+
+    public void setIndexOffset(long indexOffset) {
+        if (indexOffset < this.indexOffset) {
+            return;
+        }
+
+        this.indexOffset = indexOffset;
+    }
 
     public long getQueueOffset(String topic, Integer queueId) {
         ArrayList<Long> queueOffsets = topicOffsetMap.get(topic);

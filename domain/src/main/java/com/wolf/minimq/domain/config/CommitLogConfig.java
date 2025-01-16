@@ -14,13 +14,14 @@ public class CommitLogConfig implements Serializable {
     private String dirName = "commitlog";
     private int fileSize = 100 * 1024 * 1024;
 
+    private boolean enableFlushSleep = true;
     private int minFlushPages = 4;
-    private int flushInterval = 200;
-    private int flushAllInterval = 1000 * 10;
+    private int flushInterval = 500;
     private int flushTimeout = 1000 * 5;
+    private int ThroughFlushInterval = 1000 * 10;
 
     private int minCommitPages = 4;
     private int commitInterval = 200;
-    private int commitAllInterval = 200;
+    private int ThroughCommitInterval = 200;
 
 }
