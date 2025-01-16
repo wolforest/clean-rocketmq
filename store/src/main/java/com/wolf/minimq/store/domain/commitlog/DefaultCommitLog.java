@@ -20,6 +20,7 @@ import com.wolf.minimq.store.domain.commitlog.flush.FlushManager;
 import com.wolf.minimq.store.domain.commitlog.vo.EnqueueThreadLocal;
 import com.wolf.minimq.store.domain.commitlog.vo.InsertContext;
 import com.wolf.minimq.store.infra.memory.CLibrary;
+import java.nio.ByteBuffer;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -65,7 +66,8 @@ public class DefaultCommitLog implements CommitLog {
             MappedFile mappedFile = getMappedFile(context.getEncoder().getMessageLength());
             assignOffset(messageBO, mappedFile);
 
-            InsertResult insertResult = mappedFile.insert(context.getEncoder().encode());
+            ByteBuffer messageBuffer = context.getEncoder().encode();
+            InsertResult insertResult = mappedFile.insert(messageBuffer);
             handleInsertError(insertResult);
 
             return flushManager.flush(insertResult, messageBO);
