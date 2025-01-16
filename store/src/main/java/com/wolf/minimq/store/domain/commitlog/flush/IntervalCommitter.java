@@ -1,25 +1,25 @@
 package com.wolf.minimq.store.domain.commitlog.flush;
 
 import com.wolf.minimq.domain.config.CommitLogConfig;
-import com.wolf.minimq.domain.model.checkpoint.CheckPoint;
 import com.wolf.minimq.domain.service.store.infra.MappedFileQueue;
-import com.wolf.minimq.store.domain.commitlog.vo.GroupCommitRequest;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class IntervalCommitter extends Flusher {
-    private static final long FLUSH_JOIN_TIME = 5 * 60 * 1000;
-
-    private final CommitLogConfig commitLogConfig;
+    private final CommitLogConfig config;
     private final MappedFileQueue mappedFileQueue;
-    private final CheckPoint checkPoint;
+    private final Flusher flusher;
+
+    private long lastCommitTime = 0;
 
     public IntervalCommitter(
-        CommitLogConfig commitLogConfig,
+        CommitLogConfig config,
         MappedFileQueue mappedFileQueue,
-        CheckPoint checkPoint) {
+        Flusher flusher) {
 
-        this.commitLogConfig = commitLogConfig;
+        this.config = config;
         this.mappedFileQueue = mappedFileQueue;
-        this.checkPoint = checkPoint;
+        this.flusher = flusher;
     }
 
     @Override
@@ -28,14 +28,47 @@ public class IntervalCommitter extends Flusher {
     }
 
     @Override
-    public long getJoinTime() {
-        return FLUSH_JOIN_TIME;
-    }
-
-    @Override
     public void run() {
-
+        while (!this.isStopped()) {
+            commit();
+        }
+        forceCommit();
     }
 
+    private void commit() {
+        int minCommitPages = getMinCommitPages();
+        try {
+            boolean result = mappedFileQueue.commit(minCommitPages);
+            if (!result) {
+                flusher.wakeup();
+            }
+
+            await(config.getCommitInterval());
+        } catch (Throwable e) {
+            log.error("{} Commit error", getServiceName(), e);
+        }
+    }
+
+    private int getMinCommitPages() {
+        int minPages = config.getMinCommitPages();
+        long now = System.currentTimeMillis();
+        if (now - lastCommitTime >= config.getThroughCommitInterval()) {
+            lastCommitTime = now;
+            minPages = 0;
+        }
+
+        return minPages;
+    }
+
+    private void forceCommit() {
+        boolean result = false;
+        for (int i = 0; i < RETRY_TIMES && !result; i++) {
+            result = mappedFileQueue.commit(0);
+
+            String status = result ? "OK" : "Not OK";
+            log.info("{} service shutdown, retry {} times {}",
+                this.getServiceName(), i + 1, status);
+        }
+    }
 
 }

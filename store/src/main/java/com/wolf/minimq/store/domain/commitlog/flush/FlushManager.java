@@ -19,11 +19,9 @@ import java.util.concurrent.CompletableFuture;
  *  - StoreCheckPoint
  */
 public class FlushManager implements Lifecycle {
-    private State state = State.INITIALIZING;
+    private State state = State.RUNNING;
 
     private final CommitLogConfig commitLogConfig;
-    private final CheckPoint checkPoint;
-    private final MappedFileQueue mappedFileQueue;
 
     private final Flusher commitService;
     private final Flusher flusher;
@@ -34,17 +32,16 @@ public class FlushManager implements Lifecycle {
         MappedFileQueue mappedFileQueue,
         CheckPoint checkPoint) {
         this.commitLogConfig = commitLogConfig;
-        this.checkPoint = checkPoint;
-        this.mappedFileQueue = mappedFileQueue;
 
         this.flushWatcher = new FlushWatcher();
-        this.commitService = new IntervalCommitter(commitLogConfig, mappedFileQueue, checkPoint);
 
         if (FlushType.SYNC.equals(commitLogConfig.getFlushType())) {
             this.flusher = new GroupFlusher(mappedFileQueue, checkPoint);
         } else {
             this.flusher = new IntervalFlusher(commitLogConfig, mappedFileQueue, checkPoint);
         }
+
+        this.commitService = new IntervalCommitter(commitLogConfig, mappedFileQueue, flusher);
     }
 
     public InsertFuture flush(InsertResult insertResult, MessageBO messageBO) {
