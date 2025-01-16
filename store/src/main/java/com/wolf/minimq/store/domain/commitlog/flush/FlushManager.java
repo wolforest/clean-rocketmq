@@ -68,13 +68,14 @@ public class FlushManager implements Lifecycle {
     }
 
     private InsertFuture asyncFlush(InsertResult insertResult) {
+        flusher.setMaxOffset(insertResult.getWroteOffset());
+
         if (commitLogConfig.isEnableWriteCache()) {
-            commitService.setMaxOffset(insertResult.getWroteOffset());
             commitService.wakeup();
         } else {
-            flusher.setMaxOffset(insertResult.getWroteOffset());
             flusher.wakeup();
         }
+
         return InsertFuture.success(insertResult);
     }
 
