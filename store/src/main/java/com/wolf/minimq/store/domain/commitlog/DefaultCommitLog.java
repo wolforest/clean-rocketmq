@@ -4,7 +4,6 @@ import com.wolf.common.util.encrypt.HashUtil;
 import com.wolf.minimq.domain.config.CommitLogConfig;
 import com.wolf.minimq.domain.config.MessageConfig;
 import com.wolf.minimq.domain.enums.EnqueueStatus;
-import com.wolf.minimq.domain.enums.InsertStatus;
 import com.wolf.minimq.domain.enums.MessageVersion;
 import com.wolf.minimq.domain.exception.EnqueueException;
 import com.wolf.minimq.domain.model.dto.InsertFuture;
@@ -12,7 +11,6 @@ import com.wolf.minimq.domain.model.dto.InsertResult;
 import com.wolf.minimq.domain.model.dto.SelectedMappedBuffer;
 import com.wolf.minimq.domain.service.store.infra.MappedFile;
 import com.wolf.minimq.domain.utils.MessageDecoder;
-import com.wolf.minimq.domain.utils.MessageEncoder;
 import com.wolf.minimq.domain.utils.lock.CommitLogLock;
 import com.wolf.minimq.domain.utils.lock.CommitLogReentrantLock;
 import com.wolf.minimq.domain.service.store.domain.CommitLog;
@@ -70,7 +68,7 @@ public class DefaultCommitLog implements CommitLog {
             InsertResult insertResult = mappedFile.insert(context.getEncoder().encode());
             handleInsertError(insertResult);
 
-            return handleFlush(insertResult, context);
+            return flushManager.flush(insertResult, messageBO);
         } catch (EnqueueException messageException) {
             return InsertFuture.failure(messageException.getStatus());
         } finally {
@@ -162,11 +160,7 @@ public class DefaultCommitLog implements CommitLog {
         return mappedFileQueue.getUnFlushedSize();
     }
 
-
-
-
-
-    private void initLocalEncoder() {
+   private void initLocalEncoder() {
         localEncoder = ThreadLocal.withInitial(
             () -> new EnqueueThreadLocal(messageConfig)
         );
@@ -213,10 +207,5 @@ public class DefaultCommitLog implements CommitLog {
             default -> throw new EnqueueException(EnqueueStatus.UNKNOWN_ERROR);
         }
     }
-
-    private InsertFuture handleFlush(InsertResult insertResult, InsertContext context) {
-        return flushManager.flush(insertResult, context.getMessageBO());
-    }
-
 
 }
