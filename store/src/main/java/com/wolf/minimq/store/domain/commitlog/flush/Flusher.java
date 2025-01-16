@@ -13,5 +13,7 @@ public abstract class Flusher extends ServiceThread {
         }
     }
 
-    abstract void addRequest(GroupCommitRequest request);
+    public void addRequest(GroupCommitRequest request) {
+
+    }
 }

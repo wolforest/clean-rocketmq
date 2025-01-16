@@ -33,10 +33,6 @@ public class IntervalCommitter extends Flusher {
     }
 
     @Override
-    void addRequest(GroupCommitRequest request) {
-    }
-
-    @Override
     public void run() {
 
     }

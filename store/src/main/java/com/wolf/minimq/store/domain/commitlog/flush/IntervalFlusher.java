@@ -3,7 +3,6 @@ package com.wolf.minimq.store.domain.commitlog.flush;
 import com.wolf.minimq.domain.config.CommitLogConfig;
 import com.wolf.minimq.domain.model.checkpoint.CheckPoint;
 import com.wolf.minimq.domain.service.store.infra.MappedFileQueue;
-import com.wolf.minimq.store.domain.commitlog.vo.GroupCommitRequest;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -34,10 +33,6 @@ public class IntervalFlusher extends Flusher {
     @Override
     public long getJoinTime() {
         return FLUSH_JOIN_TIME;
-    }
-
-    @Override
-    void addRequest(GroupCommitRequest request) {
     }
 
     @Override
