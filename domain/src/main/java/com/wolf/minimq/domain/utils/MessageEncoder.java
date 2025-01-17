@@ -2,6 +2,7 @@ package com.wolf.minimq.domain.utils;
 
 import com.wolf.minimq.domain.config.MessageConfig;
 import com.wolf.minimq.domain.enums.EnqueueStatus;
+import com.wolf.minimq.domain.enums.MessageVersion;
 import com.wolf.minimq.domain.exception.EnqueueException;
 import com.wolf.minimq.domain.model.bo.MessageBO;
 import io.netty.buffer.ByteBuf;
@@ -42,7 +43,7 @@ public class MessageEncoder {
         byte[] topic = messageBO.getTopic().getBytes(StandardCharsets.UTF_8);
         int topicLen = topic.length;
         int bodyLen = messageBO.getBody().length;
-        this.messageLength = MessageUtils.calculateMessageLength(
+        this.messageLength = calculateMessageLength(
             messageBO.getVersion(), bodyLen, topicLen, propertiesLen
         );
 
@@ -55,5 +56,30 @@ public class MessageEncoder {
 
     private ByteBuffer getByteBuffer() {
         return this.buffer.nioBuffer(0, this.messageLength);
+    }
+
+    private int calculateMessageLength(MessageVersion messageVersion,
+        int bodyLength, int topicLength, int propertiesLength) {
+
+        int bornHostLength = 8;
+        int storeHostAddressLength = 8;
+
+        return 4 //TOTAL_SIZE
+            + 4 //MAGIC_CODE
+            + 4 //BODY_CRC
+            + 4 //QUEUE_ID
+            + 4 //FLAG
+            + 8 //QUEUE_OFFSET
+            + 8 //COMMITLOG_OFFSET
+            + 4 //SYSFLAG
+            + 8 //BORN_TIMESTAMP
+            + bornHostLength //BORN_HOST
+            + 8 //STORE_TIMESTAMP
+            + storeHostAddressLength //STORE_HOST_ADDRESS
+            + 4 //RECONSUME_TIMES
+            + 8 //Prepared Transaction Offset
+            + 4 + bodyLength //BODY
+            + messageVersion.getTopicLengthSize() + topicLength //TOPIC
+            + 2 + propertiesLength; //propertiesLength
     }
 }

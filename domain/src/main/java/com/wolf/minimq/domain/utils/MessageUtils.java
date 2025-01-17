@@ -1,30 +1,73 @@
 package com.wolf.minimq.domain.utils;
 
-import com.wolf.minimq.domain.enums.MessageVersion;
+import com.wolf.common.util.lang.StringUtil;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MessageUtils {
-    public static int calculateMessageLength(MessageVersion messageVersion,
-        int bodyLength, int topicLength, int propertiesLength) {
+    public static final char NAME_VALUE_SEPARATOR = 1;
+    public static final char PROPERTY_SEPARATOR = 2;
 
-        int bornHostLength = 8;
-        int storeHostAddressLength = 8;
+    public static String propertiesToString(Map<String, String> properties) {
+        if (properties == null) {
+            return "";
+        }
 
-        return 4 //TOTAL_SIZE
-            + 4 //MAGIC_CODE
-            + 4 //BODY_CRC
-            + 4 //QUEUE_ID
-            + 4 //FLAG
-            + 8 //QUEUE_OFFSET
-            + 8 //COMMITLOG_OFFSET
-            + 4 //SYSFLAG
-            + 8 //BORN_TIMESTAMP
-            + bornHostLength //BORN_HOST
-            + 8 //STORE_TIMESTAMP
-            + storeHostAddressLength //STORE_HOST_ADDRESS
-            + 4 //RECONSUME_TIMES
-            + 8 //Prepared Transaction Offset
-            + 4 + bodyLength //BODY
-            + messageVersion.getTopicLengthSize() + topicLength //TOPIC
-            + 2 + propertiesLength; //propertiesLength
+        int len = 0;
+        for (final Map.Entry<String, String> entry : properties.entrySet()) {
+            final String name = entry.getKey();
+            final String value = entry.getValue();
+            if (value == null) {
+                continue;
+            }
+            if (name != null) {
+                len += name.length();
+            }
+            len += value.length();
+            len += 2; // separator
+        }
+
+        StringBuilder sb = new StringBuilder(len);
+        for (final Map.Entry<String, String> entry : properties.entrySet()) {
+            final String name = entry.getKey();
+            final String value = entry.getValue();
+
+            if (value == null) {
+                continue;
+            }
+            sb.append(name);
+            sb.append(NAME_VALUE_SEPARATOR);
+            sb.append(value);
+            sb.append(PROPERTY_SEPARATOR);
+        }
+        return sb.toString();
     }
+
+    public static Map<String, String> stringToProperties(final String properties) {
+        Map<String, String> map = new HashMap<>(128);
+        if (StringUtil.isBlank(properties)) {
+            return map;
+        }
+
+        int len = properties.length();
+        int index = 0;
+        while (index < len) {
+            int newIndex = properties.indexOf(PROPERTY_SEPARATOR, index);
+            if (newIndex < 0) {
+                newIndex = len;
+            }
+            if (newIndex - index >= 3) {
+                int kvSepIndex = properties.indexOf(NAME_VALUE_SEPARATOR, index);
+                if (kvSepIndex > index && kvSepIndex < newIndex - 1) {
+                    String k = properties.substring(index, kvSepIndex);
+                    String v = properties.substring(kvSepIndex + 1, newIndex);
+                    map.put(k, v);
+                }
+            }
+            index = newIndex + 1;
+        }
+
+        return map;
+    }
+
 }
