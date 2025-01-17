@@ -37,8 +37,12 @@ public class MessageEncoder {
 
     public ByteBuffer encode() {
 
-        byte[] properties = null;
-        int propertiesLen = 0;
+        String propertiesString = MessageUtils.propertiesToString(messageBO.getProperties());
+        byte[] properties = propertiesString.getBytes(StandardCharsets.UTF_8);
+        int propertiesLen = properties.length;
+        if (propertiesLen > Short.MAX_VALUE) {
+            throw new EnqueueException(EnqueueStatus.PROPERTIES_SIZE_EXCEEDED);
+        }
 
         byte[] topic = messageBO.getTopic().getBytes(StandardCharsets.UTF_8);
         int topicLen = topic.length;
