@@ -12,7 +12,7 @@ public class BrokerConfig implements Serializable {
     private long grpcShutdownTimeout = 30;
     private int grpcBossThreadNum = 1;
     private int grpcWorkerThreadNum = PROCESSOR_NUMBER * 2;
-    private int grpcThreadPoolNums = 16 + PROCESSOR_NUMBER * 2;
-    private int grpcThreadPoolQueueCapacity = 100000;
+    private int grpcBusinessThreadNum = 16 + PROCESSOR_NUMBER * 2;
+    private int grpcBusinessQueueCapacity = 100000;
 
 }
