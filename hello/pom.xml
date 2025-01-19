@@ -21,6 +21,18 @@
             <groupId>com.wolf</groupId>
             <artifactId>common</artifactId>
         </dependency>
+
+        <dependency>
+            <artifactId>wolf-starter-grpc</artifactId>
+            <groupId>com.wolf.starter</groupId>
+        </dependency>
+
+        <!-- 用于代码演示 -->
+        <dependency>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java</artifactId>
+            <version>4.29.3</version>
+        </dependency>
     </dependencies>
 
 </project>
