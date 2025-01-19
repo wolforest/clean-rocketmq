@@ -1,4 +1,4 @@
-package com.wolf.minimq.broker.server;
+package com.wolf.minimq.broker.server.grpc;
 
 import com.wolf.common.convention.service.Lifecycle;
 
