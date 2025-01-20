@@ -36,7 +36,7 @@ import io.grpc.stub.StreamObserver;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class MessageServiceImpl extends MessagingServiceGrpc.MessagingServiceImplBase {
+public class MessageService extends MessagingServiceGrpc.MessagingServiceImplBase {
     @Override
     public void queryRoute(QueryRouteRequest request, StreamObserver<QueryRouteResponse> responseObserver) {
     }
