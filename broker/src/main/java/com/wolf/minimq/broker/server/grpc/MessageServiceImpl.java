@@ -32,7 +32,6 @@ import apache.rocketmq.v2.SendMessageResponse;
 import apache.rocketmq.v2.TelemetryCommand;
 import apache.rocketmq.v2.UpdateOffsetRequest;
 import apache.rocketmq.v2.UpdateOffsetResponse;
-import io.grpc.stub.ServerCalls;
 import io.grpc.stub.StreamObserver;
 import lombok.extern.slf4j.Slf4j;
 
