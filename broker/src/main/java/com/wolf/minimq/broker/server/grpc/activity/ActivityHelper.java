@@ -1,4 +1,4 @@
-package com.wolf.minimq.broker.server.grpc;
+package com.wolf.minimq.broker.server.grpc.activity;
 
 import apache.rocketmq.v2.Status;
 import com.wolf.minimq.broker.server.RequestContext;
