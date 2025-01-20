@@ -7,6 +7,7 @@ import com.wolf.common.convention.service.Lifecycle;
 import com.wolf.common.lang.concurrent.ThreadPoolFactory;
 import com.wolf.minimq.broker.api.ProducerController;
 import com.wolf.minimq.broker.server.RequestContext;
+import com.wolf.minimq.broker.server.grpc.ActivityHelper;
 import com.wolf.minimq.domain.config.BrokerConfig;
 import io.grpc.stub.StreamObserver;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -24,11 +25,29 @@ public class ProducerActivity implements Lifecycle {
 
     public void produce(SendMessageRequest request, StreamObserver<SendMessageResponse> responseObserver) {
         RequestContext context = RequestContext.create();
-        Function<Status, SendMessageResponse> statusToResponse =
-            status -> SendMessageResponse.newBuilder()
-                .setStatus(status)
-                .build();
+        Function<Status, SendMessageResponse> statusToResponse = statusToResponse();
+        Runnable task = getTask(context, request, responseObserver);
 
+        try {
+            ActivityHelper.submit(context, request, responseObserver, executor, task, statusToResponse);
+        } catch (Throwable t) {
+            ActivityHelper.writeResponse(context, request, null, executor, t, responseObserver, statusToResponse);
+        }
+    }
+
+    private Runnable getTask(RequestContext context, SendMessageRequest request, StreamObserver<SendMessageResponse> responseObserver) {
+        return () -> {
+            producerController.produce(context, request)
+                .whenComplete((response, throwable) -> {
+                    ActivityHelper.writeResponse(context, request, response, executor, throwable, responseObserver, statusToResponse());
+                });
+        };
+    }
+
+    private Function<Status, SendMessageResponse> statusToResponse() {
+        return status -> SendMessageResponse.newBuilder()
+            .setStatus(status)
+            .build();
     }
 
     @Override
