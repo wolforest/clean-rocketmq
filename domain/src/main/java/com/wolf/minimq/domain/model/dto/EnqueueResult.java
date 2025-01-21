@@ -15,8 +15,20 @@ public class EnqueueResult implements Serializable {
     private EnqueueStatus status;
     private InsertResult insertResult;
 
+    private String messageId;
+    private String transactionId;
+    private String regionId;
+
+    private long queueOffset;
+    private boolean enableTrace = true;
+
     public EnqueueResult(EnqueueStatus status) {
         this.status = status;
+    }
+
+    public EnqueueResult(EnqueueStatus status, InsertResult insertResult) {
+        this.status = status;
+        this.insertResult = insertResult;
     }
 
     public boolean isSuccess() {
