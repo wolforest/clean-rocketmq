@@ -8,6 +8,7 @@ import com.wolf.common.lang.concurrent.ThreadPoolFactory;
 import com.wolf.minimq.broker.api.ProducerController;
 import com.wolf.minimq.broker.server.RequestContext;
 import com.wolf.minimq.domain.config.BrokerConfig;
+import com.wolf.minimq.domain.model.bo.MessageBO;
 import io.grpc.stub.StreamObserver;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -36,7 +37,8 @@ public class ProducerActivity implements Lifecycle {
 
     private Runnable getTask(RequestContext context, SendMessageRequest request, StreamObserver<SendMessageResponse> responseObserver) {
         return () -> {
-            producerController.produce(context, request)
+            MessageBO messageBO = new MessageBO();
+            producerController.produce(context, messageBO)
                 .whenComplete((response, throwable) -> {
                     ActivityHelper.writeResponse(context, request, response, executor, throwable, responseObserver, statusToResponse());
                 });

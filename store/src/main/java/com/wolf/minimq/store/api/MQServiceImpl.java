@@ -6,53 +6,51 @@ import com.wolf.minimq.domain.model.dto.GetResult;
 import com.wolf.minimq.domain.service.store.api.MQService;
 import com.wolf.minimq.domain.model.dto.EnqueueResult;
 import com.wolf.minimq.domain.model.bo.MessageBO;
-import com.wolf.minimq.domain.service.store.domain.MessageQueue;
-import com.wolf.minimq.store.domain.mq.DefaultMessageQueue;
-import com.wolf.minimq.store.server.StoreContext;
+import com.wolf.minimq.domain.service.store.domain.MessageStore;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public class MQServiceImpl implements MQService {
     private final MessageConfig messageConfig;
-    private final MessageQueue messageQueue;
+    private final MessageStore messageStore;
 
-    public MQServiceImpl(MessageConfig messageConfig, MessageQueue messageQueue) {
+    public MQServiceImpl(MessageConfig messageConfig, MessageStore messageStore) {
         this.messageConfig = messageConfig;
-        this.messageQueue = messageQueue;
+        this.messageStore = messageStore;
     }
 
     @Override
     public EnqueueResult enqueue(MessageBO messageBO) {
-        return messageQueue.enqueue(messageBO);
+        return messageStore.enqueue(messageBO);
     }
 
     @Override
     public CompletableFuture<EnqueueResult> enqueueAsync(MessageBO messageBO) {
-        return messageQueue.enqueueAsync(messageBO);
+        return messageStore.enqueueAsync(messageBO);
     }
 
     @Override
     public GetResult get(String topic, int queueId, long offset) {
-        return messageQueue.get(topic, queueId, offset);
+        return messageStore.get(topic, queueId, offset);
     }
 
     @Override
     public GetResult get(String topic, int queueId, long offset, int num) {
-        return messageQueue.get(topic, queueId, offset, num);
+        return messageStore.get(topic, queueId, offset, num);
     }
 
     @Override
     public GetResult get(GetRequest request) {
-        return messageQueue.get(request);
+        return messageStore.get(request);
     }
 
     @Override
     public MessageBO getMessage(String topic, int queueId, long offset) {
-        return messageQueue.getMessage(topic, queueId, offset);
+        return messageStore.getMessage(topic, queueId, offset);
     }
 
     @Override
     public List<MessageBO> getMessage(String topic, int queueId, long offset, int num) {
-        return messageQueue.getMessage(topic, queueId, offset, num);
+        return messageStore.getMessage(topic, queueId, offset, num);
     }
 }

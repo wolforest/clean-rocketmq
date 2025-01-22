@@ -7,7 +7,7 @@ import com.wolf.minimq.domain.model.dto.GetResult;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-public interface MessageQueue {
+public interface MessageStore {
     EnqueueResult enqueue(MessageBO messageBO);
     CompletableFuture<EnqueueResult> enqueueAsync(MessageBO messageBO);
 

@@ -18,7 +18,7 @@ public class ActivityHelper {
     public static <REQ, RESP> void submit(RequestContext context, REQ request, StreamObserver<RESP> responseObserver, ExecutorService executor, Runnable task, Function<Status, RESP> statusToResponse) {
     }
 
-    public static <REQ, RESP> void writeResponse(RequestContext context, REQ request, RESP response, ExecutorService executor, Throwable t, StreamObserver<RESP> responseObserver, Function<Status, RESP> statusToResponse) {
+    public static <REQ, RESP> void writeResponse(RequestContext context, REQ request, Object response, ExecutorService executor, Throwable t, StreamObserver<RESP> responseObserver, Function<Status, RESP> statusToResponse) {
 
     }
 

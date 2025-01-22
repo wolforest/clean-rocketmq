@@ -5,7 +5,7 @@ import com.wolf.minimq.domain.service.store.api.MQService;
 import com.wolf.minimq.domain.service.store.domain.CommitLog;
 import com.wolf.minimq.domain.service.store.domain.ConsumeQueueStore;
 import com.wolf.minimq.domain.service.store.manager.MessageQueueManager;
-import com.wolf.minimq.domain.service.store.domain.MessageQueue;
+import com.wolf.minimq.domain.service.store.domain.MessageStore;
 import com.wolf.minimq.store.api.MQServiceImpl;
 import com.wolf.minimq.store.server.StoreContext;
 import lombok.extern.slf4j.Slf4j;
@@ -18,10 +18,10 @@ public class DefaultMessageQueueManager implements MessageQueueManager {
         CommitLog commitLog = StoreContext.getBean(CommitLog.class);
         ConsumeQueueStore consumeQueueStore = StoreContext.getBean(ConsumeQueueStore.class);
 
-        MessageQueue messageQueue = new DefaultMessageQueue(messageConfig, commitLog, consumeQueueStore);
-        StoreContext.register(messageQueue, MessageQueue.class);
+        MessageStore messageStore = new DefaultMessageStore(messageConfig, commitLog, consumeQueueStore);
+        StoreContext.register(messageStore, MessageStore.class);
 
-        MQService mqService = new MQServiceImpl(messageConfig, messageQueue);
+        MQService mqService = new MQServiceImpl(messageConfig, messageStore);
         StoreContext.registerAPI(mqService, MQService.class);
     }
 

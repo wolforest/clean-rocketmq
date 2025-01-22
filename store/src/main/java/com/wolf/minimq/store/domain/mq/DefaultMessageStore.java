@@ -10,7 +10,7 @@ import com.wolf.minimq.domain.model.dto.GetResult;
 import com.wolf.minimq.domain.utils.lock.ConsumeQueueLock;
 import com.wolf.minimq.domain.service.store.domain.CommitLog;
 import com.wolf.minimq.domain.service.store.domain.ConsumeQueueStore;
-import com.wolf.minimq.domain.service.store.domain.MessageQueue;
+import com.wolf.minimq.domain.service.store.domain.MessageStore;
 import com.wolf.minimq.domain.model.dto.EnqueueResult;
 import com.wolf.minimq.domain.model.bo.MessageBO;
 import com.wolf.minimq.store.server.StoreContext;
@@ -21,13 +21,13 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class DefaultMessageQueue implements MessageQueue {
+public class DefaultMessageStore implements MessageStore {
     private final ConsumeQueueLock consumeQueueLock;
     private final MessageConfig messageConfig;
     private final ConsumeQueueStore consumeQueueStore;
     private final CommitLog commitLog;
 
-    public DefaultMessageQueue(
+    public DefaultMessageStore(
         MessageConfig messageConfig,
         CommitLog commitLog,
         ConsumeQueueStore consumeQueueStore) {
