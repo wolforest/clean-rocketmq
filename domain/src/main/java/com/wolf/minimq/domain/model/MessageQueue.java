@@ -1,5 +1,6 @@
 package com.wolf.minimq.domain.model;
 
+import com.wolf.minimq.domain.enums.MessageType;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,6 +15,9 @@ public class MessageQueue implements Comparable<MessageQueue>, Serializable {
     private String broker;
     private String topic;
     private int queueId;
+
+    private int permission;
+    private MessageType messageType;
 
     @Override
     public int compareTo(MessageQueue o) {
