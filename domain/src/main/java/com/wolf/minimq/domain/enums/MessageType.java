@@ -17,29 +17,21 @@
 
 package com.wolf.minimq.domain.enums;
 
+import lombok.Getter;
+
+@Getter
 public enum MessageType {
-    Normal_Msg("Normal"),
-    Trans_Msg_Half("Trans"),
-    Trans_msg_Commit("TransCommit"),
-    Delay_Msg("Delay"),
-    Order_Msg("Order");
+    UNSPECIFIED("UNSPECIFIED"),
+    NORMAL("NORMAL"),
+    FIFO("FIFO"),
+    DELAY("DELAY"),
+    TRANSACTION("TRANSACTION"),
+    MIXED("MIXED");
 
-    private final String shortName;
+    private final String value;
 
-    MessageType(String shortName) {
-        this.shortName = shortName;
+    MessageType(String value) {
+        this.value = value;
     }
 
-    public String getShortName() {
-        return shortName;
-    }
-
-    public static MessageType getByShortName(String shortName) {
-        for (MessageType msgType : MessageType.values()) {
-            if (msgType.getShortName().equals(shortName)) {
-                return msgType;
-            }
-        }
-        return Normal_Msg;
-    }
 }

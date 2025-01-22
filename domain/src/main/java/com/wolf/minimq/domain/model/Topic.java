@@ -16,11 +16,9 @@
  */
 package com.wolf.minimq.domain.model;
 
-import com.alibaba.fastjson2.JSON;
-import com.alibaba.fastjson2.TypeReference;
 import com.alibaba.fastjson2.annotation.JSONField;
 import com.wolf.minimq.domain.enums.TagType;
-import com.wolf.minimq.domain.enums.TopicType;
+import com.wolf.minimq.domain.enums.MessageType;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
@@ -66,20 +64,20 @@ public class Topic implements Serializable {
     private Map<String, String> attributes = new HashMap<>();
 
     @JSONField(serialize = false, deserialize = false)
-    public TopicType getTopicType() {
+    public MessageType getTopicType() {
         if (attributes == null) {
-            return TopicType.NORMAL;
+            return MessageType.NORMAL;
         }
         String content = attributes.get(MESSAGE_TYPE_KEY);
         if (content == null) {
-            return TopicType.NORMAL;
+            return MessageType.NORMAL;
         }
-        return TopicType.valueOf(content);
+        return MessageType.valueOf(content);
     }
 
     @JSONField(serialize = false, deserialize = false)
-    public void setTopicType(TopicType topicType) {
-        attributes.put(MESSAGE_TYPE_KEY, topicType.getValue());
+    public void setTopicType(MessageType messageType) {
+        attributes.put(MESSAGE_TYPE_KEY, messageType.getValue());
     }
 
     @Override
