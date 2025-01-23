@@ -7,7 +7,6 @@ import apache.rocketmq.v2.SendMessageResponse;
 import apache.rocketmq.v2.Status;
 import com.wolf.minimq.broker.api.ProducerController;
 import com.wolf.minimq.broker.server.vo.RequestContext;
-import com.wolf.minimq.domain.config.NetworkConfig;
 import com.wolf.minimq.domain.model.bo.MessageBO;
 import io.grpc.stub.StreamObserver;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -16,7 +15,6 @@ import lombok.Setter;
 
 public class ProducerActivity {
     private ThreadPoolExecutor executor;
-    private final NetworkConfig networkConfig;
     /**
      * inject by GrpcManager , while starting
      *  All controllers will be registered in BrokerContext
@@ -26,8 +24,7 @@ public class ProducerActivity {
     @Setter
     private ProducerController producerController;
 
-    public ProducerActivity(NetworkConfig networkConfig, ThreadPoolExecutor executor) {
-        this.networkConfig = networkConfig;
+    public ProducerActivity(ThreadPoolExecutor executor) {
         this.executor = executor;
     }
 

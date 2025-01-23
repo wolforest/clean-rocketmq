@@ -1,8 +1,12 @@
 package com.wolf.minimq.broker.server.grpc;
 
 import com.wolf.common.convention.service.Lifecycle;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class GrpcServer implements Lifecycle {
+
+
     @Override
     public void start() {
 
