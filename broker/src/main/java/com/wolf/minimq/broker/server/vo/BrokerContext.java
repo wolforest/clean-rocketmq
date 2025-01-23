@@ -1,4 +1,4 @@
-package com.wolf.minimq.broker.server;
+package com.wolf.minimq.broker.server.vo;
 
 import com.wolf.common.convention.container.ApplicationContext;
 

@@ -1,7 +1,7 @@
 package com.wolf.minimq.broker.server.grpc.activity;
 
 import apache.rocketmq.v2.Status;
-import com.wolf.minimq.broker.server.RequestContext;
+import com.wolf.minimq.broker.server.vo.RequestContext;
 import io.grpc.stub.StreamObserver;
 import java.util.concurrent.ExecutorService;
 import java.util.function.Function;

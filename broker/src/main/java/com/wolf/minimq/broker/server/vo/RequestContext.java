@@ -1,4 +1,4 @@
-package com.wolf.minimq.broker.server;
+package com.wolf.minimq.broker.server.vo;
 
 import io.netty.channel.Channel;
 import java.util.HashMap;
