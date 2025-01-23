@@ -5,7 +5,6 @@ import java.util.concurrent.ThreadPoolExecutor;
 public class ConsumerActivity {
     private ThreadPoolExecutor executor;
 
-    public ConsumerActivity(ThreadPoolExecutor executor) {
-        this.executor = executor;
+    public ConsumerActivity() {
     }
 }

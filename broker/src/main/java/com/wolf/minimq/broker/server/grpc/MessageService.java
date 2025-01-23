@@ -32,13 +32,31 @@ import apache.rocketmq.v2.SendMessageResponse;
 import apache.rocketmq.v2.TelemetryCommand;
 import apache.rocketmq.v2.UpdateOffsetRequest;
 import apache.rocketmq.v2.UpdateOffsetResponse;
+import com.wolf.minimq.broker.server.grpc.activity.ConsumerActivity;
 import com.wolf.minimq.broker.server.grpc.activity.ProducerActivity;
+import com.wolf.minimq.broker.server.grpc.activity.RouteActivity;
+import com.wolf.minimq.broker.server.grpc.activity.TransactionActivity;
 import io.grpc.stub.StreamObserver;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class MessageService extends MessagingServiceGrpc.MessagingServiceImplBase {
-    private ProducerActivity producerActivity;
+    private final ProducerActivity producerActivity;
+    private final RouteActivity routeActivity;
+    private final ConsumerActivity consumerActivity;
+    private final TransactionActivity transactionActivity;
+
+    public MessageService(
+        RouteActivity routeActivity,
+        ProducerActivity producerActivity,
+        ConsumerActivity consumerActivity,
+        TransactionActivity transactionActivity) {
+
+        this.routeActivity = routeActivity;
+        this.producerActivity = producerActivity;
+        this.consumerActivity = consumerActivity;
+        this.transactionActivity = transactionActivity;
+    }
 
     @Override
     public void queryRoute(QueryRouteRequest request, StreamObserver<QueryRouteResponse> responseObserver) {

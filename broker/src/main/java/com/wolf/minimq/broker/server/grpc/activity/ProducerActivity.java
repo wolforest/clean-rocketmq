@@ -24,8 +24,7 @@ public class ProducerActivity {
     @Setter
     private ProducerController producerController;
 
-    public ProducerActivity(ThreadPoolExecutor executor) {
-        this.executor = executor;
+    public ProducerActivity() {
     }
 
     public void produce(SendMessageRequest request, StreamObserver<SendMessageResponse> responseObserver) {
@@ -59,5 +58,4 @@ public class ProducerActivity {
             .setStatus(status)
             .build();
     }
-
 }
