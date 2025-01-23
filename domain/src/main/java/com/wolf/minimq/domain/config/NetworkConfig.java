@@ -1,12 +1,14 @@
 package com.wolf.minimq.domain.config;
 
+import com.wolf.common.util.net.NetworkUtil;
 import java.io.Serializable;
 import lombok.Data;
 
 @Data
-public class BrokerConfig implements Serializable {
+public class NetworkConfig implements Serializable {
     private static final int PROCESSOR_NUMBER = Runtime.getRuntime().availableProcessors();
 
+    private String serverIp = NetworkUtil.getLocalAddress();
     private Integer grpcPort = 8081;
     private boolean enableGrpcEpoll = false;
 
