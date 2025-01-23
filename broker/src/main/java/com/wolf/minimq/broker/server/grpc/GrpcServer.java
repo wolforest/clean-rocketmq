@@ -59,6 +59,7 @@ public class GrpcServer implements Lifecycle {
     @Override
     public void shutdown() {
         try {
+            this.cleanup();
             this.businessThreadPool.shutdown();
 
             this.server.shutdown()

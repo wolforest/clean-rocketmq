@@ -1,16 +1,22 @@
-package com.wolf.minimq.broker.server;
+package com.wolf.minimq.broker;
 
 import com.wolf.common.convention.service.Lifecycle;
 import com.wolf.common.convention.service.LifecycleManager;
+import com.wolf.minimq.broker.server.ComponentRegister;
+import com.wolf.minimq.broker.server.ContextInitializer;
 
 /**
  * gateway of broker module
  *  - run()
  */
 public class Broker implements Lifecycle {
+
+    public static void main(String[] args) {
+        new Broker(args).start();
+    }
+
     private State state = State.INITIALIZING;
     private final String[] args;
-
     private LifecycleManager componentManager;
 
     public Broker(String[] args) {
