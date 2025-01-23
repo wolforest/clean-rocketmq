@@ -1,26 +1,34 @@
 package com.wolf.minimq.broker.server.grpc.activity;
 
+import apache.rocketmq.v2.ForwardMessageToDeadLetterQueueRequest;
+import apache.rocketmq.v2.ForwardMessageToDeadLetterQueueResponse;
 import apache.rocketmq.v2.SendMessageRequest;
 import apache.rocketmq.v2.SendMessageResponse;
 import apache.rocketmq.v2.Status;
-import com.wolf.common.convention.service.Lifecycle;
-import com.wolf.common.lang.concurrent.ThreadPoolFactory;
 import com.wolf.minimq.broker.api.ProducerController;
 import com.wolf.minimq.broker.server.vo.RequestContext;
 import com.wolf.minimq.domain.config.NetworkConfig;
 import com.wolf.minimq.domain.model.bo.MessageBO;
 import io.grpc.stub.StreamObserver;
 import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
+import lombok.Setter;
 
-public class ProducerActivity implements Lifecycle {
+public class ProducerActivity {
     private ThreadPoolExecutor executor;
     private final NetworkConfig networkConfig;
+    /**
+     * inject by GrpcManager , while starting
+     *  All controllers will be registered in BrokerContext
+     *      after related component initialized
+     *  GrpcManager will get controllers in BrokerContext
+     */
+    @Setter
     private ProducerController producerController;
 
-    public ProducerActivity(NetworkConfig networkConfig) {
+    public ProducerActivity(NetworkConfig networkConfig, ThreadPoolExecutor executor) {
         this.networkConfig = networkConfig;
+        this.executor = executor;
     }
 
     public void produce(SendMessageRequest request, StreamObserver<SendMessageResponse> responseObserver) {
@@ -33,6 +41,10 @@ public class ProducerActivity implements Lifecycle {
         } catch (Throwable t) {
             ActivityHelper.writeResponse(context, request, null, executor, t, responseObserver, statusToResponse);
         }
+    }
+
+    public void moveToDeadLetterQueue(ForwardMessageToDeadLetterQueueRequest request, StreamObserver<ForwardMessageToDeadLetterQueueResponse> responseObserver) {
+
     }
 
     private Runnable getTask(RequestContext context, SendMessageRequest request, StreamObserver<SendMessageResponse> responseObserver) {
@@ -51,35 +63,4 @@ public class ProducerActivity implements Lifecycle {
             .build();
     }
 
-    @Override
-    public void start() {
-
-    }
-
-    @Override
-    public void shutdown() {
-
-    }
-
-    @Override
-    public void initialize() {
-        executor = ThreadPoolFactory.create(
-            networkConfig.getProducerThreadNum(),
-            networkConfig.getProducerThreadNum(),
-            1,
-            TimeUnit.MINUTES,
-            "producer-activity",
-            networkConfig.getProducerQueueCapacity()
-        );
-    }
-
-    @Override
-    public void cleanup() {
-
-    }
-
-    @Override
-    public State getState() {
-        return State.RUNNING;
-    }
 }
