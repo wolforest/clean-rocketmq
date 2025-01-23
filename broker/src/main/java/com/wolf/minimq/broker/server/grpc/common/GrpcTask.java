@@ -1,4 +1,4 @@
-package com.wolf.minimq.broker.server.grpc;
+package com.wolf.minimq.broker.server.grpc.common;
 
 import com.wolf.minimq.broker.server.vo.RequestContext;
 import io.grpc.stub.StreamObserver;

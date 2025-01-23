@@ -3,6 +3,7 @@ package com.wolf.minimq.broker.server.grpc;
 import com.wolf.common.convention.service.Lifecycle;
 import com.wolf.common.lang.exception.SystemException;
 import io.grpc.Server;
+import io.grpc.netty.shaded.io.grpc.netty.NettyServerBuilder;
 import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
 
@@ -10,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 public class GrpcServer implements Lifecycle {
     private final Server server;
     private final long timeout;
+
+    private NettyServerBuilder serverBuilder;
 
     public GrpcServer(Server server, long timeout) {
         this.server = server;

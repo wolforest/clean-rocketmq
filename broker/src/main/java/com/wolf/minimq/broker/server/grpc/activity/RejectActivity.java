@@ -1,6 +1,6 @@
 package com.wolf.minimq.broker.server.grpc.activity;
 
-import com.wolf.minimq.broker.server.grpc.GrpcTask;
+import com.wolf.minimq.broker.server.grpc.common.GrpcTask;
 import java.util.concurrent.RejectedExecutionHandler;
 import java.util.concurrent.ThreadPoolExecutor;
 import lombok.extern.slf4j.Slf4j;
