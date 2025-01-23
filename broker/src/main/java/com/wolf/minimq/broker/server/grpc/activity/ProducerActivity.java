@@ -14,7 +14,7 @@ import java.util.function.Function;
 import lombok.Setter;
 
 public class ProducerActivity {
-    private ThreadPoolExecutor executor;
+    private final ThreadPoolExecutor executor;
     /**
      * inject by GrpcManager , while starting
      *  All controllers will be registered in BrokerContext
@@ -24,7 +24,9 @@ public class ProducerActivity {
     @Setter
     private ProducerController producerController;
 
-    public ProducerActivity() {
+
+    public ProducerActivity(ThreadPoolExecutor executor) {
+        this.executor = executor;
     }
 
     public void produce(SendMessageRequest request, StreamObserver<SendMessageResponse> responseObserver) {
