@@ -15,8 +15,8 @@ public class Broker implements Lifecycle {
         new Broker(args).start();
     }
 
-    private State state = State.INITIALIZING;
     private final String[] args;
+    private State state = State.INITIALIZING;
     private LifecycleManager componentManager;
 
     public Broker(String[] args) {
@@ -56,6 +56,6 @@ public class Broker implements Lifecycle {
 
     @Override
     public State getState() {
-        return null;
+        return state;
     }
 }
