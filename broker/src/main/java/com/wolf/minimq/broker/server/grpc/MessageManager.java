@@ -8,13 +8,13 @@ import com.wolf.minimq.broker.server.grpc.activity.ProducerActivity;
 import com.wolf.minimq.broker.server.grpc.activity.RejectActivity;
 import com.wolf.minimq.broker.server.grpc.activity.RouteActivity;
 import com.wolf.minimq.broker.server.grpc.activity.TransactionActivity;
-import com.wolf.minimq.domain.config.NetworkConfig;
+import com.wolf.minimq.domain.config.GrpcConfig;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import lombok.Getter;
 
 public class MessageManager implements Lifecycle {
-    private final NetworkConfig networkConfig;
+    private final GrpcConfig grpcConfig;
 
     @Getter
     private ClientActivity clientActivity;
@@ -38,8 +38,8 @@ public class MessageManager implements Lifecycle {
     protected ThreadPoolExecutor clientThreadPoolExecutor;
     protected ThreadPoolExecutor transactionThreadPoolExecutor;
 
-    public MessageManager(NetworkConfig networkConfig) {
-        this.networkConfig = networkConfig;
+    public MessageManager(GrpcConfig grpcConfig) {
+        this.grpcConfig = grpcConfig;
     }
 
     @Override
@@ -82,12 +82,12 @@ public class MessageManager implements Lifecycle {
 
     private void initClientActivity() {
         this.clientThreadPoolExecutor = ThreadPoolFactory.create(
-            networkConfig.getGrpcClientThreadNum(),
-            networkConfig.getGrpcClientThreadNum(),
+            grpcConfig.getGrpcClientThreadNum(),
+            grpcConfig.getGrpcClientThreadNum(),
             1,
             TimeUnit.MINUTES,
             "client-activity-thread-pool",
-            networkConfig.getGrpcClientQueueCapacity()
+            grpcConfig.getGrpcClientQueueCapacity()
         );
 
         this.clientThreadPoolExecutor.setRejectedExecutionHandler(rejectActivity);
@@ -99,12 +99,12 @@ public class MessageManager implements Lifecycle {
 
     private void initRouteActivity() {
         this.routeThreadPoolExecutor = ThreadPoolFactory.create(
-            networkConfig.getGrpcRouteThreadNum(),
-            networkConfig.getGrpcRouteThreadNum(),
+            grpcConfig.getGrpcRouteThreadNum(),
+            grpcConfig.getGrpcRouteThreadNum(),
             1,
             TimeUnit.MINUTES,
             "route-activity-thread-pool",
-            networkConfig.getGrpcRouteQueueCapacity()
+            grpcConfig.getGrpcRouteQueueCapacity()
         );
 
         this.routeThreadPoolExecutor.setRejectedExecutionHandler(rejectActivity);
@@ -116,12 +116,12 @@ public class MessageManager implements Lifecycle {
 
     private void initProducerActivity() {
         this.producerThreadPoolExecutor = ThreadPoolFactory.create(
-            networkConfig.getGrpcProducerThreadNum(),
-            networkConfig.getGrpcProducerThreadNum(),
+            grpcConfig.getGrpcProducerThreadNum(),
+            grpcConfig.getGrpcProducerThreadNum(),
             1,
             TimeUnit.MINUTES,
             "producer-activity-thread-pool",
-            networkConfig.getGrpcProducerQueueCapacity()
+            grpcConfig.getGrpcProducerQueueCapacity()
         );
 
         this.producerThreadPoolExecutor.setRejectedExecutionHandler(rejectActivity);
@@ -133,12 +133,12 @@ public class MessageManager implements Lifecycle {
 
     private void initConsumerActivity() {
         this.consumerThreadPoolExecutor = ThreadPoolFactory.create(
-            networkConfig.getGrpcConsumerThreadNum(),
-            networkConfig.getGrpcConsumerThreadNum(),
+            grpcConfig.getGrpcConsumerThreadNum(),
+            grpcConfig.getGrpcConsumerThreadNum(),
             1,
             TimeUnit.MINUTES,
             "consumer-activity-thread-pool",
-            networkConfig.getGrpcConsumerQueueCapacity()
+            grpcConfig.getGrpcConsumerQueueCapacity()
         );
 
         this.consumerThreadPoolExecutor.setRejectedExecutionHandler(rejectActivity);
@@ -150,12 +150,12 @@ public class MessageManager implements Lifecycle {
 
     private void initTransactionActivity() {
         this.transactionThreadPoolExecutor = ThreadPoolFactory.create(
-            networkConfig.getGrpcTransactionThreadNum(),
-            networkConfig.getGrpcTransactionThreadNum(),
+            grpcConfig.getGrpcTransactionThreadNum(),
+            grpcConfig.getGrpcTransactionThreadNum(),
             1,
             TimeUnit.MINUTES,
             "transaction-activity-thread-pool",
-            networkConfig.getGrpcTransactionQueueCapacity()
+            grpcConfig.getGrpcTransactionQueueCapacity()
         );
 
         this.transactionThreadPoolExecutor.setRejectedExecutionHandler(rejectActivity);

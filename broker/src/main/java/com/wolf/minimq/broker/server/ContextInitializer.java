@@ -3,7 +3,7 @@ package com.wolf.minimq.broker.server;
 import com.wolf.minimq.broker.server.vo.BrokerArgument;
 import com.wolf.minimq.domain.config.BrokerConfig;
 import com.wolf.minimq.domain.config.MessageConfig;
-import com.wolf.minimq.domain.config.NetworkConfig;
+import com.wolf.minimq.domain.config.GrpcConfig;
 import com.wolf.minimq.store.server.StoreContext;
 
 public class ContextInitializer {
@@ -26,7 +26,7 @@ public class ContextInitializer {
 
     private void initializeConfig() {
         StoreContext.register(new MessageConfig());
-        StoreContext.register(new NetworkConfig());
+        StoreContext.register(new GrpcConfig());
         StoreContext.register(new BrokerConfig());
     }
 

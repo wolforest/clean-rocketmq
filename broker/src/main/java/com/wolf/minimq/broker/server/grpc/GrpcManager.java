@@ -2,21 +2,20 @@ package com.wolf.minimq.broker.server.grpc;
 
 import com.wolf.common.convention.service.Lifecycle;
 import com.wolf.minimq.broker.server.vo.BrokerContext;
-import com.wolf.minimq.domain.config.NetworkConfig;
+import com.wolf.minimq.domain.config.BrokerConfig;
+import com.wolf.minimq.domain.config.GrpcConfig;
 
 public class GrpcManager implements Lifecycle {
-    private NetworkConfig networkConfig;
+    private GrpcConfig grpcConfig;
     private MessageManager messageManager;
     private MessageService messageService;
 
     @Override
     public void initialize() {
-        this.networkConfig = BrokerContext.getBean(NetworkConfig.class);
+        initConfig();
         initMessageService();
 
     }
-
-
 
     @Override
     public void start() {
@@ -38,8 +37,15 @@ public class GrpcManager implements Lifecycle {
         return State.RUNNING;
     }
 
+    private void initConfig() {
+        this.grpcConfig = BrokerContext.getBean(GrpcConfig.class);
+        BrokerConfig brokerConfig = BrokerContext.getBean(BrokerConfig.class);
+
+        this.grpcConfig.setGrpcPort(brokerConfig.getServerPort());
+    }
+
     private void initMessageService() {
-        this.messageManager = new MessageManager(networkConfig);
+        this.messageManager = new MessageManager(grpcConfig);
         messageManager.initialize();
         this.messageService = this.messageManager.getMessageService();
     }

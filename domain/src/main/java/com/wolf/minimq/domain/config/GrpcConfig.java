@@ -1,15 +1,14 @@
 package com.wolf.minimq.domain.config;
 
 import com.wolf.common.util.lang.SystemUtil;
-import com.wolf.common.util.net.NetworkUtil;
 import java.io.Serializable;
 import lombok.Data;
 
 @Data
-public class NetworkConfig implements Serializable {
-    private String serverIp = NetworkUtil.getLocalAddress();
-    private Integer grpcPort = 8081;
+public class GrpcConfig implements Serializable {
     private boolean enableGrpcEpoll = false;
+
+    private int grpcPort = 8081;
 
     private long grpcShutdownTimeout = 30;
     private int grpcBossThreadNum = 1;
@@ -19,6 +18,10 @@ public class NetworkConfig implements Serializable {
 
     // 5 seconds
     private int grpcRequestTimeout = 5000;
+    private int maxConnectionIdle = 120 * 1000;
+
+    private int maxMessageSize = 4 * 1024 * 1024;
+    private int maxInboundMessageSize = 130 * 1024 * 1024;
 
     private int grpcRouteThreadNum = SystemUtil.getProcessorNumber();
     private int grpcRouteQueueCapacity = 10000;
