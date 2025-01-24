@@ -3,6 +3,7 @@ package com.wolf.minimq.broker.server.grpc;
 import com.wolf.common.convention.service.Lifecycle;
 import com.wolf.common.lang.concurrent.ThreadPoolFactory;
 import com.wolf.common.lang.exception.SystemException;
+import com.wolf.minimq.broker.server.grpc.message.MessageService;
 import com.wolf.minimq.domain.config.GrpcConfig;
 import io.grpc.Server;
 import io.grpc.netty.shaded.io.grpc.netty.NettyServerBuilder;

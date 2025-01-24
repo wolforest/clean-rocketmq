@@ -1,6 +1,5 @@
-package com.wolf.minimq.broker.server.grpc;
+package com.wolf.minimq.broker.server.grpc.message;
 
-import com.wolf.common.convention.container.ApplicationContext;
 import com.wolf.common.convention.service.Lifecycle;
 import com.wolf.common.lang.concurrent.ThreadPoolFactory;
 import com.wolf.common.lang.exception.server.StartupException;
