@@ -16,11 +16,16 @@ import apache.rocketmq.v2.ReceiveMessageRequest;
 import apache.rocketmq.v2.ReceiveMessageResponse;
 import apache.rocketmq.v2.UpdateOffsetRequest;
 import apache.rocketmq.v2.UpdateOffsetResponse;
+import com.wolf.minimq.broker.api.ConsumerController;
 import io.grpc.stub.StreamObserver;
 import java.util.concurrent.ThreadPoolExecutor;
+import lombok.Setter;
 
 public class ConsumerActivity {
     private final ThreadPoolExecutor executor;
+
+    @Setter
+    private ConsumerController consumerController;
 
     public ConsumerActivity(ThreadPoolExecutor executor) {
         this.executor = executor;

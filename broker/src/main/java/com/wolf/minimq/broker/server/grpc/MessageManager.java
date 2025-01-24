@@ -3,6 +3,11 @@ package com.wolf.minimq.broker.server.grpc;
 import com.wolf.common.convention.container.ApplicationContext;
 import com.wolf.common.convention.service.Lifecycle;
 import com.wolf.common.lang.concurrent.ThreadPoolFactory;
+import com.wolf.common.lang.exception.server.StartupException;
+import com.wolf.minimq.broker.api.ConsumerController;
+import com.wolf.minimq.broker.api.ProducerController;
+import com.wolf.minimq.broker.api.RouteController;
+import com.wolf.minimq.broker.api.TransactionController;
 import com.wolf.minimq.broker.server.grpc.activity.ClientActivity;
 import com.wolf.minimq.broker.server.grpc.activity.ConsumerActivity;
 import com.wolf.minimq.broker.server.grpc.activity.ProducerActivity;
@@ -57,7 +62,10 @@ public class MessageManager implements Lifecycle {
 
     @Override
     public void start() {
-        ApplicationContext apiContext = BrokerContext.API;
+        injectRouteController();
+        injectProducerController();
+        injectConsumerController();
+        injectTransactionController();
     }
 
     @Override
@@ -76,9 +84,8 @@ public class MessageManager implements Lifecycle {
 
     @Override
     public State getState() {
-        return null;
+        return State.RUNNING;
     }
-
 
     private void initClientActivity() {
         this.clientThreadPoolExecutor = ThreadPoolFactory.create(
@@ -173,5 +180,37 @@ public class MessageManager implements Lifecycle {
             this.consumerActivity,
             this.transactionActivity
         );
+    }
+
+    private void injectProducerController() {
+        ProducerController producerController = BrokerContext.getAPI(ProducerController.class);
+        if (producerController == null) {
+            throw new StartupException("producer controller is null");
+        }
+        this.producerActivity.setProducerController(producerController);
+    }
+
+    private void injectConsumerController() {
+        ConsumerController consumerController = BrokerContext.getAPI(ConsumerController.class);
+        if (consumerController == null) {
+            throw new StartupException("consumer controller is null");
+        }
+        this.consumerActivity.setConsumerController(consumerController);
+    }
+
+    private void injectTransactionController() {
+        TransactionController transactionController = BrokerContext.getAPI(TransactionController.class);
+        if (transactionController == null) {
+            throw new StartupException("transaction controller is null");
+        }
+        this.transactionActivity.setTransactionController(transactionController);
+    }
+
+    private void injectRouteController() {
+        RouteController routeController = BrokerContext.getAPI(RouteController.class);
+        if (routeController == null) {
+            throw new StartupException("route controller is null");
+        }
+        this.routeActivity.setRouteController(routeController);
     }
 }
