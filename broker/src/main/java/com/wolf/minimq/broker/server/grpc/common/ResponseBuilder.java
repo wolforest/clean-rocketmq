@@ -31,11 +31,13 @@ public class ResponseBuilder {
     protected static volatile ResponseBuilder instance;
 
     public static ResponseBuilder getInstance() {
-        if (instance == null) {
-            synchronized (INSTANCE_CREATE_LOCK) {
-                if (instance == null) {
-                    instance = new ResponseBuilder();
-                }
+        if (instance != null) {
+            return instance;
+        }
+
+        synchronized (INSTANCE_CREATE_LOCK) {
+            if (instance == null) {
+                instance = new ResponseBuilder();
             }
         }
         return instance;

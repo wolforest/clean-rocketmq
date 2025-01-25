@@ -30,11 +30,13 @@ public class ResponseWriter {
     protected static volatile ResponseWriter instance;
 
     public static ResponseWriter getInstance() {
-        if (instance == null) {
-            synchronized (INSTANCE_CREATE_LOCK) {
-                if (instance == null) {
-                    instance = new ResponseWriter();
-                }
+        if (instance != null) {
+            return instance;
+        }
+
+        synchronized (INSTANCE_CREATE_LOCK) {
+            if (instance == null) {
+                instance = new ResponseWriter();
             }
         }
         return instance;
@@ -68,8 +70,7 @@ public class ResponseWriter {
     }
 
     public <T> boolean isCancelled(StreamObserver<T> observer) {
-        if (observer instanceof ServerCallStreamObserver) {
-            final ServerCallStreamObserver<T> serverCallStreamObserver = (ServerCallStreamObserver<T>) observer;
+        if (observer instanceof ServerCallStreamObserver<T> serverCallStreamObserver) {
             return serverCallStreamObserver.isCancelled();
         }
         return false;
