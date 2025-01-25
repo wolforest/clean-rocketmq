@@ -7,7 +7,7 @@ import com.wolf.minimq.broker.server.ContextInitializer;
 
 /**
  * gateway of broker module
- *  - run()
+ *  - main()
  */
 public class Broker implements Lifecycle {
 
@@ -27,6 +27,7 @@ public class Broker implements Lifecycle {
     public void initialize() {
         ContextInitializer.init(args);
         this.componentManager = ComponentRegister.register();
+        this.componentManager.initialize();
     }
 
     @Override
@@ -51,7 +52,7 @@ public class Broker implements Lifecycle {
 
     @Override
     public void cleanup() {
-
+        this.componentManager.cleanup();
     }
 
     @Override
