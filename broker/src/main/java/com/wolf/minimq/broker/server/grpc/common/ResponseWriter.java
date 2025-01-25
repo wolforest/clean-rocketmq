@@ -57,14 +57,15 @@ public class ResponseWriter {
             log.warn("client has cancelled the request. response to write: {}", response);
             return false;
         }
+
         try {
             observer.onNext(response);
-        } catch (StatusRuntimeException statusRuntimeException) {
-            if (Status.CANCELLED.equals(statusRuntimeException.getStatus())) {
+        } catch (StatusRuntimeException e) {
+            if (Status.CANCELLED.equals(e.getStatus())) {
                 log.warn("client has cancelled the request. response to write: {}", response);
                 return false;
             }
-            throw statusRuntimeException;
+            throw e;
         }
         return true;
     }

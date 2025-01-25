@@ -27,6 +27,13 @@
             <groupId>com.wolf.starter</groupId>
         </dependency>
 
+        <dependency>
+            <groupId>org.apache.rocketmq</groupId>
+            <artifactId>rocketmq-client-java</artifactId>
+            <version>5.0.7</version>
+        </dependency>
+
+
         <!-- 用于代码演示 -->
         <dependency>
             <groupId>com.google.protobuf</groupId>
