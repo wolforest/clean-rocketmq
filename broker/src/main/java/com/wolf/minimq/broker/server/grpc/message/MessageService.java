@@ -95,7 +95,7 @@ public class MessageService extends MessagingServiceGrpc.MessagingServiceImplBas
     public void forwardMessageToDeadLetterQueue(
         ForwardMessageToDeadLetterQueueRequest request,
         StreamObserver<ForwardMessageToDeadLetterQueueResponse> responseObserver) {
-        this.producerActivity.moveToDeadLetterQueue(request, responseObserver);
+        this.producerActivity.moveToDLQ(request, responseObserver);
     }
 
     @Override

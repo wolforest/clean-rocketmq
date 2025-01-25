@@ -31,7 +31,7 @@ public class ClientActivity {
     }
 
     public StreamObserver<TelemetryCommand> telemetry(StreamObserver<TelemetryCommand> responseObserver) {
-        return new StreamObserver<TelemetryCommand>() {
+        return new StreamObserver<>() {
             @Override
             public void onNext(TelemetryCommand command) {
                 responseObserver.onNext(command);

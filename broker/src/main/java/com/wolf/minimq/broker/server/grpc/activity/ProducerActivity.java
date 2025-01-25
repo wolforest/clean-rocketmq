@@ -2,8 +2,6 @@ package com.wolf.minimq.broker.server.grpc.activity;
 
 import apache.rocketmq.v2.ForwardMessageToDeadLetterQueueRequest;
 import apache.rocketmq.v2.ForwardMessageToDeadLetterQueueResponse;
-import apache.rocketmq.v2.QueryRouteRequest;
-import apache.rocketmq.v2.QueryRouteResponse;
 import apache.rocketmq.v2.SendMessageRequest;
 import apache.rocketmq.v2.SendMessageResponse;
 import apache.rocketmq.v2.Status;
@@ -43,7 +41,12 @@ public class ProducerActivity {
         }
     }
 
-    public void moveToDeadLetterQueue(ForwardMessageToDeadLetterQueueRequest request, StreamObserver<ForwardMessageToDeadLetterQueueResponse> responseObserver) {
+    /**
+     * move to dead letter queue
+     * @param request request
+     * @param responseObserver response
+     */
+    public void moveToDLQ(ForwardMessageToDeadLetterQueueRequest request, StreamObserver<ForwardMessageToDeadLetterQueueResponse> responseObserver) {
 
     }
 
