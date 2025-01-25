@@ -6,8 +6,6 @@ import apache.rocketmq.v2.ChangeInvisibleDurationRequest;
 import apache.rocketmq.v2.ChangeInvisibleDurationResponse;
 import apache.rocketmq.v2.GetOffsetRequest;
 import apache.rocketmq.v2.GetOffsetResponse;
-import apache.rocketmq.v2.PullMessageRequest;
-import apache.rocketmq.v2.PullMessageResponse;
 import apache.rocketmq.v2.QueryAssignmentRequest;
 import apache.rocketmq.v2.QueryAssignmentResponse;
 import apache.rocketmq.v2.QueryOffsetRequest;
@@ -29,9 +27,6 @@ public class ConsumerActivity {
 
     public ConsumerActivity(ThreadPoolExecutor executor) {
         this.executor = executor;
-    }
-
-    public void queryAssignment(QueryAssignmentRequest request, StreamObserver<QueryAssignmentResponse> responseObserver) {
     }
 
     public void receiveMessage(ReceiveMessageRequest request, StreamObserver<ReceiveMessageResponse> responseObserver) {

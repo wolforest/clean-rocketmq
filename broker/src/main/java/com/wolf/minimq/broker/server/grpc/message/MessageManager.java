@@ -5,7 +5,6 @@ import com.wolf.common.lang.concurrent.ThreadPoolFactory;
 import com.wolf.common.lang.exception.server.StartupException;
 import com.wolf.minimq.broker.api.ConsumerController;
 import com.wolf.minimq.broker.api.ProducerController;
-import com.wolf.minimq.broker.api.RouteController;
 import com.wolf.minimq.broker.api.TransactionController;
 import com.wolf.minimq.broker.server.grpc.activity.ClientActivity;
 import com.wolf.minimq.broker.server.grpc.activity.ConsumerActivity;
@@ -61,7 +60,6 @@ public class MessageManager implements Lifecycle {
 
     @Override
     public void start() {
-        injectRouteController();
         injectProducerController();
         injectConsumerController();
         injectTransactionController();
@@ -187,6 +185,7 @@ public class MessageManager implements Lifecycle {
             throw new StartupException("producer controller is null");
         }
         this.producerActivity.setProducerController(producerController);
+        this.routeActivity.setProducerController(producerController);
     }
 
     private void injectConsumerController() {
@@ -195,6 +194,7 @@ public class MessageManager implements Lifecycle {
             throw new StartupException("consumer controller is null");
         }
         this.consumerActivity.setConsumerController(consumerController);
+        this.routeActivity.setConsumerController(consumerController);
     }
 
     private void injectTransactionController() {
@@ -203,13 +203,5 @@ public class MessageManager implements Lifecycle {
             throw new StartupException("transaction controller is null");
         }
         this.transactionActivity.setTransactionController(transactionController);
-    }
-
-    private void injectRouteController() {
-        RouteController routeController = BrokerContext.getAPI(RouteController.class);
-        if (routeController == null) {
-            throw new StartupException("route controller is null");
-        }
-        this.routeActivity.setRouteController(routeController);
     }
 }

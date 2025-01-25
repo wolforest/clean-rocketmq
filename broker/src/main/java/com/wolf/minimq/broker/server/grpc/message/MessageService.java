@@ -60,7 +60,7 @@ public class MessageService extends MessagingServiceGrpc.MessagingServiceImplBas
 
     @Override
     public void queryRoute(QueryRouteRequest request, StreamObserver<QueryRouteResponse> responseObserver) {
-        routeActivity.queryRoute(request, responseObserver);
+        routeActivity.getRoute(request, responseObserver);
     }
 
     @Override
@@ -75,7 +75,7 @@ public class MessageService extends MessagingServiceGrpc.MessagingServiceImplBas
 
     @Override
     public void queryAssignment(QueryAssignmentRequest request, StreamObserver<QueryAssignmentResponse> responseObserver) {
-        consumerActivity.queryAssignment(request, responseObserver);
+        routeActivity.getAssignment(request, responseObserver);
     }
 
     @Override
