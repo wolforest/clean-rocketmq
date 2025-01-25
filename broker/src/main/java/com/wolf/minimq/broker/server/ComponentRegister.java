@@ -1,6 +1,9 @@
 package com.wolf.minimq.broker.server;
 
 import com.wolf.common.convention.service.LifecycleManager;
+import com.wolf.minimq.broker.domain.consumer.ConsumerManager;
+import com.wolf.minimq.broker.domain.producer.ProducerManager;
+import com.wolf.minimq.broker.domain.transaction.TransactionManager;
 import com.wolf.minimq.broker.infra.StoreManager;
 import com.wolf.minimq.broker.server.grpc.GrpcManager;
 import com.wolf.minimq.domain.service.store.manager.MetaManager;
@@ -18,10 +21,13 @@ public class ComponentRegister {
     }
 
     public LifecycleManager execute() {
-
         registerGrpc();
 
         registerStore();
+
+        registerTransaction();
+        registerProducer();
+        registerConsumer();
 
         return this.manager;
     }
@@ -33,6 +39,21 @@ public class ComponentRegister {
 
     private void registerStore() {
         StoreManager component = new StoreManager();
+        manager.register(component);
+    }
+
+    private void registerProducer() {
+        ProducerManager component = new ProducerManager();
+        manager.register(component);
+    }
+
+    private void registerConsumer() {
+        ConsumerManager component = new ConsumerManager();
+        manager.register(component);
+    }
+
+    private void registerTransaction() {
+        TransactionManager component = new TransactionManager();
         manager.register(component);
     }
 
