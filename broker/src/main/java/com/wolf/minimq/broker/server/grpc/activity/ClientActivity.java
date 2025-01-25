@@ -31,22 +31,7 @@ public class ClientActivity {
     }
 
     public StreamObserver<TelemetryCommand> telemetry(StreamObserver<TelemetryCommand> responseObserver) {
-        return new StreamObserver<>() {
-            @Override
-            public void onNext(TelemetryCommand command) {
-                responseObserver.onNext(command);
-            }
-
-            @Override
-            public void onCompleted() {
-                responseObserver.onCompleted();
-            }
-
-            @Override
-            public void onError(Throwable throwable) {
-                responseObserver.onError(throwable);
-            }
-        };
+        return responseObserver;
     }
 
     public void notifyClientTermination(NotifyClientTerminationRequest request, StreamObserver<NotifyClientTerminationResponse> responseObserver) {
