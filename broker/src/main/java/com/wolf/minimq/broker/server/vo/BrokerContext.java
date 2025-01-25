@@ -10,6 +10,10 @@ public class BrokerContext {
     public static final ApplicationContext API = new ApplicationContext();
     public static final ApplicationContext MONITOR = new ApplicationContext();
 
+    public static void registerContext(ApplicationContext context) {
+        APPLICATION.registerContext(context);
+    }
+
     public static void register(Object bean) {
         APPLICATION.register(bean);
     }

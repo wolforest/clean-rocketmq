@@ -1,5 +1,6 @@
 package com.wolf.minimq.store;
 
+import com.wolf.common.convention.container.ApplicationContext;
 import com.wolf.common.convention.service.Lifecycle;
 import com.wolf.common.convention.service.LifecycleManager;
 import com.wolf.minimq.domain.config.StoreConfig;
@@ -36,6 +37,10 @@ public class Store implements Lifecycle {
 
     public Store(@NonNull StoreArgument argument) {
         this.argument = argument;
+    }
+
+    public ApplicationContext getAPIContext() {
+        return StoreContext.API;
     }
 
     @Override

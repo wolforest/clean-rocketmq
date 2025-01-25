@@ -31,8 +31,8 @@ public class Broker implements Lifecycle {
 
     @Override
     public void start() {
-        this.state = State.STARTING;
         this.initialize();
+        this.state = State.STARTING;
 
         this.componentManager.start();
 
