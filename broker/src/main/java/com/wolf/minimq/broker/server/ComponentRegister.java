@@ -1,6 +1,7 @@
 package com.wolf.minimq.broker.server;
 
 import com.wolf.common.convention.service.LifecycleManager;
+import com.wolf.minimq.broker.infra.StoreManager;
 import com.wolf.minimq.broker.server.grpc.GrpcManager;
 import com.wolf.minimq.domain.service.store.manager.MetaManager;
 import com.wolf.minimq.store.domain.meta.DefaultMetaManager;
@@ -20,12 +21,18 @@ public class ComponentRegister {
 
         registerGrpc();
 
+        registerStore();
 
         return this.manager;
     }
 
     private void registerGrpc() {
         GrpcManager component = new GrpcManager();
+        manager.register(component);
+    }
+
+    private void registerStore() {
+        StoreManager component = new StoreManager();
         manager.register(component);
     }
 
