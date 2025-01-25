@@ -17,6 +17,6 @@ public class TransactionActivity {
         this.executor = executor;
     }
 
-    public void endTransaction(EndTransactionRequest request, StreamObserver<EndTransactionResponse> responseObserver) {
+    public void commit(EndTransactionRequest request, StreamObserver<EndTransactionResponse> responseObserver) {
     }
 }

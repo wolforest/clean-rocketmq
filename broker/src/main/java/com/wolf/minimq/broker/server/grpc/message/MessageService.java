@@ -63,10 +63,7 @@ public class MessageService extends MessagingServiceGrpc.MessagingServiceImplBas
         routeActivity.getRoute(request, responseObserver);
     }
 
-    @Override
-    public void heartbeat(HeartbeatRequest request, StreamObserver<HeartbeatResponse> responseObserver) {
-        clientActivity.heartbeat(request, responseObserver);
-    }
+
 
     @Override
     public void sendMessage(SendMessageRequest request, StreamObserver<SendMessageResponse> responseObserver) {
@@ -118,7 +115,12 @@ public class MessageService extends MessagingServiceGrpc.MessagingServiceImplBas
 
     @Override
     public void endTransaction(EndTransactionRequest request, StreamObserver<EndTransactionResponse> responseObserver) {
-        transactionActivity.endTransaction(request, responseObserver);
+        transactionActivity.commit(request, responseObserver);
+    }
+
+    @Override
+    public void heartbeat(HeartbeatRequest request, StreamObserver<HeartbeatResponse> responseObserver) {
+        clientActivity.heartbeat(request, responseObserver);
     }
 
     @Override

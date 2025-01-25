@@ -1,9 +1,11 @@
 package com.wolf.minimq.broker.server.grpc.activity;
 
+import apache.rocketmq.v2.Code;
 import apache.rocketmq.v2.HeartbeatRequest;
 import apache.rocketmq.v2.HeartbeatResponse;
 import apache.rocketmq.v2.NotifyClientTerminationRequest;
 import apache.rocketmq.v2.NotifyClientTerminationResponse;
+import apache.rocketmq.v2.Status;
 import apache.rocketmq.v2.TelemetryCommand;
 import io.grpc.stub.StreamObserver;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -16,13 +18,47 @@ public class ClientActivity {
     }
 
     public void heartbeat(HeartbeatRequest request, StreamObserver<HeartbeatResponse> responseObserver) {
+        Status status = Status.newBuilder()
+            .setCode(Code.OK)
+            .setMessage(Code.OK.name())
+            .build();
+        HeartbeatResponse response = HeartbeatResponse.newBuilder()
+            .setStatus(status)
+            .build();
+
+        responseObserver.onNext(response);
+        responseObserver.onCompleted();
     }
 
     public StreamObserver<TelemetryCommand> telemetry(StreamObserver<TelemetryCommand> responseObserver) {
-        return null;
+        return new StreamObserver<TelemetryCommand>() {
+            @Override
+            public void onNext(TelemetryCommand command) {
+                responseObserver.onNext(command);
+            }
+
+            @Override
+            public void onCompleted() {
+                responseObserver.onCompleted();
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                responseObserver.onError(throwable);
+            }
+        };
     }
 
-    public void notifyClientTermination(
-        NotifyClientTerminationRequest request, StreamObserver<NotifyClientTerminationResponse> responseObserver) {
+    public void notifyClientTermination(NotifyClientTerminationRequest request, StreamObserver<NotifyClientTerminationResponse> responseObserver) {
+        Status status = Status.newBuilder()
+            .setCode(Code.OK)
+            .setMessage(Code.OK.name())
+            .build();
+        NotifyClientTerminationResponse response = NotifyClientTerminationResponse.newBuilder()
+            .setStatus(status)
+            .build();
+
+        responseObserver.onNext(response);
+        responseObserver.onCompleted();
     }
 }
