@@ -1,6 +1,6 @@
 package com.wolf.minimq.broker.server;
 
-import com.wolf.minimq.broker.server.vo.BrokerArgument;
+import com.wolf.minimq.broker.server.model.BrokerArgument;
 import com.wolf.minimq.domain.config.BrokerConfig;
 import com.wolf.minimq.domain.config.MessageConfig;
 import com.wolf.minimq.domain.config.GrpcConfig;

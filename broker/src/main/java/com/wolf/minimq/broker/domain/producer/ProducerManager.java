@@ -2,7 +2,7 @@ package com.wolf.minimq.broker.domain.producer;
 
 import com.wolf.common.convention.service.Lifecycle;
 import com.wolf.minimq.broker.api.ProducerController;
-import com.wolf.minimq.broker.server.vo.BrokerContext;
+import com.wolf.minimq.broker.server.model.BrokerContext;
 
 public class ProducerManager implements Lifecycle {
     private Producer producer;

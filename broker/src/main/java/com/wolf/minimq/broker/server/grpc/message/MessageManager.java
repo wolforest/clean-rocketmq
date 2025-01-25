@@ -13,7 +13,7 @@ import com.wolf.minimq.broker.server.grpc.activity.ProducerActivity;
 import com.wolf.minimq.broker.server.grpc.activity.RejectActivity;
 import com.wolf.minimq.broker.server.grpc.activity.RouteActivity;
 import com.wolf.minimq.broker.server.grpc.activity.TransactionActivity;
-import com.wolf.minimq.broker.server.vo.BrokerContext;
+import com.wolf.minimq.broker.server.model.BrokerContext;
 import com.wolf.minimq.domain.config.GrpcConfig;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;

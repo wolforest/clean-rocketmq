@@ -2,7 +2,7 @@ package com.wolf.minimq.broker.domain.transaction;
 
 import com.wolf.common.convention.service.Lifecycle;
 import com.wolf.minimq.broker.api.TransactionController;
-import com.wolf.minimq.broker.server.vo.BrokerContext;
+import com.wolf.minimq.broker.server.model.BrokerContext;
 
 public class TransactionManager implements Lifecycle {
     private Transaction transaction;

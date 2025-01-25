@@ -2,7 +2,7 @@ package com.wolf.minimq.broker.infra;
 
 import com.wolf.common.convention.container.ApplicationContext;
 import com.wolf.common.convention.service.Lifecycle;
-import com.wolf.minimq.broker.server.vo.BrokerContext;
+import com.wolf.minimq.broker.server.model.BrokerContext;
 import com.wolf.minimq.store.Store;
 import com.wolf.minimq.store.server.StoreArgument;
 

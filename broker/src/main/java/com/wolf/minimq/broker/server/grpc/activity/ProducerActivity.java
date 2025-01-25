@@ -6,7 +6,7 @@ import apache.rocketmq.v2.SendMessageRequest;
 import apache.rocketmq.v2.SendMessageResponse;
 import apache.rocketmq.v2.Status;
 import com.wolf.minimq.broker.api.ProducerController;
-import com.wolf.minimq.broker.server.vo.RequestContext;
+import com.wolf.minimq.broker.server.model.RequestContext;
 import com.wolf.minimq.domain.model.bo.MessageBO;
 import io.grpc.stub.StreamObserver;
 import java.util.concurrent.ThreadPoolExecutor;

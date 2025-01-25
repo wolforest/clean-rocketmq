@@ -2,7 +2,7 @@ package com.wolf.minimq.broker.domain.consumer;
 
 import com.wolf.common.convention.service.Lifecycle;
 import com.wolf.minimq.broker.api.ConsumerController;
-import com.wolf.minimq.broker.server.vo.BrokerContext;
+import com.wolf.minimq.broker.server.model.BrokerContext;
 
 public class ConsumerManager implements Lifecycle {
     private Consumer consumer;

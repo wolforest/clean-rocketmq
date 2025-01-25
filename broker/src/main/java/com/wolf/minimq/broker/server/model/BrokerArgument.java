@@ -1,4 +1,4 @@
-package com.wolf.minimq.broker.server.vo;
+package com.wolf.minimq.broker.server.model;
 
 import java.io.Serializable;
 import lombok.AllArgsConstructor;

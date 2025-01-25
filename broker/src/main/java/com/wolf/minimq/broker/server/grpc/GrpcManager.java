@@ -3,7 +3,7 @@ package com.wolf.minimq.broker.server.grpc;
 import com.wolf.common.convention.service.Lifecycle;
 import com.wolf.minimq.broker.server.grpc.message.MessageManager;
 import com.wolf.minimq.broker.server.grpc.message.MessageService;
-import com.wolf.minimq.broker.server.vo.BrokerContext;
+import com.wolf.minimq.broker.server.model.BrokerContext;
 import com.wolf.minimq.domain.config.BrokerConfig;
 import com.wolf.minimq.domain.config.GrpcConfig;
 

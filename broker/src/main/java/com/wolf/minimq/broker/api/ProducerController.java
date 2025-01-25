@@ -1,7 +1,7 @@
 package com.wolf.minimq.broker.api;
 
 import com.wolf.minimq.broker.domain.producer.Producer;
-import com.wolf.minimq.broker.server.vo.RequestContext;
+import com.wolf.minimq.broker.server.model.RequestContext;
 import com.wolf.minimq.domain.model.bo.MessageBO;
 import com.wolf.minimq.domain.model.dto.EnqueueResult;
 import java.util.List;

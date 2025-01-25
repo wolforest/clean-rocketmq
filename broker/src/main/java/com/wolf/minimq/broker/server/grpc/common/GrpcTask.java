@@ -1,6 +1,6 @@
 package com.wolf.minimq.broker.server.grpc.common;
 
-import com.wolf.minimq.broker.server.vo.RequestContext;
+import com.wolf.minimq.broker.server.model.RequestContext;
 import io.grpc.stub.StreamObserver;
 import lombok.Data;
 
