@@ -10,7 +10,7 @@ import java.util.concurrent.CompletableFuture;
 /**
  * Message pub/sub APIs
  */
-public interface MQService {
+public interface StoreService {
     EnqueueResult enqueue(MessageBO messageBO);
     CompletableFuture<EnqueueResult> enqueueAsync(MessageBO messageBO);
 

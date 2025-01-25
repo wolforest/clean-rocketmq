@@ -3,18 +3,18 @@ package com.wolf.minimq.store.api;
 import com.wolf.minimq.domain.config.MessageConfig;
 import com.wolf.minimq.domain.model.dto.GetRequest;
 import com.wolf.minimq.domain.model.dto.GetResult;
-import com.wolf.minimq.domain.service.store.api.MQService;
+import com.wolf.minimq.domain.service.store.api.StoreService;
 import com.wolf.minimq.domain.model.dto.EnqueueResult;
 import com.wolf.minimq.domain.model.bo.MessageBO;
 import com.wolf.minimq.domain.service.store.domain.MessageStore;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-public class MQServiceImpl implements MQService {
+public class StoreServiceImpl implements StoreService {
     private final MessageConfig messageConfig;
     private final MessageStore messageStore;
 
-    public MQServiceImpl(MessageConfig messageConfig, MessageStore messageStore) {
+    public StoreServiceImpl(MessageConfig messageConfig, MessageStore messageStore) {
         this.messageConfig = messageConfig;
         this.messageStore = messageStore;
     }
