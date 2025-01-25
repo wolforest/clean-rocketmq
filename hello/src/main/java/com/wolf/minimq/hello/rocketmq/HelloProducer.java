@@ -43,6 +43,7 @@ public class HelloProducer {
 
     private Producer buildProducer() throws ClientException {
         ClientConfiguration configuration = ClientConfiguration.newBuilder()
+            .enableSsl(false)
             .setEndpoints(ENDPOINT)
             .build();
 
