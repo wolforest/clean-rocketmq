@@ -1,7 +1,7 @@
 package com.wolf.minimq.hello.java.mmap;
 
 import com.wolf.common.util.lang.RandomUtil;
-import com.wolf.common.util.time.Timer;
+import com.wolf.common.util.test.Timer;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;

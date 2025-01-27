@@ -1,8 +1,8 @@
 package com.wolf.minimq.store.domain.meta;
 
 import com.wolf.common.util.io.FileUtil;
-import com.wolf.common.util.lang.JSONUtil;
 import com.wolf.common.util.lang.StringUtil;
+import com.wolf.common.util.lang.string.JSONUtil;
 import com.wolf.minimq.domain.model.meta.ConsumeOffset;
 import com.wolf.minimq.domain.service.store.domain.meta.ConsumeOffsetStore;
 

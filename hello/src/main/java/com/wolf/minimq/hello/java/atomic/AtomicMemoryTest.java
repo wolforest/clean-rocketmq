@@ -1,6 +1,6 @@
 package com.wolf.minimq.hello.java.atomic;
 
-import com.wolf.common.lang.system.MemoryRecoder;
+import com.wolf.common.util.test.MemoryRecoder;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
 import lombok.extern.slf4j.Slf4j;

@@ -16,7 +16,7 @@ public class StartupLock {
         try {
             lockFile = new RandomAccessFile(file, "rw");
         } catch (IOException e) {
-            throw new com.wolf.common.lang.exception.io.IOException(e.getMessage());
+            throw new com.wolf.common.lang.exception.lang.IOException(e.getMessage());
         }
     }
 
@@ -30,7 +30,7 @@ public class StartupLock {
             lockFile.getChannel().write(ByteBuffer.wrap("lock".getBytes(StandardCharsets.UTF_8)));
             lockFile.getChannel().force(true);
         } catch (IOException e) {
-            throw new com.wolf.common.lang.exception.io.IOException(e.getMessage());
+            throw new com.wolf.common.lang.exception.lang.IOException(e.getMessage());
         }
     }
 

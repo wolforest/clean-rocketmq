@@ -1,7 +1,7 @@
 package com.wolf.minimq.domain.model.bo;
 
-import com.wolf.common.util.collection.MapUtil;
 import com.wolf.common.util.lang.StringUtil;
+import com.wolf.common.util.lang.collection.MapUtil;
 import com.wolf.minimq.domain.constant.SysFlag;
 import com.wolf.minimq.domain.constant.MessageConst;
 import com.wolf.minimq.domain.enums.MessageStatus;

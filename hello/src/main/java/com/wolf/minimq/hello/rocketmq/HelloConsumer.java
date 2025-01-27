@@ -32,7 +32,7 @@ public class HelloConsumer {
 
         PushConsumer pushConsumer =provider.newPushConsumerBuilder()
             .setClientConfiguration(configuration)
-            .setConsumerGroup("GROUP")
+            .setConsumerGroup(GROUP)
             .setSubscriptionExpressions(Collections.singletonMap(TOPIC, filterExpression))
             .setMessageListener(messageView -> {
                 System.out.println("Receive message, msgId: " + messageView.getMessageId()

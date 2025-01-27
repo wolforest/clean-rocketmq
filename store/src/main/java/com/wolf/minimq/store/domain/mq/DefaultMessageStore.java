@@ -1,6 +1,6 @@
 package com.wolf.minimq.store.domain.mq;
 
-import com.wolf.common.util.collection.CollectionUtil;
+import com.wolf.common.util.lang.collection.CollectionUtil;
 import com.wolf.minimq.domain.config.MessageConfig;
 import com.wolf.minimq.domain.config.StoreConfig;
 import com.wolf.minimq.domain.model.bo.QueueUnit;

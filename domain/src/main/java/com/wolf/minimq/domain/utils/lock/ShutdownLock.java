@@ -31,7 +31,7 @@ public class ShutdownLock {
             }
             FileUtil.writeString(Long.toString(pid), file);
         } catch (IOException e) {
-            throw new com.wolf.common.lang.exception.io.IOException(e.getMessage());
+            throw new com.wolf.common.lang.exception.lang.IOException(e.getMessage());
         }
     }
 

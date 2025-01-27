@@ -1,6 +1,6 @@
 package com.wolf.minimq.hello.java.atomic;
 
-import com.wolf.common.util.time.Timer;
+import com.wolf.common.util.test.Timer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
