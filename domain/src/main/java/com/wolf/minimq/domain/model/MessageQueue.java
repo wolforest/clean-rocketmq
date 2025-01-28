@@ -1,5 +1,6 @@
 package com.wolf.minimq.domain.model;
 
+import com.wolf.common.util.net.Address;
 import com.wolf.minimq.domain.enums.MessageType;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
@@ -7,12 +8,21 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * message queue
+ *  - route for publisher
+ *  - assignment for consumer
+ *  - key info register to name server
+ */
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class MessageQueue implements Comparable<MessageQueue>, Serializable {
-    private String broker;
+    private String brokerName;
+    private int brokerId;
+    private Address brokerAddress;
+
     private String topic;
     private int queueId;
 
@@ -26,9 +36,14 @@ public class MessageQueue implements Comparable<MessageQueue>, Serializable {
             return topicDiff;
         }
 
-        int brokerDiff = this.broker.compareTo(o.broker);
+        int brokerDiff = this.brokerName.compareTo(o.brokerName);
         if (brokerDiff != 0) {
             return brokerDiff;
+        }
+
+        int brokerIdDiff = this.brokerId - o.brokerId;
+        if (brokerIdDiff != 0) {
+            return brokerIdDiff;
         }
 
         return this.queueId - o.queueId;
