@@ -19,13 +19,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MessageQueue implements Comparable<MessageQueue>, Serializable {
-    private String brokerName;
     private int brokerId;
+    private String brokerName;
     private Address brokerAddress;
 
     private String topic;
     private int queueId;
-
     private int permission;
     private MessageType messageType;
 

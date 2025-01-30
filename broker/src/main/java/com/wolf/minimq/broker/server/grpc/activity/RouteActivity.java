@@ -1,9 +1,11 @@
 package com.wolf.minimq.broker.server.grpc.activity;
 
+import apache.rocketmq.v2.Code;
 import apache.rocketmq.v2.QueryAssignmentRequest;
 import apache.rocketmq.v2.QueryAssignmentResponse;
 import apache.rocketmq.v2.QueryRouteRequest;
 import apache.rocketmq.v2.QueryRouteResponse;
+import apache.rocketmq.v2.Status;
 import com.wolf.minimq.broker.api.ConsumerController;
 import com.wolf.minimq.broker.api.ProducerController;
 import io.grpc.stub.StreamObserver;
@@ -23,8 +25,20 @@ public class RouteActivity {
     }
 
     public void getRoute(QueryRouteRequest request, StreamObserver<QueryRouteResponse> responseObserver) {
+        QueryRouteResponse response = QueryRouteResponse.newBuilder()
+            .setStatus(Status.newBuilder().setCode(Code.OK))
+            .build();
+
+        responseObserver.onNext(response);
+        responseObserver.onCompleted();
     }
 
     public void getAssignment(QueryAssignmentRequest request, StreamObserver<QueryAssignmentResponse> responseObserver) {
+        QueryAssignmentResponse response = QueryAssignmentResponse.newBuilder()
+            .setStatus(Status.newBuilder().setCode(Code.OK))
+            .build();
+
+        responseObserver.onNext(response);
+        responseObserver.onCompleted();
     }
 }
