@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>mq-parent</artifactId>
-        <groupId>com.wolf.minimq</groupId>
+        <groupId>cn.coderule.minimq</groupId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -18,19 +18,29 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.wolf</groupId>
+            <groupId>cn.coderule</groupId>
             <artifactId>common</artifactId>
         </dependency>
 
         <dependency>
             <artifactId>wolf-starter-grpc</artifactId>
-            <groupId>com.wolf.starter</groupId>
+            <groupId>cn.coderule.starter</groupId>
         </dependency>
 
         <dependency>
             <groupId>org.apache.rocketmq</groupId>
             <artifactId>rocketmq-client-java</artifactId>
             <version>5.0.7</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>io.grpc</groupId>
+                    <artifactId>grpc-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.google.protobuf</groupId>
+                    <artifactId>protobuf-java</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
 

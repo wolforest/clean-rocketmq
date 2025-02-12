@@ -1,14 +1,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <groupId>com.wolf</groupId>
+        <groupId>cn.coderule</groupId>
         <artifactId>wolf-boot-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
         <relativePath />
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.wolf.minimq</groupId>
+    <groupId>cn.coderule.minimq</groupId>
     <artifactId>mq-parent</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
@@ -30,12 +30,12 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>com.wolf.minimq</groupId>
+                <groupId>cn.coderule.minimq</groupId>
                 <artifactId>domain</artifactId>
                 <version>${mini-mq.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.wolf.minimq</groupId>
+                <groupId>cn.coderule.minimq</groupId>
                 <artifactId>store</artifactId>
                 <version>${mini-mq.version}</version>
             </dependency>
