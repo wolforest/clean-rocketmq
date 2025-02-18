@@ -18,7 +18,7 @@ syntax = "proto3";
 import "google/protobuf/duration.proto";
 import "google/protobuf/timestamp.proto";
 
-import "definition.proto";
+import "apache/rocketmq/v2/definition.proto";
 
 package apache.rocketmq.v2;
 
