@@ -8,8 +8,8 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>cn.coderule.minimq</groupId>
-    <artifactId>mq-parent</artifactId>
+    <groupId>cn.coderule</groupId>
+    <artifactId>minimq</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
@@ -19,6 +19,7 @@
     <modules>
         <module>hello</module>
         <module>domain</module>
+        <module>rpc</module>
         <module>store</module>
         <module>broker</module>
     </modules>
