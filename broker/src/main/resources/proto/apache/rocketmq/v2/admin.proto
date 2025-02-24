@@ -38,6 +38,25 @@ message ChangeLogLevelRequest {
 
 message ChangeLogLevelResponse { string remark = 1; }
 
+message createTopicRequest {
+  string namespace = 1;
+  string topic = 2;
+  int32 queue_num = 3;
+}
+
+message createTopicResponse { string remark = 1; }
+
+message createGroupRequest {
+  string namespace = 1;
+  string group = 2;
+}
+
+message createGroupResponse { string remark = 1; }
+
 service Admin {
   rpc ChangeLogLevel(ChangeLogLevelRequest) returns (ChangeLogLevelResponse) {}
+
+  rpc CreateTopic(createTopicRequest) returns (createTopicResponse) {}
+  rpc CreateGroup(createGroupRequest) returns (createGroupResponse) {}
+
 }

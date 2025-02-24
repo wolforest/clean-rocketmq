@@ -305,6 +305,23 @@ message QueryOffsetResponse {
 // errors raise, return a response with common.status.code == `INTERNAL`.
 service MessagingService {
 
+  // Producer or consumer sends HeartbeatRequest to servers periodically to
+  // keep-alive. Additionally, it also reports client-side configuration,
+  // including topic subscription, load-balancing group name, etc.
+  //
+  // register producer/consumer
+  //
+  // Returns `OK` if success.
+  //
+  // If a client specifies a language that is not yet supported by servers,
+  // returns `INVALID_ARGUMENT`
+  rpc Heartbeat(HeartbeatRequest) returns (HeartbeatResponse) {}
+
+  // Notify the server that the client is terminated.
+  // unregister producer/consumer
+  rpc NotifyClientTermination(NotifyClientTerminationRequest) returns (NotifyClientTerminationResponse) {}
+
+
   // Queries the route entries of the requested topic in the perspective of the
   // given endpoints. On success, servers should return a collection of
   // addressable message-queues. Note servers may return customized route
@@ -314,15 +331,6 @@ service MessagingService {
   // If the specific endpoints is empty, returns `INVALID_ARGUMENT`.
   rpc QueryRoute(QueryRouteRequest) returns (QueryRouteResponse) {}
 
-  // Producer or consumer sends HeartbeatRequest to servers periodically to
-  // keep-alive. Additionally, it also reports client-side configuration,
-  // including topic subscription, load-balancing group name, etc.
-  //
-  // Returns `OK` if success.
-  //
-  // If a client specifies a language that is not yet supported by servers,
-  // returns `INVALID_ARGUMENT`
-  rpc Heartbeat(HeartbeatRequest) returns (HeartbeatResponse) {}
 
   // Delivers messages to brokers.
   // Clients may further:
@@ -404,16 +412,11 @@ service MessagingService {
   // clients shall report command execution results through client-side streams.
   rpc Telemetry(stream TelemetryCommand) returns (stream TelemetryCommand) {}
 
-  // Notify the server that the client is terminated.
-  rpc NotifyClientTermination(NotifyClientTerminationRequest) returns (NotifyClientTerminationResponse) {
-  }
-
   // Once a message is retrieved from consume queue on behalf of the group, it
   // will be kept invisible to other clients of the same group for a period of
   // time. The message is supposed to be processed within the invisible
   // duration. If the client, which is in charge of the invisible message, is
   // not capable of processing the message timely, it may use
   // ChangeInvisibleDuration to lengthen invisible duration.
-  rpc ChangeInvisibleDuration(ChangeInvisibleDurationRequest) returns (ChangeInvisibleDurationResponse) {
-  }
+  rpc ChangeInvisibleDuration(ChangeInvisibleDurationRequest) returns (ChangeInvisibleDurationResponse) {}
 }
