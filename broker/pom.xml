@@ -9,6 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
+    <groupId>cn.coderule.minimq</groupId>
     <artifactId>broker</artifactId>
     <version>1.0.0-SNAPSHOT</version>
 

@@ -21,7 +21,7 @@ public class ComponentRegister {
     public LifecycleManager execute() {
         registerGrpc();
 
-        //registerStore();
+        registerStore();
 
         registerTransaction();
         registerProducer();
