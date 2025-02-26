@@ -8,7 +8,7 @@ import lombok.Data;
 public class GrpcConfig implements Serializable {
     private boolean enableGrpcEpoll = false;
 
-    private int grpcPort = 8081;
+    private int port = 8081;
 
     private long grpcShutdownTimeout = 30;
     private int grpcBossThreadNum = 1;

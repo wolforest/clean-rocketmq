@@ -6,6 +6,9 @@ import lombok.Data;
 
 @Data
 public class StoreConfig implements Serializable {
+    private String host;
+    private int port;
+
     private int syncFlushTimeout = 5 * 1000;
     private String rootDir = System.getProperty("user.home") + File.separator + "mq";
 
