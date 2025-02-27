@@ -14,7 +14,6 @@ public class BrokerConfig implements Serializable {
      * should be false in production env
      */
     private boolean enableLocalStore = true;
-    private boolean enableTopicAutoCreation = true;
 
     private int producerThreadNum = SystemUtil.getProcessorNumber();
     private int producerQueueCapacity = 10000;
