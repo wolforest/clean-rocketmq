@@ -1,4 +1,4 @@
-package cn.coderule.minimq.domain.model.checkpoint;
+package cn.coderule.minimq.domain.service.store.server;
 
 import java.io.Serializable;
 import java.util.ArrayList;

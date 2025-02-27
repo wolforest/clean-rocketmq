@@ -1,11 +1,11 @@
 package cn.coderule.minimq.store.domain.commitlog;
 
 import cn.coderule.minimq.domain.model.bo.MessageBO;
-import cn.coderule.minimq.domain.model.checkpoint.CheckPoint;
-import cn.coderule.minimq.domain.model.checkpoint.Offset;
 import cn.coderule.minimq.domain.service.store.domain.CommitLog;
 import cn.coderule.minimq.domain.service.store.infra.MappedFile;
 import cn.coderule.minimq.domain.service.store.infra.MappedFileQueue;
+import cn.coderule.minimq.domain.service.store.server.CheckPoint;
+import cn.coderule.minimq.domain.service.store.server.Offset;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;

@@ -46,7 +46,7 @@ public class GrpcManager implements Lifecycle {
         this.grpcConfig = BrokerContext.getBean(GrpcConfig.class);
         BrokerConfig brokerConfig = BrokerContext.getBean(BrokerConfig.class);
 
-        this.grpcConfig.setGrpcPort(brokerConfig.getServerPort());
+        this.grpcConfig.setPort(brokerConfig.getPort());
     }
 
     private void initMessageService() {

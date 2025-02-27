@@ -37,6 +37,11 @@
             </dependency>
             <dependency>
                 <groupId>cn.coderule.minimq</groupId>
+                <artifactId>rpc</artifactId>
+                <version>${mini-mq.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.coderule.minimq</groupId>
                 <artifactId>store</artifactId>
                 <version>${mini-mq.version}</version>
             </dependency>

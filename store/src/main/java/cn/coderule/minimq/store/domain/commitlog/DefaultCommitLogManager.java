@@ -3,17 +3,16 @@ package cn.coderule.minimq.store.domain.commitlog;
 import cn.coderule.minimq.domain.config.CommitLogConfig;
 import cn.coderule.minimq.domain.config.MessageConfig;
 import cn.coderule.minimq.domain.config.StoreConfig;
-import cn.coderule.minimq.domain.model.checkpoint.CheckPoint;
 import cn.coderule.minimq.domain.service.store.api.CommitLogService;
 import cn.coderule.minimq.domain.service.store.domain.CommitLog;
 import cn.coderule.minimq.domain.service.store.infra.MappedFileQueue;
 import cn.coderule.minimq.domain.service.store.manager.CommitLogManager;
+import cn.coderule.minimq.domain.service.store.server.CheckPoint;
 import cn.coderule.minimq.store.api.CommitLogServiceImpl;
 import cn.coderule.minimq.store.domain.commitlog.flush.FlushManager;
 import cn.coderule.minimq.store.infra.file.AllocateMappedFileService;
 import cn.coderule.minimq.store.infra.file.DefaultMappedFileQueue;
 import cn.coderule.minimq.store.infra.memory.CLibrary;
-import cn.coderule.minimq.store.server.StoreCheckpoint;
 import cn.coderule.minimq.store.server.StoreContext;
 import java.io.File;
 
@@ -80,7 +79,7 @@ public class DefaultCommitLogManager implements CommitLogManager {
     }
 
     private void initCommitLog() {
-        checkpoint = StoreContext.getBean(StoreCheckpoint.class);
+        checkpoint = StoreContext.getCheckPoint();
         flushManager = new FlushManager(commitLogConfig, mappedFileQueue, checkpoint);
 
         commitLog = new DefaultCommitLog(commitLogConfig, messageConfig, mappedFileQueue, flushManager);

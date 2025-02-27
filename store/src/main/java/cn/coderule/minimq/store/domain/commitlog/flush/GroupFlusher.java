@@ -1,9 +1,9 @@
 package cn.coderule.minimq.store.domain.commitlog.flush;
 
+import cn.coderule.minimq.domain.service.store.server.CheckPoint;
 import cn.coderule.minimq.store.domain.commitlog.vo.GroupCommitRequest;
 import cn.coderule.common.util.lang.ThreadUtil;
 import cn.coderule.minimq.domain.enums.EnqueueStatus;
-import cn.coderule.minimq.domain.model.checkpoint.CheckPoint;
 import cn.coderule.minimq.domain.service.store.infra.MappedFileQueue;
 import cn.coderule.minimq.domain.utils.lock.CommitLogLock;
 import cn.coderule.minimq.domain.utils.lock.CommitLogSpinLock;

@@ -34,7 +34,7 @@ public class GrpcServer implements Lifecycle {
 
     @Override
     public void initialize() {
-        this.serverBuilder = NettyServerBuilder.forPort(config.getGrpcPort())
+        this.serverBuilder = NettyServerBuilder.forPort(config.getPort())
             .maxInboundMessageSize(config.getMaxInboundMessageSize())
             .maxConnectionIdle(config.getMaxConnectionIdle(), TimeUnit.MILLISECONDS)
             .addService(messageService)

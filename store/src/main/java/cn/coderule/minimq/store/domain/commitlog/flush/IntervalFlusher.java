@@ -1,8 +1,8 @@
 package cn.coderule.minimq.store.domain.commitlog.flush;
 
 import cn.coderule.minimq.domain.config.CommitLogConfig;
-import cn.coderule.minimq.domain.model.checkpoint.CheckPoint;
 import cn.coderule.minimq.domain.service.store.infra.MappedFileQueue;
+import cn.coderule.minimq.domain.service.store.server.CheckPoint;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
