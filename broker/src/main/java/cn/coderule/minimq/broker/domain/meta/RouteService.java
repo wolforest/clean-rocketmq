@@ -1,5 +1,6 @@
 package cn.coderule.minimq.broker.domain.meta;
 
+import cn.coderule.minimq.broker.server.model.RequestContext;
 import cn.coderule.minimq.domain.config.BrokerConfig;
 import cn.coderule.minimq.domain.model.MessageQueue;
 import java.util.Set;
@@ -14,11 +15,11 @@ public class RouteService {
 
     // private RegistryClient registryClient;
 
-    public Set<MessageQueue> getOrCreateRoute(String topic) {
+    public Set<MessageQueue> getOrCreateRoute(RequestContext context, String topic) {
         return null;
     }
 
-    public Set<MessageQueue> getRoute(String topic) {
+    public Set<MessageQueue> getRoute(RequestContext context, String topic) {
         return null;
     }
 }

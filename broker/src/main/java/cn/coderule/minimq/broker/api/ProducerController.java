@@ -21,10 +21,10 @@ public class ProducerController {
     }
 
     public CompletableFuture<EnqueueResult> produce(RequestContext context, MessageBO messageBO) {
-        return null;
+        return producer.produce(context, messageBO);
     }
 
     public CompletableFuture<List<EnqueueResult>> produce(RequestContext context, List<MessageBO> messageList) {
-        return null;
+        return producer.produce(context, messageList);
     }
 }
