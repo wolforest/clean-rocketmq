@@ -14,4 +14,8 @@ public class RouteController {
     public Set<MessageQueue> getRoute(String topic) {
         return routeService.getRoute(topic);
     }
+
+    public Set<MessageQueue> getOrCreateRoute(String topic) {
+        return routeService.getOrCreateRoute(topic);
+    }
 }

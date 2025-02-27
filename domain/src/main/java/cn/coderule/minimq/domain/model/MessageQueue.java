@@ -19,11 +19,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MessageQueue implements Comparable<MessageQueue>, Serializable {
-    private int brokerId;
-    private String brokerName;
-    private Address brokerAddress;
+    private String cluster;
+    private String serverGroup;
+    private Address serverAddress;
+    private int serverId;
 
+    private String namespace;
     private String topic;
+
     private int queueId;
     private int permission;
     private MessageType messageType;
@@ -35,12 +38,12 @@ public class MessageQueue implements Comparable<MessageQueue>, Serializable {
             return topicDiff;
         }
 
-        int brokerDiff = this.brokerName.compareTo(o.brokerName);
+        int brokerDiff = this.serverGroup.compareTo(o.serverGroup);
         if (brokerDiff != 0) {
             return brokerDiff;
         }
 
-        int brokerIdDiff = this.brokerId - o.brokerId;
+        int brokerIdDiff = this.serverId - o.serverId;
         if (brokerIdDiff != 0) {
             return brokerIdDiff;
         }

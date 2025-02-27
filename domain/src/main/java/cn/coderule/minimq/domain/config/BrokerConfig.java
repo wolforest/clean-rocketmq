@@ -10,7 +10,10 @@ public class BrokerConfig implements Serializable {
     private String host = NetworkUtil.getLocalAddress();
     private Integer port = 8081;
 
-    private boolean enableTrace = false;
+    /**
+     * should be false in production env
+     */
+    private boolean enableLocalStore = true;
     private boolean enableTopicAutoCreation = true;
 
     private int producerThreadNum = SystemUtil.getProcessorNumber();
