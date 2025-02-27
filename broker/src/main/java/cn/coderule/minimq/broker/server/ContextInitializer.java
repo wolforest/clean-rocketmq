@@ -21,14 +21,6 @@ public class ContextInitializer {
     }
 
     public void initialize() {
-        initializeConfig();
     }
-
-    private void initializeConfig() {
-        BrokerContext.register(new MessageConfig());
-        BrokerContext.register(new GrpcConfig());
-        BrokerContext.register(new BrokerConfig());
-    }
-
 
 }
