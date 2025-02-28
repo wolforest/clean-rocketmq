@@ -12,7 +12,7 @@ import io.grpc.netty.shaded.io.netty.channel.epoll.EpollServerSocketChannel;
 import io.grpc.netty.shaded.io.netty.channel.nio.NioEventLoopGroup;
 import io.grpc.netty.shaded.io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.grpc.protobuf.services.ChannelzService;
-import io.grpc.protobuf.services.ProtoReflectionService;
+import io.grpc.protobuf.services.ProtoReflectionServiceV1;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
@@ -39,7 +39,7 @@ public class GrpcServer implements Lifecycle {
             .maxConnectionIdle(config.getMaxConnectionIdle(), TimeUnit.MILLISECONDS)
             .addService(messageService)
             .addService(ChannelzService.newInstance(100))
-            .addService(ProtoReflectionService.newInstance())
+            .addService(ProtoReflectionServiceV1.newInstance())
         ;
 
         initEventLoopGroup();

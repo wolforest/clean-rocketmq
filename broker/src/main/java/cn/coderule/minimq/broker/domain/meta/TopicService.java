@@ -11,34 +11,34 @@ import cn.coderule.minimq.domain.service.store.domain.meta.TopicStore;
 public class TopicService {
     private TopicStore topicStore;
 
-    public boolean exists(String topic) {
-        return topicStore.exists(topic);
+    public boolean exists(String topicName) {
+        return topicStore.exists(topicName);
     }
 
-    public Topic getOrCreate(String topic) {
-        Topic oldTopic = get(topic);
+    public Topic getOrCreate(String topicName) {
+        Topic oldTopic = get(topicName);
         if (null != oldTopic) {
             return oldTopic;
         }
 
         Topic newTopic = Topic.builder()
-            .topicName(topic)
+            .topicName(topicName)
             .build();
 
         save(newTopic);
         return newTopic;
     }
 
-    public Topic get(String topic) {
-        return topicStore.getTopic(topic);
+    public Topic get(String topicName) {
+        return topicStore.getTopic(topicName);
     }
 
-    public void save(Topic topic) {
-        topicStore.putTopic(topic);
+    public void save(Topic topicName) {
+        topicStore.putTopic(topicName);
     }
 
-    public void delete(String topic) {
-        topicStore.deleteTopic(topic);
+    public void delete(String topicName) {
+        topicStore.deleteTopic(topicName);
     }
 
 }
