@@ -12,17 +12,15 @@ import java.util.Set;
  */
 public class RouteService {
     private final TopicConfig topicConfig;
-    private final TopicService topicService;
     private final RouteMocker routeMocker;
     // private RegistryClient registryClient;
 
-    public RouteService(TopicConfig topicConfig, TopicService topicService) {
+    public RouteService(TopicConfig topicConfig, RouteMocker routeMocker) {
         this.topicConfig = topicConfig;
-        this.topicService = topicService;
-        this.routeMocker = new RouteMocker(topicService);
+        this.routeMocker = routeMocker;
     }
 
-    public Set<MessageQueue> getRoute(RequestContext context, String topic) {
+    public Set<MessageQueue> get(RequestContext context, String topic) {
         return routeMocker.getRoute(topic);
     }
 

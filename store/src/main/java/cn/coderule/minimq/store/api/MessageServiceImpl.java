@@ -3,18 +3,18 @@ package cn.coderule.minimq.store.api;
 import cn.coderule.minimq.domain.config.MessageConfig;
 import cn.coderule.minimq.domain.model.dto.GetRequest;
 import cn.coderule.minimq.domain.model.dto.GetResult;
-import cn.coderule.minimq.domain.service.store.api.StoreService;
+import cn.coderule.minimq.domain.service.store.api.MessageService;
 import cn.coderule.minimq.domain.model.dto.EnqueueResult;
 import cn.coderule.minimq.domain.model.bo.MessageBO;
 import cn.coderule.minimq.domain.service.store.domain.MessageStore;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-public class StoreServiceImpl implements StoreService {
+public class MessageServiceImpl implements MessageService {
     private final MessageConfig messageConfig;
     private final MessageStore messageStore;
 
-    public StoreServiceImpl(MessageConfig messageConfig, MessageStore messageStore) {
+    public MessageServiceImpl(MessageConfig messageConfig, MessageStore messageStore) {
         this.messageConfig = messageConfig;
         this.messageStore = messageStore;
     }

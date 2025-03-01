@@ -18,11 +18,11 @@ public class RouteController {
     }
 
     public Set<MessageQueue> getRoute(RequestContext context, String topicName) {
-        return routeService.getRoute(context, topicName);
+        return routeService.get(context, topicName);
     }
 
     public Set<MessageQueue> getOrCreateRoute(RequestContext context, String topicName) {
-        Set<MessageQueue> result = routeService.getRoute(context, topicName);
+        Set<MessageQueue> result = routeService.get(context, topicName);
         if (CollectionUtil.notEmpty(result)) {
             return result;
         }
