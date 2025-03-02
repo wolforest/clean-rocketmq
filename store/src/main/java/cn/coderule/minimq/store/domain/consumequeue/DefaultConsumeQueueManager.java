@@ -2,7 +2,7 @@ package cn.coderule.minimq.store.domain.consumequeue;
 
 import cn.coderule.minimq.domain.config.ConsumeQueueConfig;
 import cn.coderule.minimq.domain.service.store.domain.CommitLogDispatcher;
-import cn.coderule.minimq.domain.service.store.domain.ConsumeQueueStore;
+import cn.coderule.minimq.domain.service.store.domain.ConsumeQueueGateway;
 import cn.coderule.minimq.domain.service.store.domain.meta.TopicStore;
 import cn.coderule.minimq.domain.service.store.manager.ConsumeQueueManager;
 import cn.coderule.minimq.store.domain.consumequeue.queue.ConsumeQueueFactory;
@@ -19,7 +19,7 @@ public class DefaultConsumeQueueManager implements ConsumeQueueManager {
     private ConsumeQueueFlusher flusher;
     private ConsumeQueueLoader loader;
     private ConsumeQueueRecovery recovery;
-    private ConsumeQueueStore consumeQueueStore;
+    private ConsumeQueueGateway consumeQueueGateway;
 
     @Override
     public void initialize() {
@@ -63,8 +63,8 @@ public class DefaultConsumeQueueManager implements ConsumeQueueManager {
         recovery = new ConsumeQueueRecovery(consumeQueueConfig, StoreContext.getCheckPoint());
 
         ConsumeQueueFactory consumeQueueFactory = initConsumeQueueFactory();
-        consumeQueueStore = new DefaultConsumeQueueStore(consumeQueueFactory);
-        StoreContext.register(consumeQueueStore, ConsumeQueueStore.class);
+        consumeQueueGateway = new DefaultConsumeQueueGateway(consumeQueueFactory);
+        StoreContext.register(consumeQueueGateway, ConsumeQueueGateway.class);
     }
 
     private ConsumeQueueFactory initConsumeQueueFactory() {
@@ -81,7 +81,7 @@ public class DefaultConsumeQueueManager implements ConsumeQueueManager {
 
     private void registerDispatchHandler() {
         CommitLogDispatcher dispatcher = StoreContext.getBean(CommitLogDispatcher.class);
-        QueueCommitLogHandler handler = new QueueCommitLogHandler(consumeQueueStore);
+        QueueCommitLogHandler handler = new QueueCommitLogHandler(consumeQueueGateway);
         dispatcher.registerHandler(handler);
     }
 }

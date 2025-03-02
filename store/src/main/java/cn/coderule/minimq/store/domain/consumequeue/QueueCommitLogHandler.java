@@ -2,17 +2,17 @@ package cn.coderule.minimq.store.domain.consumequeue;
 
 import cn.coderule.minimq.domain.model.bo.CommitLogEvent;
 import cn.coderule.minimq.domain.service.store.domain.CommitLogHandler;
-import cn.coderule.minimq.domain.service.store.domain.ConsumeQueueStore;
+import cn.coderule.minimq.domain.service.store.domain.ConsumeQueueGateway;
 
 public class QueueCommitLogHandler implements CommitLogHandler {
-    private final ConsumeQueueStore consumeQueueStore;
+    private final ConsumeQueueGateway consumeQueueGateway;
 
-    public QueueCommitLogHandler(ConsumeQueueStore consumeQueueStore) {
-        this.consumeQueueStore = consumeQueueStore;
+    public QueueCommitLogHandler(ConsumeQueueGateway consumeQueueGateway) {
+        this.consumeQueueGateway = consumeQueueGateway;
     }
 
     @Override
     public void handle(CommitLogEvent event) {
-        consumeQueueStore.enqueue(event);
+        consumeQueueGateway.enqueue(event);
     }
 }

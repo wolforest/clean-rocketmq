@@ -3,12 +3,12 @@ package cn.coderule.minimq.store.domain.commitlog;
 import cn.coderule.minimq.domain.config.CommitLogConfig;
 import cn.coderule.minimq.domain.config.MessageConfig;
 import cn.coderule.minimq.domain.config.StoreConfig;
-import cn.coderule.minimq.domain.service.store.api.CommitLogService;
+import cn.coderule.minimq.domain.service.store.api.CommitLogStore;
 import cn.coderule.minimq.domain.service.store.domain.CommitLog;
 import cn.coderule.minimq.domain.service.store.infra.MappedFileQueue;
 import cn.coderule.minimq.domain.service.store.manager.CommitLogManager;
 import cn.coderule.minimq.domain.service.store.server.CheckPoint;
-import cn.coderule.minimq.store.api.CommitLogServiceImpl;
+import cn.coderule.minimq.store.api.CommitLogStoreImpl;
 import cn.coderule.minimq.store.domain.commitlog.flush.FlushManager;
 import cn.coderule.minimq.store.infra.file.AllocateMappedFileService;
 import cn.coderule.minimq.store.infra.file.DefaultMappedFileQueue;
@@ -98,8 +98,8 @@ public class DefaultCommitLogManager implements CommitLogManager {
     }
 
     private void registerAPI() {
-        CommitLogService api = new CommitLogServiceImpl(commitLog);
-        StoreContext.registerAPI(api, CommitLogService.class);
+        CommitLogStore api = new CommitLogStoreImpl(commitLog);
+        StoreContext.registerAPI(api, CommitLogStore.class);
     }
 
 }

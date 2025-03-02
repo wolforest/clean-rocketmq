@@ -2,15 +2,15 @@ package cn.coderule.minimq.store.domain.consumequeue;
 
 import cn.coderule.minimq.domain.model.bo.CommitLogEvent;
 import cn.coderule.minimq.domain.model.bo.QueueUnit;
-import cn.coderule.minimq.domain.service.store.domain.ConsumeQueueStore;
+import cn.coderule.minimq.domain.service.store.domain.ConsumeQueueGateway;
 import cn.coderule.minimq.domain.service.store.domain.ConsumeQueue;
 import cn.coderule.minimq.store.domain.consumequeue.queue.ConsumeQueueFactory;
 import java.util.List;
 
-public class DefaultConsumeQueueStore implements ConsumeQueueStore {
+public class DefaultConsumeQueueGateway implements ConsumeQueueGateway {
     private final ConsumeQueueFactory consumeQueueFactory;
 
-    public DefaultConsumeQueueStore(ConsumeQueueFactory consumeQueueFactory) {
+    public DefaultConsumeQueueGateway(ConsumeQueueFactory consumeQueueFactory) {
         this.consumeQueueFactory = consumeQueueFactory;
     }
 

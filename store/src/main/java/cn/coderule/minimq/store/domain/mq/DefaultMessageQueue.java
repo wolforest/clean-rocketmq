@@ -9,8 +9,8 @@ import cn.coderule.minimq.domain.model.dto.GetRequest;
 import cn.coderule.minimq.domain.model.dto.GetResult;
 import cn.coderule.minimq.domain.utils.lock.ConsumeQueueLock;
 import cn.coderule.minimq.domain.service.store.domain.CommitLog;
-import cn.coderule.minimq.domain.service.store.domain.ConsumeQueueStore;
-import cn.coderule.minimq.domain.service.store.domain.MessageStore;
+import cn.coderule.minimq.domain.service.store.domain.ConsumeQueueGateway;
+import cn.coderule.minimq.domain.service.store.domain.MessageQueue;
 import cn.coderule.minimq.domain.model.dto.EnqueueResult;
 import cn.coderule.minimq.domain.model.bo.MessageBO;
 import cn.coderule.minimq.store.server.StoreContext;
@@ -21,20 +21,20 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class DefaultMessageStore implements MessageStore {
+public class DefaultMessageQueue implements MessageQueue {
     private final ConsumeQueueLock consumeQueueLock;
     private final MessageConfig messageConfig;
-    private final ConsumeQueueStore consumeQueueStore;
+    private final ConsumeQueueGateway consumeQueueGateway;
     private final CommitLog commitLog;
 
-    public DefaultMessageStore(
+    public DefaultMessageQueue(
         MessageConfig messageConfig,
         CommitLog commitLog,
-        ConsumeQueueStore consumeQueueStore) {
+        ConsumeQueueGateway consumeQueueGateway) {
 
         this.messageConfig = messageConfig;
         this.commitLog = commitLog;
-        this.consumeQueueStore = consumeQueueStore;
+        this.consumeQueueGateway = consumeQueueGateway;
 
         this.consumeQueueLock = new ConsumeQueueLock();
     }
@@ -57,13 +57,13 @@ public class DefaultMessageStore implements MessageStore {
     public CompletableFuture<EnqueueResult> enqueueAsync(MessageBO messageBO) {
         consumeQueueLock.lock(messageBO.getTopic(), messageBO.getQueueId());
         try {
-            long queueOffset = consumeQueueStore.assignOffset(messageBO.getTopic(), messageBO.getQueueId());
+            long queueOffset = consumeQueueGateway.assignOffset(messageBO.getTopic(), messageBO.getQueueId());
             messageBO.setQueueOffset(queueOffset);
 
             InsertFuture result = commitLog.insert(messageBO);
 
             if (result.isInsertSuccess()) {
-                consumeQueueStore.increaseOffset(messageBO.getTopic(), messageBO.getQueueId());
+                consumeQueueGateway.increaseOffset(messageBO.getTopic(), messageBO.getQueueId());
             }
 
             return result.getFuture();
@@ -93,7 +93,7 @@ public class DefaultMessageStore implements MessageStore {
 
     @Override
     public GetResult get(GetRequest request) {
-        List<QueueUnit> unitList = consumeQueueStore.get(
+        List<QueueUnit> unitList = consumeQueueGateway.get(
             request.getTopic(), request.getQueueId(), request.getOffset(), request.getNum()
         );
 

@@ -1,13 +1,12 @@
 package cn.coderule.minimq.store.api;
 
 import cn.coderule.minimq.domain.model.Topic;
-import cn.coderule.minimq.domain.service.store.api.TopicService;
-import cn.coderule.minimq.domain.service.store.domain.meta.TopicStore;
+import cn.coderule.minimq.domain.service.store.api.TopicStore;
 
-public class TopicServiceImpl implements TopicService {
-    private final TopicStore topicStore;
+public class TopicStoreImpl implements TopicStore {
+    private final cn.coderule.minimq.domain.service.store.domain.meta.TopicStore topicStore;
 
-    public TopicServiceImpl(TopicStore topicStore) {
+    public TopicStoreImpl(cn.coderule.minimq.domain.service.store.domain.meta.TopicStore topicStore) {
         this.topicStore = topicStore;
     }
 

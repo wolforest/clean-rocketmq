@@ -4,11 +4,11 @@ import cn.coderule.minimq.domain.model.bo.MessageBO;
 import cn.coderule.minimq.domain.model.dto.EnqueueResult;
 import cn.coderule.minimq.domain.model.dto.GetRequest;
 import cn.coderule.minimq.domain.model.dto.GetResult;
-import cn.coderule.minimq.domain.service.store.domain.MessageStore;
+import cn.coderule.minimq.domain.service.store.domain.MessageQueue;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-public class LocalMessageService implements MessageStore {
+public class LocalMessageService implements MessageQueue {
     @Override
     public EnqueueResult enqueue(MessageBO messageBO) {
         return null;

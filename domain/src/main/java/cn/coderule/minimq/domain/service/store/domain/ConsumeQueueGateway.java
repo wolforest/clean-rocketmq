@@ -4,7 +4,7 @@ import cn.coderule.minimq.domain.model.bo.CommitLogEvent;
 import cn.coderule.minimq.domain.model.bo.QueueUnit;
 import java.util.List;
 
-public interface ConsumeQueueStore {
+public interface ConsumeQueueGateway {
     void enqueue(CommitLogEvent event);
     QueueUnit get(String topic, int queueId, long offset);
     List<QueueUnit> get(String topic, int queueId, long offset, int num);
