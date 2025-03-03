@@ -1,4 +1,4 @@
-package cn.coderule.minimq.hello.java.atomic;
+package cn.coderule.minimq.hello.java.concurrent.atomic;
 
 import cn.coderule.common.util.test.MemoryRecoder;
 import java.util.concurrent.atomic.AtomicInteger;
