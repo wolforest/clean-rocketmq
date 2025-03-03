@@ -1,6 +1,14 @@
 package cn.coderule.minimq.rpc.registry.protocol.cluster;
 
-import cn.coderule.minimq.rpc.common.protocol.RpcSerializable;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
-public class StoreInfo extends RpcSerializable {
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
+public class StoreInfo extends ServerInfo {
+    private String haAddress;
 }
