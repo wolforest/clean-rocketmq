@@ -1,7 +1,6 @@
-package cn.coderule.minimq.rpc.common.client;
+package cn.coderule.minimq.rpc.common.netty;
 
 import cn.coderule.minimq.rpc.common.RpcClient;
-import cn.coderule.minimq.rpc.common.core.NettyService;
 import cn.coderule.minimq.rpc.common.core.RpcHook;
 import cn.coderule.minimq.rpc.common.core.RpcPipeline;
 import cn.coderule.minimq.rpc.config.RpcClientConfig;
