@@ -1,4 +1,4 @@
-package cn.coderule.minimq.rpc.registry.protocol;
+package cn.coderule.minimq.rpc.registry.protocol.cluster;
 
 import cn.coderule.minimq.rpc.common.protocol.RpcSerializable;
 import java.util.Map;
