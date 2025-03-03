@@ -4,10 +4,14 @@ import cn.coderule.minimq.rpc.common.RpcClient;
 import cn.coderule.minimq.rpc.common.core.NettyService;
 import cn.coderule.minimq.rpc.common.core.RpcHook;
 import cn.coderule.minimq.rpc.common.core.RpcPipeline;
+import cn.coderule.minimq.rpc.config.RpcClientConfig;
 
 public class NettyClient extends NettyService implements RpcClient {
-    public NettyClient(int onewaySemaphore, int asyncSemaphore) {
-        super(onewaySemaphore, asyncSemaphore);
+    private final RpcClientConfig config;
+
+    public NettyClient(RpcClientConfig config) {
+        super(config.getOnewaySemaphorePermits(), config.getAsyncSemaphorePermits());
+        this.config = config;
     }
 
     @Override
