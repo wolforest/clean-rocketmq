@@ -24,7 +24,4 @@ public class RouteService {
         return routeMocker.getRoute(topic);
     }
 
-    public Set<MessageQueue> register(Topic topic) {
-        return routeMocker.toRoute(topic);
-    }
 }

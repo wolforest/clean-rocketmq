@@ -1,6 +1,7 @@
 package cn.coderule.minimq.broker.api;
 
 import cn.coderule.common.util.lang.collection.CollectionUtil;
+import cn.coderule.minimq.broker.domain.meta.RouteMocker;
 import cn.coderule.minimq.broker.domain.meta.RouteService;
 import cn.coderule.minimq.broker.domain.meta.TopicService;
 import cn.coderule.minimq.broker.server.model.RequestContext;
@@ -11,10 +12,12 @@ import java.util.Set;
 public class RouteController {
     private final RouteService routeService;
     private final TopicService topicService;
+    private final RouteMocker routeMocker;
 
     public RouteController(RouteService routeService, TopicService topicService) {
         this.routeService = routeService;
         this.topicService = topicService;
+        routeMocker = new RouteMocker(topicService);
     }
 
     public Set<MessageQueue> getRoute(RequestContext context, String topicName) {
@@ -28,6 +31,6 @@ public class RouteController {
         }
 
         Topic topic = topicService.getOrCreate(topicName);
-        return routeService.register(topic);
+        return routeMocker.toRoute(topic);
     }
 }
