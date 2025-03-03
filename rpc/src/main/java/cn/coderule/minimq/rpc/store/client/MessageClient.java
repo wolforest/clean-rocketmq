@@ -8,8 +8,12 @@ import cn.coderule.minimq.domain.service.store.api.MessageStore;
 import cn.coderule.minimq.rpc.store.StoreClient;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import lombok.Setter;
 
-public class MessageRpcClient extends AbstractStoreClient implements StoreClient, MessageStore {
+@Setter
+public class MessageClient extends AbstractStoreClient implements StoreClient, MessageStore {
+    private MessageStore localMessageStore;
+
     @Override
     public EnqueueResult enqueue(MessageBO messageBO) {
         if (isLocal(messageBO.getTopic())) {

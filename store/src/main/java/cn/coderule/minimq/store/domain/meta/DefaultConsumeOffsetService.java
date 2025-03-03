@@ -4,13 +4,13 @@ import cn.coderule.common.util.io.FileUtil;
 import cn.coderule.common.util.lang.StringUtil;
 import cn.coderule.common.util.lang.string.JSONUtil;
 import cn.coderule.minimq.domain.model.meta.ConsumeOffset;
-import cn.coderule.minimq.domain.service.store.domain.meta.ConsumeOffsetStore;
+import cn.coderule.minimq.domain.service.store.domain.meta.ConsumeOffsetService;
 
-public class DefaultConsumeOffsetStore implements ConsumeOffsetStore {
+public class DefaultConsumeOffsetService implements ConsumeOffsetService {
     private final String storePath;
     private ConsumeOffset consumeOffset;
 
-    public DefaultConsumeOffsetStore(String storePath) {
+    public DefaultConsumeOffsetService(String storePath) {
         this.storePath = storePath;
     }
 

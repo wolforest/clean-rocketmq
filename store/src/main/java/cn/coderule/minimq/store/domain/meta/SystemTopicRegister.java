@@ -1,17 +1,17 @@
 package cn.coderule.minimq.store.domain.meta;
 
 import cn.coderule.minimq.domain.model.Topic;
-import cn.coderule.minimq.domain.service.store.domain.meta.TopicStore;
+import cn.coderule.minimq.domain.service.store.domain.meta.TopicService;
 import cn.coderule.minimq.domain.utils.topic.KeyBuilder;
 import cn.coderule.minimq.domain.utils.topic.TopicValidator;
 
 public class SystemTopicRegister {
     private static final int SCHEDULE_TOPIC_QUEUE_NUM = 18;
 
-    private final TopicStore topicStore;
+    private final TopicService topicService;
 
-    public SystemTopicRegister(TopicStore topicStore) {
-        this.topicStore = topicStore;
+    public SystemTopicRegister(TopicService topicService) {
+        this.topicService = topicService;
     }
 
     public void register() {
@@ -54,7 +54,7 @@ public class SystemTopicRegister {
             topic.setPerm(perm);
         }
 
-        topicStore.putTopic(topic);
+        topicService.putTopic(topic);
     }
 
 }

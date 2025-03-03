@@ -1,7 +1,6 @@
 package cn.coderule.minimq.broker.domain.meta;
 
 import cn.coderule.minimq.domain.model.Topic;
-import cn.coderule.minimq.domain.service.store.domain.meta.TopicStore;
 
 /**
  * topic service
@@ -9,10 +8,10 @@ import cn.coderule.minimq.domain.service.store.domain.meta.TopicStore;
  *  - support local/remote mode
  */
 public class TopicService {
-    private TopicStore topicStore;
+    private cn.coderule.minimq.domain.service.store.domain.meta.TopicService topicService;
 
     public boolean exists(String topicName) {
-        return topicStore.exists(topicName);
+        return topicService.exists(topicName);
     }
 
     public Topic getOrCreate(String topicName) {
@@ -30,15 +29,15 @@ public class TopicService {
     }
 
     public Topic get(String topicName) {
-        return topicStore.getTopic(topicName);
+        return topicService.getTopic(topicName);
     }
 
     public void save(Topic topicName) {
-        topicStore.putTopic(topicName);
+        topicService.putTopic(topicName);
     }
 
     public void delete(String topicName) {
-        topicStore.deleteTopic(topicName);
+        topicService.deleteTopic(topicName);
     }
 
 }

@@ -2,7 +2,7 @@ package cn.coderule.minimq.store.domain.consumequeue.queue;
 
 import cn.coderule.minimq.domain.config.ConsumeQueueConfig;
 import cn.coderule.minimq.domain.service.store.domain.ConsumeQueue;
-import cn.coderule.minimq.domain.service.store.domain.meta.TopicStore;
+import cn.coderule.minimq.domain.service.store.domain.meta.TopicService;
 import cn.coderule.minimq.store.server.StoreCheckpoint;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +15,7 @@ public class ConsumeQueueFactory implements ConsumeQueueRegistry {
     private static final int QUEUE_MAP_SIZE = 128;
 
     private final ConsumeQueueConfig config;
-    private final TopicStore topicStore;
+    private final TopicService topicService;
     private final StoreCheckpoint checkpoint;
 
     private final List<ConsumeQueueRegistry> createHooks = new ArrayList<>();
@@ -27,9 +27,9 @@ public class ConsumeQueueFactory implements ConsumeQueueRegistry {
      */
     protected final ConcurrentMap<String, ConcurrentMap<Integer, ConsumeQueue>> topicMap;
 
-    public ConsumeQueueFactory(ConsumeQueueConfig config, TopicStore topicStore, StoreCheckpoint checkpoint) {
+    public ConsumeQueueFactory(ConsumeQueueConfig config, TopicService topicService, StoreCheckpoint checkpoint) {
         this.config = config;
-        this.topicStore = topicStore;
+        this.topicService = topicService;
         this.checkpoint = checkpoint;
 
         this.topicMap = new ConcurrentHashMap<>(TOPIC_MAP_SIZE);
@@ -40,7 +40,7 @@ public class ConsumeQueueFactory implements ConsumeQueueRegistry {
     }
 
     public ConsumeQueue getOrCreate(String topic, int queueId) {
-        if (!topicStore.exists(topic)) {
+        if (!topicService.exists(topic)) {
             return ErrorConsumeQueue.singleton();
         }
 

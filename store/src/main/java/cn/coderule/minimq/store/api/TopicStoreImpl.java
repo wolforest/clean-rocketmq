@@ -2,26 +2,32 @@ package cn.coderule.minimq.store.api;
 
 import cn.coderule.minimq.domain.model.Topic;
 import cn.coderule.minimq.domain.service.store.api.TopicStore;
+import cn.coderule.minimq.domain.service.store.domain.meta.TopicService;
 
 public class TopicStoreImpl implements TopicStore {
-    private final cn.coderule.minimq.domain.service.store.domain.meta.TopicStore topicStore;
+    private final TopicService topicService;
 
-    public TopicStoreImpl(cn.coderule.minimq.domain.service.store.domain.meta.TopicStore topicStore) {
-        this.topicStore = topicStore;
+    public TopicStoreImpl(TopicService topicService) {
+        this.topicService = topicService;
+    }
+
+    @Override
+    public boolean exists(String topicName) {
+        return topicService.exists(topicName);
     }
 
     @Override
     public Topic getTopic(String topicName) {
-        return topicStore.getTopic(topicName);
+        return topicService.getTopic(topicName);
     }
 
     @Override
     public void putTopic(Topic topic) {
-        topicStore.putTopic(topic);
+        topicService.putTopic(topic);
     }
 
     @Override
     public void deleteTopic(String topicName) {
-        topicStore.deleteTopic(topicName);
+        topicService.deleteTopic(topicName);
     }
 }

@@ -5,13 +5,13 @@ import cn.coderule.common.util.lang.StringUtil;
 import cn.coderule.common.util.lang.string.JSONUtil;
 import cn.coderule.minimq.domain.model.Topic;
 import cn.coderule.minimq.domain.model.meta.TopicTable;
-import cn.coderule.minimq.domain.service.store.domain.meta.TopicStore;
+import cn.coderule.minimq.domain.service.store.domain.meta.TopicService;
 
-public class DefaultTopicStore implements TopicStore {
+public class DefaultTopicService implements TopicService {
     private final String storePath;
     private TopicTable topicTable;
 
-    public DefaultTopicStore(String storePath) {
+    public DefaultTopicService(String storePath) {
         this.storePath = storePath;
     }
 

@@ -3,7 +3,7 @@ package cn.coderule.minimq.store.domain.consumequeue;
 import cn.coderule.minimq.domain.config.ConsumeQueueConfig;
 import cn.coderule.minimq.domain.service.store.domain.CommitLogDispatcher;
 import cn.coderule.minimq.domain.service.store.domain.ConsumeQueueGateway;
-import cn.coderule.minimq.domain.service.store.domain.meta.TopicStore;
+import cn.coderule.minimq.domain.service.store.domain.meta.TopicService;
 import cn.coderule.minimq.domain.service.store.manager.ConsumeQueueManager;
 import cn.coderule.minimq.store.domain.consumequeue.queue.ConsumeQueueFactory;
 import cn.coderule.minimq.store.domain.consumequeue.service.ConsumeQueueFlusher;
@@ -68,8 +68,8 @@ public class DefaultConsumeQueueManager implements ConsumeQueueManager {
     }
 
     private ConsumeQueueFactory initConsumeQueueFactory() {
-        TopicStore topicStore = StoreContext.getBean(TopicStore.class);
-        ConsumeQueueFactory consumeQueueFactory = new ConsumeQueueFactory(consumeQueueConfig, topicStore, StoreContext.getCheckPoint());
+        TopicService topicService = StoreContext.getBean(TopicService.class);
+        ConsumeQueueFactory consumeQueueFactory = new ConsumeQueueFactory(consumeQueueConfig, topicService, StoreContext.getCheckPoint());
 
         consumeQueueFactory.addCreateHook(flusher);
         consumeQueueFactory.addCreateHook(loader);
