@@ -20,6 +20,7 @@
         <module>hello</module>
         <module>domain</module>
         <module>rpc</module>
+        <module>registry</module>
         <module>store</module>
         <module>broker</module>
     </modules>
@@ -38,6 +39,16 @@
             <dependency>
                 <groupId>cn.coderule.minimq</groupId>
                 <artifactId>rpc</artifactId>
+                <version>${mini-mq.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.coderule.minimq</groupId>
+                <artifactId>registry</artifactId>
+                <version>${mini-mq.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.coderule.minimq</groupId>
+                <artifactId>broker</artifactId>
                 <version>${mini-mq.version}</version>
             </dependency>
             <dependency>
