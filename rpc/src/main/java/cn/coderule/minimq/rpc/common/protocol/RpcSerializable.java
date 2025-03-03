@@ -17,11 +17,12 @@
 package cn.coderule.minimq.rpc.common.protocol;
 
 import com.alibaba.fastjson2.JSON;
+import java.io.Serializable;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-public abstract class RpcSerializable {
+public abstract class RpcSerializable implements Serializable {
     private final static Charset CHARSET_UTF8 = StandardCharsets.UTF_8;
 
     public static byte[] encode(final Object obj) {
