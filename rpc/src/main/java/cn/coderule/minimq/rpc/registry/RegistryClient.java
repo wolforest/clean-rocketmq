@@ -5,6 +5,7 @@ import cn.coderule.minimq.rpc.common.RpcClient;
 import cn.coderule.minimq.rpc.common.protocol.DataVersion;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.ClusterInfo;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.GroupInfo;
+import cn.coderule.minimq.rpc.registry.protocol.route.RouteInfo;
 import java.util.List;
 
 public interface RegistryClient {
@@ -23,7 +24,7 @@ public interface RegistryClient {
     void storeHeartbeat();
     void registerTopic(Topic topic, DataVersion version);
 
-    GroupInfo syncGroupInfo(String clusterName, String groupName);
     ClusterInfo syncClusterInfo(String clusterName);
-
+    GroupInfo syncGroupInfo(String clusterName, String groupName);
+    RouteInfo syncRouteInfo(String topicName, long timeout);
 }

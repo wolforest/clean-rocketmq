@@ -29,11 +29,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Topic route data register to name server
  * with the header: RegisterTopicRequestHeader{topic, ...}
  */
+@Setter @Getter
 public class RouteInfo extends RpcSerializable {
     private String orderTopicConf;
     /**
@@ -111,7 +114,7 @@ public class RouteInfo extends RpcSerializable {
         }
     }
 
-    public RouteInfo cloneTopicRouteData() {
+    public RouteInfo cloneRouteInfo() {
         RouteInfo routeInfo = new RouteInfo();
         routeInfo.setQueueList(new ArrayList<>());
         routeInfo.setBrokerList(new ArrayList<>());
@@ -128,7 +131,7 @@ public class RouteInfo extends RpcSerializable {
         return routeInfo;
     }
 
-    public RouteInfo deepCloneTopicRouteData() {
+    public RouteInfo deepClone() {
         RouteInfo routeInfo = new RouteInfo();
 
         routeInfo.setOrderTopicConf(this.orderTopicConf);
@@ -161,7 +164,7 @@ public class RouteInfo extends RpcSerializable {
         return routeInfo;
     }
 
-    public boolean topicRouteDataChanged(RouteInfo oldData) {
+    public boolean isChanged(RouteInfo oldData) {
         if (oldData == null)
             return true;
         RouteInfo old = new RouteInfo(oldData);
@@ -171,46 +174,6 @@ public class RouteInfo extends RpcSerializable {
         Collections.sort(now.getQueueList());
         Collections.sort(now.getBrokerList());
         return !old.equals(now);
-    }
-
-    public List<QueueInfo> getQueueList() {
-        return queueList;
-    }
-
-    public void setQueueList(List<QueueInfo> queueList) {
-        this.queueList = queueList;
-    }
-
-    public List<GroupInfo> getBrokerList() {
-        return brokerList;
-    }
-
-    public void setBrokerList(List<GroupInfo> brokerList) {
-        this.brokerList = brokerList;
-    }
-
-    public HashMap<String, List<String>> getFilterServerTable() {
-        return filterServerTable;
-    }
-
-    public void setFilterServerTable(HashMap<String, List<String>> filterServerTable) {
-        this.filterServerTable = filterServerTable;
-    }
-
-    public String getOrderTopicConf() {
-        return orderTopicConf;
-    }
-
-    public void setOrderTopicConf(String orderTopicConf) {
-        this.orderTopicConf = orderTopicConf;
-    }
-
-    public Map<String, QueueMap> getTopicQueueMappingByBroker() {
-        return topicQueueMappingByBroker;
-    }
-
-    public void setTopicQueueMappingByBroker(Map<String, QueueMap> topicQueueMappingByBroker) {
-        this.topicQueueMappingByBroker = topicQueueMappingByBroker;
     }
 
     @Override
@@ -255,11 +218,9 @@ public class RouteInfo extends RpcSerializable {
         } else if (!filterServerTable.equals(other.filterServerTable))
             return false;
         if (topicQueueMappingByBroker == null) {
-            if (other.topicQueueMappingByBroker != null)
-                return false;
-        } else if (!topicQueueMappingByBroker.equals(other.topicQueueMappingByBroker))
-            return false;
-        return true;
+            return other.topicQueueMappingByBroker == null;
+        } else
+            return topicQueueMappingByBroker.equals(other.topicQueueMappingByBroker);
     }
 
     @Override
