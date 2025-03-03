@@ -6,6 +6,10 @@ import cn.coderule.minimq.rpc.common.core.RpcHook;
 import cn.coderule.minimq.rpc.common.core.RpcPipeline;
 
 public class NettyClient extends NettyService implements RpcClient {
+    public NettyClient(int onewaySemaphore, int asyncSemaphore) {
+        super(onewaySemaphore, asyncSemaphore);
+    }
+
     @Override
     public void start() {
 
