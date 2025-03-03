@@ -9,8 +9,8 @@ public class NettyService {
     protected final Semaphore onewaySemaphore;
     protected final Semaphore asyncSemaphore;
 
-    public NettyService(int onewaySemaphore, int asyncSemaphore) {
-        this.onewaySemaphore = new Semaphore(onewaySemaphore, true);
-        this.asyncSemaphore = new Semaphore(asyncSemaphore, true);
+    public NettyService(int onewaySemaphorePermits, int asyncSemaphorePermits) {
+        this.onewaySemaphore = new Semaphore(onewaySemaphorePermits, true);
+        this.asyncSemaphore = new Semaphore(asyncSemaphorePermits, true);
     }
 }
