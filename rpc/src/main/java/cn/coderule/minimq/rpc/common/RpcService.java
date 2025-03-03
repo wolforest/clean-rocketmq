@@ -1,7 +1,7 @@
 package cn.coderule.minimq.rpc.common;
 
-import cn.coderule.minimq.rpc.common.rpc.RpcHook;
-import cn.coderule.minimq.rpc.common.rpc.RpcPipeline;
+import cn.coderule.minimq.rpc.common.core.RpcHook;
+import cn.coderule.minimq.rpc.common.core.RpcPipeline;
 
 public interface RpcService {
     void start();

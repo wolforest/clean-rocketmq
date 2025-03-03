@@ -1,4 +1,4 @@
-package cn.coderule.minimq.rpc.common.rpc;
+package cn.coderule.minimq.rpc.common.core;
 
 import io.netty.channel.ChannelHandlerContext;
 
