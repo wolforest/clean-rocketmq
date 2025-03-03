@@ -12,6 +12,15 @@ public interface RegistryClient {
     void setServerList(List<String> serverList);
     void scanServer();
 
-    void registerTopic(Topic topic, DataVersion version);
+    void registerBroker();
+    void unregisterBroker();
+    void brokerHeartbeat();
+
     void registerStore();
+    void unregisterStore();
+    void storeHeartbeat();
+    void registerTopic(Topic topic, DataVersion version);
+
+
+
 }
