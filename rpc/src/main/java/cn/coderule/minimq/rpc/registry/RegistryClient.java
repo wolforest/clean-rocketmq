@@ -8,7 +8,7 @@ public interface RegistryClient {
 
     List<String> getServerList();
     void setServerList(List<String> serverList);
-    void scanServerList();
+    void scanServer();
 
 
 }
