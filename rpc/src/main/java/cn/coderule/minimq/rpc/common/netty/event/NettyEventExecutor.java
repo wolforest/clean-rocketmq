@@ -2,6 +2,7 @@ package cn.coderule.minimq.rpc.common.netty.event;
 
 import cn.coderule.common.lang.concurrent.ServiceThread;
 import cn.coderule.minimq.rpc.common.core.RpcListener;
+import cn.coderule.minimq.rpc.common.netty.NettyService;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
@@ -9,10 +10,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class NettyEventExecutor extends ServiceThread {
     private final LinkedBlockingQueue<NettyEvent> eventQueue = new LinkedBlockingQueue<>();
-    private final RpcListener listener;
+    private final NettyService nettyService;
 
-    public NettyEventExecutor(RpcListener listener) {
-        this.listener = listener;
+    public NettyEventExecutor(NettyService nettyService) {
+        this.nettyService = nettyService;
     }
 
     @Override
@@ -45,6 +46,7 @@ public class NettyEventExecutor extends ServiceThread {
     private void processEvent() {
         try {
             NettyEvent event = this.eventQueue.poll(3000, TimeUnit.MILLISECONDS);
+            RpcListener listener = nettyService.getRpcListener();
             if (event == null || listener == null) {
                 return;
             }

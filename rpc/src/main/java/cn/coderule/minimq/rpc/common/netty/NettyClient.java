@@ -2,6 +2,7 @@ package cn.coderule.minimq.rpc.common.netty;
 
 import cn.coderule.minimq.rpc.common.RpcClient;
 import cn.coderule.minimq.rpc.common.core.RpcHook;
+import cn.coderule.minimq.rpc.common.core.RpcListener;
 import cn.coderule.minimq.rpc.common.core.RpcPipeline;
 import cn.coderule.minimq.rpc.config.RpcClientConfig;
 
@@ -11,6 +12,11 @@ public class NettyClient extends NettyService implements RpcClient {
     public NettyClient(RpcClientConfig config) {
         super(config.getOnewaySemaphorePermits(), config.getAsyncSemaphorePermits());
         this.config = config;
+    }
+
+    @Override
+    public RpcListener getRpcListener() {
+        return null;
     }
 
     @Override
@@ -37,4 +43,6 @@ public class NettyClient extends NettyService implements RpcClient {
     public void setRpcPipeline(RpcPipeline pipeline) {
 
     }
+
+
 }
