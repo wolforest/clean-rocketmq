@@ -31,7 +31,7 @@ public class ResponseFuture {
     private final long beginTimestamp = System.currentTimeMillis();
     private final CountDownLatch countDownLatch = new CountDownLatch(1);
 
-    private final SemaphoreGuard once;
+    private final SemaphoreGuard semaphoreGuard;
 
     private final AtomicBoolean executeCallbackOnlyOnce = new AtomicBoolean(false);
     private volatile RpcCommand responseCommand;
@@ -40,18 +40,18 @@ public class ResponseFuture {
     private volatile boolean interrupted = false;
 
     public ResponseFuture(Channel channel, int opaque, long timeoutMillis, RpcCallback invokeCallback,
-                          SemaphoreGuard once) {
-        this(channel, opaque, null, timeoutMillis, invokeCallback, once);
+                          SemaphoreGuard semaphoreGuard) {
+        this(channel, opaque, null, timeoutMillis, invokeCallback, semaphoreGuard);
     }
 
     public ResponseFuture(Channel channel, int opaque, RpcCommand request, long timeoutMillis, RpcCallback invokeCallback,
-                          SemaphoreGuard once) {
+                          SemaphoreGuard semaphoreGuard) {
         this.channel = channel;
         this.opaque = opaque;
         this.request = request;
         this.timeoutMillis = timeoutMillis;
         this.invokeCallback = invokeCallback;
-        this.once = once;
+        this.semaphoreGuard = semaphoreGuard;
     }
 
     public void executeRpcCallback() {
@@ -87,8 +87,8 @@ public class ResponseFuture {
     }
 
     public void release() {
-        if (this.once != null) {
-            this.once.release();
+        if (this.semaphoreGuard != null) {
+            this.semaphoreGuard.release();
         }
     }
 

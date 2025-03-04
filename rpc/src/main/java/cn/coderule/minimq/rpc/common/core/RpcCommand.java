@@ -1,4 +1,4 @@
 package cn.coderule.minimq.rpc.common.core;
 
-public interface RpcCommand {
+public class RpcCommand {
 }
