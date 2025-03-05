@@ -17,6 +17,7 @@
 package cn.coderule.minimq.rpc.common.netty.handler;
 
 import cn.coderule.minimq.rpc.common.enums.TlsMode;
+import cn.coderule.minimq.rpc.common.netty.codec.FileRegionEncoder;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;

@@ -2,6 +2,7 @@ package cn.coderule.minimq.rpc.common.netty;
 
 import cn.coderule.common.lang.concurrent.DefaultThreadFactory;
 import cn.coderule.common.util.lang.SystemUtil;
+import cn.coderule.common.util.lang.ThreadUtil;
 import cn.coderule.minimq.rpc.common.RpcServer;
 import cn.coderule.minimq.rpc.common.core.RpcCallback;
 import cn.coderule.minimq.rpc.common.core.RpcCommand;
@@ -20,12 +21,24 @@ import io.netty.channel.epoll.EpollServerSocketChannel;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.util.concurrent.DefaultEventExecutorGroup;
+import io.netty.util.concurrent.EventExecutorGroup;
 import java.net.InetSocketAddress;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ThreadPoolExecutor;
+import lombok.Getter;
 
 public class NettyServer extends NettyService implements RpcServer {
+    private static final int DEFAULT_PROCESSOR_THREAD_NUM = 4;
+
     private final RpcServerConfig config;
+    @Getter
     private final RpcListener rpcListener;
+    @Getter
+    private final ExecutorService processorExecutor;
+
+
     private final ServerBootstrap bootstrap;
     private final DefaultEventExecutorGroup eventExecutorGroup;
 
@@ -39,9 +52,23 @@ public class NettyServer extends NettyService implements RpcServer {
         this.rpcListener = rpcListener;
         this.bootstrap = new ServerBootstrap();
 
-        this.eventExecutorGroup = new DefaultEventExecutorGroup(
+        this.eventExecutorGroup = buildEventExecutorGroup();
+        this.processorExecutor = buildProcessorExecutor();
+    }
+
+    private DefaultEventExecutorGroup buildEventExecutorGroup() {
+        return new DefaultEventExecutorGroup(
             config.getBusinessThreadNum(), new DefaultThreadFactory("NettyWorker_")
         );
+    }
+
+    private ExecutorService buildProcessorExecutor() {
+        int threadNum = config.getProcessorThreadNum();
+        if (threadNum <= 0) {
+            threadNum = DEFAULT_PROCESSOR_THREAD_NUM;
+        }
+
+        return Executors.newFixedThreadPool(threadNum, new DefaultThreadFactory("NettyProcessor_"));
     }
 
     private void initBootstrap() {
@@ -73,32 +100,12 @@ public class NettyServer extends NettyService implements RpcServer {
     }
 
     @Override
-    public RpcListener getRpcListener() {
-        return null;
-    }
-
-    @Override
     public void start() {
 
     }
 
     @Override
     public void shutdown() {
-
-    }
-
-    @Override
-    public void registerRpcHook(RpcHook rpcHook) {
-
-    }
-
-    @Override
-    public void clearRpcHook() {
-
-    }
-
-    @Override
-    public void setRpcPipeline(RpcPipeline pipeline) {
 
     }
 

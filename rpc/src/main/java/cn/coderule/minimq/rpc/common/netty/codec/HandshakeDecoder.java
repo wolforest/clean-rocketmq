@@ -14,8 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.coderule.minimq.rpc.common.netty.handler;
+package cn.coderule.minimq.rpc.common.netty.codec;
 
+import cn.coderule.minimq.rpc.common.netty.handler.HAProxyMessageHandler;
+import cn.coderule.minimq.rpc.common.netty.handler.TlsModeHandler;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
@@ -29,7 +31,7 @@ import java.util.NoSuchElementException;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class HandshakeHandler extends ByteToMessageDecoder {
+public class HandshakeDecoder extends ByteToMessageDecoder {
 
     public static final String HANDSHAKE_HANDLER_NAME = "handshakeHandler";
     public static final String HA_PROXY_DECODER = "HAProxyDecoder";
@@ -38,7 +40,7 @@ public class HandshakeHandler extends ByteToMessageDecoder {
     private final EventExecutorGroup eventExecutorGroup;
     private final TlsModeHandler tlsModeHandler;
 
-    public HandshakeHandler(EventExecutorGroup eventExecutorGroup, TlsModeHandler tlsModeHandler) {
+    public HandshakeDecoder(EventExecutorGroup eventExecutorGroup, TlsModeHandler tlsModeHandler) {
         this.eventExecutorGroup = eventExecutorGroup;
         this.tlsModeHandler = tlsModeHandler;
     }

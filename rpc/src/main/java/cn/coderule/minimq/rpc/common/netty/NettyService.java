@@ -1,6 +1,7 @@
 package cn.coderule.minimq.rpc.common.netty;
 
 import cn.coderule.common.ds.Pair;
+import cn.coderule.minimq.rpc.common.RpcService;
 import cn.coderule.minimq.rpc.common.core.ResponseFuture;
 import cn.coderule.minimq.rpc.common.core.RpcHook;
 import cn.coderule.minimq.rpc.common.core.RpcListener;
@@ -22,7 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Data
-public abstract class NettyService {
+public abstract class NettyService implements RpcService {
     protected final Semaphore onewaySemaphore;
     protected final Semaphore asyncSemaphore;
 
@@ -48,9 +49,7 @@ public abstract class NettyService {
         this.onewaySemaphore = new Semaphore(onewaySemaphorePermits, true);
         this.asyncSemaphore = new Semaphore(asyncSemaphorePermits, true);
     }
-
-    public abstract RpcListener getRpcListener();
-
+   
     /**
      * Put a netty event to the executor.
      *
@@ -60,5 +59,21 @@ public abstract class NettyService {
         this.nettyEventExecutor.putNettyEvent(event);
     }
 
+    @Override
+    public void registerRpcHook(RpcHook rpcHook) {
+        if (rpcHook != null && !rpcHooks.contains(rpcHook)) {
+            rpcHooks.add(rpcHook);
+        }
+    }
+
+    @Override
+    public void clearRpcHook() {
+        rpcHooks.clear();
+    }
+
+    @Override
+    public void setRpcPipeline(RpcPipeline pipeline) {
+        this.rpcPipeline = pipeline;
+    }
 
 }

@@ -10,9 +10,15 @@ import cn.coderule.minimq.rpc.common.core.RpcProcessor;
 import cn.coderule.minimq.rpc.config.RpcClientConfig;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
+import lombok.Getter;
 
 public class NettyClient extends NettyService implements RpcClient {
     private final RpcClientConfig config;
+
+    @Getter
+    private RpcListener rpcListener;
+    @Getter
+    private ExecutorService processorExecutor;
 
     public NettyClient(RpcClientConfig config) {
         super(config.getOnewaySemaphorePermits(), config.getAsyncSemaphorePermits());
