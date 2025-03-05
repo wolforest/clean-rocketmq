@@ -16,22 +16,20 @@
  */
 package cn.coderule.minimq.rpc.common.netty.codec;
 
+import cn.coderule.minimq.rpc.common.core.RpcCommand;
+import cn.coderule.minimq.rpc.common.netty.handler.RemotingHelper;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
-import org.apache.rocketmq.common.domain.constant.LoggerName;
-import org.apache.rocketmq.logging.org.slf4j.Logger;
-import org.apache.rocketmq.logging.org.slf4j.LoggerFactory;
-import org.apache.rocketmq.remoting.common.RemotingHelper;
-import org.apache.rocketmq.remoting.protocol.RemotingCommand;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @ChannelHandler.Sharable
-public class NettyEncoder extends MessageToByteEncoder<RemotingCommand> {
-    private static final Logger log = LoggerFactory.getLogger(LoggerName.ROCKETMQ_REMOTING_NAME);
+public class NettyEncoder extends MessageToByteEncoder<RpcCommand> {
 
     @Override
-    public void encode(ChannelHandlerContext ctx, RemotingCommand remotingCommand, ByteBuf out)
+    public void encode(ChannelHandlerContext ctx, RpcCommand remotingCommand, ByteBuf out)
         throws Exception {
         try {
             remotingCommand.fastEncodeHeader(out);
@@ -40,7 +38,7 @@ public class NettyEncoder extends MessageToByteEncoder<RemotingCommand> {
                 out.writeBytes(body);
             }
         } catch (Exception e) {
-            log.error("encode exception, " + RemotingHelper.parseChannelRemoteAddr(ctx.channel()), e);
+            log.error("encode exception, {}", RemotingHelper.parseChannelRemoteAddr(ctx.channel()), e);
             if (remotingCommand != null) {
                 log.error(remotingCommand.toString());
             }

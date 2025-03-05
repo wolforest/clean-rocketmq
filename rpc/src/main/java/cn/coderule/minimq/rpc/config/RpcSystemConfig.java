@@ -17,7 +17,7 @@
 
 package cn.coderule.minimq.rpc.config;
 
-public class NettySystemConfig {
+public class RpcSystemConfig {
     public static final String COM_ROCKETMQ_REMOTING_NETTY_POOLED_BYTE_BUF_ALLOCATOR_ENABLE =
         "com.rocketmq.remoting.nettyPooledByteBufAllocatorEnable";
     public static final String COM_ROCKETMQ_REMOTING_SOCKET_SNDBUF_SIZE =

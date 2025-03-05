@@ -1,6 +1,6 @@
 package cn.coderule.minimq.rpc.registry.protocol.cluster;
 
-import cn.coderule.minimq.rpc.common.protocol.RpcSerializable;
+import cn.coderule.minimq.rpc.common.netty.codec.RpcSerializable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package cn.coderule.minimq.rpc.common.protocol;
+package cn.coderule.minimq.rpc.common.enums;
 
 public enum SerializeType {
     JSON((byte) 0),

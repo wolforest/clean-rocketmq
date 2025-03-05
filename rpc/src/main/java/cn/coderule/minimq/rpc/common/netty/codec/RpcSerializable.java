@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.coderule.minimq.rpc.common.protocol;
+package cn.coderule.minimq.rpc.common.netty.codec;
 
 import com.alibaba.fastjson2.JSON;
 import java.io.Serializable;
