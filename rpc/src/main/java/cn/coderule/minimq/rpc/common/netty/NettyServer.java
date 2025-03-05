@@ -3,11 +3,15 @@ package cn.coderule.minimq.rpc.common.netty;
 import cn.coderule.common.lang.concurrent.DefaultThreadFactory;
 import cn.coderule.common.util.lang.SystemUtil;
 import cn.coderule.minimq.rpc.common.RpcServer;
+import cn.coderule.minimq.rpc.common.core.RpcCallback;
+import cn.coderule.minimq.rpc.common.core.RpcCommand;
 import cn.coderule.minimq.rpc.common.core.RpcHook;
 import cn.coderule.minimq.rpc.common.core.RpcListener;
 import cn.coderule.minimq.rpc.common.core.RpcPipeline;
+import cn.coderule.minimq.rpc.common.core.RpcProcessor;
 import cn.coderule.minimq.rpc.config.RpcServerConfig;
 import io.netty.bootstrap.ServerBootstrap;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.epoll.Epoll;
@@ -17,6 +21,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.util.concurrent.DefaultEventExecutorGroup;
 import java.net.InetSocketAddress;
+import java.util.concurrent.ExecutorService;
 
 public class NettyServer extends NettyService implements RpcServer {
     private final RpcServerConfig config;
@@ -101,5 +106,26 @@ public class NettyServer extends NettyService implements RpcServer {
         return SystemUtil.isLinux()
             && config.isUseEpoll()
             && Epoll.isAvailable();
+    }
+
+    @Override
+    public void registerProcessor(int requestCode, RpcProcessor processor, ExecutorService executor) {
+
+    }
+
+    @Override
+    public RpcCommand invokeSync(Channel channel, RpcCommand request, long timeoutMillis) throws Exception {
+        return null;
+    }
+
+    @Override
+    public void invokeAsync(Channel channel, RpcCommand request, long timeoutMillis,
+        RpcCallback callback) throws Exception {
+
+    }
+
+    @Override
+    public void invokeOneway(Channel channel, RpcCommand request, long timeoutMillis) throws Exception {
+
     }
 }
