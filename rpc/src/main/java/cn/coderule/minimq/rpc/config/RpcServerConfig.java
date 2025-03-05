@@ -15,9 +15,9 @@ public class RpcServerConfig implements Serializable {
     private int bossThreadNum = 1;
     private int workerThreadNum = 3;
     private int businessThreadNum = 8;
-
     private int callbackThreadNum = 0;
 
+    private boolean useEpoll = false;
     private int onewaySemaphorePermits = 256;
     private int asyncSemaphorePermits = 64;
     private int maxChannelIdle = 120_000;
@@ -32,5 +32,4 @@ public class RpcServerConfig implements Serializable {
     private boolean enableGracefullyShutdown = false;
     private int shutdownWaitTime = 30_000;
 
-    private boolean useEpoll = false;
 }
