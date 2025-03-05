@@ -12,8 +12,10 @@ public class RpcServerConfig implements Serializable {
     private String address = "0.0.0.0";
     private int port = 0;
 
-    private int bossThreadNum = 3;
-    private int workerThreadNum = 8;
+    private int bossThreadNum = 1;
+    private int workerThreadNum = 3;
+    private int businessThreadNum = 8;
+
     private int callbackThreadNum = 0;
 
     private int onewaySemaphorePermits = 256;

@@ -6,15 +6,15 @@ import lombok.Data;
 
 @Data
 public class GrpcConfig implements Serializable {
-    private boolean enableGrpcEpoll = false;
-
     private int port = 8081;
 
-    private long grpcShutdownTimeout = 30;
     private int grpcBossThreadNum = 1;
     private int grpcWorkerThreadNum = SystemUtil.getProcessorNumber() * 2;
     private int grpcBusinessThreadNum = 16 + SystemUtil.getProcessorNumber() * 2;
     private int grpcBusinessQueueCapacity = 100000;
+    private long grpcShutdownTimeout = 30;
+
+    private boolean enableGrpcEpoll = false;
 
     // 5 seconds
     private int grpcRequestTimeout = 5000;
