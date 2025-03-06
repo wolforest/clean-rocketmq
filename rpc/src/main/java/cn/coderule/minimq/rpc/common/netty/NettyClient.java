@@ -4,7 +4,7 @@ import cn.coderule.minimq.rpc.common.RpcClient;
 import cn.coderule.minimq.rpc.common.core.RpcCallback;
 import cn.coderule.minimq.rpc.common.core.RpcCommand;
 import cn.coderule.minimq.rpc.common.core.RpcHook;
-import cn.coderule.minimq.rpc.common.core.RpcListener;
+import cn.coderule.minimq.rpc.common.netty.event.RpcListener;
 import cn.coderule.minimq.rpc.common.core.RpcPipeline;
 import cn.coderule.minimq.rpc.common.core.RpcProcessor;
 import cn.coderule.minimq.rpc.config.RpcClientConfig;

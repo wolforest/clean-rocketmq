@@ -4,7 +4,6 @@ import cn.coderule.common.ds.Pair;
 import cn.coderule.minimq.rpc.common.RpcService;
 import cn.coderule.minimq.rpc.common.core.ResponseFuture;
 import cn.coderule.minimq.rpc.common.core.RpcHook;
-import cn.coderule.minimq.rpc.common.core.RpcListener;
 import cn.coderule.minimq.rpc.common.core.RpcPipeline;
 import cn.coderule.minimq.rpc.common.core.RpcProcessor;
 import cn.coderule.minimq.rpc.common.netty.event.NettyEvent;
@@ -49,7 +48,7 @@ public abstract class NettyService implements RpcService {
         this.onewaySemaphore = new Semaphore(onewaySemaphorePermits, true);
         this.asyncSemaphore = new Semaphore(asyncSemaphorePermits, true);
     }
-   
+
     /**
      * Put a netty event to the executor.
      *

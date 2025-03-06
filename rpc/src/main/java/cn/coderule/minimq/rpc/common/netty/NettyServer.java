@@ -5,7 +5,7 @@ import cn.coderule.common.util.lang.SystemUtil;
 import cn.coderule.minimq.rpc.common.RpcServer;
 import cn.coderule.minimq.rpc.common.core.RpcCallback;
 import cn.coderule.minimq.rpc.common.core.RpcCommand;
-import cn.coderule.minimq.rpc.common.core.RpcListener;
+import cn.coderule.minimq.rpc.common.netty.event.RpcListener;
 import cn.coderule.minimq.rpc.common.core.RpcProcessor;
 import cn.coderule.minimq.rpc.config.RpcServerConfig;
 import io.netty.bootstrap.ServerBootstrap;

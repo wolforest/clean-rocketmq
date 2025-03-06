@@ -1,7 +1,7 @@
 package cn.coderule.minimq.rpc.common;
 
 import cn.coderule.minimq.rpc.common.core.RpcHook;
-import cn.coderule.minimq.rpc.common.core.RpcListener;
+import cn.coderule.minimq.rpc.common.netty.event.RpcListener;
 import cn.coderule.minimq.rpc.common.core.RpcPipeline;
 import java.util.concurrent.ExecutorService;
 
