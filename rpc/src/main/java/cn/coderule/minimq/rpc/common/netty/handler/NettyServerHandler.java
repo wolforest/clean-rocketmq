@@ -27,9 +27,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @ChannelHandler.Sharable
 public class NettyServerHandler extends SimpleChannelInboundHandler<RpcCommand> {
-    private final RpcDispatcher dispatcher;
+    private final NettyDispatcher dispatcher;
 
-    public NettyServerHandler(RpcDispatcher dispatcher) {
+    public NettyServerHandler(NettyDispatcher dispatcher) {
         this.dispatcher = dispatcher;
     }
 
