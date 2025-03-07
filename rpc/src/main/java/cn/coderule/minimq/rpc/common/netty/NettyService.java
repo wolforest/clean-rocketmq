@@ -1,7 +1,7 @@
 package cn.coderule.minimq.rpc.common.netty;
 
 import cn.coderule.common.ds.Pair;
-import cn.coderule.minimq.rpc.common.RpcService;
+import cn.coderule.minimq.rpc.common.core.RpcService;
 import cn.coderule.minimq.rpc.common.core.ResponseFuture;
 import cn.coderule.minimq.rpc.common.core.RpcHook;
 import cn.coderule.minimq.rpc.common.core.RpcPipeline;
