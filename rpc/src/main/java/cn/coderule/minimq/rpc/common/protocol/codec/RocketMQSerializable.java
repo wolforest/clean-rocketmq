@@ -14,11 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.coderule.minimq.rpc.common.protocol;
+package cn.coderule.minimq.rpc.common.protocol.codec;
 
 import cn.coderule.minimq.rpc.common.core.RpcCommand;
 import cn.coderule.minimq.rpc.common.enums.LanguageCode;
 import cn.coderule.minimq.rpc.common.exception.RemotingCommandException;
+import cn.coderule.minimq.rpc.common.protocol.header.FastCodesHeader;
 import io.netty.buffer.ByteBuf;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;

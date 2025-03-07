@@ -1,5 +1,6 @@
 package cn.coderule.minimq.rpc.common.protocol;
 
+import cn.coderule.minimq.rpc.common.protocol.codec.RpcSerializable;
 import java.util.concurrent.atomic.AtomicLong;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

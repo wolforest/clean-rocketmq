@@ -15,9 +15,10 @@
  * limitations under the License.
  */
 
-package cn.coderule.minimq.rpc.common.protocol;
+package cn.coderule.minimq.rpc.common.protocol.header;
 
 import cn.coderule.minimq.rpc.common.exception.RemotingCommandException;
+import cn.coderule.minimq.rpc.common.protocol.codec.RocketMQSerializable;
 import io.netty.buffer.ByteBuf;
 import java.util.HashMap;
 

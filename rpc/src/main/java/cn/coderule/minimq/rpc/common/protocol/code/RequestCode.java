@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package cn.coderule.minimq.rpc.common.protocol;
+package cn.coderule.minimq.rpc.common.protocol.code;
 
 public class RequestCode {
 
