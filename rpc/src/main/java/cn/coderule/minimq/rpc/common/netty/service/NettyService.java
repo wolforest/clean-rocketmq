@@ -1,4 +1,4 @@
-package cn.coderule.minimq.rpc.common.netty;
+package cn.coderule.minimq.rpc.common.netty.service;
 
 import cn.coderule.common.ds.Pair;
 import cn.coderule.minimq.rpc.common.core.RpcService;
