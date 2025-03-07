@@ -16,8 +16,8 @@
  */
 package cn.coderule.minimq.rpc.common.netty.codec;
 
-import cn.coderule.minimq.rpc.common.netty.handler.HAProxyMessageHandler;
-import cn.coderule.minimq.rpc.common.netty.handler.TlsModeHandler;
+import cn.coderule.minimq.rpc.common.netty.service.HAProxyMessageHandler;
+import cn.coderule.minimq.rpc.common.netty.service.TlsModeHandler;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
@@ -61,7 +61,7 @@ public class HandshakeDecoder extends ByteToMessageDecoder {
             }
 
             try {
-                // Remove this handler
+                // Remove this service
                 ctx.pipeline().remove(this);
             } catch (NoSuchElementException e) {
                 log.error("Error while removing HandshakeHandler", e);

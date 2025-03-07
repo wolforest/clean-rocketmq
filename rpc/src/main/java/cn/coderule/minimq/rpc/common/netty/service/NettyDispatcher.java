@@ -1,4 +1,4 @@
-package cn.coderule.minimq.rpc.common.netty.handler;
+package cn.coderule.minimq.rpc.common.netty.service;
 
 import cn.coderule.minimq.rpc.common.core.RpcCommand;
 import cn.coderule.minimq.rpc.common.core.RpcProcessor;

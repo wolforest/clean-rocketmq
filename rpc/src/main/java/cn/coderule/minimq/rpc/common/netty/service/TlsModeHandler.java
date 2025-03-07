@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.coderule.minimq.rpc.common.netty.handler;
+package cn.coderule.minimq.rpc.common.netty.service;
 
 import cn.coderule.minimq.rpc.common.enums.TlsMode;
 import cn.coderule.minimq.rpc.common.netty.codec.FileRegionEncoder;
@@ -83,7 +83,7 @@ public class TlsModeHandler extends SimpleChannelInboundHandler<ByteBuf> {
         }
 
         try {
-            // Remove this handler
+            // Remove this service
             ctx.pipeline().remove(this);
         } catch (NoSuchElementException e) {
             log.error("Error while removing TlsModeHandler", e);

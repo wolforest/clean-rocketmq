@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.coderule.minimq.rpc.common.netty.handler;
+package cn.coderule.minimq.rpc.common.netty.service;
 
 import cn.coderule.common.util.lang.StringUtil;
 import cn.coderule.common.util.lang.collection.CollectionUtil;

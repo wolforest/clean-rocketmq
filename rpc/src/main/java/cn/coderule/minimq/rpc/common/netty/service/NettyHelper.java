@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.coderule.minimq.rpc.common.netty.util;
+package cn.coderule.minimq.rpc.common.netty.service;
 
 import cn.coderule.common.util.net.NetworkUtil;
 import cn.coderule.minimq.rpc.common.constant.AttributeKeys;

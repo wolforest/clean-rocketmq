@@ -14,10 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.coderule.minimq.rpc.common.netty.handler;
+package cn.coderule.minimq.rpc.common.netty.service;
 
 import cn.coderule.minimq.rpc.common.core.RpcCommand;
-import cn.coderule.minimq.rpc.common.netty.util.NettyHelper;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
