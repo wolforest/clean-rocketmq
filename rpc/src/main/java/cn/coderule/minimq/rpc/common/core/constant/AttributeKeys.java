@@ -14,9 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.coderule.minimq.rpc.common.constant;
+package cn.coderule.minimq.rpc.common.core.constant;
 
-import cn.coderule.minimq.rpc.common.enums.LanguageCode;
+import cn.coderule.minimq.rpc.common.core.enums.LanguageCode;
 import io.netty.util.AttributeKey;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

@@ -1,16 +1,16 @@
 package cn.coderule.minimq.rpc.common.core;
 
-import cn.coderule.minimq.rpc.common.annotation.CFNotNull;
-import cn.coderule.minimq.rpc.common.enums.BoundaryType;
-import cn.coderule.minimq.rpc.common.exception.RemotingCommandException;
-import cn.coderule.minimq.rpc.common.enums.LanguageCode;
-import cn.coderule.minimq.rpc.common.enums.RemotingCommandType;
+import cn.coderule.minimq.rpc.common.core.annotation.CFNotNull;
+import cn.coderule.minimq.rpc.common.core.enums.BoundaryType;
+import cn.coderule.minimq.rpc.common.core.exception.RemotingCommandException;
+import cn.coderule.minimq.rpc.common.core.enums.LanguageCode;
+import cn.coderule.minimq.rpc.common.core.enums.RemotingCommandType;
 import cn.coderule.minimq.rpc.common.protocol.header.CommandHeader;
 import cn.coderule.minimq.rpc.common.protocol.header.FastCodesHeader;
 import cn.coderule.minimq.rpc.common.protocol.code.SystemResponseCode;
 import cn.coderule.minimq.rpc.common.protocol.codec.RocketMQSerializable;
 import cn.coderule.minimq.rpc.common.protocol.codec.RpcSerializable;
-import cn.coderule.minimq.rpc.common.enums.SerializeType;
+import cn.coderule.minimq.rpc.common.core.enums.SerializeType;
 import com.alibaba.fastjson2.annotation.JSONField;
 import com.google.common.base.Stopwatch;
 import io.netty.buffer.ByteBuf;

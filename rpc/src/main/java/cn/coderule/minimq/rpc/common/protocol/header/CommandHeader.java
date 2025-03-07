@@ -16,7 +16,7 @@
  */
 package cn.coderule.minimq.rpc.common.protocol.header;
 
-import cn.coderule.minimq.rpc.common.exception.RemotingCommandException;
+import cn.coderule.minimq.rpc.common.core.exception.RemotingCommandException;
 
 public interface CommandHeader {
     void checkFields() throws RemotingCommandException;

@@ -14,28 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.coderule.minimq.rpc.common.exception;
+package cn.coderule.minimq.rpc.common.core.exception;
 
-public class RemotingException extends Exception {
-    private static final long serialVersionUID = -5690687334570505110L;
+public class RemotingTimeoutException extends RemotingException {
 
-    private int code = 0;
+    private static final long serialVersionUID = 4106899185095245979L;
 
-    public RemotingException(String message) {
+    public RemotingTimeoutException(String message) {
         super(message);
     }
 
-    public RemotingException(int code, String message) {
-        super(message);
-        this.code = code;
+    public RemotingTimeoutException(String addr, long timeoutMillis) {
+        this(addr, timeoutMillis, null);
     }
 
-    public RemotingException(int code, String message, String addr) {
-        super(addr + ":" + message);
-        this.code = code;
-    }
-
-    public RemotingException(String message, Throwable cause) {
-        super(message, cause);
+    public RemotingTimeoutException(String addr, long timeoutMillis, Throwable cause) {
+        super("wait response on the channel <" + addr + "> timeout, " + timeoutMillis + "(ms)", cause);
     }
 }

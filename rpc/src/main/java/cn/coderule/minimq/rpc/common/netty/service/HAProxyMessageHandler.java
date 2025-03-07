@@ -18,8 +18,8 @@ package cn.coderule.minimq.rpc.common.netty.service;
 
 import cn.coderule.common.util.lang.StringUtil;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
-import cn.coderule.minimq.rpc.common.constant.HAProxyConstants;
-import cn.coderule.minimq.rpc.common.constant.AttributeKeys;
+import cn.coderule.minimq.rpc.common.core.constant.HAProxyConstants;
+import cn.coderule.minimq.rpc.common.core.constant.AttributeKeys;
 import io.netty.buffer.ByteBufUtil;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;

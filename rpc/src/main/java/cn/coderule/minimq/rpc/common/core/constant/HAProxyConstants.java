@@ -14,16 +14,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.coderule.minimq.rpc.common.exception;
 
-public class RemotingCommandException extends RemotingException {
-    private static final long serialVersionUID = -6061365915274953096L;
+package cn.coderule.minimq.rpc.common.core.constant;
 
-    public RemotingCommandException(String message) {
-        super(message, null);
-    }
+public class HAProxyConstants {
 
-    public RemotingCommandException(String message, Throwable cause) {
-        super(message, cause);
-    }
+    public static final String CHANNEL_ID = "channel_id";
+    public static final String PROXY_PROTOCOL_PREFIX = "proxy_protocol_";
+    public static final String PROXY_PROTOCOL_ADDR = PROXY_PROTOCOL_PREFIX + "addr";
+    public static final String PROXY_PROTOCOL_PORT = PROXY_PROTOCOL_PREFIX + "port";
+    public static final String PROXY_PROTOCOL_SERVER_ADDR = PROXY_PROTOCOL_PREFIX + "server_addr";
+    public static final String PROXY_PROTOCOL_SERVER_PORT = PROXY_PROTOCOL_PREFIX + "server_port";
+    public static final String PROXY_PROTOCOL_TLV_PREFIX = PROXY_PROTOCOL_PREFIX + "tlv_0x";
 }

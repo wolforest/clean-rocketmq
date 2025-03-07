@@ -14,16 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.coderule.minimq.rpc.common.exception;
+package cn.coderule.minimq.rpc.common.core.exception;
 
-public class RemotingConnectException extends RemotingException {
-    private static final long serialVersionUID = -5565366231695911316L;
+public class RemotingTooMuchRequestException extends RemotingException {
+    private static final long serialVersionUID = 4326919581254519654L;
 
-    public RemotingConnectException(String addr) {
-        this(addr, null);
-    }
-
-    public RemotingConnectException(String addr, Throwable cause) {
-        super("connect to " + addr + " failed", cause);
+    public RemotingTooMuchRequestException(String message) {
+        super(message);
     }
 }

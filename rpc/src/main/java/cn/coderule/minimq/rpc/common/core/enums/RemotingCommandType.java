@@ -14,12 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.coderule.minimq.rpc.common.exception;
+package cn.coderule.minimq.rpc.common.core.enums;
 
-public class RemotingTooMuchRequestException extends RemotingException {
-    private static final long serialVersionUID = 4326919581254519654L;
-
-    public RemotingTooMuchRequestException(String message) {
-        super(message);
-    }
+public enum RemotingCommandType {
+    REQUEST_COMMAND,
+    RESPONSE_COMMAND;
 }

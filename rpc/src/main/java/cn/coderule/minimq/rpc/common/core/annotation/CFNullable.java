@@ -14,29 +14,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package cn.coderule.minimq.rpc.common.core.annotation;
 
-package cn.coderule.minimq.rpc.common.enums;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-public enum SerializeType {
-    JSON((byte) 0),
-    ROCKETMQ((byte) 1);
-
-    private final byte code;
-
-    SerializeType(byte code) {
-        this.code = code;
-    }
-
-    public static SerializeType valueOf(byte code) {
-        for (SerializeType serializeType : SerializeType.values()) {
-            if (serializeType.getCode() == code) {
-                return serializeType;
-            }
-        }
-        return null;
-    }
-
-    public byte getCode() {
-        return code;
-    }
+@Documented
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER, ElementType.LOCAL_VARIABLE})
+public @interface CFNullable {
 }

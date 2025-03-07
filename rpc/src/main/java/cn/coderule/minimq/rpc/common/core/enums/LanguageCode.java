@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package cn.coderule.minimq.rpc.common.enums;
+package cn.coderule.minimq.rpc.common.core.enums;
 
 import java.util.Arrays;
 import java.util.Map;

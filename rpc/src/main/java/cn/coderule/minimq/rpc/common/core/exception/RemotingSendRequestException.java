@@ -14,16 +14,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.coderule.minimq.rpc.common.annotation;
+package cn.coderule.minimq.rpc.common.core.exception;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+public class RemotingSendRequestException extends RemotingException {
+    private static final long serialVersionUID = 5391285827332471674L;
 
-@Documented
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER, ElementType.LOCAL_VARIABLE})
-public @interface CFNullable {
+    public RemotingSendRequestException(String addr) {
+        this(addr, null);
+    }
+
+    public RemotingSendRequestException(String addr, Throwable cause) {
+        super("send request to <" + addr + "> failed", cause);
+    }
 }
