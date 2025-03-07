@@ -4,7 +4,6 @@ import cn.coderule.common.ds.Pair;
 import cn.coderule.minimq.rpc.common.core.RpcService;
 import cn.coderule.minimq.rpc.common.core.model.ResponseFuture;
 import cn.coderule.minimq.rpc.common.core.RpcHook;
-import cn.coderule.minimq.rpc.common.core.RpcPipeline;
 import cn.coderule.minimq.rpc.common.RpcProcessor;
 import cn.coderule.minimq.rpc.common.netty.event.NettyEvent;
 import cn.coderule.minimq.rpc.common.netty.event.NettyEventExecutor;
@@ -40,7 +39,6 @@ public abstract class NettyService implements RpcService {
 
     protected volatile SslContext sslContext;
     protected List<RpcHook> rpcHooks = new ArrayList<>();
-    protected RpcPipeline rpcPipeline;
     protected AtomicBoolean isStopping = new AtomicBoolean(false);
     protected Pair<RpcProcessor, ExecutorService> defaultProcessorPair;
 
@@ -68,11 +66,6 @@ public abstract class NettyService implements RpcService {
     @Override
     public void clearRpcHook() {
         rpcHooks.clear();
-    }
-
-    @Override
-    public void setRpcPipeline(RpcPipeline pipeline) {
-        this.rpcPipeline = pipeline;
     }
 
 }

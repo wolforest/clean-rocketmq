@@ -5,7 +5,6 @@ import cn.coderule.minimq.rpc.common.core.RpcCallback;
 import cn.coderule.minimq.rpc.common.core.model.RpcCommand;
 import cn.coderule.minimq.rpc.common.core.RpcHook;
 import cn.coderule.minimq.rpc.common.netty.event.RpcListener;
-import cn.coderule.minimq.rpc.common.core.RpcPipeline;
 import cn.coderule.minimq.rpc.common.RpcProcessor;
 import cn.coderule.minimq.rpc.common.netty.service.NettyService;
 import cn.coderule.minimq.rpc.common.config.RpcClientConfig;
@@ -48,11 +47,6 @@ public class NettyClient extends NettyService implements RpcClient {
 
     @Override
     public void clearRpcHook() {
-
-    }
-
-    @Override
-    public void setRpcPipeline(RpcPipeline pipeline) {
 
     }
 

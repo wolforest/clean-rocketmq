@@ -12,5 +12,4 @@ public interface RpcService {
 
     ExecutorService getProcessorExecutor();
     RpcListener getRpcListener();
-    void setRpcPipeline(RpcPipeline pipeline);
 }
