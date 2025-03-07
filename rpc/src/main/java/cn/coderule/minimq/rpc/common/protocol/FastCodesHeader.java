@@ -18,7 +18,6 @@
 package cn.coderule.minimq.rpc.common.protocol;
 
 import cn.coderule.minimq.rpc.common.exception.RemotingCommandException;
-import cn.coderule.minimq.rpc.common.netty.codec.RocketMQSerializable;
 import io.netty.buffer.ByteBuf;
 import java.util.HashMap;
 

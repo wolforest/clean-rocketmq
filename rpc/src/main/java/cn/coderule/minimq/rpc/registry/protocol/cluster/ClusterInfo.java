@@ -1,6 +1,6 @@
 package cn.coderule.minimq.rpc.registry.protocol.cluster;
 
-import cn.coderule.minimq.rpc.common.netty.codec.RpcSerializable;
+import cn.coderule.minimq.rpc.common.protocol.RpcSerializable;
 import java.util.Map;
 import java.util.Set;
 import lombok.Data;

@@ -20,7 +20,7 @@
  */
 package cn.coderule.minimq.rpc.registry.protocol.route;
 
-import cn.coderule.minimq.rpc.common.netty.codec.RpcSerializable;
+import cn.coderule.minimq.rpc.common.protocol.RpcSerializable;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.GroupInfo;
 import java.util.ArrayList;
 import java.util.Collections;
