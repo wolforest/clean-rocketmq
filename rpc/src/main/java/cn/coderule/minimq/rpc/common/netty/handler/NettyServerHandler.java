@@ -17,6 +17,7 @@
 package cn.coderule.minimq.rpc.common.netty.handler;
 
 import cn.coderule.minimq.rpc.common.core.RpcCommand;
+import cn.coderule.minimq.rpc.common.netty.util.NettyHelper;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -39,7 +40,7 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<RpcCommand> 
         this.dispatcher.dispatch(ctx, msg);
 
         // The related remoting server has been shutdown, so close the connected channel
-        RemotingHelper.closeChannel(ctx.channel());
+        NettyHelper.closeChannel(ctx.channel());
     }
 
     @Override
@@ -49,12 +50,12 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<RpcCommand> 
             if (!channel.config().isAutoRead()) {
                 channel.config().setAutoRead(true);
                 log.info("Channel[{}] turns writable, bytes to buffer before changing channel to un-writable: {}",
-                    RemotingHelper.parseChannelRemoteAddr(channel), channel.bytesBeforeUnwritable());
+                    NettyHelper.parseChannelRemoteAddr(channel), channel.bytesBeforeUnwritable());
             }
         } else {
             channel.config().setAutoRead(false);
             log.warn("Channel[{}] auto-read is disabled, bytes to drain before it turns writable: {}",
-                RemotingHelper.parseChannelRemoteAddr(channel), channel.bytesBeforeWritable());
+                NettyHelper.parseChannelRemoteAddr(channel), channel.bytesBeforeWritable());
         }
         super.channelWritabilityChanged(ctx);
     }

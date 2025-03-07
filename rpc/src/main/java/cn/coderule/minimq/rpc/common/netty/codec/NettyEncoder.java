@@ -17,7 +17,7 @@
 package cn.coderule.minimq.rpc.common.netty.codec;
 
 import cn.coderule.minimq.rpc.common.core.RpcCommand;
-import cn.coderule.minimq.rpc.common.netty.handler.RemotingHelper;
+import cn.coderule.minimq.rpc.common.netty.util.NettyHelper;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -38,11 +38,11 @@ public class NettyEncoder extends MessageToByteEncoder<RpcCommand> {
                 out.writeBytes(body);
             }
         } catch (Exception e) {
-            log.error("encode exception, {}", RemotingHelper.parseChannelRemoteAddr(ctx.channel()), e);
+            log.error("encode exception, {}", NettyHelper.parseChannelRemoteAddr(ctx.channel()), e);
             if (remotingCommand != null) {
                 log.error(remotingCommand.toString());
             }
-            RemotingHelper.closeChannel(ctx.channel());
+            NettyHelper.closeChannel(ctx.channel());
         }
     }
 }

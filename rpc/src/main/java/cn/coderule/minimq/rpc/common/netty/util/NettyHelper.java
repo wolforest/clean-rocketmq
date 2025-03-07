@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.coderule.minimq.rpc.common.netty.handler;
+package cn.coderule.minimq.rpc.common.netty.util;
 
 import cn.coderule.common.util.net.NetworkUtil;
 import cn.coderule.minimq.rpc.common.constant.AttributeKeys;
@@ -43,11 +43,11 @@ import org.apache.commons.lang3.StringUtils;
 
 
 @Slf4j
-public class RemotingHelper {
+public class NettyHelper {
     public static final String DEFAULT_CHARSET = "UTF-8";
     public static final String DEFAULT_CIDR_ALL = "0.0.0.0/0";
 
-    public static final Map<Integer, String> REQUEST_CODE_MAP = new HashMap<Integer, String>() {
+    public static final Map<Integer, String> REQUEST_CODE_MAP = new HashMap<>() {
         {
             try {
                 Field[] f = RequestCode.class.getFields();
@@ -61,7 +61,7 @@ public class RemotingHelper {
         }
     };
 
-    public static final Map<Integer, String> RESPONSE_CODE_MAP = new HashMap<Integer, String>() {
+    public static final Map<Integer, String> RESPONSE_CODE_MAP = new HashMap<>() {
         {
             try {
                 Field[] f = ResponseCode.class.getFields();
@@ -257,7 +257,7 @@ public class RemotingHelper {
         SocketAddress remote = channel.localAddress();
         final String addr = remote != null ? remote.toString() : "";
 
-        if (addr.length() > 0) {
+        if (!addr.isEmpty()) {
             int index = addr.lastIndexOf("/");
             if (index >= 0) {
                 return addr.substring(index + 1);
@@ -346,7 +346,7 @@ public class RemotingHelper {
     }
 
     public static void closeChannel(Channel channel) {
-        final String addrRemote = RemotingHelper.parseChannelRemoteAddr(channel);
+        final String addrRemote = NettyHelper.parseChannelRemoteAddr(channel);
         if ("".equals(addrRemote)) {
             channel.close();
             return;

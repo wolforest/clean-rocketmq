@@ -17,7 +17,7 @@
 package cn.coderule.minimq.rpc.common.netty.codec;
 
 import cn.coderule.minimq.rpc.common.core.RpcCommand;
-import cn.coderule.minimq.rpc.common.netty.handler.RemotingHelper;
+import cn.coderule.minimq.rpc.common.netty.util.NettyHelper;
 import com.google.common.base.Stopwatch;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
@@ -47,8 +47,8 @@ public class NettyDecoder extends LengthFieldBasedFrameDecoder {
             cmd.setProcessTimer(timer);
             return cmd;
         } catch (Exception e) {
-            log.error("decode exception, {}", RemotingHelper.parseChannelRemoteAddr(ctx.channel()), e);
-            RemotingHelper.closeChannel(ctx.channel());
+            log.error("decode exception, {}", NettyHelper.parseChannelRemoteAddr(ctx.channel()), e);
+            NettyHelper.closeChannel(ctx.channel());
         } finally {
             if (null != frame) {
                 frame.release();
