@@ -16,7 +16,7 @@
  */
 package cn.coderule.minimq.rpc.common.protocol.codec;
 
-import cn.coderule.minimq.rpc.common.core.RpcCommand;
+import cn.coderule.minimq.rpc.common.core.model.RpcCommand;
 import cn.coderule.minimq.rpc.common.core.enums.LanguageCode;
 import cn.coderule.minimq.rpc.common.core.exception.RemotingCommandException;
 import cn.coderule.minimq.rpc.common.protocol.header.FastCodesHeader;

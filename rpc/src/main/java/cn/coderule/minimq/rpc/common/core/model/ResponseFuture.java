@@ -14,9 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.coderule.minimq.rpc.common.core;
+package cn.coderule.minimq.rpc.common.core.model;
 
 import cn.coderule.common.lang.concurrent.SemaphoreGuard;
+import cn.coderule.minimq.rpc.common.core.RpcCallback;
 import io.netty.channel.Channel;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;

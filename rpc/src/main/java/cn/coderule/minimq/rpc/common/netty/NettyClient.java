@@ -2,11 +2,11 @@ package cn.coderule.minimq.rpc.common.netty;
 
 import cn.coderule.minimq.rpc.common.RpcClient;
 import cn.coderule.minimq.rpc.common.core.RpcCallback;
-import cn.coderule.minimq.rpc.common.core.RpcCommand;
+import cn.coderule.minimq.rpc.common.core.model.RpcCommand;
 import cn.coderule.minimq.rpc.common.core.RpcHook;
 import cn.coderule.minimq.rpc.common.netty.event.RpcListener;
 import cn.coderule.minimq.rpc.common.core.RpcPipeline;
-import cn.coderule.minimq.rpc.common.core.RpcProcessor;
+import cn.coderule.minimq.rpc.common.RpcProcessor;
 import cn.coderule.minimq.rpc.common.netty.service.NettyService;
 import cn.coderule.minimq.rpc.config.RpcClientConfig;
 import java.util.List;

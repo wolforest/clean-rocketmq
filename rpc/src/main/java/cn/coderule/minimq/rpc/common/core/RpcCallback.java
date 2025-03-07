@@ -1,5 +1,8 @@
 package cn.coderule.minimq.rpc.common.core;
 
+import cn.coderule.minimq.rpc.common.core.model.ResponseFuture;
+import cn.coderule.minimq.rpc.common.core.model.RpcCommand;
+
 public interface RpcCallback {
 
     void onComplete(ResponseFuture responseFuture);

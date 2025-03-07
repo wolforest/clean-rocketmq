@@ -16,7 +16,7 @@
  */
 package cn.coderule.minimq.rpc.common.netty.service;
 
-import cn.coderule.minimq.rpc.common.core.RpcCommand;
+import cn.coderule.minimq.rpc.common.core.model.RpcCommand;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;

@@ -1,5 +1,6 @@
-package cn.coderule.minimq.rpc.common.core;
+package cn.coderule.minimq.rpc.common;
 
+import cn.coderule.minimq.rpc.common.core.model.RpcCommand;
 import io.netty.channel.ChannelHandlerContext;
 
 public interface RpcProcessor {
