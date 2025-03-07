@@ -8,7 +8,7 @@ import cn.coderule.minimq.rpc.common.netty.event.RpcListener;
 import cn.coderule.minimq.rpc.common.core.RpcPipeline;
 import cn.coderule.minimq.rpc.common.RpcProcessor;
 import cn.coderule.minimq.rpc.common.netty.service.NettyService;
-import cn.coderule.minimq.rpc.config.RpcClientConfig;
+import cn.coderule.minimq.rpc.common.config.RpcClientConfig;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import lombok.Getter;

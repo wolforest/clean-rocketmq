@@ -8,7 +8,7 @@ import cn.coderule.minimq.rpc.common.core.model.RpcCommand;
 import cn.coderule.minimq.rpc.common.netty.event.RpcListener;
 import cn.coderule.minimq.rpc.common.RpcProcessor;
 import cn.coderule.minimq.rpc.common.netty.service.NettyService;
-import cn.coderule.minimq.rpc.config.RpcServerConfig;
+import cn.coderule.minimq.rpc.common.config.RpcServerConfig;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelOption;

@@ -1,4 +1,4 @@
-package cn.coderule.minimq.rpc.config;
+package cn.coderule.minimq.rpc.common.config;
 
 import java.io.Serializable;
 import lombok.Data;
