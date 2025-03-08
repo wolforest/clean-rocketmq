@@ -26,11 +26,6 @@ public class NettyClient extends NettyService implements RpcClient {
     }
 
     @Override
-    public RpcListener getRpcListener() {
-        return null;
-    }
-
-    @Override
     public void start() {
 
     }

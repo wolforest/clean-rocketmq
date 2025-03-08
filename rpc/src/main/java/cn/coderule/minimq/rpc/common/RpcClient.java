@@ -6,7 +6,6 @@ import cn.coderule.minimq.rpc.common.core.invoke.RpcCommand;
 import cn.coderule.minimq.rpc.common.core.RpcService;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
 
 public interface RpcClient extends RpcService {
     boolean isChannelWritable(final String addr);
@@ -15,8 +14,6 @@ public interface RpcClient extends RpcService {
     default void closeChannel(final String addr) {
         closeChannels(List.of(addr));
     }
-
-    void registerProcessor(int requestCode, RpcProcessor processor, ExecutorService executor);
 
     RpcCommand invokeSync(final String addr, final RpcCommand request, final long timeoutMillis) throws Exception;
     void invokeAsync(final String addr, final RpcCommand request, final long timeoutMillis, final RpcCallback invokeCallback) throws Exception;
