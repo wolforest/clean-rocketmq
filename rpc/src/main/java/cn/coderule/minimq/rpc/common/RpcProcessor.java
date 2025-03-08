@@ -1,9 +1,9 @@
 package cn.coderule.minimq.rpc.common;
 
 import cn.coderule.minimq.rpc.common.core.invoke.RpcCommand;
-import io.netty.channel.ChannelHandlerContext;
+import cn.coderule.minimq.rpc.common.core.invoke.RpcContext;
 
 public interface RpcProcessor {
-    RpcCommand process(ChannelHandlerContext ctx, RpcCommand request);
+    RpcCommand process(RpcContext ctx, RpcCommand request);
     boolean reject();
 }
