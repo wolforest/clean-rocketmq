@@ -1,7 +1,7 @@
 package cn.coderule.minimq.rpc.common;
 
-import cn.coderule.minimq.rpc.common.core.RpcCallback;
-import cn.coderule.minimq.rpc.common.core.model.RpcCommand;
+import cn.coderule.minimq.rpc.common.core.invoke.RpcCallback;
+import cn.coderule.minimq.rpc.common.core.invoke.RpcCommand;
 import cn.coderule.minimq.rpc.common.core.RpcService;
 import io.netty.channel.Channel;
 import java.util.concurrent.ExecutorService;

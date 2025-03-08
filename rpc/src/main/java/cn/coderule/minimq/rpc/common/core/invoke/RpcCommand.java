@@ -1,4 +1,4 @@
-package cn.coderule.minimq.rpc.common.core.model;
+package cn.coderule.minimq.rpc.common.core.invoke;
 
 import cn.coderule.minimq.rpc.common.core.annotation.CFNotNull;
 import cn.coderule.minimq.rpc.common.core.enums.BoundaryType;

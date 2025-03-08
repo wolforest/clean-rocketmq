@@ -1,8 +1,8 @@
 package cn.coderule.minimq.rpc.common.netty;
 
 import cn.coderule.minimq.rpc.common.RpcClient;
-import cn.coderule.minimq.rpc.common.core.RpcCallback;
-import cn.coderule.minimq.rpc.common.core.model.RpcCommand;
+import cn.coderule.minimq.rpc.common.core.invoke.RpcCallback;
+import cn.coderule.minimq.rpc.common.core.invoke.RpcCommand;
 import cn.coderule.minimq.rpc.common.core.RpcHook;
 import cn.coderule.minimq.rpc.common.netty.event.RpcListener;
 import cn.coderule.minimq.rpc.common.RpcProcessor;

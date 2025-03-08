@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package cn.coderule.minimq.rpc.common.core.model;
+package cn.coderule.minimq.rpc.common.core.invoke;
 
 import io.netty.channel.Channel;
 import lombok.Data;

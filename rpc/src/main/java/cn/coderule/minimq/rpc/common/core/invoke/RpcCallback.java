@@ -1,7 +1,4 @@
-package cn.coderule.minimq.rpc.common.core;
-
-import cn.coderule.minimq.rpc.common.core.model.ResponseFuture;
-import cn.coderule.minimq.rpc.common.core.model.RpcCommand;
+package cn.coderule.minimq.rpc.common.core.invoke;
 
 public interface RpcCallback {
 

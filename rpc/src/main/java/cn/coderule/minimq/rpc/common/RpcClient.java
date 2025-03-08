@@ -1,8 +1,8 @@
 package cn.coderule.minimq.rpc.common;
 
-import cn.coderule.minimq.rpc.common.core.model.ResponseFuture;
-import cn.coderule.minimq.rpc.common.core.RpcCallback;
-import cn.coderule.minimq.rpc.common.core.model.RpcCommand;
+import cn.coderule.minimq.rpc.common.core.invoke.ResponseFuture;
+import cn.coderule.minimq.rpc.common.core.invoke.RpcCallback;
+import cn.coderule.minimq.rpc.common.core.invoke.RpcCommand;
 import cn.coderule.minimq.rpc.common.core.RpcService;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
