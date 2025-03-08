@@ -11,6 +11,6 @@ public interface RpcService {
     void registerRpcHook(RpcHook rpcHook);
     void clearRpcHook();
 
-    ExecutorService getProcessorExecutor();
+    ExecutorService getCallbackExecutor();
     RpcListener getRpcListener();
 }

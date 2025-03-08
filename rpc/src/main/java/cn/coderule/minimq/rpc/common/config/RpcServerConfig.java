@@ -15,7 +15,7 @@ public class RpcServerConfig implements Serializable {
     private int bossThreadNum = 1;
     private int workerThreadNum = 3;
     private int businessThreadNum = 8;
-    private int processorThreadNum = 0;
+    private int callbackThreadNum = 0;
 
     private boolean useEpoll = false;
     private int onewaySemaphorePermits = 256;

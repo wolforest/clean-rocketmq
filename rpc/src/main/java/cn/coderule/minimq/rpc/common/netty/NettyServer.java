@@ -31,7 +31,7 @@ public class NettyServer extends NettyService implements RpcServer {
     @Getter
     private final RpcListener rpcListener;
     @Getter
-    private final ExecutorService processorExecutor;
+    private final ExecutorService callbackExecutor;
 
 
     private final ServerBootstrap bootstrap;
@@ -48,7 +48,7 @@ public class NettyServer extends NettyService implements RpcServer {
         this.bootstrap = new ServerBootstrap();
 
         this.eventExecutorGroup = buildEventExecutorGroup();
-        this.processorExecutor = buildProcessorExecutor();
+        this.callbackExecutor = buildCallbackExecutor();
     }
 
     private DefaultEventExecutorGroup buildEventExecutorGroup() {
@@ -57,8 +57,8 @@ public class NettyServer extends NettyService implements RpcServer {
         );
     }
 
-    private ExecutorService buildProcessorExecutor() {
-        int threadNum = config.getProcessorThreadNum();
+    private ExecutorService buildCallbackExecutor() {
+        int threadNum = config.getCallbackThreadNum();
         if (threadNum <= 0) {
             threadNum = DEFAULT_PROCESSOR_THREAD_NUM;
         }
