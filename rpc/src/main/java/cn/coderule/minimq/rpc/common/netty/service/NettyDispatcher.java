@@ -33,7 +33,7 @@ public class NettyDispatcher {
      */
     private final HashMap<Integer, Pair<RpcProcessor, ExecutorService>> processorMap = new HashMap<>(64);
     private final List<RpcHook> rpcHooks = new ArrayList<>();
-    protected AtomicBoolean isShuttingDown = new AtomicBoolean(false);
+    protected AtomicBoolean isStopping = new AtomicBoolean(false);
 
     public NettyDispatcher(int onewaySemaphorePermits, int asyncSemaphorePermits) {
         this.onewaySemaphore = new Semaphore(onewaySemaphorePermits, true);
@@ -41,7 +41,7 @@ public class NettyDispatcher {
     }
 
     public void shutdown() {
-        this.isShuttingDown.set(true);
+        this.isStopping.set(true);
     }
 
     public void registerProcessor(int requestCode, @NonNull RpcProcessor processor, @NonNull ExecutorService executor) {
@@ -92,16 +92,47 @@ public class NettyDispatcher {
 
     }
 
+    private void invokePreHooks(RpcContext ctx, RpcCommand request) {
+
+    }
+
+    private void invokePostHooks(RpcContext ctx, RpcCommand request, RpcCommand response) {
+
+    }
+
+    private void writeResponse(RpcContext ctx, RpcCommand request, RpcCommand response) {
+
+    }
+
     private void requestFailed(RpcContext ctx, RpcCommand command, Throwable t) {
 
     }
 
+    private void processFailed(RpcContext ctx, RpcCommand command, Throwable t) {
+
+    }
+
+    private Runnable createProcessTask(RpcContext ctx, RpcCommand request, RpcProcessor processor) {
+        return () -> {
+            try {
+                invokePreHooks(ctx, request);
+                RpcCommand response = processor.process(ctx, request);
+                invokePostHooks(ctx, request, response);
+
+                writeResponse(ctx, request, response);
+            } catch (Throwable e) {
+                processFailed(ctx, request, e);
+            }
+        };
+    }
+
     private RequestTask createRequestTask(RpcContext ctx, RpcCommand command, RpcProcessor processor) {
-        return null;
+        Runnable task = createProcessTask(ctx, command, processor);
+        return new RequestTask(task, ctx.channel(), command);
     }
 
     private void processRequest(RpcContext ctx, RpcCommand command) {
-        if (isShuttingDown.get()) {
+        if (isStopping.get()) {
             rejectByServer(ctx, command);
             return;
         }

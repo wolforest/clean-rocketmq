@@ -17,6 +17,7 @@
 package cn.coderule.minimq.rpc.common.netty.service;
 
 import cn.coderule.minimq.rpc.common.core.invoke.RpcCommand;
+import cn.coderule.minimq.rpc.common.core.invoke.RpcContext;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -36,7 +37,8 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<RpcCommand> 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, RpcCommand msg) {
         // dispatch ...
-        this.dispatcher.dispatch(ctx, msg);
+        RpcContext context = new RpcContext(ctx);
+        this.dispatcher.dispatch(context, msg);
 
         // The related remoting server has been shutdown, so close the connected channel
         NettyHelper.closeChannel(ctx.channel());
