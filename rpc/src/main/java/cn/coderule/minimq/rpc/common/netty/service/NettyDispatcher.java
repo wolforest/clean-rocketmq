@@ -94,10 +94,24 @@ public class NettyDispatcher {
     }
 
     private void invokePreHooks(RpcContext ctx, RpcCommand request) {
+        if (rpcHooks.isEmpty()) {
+            return;
+        }
+
+        for (RpcHook rpcHook : rpcHooks) {
+            rpcHook.onRequestStart(ctx, request);
+        }
 
     }
 
     private void invokePostHooks(RpcContext ctx, RpcCommand request, RpcCommand response) {
+        if (rpcHooks.isEmpty()) {
+            return;
+        }
+
+        for (RpcHook rpcHook : rpcHooks) {
+            rpcHook.onResponseComplete(ctx, request, response);
+        }
 
     }
 
