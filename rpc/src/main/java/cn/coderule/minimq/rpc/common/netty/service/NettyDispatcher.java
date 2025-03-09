@@ -1,6 +1,7 @@
 package cn.coderule.minimq.rpc.common.netty.service;
 
 import cn.coderule.common.ds.Pair;
+import cn.coderule.minimq.domain.exception.AbortProcessException;
 import cn.coderule.minimq.rpc.common.RpcHook;
 import cn.coderule.minimq.rpc.common.core.invoke.RequestTask;
 import cn.coderule.minimq.rpc.common.core.invoke.ResponseFuture;
@@ -108,6 +109,10 @@ public class NettyDispatcher {
 
     }
 
+    private void abortProcess(RpcContext ctx, RpcCommand command, Throwable t) {
+
+    }
+
     private void processFailed(RpcContext ctx, RpcCommand command, Throwable t) {
 
     }
@@ -120,6 +125,8 @@ public class NettyDispatcher {
                 invokePostHooks(ctx, request, response);
 
                 writeResponse(ctx, request, response);
+            } catch (AbortProcessException e) {
+                abortProcess(ctx, request, e);
             } catch (Throwable e) {
                 processFailed(ctx, request, e);
             }
