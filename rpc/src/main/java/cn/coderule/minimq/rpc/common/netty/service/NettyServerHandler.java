@@ -36,29 +36,36 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<RpcCommand> 
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, RpcCommand msg) {
-        // dispatch ...
         RpcContext context = new RpcContext(ctx);
         this.dispatcher.dispatch(context, msg);
 
         // The related remoting server has been shutdown, so close the connected channel
-        NettyHelper.closeChannel(ctx.channel());
+        NettyHelper.close(ctx.channel());
     }
 
     @Override
     public void channelWritabilityChanged(ChannelHandlerContext ctx) throws Exception {
+        changeAutoRead(ctx);
+        super.channelWritabilityChanged(ctx);
+    }
+
+    private void changeAutoRead(ChannelHandlerContext ctx) {
         Channel channel = ctx.channel();
-        if (channel.isWritable()) {
-            if (!channel.config().isAutoRead()) {
-                channel.config().setAutoRead(true);
-                log.info("Channel[{}] turns writable, bytes to buffer before changing channel to un-writable: {}",
-                    NettyHelper.parseChannelRemoteAddr(channel), channel.bytesBeforeUnwritable());
-            }
-        } else {
+
+        if (!channel.isWritable()) {
             channel.config().setAutoRead(false);
             log.warn("Channel[{}] auto-read is disabled, bytes to drain before it turns writable: {}",
-                NettyHelper.parseChannelRemoteAddr(channel), channel.bytesBeforeWritable());
+                NettyHelper.getRemoteAddr(channel), channel.bytesBeforeWritable());
+            return;
         }
-        super.channelWritabilityChanged(ctx);
+
+        if (channel.config().isAutoRead()) {
+            return;
+        }
+
+        channel.config().setAutoRead(true);
+        log.info("Channel[{}] turns writable, bytes to buffer before changing channel to un-writable: {}",
+            NettyHelper.getRemoteAddr(channel), channel.bytesBeforeUnwritable());
     }
 }
 

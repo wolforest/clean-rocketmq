@@ -47,8 +47,8 @@ public class NettyDecoder extends LengthFieldBasedFrameDecoder {
             cmd.setProcessTimer(timer);
             return cmd;
         } catch (Exception e) {
-            log.error("decode exception, {}", NettyHelper.parseChannelRemoteAddr(ctx.channel()), e);
-            NettyHelper.closeChannel(ctx.channel());
+            log.error("decode exception, {}", NettyHelper.getRemoteAddr(ctx.channel()), e);
+            NettyHelper.close(ctx.channel());
         } finally {
             if (null != frame) {
                 frame.release();

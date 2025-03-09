@@ -27,6 +27,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
@@ -563,72 +565,6 @@ public class RpcCommand {
         return (this.flag & bits) == bits;
     }
 
-    public LanguageCode getLanguage() {
-        return language;
-    }
-
-    public void setLanguage(LanguageCode language) {
-        this.language = language;
-    }
-
-    public int getVersion() {
-        return version;
-    }
-
-    public void setVersion(int version) {
-        this.version = version;
-    }
-
-    public int getOpaque() {
-        return opaque;
-    }
-
-    public void setOpaque(int opaque) {
-        this.opaque = opaque;
-    }
-
-    public int getFlag() {
-        return flag;
-    }
-
-    public void setFlag(int flag) {
-        this.flag = flag;
-    }
-
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark;
-    }
-
-    public byte[] getBody() {
-        return body;
-    }
-
-    public void setBody(byte[] body) {
-        this.body = body;
-    }
-
-    @JSONField(serialize = false)
-    public boolean isSuspended() {
-        return suspended;
-    }
-
-    @JSONField(serialize = false)
-    public void setSuspended(boolean suspended) {
-        this.suspended = suspended;
-    }
-
-    public HashMap<String, String> getExtFields() {
-        return extFields;
-    }
-
-    public void setExtFields(HashMap<String, String> extFields) {
-        this.extFields = extFields;
-    }
-
     public void addExtField(String key, String value) {
         if (null == extFields) {
             extFields = new HashMap<>(256);
@@ -647,19 +583,4 @@ public class RpcCommand {
             + serializeTypeCurrentRPC + "]";
     }
 
-    public SerializeType getSerializeTypeCurrentRPC() {
-        return serializeTypeCurrentRPC;
-    }
-
-    public void setSerializeTypeCurrentRPC(SerializeType serializeTypeCurrentRPC) {
-        this.serializeTypeCurrentRPC = serializeTypeCurrentRPC;
-    }
-
-    public Stopwatch getProcessTimer() {
-        return processTimer;
-    }
-
-    public void setProcessTimer(Stopwatch processTimer) {
-        this.processTimer = processTimer;
-    }
 }

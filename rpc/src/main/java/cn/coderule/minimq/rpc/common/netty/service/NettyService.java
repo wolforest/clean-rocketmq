@@ -9,6 +9,7 @@ import cn.coderule.minimq.rpc.common.netty.event.NettyEvent;
 import cn.coderule.minimq.rpc.common.netty.event.NettyEventExecutor;
 import io.netty.handler.ssl.SslContext;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -25,26 +26,23 @@ public abstract class NettyService implements RpcService {
     protected final Semaphore onewaySemaphore;
     protected final Semaphore asyncSemaphore;
 
+    protected final NettyDispatcher dispatcher;
+
     /**
      * response map
      * { opaque : ResponseFuture }
      */
     protected final ConcurrentMap<Integer, ResponseFuture> responseMap = new ConcurrentHashMap<>(256);
-    /**
-     * processor map
-     * { requestCode: [RpcProcessor, ExecutorService] }
-     */
-    protected final HashMap<Integer, Pair<RpcProcessor, ExecutorService>> processorMap = new HashMap<>(64);
+
     protected final NettyEventExecutor nettyEventExecutor = new NettyEventExecutor(this);
 
     protected volatile SslContext sslContext;
-    protected List<RpcHook> rpcHooks = new ArrayList<>();
     protected AtomicBoolean isStopping = new AtomicBoolean(false);
-    protected Pair<RpcProcessor, ExecutorService> defaultProcessorPair;
 
     public NettyService(int onewaySemaphorePermits, int asyncSemaphorePermits) {
         this.onewaySemaphore = new Semaphore(onewaySemaphorePermits, true);
         this.asyncSemaphore = new Semaphore(asyncSemaphorePermits, true);
+        this.dispatcher = new NettyDispatcher();
     }
 
     /**
@@ -58,14 +56,24 @@ public abstract class NettyService implements RpcService {
 
     @Override
     public void registerRpcHook(RpcHook rpcHook) {
-        if (rpcHook != null && !rpcHooks.contains(rpcHook)) {
-            rpcHooks.add(rpcHook);
-        }
+        dispatcher.registerRpcHook(rpcHook);
     }
 
     @Override
     public void clearRpcHook() {
-        rpcHooks.clear();
+        dispatcher.clearRpcHook();
+    }
+
+    @Override
+    public void registerProcessor(int requestCode, RpcProcessor processor, ExecutorService executor) {
+        ExecutorService executorService = executor == null ? this.getCallbackExecutor() : executor;
+        dispatcher.registerProcessor(requestCode, processor, executorService);
+    }
+
+    @Override
+    public void registerProcessor(Collection<Integer> codes, RpcProcessor processor, ExecutorService executor) {
+        ExecutorService executorService = executor == null ? this.getCallbackExecutor() : executor;
+        dispatcher.registerProcessor(codes, processor, executorService);
     }
 
 }

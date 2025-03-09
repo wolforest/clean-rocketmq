@@ -38,11 +38,11 @@ public class NettyEncoder extends MessageToByteEncoder<RpcCommand> {
                 out.writeBytes(body);
             }
         } catch (Exception e) {
-            log.error("encode exception, {}", NettyHelper.parseChannelRemoteAddr(ctx.channel()), e);
+            log.error("encode exception, {}", NettyHelper.getRemoteAddr(ctx.channel()), e);
             if (remotingCommand != null) {
                 log.error(remotingCommand.toString());
             }
-            NettyHelper.closeChannel(ctx.channel());
+            NettyHelper.close(ctx.channel());
         }
     }
 }

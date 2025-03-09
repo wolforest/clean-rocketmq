@@ -1,6 +1,7 @@
 package cn.coderule.minimq.rpc.common.netty.service;
 
 import cn.coderule.common.ds.Pair;
+import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.minimq.domain.exception.AbortProcessException;
 import cn.coderule.minimq.rpc.common.RpcHook;
 import cn.coderule.minimq.rpc.common.core.invoke.RequestTask;
@@ -9,20 +10,17 @@ import cn.coderule.minimq.rpc.common.core.invoke.RpcCommand;
 import cn.coderule.minimq.rpc.common.RpcProcessor;
 import cn.coderule.minimq.rpc.common.core.invoke.RpcContext;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.RejectedExecutionException;
-import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicBoolean;
 import lombok.NonNull;
 
 public class NettyDispatcher {
-    private final Semaphore onewaySemaphore;
-    private final Semaphore asyncSemaphore;
-
     /**
      * response map
      * { opaque : ResponseFuture }
@@ -36,13 +34,23 @@ public class NettyDispatcher {
     private final List<RpcHook> rpcHooks = new ArrayList<>();
     protected AtomicBoolean isStopping = new AtomicBoolean(false);
 
-    public NettyDispatcher(int onewaySemaphorePermits, int asyncSemaphorePermits) {
-        this.onewaySemaphore = new Semaphore(onewaySemaphorePermits, true);
-        this.asyncSemaphore = new Semaphore(asyncSemaphorePermits, true);
+    public NettyDispatcher() {
     }
 
     public void shutdown() {
         this.isStopping.set(true);
+    }
+
+    public void registerProcessor(Collection<Integer> codes, @NonNull RpcProcessor processor, @NonNull ExecutorService executor) {
+        if (CollectionUtil.isEmpty(codes)) {
+            return;
+        }
+
+
+        Pair<RpcProcessor, ExecutorService> pair = Pair.of(processor, executor);
+        for (Integer code : codes) {
+            processorMap.put(code, pair);
+        }
     }
 
     public void registerProcessor(int requestCode, @NonNull RpcProcessor processor, @NonNull ExecutorService executor) {

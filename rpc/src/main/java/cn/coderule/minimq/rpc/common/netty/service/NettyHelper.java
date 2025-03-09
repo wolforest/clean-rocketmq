@@ -16,7 +16,9 @@
  */
 package cn.coderule.minimq.rpc.common.netty.service;
 
+import cn.coderule.common.util.lang.ThreadUtil;
 import cn.coderule.common.util.net.NetworkUtil;
+import cn.coderule.minimq.rpc.common.config.RpcSystemConfig;
 import cn.coderule.minimq.rpc.common.core.constant.AttributeKeys;
 import cn.coderule.minimq.rpc.common.core.invoke.RpcCommand;
 import cn.coderule.minimq.rpc.common.core.exception.RemotingCommandException;
@@ -30,14 +32,17 @@ import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.util.Attribute;
 import io.netty.util.AttributeKey;
+import io.netty.util.concurrent.Future;
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
+import javax.annotation.Nullable;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
@@ -47,55 +52,52 @@ public class NettyHelper {
     public static final String DEFAULT_CHARSET = "UTF-8";
     public static final String DEFAULT_CIDR_ALL = "0.0.0.0/0";
 
-    public static final Map<Integer, String> REQUEST_CODE_MAP = new HashMap<>() {
-        {
-            try {
-                Field[] f = RequestCode.class.getFields();
-                for (Field field : f) {
-                    if (field.getType() == int.class) {
-                        put((int) field.get(null), field.getName().toLowerCase());
-                    }
-                }
-            } catch (IllegalAccessException ignore) {
-            }
-        }
-    };
+    public static final Map<Integer, String> REQUEST_CODE_MAP = parseRequestCode();
+    public static final Map<Integer, String> RESPONSE_CODE_MAP = parseResponseCode();
 
-    public static final Map<Integer, String> RESPONSE_CODE_MAP = new HashMap<>() {
-        {
-            try {
-                Field[] f = ResponseCode.class.getFields();
-                for (Field field : f) {
-                    if (field.getType() == int.class) {
-                        put((int) field.get(null), field.getName().toLowerCase());
-                    }
-                }
-            } catch (IllegalAccessException ignore) {
-            }
-        }
-    };
-
-    public static <T> T getAttributeValue(AttributeKey<T> key, final Channel channel) {
-        if (!channel.hasAttr(key)) {
-            return null;
-        }
-
-        Attribute<T> attribute = channel.attr(key);
-        return attribute.get();
+    public static SocketChannel connect(SocketAddress remote) {
+        return connect(remote, 1000 * 5);
     }
 
-    public static <T> void setPropertyToAttr(final Channel channel, AttributeKey<T> attributeKey, T value) {
-        if (channel == null) {
+    public static SocketChannel connect(SocketAddress remote, final int timeoutMillis) {
+        SocketChannel sc = null;
+        try {
+            sc = SocketChannel.open();
+            sc.configureBlocking(true);
+            sc.socket().setSoLinger(false, -1);
+            sc.socket().setTcpNoDelay(true);
+
+            if (RpcSystemConfig.socketSndbufSize > 0) {
+                sc.socket().setReceiveBufferSize(RpcSystemConfig.socketSndbufSize);
+            }
+            if (RpcSystemConfig.socketRcvbufSize > 0) {
+                sc.socket().setSendBufferSize(RpcSystemConfig.socketRcvbufSize);
+            }
+
+            sc.socket().connect(remote, timeoutMillis);
+            sc.configureBlocking(false);
+            return sc;
+        } catch (Exception e) {
+            closeSocketChannel(sc);
+        }
+
+        return null;
+    }
+
+    public static void close(Channel channel) {
+        final String addrRemote = NettyHelper.getRemoteAddr(channel);
+        if ("".equals(addrRemote)) {
+            channel.close();
             return;
         }
-        channel.attr(attributeKey).set(value);
-    }
 
-    public static SocketAddress string2SocketAddress(final String addr) {
-        int split = addr.lastIndexOf(":");
-        String host = addr.substring(0, split);
-        String port = addr.substring(split + 1);
-        return new InetSocketAddress(host, Integer.parseInt(port));
+        channel.close().addListener(new ChannelFutureListener() {
+            @Override
+            public void operationComplete(ChannelFuture future) throws Exception {
+                log.info("closeChannel: close the connection to remote address[{}] result: {}", addrRemote,
+                    future.isSuccess());
+            }
+        });
     }
 
     public static RpcCommand invokeSync(final String addr, final RpcCommand request, final long timeoutMillis)
@@ -126,6 +128,104 @@ public class NettyHelper {
         }
     }
 
+    public static void writeResponse(Channel channel, RpcCommand request, @Nullable RpcCommand response) {
+        writeResponse(channel, request, response, null);
+    }
+
+    public static void writeResponse(Channel channel, RpcCommand request, @Nullable RpcCommand response,
+        Consumer<Future<?>> callback) {
+        if (response == null) {
+            return;
+        }
+
+        if (request.isOnewayRPC()) {
+            return;
+        }
+
+        response.setOpaque(request.getOpaque());
+        response.markResponseType();
+
+        try {
+            channel.writeAndFlush(response).addListener((ChannelFutureListener) future -> {
+                if (future.isSuccess()) {
+                    log.debug("Response[request code: {}, response code: {}, opaque: {}] is written to channel{}",
+                        request.getCode(), response.getCode(), response.getOpaque(), channel);
+                } else {
+                    log.error("Failed to write response[request code: {}, response code: {}, opaque: {}] to channel{}",
+                        request.getCode(), response.getCode(), response.getOpaque(), channel, future.cause());
+                }
+
+                if (callback != null) {
+                    callback.accept(future);
+                }
+            });
+        } catch (Throwable e) {
+            log.error("process request over, but response failed. request: {}", request, e);
+        }
+    }
+
+    public static <T> T getAttribute(AttributeKey<T> key, final Channel channel) {
+        if (!channel.hasAttr(key)) {
+            return null;
+        }
+
+        Attribute<T> attribute = channel.attr(key);
+        return attribute.get();
+    }
+
+    public static <T> void setAttribute(final Channel channel, AttributeKey<T> attributeKey, T value) {
+        if (channel == null) {
+            return;
+        }
+        channel.attr(attributeKey).set(value);
+    }
+
+    public static String getRemoteAddr(final Channel channel) {
+        if (null == channel) {
+            return "";
+        }
+        String addr = getProxyAddress(channel);
+        if (StringUtils.isNotBlank(addr)) {
+            return addr;
+        }
+        Attribute<String> att = channel.attr(AttributeKeys.REMOTE_ADDR_KEY);
+        if (att == null) {
+            // mocked in unit test
+            return parseRemoteAddr(channel);
+        }
+        addr = att.get();
+        if (addr == null) {
+            addr = parseRemoteAddr(channel);
+            att.set(addr);
+        }
+        return addr;
+    }
+
+    public static String getLocalAddr(final Channel channel) {
+        SocketAddress remote = channel.localAddress();
+        final String addr = remote != null ? remote.toString() : "";
+
+        if (addr.isEmpty()) {
+            return "";
+        }
+
+        int index = addr.lastIndexOf("/");
+        if (index >= 0) {
+            return addr.substring(index + 1);
+        }
+
+        return addr;
+    }
+
+    public static String getRequestCodeDesc(int code) {
+        return REQUEST_CODE_MAP.getOrDefault(code, String.valueOf(code));
+    }
+
+    public static String getResponseCodeDesc(int code) {
+        return RESPONSE_CODE_MAP.getOrDefault(code, String.valueOf(code));
+    }
+
+    /************************************* private methods start ***********************************/
     private static SocketChannel openSocketChannel(String addr) throws RemotingConnectException {
         SocketAddress socketAddress = NetworkUtil.toSocketAddress(addr);
         SocketChannel socketChannel = connect(socketAddress);
@@ -144,16 +244,16 @@ public class NettyHelper {
         try {
             socketChannel.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("close socketChannel exception", e);
         }
     }
 
     private static void readBuffer(ByteBuffer byteBufferBody, SocketChannel socketChannel, String addr, long beginTime, long timeout) throws RemotingSendRequestException, IOException, InterruptedException {
         while (byteBufferBody.hasRemaining()) {
             int length = socketChannel.read(byteBufferBody);
-            checkChannelOperationResult(length, addr, beginTime, timeout, byteBufferBody);
+            checkRequestResult(length, addr, beginTime, timeout, byteBufferBody);
 
-            Thread.sleep(1);
+            ThreadUtil.sleep(1);
         }
     }
 
@@ -161,9 +261,9 @@ public class NettyHelper {
         ByteBuffer byteBufferSize = ByteBuffer.allocate(4);
         while (byteBufferSize.hasRemaining()) {
             int length = socketChannel.read(byteBufferSize);
-            checkChannelOperationResult(length, addr, beginTime, timeout, byteBufferSize);
+            checkRequestResult(length, addr, beginTime, timeout, byteBufferSize);
 
-            Thread.sleep(1);
+            ThreadUtil.sleep(1);
         }
 
         return byteBufferSize.getInt(0);
@@ -173,13 +273,13 @@ public class NettyHelper {
         ByteBuffer byteBufferRequest = request.encode();
         while (byteBufferRequest.hasRemaining()) {
             int length = socketChannel.write(byteBufferRequest);
-            checkChannelOperationResult(length, addr, beginTime, timeout, byteBufferRequest);
+            checkRequestResult(length, addr, beginTime, timeout, byteBufferRequest);
 
-            Thread.sleep(1);
+            ThreadUtil.sleep(1);
         }
     }
 
-    private static void checkChannelOperationResult(int length, String addr, long beginTime, long timeout, ByteBuffer buffer) throws RemotingSendRequestException {
+    private static void checkRequestResult(int length, String addr, long beginTime, long timeout, ByteBuffer buffer) throws RemotingSendRequestException {
         if (length <= 0) {
             throw new RemotingSendRequestException(addr);
         }
@@ -203,45 +303,24 @@ public class NettyHelper {
         }
     }
 
-    public static String parseChannelRemoteAddr(final Channel channel) {
-        if (null == channel) {
-            return "";
-        }
-        String addr = getProxyProtocolAddress(channel);
-        if (StringUtils.isNotBlank(addr)) {
-            return addr;
-        }
-        Attribute<String> att = channel.attr(AttributeKeys.REMOTE_ADDR_KEY);
-        if (att == null) {
-            // mocked in unit test
-            return parseChannelRemoteAddr0(channel);
-        }
-        addr = att.get();
-        if (addr == null) {
-            addr = parseChannelRemoteAddr0(channel);
-            att.set(addr);
-        }
-        return addr;
-    }
-
-    private static String getProxyProtocolAddress(Channel channel) {
+    private static String getProxyAddress(Channel channel) {
         if (!channel.hasAttr(AttributeKeys.PROXY_PROTOCOL_ADDR)) {
             return null;
         }
 
-        String proxyProtocolAddr = getAttributeValue(AttributeKeys.PROXY_PROTOCOL_ADDR, channel);
-        String proxyProtocolPort = getAttributeValue(AttributeKeys.PROXY_PROTOCOL_PORT, channel);
+        String proxyProtocolAddr = getAttribute(AttributeKeys.PROXY_PROTOCOL_ADDR, channel);
+        String proxyProtocolPort = getAttribute(AttributeKeys.PROXY_PROTOCOL_PORT, channel);
         if (StringUtils.isBlank(proxyProtocolAddr) || proxyProtocolPort == null) {
             return null;
         }
         return proxyProtocolAddr + ":" + proxyProtocolPort;
     }
 
-    private static String parseChannelRemoteAddr0(final Channel channel) {
+    private static String parseRemoteAddr(final Channel channel) {
         SocketAddress remote = channel.remoteAddress();
         final String addr = remote != null ? remote.toString() : "";
 
-        if (addr.length() <= 0) {
+        if (addr.isEmpty()) {
             return "";
         }
 
@@ -253,119 +332,33 @@ public class NettyHelper {
         return addr;
     }
 
-    public static String parseChannelLocalAddr(final Channel channel) {
-        SocketAddress remote = channel.localAddress();
-        final String addr = remote != null ? remote.toString() : "";
-
-        if (!addr.isEmpty()) {
-            int index = addr.lastIndexOf("/");
-            if (index >= 0) {
-                return addr.substring(index + 1);
-            }
-
-            return addr;
-        }
-
-        return "";
-    }
-
-    public static String parseHostFromAddress(String address) {
-        if (address == null) {
-            return "";
-        }
-
-        String[] addressSplits = address.split(":");
-        if (addressSplits.length < 1) {
-            return "";
-        }
-
-        return addressSplits[0];
-    }
-
-    public static String parseSocketAddressAddr(SocketAddress socketAddress) {
-        if (socketAddress == null) {
-            return "";
-        }
-
-        // Default toString of InetSocketAddress is "hostName/IP:port"
-        final String addr = socketAddress.toString();
-        int index = addr.lastIndexOf("/");
-        return (index != -1) ? addr.substring(index + 1) : addr;
-    }
-
-    public static Integer parseSocketAddressPort(SocketAddress socketAddress) {
-        if (socketAddress instanceof InetSocketAddress) {
-            return ((InetSocketAddress) socketAddress).getPort();
-        }
-        return -1;
-    }
-
-    public static int ipToInt(String ip) {
-        String[] ips = ip.split("\\.");
-        return (Integer.parseInt(ips[0]) << 24)
-            | (Integer.parseInt(ips[1]) << 16)
-            | (Integer.parseInt(ips[2]) << 8)
-            | Integer.parseInt(ips[3]);
-    }
-
-    public static boolean ipInCIDR(String ip, String cidr) {
-        int ipAddr = ipToInt(ip);
-        String[] cidrArr = cidr.split("/");
-        int netId = Integer.parseInt(cidrArr[1]);
-        int mask = 0xFFFFFFFF << (32 - netId);
-        int cidrIpAddr = ipToInt(cidrArr[0]);
-
-        return (ipAddr & mask) == (cidrIpAddr & mask);
-    }
-
-    public static SocketChannel connect(SocketAddress remote) {
-        return connect(remote, 1000 * 5);
-    }
-
-    public static SocketChannel connect(SocketAddress remote, final int timeoutMillis) {
-        SocketChannel sc = null;
+    private static Map<Integer, String> parseRequestCode() {
+        Map<Integer, String> map = new HashMap<>();
         try {
-            sc = SocketChannel.open();
-            sc.configureBlocking(true);
-            sc.socket().setSoLinger(false, -1);
-            sc.socket().setTcpNoDelay(true);
-//            if (NettySystemConfig.socketSndbufSize > 0) {
-//                sc.socket().setReceiveBufferSize(NettySystemConfig.socketSndbufSize);
-//            }
-//            if (NettySystemConfig.socketRcvbufSize > 0) {
-//                sc.socket().setSendBufferSize(NettySystemConfig.socketRcvbufSize);
-//            }
-            sc.socket().connect(remote, timeoutMillis);
-            sc.configureBlocking(false);
-            return sc;
-        } catch (Exception e) {
-            closeSocketChannel(sc);
-        }
-
-        return null;
-    }
-
-    public static void closeChannel(Channel channel) {
-        final String addrRemote = NettyHelper.parseChannelRemoteAddr(channel);
-        if ("".equals(addrRemote)) {
-            channel.close();
-            return;
-        }
-
-        channel.close().addListener(new ChannelFutureListener() {
-            @Override
-            public void operationComplete(ChannelFuture future) throws Exception {
-                log.info("closeChannel: close the connection to remote address[{}] result: {}", addrRemote,
-                    future.isSuccess());
+            Field[] f = RequestCode.class.getFields();
+            for (Field field : f) {
+                if (field.getType() == int.class) {
+                    map.put((int) field.get(null), field.getName().toLowerCase());
+                }
             }
-        });
+        } catch (IllegalAccessException ignore) {
+        }
+
+        return map;
     }
 
-    public static String getRequestCodeDesc(int code) {
-        return REQUEST_CODE_MAP.getOrDefault(code, String.valueOf(code));
-    }
+    private static Map<Integer, String> parseResponseCode() {
+        Map<Integer, String> map = new HashMap<>();
+        try {
+            Field[] f = ResponseCode.class.getFields();
+            for (Field field : f) {
+                if (field.getType() == int.class) {
+                    map.put((int) field.get(null), field.getName().toLowerCase());
+                }
+            }
+        } catch (IllegalAccessException ignore) {
+        }
 
-    public static String getResponseCodeDesc(int code) {
-        return RESPONSE_CODE_MAP.getOrDefault(code, String.valueOf(code));
+        return map;
     }
 }
