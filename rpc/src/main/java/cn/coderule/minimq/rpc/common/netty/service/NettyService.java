@@ -1,6 +1,5 @@
 package cn.coderule.minimq.rpc.common.netty.service;
 
-import cn.coderule.common.ds.Pair;
 import cn.coderule.minimq.rpc.common.core.RpcService;
 import cn.coderule.minimq.rpc.common.core.invoke.ResponseFuture;
 import cn.coderule.minimq.rpc.common.RpcHook;
@@ -8,10 +7,7 @@ import cn.coderule.minimq.rpc.common.RpcProcessor;
 import cn.coderule.minimq.rpc.common.netty.event.NettyEvent;
 import cn.coderule.minimq.rpc.common.netty.event.NettyEventExecutor;
 import io.netty.handler.ssl.SslContext;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutorService;
@@ -37,7 +33,7 @@ public abstract class NettyService implements RpcService {
     protected final NettyEventExecutor nettyEventExecutor = new NettyEventExecutor(this);
 
     protected volatile SslContext sslContext;
-    protected AtomicBoolean isStopping = new AtomicBoolean(false);
+    protected AtomicBoolean stopping = new AtomicBoolean(false);
 
     public NettyService(int onewaySemaphorePermits, int asyncSemaphorePermits) {
         this.onewaySemaphore = new Semaphore(onewaySemaphorePermits, true);

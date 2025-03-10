@@ -32,13 +32,13 @@ public class NettyDispatcher {
      */
     private final HashMap<Integer, Pair<RpcProcessor, ExecutorService>> processorMap = new HashMap<>(64);
     private final List<RpcHook> rpcHooks = new ArrayList<>();
-    protected AtomicBoolean isStopping = new AtomicBoolean(false);
+    protected AtomicBoolean stopping = new AtomicBoolean(false);
 
     public NettyDispatcher() {
     }
 
     public void shutdown() {
-        this.isStopping.set(true);
+        this.stopping.set(true);
     }
 
     public void registerProcessor(Collection<Integer> codes, @NonNull RpcProcessor processor, @NonNull ExecutorService executor) {
@@ -161,7 +161,7 @@ public class NettyDispatcher {
     }
 
     private void processRequest(RpcContext ctx, RpcCommand command) {
-        if (isStopping.get()) {
+        if (stopping.get()) {
             rejectByServer(ctx, command);
             return;
         }
