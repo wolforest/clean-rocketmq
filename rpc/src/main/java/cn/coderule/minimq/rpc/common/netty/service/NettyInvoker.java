@@ -3,6 +3,7 @@ package cn.coderule.minimq.rpc.common.netty.service;
 import cn.coderule.minimq.rpc.common.core.exception.RemotingSendRequestException;
 import cn.coderule.minimq.rpc.common.core.exception.RemotingTimeoutException;
 import cn.coderule.minimq.rpc.common.core.invoke.ResponseFuture;
+import cn.coderule.minimq.rpc.common.core.invoke.RpcCallback;
 import cn.coderule.minimq.rpc.common.core.invoke.RpcCommand;
 import io.netty.channel.Channel;
 import java.util.concurrent.CompletableFuture;
@@ -50,6 +51,32 @@ public class NettyInvoker {
 
     public CompletableFuture<ResponseFuture> invokeAsync(Channel channel, RpcCommand request, long timeoutMillis) {
         return null;
+    }
+
+    public void invokeAsync(Channel channel, RpcCommand request, long timeoutMillis, RpcCallback rpcCallback) {
+        invokeAsync(channel, request, timeoutMillis)
+        .whenComplete((v, t) -> {
+            if (t == null) {
+                rpcCallback.onComplete(v);
+            } else {
+                ResponseFuture responseFuture = new ResponseFuture(
+                    channel,
+                    request.getOpaque(),
+                    request,
+                    timeoutMillis,
+                    null,
+                    null
+                );
+
+                responseFuture.setCause(t);
+                rpcCallback.onComplete(responseFuture);
+            }
+        }).thenAccept(responseFuture -> {
+            rpcCallback.onSuccess(responseFuture.getResponse());
+        }).exceptionally(t -> {
+            rpcCallback.onFailure(t);
+            return null;
+        });
     }
 
     public void scanResponseMap() {
