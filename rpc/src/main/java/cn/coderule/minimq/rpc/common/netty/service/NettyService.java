@@ -22,7 +22,6 @@ public abstract class NettyService implements RpcService {
     protected final NettyInvoker invoker;
 
     protected final ExecutorService callbackExecutor;
-    protected final NettyEventExecutor nettyEventExecutor = new NettyEventExecutor(this);
 
     protected AtomicBoolean stopping = new AtomicBoolean(false);
 
@@ -30,15 +29,6 @@ public abstract class NettyService implements RpcService {
         this.dispatcher = new NettyDispatcher();
         this.callbackExecutor = buildCallbackExecutor(callbackThreadNum);
         this.invoker = new NettyInvoker(onewaySemaphorePermits, asyncSemaphorePermits, callbackExecutor);
-    }
-
-    /**
-     * Put a netty event to the executor.
-     *
-     * @param event Netty event instance.
-     */
-    public void putNettyEvent(final NettyEvent event) {
-        this.nettyEventExecutor.putNettyEvent(event);
     }
 
     @Override

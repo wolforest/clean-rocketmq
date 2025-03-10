@@ -4,23 +4,23 @@ import cn.coderule.minimq.rpc.common.RpcClient;
 import cn.coderule.minimq.rpc.common.core.invoke.RpcCallback;
 import cn.coderule.minimq.rpc.common.core.invoke.RpcCommand;
 import cn.coderule.minimq.rpc.common.RpcHook;
+import cn.coderule.minimq.rpc.common.netty.event.NettyEventExecutor;
 import cn.coderule.minimq.rpc.common.netty.event.RpcListener;
 import cn.coderule.minimq.rpc.common.RpcProcessor;
 import cn.coderule.minimq.rpc.common.netty.service.NettyService;
 import cn.coderule.minimq.rpc.common.config.RpcClientConfig;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
-import lombok.Getter;
 
 public class NettyClient extends NettyService implements RpcClient {
     private final RpcClientConfig config;
+    private final NettyEventExecutor nettyEventExecutor;
 
-    @Getter
-    private RpcListener rpcListener;
-
-    public NettyClient(RpcClientConfig config) {
+    public NettyClient(RpcClientConfig config, RpcListener rpcListener) {
         super(config.getOnewaySemaphorePermits(), config.getAsyncSemaphorePermits(), config.getCallbackThreadNum());
         this.config = config;
+
+        this.nettyEventExecutor = new NettyEventExecutor(rpcListener);
     }
 
     @Override

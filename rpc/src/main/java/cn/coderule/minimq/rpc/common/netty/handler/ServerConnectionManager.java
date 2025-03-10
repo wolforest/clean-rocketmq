@@ -32,12 +32,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @ChannelHandler.Sharable
 public class ServerConnectionManager extends ChannelDuplexHandler {
-    private final NettyEventExecutor nettyEventExecutor;
-    private final RpcListener rpcListener;
+    private final NettyEventExecutor eventExecutor;
 
-    public ServerConnectionManager(RpcListener rpcListener, NettyEventExecutor nettyEventExecutor) {
-        this.rpcListener = rpcListener;
-        this.nettyEventExecutor = nettyEventExecutor;
+    public ServerConnectionManager(NettyEventExecutor eventExecutor) {
+        this.eventExecutor = eventExecutor;
     }
 
     @Override
@@ -60,8 +58,8 @@ public class ServerConnectionManager extends ChannelDuplexHandler {
         log.info("NETTY SERVER PIPELINE: channelActive, the channel[{}]", remoteAddress);
         super.channelActive(ctx);
 
-        if (rpcListener != null) {
-            nettyEventExecutor.putNettyEvent(new NettyEvent(NettyEventType.CONNECT, remoteAddress, ctx.channel()));
+        if (eventExecutor.getRpcListener() != null) {
+            eventExecutor.putNettyEvent(new NettyEvent(NettyEventType.CONNECT, remoteAddress, ctx.channel()));
         }
     }
 
@@ -71,8 +69,8 @@ public class ServerConnectionManager extends ChannelDuplexHandler {
         log.info("NETTY SERVER PIPELINE: channelInactive, the channel[{}]", remoteAddress);
         super.channelInactive(ctx);
 
-        if (rpcListener != null) {
-            nettyEventExecutor.putNettyEvent(new NettyEvent(NettyEventType.CLOSE, remoteAddress, ctx.channel()));
+        if (eventExecutor.getRpcListener() != null) {
+            eventExecutor.putNettyEvent(new NettyEvent(NettyEventType.CLOSE, remoteAddress, ctx.channel()));
         }
     }
 
@@ -92,8 +90,8 @@ public class ServerConnectionManager extends ChannelDuplexHandler {
         log.warn("NETTY SERVER PIPELINE: IDLE exception [{}]", remoteAddress);
         NettyHelper.close(ctx.channel());
 
-        if (rpcListener != null) {
-            nettyEventExecutor.putNettyEvent(
+        if (eventExecutor.getRpcListener() != null) {
+            eventExecutor.putNettyEvent(
                 new NettyEvent(NettyEventType.IDLE, remoteAddress, ctx.channel())
             );
         }
@@ -107,8 +105,8 @@ public class ServerConnectionManager extends ChannelDuplexHandler {
         log.warn("NETTY SERVER PIPELINE: exceptionCaught {}", remoteAddress);
         log.warn("NETTY SERVER PIPELINE: exceptionCaught exception.", cause);
 
-        if (rpcListener != null) {
-            nettyEventExecutor.putNettyEvent(new NettyEvent(NettyEventType.EXCEPTION, remoteAddress, ctx.channel()));
+        if (eventExecutor.getRpcListener() != null) {
+            eventExecutor.putNettyEvent(new NettyEvent(NettyEventType.EXCEPTION, remoteAddress, ctx.channel()));
         }
 
         NettyHelper.close(ctx.channel());

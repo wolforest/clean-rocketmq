@@ -5,6 +5,7 @@ import cn.coderule.common.util.lang.SystemUtil;
 import cn.coderule.minimq.rpc.common.RpcServer;
 import cn.coderule.minimq.rpc.common.core.invoke.RpcCallback;
 import cn.coderule.minimq.rpc.common.core.invoke.RpcCommand;
+import cn.coderule.minimq.rpc.common.netty.event.NettyEventExecutor;
 import cn.coderule.minimq.rpc.common.netty.event.RpcListener;
 import cn.coderule.minimq.rpc.common.RpcProcessor;
 import cn.coderule.minimq.rpc.common.netty.service.NettyService;
@@ -21,15 +22,13 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.util.concurrent.DefaultEventExecutorGroup;
 import java.net.InetSocketAddress;
 import java.util.concurrent.ExecutorService;
-import lombok.Getter;
 
 public class NettyServer extends NettyService implements RpcServer {
     private final RpcServerConfig config;
-    @Getter
-    private final RpcListener rpcListener;
 
     private final ServerBootstrap bootstrap;
     private final DefaultEventExecutorGroup eventExecutorGroup;
+    private final NettyEventExecutor nettyEventExecutor;
 
     public NettyServer(RpcServerConfig config) {
         this(config, null);
@@ -38,9 +37,9 @@ public class NettyServer extends NettyService implements RpcServer {
     public NettyServer(RpcServerConfig config, RpcListener rpcListener) {
         super(config.getOnewaySemaphorePermits(), config.getAsyncSemaphorePermits(), config.getCallbackThreadNum());
         this.config = config;
-        this.rpcListener = rpcListener;
         this.bootstrap = new ServerBootstrap();
 
+        this.nettyEventExecutor = new NettyEventExecutor(rpcListener);
         this.eventExecutorGroup = buildEventExecutorGroup();
     }
 
