@@ -16,8 +16,8 @@
  */
 package cn.coderule.minimq.rpc.common.netty.codec;
 
-import cn.coderule.minimq.rpc.common.netty.service.HAProxyMessageHandler;
-import cn.coderule.minimq.rpc.common.netty.service.TlsModeHandler;
+import cn.coderule.minimq.rpc.common.netty.handler.HAProxyMessageHandler;
+import cn.coderule.minimq.rpc.common.netty.handler.TlsModeHandler;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
