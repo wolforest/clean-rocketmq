@@ -39,9 +39,44 @@ public class NettyInvoker {
         this.callbackExecutor = callbackExecutor;
     }
 
-    public void invokeOneway(Channel channel, RpcCommand request, long timeoutMillis)
-        throws InterruptedException, RemotingTimeoutException, RemotingSendRequestException {
+    private void acquireOnewaySemaphoreFailed(long timeoutMillis) throws RemotingTooMuchRequestException, RemotingTimeoutException {
+        if (timeoutMillis <= 0) {
+            throw new RemotingTooMuchRequestException("invokeOnewayImpl invoke too fast");
+        }
 
+        String info = String.format(
+            "invokeOneway tryAcquire semaphore timeout, %dms, waiting thread nums: %d semaphoreOnewayValue: %d",
+            timeoutMillis,
+            this.onewaySemaphore.getQueueLength(),
+            this.onewaySemaphore.availablePermits()
+        );
+        log.warn(info);
+        throw new RemotingTimeoutException(info);
+    }
+
+    public void invokeOneway(Channel channel, RpcCommand request, long timeoutMillis)
+        throws InterruptedException, RemotingTimeoutException, RemotingTooMuchRequestException, RemotingSendRequestException {
+        request.markOnewayRPC();
+
+        boolean acquired = this.onewaySemaphore.tryAcquire(timeoutMillis, TimeUnit.MILLISECONDS);
+        if (!acquired) {
+            acquireOnewaySemaphoreFailed(timeoutMillis);
+            return;
+        }
+
+        SemaphoreGuard guard = new SemaphoreGuard(this.onewaySemaphore);
+        try {
+            channel.writeAndFlush(request).addListener((ChannelFutureListener) f -> {
+                guard.release();
+                if (!f.isSuccess()) {
+                    log.warn("invokeOneway failed: {}", channel.remoteAddress());
+                }
+            });
+        } catch (Exception e) {
+            guard.release();
+            log.warn("invokeOneway flush failed: {}", channel.remoteAddress());
+            throw new RemotingSendRequestException(NettyHelper.getRemoteAddr(channel), e);
+        }
     }
 
     public RpcCommand invokeSync(Channel channel, RpcCommand request, long timeoutMillis)
