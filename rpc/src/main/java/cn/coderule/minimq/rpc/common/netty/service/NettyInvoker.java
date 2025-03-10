@@ -127,6 +127,19 @@ public class NettyInvoker {
         });
     }
 
+    public void fastFail(final Channel channel) {
+        for (Map.Entry<Integer, ResponseFuture> entry : responseMap.entrySet()) {
+            if (entry.getValue().getChannel() != channel) {
+                continue;
+            }
+
+            Integer opaque = entry.getKey();
+            if (opaque != null) {
+                requestFailed(opaque);
+            }
+        }
+    }
+
     public void scanResponse() {
         List<ResponseFuture> rfList = new LinkedList<>();
         Iterator<Map.Entry<Integer, ResponseFuture>> it = this.responseMap.entrySet().iterator();
