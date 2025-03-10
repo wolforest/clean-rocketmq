@@ -25,14 +25,9 @@ import java.util.concurrent.Executors;
 import lombok.Getter;
 
 public class NettyServer extends NettyService implements RpcServer {
-    private static final int DEFAULT_PROCESSOR_THREAD_NUM = 4;
-
     private final RpcServerConfig config;
     @Getter
     private final RpcListener rpcListener;
-    @Getter
-    private final ExecutorService callbackExecutor;
-
 
     private final ServerBootstrap bootstrap;
     private final DefaultEventExecutorGroup eventExecutorGroup;
@@ -42,28 +37,18 @@ public class NettyServer extends NettyService implements RpcServer {
     }
 
     public NettyServer(RpcServerConfig config, RpcListener rpcListener) {
-        super(config.getOnewaySemaphorePermits(), config.getAsyncSemaphorePermits());
+        super(config.getOnewaySemaphorePermits(), config.getAsyncSemaphorePermits(), config.getCallbackThreadNum());
         this.config = config;
         this.rpcListener = rpcListener;
         this.bootstrap = new ServerBootstrap();
 
         this.eventExecutorGroup = buildEventExecutorGroup();
-        this.callbackExecutor = buildCallbackExecutor();
     }
 
     private DefaultEventExecutorGroup buildEventExecutorGroup() {
         return new DefaultEventExecutorGroup(
             config.getBusinessThreadNum(), new DefaultThreadFactory("NettyWorker_")
         );
-    }
-
-    private ExecutorService buildCallbackExecutor() {
-        int threadNum = config.getCallbackThreadNum();
-        if (threadNum <= 0) {
-            threadNum = DEFAULT_PROCESSOR_THREAD_NUM;
-        }
-
-        return Executors.newFixedThreadPool(threadNum, new DefaultThreadFactory("NettyProcessor_"));
     }
 
     private void initBootstrap() {
@@ -75,7 +60,6 @@ public class NettyServer extends NettyService implements RpcServer {
             .childOption(ChannelOption.TCP_NODELAY, true)
             .localAddress(new InetSocketAddress(config.getAddress(), config.getPort()))
             ;
-
     }
 
     private EventLoopGroup buildBossGroup() {

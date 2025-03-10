@@ -1,16 +1,14 @@
 package cn.coderule.minimq.rpc.common.netty.service;
 
+import cn.coderule.common.lang.concurrent.DefaultThreadFactory;
 import cn.coderule.minimq.rpc.common.core.RpcService;
-import cn.coderule.minimq.rpc.common.core.invoke.ResponseFuture;
 import cn.coderule.minimq.rpc.common.RpcHook;
 import cn.coderule.minimq.rpc.common.RpcProcessor;
 import cn.coderule.minimq.rpc.common.netty.event.NettyEvent;
 import cn.coderule.minimq.rpc.common.netty.event.NettyEventExecutor;
-import io.netty.handler.ssl.SslContext;
 import java.util.Collection;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -18,15 +16,20 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Data
 public abstract class NettyService implements RpcService {
+    private static final int DEFAULT_PROCESSOR_THREAD_NUM = 4;
+
     protected final NettyDispatcher dispatcher;
     protected final NettyInvoker invoker;
+
+    protected final ExecutorService callbackExecutor;
     protected final NettyEventExecutor nettyEventExecutor = new NettyEventExecutor(this);
 
     protected AtomicBoolean stopping = new AtomicBoolean(false);
 
-    public NettyService(int onewaySemaphorePermits, int asyncSemaphorePermits) {
+    public NettyService(int onewaySemaphorePermits, int asyncSemaphorePermits, int callbackThreadNum) {
         this.dispatcher = new NettyDispatcher();
-        this.invoker = new NettyInvoker(onewaySemaphorePermits, asyncSemaphorePermits);
+        this.callbackExecutor = buildCallbackExecutor(callbackThreadNum);
+        this.invoker = new NettyInvoker(onewaySemaphorePermits, asyncSemaphorePermits, callbackExecutor);
     }
 
     /**
@@ -58,6 +61,15 @@ public abstract class NettyService implements RpcService {
     public void registerProcessor(Collection<Integer> codes, RpcProcessor processor, ExecutorService executor) {
         ExecutorService executorService = executor == null ? this.getCallbackExecutor() : executor;
         dispatcher.registerProcessor(codes, processor, executorService);
+    }
+
+    private ExecutorService buildCallbackExecutor(int callbackThreadNum) {
+        int threadNum = callbackThreadNum;
+        if (threadNum <= 0) {
+            threadNum = DEFAULT_PROCESSOR_THREAD_NUM;
+        }
+
+        return Executors.newFixedThreadPool(threadNum, new DefaultThreadFactory("NettyProcessor_"));
     }
 
 }

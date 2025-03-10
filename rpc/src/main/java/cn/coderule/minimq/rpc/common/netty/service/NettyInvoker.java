@@ -1,5 +1,6 @@
 package cn.coderule.minimq.rpc.common.netty.service;
 
+import cn.coderule.common.lang.concurrent.SemaphoreGuard;
 import cn.coderule.minimq.rpc.common.core.exception.RemotingSendRequestException;
 import cn.coderule.minimq.rpc.common.core.exception.RemotingTimeoutException;
 import cn.coderule.minimq.rpc.common.core.exception.RemotingTooMuchRequestException;
@@ -7,21 +8,23 @@ import cn.coderule.minimq.rpc.common.core.invoke.ResponseFuture;
 import cn.coderule.minimq.rpc.common.core.invoke.RpcCallback;
 import cn.coderule.minimq.rpc.common.core.invoke.RpcCommand;
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelFutureListener;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class NettyInvoker {
     private final Semaphore onewaySemaphore;
     private final Semaphore asyncSemaphore;
-    private AtomicBoolean stopping = new AtomicBoolean(false);
+    private final ExecutorService callbackExecutor;
 
     /**
      * response map
@@ -30,13 +33,15 @@ public class NettyInvoker {
     private final ConcurrentMap<Integer, ResponseFuture> responseMap
         = new ConcurrentHashMap<>(256);
 
-    public NettyInvoker(int onewaySemaphorePermits, int asyncSemaphorePermits) {
+    public NettyInvoker(int onewaySemaphorePermits, int asyncSemaphorePermits, ExecutorService callbackExecutor) {
         this.onewaySemaphore = new Semaphore(onewaySemaphorePermits);
         this.asyncSemaphore = new Semaphore(asyncSemaphorePermits);
+        this.callbackExecutor = callbackExecutor;
     }
 
-    public void shutdown() {
-        this.stopping.set(true);
+    public void invokeOneway(Channel channel, RpcCommand request, long timeoutMillis)
+        throws InterruptedException, RemotingTimeoutException, RemotingSendRequestException {
+
     }
 
     public RpcCommand invokeSync(Channel channel, RpcCommand request, long timeoutMillis)
@@ -52,41 +57,23 @@ public class NettyInvoker {
         }
     }
 
-    private boolean tryAcquireAsyncSemaphore(long timeoutMillis, CompletableFuture<ResponseFuture> future) {
-        boolean acquired;
-        try {
-            acquired = this.asyncSemaphore.tryAcquire(timeoutMillis, TimeUnit.MILLISECONDS);
-        } catch (Throwable t) {
-            future.completeExceptionally(t);
-            return false;
-        }
-
-        if (acquired) return true;
-
-        if (timeoutMillis <= 0) {
-            future.completeExceptionally(new RemotingTooMuchRequestException("invokeAsyncImpl invoke too fast"));
-            return false;
-        }
-
-        String info = String.format(
-            "invokeAsyncImpl tryAcquire semaphore timeout, %dms, waiting thread nums: %d semaphoreAsyncValue: %d",
-            timeoutMillis,
-            this.asyncSemaphore.getQueueLength(),
-            this.asyncSemaphore.availablePermits()
-        );
-        log.warn(info);
-        future.completeExceptionally(new RemotingTimeoutException(info));
-        return false;
-    }
-
     public CompletableFuture<ResponseFuture> invokeAsync(Channel channel, RpcCommand request, long timeoutMillis) {
+        long startTime = System.currentTimeMillis();
         CompletableFuture<ResponseFuture> future = new CompletableFuture<>();
+        SemaphoreGuard semaphoreGuard = new SemaphoreGuard(this.asyncSemaphore);
 
-        if (!tryAcquireAsyncSemaphore(timeoutMillis, future)) {
+        if (!tryAcquireAsyncSemaphore(timeoutMillis, future, semaphoreGuard, startTime)) {
             return future;
         }
 
-        return null;
+        ResponseFuture response = createResponseFuture(channel, request, timeoutMillis, future, semaphoreGuard);
+        this.responseMap.put(request.getOpaque(), response);
+
+        try {
+            return writeAndFlush(channel, request, response, future);
+        } catch (Exception e) {
+            return flushFailed(channel, request, response, future, e);
+        }
     }
 
     public void invokeAsync(Channel channel, RpcCommand request, long timeoutMillis, RpcCallback rpcCallback) {
@@ -118,4 +105,154 @@ public class NettyInvoker {
     public void scanResponseMap() {
 
     }
+
+    /*********************************** private methods ***********************************/
+    private void acquireAsyncSemaphoreFailed(long timeoutMillis, CompletableFuture<ResponseFuture> future) {
+        if (timeoutMillis <= 0) {
+            future.completeExceptionally(new RemotingTooMuchRequestException("invokeAsyncImpl invoke too fast"));
+            return;
+        }
+
+        String info = String.format(
+            "invokeAsyncImpl tryAcquire semaphore timeout, %dms, waiting thread nums: %d semaphoreAsyncValue: %d",
+            timeoutMillis,
+            this.asyncSemaphore.getQueueLength(),
+            this.asyncSemaphore.availablePermits()
+        );
+        log.warn(info);
+        future.completeExceptionally(new RemotingTimeoutException(info));
+    }
+
+    private boolean tryAcquireAsyncSemaphore(long timeoutMillis, CompletableFuture<ResponseFuture> future, SemaphoreGuard semaphoreGuard, long startTime) {
+        boolean acquired;
+        try {
+            acquired = this.asyncSemaphore.tryAcquire(timeoutMillis, TimeUnit.MILLISECONDS);
+        } catch (Throwable t) {
+            future.completeExceptionally(t);
+            return false;
+        }
+
+        if (!acquired) {
+            acquireAsyncSemaphoreFailed(timeoutMillis, future);
+            return false;
+        }
+
+        long costTime = System.currentTimeMillis() - startTime;
+        if (timeoutMillis < costTime) {
+            semaphoreGuard.release();
+            future.completeExceptionally(new RemotingTimeoutException("invokeAsyncImpl call timeout"));
+            return false;
+        }
+
+        return true;
+    }
+
+    private ResponseFuture createResponseFuture(Channel channel, RpcCommand request, long timeout, CompletableFuture<ResponseFuture> future, SemaphoreGuard semaphoreGuard) {
+        AtomicReference<ResponseFuture> responseReference = new AtomicReference<>();
+        RpcCallback rpcCallback = new RpcCallback() {
+            @Override
+            public void onComplete(ResponseFuture responseFuture) {
+            }
+
+            @Override
+            public void onSuccess(RpcCommand response) {
+                future.complete(responseReference.get());
+            }
+
+            @Override
+            public void onFailure(Throwable throwable) {
+                future.completeExceptionally(throwable);
+            }
+        };
+
+        ResponseFuture responseFuture = new ResponseFuture(
+            channel,
+            request.getOpaque(),
+            request,
+            timeout,
+            rpcCallback,
+            semaphoreGuard
+        );
+        responseReference.set(responseFuture);
+
+        return responseFuture;
+    }
+
+    private boolean submitInvokeCallback(final ResponseFuture responseFuture, ExecutorService executor) {
+        boolean runInThisThread = false;
+
+        try {
+            executor.submit(() -> {
+                callInvokeCallback(responseFuture);
+            });
+        } catch (Exception e) {
+            runInThisThread = true;
+            log.warn("execute callback in executor exception, maybe executor busy", e);
+        }
+
+        return runInThisThread;
+    }
+
+    private void callInvokeCallback(final ResponseFuture responseFuture) {
+        try {
+            responseFuture.executeRpcCallback();
+        } catch (Throwable e) {
+            log.warn("executeInvokeCallback Exception", e);
+        } finally {
+            responseFuture.release();
+        }
+    }
+
+    private void executeInvokeCallback(final ResponseFuture responseFuture) {
+        ExecutorService executor = this.callbackExecutor;
+        boolean runInThisThread = executor == null || executor.isShutdown();
+
+        if (!runInThisThread) {
+            runInThisThread = submitInvokeCallback(responseFuture, executor);
+        }
+
+        if (runInThisThread) {
+            callInvokeCallback(responseFuture);
+        }
+    }
+
+    private void requestFailed(final int opaque) {
+        ResponseFuture responseFuture = responseMap.remove(opaque);
+        if (responseFuture == null) {
+            return;
+        }
+
+        responseFuture.setSendRequestOK(false);
+        responseFuture.putResponse(null);
+        try {
+            executeInvokeCallback(responseFuture);
+        } catch (Throwable e) {
+            log.warn("execute callback in requestFail, and callback throw", e);
+        } finally {
+            responseFuture.release();
+        }
+    }
+
+    private CompletableFuture<ResponseFuture> writeAndFlush(Channel channel, RpcCommand request, ResponseFuture response, CompletableFuture<ResponseFuture> future) {
+        channel.writeAndFlush(request)
+            .addListener((ChannelFutureListener) f -> {
+                if (f.isSuccess()) {
+                    response.setSendRequestOK(true);
+                    return;
+                }
+
+                requestFailed(request.getOpaque());
+                log.warn("send a request command to channel <{}> failed.", NettyHelper.getRemoteAddr(channel));
+            });
+        return future;
+    }
+
+    private CompletableFuture<ResponseFuture> flushFailed(Channel channel, RpcCommand request, ResponseFuture response, CompletableFuture<ResponseFuture> future, Exception e) {
+        responseMap.remove(request.getOpaque());
+        response.release();
+        log.warn("send a request command to channel <{}> Exception", NettyHelper.getRemoteAddr(channel), e);
+        future.completeExceptionally(new RemotingSendRequestException(NettyHelper.getRemoteAddr(channel), e));
+        return future;
+    }
+
 }
