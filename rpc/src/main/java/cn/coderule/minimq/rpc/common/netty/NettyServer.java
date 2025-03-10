@@ -45,8 +45,6 @@ public class NettyServer extends NettyService implements RpcServer {
     private final NettyEventExecutor nettyEventExecutor;
     private final NettyMonitor monitor;
 
-
-
     // sharable handlers
     private NettyEncoder encoder;
     private ServerConnectionHandler connectionHandler;

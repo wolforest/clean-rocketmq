@@ -18,21 +18,16 @@ import lombok.extern.slf4j.Slf4j;
 public abstract class NettyService implements RpcService {
     private static final int DEFAULT_PROCESSOR_THREAD_NUM = 4;
 
-    protected final HashedWheelTimer timer;
-
     protected final NettyDispatcher dispatcher;
     protected final NettyInvoker invoker;
-
     protected final ExecutorService callbackExecutor;
 
     protected AtomicBoolean stopping = new AtomicBoolean(false);
 
     public NettyService(int onewaySemaphorePermits, int asyncSemaphorePermits, int callbackThreadNum) {
-        this.timer = new HashedWheelTimer(r -> new Thread(r, "NettyTimer"));
-
         this.dispatcher = new NettyDispatcher();
         this.callbackExecutor = buildCallbackExecutor(callbackThreadNum);
-        this.invoker = new NettyInvoker(onewaySemaphorePermits, asyncSemaphorePermits, callbackExecutor, timer);
+        this.invoker = new NettyInvoker(onewaySemaphorePermits, asyncSemaphorePermits, callbackExecutor);
     }
 
     @Override

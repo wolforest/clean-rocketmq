@@ -41,15 +41,11 @@ public class NettyInvoker {
     private final ConcurrentMap<Integer, ResponseFuture> responseMap
         = new ConcurrentHashMap<>(256);
 
-    public NettyInvoker(
-        int onewaySemaphorePermits,
-        int asyncSemaphorePermits,
-        ExecutorService callbackExecutor,
-        HashedWheelTimer timer) {
-        this.onewaySemaphore = new Semaphore(onewaySemaphorePermits);
-        this.asyncSemaphore = new Semaphore(asyncSemaphorePermits);
+    public NettyInvoker(int onewayPermits, int asyncPermits, ExecutorService callbackExecutor) {
+        this.onewaySemaphore = new Semaphore(onewayPermits);
+        this.asyncSemaphore = new Semaphore(asyncPermits);
         this.callbackExecutor = callbackExecutor;
-        this.timer = timer;
+        this.timer = new HashedWheelTimer(r -> new Thread(r, "NettyTimer"));
     }
 
     public void start() {
@@ -66,6 +62,10 @@ public class NettyInvoker {
             }
         };
         timer.newTimeout(task, 1000, TimeUnit.MILLISECONDS);
+    }
+
+    public void shutdown() {
+        timer.stop();
     }
 
     public void invokeOneway(Channel channel, RpcCommand request, long timeoutMillis)
