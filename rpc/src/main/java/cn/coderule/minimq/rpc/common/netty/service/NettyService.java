@@ -5,6 +5,7 @@ import cn.coderule.minimq.rpc.common.core.RpcService;
 import cn.coderule.minimq.rpc.common.RpcHook;
 import cn.coderule.minimq.rpc.common.RpcProcessor;
 import io.netty.channel.Channel;
+import io.netty.util.HashedWheelTimer;
 import java.util.Collection;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -17,6 +18,8 @@ import lombok.extern.slf4j.Slf4j;
 public abstract class NettyService implements RpcService {
     private static final int DEFAULT_PROCESSOR_THREAD_NUM = 4;
 
+    protected final HashedWheelTimer timer;
+
     protected final NettyDispatcher dispatcher;
     protected final NettyInvoker invoker;
 
@@ -25,9 +28,11 @@ public abstract class NettyService implements RpcService {
     protected AtomicBoolean stopping = new AtomicBoolean(false);
 
     public NettyService(int onewaySemaphorePermits, int asyncSemaphorePermits, int callbackThreadNum) {
+        this.timer = new HashedWheelTimer(r -> new Thread(r, "NettyTimer"));
+
         this.dispatcher = new NettyDispatcher();
         this.callbackExecutor = buildCallbackExecutor(callbackThreadNum);
-        this.invoker = new NettyInvoker(onewaySemaphorePermits, asyncSemaphorePermits, callbackExecutor);
+        this.invoker = new NettyInvoker(onewaySemaphorePermits, asyncSemaphorePermits, callbackExecutor, timer);
     }
 
     @Override

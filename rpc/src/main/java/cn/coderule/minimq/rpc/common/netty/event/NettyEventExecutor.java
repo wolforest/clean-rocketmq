@@ -35,6 +35,10 @@ public class NettyEventExecutor extends ServiceThread {
 
     @Override
     public void run() {
+        if (null == this.rpcListener) {
+            return;
+        }
+
         log.info("{} service started", this.getServiceName());
 
         while (!this.isStopped()) {

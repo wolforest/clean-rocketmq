@@ -9,6 +9,9 @@ import cn.coderule.minimq.rpc.common.core.invoke.RpcCallback;
 import cn.coderule.minimq.rpc.common.core.invoke.RpcCommand;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFutureListener;
+import io.netty.util.HashedWheelTimer;
+import io.netty.util.Timeout;
+import io.netty.util.TimerTask;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -26,6 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class NettyInvoker {
+    private final HashedWheelTimer timer;
     private final Semaphore onewaySemaphore;
     private final Semaphore asyncSemaphore;
     private final ExecutorService callbackExecutor;
@@ -37,10 +41,31 @@ public class NettyInvoker {
     private final ConcurrentMap<Integer, ResponseFuture> responseMap
         = new ConcurrentHashMap<>(256);
 
-    public NettyInvoker(int onewaySemaphorePermits, int asyncSemaphorePermits, ExecutorService callbackExecutor) {
+    public NettyInvoker(
+        int onewaySemaphorePermits,
+        int asyncSemaphorePermits,
+        ExecutorService callbackExecutor,
+        HashedWheelTimer timer) {
         this.onewaySemaphore = new Semaphore(onewaySemaphorePermits);
         this.asyncSemaphore = new Semaphore(asyncSemaphorePermits);
         this.callbackExecutor = callbackExecutor;
+        this.timer = timer;
+    }
+
+    public void start() {
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run (Timeout timeout) {
+                try {
+                    NettyInvoker.this.scanResponse();
+                } catch (Throwable t) {
+                    log.error("NettyInvoker.scanResponse exception", t);
+                } finally {
+                    timer.newTimeout(this, 1000, TimeUnit.MILLISECONDS);
+                }
+            }
+        };
+        timer.newTimeout(task, 1000, TimeUnit.MILLISECONDS);
     }
 
     public void invokeOneway(Channel channel, RpcCommand request, long timeoutMillis)

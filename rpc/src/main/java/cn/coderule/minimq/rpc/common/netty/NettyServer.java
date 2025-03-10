@@ -5,7 +5,6 @@ import cn.coderule.common.util.lang.SystemUtil;
 import cn.coderule.minimq.rpc.common.RpcServer;
 import cn.coderule.minimq.rpc.common.core.invoke.RpcCallback;
 import cn.coderule.minimq.rpc.common.core.invoke.RpcCommand;
-import cn.coderule.minimq.rpc.common.netty.codec.HandshakeDecoder;
 import cn.coderule.minimq.rpc.common.netty.codec.NettyDecoder;
 import cn.coderule.minimq.rpc.common.netty.codec.NettyEncoder;
 import cn.coderule.minimq.rpc.common.netty.event.NettyEventExecutor;
@@ -14,6 +13,7 @@ import cn.coderule.minimq.rpc.common.RpcProcessor;
 import cn.coderule.minimq.rpc.common.netty.handler.NettyServerHandler;
 import cn.coderule.minimq.rpc.common.netty.handler.RequestCodeCounter;
 import cn.coderule.minimq.rpc.common.netty.handler.ServerConnectionHandler;
+import cn.coderule.minimq.rpc.common.netty.service.NettyMonitor;
 import cn.coderule.minimq.rpc.common.netty.service.NettyService;
 import cn.coderule.minimq.rpc.common.config.RpcServerConfig;
 import io.netty.bootstrap.ServerBootstrap;
@@ -42,8 +42,10 @@ public class NettyServer extends NettyService implements RpcServer {
 
     private final ServerBootstrap bootstrap;
     private final DefaultEventExecutorGroup eventExecutorGroup;
-    private final RpcListener rpcListener;
     private final NettyEventExecutor nettyEventExecutor;
+    private final NettyMonitor monitor;
+
+
 
     // sharable handlers
     private NettyEncoder encoder;
@@ -60,41 +62,26 @@ public class NettyServer extends NettyService implements RpcServer {
         this.config = config;
         this.bootstrap = new ServerBootstrap();
 
-        this.rpcListener = rpcListener;
         this.nettyEventExecutor = new NettyEventExecutor(rpcListener);
         this.eventExecutorGroup = buildEventExecutorGroup();
+
+        initBootstrap();
+        this.monitor = new NettyMonitor(config, requestCodeCounter);
     }
 
     @Override
     public void start() {
-        initBootstrap();
+        startServer();
 
-        try {
-            ChannelFuture future = bootstrap.bind().sync();
-            InetSocketAddress addr = (InetSocketAddress) future.channel().localAddress();
-            if (0 == config.getPort()) {
-                config.setPort(addr.getPort());
-            }
-            log.info("server start success, listen at {}:{}", config.getAddress(), config.getPort());
-        } catch (Exception e) {
-            throw new IllegalStateException("server start failed");
-        }
+        nettyEventExecutor.start();
+        invoker.start();
+        dispatcher.start();
 
+        monitor.start();
     }
 
     @Override
     public void shutdown() {
-
-    }
-
-    private boolean useEpoll() {
-        return SystemUtil.isLinux()
-            && config.isUseEpoll()
-            && Epoll.isAvailable();
-    }
-
-    @Override
-    public void registerProcessor(int requestCode, RpcProcessor processor, ExecutorService executor) {
 
     }
 
@@ -114,11 +101,29 @@ public class NettyServer extends NettyService implements RpcServer {
 
     }
 
+    private void startServer() {
+        try {
+            ChannelFuture future = bootstrap.bind().sync();
+            InetSocketAddress addr = (InetSocketAddress) future.channel().localAddress();
+            if (0 == config.getPort()) {
+                config.setPort(addr.getPort());
+            }
+            log.info("server start success, listen at {}:{}", config.getAddress(), config.getPort());
+        } catch (Exception e) {
+            throw new IllegalStateException("server start failed");
+        }
+    }
 
     private DefaultEventExecutorGroup buildEventExecutorGroup() {
         return new DefaultEventExecutorGroup(
             config.getBusinessThreadNum(), new DefaultThreadFactory("NettyWorker_")
         );
+    }
+
+    private boolean useEpoll() {
+        return SystemUtil.isLinux()
+            && config.isUseEpoll()
+            && Epoll.isAvailable();
     }
 
     private void initBootstrap() {

@@ -9,6 +9,9 @@ import cn.coderule.minimq.rpc.common.core.invoke.ResponseFuture;
 import cn.coderule.minimq.rpc.common.core.invoke.RpcCommand;
 import cn.coderule.minimq.rpc.common.RpcProcessor;
 import cn.coderule.minimq.rpc.common.core.invoke.RpcContext;
+import io.netty.util.HashedWheelTimer;
+import io.netty.util.Timeout;
+import io.netty.util.TimerTask;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -17,10 +20,14 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class NettyDispatcher {
+
     /**
      * response map
      * { opaque : ResponseFuture }
@@ -35,6 +42,10 @@ public class NettyDispatcher {
     protected AtomicBoolean stopping = new AtomicBoolean(false);
 
     public NettyDispatcher() {
+    }
+
+    public void start() {
+        this.stopping.set(false);
     }
 
     public void shutdown() {
