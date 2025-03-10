@@ -9,6 +9,7 @@ import cn.coderule.minimq.rpc.common.netty.event.RpcListener;
 import cn.coderule.minimq.rpc.common.RpcProcessor;
 import cn.coderule.minimq.rpc.common.netty.service.NettyService;
 import cn.coderule.minimq.rpc.common.config.RpcClientConfig;
+import io.netty.channel.Channel;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 
@@ -55,6 +56,10 @@ public class NettyClient extends NettyService implements RpcClient {
 
     @Override
     public void closeChannels(List<String> addrList) {
+
+    }
+
+    public void closeChannel(Channel channel) {
 
     }
 

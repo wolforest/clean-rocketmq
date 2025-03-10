@@ -14,12 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.coderule.minimq.rpc.common.netty.handler;
+package cn.coderule.minimq.rpc.common.netty.connection;
 
 import cn.coderule.minimq.rpc.common.netty.event.NettyEvent;
 import cn.coderule.minimq.rpc.common.netty.event.NettyEventExecutor;
 import cn.coderule.minimq.rpc.common.netty.event.NettyEventType;
-import cn.coderule.minimq.rpc.common.netty.event.RpcListener;
 import cn.coderule.minimq.rpc.common.netty.service.NettyHelper;
 import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandler;

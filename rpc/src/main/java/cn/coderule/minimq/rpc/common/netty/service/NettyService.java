@@ -6,6 +6,7 @@ import cn.coderule.minimq.rpc.common.RpcHook;
 import cn.coderule.minimq.rpc.common.RpcProcessor;
 import cn.coderule.minimq.rpc.common.netty.event.NettyEvent;
 import cn.coderule.minimq.rpc.common.netty.event.NettyEventExecutor;
+import io.netty.channel.Channel;
 import java.util.Collection;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -51,6 +52,10 @@ public abstract class NettyService implements RpcService {
     public void registerProcessor(Collection<Integer> codes, RpcProcessor processor, ExecutorService executor) {
         ExecutorService executorService = executor == null ? this.getCallbackExecutor() : executor;
         dispatcher.registerProcessor(codes, processor, executorService);
+    }
+
+    public void failFast(Channel channel) {
+        this.invoker.failFast(channel);
     }
 
     private ExecutorService buildCallbackExecutor(int callbackThreadNum) {
