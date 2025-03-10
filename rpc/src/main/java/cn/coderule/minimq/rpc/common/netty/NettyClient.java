@@ -64,7 +64,18 @@ public class NettyClient extends NettyService implements RpcClient {
 
     @Override
     public void shutdown() {
+        try {
+            dispatcher.shutdown();
+            invoker.shutdown();
 
+            workerGroup.shutdownGracefully();
+            businessGroup.shutdownGracefully();
+            eventExecutor.shutdown();
+
+            shutdownCallbackExecutor();
+        } catch (Exception e) {
+            log.error("shutdown client error", e);
+        }
     }
 
     @Override
