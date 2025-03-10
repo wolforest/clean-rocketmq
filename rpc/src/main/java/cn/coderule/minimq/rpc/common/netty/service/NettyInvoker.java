@@ -127,7 +127,7 @@ public class NettyInvoker {
         });
     }
 
-    public void fastFail(final Channel channel) {
+    public void failFast(final Channel channel) {
         for (Map.Entry<Integer, ResponseFuture> entry : responseMap.entrySet()) {
             if (entry.getValue().getChannel() != channel) {
                 continue;

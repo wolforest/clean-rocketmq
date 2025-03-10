@@ -17,11 +17,9 @@ public class NettyClient extends NettyService implements RpcClient {
 
     @Getter
     private RpcListener rpcListener;
-    @Getter
-    private ExecutorService callbackExecutor;
 
     public NettyClient(RpcClientConfig config) {
-        super(config.getOnewaySemaphorePermits(), config.getAsyncSemaphorePermits());
+        super(config.getOnewaySemaphorePermits(), config.getAsyncSemaphorePermits(), config.getCallbackThreadNum());
         this.config = config;
     }
 
