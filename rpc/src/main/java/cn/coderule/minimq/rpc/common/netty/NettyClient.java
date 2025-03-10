@@ -37,6 +37,7 @@ public class NettyClient extends NettyService implements RpcClient {
     private final EventExecutorGroup businessGroup;
     private final NettyEventExecutor eventExecutor;
 
+
     public NettyClient(RpcClientConfig config, RpcListener rpcListener) {
         super(config.getOnewaySemaphorePermits(), config.getAsyncSemaphorePermits(), config.getCallbackThreadNum());
         this.config = config;
@@ -114,7 +115,6 @@ public class NettyClient extends NettyService implements RpcClient {
     public void invokeOneway(String addr, RpcCommand request, long timeoutMillis) throws Exception {
 
     }
-
 
     private void initBootstrap() {
         bootstrap.group(workerGroup)

@@ -28,7 +28,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class NettyInvoker {
+public class ChannelInvoker {
     private final HashedWheelTimer timer;
     private final Semaphore onewaySemaphore;
     private final Semaphore asyncSemaphore;
@@ -41,7 +41,7 @@ public class NettyInvoker {
     private final ConcurrentMap<Integer, ResponseFuture> responseMap
         = new ConcurrentHashMap<>(256);
 
-    public NettyInvoker(int onewayPermits, int asyncPermits, ExecutorService callbackExecutor) {
+    public ChannelInvoker(int onewayPermits, int asyncPermits, ExecutorService callbackExecutor) {
         this.onewaySemaphore = new Semaphore(onewayPermits);
         this.asyncSemaphore = new Semaphore(asyncPermits);
         this.callbackExecutor = callbackExecutor;
@@ -53,7 +53,7 @@ public class NettyInvoker {
             @Override
             public void run (Timeout timeout) {
                 try {
-                    NettyInvoker.this.scanResponse();
+                    ChannelInvoker.this.scanResponse();
                 } catch (Throwable t) {
                     log.error("NettyInvoker.scanResponse exception", t);
                 } finally {
