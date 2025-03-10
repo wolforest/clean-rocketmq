@@ -2,6 +2,7 @@ package cn.coderule.minimq.rpc.common.netty;
 
 import cn.coderule.common.lang.concurrent.DefaultThreadFactory;
 import cn.coderule.common.util.lang.SystemUtil;
+import cn.coderule.common.util.lang.ThreadUtil;
 import cn.coderule.minimq.rpc.common.RpcServer;
 import cn.coderule.minimq.rpc.common.core.invoke.RpcCallback;
 import cn.coderule.minimq.rpc.common.core.invoke.RpcCommand;
@@ -9,7 +10,6 @@ import cn.coderule.minimq.rpc.common.netty.codec.NettyDecoder;
 import cn.coderule.minimq.rpc.common.netty.codec.NettyEncoder;
 import cn.coderule.minimq.rpc.common.netty.event.NettyEventExecutor;
 import cn.coderule.minimq.rpc.common.netty.event.RpcListener;
-import cn.coderule.minimq.rpc.common.RpcProcessor;
 import cn.coderule.minimq.rpc.common.netty.handler.NettyServerHandler;
 import cn.coderule.minimq.rpc.common.netty.handler.RequestCodeCounter;
 import cn.coderule.minimq.rpc.common.netty.handler.ServerConnectionHandler;
@@ -33,7 +33,6 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.timeout.IdleStateHandler;
 import io.netty.util.concurrent.DefaultEventExecutorGroup;
 import java.net.InetSocketAddress;
-import java.util.concurrent.ExecutorService;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -41,7 +40,11 @@ public class NettyServer extends NettyService implements RpcServer {
     private final RpcServerConfig config;
 
     private final ServerBootstrap bootstrap;
-    private final DefaultEventExecutorGroup eventExecutorGroup;
+
+    private EventLoopGroup bossGroup;
+    private EventLoopGroup workerGroup;
+    private final DefaultEventExecutorGroup businessGroup;
+
     private final NettyEventExecutor nettyEventExecutor;
     private final NettyMonitor monitor;
 
@@ -61,7 +64,7 @@ public class NettyServer extends NettyService implements RpcServer {
         this.bootstrap = new ServerBootstrap();
 
         this.nettyEventExecutor = new NettyEventExecutor(rpcListener);
-        this.eventExecutorGroup = buildEventExecutorGroup();
+        this.businessGroup = buildEventExecutorGroup();
 
         initBootstrap();
         this.monitor = new NettyMonitor(config, requestCodeCounter);
@@ -80,7 +83,25 @@ public class NettyServer extends NettyService implements RpcServer {
 
     @Override
     public void shutdown() {
+        try {
+            if (config.isEnableGracefullyShutdown()
+                && stopping.compareAndSet(false, true)) {
+                ThreadUtil.sleep(config.getShutdownWaitTime());
+            }
 
+            monitor.shutdown();
+            dispatcher.shutdown();
+            invoker.shutdown();
+
+            bossGroup.shutdownGracefully();
+            workerGroup.shutdownGracefully();
+            businessGroup.shutdownGracefully();
+            nettyEventExecutor.shutdown();
+
+            shutdownCallbackExecutor();
+        } catch (Exception e) {
+            log.error("NettyServer shutdown failed", e);
+        }
     }
 
     @Override
@@ -109,6 +130,12 @@ public class NettyServer extends NettyService implements RpcServer {
             log.info("server start success, listen at {}:{}", config.getAddress(), config.getPort());
         } catch (Exception e) {
             throw new IllegalStateException("server start failed");
+        }
+    }
+
+    private void shutdownCallbackExecutor() {
+        if (callbackExecutor != null) {
+            callbackExecutor.shutdown();
         }
     }
 
@@ -173,7 +200,7 @@ public class NettyServer extends NettyService implements RpcServer {
             @Override
             protected void initChannel(SocketChannel channel) throws Exception {
                 channel.pipeline().addLast(
-                    eventExecutorGroup,
+                    businessGroup,
                     encoder,
                     new NettyDecoder(),
                     requestCodeCounter,
@@ -187,17 +214,21 @@ public class NettyServer extends NettyService implements RpcServer {
 
     private EventLoopGroup buildBossGroup() {
         if (useEpoll()) {
-            return new EpollEventLoopGroup(config.getBossThreadNum(), new DefaultThreadFactory("NettyEpollBoss_"));
+            bossGroup = new EpollEventLoopGroup(config.getBossThreadNum(), new DefaultThreadFactory("NettyEpollBoss_"));
         } else {
-            return new NioEventLoopGroup(config.getBossThreadNum(), new DefaultThreadFactory("NettyNioBoss_"));
+            bossGroup = new NioEventLoopGroup(config.getBossThreadNum(), new DefaultThreadFactory("NettyNioBoss_"));
         }
+
+        return bossGroup;
     }
 
     private EventLoopGroup buildWorkerGroup() {
         if (useEpoll()) {
-            return new EpollEventLoopGroup(config.getWorkerThreadNum(), new DefaultThreadFactory("NettyEpollBoss_"));
+            workerGroup = new EpollEventLoopGroup(config.getWorkerThreadNum(), new DefaultThreadFactory("NettyEpollBoss_"));
         } else {
-            return new NioEventLoopGroup(config.getWorkerThreadNum(), new DefaultThreadFactory("NettyNioBoss_"));
+            workerGroup = new NioEventLoopGroup(config.getWorkerThreadNum(), new DefaultThreadFactory("NettyNioBoss_"));
         }
+
+        return workerGroup;
     }
 }
