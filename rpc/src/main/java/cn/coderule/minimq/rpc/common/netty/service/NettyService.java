@@ -11,7 +11,6 @@ import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicBoolean;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -19,26 +18,15 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Data
 public abstract class NettyService implements RpcService {
-    protected final Semaphore onewaySemaphore;
-    protected final Semaphore asyncSemaphore;
-
     protected final NettyDispatcher dispatcher;
-
-    /**
-     * response map
-     * { opaque : ResponseFuture }
-     */
-    protected final ConcurrentMap<Integer, ResponseFuture> responseMap = new ConcurrentHashMap<>(256);
-
+    protected final NettyInvoker invoker;
     protected final NettyEventExecutor nettyEventExecutor = new NettyEventExecutor(this);
 
-    protected volatile SslContext sslContext;
     protected AtomicBoolean stopping = new AtomicBoolean(false);
 
     public NettyService(int onewaySemaphorePermits, int asyncSemaphorePermits) {
-        this.onewaySemaphore = new Semaphore(onewaySemaphorePermits, true);
-        this.asyncSemaphore = new Semaphore(asyncSemaphorePermits, true);
         this.dispatcher = new NettyDispatcher();
+        this.invoker = new NettyInvoker(onewaySemaphorePermits, asyncSemaphorePermits);
     }
 
     /**

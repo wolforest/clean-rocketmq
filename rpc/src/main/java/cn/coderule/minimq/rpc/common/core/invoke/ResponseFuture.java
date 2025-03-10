@@ -17,11 +17,16 @@
 package cn.coderule.minimq.rpc.common.core.invoke;
 
 import cn.coderule.common.lang.concurrent.SemaphoreGuard;
+import cn.coderule.minimq.rpc.common.core.exception.RemotingException;
+import cn.coderule.minimq.rpc.common.core.exception.RemotingSendRequestException;
+import cn.coderule.minimq.rpc.common.core.exception.RemotingTimeoutException;
 import io.netty.channel.Channel;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import lombok.Data;
 
+@Data
 public class ResponseFuture {
     private final Channel channel;
     private final int opaque;
@@ -34,7 +39,7 @@ public class ResponseFuture {
     private final SemaphoreGuard semaphoreGuard;
 
     private final AtomicBoolean executeCallbackOnlyOnce = new AtomicBoolean(false);
-    private volatile RpcCommand responseCommand;
+    private volatile RpcCommand response;
     private volatile boolean sendRequestOK = true;
     private volatile Throwable cause;
     private volatile boolean interrupted = false;
@@ -63,20 +68,20 @@ public class ResponseFuture {
             return;
         }
 
-        RpcCommand response = getResponseCommand();
+        RpcCommand response = getResponse();
         if (response != null) {
             invokeCallback.onSuccess(response);
             invokeCallback.onComplete(this);
             return;
         }
 
-//        if (!isSendRequestOK()) {
-//            invokeCallback.onFailure(new RemotingSendRequestException(channel.remoteAddress().toString(), getCause()));
-//        } else if (isTimeout()) {
-//            invokeCallback.onFailure(new RemotingTimeoutException(channel.remoteAddress().toString(), getTimeoutMillis(), getCause()));
-//        } else {
-//            invokeCallback.onFailure(new RemotingException(getRequestCommand().toString(), getCause()));
-//        }
+        if (!isSendRequestOK()) {
+            invokeCallback.onFailure(new RemotingSendRequestException(channel.remoteAddress().toString(), getCause()));
+        } else if (isTimeout()) {
+            invokeCallback.onFailure(new RemotingTimeoutException(channel.remoteAddress().toString(), getTimeoutMillis(), getCause()));
+        } else {
+            invokeCallback.onFailure(new RemotingException(getRequest().toString(), getCause()));
+        }
 
         invokeCallback.onComplete(this);
     }
@@ -99,69 +104,17 @@ public class ResponseFuture {
 
     public RpcCommand waitResponse(final long timeoutMillis) throws InterruptedException {
         this.countDownLatch.await(timeoutMillis, TimeUnit.MILLISECONDS);
-        return this.responseCommand;
+        return this.response;
     }
 
     public void putResponse(final RpcCommand responseCommand) {
-        this.responseCommand = responseCommand;
+        this.response = responseCommand;
         this.countDownLatch.countDown();
-    }
-
-    public long getBeginTimestamp() {
-        return beginTimestamp;
-    }
-
-    public boolean isSendRequestOK() {
-        return sendRequestOK;
-    }
-
-    public void setSendRequestOK(boolean sendRequestOK) {
-        this.sendRequestOK = sendRequestOK;
-    }
-
-    public long getTimeoutMillis() {
-        return timeoutMillis;
-    }
-
-    public RpcCallback getRpcCallback() {
-        return invokeCallback;
-    }
-
-    public Throwable getCause() {
-        return cause;
-    }
-
-    public void setCause(Throwable cause) {
-        this.cause = cause;
-    }
-
-    public RpcCommand getResponseCommand() {
-        return responseCommand;
-    }
-
-    public void setResponseCommand(RpcCommand responseCommand) {
-        this.responseCommand = responseCommand;
-    }
-
-    public int getOpaque() {
-        return opaque;
-    }
-
-    public RpcCommand getRequestCommand() {
-        return request;
-    }
-
-    public Channel getChannel() {
-        return channel;
-    }
-
-    public boolean isInterrupted() {
-        return interrupted;
     }
 
     @Override
     public String toString() {
-        return "ResponseFuture [responseCommand=" + responseCommand + ", sendRequestOK=" + sendRequestOK
+        return "ResponseFuture [responseCommand=" + response + ", sendRequestOK=" + sendRequestOK
             + ", cause=" + cause + ", opaque=" + opaque + ", timeoutMillis=" + timeoutMillis
             + ", invokeCallback=" + invokeCallback + ", beginTimestamp=" + beginTimestamp
             + ", countDownLatch=" + countDownLatch + "]";
