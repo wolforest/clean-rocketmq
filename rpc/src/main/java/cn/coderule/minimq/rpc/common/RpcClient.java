@@ -4,12 +4,15 @@ import cn.coderule.minimq.rpc.common.core.invoke.ResponseFuture;
 import cn.coderule.minimq.rpc.common.core.invoke.RpcCallback;
 import cn.coderule.minimq.rpc.common.core.invoke.RpcCommand;
 import cn.coderule.minimq.rpc.common.core.RpcService;
+import io.netty.channel.Channel;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public interface RpcClient extends RpcService {
     boolean isChannelWritable(final String addr);
     boolean isAddressReachable(final String addr);
+
+    void closeChannel(Channel channel);
     void closeChannels(final List<String> addrList);
     default void closeChannel(final String addr) {
         closeChannels(List.of(addr));

@@ -4,8 +4,6 @@ import cn.coderule.common.lang.concurrent.DefaultThreadFactory;
 import cn.coderule.common.util.lang.SystemUtil;
 import cn.coderule.common.util.lang.ThreadUtil;
 import cn.coderule.minimq.rpc.common.RpcServer;
-import cn.coderule.minimq.rpc.common.core.invoke.RpcCallback;
-import cn.coderule.minimq.rpc.common.core.invoke.RpcCommand;
 import cn.coderule.minimq.rpc.common.netty.codec.NettyDecoder;
 import cn.coderule.minimq.rpc.common.netty.codec.NettyEncoder;
 import cn.coderule.minimq.rpc.common.netty.event.NettyEventExecutor;
@@ -18,7 +16,6 @@ import cn.coderule.minimq.rpc.common.netty.service.NettyService;
 import cn.coderule.minimq.rpc.common.config.RpcServerConfig;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.PooledByteBufAllocator;
-import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
@@ -45,7 +42,7 @@ public class NettyServer extends NettyService implements RpcServer {
     private EventLoopGroup workerGroup;
     private final DefaultEventExecutorGroup businessGroup;
 
-    private final NettyEventExecutor nettyEventExecutor;
+    private final NettyEventExecutor eventExecutor;
     private final NettyMonitor monitor;
 
     // sharable handlers
@@ -63,7 +60,7 @@ public class NettyServer extends NettyService implements RpcServer {
         this.config = config;
         this.bootstrap = new ServerBootstrap();
 
-        this.nettyEventExecutor = new NettyEventExecutor(rpcListener);
+        this.eventExecutor = new NettyEventExecutor(rpcListener);
         this.businessGroup = buildEventExecutorGroup();
 
         initBootstrap();
@@ -74,7 +71,7 @@ public class NettyServer extends NettyService implements RpcServer {
     public void start() {
         startServer();
 
-        nettyEventExecutor.start();
+        eventExecutor.start();
         invoker.start();
         dispatcher.start();
 
@@ -96,7 +93,7 @@ public class NettyServer extends NettyService implements RpcServer {
             bossGroup.shutdownGracefully();
             workerGroup.shutdownGracefully();
             businessGroup.shutdownGracefully();
-            nettyEventExecutor.shutdown();
+            eventExecutor.shutdown();
 
             shutdownCallbackExecutor();
         } catch (Exception e) {
@@ -125,7 +122,7 @@ public class NettyServer extends NettyService implements RpcServer {
 
     private DefaultEventExecutorGroup buildEventExecutorGroup() {
         return new DefaultEventExecutorGroup(
-            config.getBusinessThreadNum(), new DefaultThreadFactory("NettyWorker_")
+            config.getBusinessThreadNum(), new DefaultThreadFactory("NettyServerBusiness_")
         );
     }
 
@@ -153,7 +150,7 @@ public class NettyServer extends NettyService implements RpcServer {
 
     private void initHandlers() {
         encoder = new NettyEncoder();
-        connectionHandler = new ServerConnectionHandler(nettyEventExecutor);
+        connectionHandler = new ServerConnectionHandler(eventExecutor);
         serverHandler = new NettyServerHandler(dispatcher);
         requestCodeCounter = new RequestCodeCounter();
     }

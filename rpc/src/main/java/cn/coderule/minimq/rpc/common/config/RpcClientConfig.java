@@ -5,13 +5,15 @@ import lombok.Data;
 
 @Data
 public class RpcClientConfig implements Serializable {
-    private int workerThreadNum = 4;
+    private int bossThreadNum = 0;
+    private int workerThreadNum = 1;
+    private int businessThreadNum = 4;
     private int callbackThreadNum = Runtime.getRuntime().availableProcessors();
     private int onewaySemaphorePermits = 65535;
     private int asyncSemaphorePermits = 65535;
 
     private int connectTimeout = 3_000;
-    private long maxChannelIdle = 120_000;
+    private int maxChannelIdle = 120;
     private long idleCheckInterval = 60_000;
     private long maxReconnectTimeout = 60_000;
 
