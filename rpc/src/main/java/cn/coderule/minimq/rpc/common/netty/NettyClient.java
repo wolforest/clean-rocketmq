@@ -3,15 +3,12 @@ package cn.coderule.minimq.rpc.common.netty;
 import cn.coderule.minimq.rpc.common.RpcClient;
 import cn.coderule.minimq.rpc.common.core.invoke.RpcCallback;
 import cn.coderule.minimq.rpc.common.core.invoke.RpcCommand;
-import cn.coderule.minimq.rpc.common.RpcHook;
 import cn.coderule.minimq.rpc.common.netty.event.NettyEventExecutor;
 import cn.coderule.minimq.rpc.common.netty.event.RpcListener;
-import cn.coderule.minimq.rpc.common.RpcProcessor;
 import cn.coderule.minimq.rpc.common.netty.service.NettyService;
 import cn.coderule.minimq.rpc.common.config.RpcClientConfig;
 import io.netty.channel.Channel;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
 
 public class NettyClient extends NettyService implements RpcClient {
     private final RpcClientConfig config;
@@ -35,16 +32,6 @@ public class NettyClient extends NettyService implements RpcClient {
     }
 
     @Override
-    public void registerRpcHook(RpcHook rpcHook) {
-
-    }
-
-    @Override
-    public void clearRpcHook() {
-
-    }
-
-    @Override
     public boolean isChannelWritable(String addr) {
         return false;
     }
@@ -60,11 +47,6 @@ public class NettyClient extends NettyService implements RpcClient {
     }
 
     public void closeChannel(Channel channel) {
-
-    }
-
-    @Override
-    public void registerProcessor(int requestCode, RpcProcessor processor, ExecutorService executor) {
 
     }
 

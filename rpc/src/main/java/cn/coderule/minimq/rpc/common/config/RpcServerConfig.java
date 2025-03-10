@@ -20,7 +20,7 @@ public class RpcServerConfig implements Serializable {
     private boolean useEpoll = false;
     private int onewaySemaphorePermits = 256;
     private int asyncSemaphorePermits = 64;
-    private int maxChannelIdle = 120_000;
+    private int maxChannelIdle = 120;
 
     private int sendBufferSize = 0;
     private int receiveBufferSize = 0;

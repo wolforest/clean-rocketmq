@@ -4,8 +4,6 @@ import cn.coderule.common.lang.concurrent.DefaultThreadFactory;
 import cn.coderule.minimq.rpc.common.core.RpcService;
 import cn.coderule.minimq.rpc.common.RpcHook;
 import cn.coderule.minimq.rpc.common.RpcProcessor;
-import cn.coderule.minimq.rpc.common.netty.event.NettyEvent;
-import cn.coderule.minimq.rpc.common.netty.event.NettyEventExecutor;
 import io.netty.channel.Channel;
 import java.util.Collection;
 import java.util.concurrent.ExecutorService;
