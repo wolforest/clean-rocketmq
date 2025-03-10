@@ -40,13 +40,18 @@ import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import javax.annotation.Nullable;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
-
+/**
+ * netty related utils
+ * - channel connect/close
+ * - write request/response
+ * - attribute getter/setter
+ * - address getter/setter
+ */
 @Slf4j
 public class NettyHelper {
     public static final String DEFAULT_CHARSET = "UTF-8";
@@ -100,7 +105,7 @@ public class NettyHelper {
         });
     }
 
-    public static RpcCommand invokeSync(final String addr, final RpcCommand request, final long timeoutMillis)
+    public static RpcCommand writeRequest(final String addr, final RpcCommand request, final long timeoutMillis)
         throws InterruptedException, RemotingConnectException, RemotingSendRequestException, RemotingTimeoutException, RemotingCommandException {
 
         boolean sendRequestOK = false;
