@@ -9,6 +9,10 @@ import cn.coderule.minimq.rpc.common.core.invoke.RpcCallback;
 import cn.coderule.minimq.rpc.common.core.invoke.RpcCommand;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFutureListener;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -39,21 +43,6 @@ public class NettyInvoker {
         this.callbackExecutor = callbackExecutor;
     }
 
-    private void acquireOnewaySemaphoreFailed(long timeoutMillis) throws RemotingTooMuchRequestException, RemotingTimeoutException {
-        if (timeoutMillis <= 0) {
-            throw new RemotingTooMuchRequestException("invokeOnewayImpl invoke too fast");
-        }
-
-        String info = String.format(
-            "invokeOneway tryAcquire semaphore timeout, %dms, waiting thread nums: %d semaphoreOnewayValue: %d",
-            timeoutMillis,
-            this.onewaySemaphore.getQueueLength(),
-            this.onewaySemaphore.availablePermits()
-        );
-        log.warn(info);
-        throw new RemotingTimeoutException(info);
-    }
-
     public void invokeOneway(Channel channel, RpcCommand request, long timeoutMillis)
         throws InterruptedException, RemotingTimeoutException, RemotingTooMuchRequestException, RemotingSendRequestException {
         request.markOnewayRPC();
@@ -66,7 +55,8 @@ public class NettyInvoker {
 
         SemaphoreGuard guard = new SemaphoreGuard(this.onewaySemaphore);
         try {
-            channel.writeAndFlush(request).addListener((ChannelFutureListener) f -> {
+            channel.writeAndFlush(request)
+            .addListener((ChannelFutureListener) f -> {
                 guard.release();
                 if (!f.isSuccess()) {
                     log.warn("invokeOneway failed: {}", channel.remoteAddress());
@@ -137,11 +127,44 @@ public class NettyInvoker {
         });
     }
 
-    public void scanResponseMap() {
+    public void scanResponse() {
+        List<ResponseFuture> rfList = new LinkedList<>();
+        Iterator<Map.Entry<Integer, ResponseFuture>> it = this.responseMap.entrySet().iterator();
 
+        while (it.hasNext()) {
+            Map.Entry<Integer, ResponseFuture> next = it.next();
+            ResponseFuture rep = next.getValue();
+
+            long maxTime = rep.getBeginTimestamp() + rep.getTimeoutMillis() + 1000;
+            if (maxTime > System.currentTimeMillis()) {
+                continue;
+            }
+
+            rep.release();
+            it.remove();
+            rfList.add(rep);
+            log.warn("remove timeout request, {}", rep);
+        }
+
+        executeInvokeCallback(rfList);
     }
 
     /*********************************** private methods ***********************************/
+    private void acquireOnewaySemaphoreFailed(long timeoutMillis) throws RemotingTooMuchRequestException, RemotingTimeoutException {
+        if (timeoutMillis <= 0) {
+            throw new RemotingTooMuchRequestException("invokeOnewayImpl invoke too fast");
+        }
+
+        String info = String.format(
+            "invokeOneway tryAcquire semaphore timeout, %dms, waiting thread nums: %d semaphoreOnewayValue: %d",
+            timeoutMillis,
+            this.onewaySemaphore.getQueueLength(),
+            this.onewaySemaphore.availablePermits()
+        );
+        log.warn(info);
+        throw new RemotingTimeoutException(info);
+    }
+
     private void acquireAsyncSemaphoreFailed(long timeoutMillis, CompletableFuture<ResponseFuture> future) {
         if (timeoutMillis <= 0) {
             future.completeExceptionally(new RemotingTooMuchRequestException("invokeAsyncImpl invoke too fast"));
@@ -235,6 +258,16 @@ public class NettyInvoker {
             log.warn("executeInvokeCallback Exception", e);
         } finally {
             responseFuture.release();
+        }
+    }
+
+    private void executeInvokeCallback(List<ResponseFuture> rfList) {
+        for (ResponseFuture rf : rfList) {
+            try {
+                executeInvokeCallback(rf);
+            } catch (Throwable e) {
+                log.warn("scanResponseTable, operationComplete Exception", e);
+            }
         }
     }
 
