@@ -2,6 +2,7 @@ package cn.coderule.minimq.rpc.common.netty.service;
 
 import cn.coderule.minimq.rpc.common.core.exception.RemotingSendRequestException;
 import cn.coderule.minimq.rpc.common.core.exception.RemotingTimeoutException;
+import cn.coderule.minimq.rpc.common.core.exception.RemotingTooMuchRequestException;
 import cn.coderule.minimq.rpc.common.core.invoke.ResponseFuture;
 import cn.coderule.minimq.rpc.common.core.invoke.RpcCallback;
 import cn.coderule.minimq.rpc.common.core.invoke.RpcCommand;
@@ -14,7 +15,9 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class NettyInvoker {
     private final Semaphore onewaySemaphore;
     private final Semaphore asyncSemaphore;
@@ -49,7 +52,40 @@ public class NettyInvoker {
         }
     }
 
+    private boolean tryAcquireAsyncSemaphore(long timeoutMillis, CompletableFuture<ResponseFuture> future) {
+        boolean acquired;
+        try {
+            acquired = this.asyncSemaphore.tryAcquire(timeoutMillis, TimeUnit.MILLISECONDS);
+        } catch (Throwable t) {
+            future.completeExceptionally(t);
+            return false;
+        }
+
+        if (acquired) return true;
+
+        if (timeoutMillis <= 0) {
+            future.completeExceptionally(new RemotingTooMuchRequestException("invokeAsyncImpl invoke too fast"));
+            return false;
+        }
+
+        String info = String.format(
+            "invokeAsyncImpl tryAcquire semaphore timeout, %dms, waiting thread nums: %d semaphoreAsyncValue: %d",
+            timeoutMillis,
+            this.asyncSemaphore.getQueueLength(),
+            this.asyncSemaphore.availablePermits()
+        );
+        log.warn(info);
+        future.completeExceptionally(new RemotingTimeoutException(info));
+        return false;
+    }
+
     public CompletableFuture<ResponseFuture> invokeAsync(Channel channel, RpcCommand request, long timeoutMillis) {
+        CompletableFuture<ResponseFuture> future = new CompletableFuture<>();
+
+        if (!tryAcquireAsyncSemaphore(timeoutMillis, future)) {
+            return future;
+        }
+
         return null;
     }
 
