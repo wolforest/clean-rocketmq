@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.coderule.minimq.rpc.common.netty.connection;
+package cn.coderule.minimq.rpc.common.netty.handler;
 
 import cn.coderule.common.util.net.NetworkUtil;
 import cn.coderule.minimq.rpc.common.netty.NettyClient;
@@ -31,11 +31,11 @@ import java.net.SocketAddress;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class ClientConnectionManager extends ChannelDuplexHandler {
+public class ClientConnectionHandler extends ChannelDuplexHandler {
     private final NettyEventExecutor eventExecutor;
     private final NettyClient nettyClient;
 
-    public ClientConnectionManager(NettyClient nettyClient, NettyEventExecutor eventExecutor) {
+    public ClientConnectionHandler(NettyClient nettyClient, NettyEventExecutor eventExecutor) {
         this.nettyClient = nettyClient;
         this.eventExecutor = eventExecutor;
     }

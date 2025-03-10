@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.coderule.minimq.rpc.common.netty.connection;
+package cn.coderule.minimq.rpc.common.netty.handler;
 
 import cn.coderule.minimq.rpc.common.netty.event.NettyEvent;
 import cn.coderule.minimq.rpc.common.netty.event.NettyEventExecutor;
@@ -30,10 +30,10 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @ChannelHandler.Sharable
-public class ServerConnectionManager extends ChannelDuplexHandler {
+public class ServerConnectionHandler extends ChannelDuplexHandler {
     private final NettyEventExecutor eventExecutor;
 
-    public ServerConnectionManager(NettyEventExecutor eventExecutor) {
+    public ServerConnectionHandler(NettyEventExecutor eventExecutor) {
         this.eventExecutor = eventExecutor;
     }
 
