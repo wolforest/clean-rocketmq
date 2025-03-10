@@ -4,11 +4,11 @@ import cn.coderule.minimq.rpc.common.core.invoke.ResponseFuture;
 import cn.coderule.minimq.rpc.common.core.invoke.RpcCallback;
 import cn.coderule.minimq.rpc.common.core.invoke.RpcCommand;
 
-public class RpcCallbackWrapper implements RpcCallback {
+public class CallbackWrapper implements RpcCallback {
     private final RpcCallback rpcCallback;
     private final String addr;
 
-    public RpcCallbackWrapper(RpcCallback rpcCallback, String addr) {
+    public CallbackWrapper(RpcCallback rpcCallback, String addr) {
         this.rpcCallback = rpcCallback;
         this.addr = addr;
     }
