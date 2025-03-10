@@ -104,22 +104,6 @@ public class NettyServer extends NettyService implements RpcServer {
         }
     }
 
-    @Override
-    public RpcCommand invokeSync(Channel channel, RpcCommand request, long timeoutMillis) throws Exception {
-        return null;
-    }
-
-    @Override
-    public void invokeAsync(Channel channel, RpcCommand request, long timeoutMillis,
-        RpcCallback callback) throws Exception {
-
-    }
-
-    @Override
-    public void invokeOneway(Channel channel, RpcCommand request, long timeoutMillis) throws Exception {
-
-    }
-
     private void startServer() {
         try {
             ChannelFuture future = bootstrap.bind().sync();
