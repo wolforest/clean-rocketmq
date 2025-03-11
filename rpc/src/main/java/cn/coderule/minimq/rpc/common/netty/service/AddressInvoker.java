@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -54,9 +55,6 @@ public class AddressInvoker {
         return null;
     }
 
-    /**
-     * @todo
-     */
     public RpcCommand invokeSync(String addr, RpcCommand request, long timeout) throws Exception {
         long startTime = System.currentTimeMillis();
         Channel channel = getOrCreateChannel(addr);
@@ -74,15 +72,19 @@ public class AddressInvoker {
             if (leftTime <= 0) {
                 throw new RemotingTimeoutException(addr, timeout);
             }
-            RpcCommand response = channelInvoker.invokeSync(channel, request, leftTime);
-            updateChannelLastResponseTime(addr);
+            RpcCommand response = this.invokeWithRetry(channel, request, leftTime)
+                .thenApply(ResponseFuture::getResponse)
+                .get(leftTime, TimeUnit.MILLISECONDS);
 
+            updateChannelLastResponseTime(addr);
             return response;
-        } catch (RemotingSendRequestException e) {
+        } catch (ExecutionException e) {
             log.warn("invokeSync: send request exception, so close the channel[{}]", remoteAddr);
             this.closeChannel(addr, channel);
             throw e;
         } catch (RemotingTimeoutException e) {
+            // avoid close the success channel if left timeout is small,
+            // since it may cost too much time in get the success channel, the left timeout for read is small
             boolean shouldClose = leftTime > MIN_CLOSE_TIMEOUT_MILLIS || leftTime > timeout / 4;
             if (shouldClose && config.isCloseChannelWhenTimeout()) {
                 this.closeChannel(addr, channel);
@@ -122,7 +124,24 @@ public class AddressInvoker {
                 return;
             }
             CallbackWrapper callbackWrapper = new CallbackWrapper(this, rpcCallback, addr);
-            channelInvoker.invokeAsync(channel, request, timeout - costTime, callbackWrapper);
+            long newTimeout = timeout - costTime;
+            this.invokeWithRetry(channel, request, newTimeout)
+                .whenComplete((v, t) -> {
+                    if (t == null) {
+                        callbackWrapper.onComplete(v);
+                    } else {
+                        ResponseFuture responseFuture = new ResponseFuture(channel, request.getOpaque(), request, newTimeout, null, null);
+                        responseFuture.setCause(t);
+                        callbackWrapper.onComplete(responseFuture);
+                    }
+                })
+                .thenAccept(responseFuture -> {
+                    callbackWrapper.onSuccess(responseFuture.getResponse());
+                })
+                .exceptionally(t -> {
+                    callbackWrapper.onFailure(t);
+                    return null;
+                }) ;
         });
     }
 
@@ -170,9 +189,7 @@ public class AddressInvoker {
                 }
 
                 dispatcher.invokePostHooks(rpcContext, request, v.getResponse());
-            })
-            ;
-
+            }) ;
     }
 
     private CompletableFuture<ResponseFuture> retryInvoke(ResponseFuture responseFuture, Stopwatch stopwatch) {
