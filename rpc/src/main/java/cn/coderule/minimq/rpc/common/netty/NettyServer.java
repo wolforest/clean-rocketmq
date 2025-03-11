@@ -37,7 +37,6 @@ public class NettyServer extends NettyService implements RpcServer {
     private final RpcServerConfig config;
 
     private final ServerBootstrap bootstrap;
-
     private EventLoopGroup bossGroup;
     private EventLoopGroup workerGroup;
     private final DefaultEventExecutorGroup businessGroup;

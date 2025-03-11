@@ -1,6 +1,10 @@
 package cn.coderule.minimq.rpc.common.netty.service;
 
+import cn.coderule.common.util.net.NetworkUtil;
 import cn.coderule.minimq.rpc.common.config.RpcClientConfig;
+import cn.coderule.minimq.rpc.common.core.exception.RemotingConnectException;
+import cn.coderule.minimq.rpc.common.core.exception.RemotingSendRequestException;
+import cn.coderule.minimq.rpc.common.core.exception.RemotingTimeoutException;
 import cn.coderule.minimq.rpc.common.core.invoke.RpcCallback;
 import cn.coderule.minimq.rpc.common.core.invoke.RpcCommand;
 import io.netty.bootstrap.Bootstrap;
@@ -15,6 +19,9 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class AddressInvoker {
+    private static final long LOCK_TIMEOUT_MILLIS = 3000;
+    private static final long MIN_CLOSE_TIMEOUT_MILLIS = 100;
+
     @Getter
     private final RpcClientConfig config;
     private final Bootstrap bootstrap;
@@ -30,20 +37,52 @@ public class AddressInvoker {
         this.channelInvoker = channelInvoker;
     }
 
-
-
-
-    public RpcCommand invokeSync(String addr, RpcCommand request,
-        long timeoutMillis) throws Exception {
+    private Channel getOrCreateChannel(String addr) {
         return null;
     }
 
-    public void invokeAsync(String addr, RpcCommand request, long timeoutMillis,
-        RpcCallback invokeCallback) throws Exception {
+    public RpcCommand invokeSync(String addr, RpcCommand request, long timeout) throws Exception {
+        long startTime = System.currentTimeMillis();
+        Channel channel = getOrCreateChannel(addr);
+        String remoteAddr = NettyHelper.getRemoteAddr(channel);
+
+        if (channel == null || !channel.isActive()) {
+            this.closeChannel(addr, channel);
+            throw new RemotingConnectException(addr);
+        }
+
+        long leftTime = timeout;
+        try {
+            long costTime = System.currentTimeMillis() - startTime;
+            leftTime -= costTime;
+            if (leftTime <= 0) {
+                throw new RemotingTimeoutException(addr, timeout);
+            }
+            RpcCommand response = channelInvoker.invokeSync(channel, request, leftTime);
+            updateChannelLastResponseTime(addr);
+
+            return response;
+        } catch (RemotingSendRequestException e) {
+            log.warn("invokeSync: send request exception, so close the channel[{}]", remoteAddr);
+            this.closeChannel(addr, channel);
+            throw e;
+        } catch (RemotingTimeoutException e) {
+            boolean shouldClose = leftTime > MIN_CLOSE_TIMEOUT_MILLIS || leftTime > timeout / 4;
+            if (shouldClose && config.isCloseChannelWhenTimeout()) {
+                this.closeChannel(addr, channel);
+                log.warn("invokeSync: close socket because of timeout, {}ms, {}", timeout, remoteAddr);
+            }
+
+            log.warn("invokeSync: wait response timeout exception, the channel[{}]", remoteAddr);
+            throw e;
+        }
+    }
+
+    public void invokeAsync(String addr, RpcCommand request, long timeout, RpcCallback invokeCallback) throws Exception {
 
     }
 
-    public void invokeOneway(String addr, RpcCommand request, long timeoutMillis) throws Exception {
+    public void invokeOneway(String addr, RpcCommand request, long timeout) throws Exception {
 
     }
 
@@ -61,6 +100,10 @@ public class AddressInvoker {
 
     public boolean isAddressReachable(String addr) {
         return false;
+    }
+
+    public void closeChannel(final String addr, final Channel channel) {
+
     }
 
     public void closeChannel(Channel channel) {
