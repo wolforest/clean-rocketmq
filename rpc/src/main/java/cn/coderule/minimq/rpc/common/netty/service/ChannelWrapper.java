@@ -11,13 +11,12 @@ import lombok.extern.slf4j.Slf4j;
 public class ChannelWrapper {
     private final AddressInvoker invoker;
     private final ReentrantReadWriteLock lock;
-    @Getter
     private final String address;
-    @Getter
-    private ChannelFuture channelFuture;
+
     @Getter
     private long lastResponseTime;
 
+    private ChannelFuture channelFuture;
     // only affected by sync or async request, oneway is not included.
     private ChannelFuture channelToClose;
     private volatile long lastReconnectTime = 0L;
@@ -74,9 +73,12 @@ public class ChannelWrapper {
             }
 
             channelToClose = channelFuture;
+
             String[] hostAndPort = NetworkUtil.getHostAndPort(address);
-            channelFuture = invoker.getBootstrap(address)
+            channelFuture = invoker
+                .getBootstrap(address)
                 .connect(hostAndPort[0], Integer.parseInt(hostAndPort[1]));
+
             lastReconnectTime = System.currentTimeMillis();
             return true;
         } finally {
