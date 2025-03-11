@@ -123,17 +123,19 @@ public class AddressInvoker {
                 rpcCallback.onFailure(new RemotingTooMuchRequestException("invokeAsync call the addr[" + remoteAddr + "] timeout"));
                 return;
             }
+
             CallbackWrapper callbackWrapper = new CallbackWrapper(this, rpcCallback, addr);
             long newTimeout = timeout - costTime;
             this.invokeWithRetry(channel, request, newTimeout)
                 .whenComplete((v, t) -> {
                     if (t == null) {
                         callbackWrapper.onComplete(v);
-                    } else {
-                        ResponseFuture responseFuture = new ResponseFuture(channel, request.getOpaque(), request, newTimeout, null, null);
-                        responseFuture.setCause(t);
-                        callbackWrapper.onComplete(responseFuture);
+                        return;
                     }
+
+                    ResponseFuture responseFuture = new ResponseFuture(channel, request.getOpaque(), request, newTimeout, null, null);
+                    responseFuture.setCause(t);
+                    callbackWrapper.onComplete(responseFuture);
                 })
                 .thenAccept(responseFuture -> {
                     callbackWrapper.onSuccess(responseFuture.getResponse());
