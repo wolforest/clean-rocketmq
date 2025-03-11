@@ -2,7 +2,6 @@ package cn.coderule.minimq.rpc.common.netty.service;
 
 import cn.coderule.minimq.rpc.common.config.RpcClientConfig;
 import cn.coderule.minimq.rpc.common.core.exception.RemotingConnectException;
-import cn.coderule.minimq.rpc.common.core.exception.RemotingSendRequestException;
 import cn.coderule.minimq.rpc.common.core.exception.RemotingTimeoutException;
 import cn.coderule.minimq.rpc.common.core.exception.RemotingTooMuchRequestException;
 import cn.coderule.minimq.rpc.common.core.invoke.ResponseFuture;
@@ -47,18 +46,9 @@ public class AddressInvoker {
         this.channelInvoker = channelInvoker;
     }
 
-    private ChannelFuture getOrCreateChannelAsync(String addr) {
-        return null;
-    }
-
-    private Channel getOrCreateChannel(String addr) {
-        return null;
-    }
-
     public RpcCommand invokeSync(String addr, RpcCommand request, long timeout) throws Exception {
         long startTime = System.currentTimeMillis();
         Channel channel = getOrCreateChannel(addr);
-        String remoteAddr = NettyHelper.getRemoteAddr(channel);
 
         if (channel == null || !channel.isActive()) {
             this.closeChannel(addr, channel);
@@ -66,6 +56,7 @@ public class AddressInvoker {
         }
 
         long leftTime = timeout;
+        String remoteAddr = NettyHelper.getRemoteAddr(channel);
         try {
             long costTime = System.currentTimeMillis() - startTime;
             leftTime -= costTime;
@@ -147,6 +138,62 @@ public class AddressInvoker {
         });
     }
 
+    public CompletableFuture<RpcCommand> invokeAsync(String addr, RpcCommand request, long timeout) {
+        CompletableFuture<RpcCommand> future = new CompletableFuture<>();
+
+        try {
+            ChannelFuture channelFuture = getOrCreateChannelAsync(addr);
+            if (channelFuture == null) {
+                future.completeExceptionally(new RemotingConnectException(addr));
+                return future;
+            }
+
+            addInvokeAsyncListener(addr, request, timeout, channelFuture, future);
+        } catch (Throwable t) {
+            future.completeExceptionally(t);
+        }
+
+        return future;
+    }
+
+    public Bootstrap getBootstrap(String addr) {
+        return bootstrap;
+    }
+
+    public void updateChannelLastResponseTime(String addr) {
+
+    }
+
+    public boolean isChannelWritable(String addr) {
+        return false;
+    }
+
+    public boolean isAddressReachable(String addr) {
+        return false;
+    }
+
+    public void closeChannel(final String addr, final Channel channel) {
+
+    }
+
+    public void closeChannel(Channel channel) {
+
+    }
+
+    public void closeChannels(List<String> addrList) {
+
+    }
+
+    /******************************* private methods start ***********************************/
+
+    private ChannelFuture getOrCreateChannelAsync(String addr) {
+        return null;
+    }
+
+    private Channel getOrCreateChannel(String addr) {
+        return null;
+    }
+
     private void addInvokeAsyncListener(String addr, RpcCommand request, long timeout, ChannelFuture channelFuture, CompletableFuture<RpcCommand> future) {
         channelFuture.addListener(f -> {
             if (!f.isSuccess()) {
@@ -178,23 +225,6 @@ public class AddressInvoker {
         });
     }
 
-    public CompletableFuture<RpcCommand> invokeAsync(String addr, RpcCommand request, long timeout) {
-        CompletableFuture<RpcCommand> future = new CompletableFuture<>();
-
-        try {
-            ChannelFuture channelFuture = getOrCreateChannelAsync(addr);
-            if (channelFuture == null) {
-                future.completeExceptionally(new RemotingConnectException(addr));
-                return future;
-            }
-
-            addInvokeAsyncListener(addr, request, timeout, channelFuture, future);
-        } catch (Throwable t) {
-            future.completeExceptionally(t);
-        }
-
-        return future;
-    }
 
     public void invokeOneway(String addr, RpcCommand request, long timeout) throws Exception {
         ChannelFuture channelFuture = getOrCreateChannelAsync(addr);
@@ -203,21 +233,21 @@ public class AddressInvoker {
         }
 
         channelFuture.addListener(future -> {
-           if (!future.isSuccess()) {
-               return;
-           }
+            if (!future.isSuccess()) {
+                return;
+            }
 
-           Channel channel = channelFuture.channel();
-           String remoteAddr = NettyHelper.getRemoteAddr(channel);
-           if (remoteAddr == null || !channel.isActive()) {
-               this.closeChannel(addr, channel);
-               return;
-           }
+            Channel channel = channelFuture.channel();
+            String remoteAddr = NettyHelper.getRemoteAddr(channel);
+            if (remoteAddr == null || !channel.isActive()) {
+                this.closeChannel(addr, channel);
+                return;
+            }
 
-           RpcContext ctx = new RpcContext(remoteAddr);
-           dispatcher.invokePreHooks(ctx, request);
+            RpcContext ctx = new RpcContext(remoteAddr);
+            dispatcher.invokePreHooks(ctx, request);
 
-           channelInvoker.invokeOneway(channel, request, timeout);
+            channelInvoker.invokeOneway(channel, request, timeout);
         });
     }
 
@@ -310,7 +340,7 @@ public class AddressInvoker {
 
     }
 
-    public ChannelWrapper getChannelWrapper(Channel channel) {
+    private ChannelWrapper getChannelWrapper(Channel channel) {
         return  channelMap.computeIfPresent(channel, (tmpChannel, tmpWrapper) -> {
             try {
                 if (tmpWrapper.reconnect()) {
@@ -322,34 +352,6 @@ public class AddressInvoker {
 
             return tmpWrapper;
         });
-    }
-
-    public Bootstrap getBootstrap(String addr) {
-        return bootstrap;
-    }
-
-    public void updateChannelLastResponseTime(String addr) {
-
-    }
-
-    public boolean isChannelWritable(String addr) {
-        return false;
-    }
-
-    public boolean isAddressReachable(String addr) {
-        return false;
-    }
-
-    public void closeChannel(final String addr, final Channel channel) {
-
-    }
-
-    public void closeChannel(Channel channel) {
-
-    }
-
-    public void closeChannels(List<String> addrList) {
-
     }
 
 }
