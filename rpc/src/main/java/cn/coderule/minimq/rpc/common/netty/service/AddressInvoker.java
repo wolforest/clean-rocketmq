@@ -5,10 +5,12 @@ import cn.coderule.minimq.rpc.common.config.RpcClientConfig;
 import cn.coderule.minimq.rpc.common.core.exception.RemotingConnectException;
 import cn.coderule.minimq.rpc.common.core.exception.RemotingSendRequestException;
 import cn.coderule.minimq.rpc.common.core.exception.RemotingTimeoutException;
+import cn.coderule.minimq.rpc.common.core.exception.RemotingTooMuchRequestException;
 import cn.coderule.minimq.rpc.common.core.invoke.RpcCallback;
 import cn.coderule.minimq.rpc.common.core.invoke.RpcCommand;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -35,6 +37,10 @@ public class AddressInvoker {
         this.config = config;
         this.bootstrap = bootstrap;
         this.channelInvoker = channelInvoker;
+    }
+
+    private ChannelFuture getOrCreateChannelAsync(String addr) {
+        return null;
     }
 
     private Channel getOrCreateChannel(String addr) {
@@ -78,8 +84,36 @@ public class AddressInvoker {
         }
     }
 
-    public void invokeAsync(String addr, RpcCommand request, long timeout, RpcCallback invokeCallback) throws Exception {
+    public void invokeAsync(String addr, RpcCommand request, long timeout, RpcCallback rpcCallback) throws Exception {
+        long startTime = System.currentTimeMillis();
+        ChannelFuture future = getOrCreateChannelAsync(addr);
+        if (future == null) {
+            rpcCallback.onFailure(new RemotingConnectException(addr));
+            return;
+        }
 
+        future.addListener(f -> {
+            if (!f.isSuccess()) {
+                rpcCallback.onFailure(new RemotingConnectException(addr));
+                return;
+            }
+
+            Channel channel = future.channel();
+            String remoteAddr = NettyHelper.getRemoteAddr(channel);
+            if (remoteAddr == null || !channel.isActive()) {
+                this.closeChannel(addr, channel);
+                rpcCallback.onFailure(new RemotingConnectException(addr));
+                return;
+            }
+
+            long costTime = System.currentTimeMillis() - startTime;
+            if (timeout < costTime) {
+                rpcCallback.onFailure(new RemotingTooMuchRequestException("invokeAsync call the addr[" + remoteAddr + "] timeout"));
+                return;
+            }
+            CallbackWrapper callbackWrapper = new CallbackWrapper(this, rpcCallback, addr);
+            channelInvoker.invokeAsync(channel, request, timeout - costTime, callbackWrapper);
+        });
     }
 
     public void invokeOneway(String addr, RpcCommand request, long timeout) throws Exception {
