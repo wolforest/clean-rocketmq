@@ -250,16 +250,24 @@ public class AddressInvoker {
 
         RpcCommand retryRequest = createRetryRequest(responseFuture.getRequest());
         if (channelWrapper.isOK()) {
-            long duration = stopwatch.elapsed(TimeUnit.MILLISECONDS);
-            stopwatch.stop();
-            Channel retryChannel = channelWrapper.getChannel();
-            if (retryChannel != null && responseFuture.getChannel() != retryChannel) {
-                long newTimeout = responseFuture.getTimeoutMillis() - duration;
-                channelInvoker.invokeAsync(retryChannel, retryRequest, newTimeout);
-            }
-            return CompletableFuture.completedFuture(responseFuture);
+            return retryInvokeWithOldChannel(responseFuture, stopwatch, channelWrapper, retryRequest);
         }
 
+        return retryInvokeWithNewChannel(responseFuture, stopwatch, channelWrapper, retryRequest);
+    }
+
+    private CompletableFuture<ResponseFuture> retryInvokeWithOldChannel(ResponseFuture responseFuture, Stopwatch stopwatch, ChannelWrapper channelWrapper, RpcCommand retryRequest) {
+        long duration = stopwatch.elapsed(TimeUnit.MILLISECONDS);
+        stopwatch.stop();
+        Channel retryChannel = channelWrapper.getChannel();
+        if (retryChannel != null && responseFuture.getChannel() != retryChannel) {
+            long newTimeout = responseFuture.getTimeoutMillis() - duration;
+            channelInvoker.invokeAsync(retryChannel, retryRequest, newTimeout);
+        }
+        return CompletableFuture.completedFuture(responseFuture);
+    }
+
+    private CompletableFuture<ResponseFuture> retryInvokeWithNewChannel(ResponseFuture responseFuture, Stopwatch stopwatch, ChannelWrapper channelWrapper, RpcCommand retryRequest) {
         CompletableFuture<ResponseFuture> future = new CompletableFuture<>();
         ChannelFuture channelFuture = channelWrapper.getChannelFuture();
         channelFuture.addListener(f -> {
