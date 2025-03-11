@@ -146,7 +146,48 @@ public class AddressInvoker {
     }
 
     public CompletableFuture<RpcCommand> invokeAsync(String addr, RpcCommand request, long timeout) {
-        return null;
+        CompletableFuture<RpcCommand> future = new CompletableFuture<>();
+
+        try {
+            ChannelFuture channelFuture = getOrCreateChannelAsync(addr);
+            if (channelFuture == null) {
+                future.completeExceptionally(new RemotingConnectException(addr));
+                return future;
+            }
+
+            channelFuture.addListener(f -> {
+                if (!f.isSuccess()) {
+                    future.completeExceptionally(new RemotingConnectException(addr));
+                    return;
+                }
+
+                Channel channel = channelFuture.channel();
+                if (channel == null || !channel.isActive()) {
+                    this.closeChannel(addr, channel);
+                    future.completeExceptionally(new RemotingConnectException(addr));
+                    return;
+                }
+
+                invokeWithRetry(channel, request, timeout)
+                    .whenComplete((v, t) -> {
+                        if (t == null) {
+                            updateChannelLastResponseTime(addr);
+                        }
+                    })
+                    .thenApply(ResponseFuture::getResponse)
+                    .whenComplete((v, t) -> {
+                        if (t == null) {
+                            future.complete(v);
+                        } else {
+                            future.completeExceptionally(t);
+                        }
+                    });
+            });
+        } catch (Throwable t) {
+            future.completeExceptionally(t);
+        }
+
+        return future;
     }
 
     public void invokeOneway(String addr, RpcCommand request, long timeout) throws Exception {
