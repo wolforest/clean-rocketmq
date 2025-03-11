@@ -67,7 +67,7 @@ public class AddressInvoker {
                 .thenApply(ResponseFuture::getResponse)
                 .get(leftTime, TimeUnit.MILLISECONDS);
 
-            updateChannelLastResponseTime(addr);
+            updateLastResponseTime(addr);
             return response;
         } catch (ExecutionException e) {
             log.warn("invokeSync: send request exception, so close the channel[{}]", remoteAddr);
@@ -160,8 +160,17 @@ public class AddressInvoker {
         return bootstrap;
     }
 
-    public void updateChannelLastResponseTime(String addr) {
+    public void updateLastResponseTime(String addr) {
+        ChannelWrapper channelWrapper = this.channelMap.get(addr);
+        if (channelWrapper == null) {
+            return;
+        }
 
+        if (!channelWrapper.isOK()) {
+            return;
+        }
+
+        channelWrapper.updateLastResponseTime();
     }
 
     public boolean isChannelWritable(String addr) {
@@ -211,7 +220,7 @@ public class AddressInvoker {
             invokeWithRetry(channel, request, timeout)
                 .whenComplete((v, t) -> {
                     if (t == null) {
-                        updateChannelLastResponseTime(addr);
+                        updateLastResponseTime(addr);
                     }
                 })
                 .thenApply(ResponseFuture::getResponse)

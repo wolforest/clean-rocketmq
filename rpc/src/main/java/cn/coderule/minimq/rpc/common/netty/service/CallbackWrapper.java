@@ -22,7 +22,7 @@ public class CallbackWrapper implements RpcCallback {
 
     @Override
     public void onSuccess(RpcCommand response) {
-        this.invoker.updateChannelLastResponseTime(addr);
+        this.invoker.updateLastResponseTime(addr);
         this.rpcCallback.onSuccess(response);
     }
 
