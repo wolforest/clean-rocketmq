@@ -30,9 +30,8 @@ public class AddressInvoker {
         this.channelInvoker = channelInvoker;
     }
 
-    public Bootstrap getBootstrap(String addr) {
-        return bootstrap;
-    }
+
+
 
     public RpcCommand invokeSync(String addr, RpcCommand request,
         long timeoutMillis) throws Exception {
@@ -45,6 +44,14 @@ public class AddressInvoker {
     }
 
     public void invokeOneway(String addr, RpcCommand request, long timeoutMillis) throws Exception {
+
+    }
+
+    public Bootstrap getBootstrap(String addr) {
+        return bootstrap;
+    }
+
+    public void updateChannelLastResponseTime(String addr) {
 
     }
 

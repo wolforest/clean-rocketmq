@@ -17,16 +17,17 @@ public class CallbackWrapper implements RpcCallback {
 
     @Override
     public void onComplete(ResponseFuture responseFuture) {
-
+        this.rpcCallback.onComplete(responseFuture);
     }
 
     @Override
     public void onSuccess(RpcCommand response) {
-        RpcCallback.super.onSuccess(response);
+        this.invoker.updateChannelLastResponseTime(addr);
+        this.rpcCallback.onSuccess(response);
     }
 
     @Override
     public void onFailure(Throwable throwable) {
-        RpcCallback.super.onFailure(throwable);
+        this.rpcCallback.onFailure(throwable);
     }
 }
