@@ -1,5 +1,6 @@
 package cn.coderule.minimq.rpc.common.netty.service;
 
+import cn.coderule.common.util.lang.StringUtil;
 import cn.coderule.minimq.rpc.common.config.RpcClientConfig;
 import cn.coderule.minimq.rpc.common.core.exception.RemotingConnectException;
 import cn.coderule.minimq.rpc.common.core.exception.RemotingTimeoutException;
@@ -161,6 +162,10 @@ public class AddressInvoker {
     }
 
     public void updateLastResponseTime(String addr) {
+        if (StringUtil.isBlank(addr)) {
+            return;
+        }
+
         ChannelWrapper channelWrapper = this.channelMap.get(addr);
         if (channelWrapper == null) {
             return;
@@ -174,11 +179,29 @@ public class AddressInvoker {
     }
 
     public boolean isChannelWritable(String addr) {
-        return false;
+        if (StringUtil.isBlank(addr)) {
+            return false;
+        }
+
+        ChannelWrapper cw = this.channelMap.get(addr);
+        if (cw != null && cw.isOK()) {
+            return cw.isWritable();
+        }
+        return true;
     }
 
     public boolean isAddressReachable(String addr) {
-        return false;
+        if (StringUtil.isBlank(addr)) {
+            return false;
+        }
+
+        try {
+            Channel channel = getOrCreateChannel(addr);
+            return channel != null && channel.isActive();
+        } catch (Exception e) {
+            log.warn("Get and create channel of {} failed", addr, e);
+            return false;
+        }
     }
 
     public void closeChannel(final String addr, final Channel channel) {
