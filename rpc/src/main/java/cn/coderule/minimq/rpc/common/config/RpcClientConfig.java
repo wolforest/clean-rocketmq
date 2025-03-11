@@ -19,6 +19,8 @@ public class RpcClientConfig implements Serializable {
 
     private boolean enableNettyPool = false;
     private boolean enableTransparentRetry = true;
+    private boolean enableReconnectForGoAway = true;
+
     private boolean disableCallbackExecutor = false;
     private boolean disableNettyWorkerGroup = false;
     private boolean closeChannelWhenTimeout = true;

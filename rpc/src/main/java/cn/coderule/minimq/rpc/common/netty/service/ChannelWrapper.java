@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ChannelWrapper {
     private final AddressInvoker invoker;
     private final ReentrantReadWriteLock lock;
+    @Getter
     private final String address;
 
     @Getter
@@ -36,7 +37,7 @@ public class ChannelWrapper {
         return getChannel().isWritable();
     }
 
-    private Channel getChannel() {
+    public Channel getChannel() {
         return getChannelFuture().channel();
     }
 

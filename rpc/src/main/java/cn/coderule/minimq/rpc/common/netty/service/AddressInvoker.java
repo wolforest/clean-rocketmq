@@ -1,14 +1,16 @@
 package cn.coderule.minimq.rpc.common.netty.service;
 
-import cn.coderule.common.util.net.NetworkUtil;
 import cn.coderule.minimq.rpc.common.config.RpcClientConfig;
 import cn.coderule.minimq.rpc.common.core.exception.RemotingConnectException;
 import cn.coderule.minimq.rpc.common.core.exception.RemotingSendRequestException;
 import cn.coderule.minimq.rpc.common.core.exception.RemotingTimeoutException;
 import cn.coderule.minimq.rpc.common.core.exception.RemotingTooMuchRequestException;
+import cn.coderule.minimq.rpc.common.core.invoke.ResponseFuture;
 import cn.coderule.minimq.rpc.common.core.invoke.RpcCallback;
 import cn.coderule.minimq.rpc.common.core.invoke.RpcCommand;
 import cn.coderule.minimq.rpc.common.core.invoke.RpcContext;
+import cn.coderule.minimq.rpc.common.protocol.code.ResponseCode;
+import com.google.common.base.Stopwatch;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -16,6 +18,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import lombok.Getter;
@@ -51,6 +54,9 @@ public class AddressInvoker {
         return null;
     }
 
+    /**
+     * @todo
+     */
     public RpcCommand invokeSync(String addr, RpcCommand request, long timeout) throws Exception {
         long startTime = System.currentTimeMillis();
         Channel channel = getOrCreateChannel(addr);
@@ -120,6 +126,10 @@ public class AddressInvoker {
         });
     }
 
+    public CompletableFuture<RpcCommand> invokeAsync(String addr, RpcCommand request, long timeout) {
+        return null;
+    }
+
     public void invokeOneway(String addr, RpcCommand request, long timeout) throws Exception {
         ChannelFuture channelFuture = getOrCreateChannelAsync(addr);
         if (channelFuture == null) {
@@ -145,8 +155,101 @@ public class AddressInvoker {
         });
     }
 
-    public CompletableFuture<RpcCommand> invoke(String addr, RpcCommand request, long timeoutMillis) {
-        return null;
+    private CompletableFuture<ResponseFuture> invokeWithRetry(Channel channel, RpcCommand request, long timeout) {
+        Stopwatch stopwatch = Stopwatch.createStarted();
+
+        String remoteAddr = NettyHelper.getRemoteAddr(channel);
+        RpcContext rpcContext = new RpcContext(remoteAddr);
+        dispatcher.invokePreHooks(rpcContext, request);
+
+        return channelInvoker.invokeAsync(channel, request, timeout)
+            .thenCompose(responseFuture -> retryInvoke(responseFuture, stopwatch))
+            .whenComplete((v, t) -> {
+                if (t != null) {
+                    return;
+                }
+
+                dispatcher.invokePostHooks(rpcContext, request, v.getResponse());
+            })
+            ;
+
+    }
+
+    private CompletableFuture<ResponseFuture> retryInvoke(ResponseFuture responseFuture, Stopwatch stopwatch) {
+        RpcCommand response = responseFuture.getResponse();
+        if (response.getCode() != ResponseCode.GO_AWAY) {
+            return CompletableFuture.completedFuture(responseFuture);
+        }
+
+        if (!config.isEnableReconnectForGoAway() || !config.isEnableTransparentRetry()) {
+            return CompletableFuture.completedFuture(responseFuture);
+        }
+
+        ChannelWrapper channelWrapper = getChannelWrapper(responseFuture.getChannel());
+        if (channelWrapper == null) {
+            return CompletableFuture.completedFuture(responseFuture);
+        }
+
+        RpcCommand retryRequest = createRetryRequest(responseFuture.getRequest());
+        if (channelWrapper.isOK()) {
+            long duration = stopwatch.elapsed(TimeUnit.MILLISECONDS);
+            stopwatch.stop();
+            Channel retryChannel = channelWrapper.getChannel();
+            if (retryChannel != null && responseFuture.getChannel() != retryChannel) {
+                long newTimeout = responseFuture.getTimeoutMillis() - duration;
+                channelInvoker.invokeAsync(retryChannel, retryRequest, newTimeout);
+            }
+            return CompletableFuture.completedFuture(responseFuture);
+        }
+
+        CompletableFuture<ResponseFuture> future = new CompletableFuture<>();
+        ChannelFuture channelFuture = channelWrapper.getChannelFuture();
+        channelFuture.addListener(f -> {
+            long duration = stopwatch.elapsed(TimeUnit.MILLISECONDS);
+            stopwatch.stop();
+            if (!f.isSuccess()) {
+                future.completeExceptionally(new RemotingConnectException(channelWrapper.getAddress()));
+                return;
+            }
+
+            Channel retryChannel0 = channelFuture.channel();
+            if (retryChannel0 == null || responseFuture.getChannel() == retryChannel0) {
+                return;
+            }
+            long newTimeout = responseFuture.getTimeoutMillis() - duration;
+            channelInvoker.invokeAsync(retryChannel0, retryRequest, newTimeout)
+                .whenComplete((v, t) -> {
+                    if (t != null) {
+                        future.completeExceptionally(t);
+                    } else {
+                        future.complete(v);
+                    }
+                });
+        });
+
+        return future;
+    }
+
+    private RpcCommand createRetryRequest(RpcCommand request) {
+        RpcCommand retryRequest = RpcCommand.createRequestCommand(request.getCode(), request.getCustomHeader());
+        retryRequest.setBody(request.getBody());
+
+        return retryRequest;
+
+    }
+
+    public ChannelWrapper getChannelWrapper(Channel channel) {
+        return  channelMap.computeIfPresent(channel, (tmpChannel, tmpWrapper) -> {
+            try {
+                if (tmpWrapper.reconnect()) {
+                    channelMap.put(tmpWrapper.getChannel(), tmpWrapper);
+                }
+            } catch (Throwable t) {
+                log.error("Channel {} reconnect error", tmpWrapper, t);
+            }
+
+            return tmpWrapper;
+        });
     }
 
     public Bootstrap getBootstrap(String addr) {
