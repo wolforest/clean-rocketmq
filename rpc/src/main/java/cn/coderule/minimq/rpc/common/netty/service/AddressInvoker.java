@@ -12,6 +12,7 @@ import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.locks.Lock;
@@ -118,6 +119,10 @@ public class AddressInvoker {
 
     public void invokeOneway(String addr, RpcCommand request, long timeout) throws Exception {
 
+    }
+
+    public CompletableFuture<RpcCommand> invoke(String addr, RpcCommand request, long timeoutMillis) {
+        return null;
     }
 
     public Bootstrap getBootstrap(String addr) {
