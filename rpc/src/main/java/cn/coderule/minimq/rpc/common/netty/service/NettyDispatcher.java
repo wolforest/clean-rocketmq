@@ -52,6 +52,23 @@ public class NettyDispatcher {
         this.stopping.set(true);
     }
 
+    public void dispatch(RpcContext ctx, RpcCommand command) {
+        if (command == null) {
+            return;
+        }
+
+        switch (command.getType()) {
+            case REQUEST_COMMAND:
+                processRequest(ctx, command);
+                break;
+            case RESPONSE_COMMAND:
+                processResponse(ctx, command);
+                break;
+            default:
+                break;
+        }
+    }
+
     public void registerProcessor(Collection<Integer> codes, @NonNull RpcProcessor processor, @NonNull ExecutorService executor) {
         if (CollectionUtil.isEmpty(codes)) {
             return;
@@ -79,21 +96,26 @@ public class NettyDispatcher {
         rpcHooks.clear();
     }
 
-    public void dispatch(RpcContext ctx, RpcCommand command) {
-        if (command == null) {
+    public void invokePreHooks(RpcContext ctx, RpcCommand request) {
+        if (rpcHooks.isEmpty()) {
             return;
         }
 
-        switch (command.getType()) {
-            case REQUEST_COMMAND:
-                processRequest(ctx, command);
-                break;
-            case RESPONSE_COMMAND:
-                processResponse(ctx, command);
-                break;
-            default:
-                break;
+        for (RpcHook rpcHook : rpcHooks) {
+            rpcHook.onRequestStart(ctx, request);
         }
+
+    }
+
+    public void invokePostHooks(RpcContext ctx, RpcCommand request, RpcCommand response) {
+        if (rpcHooks.isEmpty()) {
+            return;
+        }
+
+        for (RpcHook rpcHook : rpcHooks) {
+            rpcHook.onResponseComplete(ctx, request, response);
+        }
+
     }
 
     private void illegalRequestCode(RpcContext ctx, RpcCommand command) {
@@ -112,27 +134,7 @@ public class NettyDispatcher {
 
     }
 
-    private void invokePreHooks(RpcContext ctx, RpcCommand request) {
-        if (rpcHooks.isEmpty()) {
-            return;
-        }
 
-        for (RpcHook rpcHook : rpcHooks) {
-            rpcHook.onRequestStart(ctx, request);
-        }
-
-    }
-
-    private void invokePostHooks(RpcContext ctx, RpcCommand request, RpcCommand response) {
-        if (rpcHooks.isEmpty()) {
-            return;
-        }
-
-        for (RpcHook rpcHook : rpcHooks) {
-            rpcHook.onResponseComplete(ctx, request, response);
-        }
-
-    }
 
     private void writeResponse(RpcContext ctx, RpcCommand request, RpcCommand response) {
 

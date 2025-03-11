@@ -6,13 +6,21 @@ import lombok.Data;
 
 @Data
 public class RpcContext {
-    private final ChannelHandlerContext channelContext;
+    private ChannelHandlerContext channelContext;
+    private String addr;
+
+    public RpcContext(String addr) {
+        this.addr = addr;
+    }
 
     public RpcContext(ChannelHandlerContext channelContext) {
         this.channelContext = channelContext;
     }
 
     public Channel channel() {
+        if (channelContext == null) {
+            return null;
+        }
         return channelContext.channel();
     }
 }

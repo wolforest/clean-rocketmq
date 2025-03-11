@@ -8,6 +8,7 @@ import cn.coderule.minimq.rpc.common.core.exception.RemotingTimeoutException;
 import cn.coderule.minimq.rpc.common.core.exception.RemotingTooMuchRequestException;
 import cn.coderule.minimq.rpc.common.core.invoke.RpcCallback;
 import cn.coderule.minimq.rpc.common.core.invoke.RpcCommand;
+import cn.coderule.minimq.rpc.common.core.invoke.RpcContext;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -28,15 +29,17 @@ public class AddressInvoker {
     @Getter
     private final RpcClientConfig config;
     private final Bootstrap bootstrap;
+    private final NettyDispatcher dispatcher;
     private final ChannelInvoker channelInvoker;
 
     private final Lock lock = new ReentrantLock();
     private final ConcurrentMap<String /* addr */, ChannelWrapper> addressMap = new ConcurrentHashMap<>();
     private final ConcurrentMap<Channel, ChannelWrapper> channelMap = new ConcurrentHashMap<>();
 
-    public AddressInvoker(RpcClientConfig config, Bootstrap bootstrap, ChannelInvoker channelInvoker) {
+    public AddressInvoker(RpcClientConfig config, Bootstrap bootstrap, NettyDispatcher dispatcher, ChannelInvoker channelInvoker) {
         this.config = config;
         this.bootstrap = bootstrap;
+        this.dispatcher = dispatcher;
         this.channelInvoker = channelInvoker;
     }
 
@@ -118,7 +121,28 @@ public class AddressInvoker {
     }
 
     public void invokeOneway(String addr, RpcCommand request, long timeout) throws Exception {
+        ChannelFuture channelFuture = getOrCreateChannelAsync(addr);
+        if (channelFuture == null) {
+            throw new RemotingConnectException(addr);
+        }
 
+        channelFuture.addListener(future -> {
+           if (!future.isSuccess()) {
+               return;
+           }
+
+           Channel channel = channelFuture.channel();
+           String remoteAddr = NettyHelper.getRemoteAddr(channel);
+           if (remoteAddr == null || !channel.isActive()) {
+               this.closeChannel(addr, channel);
+               return;
+           }
+
+           RpcContext ctx = new RpcContext(remoteAddr);
+           dispatcher.invokePreHooks(ctx, request);
+
+           channelInvoker.invokeOneway(channel, request, timeout);
+        });
     }
 
     public CompletableFuture<RpcCommand> invoke(String addr, RpcCommand request, long timeoutMillis) {
