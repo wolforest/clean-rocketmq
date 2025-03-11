@@ -5,10 +5,12 @@ import cn.coderule.minimq.rpc.common.core.invoke.RpcCallback;
 import cn.coderule.minimq.rpc.common.core.invoke.RpcCommand;
 
 public class CallbackWrapper implements RpcCallback {
+    private final AddressInvoker invoker;
     private final RpcCallback rpcCallback;
     private final String addr;
 
-    public CallbackWrapper(RpcCallback rpcCallback, String addr) {
+    public CallbackWrapper(AddressInvoker invoker, RpcCallback rpcCallback, String addr) {
+        this.invoker = invoker;
         this.rpcCallback = rpcCallback;
         this.addr = addr;
     }

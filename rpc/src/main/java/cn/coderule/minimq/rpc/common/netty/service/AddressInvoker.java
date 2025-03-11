@@ -10,8 +10,12 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class AddressInvoker {
+    @Getter
     private final RpcClientConfig config;
     private final Bootstrap bootstrap;
     private final ChannelInvoker channelInvoker;
@@ -24,6 +28,10 @@ public class AddressInvoker {
         this.config = config;
         this.bootstrap = bootstrap;
         this.channelInvoker = channelInvoker;
+    }
+
+    public Bootstrap getBootstrap(String addr) {
+        return bootstrap;
     }
 
     public RpcCommand invokeSync(String addr, RpcCommand request,
