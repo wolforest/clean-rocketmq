@@ -2,6 +2,7 @@ package cn.coderule.minimq.rpc.common.netty.service;
 
 import cn.coderule.common.util.lang.StringUtil;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
+import cn.coderule.common.util.net.NetworkUtil;
 import cn.coderule.minimq.rpc.common.config.RpcClientConfig;
 import cn.coderule.minimq.rpc.common.core.exception.RemotingConnectException;
 import cn.coderule.minimq.rpc.common.core.exception.RemotingTimeoutException;
@@ -285,11 +286,69 @@ public class AddressInvoker {
     /******************************* private methods start ***********************************/
 
     private ChannelFuture getOrCreateChannelAsync(String addr) {
+        if (StringUtil.isBlank(addr)) {
+            return null;
+        }
+
+        ChannelWrapper channelWrapper = this.addressMap.get(addr);
+        if (channelWrapper != null && channelWrapper.isOK()) {
+            return channelWrapper.getChannelFuture();
+        }
+
         return null;
     }
 
     private Channel getOrCreateChannel(String addr) {
+        ChannelFuture channelFuture = getOrCreateChannelAsync(addr);
+        if (channelFuture == null) {
+            return null;
+        }
+
+        return channelFuture.awaitUninterruptibly().channel();
+    }
+
+    private ChannelFuture createChannelAsync(final String addr) throws InterruptedException {
+        ChannelWrapper channelWrapper = this.addressMap.get(addr);
+        if (channelWrapper != null && channelWrapper.isOK()) {
+            return channelWrapper.getChannelFuture();
+        }
+
+        if (!lock.tryLock(LOCK_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS)) {
+            return null;
+        }
+
+        try {
+            channelWrapper = this.addressMap.get(addr);
+            if (channelWrapper == null) {
+                return createChannel(addr).getChannelFuture();
+            }
+
+            if (channelWrapper.isOK() || !channelWrapper.getChannelFuture().isDone()) {
+                return channelWrapper.getChannelFuture();
+            } else {
+                this.addressMap.remove(addr);
+            }
+
+            return createChannel(addr).getChannelFuture();
+        } catch (Exception e) {
+            log.error("CreateChannel exception", e);
+        } finally {
+            lock.unlock();
+        }
+
         return null;
+    }
+
+    private ChannelWrapper createChannel(String addr) {
+        String[] hostAndPort = NetworkUtil.getHostAndPort(addr);
+        ChannelFuture channelFuture = bootstrap.connect(hostAndPort[0], Integer.parseInt(hostAndPort[1]));
+        log.info("createChannel: begin to connect remote host[{}] asynchronously", addr);
+
+        ChannelWrapper cw = new ChannelWrapper(this, channelFuture, addr);
+        this.addressMap.put(addr, cw);
+        this.channelMap.put(channelFuture.channel(), cw);
+
+        return cw;
     }
 
     private boolean needRemove(ChannelWrapper prevWrapper, Channel channel) {
@@ -303,18 +362,23 @@ public class AddressInvoker {
         return shouldRemove;
     }
 
+    private void removeChannel(String addr, Channel channel) {
+        ChannelWrapper wrapper = this.channelMap.remove(channel);
+        if (null != wrapper && wrapper.tryClose(channel)) {
+            this.addressMap.remove(addr);
+        }
+        log.info("closeChannel: the channel[{}] was removed from channel table", addr);
+    }
+
     private void closeChannelWithLock(String addr, Channel channel) {
         try {
             ChannelWrapper prevWrapper = this.addressMap.get(addr);
-            boolean shouldRemove = needRemove(prevWrapper, channel);
 
+            boolean shouldRemove = needRemove(prevWrapper, channel);
             if (shouldRemove) {
-                ChannelWrapper wrapper = this.channelMap.remove(channel);
-                if (null != wrapper && wrapper.tryClose(channel)) {
-                    this.addressMap.remove(addr);
-                }
-                log.info("closeChannel: the channel[{}] was removed from channel table", addr);
+                removeChannel(addr, channel);
             }
+
             NettyHelper.close(channel);
         } catch (Exception e) {
             log.error("closeChannel exception", e);
