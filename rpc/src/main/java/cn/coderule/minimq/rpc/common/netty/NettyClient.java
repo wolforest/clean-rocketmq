@@ -10,6 +10,7 @@ import cn.coderule.minimq.rpc.common.netty.event.NettyEventExecutor;
 import cn.coderule.minimq.rpc.common.netty.event.RpcListener;
 import cn.coderule.minimq.rpc.common.netty.handler.ClientConnectionHandler;
 import cn.coderule.minimq.rpc.common.netty.handler.NettyClientHandler;
+import cn.coderule.minimq.rpc.common.netty.service.AddressInvoker;
 import cn.coderule.minimq.rpc.common.netty.service.NettyService;
 import cn.coderule.minimq.rpc.common.config.RpcClientConfig;
 import io.netty.bootstrap.Bootstrap;
@@ -26,6 +27,7 @@ import io.netty.handler.timeout.IdleStateHandler;
 import io.netty.util.concurrent.DefaultEventExecutorGroup;
 import io.netty.util.concurrent.EventExecutorGroup;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -36,6 +38,8 @@ public class NettyClient extends NettyService implements RpcClient {
     private final EventLoopGroup workerGroup;
     private final EventExecutorGroup businessGroup;
     private final NettyEventExecutor eventExecutor;
+
+    private final AddressInvoker addressInvoker;
 
 
     public NettyClient(RpcClientConfig config, RpcListener rpcListener) {
@@ -48,6 +52,7 @@ public class NettyClient extends NettyService implements RpcClient {
         this.businessGroup = buildEventExecutorGroup();
 
         initBootstrap();
+        addressInvoker = new AddressInvoker(config, bootstrap, dispatcher, invoker);
     }
 
     @Override
@@ -80,40 +85,43 @@ public class NettyClient extends NettyService implements RpcClient {
     }
 
     @Override
-    public boolean isChannelWritable(String addr) {
-        return false;
+    public RpcCommand invokeSync(String addr, RpcCommand request, long timeoutMillis) throws Exception {
+        return addressInvoker.invokeSync(addr, request, timeoutMillis);
     }
 
     @Override
-    public boolean isAddressReachable(String addr) {
-        return false;
+    public CompletableFuture<RpcCommand> invokeASync(String addr, RpcCommand request, long timeoutMillis) {
+        return addressInvoker.invokeAsync(addr, request, timeoutMillis);
     }
 
     @Override
-    public void closeChannels(List<String> addrList) {
-
-    }
-
-    @Override
-    public void closeChannel(Channel channel) {
-
-    }
-
-    @Override
-    public RpcCommand invokeSync(String addr, RpcCommand request,
-        long timeoutMillis) throws Exception {
-        return null;
-    }
-
-    @Override
-    public void invokeAsync(String addr, RpcCommand request, long timeoutMillis,
-        RpcCallback invokeCallback) throws Exception {
-
+    public void invokeAsync(String addr, RpcCommand request, long timeoutMillis, RpcCallback invokeCallback) {
+        addressInvoker.invokeAsync(addr, request, timeoutMillis, invokeCallback);
     }
 
     @Override
     public void invokeOneway(String addr, RpcCommand request, long timeoutMillis) throws Exception {
+        addressInvoker.invokeOneway(addr, request, timeoutMillis);
+    }
 
+    @Override
+    public boolean isChannelWritable(String addr) {
+        return addressInvoker.isChannelWritable(addr);
+    }
+
+    @Override
+    public boolean isAddressReachable(String addr) {
+        return addressInvoker.isAddressReachable(addr);
+    }
+
+    @Override
+    public void closeChannels(List<String> addrList) {
+        addressInvoker.closeChannels(addrList);
+    }
+
+    @Override
+    public void closeChannel(Channel channel) {
+        addressInvoker.closeChannel(channel);
     }
 
     private void initBootstrap() {
