@@ -118,6 +118,37 @@ public class NettyDispatcher {
 
     }
 
+    private void processRequest(RpcContext ctx, RpcCommand command) {
+        if (stopping.get()) {
+            rejectByServer(ctx, command);
+            return;
+        }
+
+        Pair<RpcProcessor, ExecutorService> processor = processorMap.get(command.getCode());
+        if (processor == null) {
+            illegalRequestCode(ctx, command);
+            return;
+        }
+
+        if (processor.getLeft().reject()) {
+            rejectByBusiness(ctx, command);
+            return;
+        }
+
+        try {
+            RequestTask task = createRequestTask(ctx, command, processor.getLeft());
+            processor.getRight().submit(task);
+        } catch (RejectedExecutionException e) {
+            flowControl(ctx, command);
+        } catch (Throwable t) {
+            requestFailed(ctx, command, t);
+        }
+    }
+
+    private void processResponse(RpcContext ctx, RpcCommand command) {
+
+    }
+
     private void illegalRequestCode(RpcContext ctx, RpcCommand command) {
 
     }
@@ -133,8 +164,6 @@ public class NettyDispatcher {
     private void flowControl(RpcContext ctx, RpcCommand command) {
 
     }
-
-
 
     private void writeResponse(RpcContext ctx, RpcCommand request, RpcCommand response) {
 
@@ -172,37 +201,5 @@ public class NettyDispatcher {
         Runnable task = createProcessTask(ctx, command, processor);
         return new RequestTask(task, ctx.channel(), command);
     }
-
-    private void processRequest(RpcContext ctx, RpcCommand command) {
-        if (stopping.get()) {
-            rejectByServer(ctx, command);
-            return;
-        }
-
-        Pair<RpcProcessor, ExecutorService> processor = processorMap.get(command.getCode());
-        if (processor == null) {
-            illegalRequestCode(ctx, command);
-            return;
-        }
-
-        if (processor.getLeft().reject()) {
-            rejectByBusiness(ctx, command);
-            return;
-        }
-
-        try {
-            RequestTask task = createRequestTask(ctx, command, processor.getLeft());
-            processor.getRight().submit(task);
-        } catch (RejectedExecutionException e) {
-            flowControl(ctx, command);
-        } catch (Throwable t) {
-            requestFailed(ctx, command, t);
-        }
-    }
-
-    private void processResponse(RpcContext ctx, RpcCommand command) {
-
-    }
-
 
 }

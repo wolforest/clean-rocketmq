@@ -7,7 +7,7 @@ import cn.coderule.minimq.rpc.common.RpcServer;
 import cn.coderule.minimq.rpc.common.netty.codec.NettyDecoder;
 import cn.coderule.minimq.rpc.common.netty.codec.NettyEncoder;
 import cn.coderule.minimq.rpc.common.netty.event.NettyEventExecutor;
-import cn.coderule.minimq.rpc.common.netty.event.RpcListener;
+import cn.coderule.minimq.rpc.common.RpcListener;
 import cn.coderule.minimq.rpc.common.netty.handler.NettyServerHandler;
 import cn.coderule.minimq.rpc.common.netty.handler.RequestCodeCounter;
 import cn.coderule.minimq.rpc.common.netty.handler.ServerConnectionHandler;
