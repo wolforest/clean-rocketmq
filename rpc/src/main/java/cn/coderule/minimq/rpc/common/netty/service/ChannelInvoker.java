@@ -16,6 +16,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -25,6 +26,7 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicReference;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -38,6 +40,7 @@ public class ChannelInvoker {
      * response map
      * { opaque : ResponseFuture }
      */
+    @Getter
     private final ConcurrentMap<Integer, ResponseFuture> responseMap
         = new ConcurrentHashMap<>(256);
 
@@ -185,6 +188,21 @@ public class ChannelInvoker {
         }
 
         executeInvokeCallback(rfList);
+    }
+
+    public void interruptRequests(Set<String> brokerAddrSet) {
+        for (ResponseFuture responseFuture : responseMap.values()) {
+            RpcCommand cmd = responseFuture.getRequest();
+            if (cmd == null) {
+                continue;
+            }
+            String remoteAddr = NettyHelper.getRemoteAddr(responseFuture.getChannel());
+            // interrupt only pull message request
+            if (brokerAddrSet.contains(remoteAddr) && (cmd.getCode() == 11 || cmd.getCode() == 361)) {
+                log.info("interrupt {}", cmd);
+                responseFuture.interrupt();
+            }
+        }
     }
 
     /*********************************** private methods ***********************************/

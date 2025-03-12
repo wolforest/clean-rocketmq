@@ -1,6 +1,7 @@
 package cn.coderule.minimq.rpc.common.netty.service;
 
 import cn.coderule.common.util.lang.StringUtil;
+import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.minimq.rpc.common.config.RpcClientConfig;
 import cn.coderule.minimq.rpc.common.core.exception.RemotingConnectException;
 import cn.coderule.minimq.rpc.common.core.exception.RemotingTimeoutException;
@@ -14,7 +15,9 @@ import com.google.common.base.Stopwatch;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -22,7 +25,9 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import javax.print.DocFlavor;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -166,7 +171,7 @@ public class AddressInvoker {
             return;
         }
 
-        ChannelWrapper channelWrapper = this.channelMap.get(addr);
+        ChannelWrapper channelWrapper = this.addressMap.get(addr);
         if (channelWrapper == null) {
             return;
         }
@@ -183,7 +188,7 @@ public class AddressInvoker {
             return false;
         }
 
-        ChannelWrapper cw = this.channelMap.get(addr);
+        ChannelWrapper cw = this.addressMap.get(addr);
         if (cw != null && cw.isOK()) {
             return cw.isWritable();
         }
@@ -204,16 +209,97 @@ public class AddressInvoker {
         }
     }
 
-    public void closeChannel(final String addr, final Channel channel) {
+    private boolean needRemove(ChannelWrapper prevWrapper, Channel channel) {
+        boolean shouldRemove = true;
+        if (null == prevWrapper) {
+            shouldRemove = false;
+        } else if (prevWrapper.getChannel() != channel) {
+            shouldRemove = false;
+        }
 
+        return shouldRemove;
+    }
+
+    private void closeChannelWithLock(String addr, Channel channel) {
+        try {
+            ChannelWrapper prevWrapper = this.addressMap.get(addr);
+            boolean shouldRemove = needRemove(prevWrapper, channel);
+
+            if (shouldRemove) {
+                ChannelWrapper wrapper = this.channelMap.remove(channel);
+                if (null != wrapper && wrapper.tryClose(channel)) {
+                    this.addressMap.remove(addr);
+                }
+                log.info("closeChannel: the channel[{}] was removed from channel table", addr);
+            }
+            NettyHelper.close(channel);
+        } catch (Exception e) {
+            log.error("closeChannel exception", e);
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    private void closeChannelWithLock(Channel channel) {
+
+    }
+
+    public void closeChannel(String addr, Channel channel) {
+        if (null == channel) {
+            return;
+        }
+
+        String remoteAddr = null != addr
+            ? addr
+            : NettyHelper.getRemoteAddr(channel);
+
+        if (StringUtil.isBlank(remoteAddr)) {
+            return;
+        }
+
+        try {
+            if (!lock.tryLock(LOCK_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS)) {
+                log.warn("closeChannel: try to lock channel table, but timeout, {}ms", LOCK_TIMEOUT_MILLIS);
+                return;
+            }
+
+            closeChannelWithLock(remoteAddr, channel);
+        } catch (InterruptedException e) {
+            log.error("closeChannel exception", e);
+        }
     }
 
     public void closeChannel(Channel channel) {
+        if (null == channel) {
+            return;
+        }
 
+        try {
+            if (!lock.tryLock(LOCK_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS)) {
+                log.warn("closeChannel: fail to  lock channel table, but timeout, {}ms", LOCK_TIMEOUT_MILLIS);
+                return;
+            }
+
+            closeChannelWithLock(channel);
+        } catch (InterruptedException e) {
+            log.error("closeChannel exception", e);
+        }
     }
 
     public void closeChannels(List<String> addrList) {
+        if (CollectionUtil.isEmpty(addrList)) {
+            return;
+        }
 
+        for (String addr : addrList) {
+            ChannelWrapper wrapper = this.addressMap.get(addr);
+            if (wrapper == null) {
+                continue;
+            }
+            this.closeChannel(addr, wrapper.getChannel());
+        }
+
+        channelInvoker.interruptRequests(new HashSet<>(addrList));
     }
 
     /******************************* private methods start ***********************************/
