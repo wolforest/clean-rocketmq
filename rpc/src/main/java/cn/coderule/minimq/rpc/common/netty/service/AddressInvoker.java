@@ -18,7 +18,6 @@ import io.netty.channel.ChannelFuture;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -26,9 +25,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-import javax.print.DocFlavor;
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -81,20 +78,12 @@ public class AddressInvoker {
             this.closeChannel(addr, channel);
             throw e;
         } catch (RemotingTimeoutException e) {
-            // avoid close the success channel if left timeout is small,
-            // since it may cost too much time in get the success channel, the left timeout for read is small
-            boolean shouldClose = leftTime > MIN_CLOSE_TIMEOUT_MILLIS || leftTime > timeout / 4;
-            if (shouldClose && config.isCloseChannelWhenTimeout()) {
-                this.closeChannel(addr, channel);
-                log.warn("invokeSync: close socket because of timeout, {}ms, {}", timeout, remoteAddr);
-            }
-
-            log.warn("invokeSync: wait response timeout exception, the channel[{}]", remoteAddr);
+            invokeSyncTimeout(addr, channel, leftTime, timeout);
             throw e;
         }
     }
 
-    public void invokeAsync(String addr, RpcCommand request, long timeout, RpcCallback rpcCallback) throws Exception {
+    public void invokeAsync(String addr, RpcCommand request, long timeout, RpcCallback rpcCallback) {
         long startTime = System.currentTimeMillis();
         ChannelFuture future = getOrCreateChannelAsync(addr);
         if (future == null) {
@@ -396,6 +385,18 @@ public class AddressInvoker {
                     }
                 });
         });
+    }
+
+    private void invokeSyncTimeout(String addr, Channel channel, long leftTime, long timeout) throws Exception {
+        // avoid close the success channel if left timeout is small,
+        // since it may cost too much time in get the success channel, the left timeout for read is small
+        boolean shouldClose = leftTime > MIN_CLOSE_TIMEOUT_MILLIS || leftTime > timeout / 4;
+        if (shouldClose && config.isCloseChannelWhenTimeout()) {
+            this.closeChannel(addr, channel);
+            log.warn("invokeSync: close socket because of timeout, {}ms, {}", timeout, addr);
+        }
+
+        log.warn("invokeSync: wait response timeout exception, the channel[{}]", addr);
     }
 
     private CompletableFuture<ResponseFuture> invokeWithRetry(Channel channel, RpcCommand request, long timeout) {
