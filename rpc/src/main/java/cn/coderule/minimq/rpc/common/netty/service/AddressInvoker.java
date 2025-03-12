@@ -17,6 +17,7 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
@@ -162,6 +163,31 @@ public class AddressInvoker {
         return future;
     }
 
+    public void invokeOneway(String addr, RpcCommand request, long timeout) throws Exception {
+        ChannelFuture channelFuture = getOrCreateChannelAsync(addr);
+        if (channelFuture == null) {
+            throw new RemotingConnectException(addr);
+        }
+
+        channelFuture.addListener(future -> {
+            if (!future.isSuccess()) {
+                return;
+            }
+
+            Channel channel = channelFuture.channel();
+            String remoteAddr = NettyHelper.getRemoteAddr(channel);
+            if (remoteAddr == null || !channel.isActive()) {
+                this.closeChannel(addr, channel);
+                return;
+            }
+
+            RpcContext ctx = new RpcContext(remoteAddr);
+            dispatcher.invokePreHooks(ctx, request);
+
+            channelInvoker.invokeOneway(channel, request, timeout);
+        });
+    }
+
     public Bootstrap getBootstrap(String addr) {
         return bootstrap;
     }
@@ -207,41 +233,6 @@ public class AddressInvoker {
             log.warn("Get and create channel of {} failed", addr, e);
             return false;
         }
-    }
-
-    private boolean needRemove(ChannelWrapper prevWrapper, Channel channel) {
-        boolean shouldRemove = true;
-        if (null == prevWrapper) {
-            shouldRemove = false;
-        } else if (prevWrapper.getChannel() != channel) {
-            shouldRemove = false;
-        }
-
-        return shouldRemove;
-    }
-
-    private void closeChannelWithLock(String addr, Channel channel) {
-        try {
-            ChannelWrapper prevWrapper = this.addressMap.get(addr);
-            boolean shouldRemove = needRemove(prevWrapper, channel);
-
-            if (shouldRemove) {
-                ChannelWrapper wrapper = this.channelMap.remove(channel);
-                if (null != wrapper && wrapper.tryClose(channel)) {
-                    this.addressMap.remove(addr);
-                }
-                log.info("closeChannel: the channel[{}] was removed from channel table", addr);
-            }
-            NettyHelper.close(channel);
-        } catch (Exception e) {
-            log.error("closeChannel exception", e);
-        } finally {
-            lock.unlock();
-        }
-    }
-
-    private void closeChannelWithLock(Channel channel) {
-
     }
 
     public void closeChannel(String addr, Channel channel) {
@@ -312,6 +303,70 @@ public class AddressInvoker {
         return null;
     }
 
+    private boolean needRemove(ChannelWrapper prevWrapper, Channel channel) {
+        boolean shouldRemove = true;
+        if (null == prevWrapper) {
+            shouldRemove = false;
+        } else if (prevWrapper.getChannel() != channel) {
+            shouldRemove = false;
+        }
+
+        return shouldRemove;
+    }
+
+    private void closeChannelWithLock(String addr, Channel channel) {
+        try {
+            ChannelWrapper prevWrapper = this.addressMap.get(addr);
+            boolean shouldRemove = needRemove(prevWrapper, channel);
+
+            if (shouldRemove) {
+                ChannelWrapper wrapper = this.channelMap.remove(channel);
+                if (null != wrapper && wrapper.tryClose(channel)) {
+                    this.addressMap.remove(addr);
+                }
+                log.info("closeChannel: the channel[{}] was removed from channel table", addr);
+            }
+            NettyHelper.close(channel);
+        } catch (Exception e) {
+            log.error("closeChannel exception", e);
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    private void closeChannelWithLock(Channel channel) {
+        try {
+            ChannelWrapper prevWrapper = null;
+            String remoteAddr = null;
+
+            for (Map.Entry<String, ChannelWrapper> entry : this.addressMap.entrySet()) {
+                ChannelWrapper value = entry.getValue();
+                if (value.getChannel() == null || value.getChannel() != channel) {
+                    continue;
+                }
+
+                prevWrapper = value;
+                remoteAddr = entry.getKey();
+                break;
+            }
+
+            if (null == prevWrapper) {
+                return;
+            }
+
+            ChannelWrapper wrapper = this.channelMap.remove(channel);
+            if (null != wrapper && wrapper.tryClose(channel)) {
+                this.addressMap.remove(remoteAddr);
+                log.info("closeChannel: the channel[{}] was removed", remoteAddr);
+            }
+            NettyHelper.close(channel);
+        } catch (Exception e) {
+            log.error("closeChannel exception", e);
+        } finally {
+            lock.unlock();
+        }
+    }
+
     private void addInvokeAsyncListener(String addr, RpcCommand request, long timeout, ChannelFuture channelFuture, CompletableFuture<RpcCommand> future) {
         channelFuture.addListener(f -> {
             if (!f.isSuccess()) {
@@ -340,32 +395,6 @@ public class AddressInvoker {
                         future.completeExceptionally(t);
                     }
                 });
-        });
-    }
-
-
-    public void invokeOneway(String addr, RpcCommand request, long timeout) throws Exception {
-        ChannelFuture channelFuture = getOrCreateChannelAsync(addr);
-        if (channelFuture == null) {
-            throw new RemotingConnectException(addr);
-        }
-
-        channelFuture.addListener(future -> {
-            if (!future.isSuccess()) {
-                return;
-            }
-
-            Channel channel = channelFuture.channel();
-            String remoteAddr = NettyHelper.getRemoteAddr(channel);
-            if (remoteAddr == null || !channel.isActive()) {
-                this.closeChannel(addr, channel);
-                return;
-            }
-
-            RpcContext ctx = new RpcContext(remoteAddr);
-            dispatcher.invokePreHooks(ctx, request);
-
-            channelInvoker.invokeOneway(channel, request, timeout);
         });
     }
 
