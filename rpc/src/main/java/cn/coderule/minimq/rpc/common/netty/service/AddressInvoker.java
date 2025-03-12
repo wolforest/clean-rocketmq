@@ -29,6 +29,11 @@ import java.util.concurrent.locks.ReentrantLock;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * address invoker
+ * - connection management base on address
+ * - invoke and retry policy
+ */
 @Slf4j
 public class AddressInvoker {
     private static final long LOCK_TIMEOUT_MILLIS = 3000;

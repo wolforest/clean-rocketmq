@@ -118,30 +118,30 @@ public class NettyDispatcher {
 
     }
 
-    private void processRequest(RpcContext ctx, RpcCommand command) {
+    private void processRequest(RpcContext ctx, RpcCommand request) {
         if (stopping.get()) {
-            rejectByServer(ctx, command);
+            rejectByServer(ctx, request);
             return;
         }
 
-        Pair<RpcProcessor, ExecutorService> processor = processorMap.get(command.getCode());
+        Pair<RpcProcessor, ExecutorService> processor = processorMap.get(request.getCode());
         if (processor == null) {
-            illegalRequestCode(ctx, command);
+            illegalRequestCode(ctx, request);
             return;
         }
 
         if (processor.getLeft().reject()) {
-            rejectByBusiness(ctx, command);
+            rejectByBusiness(ctx, request);
             return;
         }
 
         try {
-            RequestTask task = createRequestTask(ctx, command, processor.getLeft());
+            RequestTask task = createRequestTask(ctx, request, processor.getLeft());
             processor.getRight().submit(task);
         } catch (RejectedExecutionException e) {
-            flowControl(ctx, command);
+            flowControl(ctx, request);
         } catch (Throwable t) {
-            requestFailed(ctx, command, t);
+            requestFailed(ctx, request, t);
         }
     }
 
