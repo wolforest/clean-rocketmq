@@ -1,4 +1,4 @@
-package cn.coderule.minimq.domain.model.dto;
+package cn.coderule.minimq.domain.dto;
 
 import cn.coderule.minimq.domain.enums.EnqueueStatus;
 import java.io.Serializable;

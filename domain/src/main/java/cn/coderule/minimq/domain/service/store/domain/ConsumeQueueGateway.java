@@ -1,7 +1,7 @@
 package cn.coderule.minimq.domain.service.store.domain;
 
-import cn.coderule.minimq.domain.model.bo.CommitLogEvent;
-import cn.coderule.minimq.domain.model.bo.QueueUnit;
+import cn.coderule.minimq.domain.model.CommitLogEvent;
+import cn.coderule.minimq.domain.model.QueueUnit;
 import java.util.List;
 
 public interface ConsumeQueueGateway {

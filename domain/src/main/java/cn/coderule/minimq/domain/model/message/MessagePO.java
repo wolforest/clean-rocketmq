@@ -1,4 +1,4 @@
-package cn.coderule.minimq.domain.model.po;
+package cn.coderule.minimq.domain.model.message;
 
 import java.io.Serializable;
 import java.net.SocketAddress;

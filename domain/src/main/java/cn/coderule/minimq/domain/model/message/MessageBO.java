@@ -1,4 +1,4 @@
-package cn.coderule.minimq.domain.model.bo;
+package cn.coderule.minimq.domain.model.message;
 
 import cn.coderule.common.util.lang.StringUtil;
 import cn.coderule.common.util.lang.collection.MapUtil;

@@ -1,4 +1,4 @@
-package cn.coderule.minimq.domain.model.dto;
+package cn.coderule.minimq.domain.dto;
 
 import java.io.Serializable;
 

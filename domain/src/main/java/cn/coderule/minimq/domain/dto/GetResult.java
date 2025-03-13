@@ -1,7 +1,7 @@
-package cn.coderule.minimq.domain.model.dto;
+package cn.coderule.minimq.domain.dto;
 
 import cn.coderule.minimq.domain.enums.MessageStatus;
-import cn.coderule.minimq.domain.model.bo.MessageBO;
+import cn.coderule.minimq.domain.model.message.MessageBO;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;

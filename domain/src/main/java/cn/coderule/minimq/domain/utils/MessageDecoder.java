@@ -2,7 +2,7 @@ package cn.coderule.minimq.domain.utils;
 
 import cn.coderule.common.util.encrypt.HashUtil;
 import cn.coderule.minimq.domain.enums.MessageVersion;
-import cn.coderule.minimq.domain.model.bo.MessageBO;
+import cn.coderule.minimq.domain.model.message.MessageBO;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;

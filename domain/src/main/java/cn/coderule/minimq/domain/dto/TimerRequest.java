@@ -14,9 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.coderule.minimq.domain.model.dto;
+package cn.coderule.minimq.domain.dto;
 
-import cn.coderule.minimq.domain.model.bo.MessageBO;
+import cn.coderule.minimq.domain.model.message.MessageBO;
 import java.io.Serializable;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
