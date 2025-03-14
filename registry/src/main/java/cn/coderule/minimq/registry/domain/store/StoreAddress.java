@@ -3,6 +3,10 @@ package cn.coderule.minimq.registry.domain.store;
 import java.io.Serializable;
 import lombok.Data;
 
+/**
+ * replaced by StoreInfo
+ */
+@Deprecated
 @Data
 public class StoreAddress implements Serializable {
     private final String clusterName;

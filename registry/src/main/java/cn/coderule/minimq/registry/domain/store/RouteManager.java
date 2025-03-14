@@ -8,6 +8,7 @@ import cn.coderule.minimq.rpc.registry.protocol.cluster.ClusterInfo;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.GroupInfo;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.StoreInfo;
 import cn.coderule.minimq.rpc.registry.protocol.route.RouteInfo;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
 import lombok.extern.slf4j.Slf4j;
@@ -17,9 +18,16 @@ public class RouteManager {
     private final RegistryConfig config;
     private final RpcClient rpcClient;
 
+    // topicMap: topicName -> groupName -> Topic
     private ConcurrentMap<String, Map<String, Topic>> topicMap;
+    // groupMap: groupName -> GroupInfo
     private ConcurrentMap<String, GroupInfo> groupMap;
+    // clusterMap: clusterName -> ClusterInfo
     private ConcurrentMap<String, ClusterInfo> clusterMap;
+
+    private ConcurrentMap<StoreInfo, StoreHealthInfo> healthMap;
+    private ConcurrentMap<StoreInfo, List<String>> filterMap;
+    // private ConcurrentMap<String, Map<String, TopicQueueMappingInfo>> topicQueueMap;
 
     public RouteManager(RegistryConfig config, RpcClient rpcClient) {
         this.config = config;
