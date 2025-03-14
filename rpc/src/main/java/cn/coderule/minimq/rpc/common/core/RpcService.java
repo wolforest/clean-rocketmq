@@ -14,4 +14,5 @@ public interface RpcService {
 
     void registerProcessor(Collection<Integer> codes, RpcProcessor processor, ExecutorService executor);
     void registerProcessor(int requestCode, RpcProcessor processor, ExecutorService executor);
+    void registerDefaultProcessor(RpcProcessor processor, ExecutorService executor);
 }

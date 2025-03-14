@@ -39,7 +39,9 @@ public class NettyDispatcher {
      */
     private final HashMap<Integer, Pair<RpcProcessor, ExecutorService>> processorMap = new HashMap<>(64);
     private final List<RpcHook> rpcHooks = new ArrayList<>();
-    protected AtomicBoolean stopping = new AtomicBoolean(false);
+    private final AtomicBoolean stopping = new AtomicBoolean(false);
+
+    private Pair<RpcProcessor, ExecutorService> defaultProcessor;
 
     public NettyDispatcher() {
     }
@@ -84,6 +86,10 @@ public class NettyDispatcher {
     public void registerProcessor(int requestCode, @NonNull RpcProcessor processor, @NonNull ExecutorService executor) {
         Pair<RpcProcessor, ExecutorService> pair = Pair.of(processor, executor);
         processorMap.put(requestCode, pair);
+    }
+
+    public void registerDefaultProcessor(RpcProcessor processor, ExecutorService executor) {
+        this.defaultProcessor = Pair.of(processor, executor);
     }
 
     public void registerRpcHook(RpcHook rpcHook) {

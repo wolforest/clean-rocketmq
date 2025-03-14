@@ -40,6 +40,11 @@ public abstract class NettyService implements RpcService {
     }
 
     @Override
+    public void registerDefaultProcessor(RpcProcessor processor, ExecutorService executor) {
+        dispatcher.registerDefaultProcessor(processor, executor);
+    }
+
+    @Override
     public void registerProcessor(int requestCode, RpcProcessor processor, ExecutorService executor) {
         ExecutorService executorService = executor == null ? this.getCallbackExecutor() : executor;
         dispatcher.registerProcessor(requestCode, processor, executorService);
