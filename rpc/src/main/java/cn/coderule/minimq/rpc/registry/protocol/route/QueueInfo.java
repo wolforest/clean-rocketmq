@@ -23,6 +23,10 @@ package cn.coderule.minimq.rpc.registry.protocol.route;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * replaced by Topic
+ */
+@Deprecated
 @Setter @Getter
 public class QueueInfo implements Comparable<QueueInfo> {
     private String brokerName;

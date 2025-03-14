@@ -10,7 +10,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class ClusterInfo extends RpcSerializable {
     private String clusterName;
-    private Map<String/* storeName */, GroupInfo> brokerAddrTable;
-    private Map<String/* clusterName */, Set<String/* storeName */>> clusterAddrTable;
+    private Map<String/* groupName */, GroupInfo> groupMap;
+    private Map<String/* clusterName */, Set<String/* storeName */>> serverMap;
 
 }
