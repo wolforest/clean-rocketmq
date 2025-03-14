@@ -131,6 +131,10 @@ public class NettyDispatcher {
         }
 
         Pair<RpcProcessor, ExecutorService> processor = processorMap.get(request.getCode());
+        if (processor == null && defaultProcessor != null) {
+            processor = defaultProcessor;
+        }
+
         if (processor == null) {
             illegalRequestCode(ctx, request);
             return;
