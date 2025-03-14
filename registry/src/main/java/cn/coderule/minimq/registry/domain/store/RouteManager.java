@@ -37,7 +37,7 @@ public class RouteManager {
         this.rpcClient = rpcClient;
     }
 
-    public StoreRegisterResult registerStore(StoreInfo storeInfo, RouteInfo routeInfo) {
+    public StoreRegisterResult registerStore(StoreInfo storeInfo, RouteInfo routeInfo, List<String> filterList) {
         return null;
     }
 }
