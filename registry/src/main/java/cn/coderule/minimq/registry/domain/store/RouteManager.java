@@ -7,6 +7,7 @@ import cn.coderule.minimq.rpc.registry.protocol.body.StoreRegisterResult;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.ClusterInfo;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.GroupInfo;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.StoreInfo;
+import cn.coderule.minimq.rpc.registry.protocol.route.QueueMap;
 import cn.coderule.minimq.rpc.registry.protocol.route.RouteInfo;
 import java.util.List;
 import java.util.Map;
@@ -24,10 +25,12 @@ public class RouteManager {
     private ConcurrentMap<String, GroupInfo> groupMap;
     // clusterMap: clusterName -> ClusterInfo
     private ConcurrentMap<String, ClusterInfo> clusterMap;
-
+    // healthMap: storeInfo -> StoreHealthInfo
     private ConcurrentMap<StoreInfo, StoreHealthInfo> healthMap;
+    // filterMap: storeInfo -> filterServerList
     private ConcurrentMap<StoreInfo, List<String>> filterMap;
-    // private ConcurrentMap<String, Map<String, TopicQueueMappingInfo>> topicQueueMap;
+    // topicQueue: topicName -> groupName -> QueueMap
+    private ConcurrentMap<String, Map<String, QueueMap>> topicQueueMap;
 
     public RouteManager(RegistryConfig config, RpcClient rpcClient) {
         this.config = config;
