@@ -1,4 +1,4 @@
-package cn.coderule.minimq.registry.domain.store;
+package cn.coderule.minimq.registry.domain.store.model;
 
 import java.io.Serializable;
 import lombok.Data;

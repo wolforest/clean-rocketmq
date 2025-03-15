@@ -1,4 +1,4 @@
-package cn.coderule.minimq.registry.domain.store;
+package cn.coderule.minimq.registry.domain.store.model;
 
 import cn.coderule.minimq.domain.model.Topic;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.ClusterInfo;
