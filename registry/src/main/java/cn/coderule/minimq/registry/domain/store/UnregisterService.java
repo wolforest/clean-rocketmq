@@ -5,9 +5,9 @@ import cn.coderule.minimq.domain.config.RegistryConfig;
 
 public class UnregisterService extends ServiceThread {
     private final RegistryConfig config;
-    private final StoreManager manager;
+    private final StoreRegistry manager;
 
-    public UnregisterService(RegistryConfig config, StoreManager manager) {
+    public UnregisterService(RegistryConfig config, StoreRegistry manager) {
         this.config = config;
         this.manager = manager;
     }

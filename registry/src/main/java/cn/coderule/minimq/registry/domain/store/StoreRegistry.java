@@ -10,19 +10,27 @@ import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class StoreManager {
+public class StoreRegistry {
     private final RegistryConfig config;
     private final Route route;
 
     private final RpcClient rpcClient;
     private final UnregisterService unregisterService;
 
-    public StoreManager(RegistryConfig config, RpcClient rpcClient, Route route) {
+    public StoreRegistry(RegistryConfig config, RpcClient rpcClient, Route route) {
         this.route = route;
         this.config = config;
 
         this.rpcClient = rpcClient;
         this.unregisterService = new UnregisterService(config, this);
+    }
+
+    public void start() {
+        unregisterService.start();
+    }
+
+    public void shutdown() {
+        unregisterService.shutdown();
     }
 
     public StoreRegisterResult registerStore(StoreInfo storeInfo, RouteInfo routeInfo, List<String> filterList) {
