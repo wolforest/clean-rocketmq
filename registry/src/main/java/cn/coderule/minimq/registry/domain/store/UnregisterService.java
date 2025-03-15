@@ -11,15 +11,12 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class UnregisterService extends ServiceThread {
-    private final RegistryConfig config;
     private final StoreRegistry registry;
 
     private final BlockingQueue<UnRegisterBrokerRequestHeader> queue;
 
     public UnregisterService(RegistryConfig config, StoreRegistry registry) {
-        this.config = config;
         this.registry = registry;
-
         queue = new LinkedBlockingQueue<>(config.getUnregisterQueueCapacity());
     }
 
