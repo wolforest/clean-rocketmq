@@ -110,6 +110,21 @@ public class StoreRegistry {
         return false;
     }
 
+    private boolean hasRegistered(StoreInfo store, GroupInfo group, TopicConfigSerializeWrapper topicInfo) {
+        if (group.getBrokerAddrs().containsKey(store.getGroupNo())) {
+            return false;
+        }
+
+        if (topicInfo.getTopicConfigTable().size() != 1) {
+            return false;
+        }
+
+        log.warn("Can't register topicConfigWrapper={} because broker[{}]={} has not registered.",
+            topicInfo.getTopicConfigTable(), store.getGroupNo(), store.getAddress());
+
+        return true;
+    }
+
     public StoreRegisterResult register(StoreInfo store, TopicConfigSerializeWrapper topicInfo, List<String> filterList, Channel channel) {
         StoreRegisterResult result = new StoreRegisterResult();
         try {
@@ -121,6 +136,10 @@ public class StoreRegistry {
 
             if (!checkHealthInfo(store, group, topicInfo)) {
                 return result;
+            }
+
+            if (hasRegistered(store, group, topicInfo)) {
+                return null;
             }
 
 
