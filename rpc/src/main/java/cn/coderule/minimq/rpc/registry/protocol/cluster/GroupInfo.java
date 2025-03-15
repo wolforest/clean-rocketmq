@@ -3,6 +3,7 @@ package cn.coderule.minimq.rpc.registry.protocol.cluster;
 import cn.coderule.minimq.domain.constant.MQConstants;
 import cn.coderule.minimq.rpc.common.protocol.codec.RpcSerializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
@@ -80,6 +81,18 @@ public class GroupInfo extends RpcSerializable implements Comparable<GroupInfo> 
         }
 
         return masterAddress;
+    }
+
+    public Long getMinNo() {
+        if (brokerAddrs.isEmpty()) {
+            return null;
+        }
+
+        return Collections.min(brokerAddrs.keySet());
+    }
+
+    public String putAddress(long brokerId, String brokerAddress) {
+        return brokerAddrs.put(brokerId, brokerAddress);
     }
 
     @Override

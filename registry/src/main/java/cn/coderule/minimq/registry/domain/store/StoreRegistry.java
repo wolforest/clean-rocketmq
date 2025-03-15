@@ -1,20 +1,26 @@
 package cn.coderule.minimq.registry.domain.store;
 
+import cn.coderule.common.util.lang.StringUtil;
 import cn.coderule.minimq.domain.config.RegistryConfig;
+import cn.coderule.minimq.domain.constant.MQConstants;
+import cn.coderule.minimq.domain.model.Topic;
 import cn.coderule.minimq.registry.domain.store.model.Route;
 import cn.coderule.minimq.registry.domain.store.model.StoreHealthInfo;
 import cn.coderule.minimq.rpc.common.RpcClient;
 import cn.coderule.minimq.rpc.registry.protocol.body.StoreRegisterResult;
+import cn.coderule.minimq.rpc.registry.protocol.body.TopicConfigAndMappingSerializeWrapper;
 import cn.coderule.minimq.rpc.registry.protocol.body.TopicConfigSerializeWrapper;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.GroupInfo;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.StoreInfo;
 import cn.coderule.minimq.rpc.registry.protocol.header.UnRegisterBrokerRequestHeader;
 import cn.coderule.minimq.rpc.registry.protocol.route.RouteInfo;
+import cn.coderule.minimq.rpc.registry.protocol.statictopic.TopicQueueMappingInfo;
 import java.nio.channels.Channel;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentMap;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -125,6 +131,74 @@ public class StoreRegistry {
         return true;
     }
 
+    private boolean isPrimarySlave(StoreInfo store, GroupInfo group) {
+        boolean isMaster = MQConstants.MASTER_ID == store.getGroupNo();
+        return  !isMaster
+            && null == store.getEnableActingMaster()
+            && store.getGroupNo() == group.getMinNo();
+    }
+
+    private Map<String, TopicQueueMappingInfo> getQueueMap(TopicConfigSerializeWrapper topicInfo) {
+        TopicConfigAndMappingSerializeWrapper topicWrapper = TopicConfigAndMappingSerializeWrapper.from(topicInfo);
+        return topicWrapper.getTopicQueueMappingInfoMap();
+    }
+
+    private void deleteNotExistTopic(StoreInfo store, TopicConfigSerializeWrapper topicInfo) {
+
+    }
+
+    private void saveTopicInfo(StoreInfo store, GroupInfo group, TopicConfigSerializeWrapper topicInfo, boolean isPrimarySlave) {
+
+
+    }
+
+    private void saveQueueMap(StoreInfo store, TopicConfigSerializeWrapper topicInfo, boolean isFirst, Map<String, TopicQueueMappingInfo> queueMap) {
+
+    }
+
+    private void registerTopicInfo(StoreInfo store, GroupInfo group, TopicConfigSerializeWrapper topicInfo, boolean isFirst) {
+        if (null == topicInfo) {
+            return;
+        }
+
+        boolean isMaster = MQConstants.MASTER_ID == store.getGroupNo();
+        boolean isPrimarySlave = isPrimarySlave(store, group);
+        if (!isMaster && !isPrimarySlave) {
+            return;
+        }
+
+        ConcurrentMap<String, Topic> topicTable = topicInfo.getTopicConfigTable();
+        if (topicTable == null) {
+            return;
+        }
+
+        Map<String, TopicQueueMappingInfo> queueMap = getQueueMap(topicInfo);
+        if (config.isDeleteTopicWhileRegistration() && queueMap.isEmpty()) {
+            deleteNotExistTopic(store, topicInfo);
+        }
+
+        saveTopicInfo(store, group, topicInfo, isFirst);
+        saveQueueMap(store, topicInfo, isFirst, queueMap);
+    }
+
+    public void saveHealthInfo(StoreInfo store, TopicConfigSerializeWrapper topicInfo, Channel channel) {
+
+    }
+
+    private void saveFilterList(StoreInfo store, List<String> filterList) {
+
+    }
+
+    private void setHaAndMasterInfo(StoreInfo store, GroupInfo group, StoreRegisterResult result) {
+
+    }
+
+    private void notifyMinIdChanged(boolean isMinIdChanged) {
+        if (!isMinIdChanged || !config.isNotifyMinIdChanged()) {
+            return;
+        }
+    }
+
     public StoreRegisterResult register(StoreInfo store, TopicConfigSerializeWrapper topicInfo, List<String> filterList, Channel channel) {
         StoreRegisterResult result = new StoreRegisterResult();
         try {
@@ -142,8 +216,14 @@ public class StoreRegistry {
                 return null;
             }
 
+            String preAddr = group.putAddress(store.getGroupNo(), store.getAddress());
+            boolean isFirst = StringUtil.isEmpty(preAddr);
 
-
+            registerTopicInfo(store, group, topicInfo, isFirst);
+            saveHealthInfo(store, topicInfo, channel);
+            saveFilterList(store, filterList);
+            setHaAndMasterInfo(store, group, result);
+            notifyMinIdChanged(isMinIdChanged);
         } catch (Exception e) {
             log.error("register store error", e);
         } finally {
