@@ -5,6 +5,7 @@ import cn.coderule.minimq.registry.domain.store.model.Route;
 import cn.coderule.minimq.rpc.common.RpcClient;
 import cn.coderule.minimq.rpc.registry.protocol.body.StoreRegisterResult;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.StoreInfo;
+import cn.coderule.minimq.rpc.registry.protocol.header.UnRegisterBrokerRequestHeader;
 import cn.coderule.minimq.rpc.registry.protocol.route.RouteInfo;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
@@ -33,7 +34,11 @@ public class StoreRegistry {
         unregisterService.shutdown();
     }
 
-    public StoreRegisterResult registerStore(StoreInfo storeInfo, RouteInfo routeInfo, List<String> filterList) {
+    public StoreRegisterResult register(StoreInfo storeInfo, RouteInfo routeInfo, List<String> filterList) {
         return null;
+    }
+
+    public boolean unregisterAsync(UnRegisterBrokerRequestHeader request) {
+        unregisterService.submit(request);
     }
 }
