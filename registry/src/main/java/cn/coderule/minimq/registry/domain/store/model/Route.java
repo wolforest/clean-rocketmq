@@ -12,10 +12,14 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 import lombok.Data;
 
 @Data
 public class Route implements Serializable {
+    private final ReadWriteLock lock = new ReentrantReadWriteLock();
+
     // topicMap: topicName -> groupName -> Topic
     private final ConcurrentMap<String, Map<String, Topic>> topicMap;
     // groupMap: groupName -> GroupInfo
@@ -36,6 +40,22 @@ public class Route implements Serializable {
         this.healthMap = new ConcurrentHashMap<>(256);
         this.filterMap = new ConcurrentHashMap<>(256);
         this.topicQueueMap = new ConcurrentHashMap<>(1024);
+    }
+
+    public void lockWrite() throws InterruptedException {
+        this.lock.writeLock().lockInterruptibly();
+    }
+
+    public void unlockWrite() {
+        this.lock.writeLock().unlock();
+    }
+
+    public void lockRead() throws InterruptedException {
+        this.lock.readLock().lockInterruptibly();
+    }
+
+    public void unlockRead() {
+        this.lock.readLock().unlock();
     }
 
     public void addGroupToCluster(String clusterName, String groupName) {
@@ -63,7 +83,7 @@ public class Route implements Serializable {
      * @param groupName groupName
      * @return groupInfo
      */
-    public GroupInfo getOrCreateGroup(String clusterName, String groupName) {
+    public GroupInfo getOrCreateGroup(String zoneName, String clusterName, String groupName, boolean enableActingMaster) {
         GroupInfo groupInfo = this.groupMap.get(groupName);
         if (groupInfo != null) {
             return groupInfo;
@@ -71,7 +91,7 @@ public class Route implements Serializable {
 
         addGroupToCluster(clusterName, groupName);
 
-        groupInfo = new GroupInfo(clusterName, groupName, new HashMap<>());
+        groupInfo = new GroupInfo(clusterName, groupName, new HashMap<>(), enableActingMaster, zoneName);
         GroupInfo oldInfo = this.groupMap.putIfAbsent(groupName, groupInfo);
 
         return oldInfo == null ? groupInfo : oldInfo;

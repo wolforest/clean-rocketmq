@@ -11,4 +11,5 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = true)
 public class StoreInfo extends ServerInfo {
     private String haAddress;
+    private Boolean enableActingMaster;
 }

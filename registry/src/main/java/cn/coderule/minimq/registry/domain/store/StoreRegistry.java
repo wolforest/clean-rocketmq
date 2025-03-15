@@ -4,6 +4,7 @@ import cn.coderule.minimq.domain.config.RegistryConfig;
 import cn.coderule.minimq.registry.domain.store.model.Route;
 import cn.coderule.minimq.rpc.common.RpcClient;
 import cn.coderule.minimq.rpc.registry.protocol.body.StoreRegisterResult;
+import cn.coderule.minimq.rpc.registry.protocol.cluster.GroupInfo;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.StoreInfo;
 import cn.coderule.minimq.rpc.registry.protocol.header.UnRegisterBrokerRequestHeader;
 import cn.coderule.minimq.rpc.registry.protocol.route.RouteInfo;
@@ -35,8 +36,20 @@ public class StoreRegistry {
         unregisterService.shutdown();
     }
 
-    public StoreRegisterResult register(StoreInfo storeInfo, RouteInfo routeInfo, List<String> filterList) {
-        return null;
+    public StoreRegisterResult register(StoreInfo store, RouteInfo routeInfo, List<String> filterList) {
+        StoreRegisterResult result = new StoreRegisterResult();
+        try {
+            route.lockWrite();
+            boolean enableActingMaster = store.getEnableActingMaster() != null && store.getEnableActingMaster();
+            GroupInfo group = route.getOrCreateGroup(store.getZoneName(), store.getClusterName(), store.getGroupName(), enableActingMaster);
+
+        } catch (Exception e) {
+            log.error("register store error", e);
+        } finally {
+            route.unlockWrite();
+        }
+
+        return result;
     }
 
     public void unregister(Set<UnRegisterBrokerRequestHeader> requests) {
