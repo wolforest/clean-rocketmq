@@ -13,6 +13,11 @@ public class StoreInfo extends ServerInfo {
     private String haAddress;
     private Boolean enableActingMaster;
 
+    public StoreInfo(String clusterName, String address) {
+        this.clusterName = clusterName;
+        this.address = address;
+    }
+
     public boolean isEnableActingMaster() {
         return enableActingMaster != null && enableActingMaster;
     }

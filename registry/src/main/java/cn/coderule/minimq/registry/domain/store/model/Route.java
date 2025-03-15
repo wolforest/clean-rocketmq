@@ -97,4 +97,15 @@ public class Route implements Serializable {
         return oldInfo == null ? groupInfo : oldInfo;
     }
 
+    public StoreHealthInfo getHealthInfo(StoreInfo storeInfo) {
+        return this.healthMap.get(storeInfo);
+    }
+
+    public StoreHealthInfo putHealthInfo(StoreInfo storeInfo, StoreHealthInfo healthInfo) {
+        return this.healthMap.put(storeInfo, healthInfo);
+    }
+
+    public void removeHealthInfo(StoreInfo storeInfo) {
+        this.healthMap.remove(storeInfo);
+    }
 }

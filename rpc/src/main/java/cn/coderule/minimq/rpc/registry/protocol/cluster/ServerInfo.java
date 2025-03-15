@@ -11,13 +11,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ServerInfo extends RpcSerializable {
-    private String clusterName;
-    private String groupName;
-    private long groupNo;
+    protected String clusterName;
+    protected String groupName;
+    protected long groupNo;
 
-    private String address;
-    private String zoneName;
+    protected String address;
+    protected String zoneName;
 
-    private long heartbeatInterval;
-    private long heartbeatTimeout;
+    protected long heartbeatInterval;
+    protected long heartbeatTimeout;
 }

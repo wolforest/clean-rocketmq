@@ -2,12 +2,15 @@ package cn.coderule.minimq.registry.domain.store;
 
 import cn.coderule.minimq.domain.config.RegistryConfig;
 import cn.coderule.minimq.registry.domain.store.model.Route;
+import cn.coderule.minimq.registry.domain.store.model.StoreHealthInfo;
 import cn.coderule.minimq.rpc.common.RpcClient;
 import cn.coderule.minimq.rpc.registry.protocol.body.StoreRegisterResult;
+import cn.coderule.minimq.rpc.registry.protocol.body.TopicConfigSerializeWrapper;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.GroupInfo;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.StoreInfo;
 import cn.coderule.minimq.rpc.registry.protocol.header.UnRegisterBrokerRequestHeader;
 import cn.coderule.minimq.rpc.registry.protocol.route.RouteInfo;
+import java.nio.channels.Channel;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -75,15 +78,39 @@ public class StoreRegistry {
         );
     }
 
-    private boolean checkHealthInfo(StoreInfo store, GroupInfo group, RouteInfo routeInfo) {
+    private boolean checkHealthInfo(StoreInfo store, GroupInfo group, TopicConfigSerializeWrapper topicInfo) {
         Map<Long, String> addrMap = group.getBrokerAddrs();
         String oldAddr = addrMap.get(store.getGroupNo());
+        if (null == oldAddr || oldAddr.equals(store.getAddress())) {
+            return true;
+        }
 
+        StoreInfo oldStore = new StoreInfo(store.getClusterName(), oldAddr);
+        StoreHealthInfo oldHealthInfo = route.getHealthInfo(oldStore);
+        if (oldHealthInfo == null) {
+            return true;
+        }
 
-        return true;
+        long oldVersion = oldHealthInfo.getDataVersion().getStateVersion();
+        long newVersion = topicInfo.getDataVersion().getStateVersion();
+        if (oldVersion <= newVersion) {
+            return true;
+        }
+
+        log.warn("Registering Broker conflicts with the existed one, just ignore.:"
+                + " Cluster:{}, BrokerName:{}, BrokerId:{}, Old BrokerAddr:{}, "
+                + "Old Version:{}, New BrokerAddr:{}, New Version:{}.",
+                store.getClusterName(), store.getGroupName(), store.getGroupNo(),
+                oldAddr, oldVersion, store.getAddress(), newVersion
+        );
+
+        //Remove the rejected brokerAddr from brokerLiveTable.
+        route.removeHealthInfo(store);
+
+        return false;
     }
 
-    public StoreRegisterResult register(StoreInfo store, RouteInfo routeInfo, List<String> filterList) {
+    public StoreRegisterResult register(StoreInfo store, TopicConfigSerializeWrapper topicInfo, List<String> filterList, Channel channel) {
         StoreRegisterResult result = new StoreRegisterResult();
         try {
             route.lockWrite();
@@ -92,7 +119,7 @@ public class StoreRegistry {
             boolean isMinIdChanged = checkMinIdChanged(store, group);
             removeExistAddress(store, group);
 
-            if (!checkHealthInfo(store, group, routeInfo)) {
+            if (!checkHealthInfo(store, group, topicInfo)) {
                 return result;
             }
 
