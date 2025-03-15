@@ -12,4 +12,8 @@ import lombok.NoArgsConstructor;
 public class StoreInfo extends ServerInfo {
     private String haAddress;
     private Boolean enableActingMaster;
+
+    public boolean isEnableActingMaster() {
+        return enableActingMaster != null && enableActingMaster;
+    }
 }
