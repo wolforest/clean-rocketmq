@@ -15,4 +15,6 @@ public class RegistryConfig implements Serializable {
 
     private int routeThreadNum = 8;
     private int processThreadNum = 16;
+
+    private int unregisterQueueCapacity = 3000;
 }

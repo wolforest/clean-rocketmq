@@ -8,6 +8,7 @@ import cn.coderule.minimq.rpc.registry.protocol.cluster.StoreInfo;
 import cn.coderule.minimq.rpc.registry.protocol.header.UnRegisterBrokerRequestHeader;
 import cn.coderule.minimq.rpc.registry.protocol.route.RouteInfo;
 import java.util.List;
+import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -38,7 +39,11 @@ public class StoreRegistry {
         return null;
     }
 
+    public void unregister(Set<UnRegisterBrokerRequestHeader> requests) {
+
+    }
+
     public boolean unregisterAsync(UnRegisterBrokerRequestHeader request) {
-        unregisterService.submit(request);
+        return unregisterService.submit(request);
     }
 }
