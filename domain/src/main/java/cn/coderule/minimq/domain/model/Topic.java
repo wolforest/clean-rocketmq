@@ -16,6 +16,7 @@
  */
 package cn.coderule.minimq.domain.model;
 
+import cn.coderule.minimq.domain.config.TopicConfig;
 import com.alibaba.fastjson2.annotation.JSONField;
 import cn.coderule.minimq.domain.enums.TagType;
 import cn.coderule.minimq.domain.enums.MessageType;
@@ -62,6 +63,17 @@ public class Topic implements Serializable {
      */
     @Builder.Default
     private Map<String, String> attributes = new HashMap<>();
+
+    public Topic(Topic other) {
+        this.topicName = other.topicName;
+        this.readQueueNums = other.readQueueNums;
+        this.writeQueueNums = other.writeQueueNums;
+        this.perm = other.perm;
+        this.tagType = other.tagType;
+        this.topicSysFlag = other.topicSysFlag;
+        this.order = other.order;
+        this.attributes = other.attributes;
+    }
 
     @JSONField(serialize = false, deserialize = false)
     public MessageType getTopicType() {

@@ -75,8 +75,9 @@ public class StoreRegistry {
         );
     }
 
-    private boolean checkHealthInfo(StoreInfo store, GroupInfo group) {
+    private boolean checkHealthInfo(StoreInfo store, GroupInfo group, RouteInfo routeInfo) {
         Map<Long, String> addrMap = group.getBrokerAddrs();
+        String oldAddr = addrMap.get(store.getGroupNo());
 
 
         return true;
@@ -91,7 +92,7 @@ public class StoreRegistry {
             boolean isMinIdChanged = checkMinIdChanged(store, group);
             removeExistAddress(store, group);
 
-            if (!checkHealthInfo(store, group)) {
+            if (!checkHealthInfo(store, group, routeInfo)) {
                 return result;
             }
 
