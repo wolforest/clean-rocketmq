@@ -115,6 +115,14 @@ public class Route implements Serializable {
         this.filterMap.remove(storeInfo);
     }
 
+    public Topic getTopic(String groupName,  String topicName) {
+        if (!this.topicMap.containsKey(topicName)) {
+            return null;
+        }
+
+        return this.topicMap.get(topicName).get(groupName);
+    }
+
     public void saveTopic(String groupName, Topic topic) {
         Map<String, Topic> map = this.topicMap.computeIfAbsent(topic.getTopicName(), k -> new HashMap<>());
         if (map.containsKey(groupName)) {
