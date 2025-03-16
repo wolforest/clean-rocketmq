@@ -146,11 +146,36 @@ public class StoreRegistry {
     }
 
     private void deleteNotExistTopic(StoreInfo store, TopicConfigSerializeWrapper topicInfo) {
+        if (!config.isDeleteTopicWhileRegistration()) {
+            return;
+        }
 
+        // Delete the topics that don't exist in tcTable from the current broker
+        // Static topic is not supported currently
+        // false in default setting
     }
 
-    private void saveTopicInfo(StoreInfo store, GroupInfo group, TopicConfigSerializeWrapper topicInfo, boolean isPrimarySlave) {
+    private void saveTopicInfo(StoreInfo store, GroupInfo group, TopicConfigSerializeWrapper topicInfo, boolean isFirst) {
+        if (null == topicInfo || null == topicInfo.getTopicConfigTable()) {
+            return;
+        }
 
+        boolean isMaster = MQConstants.MASTER_ID == store.getGroupNo();
+        boolean isPrimarySlave = isPrimarySlave(store, group);
+        if (!isMaster && !isPrimarySlave) {
+            return;
+        }
+
+        Map<String, TopicQueueMappingInfo> queueMap = getQueueMap(topicInfo);
+        if (queueMap.isEmpty()) {
+            deleteNotExistTopic(store, topicInfo);
+        }
+
+        saveQueueInfo(store, topicInfo, isPrimarySlave);
+        saveQueueMap(store, topicInfo, isFirst, queueMap);
+    }
+
+    private void saveQueueInfo(StoreInfo store, TopicConfigSerializeWrapper topicInfo, boolean isPrimarySlave) {
 
     }
 
