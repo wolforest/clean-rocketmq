@@ -6,6 +6,7 @@ import cn.coderule.minimq.domain.constant.MQConstants;
 import cn.coderule.minimq.domain.model.Topic;
 import cn.coderule.minimq.registry.domain.store.model.Route;
 import cn.coderule.minimq.registry.domain.store.model.StoreHealthInfo;
+import cn.coderule.minimq.registry.domain.store.model.StoreStatusInfo;
 import cn.coderule.minimq.rpc.common.RpcClient;
 import cn.coderule.minimq.rpc.registry.protocol.body.StoreRegisterResult;
 import cn.coderule.minimq.rpc.registry.protocol.body.TopicConfigAndMappingSerializeWrapper;
@@ -17,6 +18,8 @@ import cn.coderule.minimq.rpc.registry.protocol.route.RouteInfo;
 import cn.coderule.minimq.rpc.registry.protocol.statictopic.TopicQueueMappingInfo;
 import java.nio.channels.Channel;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -132,8 +135,7 @@ public class StoreRegistry {
     }
 
     private boolean isPrimarySlave(StoreInfo store, GroupInfo group) {
-        boolean isMaster = MQConstants.MASTER_ID == store.getGroupNo();
-        return  !isMaster
+        return  MQConstants.MASTER_ID != store.getGroupNo()
             && null == store.getEnableActingMaster()
             && store.getGroupNo() == group.getMinNo();
     }
@@ -193,8 +195,12 @@ public class StoreRegistry {
 
     }
 
-    private void notifyMinIdChanged(boolean isMinIdChanged) {
-        if (!isMinIdChanged || !config.isNotifyMinIdChanged()) {
+    private void notifyMinIdChanged(Map<String, StoreStatusInfo> notifyMap) {
+
+    }
+
+    private void notifyMinIdChanged() {
+        if (!config.isNotifyMinIdChanged()) {
             return;
         }
     }
@@ -223,7 +229,8 @@ public class StoreRegistry {
             saveHealthInfo(store, topicInfo, channel);
             saveFilterList(store, filterList);
             setHaAndMasterInfo(store, group, result);
-            notifyMinIdChanged(isMinIdChanged);
+
+            if (isMinIdChanged) notifyMinIdChanged();
         } catch (Exception e) {
             log.error("register store error", e);
         } finally {
@@ -233,8 +240,33 @@ public class StoreRegistry {
         return result;
     }
 
-    public void unregister(Set<UnRegisterBrokerRequestHeader> requests) {
+    private void cleanTopicWhileUnRegister(Set<String> removedBroker, Set<String> reducedBroker) {
 
+    }
+
+    public void unregister(UnRegisterBrokerRequestHeader request, Set<String> removedSet, Set<String> reducedSet, Map<String, StoreStatusInfo> notifyMap) {
+
+    }
+
+    public void unregister(Set<UnRegisterBrokerRequestHeader> requests) {
+        try {
+            route.lockWrite();
+
+            Set<String> removedSet = new HashSet<>();
+            Set<String> reducedSet = new HashSet<>();
+            Map<String, StoreStatusInfo> notifyMap = new HashMap<>();
+
+            for (UnRegisterBrokerRequestHeader request : requests) {
+                unregister(request, removedSet, reducedSet, notifyMap);
+            }
+
+            cleanTopicWhileUnRegister(removedSet, reducedSet);
+            notifyMinIdChanged(notifyMap);
+        } catch (Exception e) {
+            log.error("register store error", e);
+        } finally {
+            route.unlockWrite();
+        }
     }
 
     public boolean unregisterAsync(UnRegisterBrokerRequestHeader request) {
