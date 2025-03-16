@@ -15,8 +15,10 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 @Data
+@Slf4j
 public class Route implements Serializable {
     private final ReadWriteLock lock = new ReentrantReadWriteLock();
 
@@ -114,6 +116,12 @@ public class Route implements Serializable {
     }
 
     public void saveTopic(String groupName, Topic topic) {
+        Map<String, Topic> map = this.topicMap.computeIfAbsent(topic.getTopicName(), k -> new HashMap<>());
+        if (map.containsKey(groupName)) {
+            Topic oldTopic = map.get(groupName);
+            log.info("Topic changed, Old: {}; NEW: {}", oldTopic, topic);
+        }
 
+        map.put(groupName, topic);
     }
 }
