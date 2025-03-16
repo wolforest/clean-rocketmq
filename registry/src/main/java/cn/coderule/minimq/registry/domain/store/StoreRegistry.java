@@ -3,6 +3,7 @@ package cn.coderule.minimq.registry.domain.store;
 import cn.coderule.common.util.lang.StringUtil;
 import cn.coderule.minimq.domain.config.RegistryConfig;
 import cn.coderule.minimq.domain.constant.MQConstants;
+import cn.coderule.minimq.domain.constant.PermName;
 import cn.coderule.minimq.domain.model.Topic;
 import cn.coderule.minimq.registry.domain.store.model.Route;
 import cn.coderule.minimq.registry.domain.store.model.StoreHealthInfo;
@@ -171,11 +172,28 @@ public class StoreRegistry {
             deleteNotExistTopic(store, topicInfo);
         }
 
-        saveQueueInfo(store, topicInfo, isPrimarySlave);
+        saveQueueInfo(store, topicInfo, isFirst, isPrimarySlave);
         saveQueueMap(store, topicInfo, isFirst, queueMap);
     }
 
-    private void saveQueueInfo(StoreInfo store, TopicConfigSerializeWrapper topicInfo, boolean isPrimarySlave) {
+    private boolean isTopicChanged(StoreInfo store, TopicConfigSerializeWrapper topicInfo, String topicName) {
+
+        return false;
+    }
+
+    private void saveQueueInfo(StoreInfo store, TopicConfigSerializeWrapper topicInfo, boolean isFirst, boolean isPrimarySlave) {
+        for (Map.Entry<String, Topic> entry : topicInfo.getTopicConfigTable().entrySet()) {
+            if (!isFirst && !isTopicChanged(store, topicInfo, entry.getKey())) {
+                continue;
+            }
+
+            Topic topic = entry.getValue();
+            if (isPrimarySlave && store.isEnableActingMaster()) {
+                topic.setPerm(topic.getPerm() & (~PermName.PERM_WRITE));
+            }
+
+            route.saveTopic(store.getGroupName(), topic);
+        }
 
     }
 

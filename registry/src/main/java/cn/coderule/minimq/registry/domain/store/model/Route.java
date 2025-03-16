@@ -112,4 +112,8 @@ public class Route implements Serializable {
     public void removeFilter(StoreInfo storeInfo) {
         this.filterMap.remove(storeInfo);
     }
+
+    public void saveTopic(String groupName, Topic topic) {
+
+    }
 }
