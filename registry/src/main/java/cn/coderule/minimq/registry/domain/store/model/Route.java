@@ -105,7 +105,11 @@ public class Route implements Serializable {
         return this.healthMap.put(storeInfo, healthInfo);
     }
 
-    public void removeHealthInfo(StoreInfo storeInfo) {
-        this.healthMap.remove(storeInfo);
+    public StoreHealthInfo removeHealthInfo(StoreInfo storeInfo) {
+        return this.healthMap.remove(storeInfo);
+    }
+
+    public void removeFilter(StoreInfo storeInfo) {
+        this.filterMap.remove(storeInfo);
     }
 }

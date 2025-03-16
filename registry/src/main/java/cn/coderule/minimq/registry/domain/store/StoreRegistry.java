@@ -245,6 +245,15 @@ public class StoreRegistry {
     }
 
     public void unregister(UnRegisterBrokerRequestHeader request, Set<String> removedSet, Set<String> reducedSet, Map<String, StoreStatusInfo> notifyMap) {
+        StoreInfo store = new StoreInfo(request.getClusterName(), request.getBrokerAddr());
+
+        StoreHealthInfo healthInfo = route.removeHealthInfo(store);
+        log.info("unregisterBroker, remove from brokerLiveTable {}, {}",
+            healthInfo != null ? "OK" : "Failed",
+            request.getBrokerAddr()
+        );
+
+        route.removeFilter(store);
 
     }
 
