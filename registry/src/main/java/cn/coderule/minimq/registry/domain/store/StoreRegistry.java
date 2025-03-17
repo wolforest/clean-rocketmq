@@ -60,6 +60,68 @@ public class StoreRegistry {
         unregisterService.shutdown();
     }
 
+    public StoreRegisterResult register(StoreInfo store, TopicConfigSerializeWrapper topicInfo, List<String> filterList, Channel channel) {
+        StoreRegisterResult result = new StoreRegisterResult();
+        try {
+            route.lockWrite();
+
+            GroupInfo group = getOrCreateGroup(store);
+            boolean isMinIdChanged = checkMinIdChanged(store, group);
+            removeExistAddress(store, group);
+
+            if (!checkHealthInfo(store, group, topicInfo)) {
+                return result;
+            }
+
+            if (hasRegistered(store, group, topicInfo)) {
+                return null;
+            }
+
+            String preAddr = group.putAddress(store.getGroupNo(), store.getAddress());
+            boolean isFirst = StringUtil.isEmpty(preAddr);
+
+            registerTopicInfo(store, group, topicInfo, isFirst);
+            saveHealthInfo(store, topicInfo, channel);
+            saveFilterList(store, filterList);
+            setHaAndMasterInfo(store, result);
+
+            if (isMinIdChanged) {
+                notifyMinIdChanged(group, null, route.getHealthHaAddress(store));
+            }
+        } catch (Exception e) {
+            log.error("register store error", e);
+        } finally {
+            route.unlockWrite();
+        }
+
+        return result;
+    }
+
+    public void unregister(Set<UnRegisterBrokerRequestHeader> requests) {
+        try {
+            route.lockWrite();
+
+            Set<String> removedSet = new HashSet<>();
+            Set<String> reducedSet = new HashSet<>();
+            Map<String, StoreStatusInfo> notifyMap = new HashMap<>();
+
+            for (UnRegisterBrokerRequestHeader request : requests) {
+                unregister(request, removedSet, reducedSet, notifyMap);
+            }
+
+            cleanTopicWhileUnRegister(removedSet, reducedSet);
+            notifyMinIdChanged(notifyMap);
+        } catch (Exception e) {
+            log.error("register store error", e);
+        } finally {
+            route.unlockWrite();
+        }
+    }
+
+    public boolean unregisterAsync(UnRegisterBrokerRequestHeader request) {
+        return unregisterService.submit(request);
+    }
+
     private GroupInfo getOrCreateGroup(StoreInfo storeInfo) {
         return route.getOrCreateGroup(
             storeInfo.getZoneName(),
@@ -259,7 +321,7 @@ public class StoreRegistry {
         saveQueueMap(store, topicInfo, isFirst, queueMap);
     }
 
-    public void saveHealthInfo(StoreInfo store, TopicConfigSerializeWrapper topicInfo, Channel channel) {
+    private void saveHealthInfo(StoreInfo store, TopicConfigSerializeWrapper topicInfo, Channel channel) {
         long timeout = null != store.getHeartbeatTimeout()
             ? store.getHeartbeatTimeout()
             : DEFAULT_BROKER_CHANNEL_EXPIRED_TIME;
@@ -386,42 +448,6 @@ public class StoreRegistry {
         }
     }
 
-    public StoreRegisterResult register(StoreInfo store, TopicConfigSerializeWrapper topicInfo, List<String> filterList, Channel channel) {
-        StoreRegisterResult result = new StoreRegisterResult();
-        try {
-            route.lockWrite();
-
-            GroupInfo group = getOrCreateGroup(store);
-            boolean isMinIdChanged = checkMinIdChanged(store, group);
-            removeExistAddress(store, group);
-
-            if (!checkHealthInfo(store, group, topicInfo)) {
-                return result;
-            }
-
-            if (hasRegistered(store, group, topicInfo)) {
-                return null;
-            }
-
-            String preAddr = group.putAddress(store.getGroupNo(), store.getAddress());
-            boolean isFirst = StringUtil.isEmpty(preAddr);
-
-            registerTopicInfo(store, group, topicInfo, isFirst);
-            saveHealthInfo(store, topicInfo, channel);
-            saveFilterList(store, filterList);
-            setHaAndMasterInfo(store, result);
-
-            if (isMinIdChanged) {
-                notifyMinIdChanged(group, null, route.getHealthHaAddress(store));
-            }
-        } catch (Exception e) {
-            log.error("register store error", e);
-        } finally {
-            route.unlockWrite();
-        }
-
-        return result;
-    }
 
     private void cleanRemovedStore(Set<String> removedBroker, Map<String, Topic> topicMap, String topic) {
         for (final String tmpGroup : removedBroker) {
@@ -480,7 +506,7 @@ public class StoreRegistry {
         return groupInfo.getMinNo() > 0;
     }
 
-    public void removeGroupInfo(StoreInfo store, GroupInfo group, Map<String, StoreStatusInfo> notifyMap) {
+    private void removeGroupInfo(StoreInfo store, GroupInfo group, Map<String, StoreStatusInfo> notifyMap) {
         if (null == group) {
             return;
         }
@@ -511,7 +537,7 @@ public class StoreRegistry {
         notifyMap.put(store.getGroupName(), statusInfo);
     }
 
-    public void removeClusterInfo(StoreInfo store, GroupInfo group, Set<String> removedSet, Set<String> reducedSet) {
+    private void removeClusterInfo(StoreInfo store, GroupInfo group, Set<String> removedSet, Set<String> reducedSet) {
         if (null == group || group.isAddressEmpty()) {
             reducedSet.add(store.getGroupName());
             return;
@@ -521,7 +547,7 @@ public class StoreRegistry {
         removedSet.add(group.getBrokerName());
     }
 
-    public void unregister(UnRegisterBrokerRequestHeader request, Set<String> removedSet, Set<String> reducedSet, Map<String, StoreStatusInfo> notifyMap) {
+    private void unregister(UnRegisterBrokerRequestHeader request, Set<String> removedSet, Set<String> reducedSet, Map<String, StoreStatusInfo> notifyMap) {
         StoreInfo store = new StoreInfo(request.getClusterName(), request.getBrokerAddr());
         store.setGroupName(request.getBrokerName());
         store.setGroupNo(request.getBrokerId());
@@ -539,28 +565,5 @@ public class StoreRegistry {
         removeClusterInfo(store, group, removedSet, reducedSet);
     }
 
-    public void unregister(Set<UnRegisterBrokerRequestHeader> requests) {
-        try {
-            route.lockWrite();
 
-            Set<String> removedSet = new HashSet<>();
-            Set<String> reducedSet = new HashSet<>();
-            Map<String, StoreStatusInfo> notifyMap = new HashMap<>();
-
-            for (UnRegisterBrokerRequestHeader request : requests) {
-                unregister(request, removedSet, reducedSet, notifyMap);
-            }
-
-            cleanTopicWhileUnRegister(removedSet, reducedSet);
-            notifyMinIdChanged(notifyMap);
-        } catch (Exception e) {
-            log.error("register store error", e);
-        } finally {
-            route.unlockWrite();
-        }
-    }
-
-    public boolean unregisterAsync(UnRegisterBrokerRequestHeader request) {
-        return unregisterService.submit(request);
-    }
 }
