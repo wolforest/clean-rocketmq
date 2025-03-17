@@ -132,4 +132,14 @@ public class Route implements Serializable {
 
         map.put(groupName, topic);
     }
+
+    public Set<String> getTopicByGroup(String groupName) {
+        Set<String> topicSet = new HashSet<>();
+        for (Map.Entry<String, Map<String, Topic>> entry : this.topicMap.entrySet()) {
+            if (entry.getValue().containsKey(groupName)) {
+                topicSet.add(entry.getKey());
+            }
+        }
+        return topicSet;
+    }
 }

@@ -154,6 +154,7 @@ public class StoreRegistry {
         // Delete the topics that don't exist in tcTable from the current broker
         // Static topic is not supported currently
         // false in default setting
+
     }
 
     private void saveTopicInfo(StoreInfo store, GroupInfo group, TopicConfigSerializeWrapper topicInfo, boolean isFirst) {
