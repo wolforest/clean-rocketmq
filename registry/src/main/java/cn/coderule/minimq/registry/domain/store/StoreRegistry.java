@@ -135,6 +135,10 @@ public class StoreRegistry {
         return !route.containsTopic(store.getGroupName(), topicName);
     }
 
+    public DataVersion getStoreVersion(StoreInfo store) {
+        return route.getHealthVersion(store);
+    }
+
     private GroupInfo getOrCreateGroup(StoreInfo storeInfo) {
         return route.getOrCreateGroup(
             storeInfo.getZoneName(),
@@ -271,8 +275,6 @@ public class StoreRegistry {
         saveQueueInfo(store, topicInfo, isFirst, isPrimarySlave);
         saveQueueMap(store, topicInfo, isFirst, queueMap);
     }
-
-
 
     private void saveQueueInfo(StoreInfo store, TopicConfigSerializeWrapper topicInfo, boolean isFirst, boolean isPrimarySlave) {
         for (Map.Entry<String, Topic> entry : topicInfo.getTopicConfigTable().entrySet()) {
