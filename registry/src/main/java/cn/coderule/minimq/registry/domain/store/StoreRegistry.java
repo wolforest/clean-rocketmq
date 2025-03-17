@@ -406,8 +406,41 @@ public class StoreRegistry {
 
     }
 
+    public void removeGroupInfo(StoreInfo store, GroupInfo group, Map<String, StoreStatusInfo> notifyMap) {
+        if (null == group) {
+            return;
+        }
+        boolean isMinIdChanged = !group.getBrokerAddrs().isEmpty()
+            && store.getGroupNo() == group.getMinNo();
+
+        boolean removed = group.getBrokerAddrs().entrySet()
+            .removeIf(item -> item.getValue().equals(store.getAddress()));
+        log.info("unregisterBroker, remove addr from brokerAddrTable {}, {}",
+            removed ? "OK" : "Failed",
+            store
+        );
+
+        if (group.getBrokerAddrs().isEmpty()) {
+            route.removeGroup(group.getBrokerName());
+            log.info("unregisterBroker, remove group from brokerGroupTable {}", group.getBrokerName());
+            return;
+        }
+
+        if (!isMinIdChanged) {
+            return;
+        }
+
+        StoreStatusInfo statusInfo = StoreStatusInfo.builder()
+            .brokerAddrs(group.getBrokerAddrs())
+            .offlineBrokerAddr(store.getAddress())
+            .build();
+        notifyMap.put(group.getBrokerName(), statusInfo);
+    }
+
     public void unregister(UnRegisterBrokerRequestHeader request, Set<String> removedSet, Set<String> reducedSet, Map<String, StoreStatusInfo> notifyMap) {
         StoreInfo store = new StoreInfo(request.getClusterName(), request.getBrokerAddr());
+        store.setGroupName(request.getBrokerName());
+        store.setGroupNo(request.getBrokerId());
 
         StoreHealthInfo healthInfo = route.removeHealthInfo(store);
         log.info("unregisterBroker, remove from brokerLiveTable {}, {}",
@@ -416,6 +449,10 @@ public class StoreRegistry {
         );
 
         route.removeFilter(store);
+
+        GroupInfo group = route.getGroup(store.getGroupName());
+        removeGroupInfo(store, group, notifyMap);
+
 
     }
 

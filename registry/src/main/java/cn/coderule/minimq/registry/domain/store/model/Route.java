@@ -74,6 +74,9 @@ public class Route implements Serializable {
         return this.groupMap.get(groupName);
     }
 
+    public GroupInfo removeGroup(String groupName) {
+        return this.groupMap.remove(groupName);
+    }
     /**
      * get or create group
      * - get GroupInfo if exists
