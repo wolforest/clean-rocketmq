@@ -1,6 +1,7 @@
 package cn.coderule.minimq.registry.domain.store;
 
 import cn.coderule.common.util.lang.StringUtil;
+import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.common.util.lang.collection.MapUtil;
 import cn.coderule.minimq.domain.config.RegistryConfig;
 import cn.coderule.minimq.domain.constant.MQConstants;
@@ -122,6 +123,23 @@ public class StoreRegistry {
 
     public boolean unregisterAsync(UnRegisterBrokerRequestHeader request) {
         return unregisterService.submit(request);
+    }
+
+    public void registerTopic(String topicName, List<Topic> topicList) {
+        if (CollectionUtil.isEmpty(topicList)) {
+            return;
+        }
+
+        try {
+            route.lockWrite();
+            for (Topic topic : topicList) {
+                route.saveTopic(topicName, topic);
+            }
+        } catch (Exception e) {
+            log.error("register topic error", e);
+        } finally {
+            route.unlockWrite();
+        }
     }
 
     public boolean isGroupChanged(StoreInfo store, DataVersion version) {

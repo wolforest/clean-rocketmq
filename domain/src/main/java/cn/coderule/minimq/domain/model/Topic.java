@@ -16,7 +16,6 @@
  */
 package cn.coderule.minimq.domain.model;
 
-import cn.coderule.minimq.domain.config.TopicConfig;
 import com.alibaba.fastjson2.annotation.JSONField;
 import cn.coderule.minimq.domain.enums.TagType;
 import cn.coderule.minimq.domain.enums.MessageType;
