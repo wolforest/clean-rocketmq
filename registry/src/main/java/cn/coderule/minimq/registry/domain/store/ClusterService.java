@@ -1,39 +1,17 @@
 package cn.coderule.minimq.registry.domain.store;
 
-import cn.coderule.common.util.lang.StringUtil;
-import cn.coderule.common.util.lang.collection.MapUtil;
 import cn.coderule.minimq.domain.config.RegistryConfig;
-import cn.coderule.minimq.domain.constant.MQConstants;
 import cn.coderule.minimq.domain.constant.PermName;
 import cn.coderule.minimq.domain.model.Topic;
 import cn.coderule.minimq.registry.domain.store.model.Route;
 import cn.coderule.minimq.registry.domain.store.model.StoreHealthInfo;
-import cn.coderule.minimq.registry.domain.store.model.StoreStatusInfo;
-import cn.coderule.minimq.rpc.common.RpcClient;
-import cn.coderule.minimq.rpc.common.core.invoke.RpcCommand;
 import cn.coderule.minimq.rpc.common.protocol.DataVersion;
 import cn.coderule.minimq.rpc.common.protocol.code.RequestCode;
 import cn.coderule.minimq.rpc.registry.protocol.body.BrokerMemberGroup;
-import cn.coderule.minimq.rpc.registry.protocol.body.StoreRegisterResult;
-import cn.coderule.minimq.rpc.registry.protocol.body.TopicConfigAndMappingSerializeWrapper;
-import cn.coderule.minimq.rpc.registry.protocol.body.TopicConfigSerializeWrapper;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.ClusterInfo;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.GroupInfo;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.StoreInfo;
-import cn.coderule.minimq.rpc.registry.protocol.header.NotifyMinBrokerIdChangeRequestHeader;
-import cn.coderule.minimq.rpc.registry.protocol.header.UnRegisterBrokerRequestHeader;
-import cn.coderule.minimq.rpc.registry.protocol.statictopic.TopicQueueMappingInfo;
-import com.google.common.collect.Sets;
-import io.netty.channel.Channel;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentMap;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -88,11 +66,52 @@ public class ClusterService {
     }
 
     public int removeGroupWritePermission(String groupName) {
+        try {
+            route.lockWrite();
+            return operateGroupPermission(groupName, RequestCode.WIPE_WRITE_PERM_OF_BROKER);
+        } catch (Exception e) {
+            log.error("remove group write permission error", e);
+        } finally {
+            route.unlockWrite();
+        }
+
         return 0;
     }
 
     public int addGroupWritePermission(String groupName) {
+        try {
+            route.lockWrite();
+            return operateGroupPermission(groupName, RequestCode.ADD_WRITE_PERM_OF_BROKER);
+        } catch (Exception e) {
+            log.error("add group write permission error", e);
+        } finally {
+            route.unlockWrite();
+        }
         return 0;
     }
 
+    private int operateGroupPermission(final String brokerName, final int requestCode) {
+        int topicCnt = 0;
+
+        for (Map.Entry<String, Map<String, Topic>> entry : route.getTopicMap().entrySet()) {
+            Map<String, Topic> qdMap = entry.getValue();
+
+            final Topic qd = qdMap.get(brokerName);
+            if (qd == null) {
+                continue;
+            }
+            int perm = qd.getPerm();
+            switch (requestCode) {
+                case RequestCode.WIPE_WRITE_PERM_OF_BROKER:
+                    perm &= ~PermName.PERM_WRITE;
+                    break;
+                case RequestCode.ADD_WRITE_PERM_OF_BROKER:
+                    perm = PermName.PERM_READ | PermName.PERM_WRITE;
+                    break;
+            }
+            qd.setPerm(perm);
+            topicCnt++;
+        }
+        return topicCnt;
+    }
 }
