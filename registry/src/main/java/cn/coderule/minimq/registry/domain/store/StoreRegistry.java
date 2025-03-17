@@ -285,8 +285,24 @@ public class StoreRegistry {
         route.saveFilter(store, filterList);
     }
 
-    private void setHaAndMasterInfo(StoreInfo store, GroupInfo group, StoreRegisterResult result) {
+    private void setHaAndMasterInfo(StoreInfo store, StoreRegisterResult result) {
+        if (MQConstants.MASTER_ID == store.getGroupNo()) {
+            return;
+        }
 
+        String masterAddr = result.getMasterAddr();
+        if (masterAddr == null) {
+            return;
+        }
+
+        StoreInfo masterStore = new StoreInfo(store.getClusterName(), masterAddr);
+        StoreHealthInfo masterHealthInfo = route.getHealthInfo(masterStore);
+        if (masterHealthInfo == null) {
+            return;
+        }
+
+        result.setMasterAddr(masterAddr);
+        result.setHaServerAddr(masterHealthInfo.getHaServerAddr());
     }
 
     private void notifyMinIdChanged(Map<String, StoreStatusInfo> notifyMap) {
@@ -322,7 +338,7 @@ public class StoreRegistry {
             registerTopicInfo(store, group, topicInfo, isFirst);
             saveHealthInfo(store, topicInfo, channel);
             saveFilterList(store, filterList);
-            setHaAndMasterInfo(store, group, result);
+            setHaAndMasterInfo(store, result);
 
             if (isMinIdChanged) {
                 notifyMinIdChanged(group, null, route.getHealthHaAddress(store));
