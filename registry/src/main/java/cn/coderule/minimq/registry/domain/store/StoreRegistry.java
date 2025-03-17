@@ -1,6 +1,8 @@
 package cn.coderule.minimq.registry.domain.store;
 
 import cn.coderule.common.util.lang.StringUtil;
+import cn.coderule.common.util.lang.collection.CollectionUtil;
+import cn.coderule.common.util.lang.collection.MapUtil;
 import cn.coderule.minimq.domain.config.RegistryConfig;
 import cn.coderule.minimq.domain.constant.MQConstants;
 import cn.coderule.minimq.domain.constant.PermName;
@@ -309,10 +311,25 @@ public class StoreRegistry {
 
     }
 
-    private void notifyMinIdChanged(GroupInfo group, String offlineAddress, String haAddress ) {
+    private boolean needNotifyMinIdChanged(GroupInfo group) {
         if (!config.isNotifyMinIdChanged()) {
+            return false;
+        }
+
+        if (null == group || MapUtil.isEmpty(group.getBrokerAddrs())) {
+            return false;
+        }
+
+        return null != rpcClient;
+    }
+
+    private void notifyMinIdChanged(GroupInfo group, String offlineAddress, String haAddress ) {
+        if (!needNotifyMinIdChanged(group)) {
             return;
         }
+
+//        NotifyMinBrokerIdChangeRequestHeader requestHeader = new NotifyMinBrokerIdChangeRequestHeader();
+
     }
 
     public StoreRegisterResult register(StoreInfo store, TopicConfigSerializeWrapper topicInfo, List<String> filterList, Channel channel) {
