@@ -273,7 +273,16 @@ public class StoreRegistry {
     }
 
     private void saveFilterList(StoreInfo store, List<String> filterList) {
+        if (null == filterList) {
+            return;
+        }
 
+        if (filterList.isEmpty()) {
+            route.removeFilter(store);
+            return;
+        }
+
+        route.saveFilter(store, filterList);
     }
 
     private void setHaAndMasterInfo(StoreInfo store, GroupInfo group, StoreRegisterResult result) {

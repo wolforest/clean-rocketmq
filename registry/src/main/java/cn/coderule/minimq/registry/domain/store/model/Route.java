@@ -130,6 +130,10 @@ public class Route implements Serializable {
         this.filterMap.remove(storeInfo);
     }
 
+    public void saveFilter(StoreInfo storeInfo, List<String> filterList) {
+        this.filterMap.put(storeInfo, filterList);
+    }
+
     public Topic getTopic(String groupName,  String topicName) {
         if (!this.topicMap.containsKey(topicName)) {
             return null;
