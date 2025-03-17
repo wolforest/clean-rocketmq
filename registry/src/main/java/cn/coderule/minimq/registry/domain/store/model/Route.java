@@ -107,13 +107,11 @@ public class Route implements Serializable {
         return this.healthMap.get(storeInfo);
     }
 
-    public StoreHealthInfo saveHealthInfo(StoreInfo storeInfo, StoreHealthInfo healthInfo) {
+    public void saveHealthInfo(StoreInfo storeInfo, StoreHealthInfo healthInfo) {
         StoreHealthInfo prev = this.healthMap.put(storeInfo, healthInfo);
         if (prev != null) {
             log.info("StoreHealthInfo changed, Old: {}; NEW: {}", prev, healthInfo);
         }
-
-        return prev;
     }
 
     public StoreHealthInfo removeHealthInfo(StoreInfo storeInfo) {
@@ -210,10 +208,10 @@ public class Route implements Serializable {
         return this.clusterMap.get(clusterName);
     }
 
-    public boolean removeGroupInCluster(String clusterName, String groupName) {
+    public void removeGroupInCluster(String clusterName, String groupName) {
         Set<String> groupNames = this.clusterMap.get(clusterName);
         if (groupNames == null) {
-            return false;
+            return;
         }
 
         boolean status = groupNames.remove(groupName);
@@ -229,6 +227,5 @@ public class Route implements Serializable {
             );
         }
 
-        return status;
     }
 }

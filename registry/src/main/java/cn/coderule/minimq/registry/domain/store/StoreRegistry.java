@@ -395,7 +395,6 @@ public class StoreRegistry {
 
             notifyMinIdChanged(groupInfo, statusInfo.getOfflineBrokerAddr(), statusInfo.getHaBrokerAddr());
         }
-
     }
 
     private boolean needNotifyMinIdChanged(GroupInfo group) {
@@ -447,7 +446,6 @@ public class StoreRegistry {
             rpcClient.invokeOneway(addr, request, 5000);
         }
     }
-
 
     private void cleanRemovedStore(Set<String> removedBroker, Map<String, Topic> topicMap, String topic) {
         for (final String tmpGroup : removedBroker) {
@@ -564,6 +562,4 @@ public class StoreRegistry {
         removeGroupInfo(store, group, notifyMap);
         removeClusterInfo(store, group, removedSet, reducedSet);
     }
-
-
 }
