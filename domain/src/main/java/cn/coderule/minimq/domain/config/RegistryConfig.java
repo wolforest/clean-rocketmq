@@ -27,4 +27,5 @@ public class RegistryConfig implements Serializable {
      */
     private boolean deleteTopicWhileRegistration = false;
     private boolean notifyMinIdChanged = false;
+    private long idleScanInterval = 5 * 1000;
 }
