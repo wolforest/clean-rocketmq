@@ -16,6 +16,7 @@ import cn.coderule.minimq.rpc.common.protocol.code.RequestCode;
 import cn.coderule.minimq.rpc.registry.protocol.body.StoreRegisterResult;
 import cn.coderule.minimq.rpc.registry.protocol.body.TopicConfigAndMappingSerializeWrapper;
 import cn.coderule.minimq.rpc.registry.protocol.body.TopicConfigSerializeWrapper;
+import cn.coderule.minimq.rpc.registry.protocol.cluster.ClusterInfo;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.GroupInfo;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.StoreInfo;
 import cn.coderule.minimq.rpc.registry.protocol.header.NotifyMinBrokerIdChangeRequestHeader;
@@ -137,6 +138,13 @@ public class StoreRegistry {
 
     public DataVersion getStoreVersion(StoreInfo store) {
         return route.getHealthVersion(store);
+    }
+
+    public ClusterInfo getClusterInfo() {
+        ClusterInfo clusterInfo = new ClusterInfo();
+        clusterInfo.setBrokerAddrTable(route.getGroupMap());
+        clusterInfo.setClusterAddrTable(route.getClusterMap());
+        return clusterInfo;
     }
 
     private GroupInfo getOrCreateGroup(StoreInfo storeInfo) {
