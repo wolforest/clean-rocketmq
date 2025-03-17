@@ -421,8 +421,8 @@ public class StoreRegistry {
         );
 
         if (group.getBrokerAddrs().isEmpty()) {
-            route.removeGroup(group.getBrokerName());
-            log.info("unregisterBroker, remove group from brokerGroupTable {}", group.getBrokerName());
+            route.removeGroup(store.getGroupName());
+            log.info("unregisterBroker, remove group from brokerGroupTable {}", store.getGroupName());
             return;
         }
 
@@ -434,7 +434,16 @@ public class StoreRegistry {
             .brokerAddrs(group.getBrokerAddrs())
             .offlineBrokerAddr(store.getAddress())
             .build();
-        notifyMap.put(group.getBrokerName(), statusInfo);
+        notifyMap.put(store.getGroupName(), statusInfo);
+    }
+
+    public void removeClusterInfo(StoreInfo store, GroupInfo group, Set<String> removedSet, Set<String> reducedSet) {
+        if (null == group || group.isAddressEmpty()) {
+            reducedSet.add(store.getGroupName());
+            return;
+        }
+
+
     }
 
     public void unregister(UnRegisterBrokerRequestHeader request, Set<String> removedSet, Set<String> reducedSet, Map<String, StoreStatusInfo> notifyMap) {

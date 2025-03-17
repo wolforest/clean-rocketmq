@@ -205,4 +205,30 @@ public class Route implements Serializable {
         String groupName = queueMap.getBname();
         map.put(groupName, queueMap);
     }
+
+    public Set<String> getGroupInCluster(String clusterName) {
+        return this.clusterMap.get(clusterName);
+    }
+
+    public boolean removeGroupInCluster(String clusterName, String groupName) {
+        Set<String> groupNames = this.clusterMap.get(clusterName);
+        if (groupNames == null) {
+            return false;
+        }
+
+        boolean status = groupNames.remove(groupName);
+        log.info("unregisterBroker, remove name from clusterAddrTable {}, {}",
+            status ? "OK" : "Failed",
+            groupName
+        );
+
+        if (groupNames.isEmpty()) {
+            this.clusterMap.remove(clusterName);
+            log.info("unregisterBroker, remove cluster from clusterAddrTable {}",
+                clusterName
+            );
+        }
+
+        return status;
+    }
 }

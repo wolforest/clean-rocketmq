@@ -95,6 +95,10 @@ public class GroupInfo extends RpcSerializable implements Comparable<GroupInfo> 
         return brokerAddrs.get(MQConstants.MASTER_ID);
     }
 
+    public boolean isAddressEmpty() {
+        return brokerAddrs.isEmpty();
+    }
+
     public String getAddress(long groupNo) {
         return brokerAddrs.get(groupNo);
     }
