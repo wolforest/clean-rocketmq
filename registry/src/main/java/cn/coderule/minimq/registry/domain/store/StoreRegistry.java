@@ -13,6 +13,7 @@ import cn.coderule.minimq.rpc.common.RpcClient;
 import cn.coderule.minimq.rpc.common.core.invoke.RpcCommand;
 import cn.coderule.minimq.rpc.common.protocol.DataVersion;
 import cn.coderule.minimq.rpc.common.protocol.code.RequestCode;
+import cn.coderule.minimq.rpc.registry.protocol.body.BrokerMemberGroup;
 import cn.coderule.minimq.rpc.registry.protocol.body.StoreRegisterResult;
 import cn.coderule.minimq.rpc.registry.protocol.body.TopicConfigAndMappingSerializeWrapper;
 import cn.coderule.minimq.rpc.registry.protocol.body.TopicConfigSerializeWrapper;
@@ -145,6 +146,24 @@ public class StoreRegistry {
         clusterInfo.setBrokerAddrTable(route.getGroupMap());
         clusterInfo.setClusterAddrTable(route.getClusterMap());
         return clusterInfo;
+    }
+
+    public BrokerMemberGroup getGroupInfo(String clusterName, String groupName) {
+        BrokerMemberGroup memberGroup = new BrokerMemberGroup(clusterName, groupName);
+
+        try {
+            route.lockRead();
+            GroupInfo groupInfo = route.getGroup(groupName);
+            if (groupInfo != null) {
+                memberGroup.setBrokerAddrs(groupInfo.getBrokerAddrs());
+            }
+        } catch (Exception e) {
+            log.error("get group info error", e);
+        } finally {
+            route.unlockRead();
+        }
+
+        return memberGroup;
     }
 
     private GroupInfo getOrCreateGroup(StoreInfo storeInfo) {
