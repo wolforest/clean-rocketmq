@@ -122,6 +122,19 @@ public class StoreRegistry {
         return unregisterService.submit(request);
     }
 
+    public boolean isGroupChanged(StoreInfo store, DataVersion version) {
+        DataVersion prevVersion = route.getHealthVersion(store);
+        return prevVersion == null || !prevVersion.equals(version);
+    }
+
+    public boolean isTopicChanged(StoreInfo store,  String topicName, DataVersion version) {
+        if (isGroupChanged(store, version)) {
+            return true;
+        }
+
+        return !route.containsTopic(store.getGroupName(), topicName);
+    }
+
     private GroupInfo getOrCreateGroup(StoreInfo storeInfo) {
         return route.getOrCreateGroup(
             storeInfo.getZoneName(),
@@ -259,22 +272,11 @@ public class StoreRegistry {
         saveQueueMap(store, topicInfo, isFirst, queueMap);
     }
 
-    private boolean isGroupChanged(StoreInfo store, TopicConfigSerializeWrapper topicInfo) {
-        DataVersion prevVersion = route.getHealthVersion(store);
-        return prevVersion == null || !prevVersion.equals(topicInfo.getDataVersion());
-    }
 
-    private boolean isTopicChanged(StoreInfo store, TopicConfigSerializeWrapper topicInfo, String topicName) {
-        if (isGroupChanged(store, topicInfo)) {
-            return true;
-        }
-
-        return !route.containsTopic(store.getGroupName(), topicName);
-    }
 
     private void saveQueueInfo(StoreInfo store, TopicConfigSerializeWrapper topicInfo, boolean isFirst, boolean isPrimarySlave) {
         for (Map.Entry<String, Topic> entry : topicInfo.getTopicConfigTable().entrySet()) {
-            if (!isFirst && !isTopicChanged(store, topicInfo, entry.getKey())) {
+            if (!isFirst && !isTopicChanged(store,entry.getKey(), topicInfo.getDataVersion() )) {
                 continue;
             }
 
@@ -288,7 +290,7 @@ public class StoreRegistry {
     }
 
     private void saveQueueMap(StoreInfo store, TopicConfigSerializeWrapper topicInfo, boolean isFirst, Map<String, TopicQueueMappingInfo> queueMap) {
-        if (!isGroupChanged(store, topicInfo) && !isFirst) {
+        if (!isGroupChanged(store, topicInfo.getDataVersion()) && !isFirst) {
             return;
         }
         for (Map.Entry<String, TopicQueueMappingInfo> entry : queueMap.entrySet()) {
