@@ -172,6 +172,10 @@ public class Route implements Serializable {
         return topicSet;
     }
 
+    public void removeTopic(String topicName) {
+        this.topicMap.remove(topicName);
+    }
+
     public void removeTopic(String groupName, String topicName) {
         Map<String, Topic> map = this.topicMap.get(topicName);
         if (map == null) {
