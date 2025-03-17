@@ -166,6 +166,16 @@ public class StoreRegistry {
         return memberGroup;
     }
 
+    public void flushStoreUpdateTime(String clusterName, String address) {
+        StoreInfo store = new StoreInfo(clusterName, address);
+        StoreHealthInfo healthInfo = route.getHealthInfo(store);
+        if (healthInfo == null) {
+            return;
+        }
+
+        healthInfo.setLastUpdateTimestamp(System.currentTimeMillis());
+    }
+
     private GroupInfo getOrCreateGroup(StoreInfo storeInfo) {
         return route.getOrCreateGroup(
             storeInfo.getZoneName(),
