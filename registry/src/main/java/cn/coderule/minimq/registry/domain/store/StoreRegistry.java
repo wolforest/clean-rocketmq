@@ -1,7 +1,6 @@
 package cn.coderule.minimq.registry.domain.store;
 
 import cn.coderule.common.util.lang.StringUtil;
-import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.common.util.lang.collection.MapUtil;
 import cn.coderule.minimq.domain.config.RegistryConfig;
 import cn.coderule.minimq.domain.constant.MQConstants;
@@ -28,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -402,8 +402,61 @@ public class StoreRegistry {
         return result;
     }
 
-    private void cleanTopicWhileUnRegister(Set<String> removedBroker, Set<String> reducedBroker) {
+    private void cleanRemovedStore(Set<String> removedBroker, Map<String, Topic> topicMap, String topic) {
+        for (final String tmpGroup : removedBroker) {
+            final Topic removedQD = topicMap.remove(tmpGroup);
+            if (removedQD != null) {
+                log.debug("removeTopicByBrokerName, remove one broker's topic {} {}", topic, removedQD);
+            }
+        }
+    }
 
+    private void cleanReducedStore(Set<String> reducedBroker, Map<String, Topic> topicMap) {
+        for (final String groupName : reducedBroker) {
+            final Topic tmpTopic = topicMap.get(groupName);
+            if (tmpTopic == null) {
+                continue;
+            }
+
+            GroupInfo groupInfo = route.getGroup(groupName);
+            if (!groupInfo.isEnableActingMaster()) {
+                continue;
+            }
+
+            // Master has been unregistered, wipe the write perm
+            if (noMasterInGroup(groupInfo)) {
+                tmpTopic.setPerm(tmpTopic.getPerm() & (~PermName.PERM_WRITE));
+            }
+        }
+    }
+
+    private void cleanTopicWhileUnRegister(Set<String> removedBroker, Set<String> reducedBroker) {
+        Iterator<Map.Entry<String, Map<String, Topic>>> itMap = route.getTopicMap().entrySet().iterator();
+        while (itMap.hasNext()) {
+            Map.Entry<String, Map<String, Topic>> entry = itMap.next();
+            Map<String, Topic> topicMap = entry.getValue();
+
+            cleanRemovedStore(removedBroker, topicMap, entry.getKey());
+
+            if (topicMap.isEmpty()) {
+                log.debug("removeTopicByBrokerName, remove the topic all queue {}", entry.getKey());
+                itMap.remove();
+            }
+
+            cleanReducedStore(reducedBroker, topicMap);
+        }
+    }
+
+    private boolean noMasterInGroup(GroupInfo groupInfo) {
+        if (groupInfo == null) {
+            return true;
+        }
+
+        if (groupInfo.isAddressEmpty()) {
+            return true;
+        }
+
+        return groupInfo.getMinNo() > 0;
     }
 
     public void removeGroupInfo(StoreInfo store, GroupInfo group, Map<String, StoreStatusInfo> notifyMap) {
