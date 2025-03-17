@@ -443,7 +443,8 @@ public class StoreRegistry {
             return;
         }
 
-
+        route.removeGroupInCluster(group.getCluster(), group.getBrokerName());
+        removedSet.add(group.getBrokerName());
     }
 
     public void unregister(UnRegisterBrokerRequestHeader request, Set<String> removedSet, Set<String> reducedSet, Map<String, StoreStatusInfo> notifyMap) {
@@ -461,8 +462,7 @@ public class StoreRegistry {
 
         GroupInfo group = route.getGroup(store.getGroupName());
         removeGroupInfo(store, group, notifyMap);
-
-
+        removeClusterInfo(store, group, removedSet, reducedSet);
     }
 
     public void unregister(Set<UnRegisterBrokerRequestHeader> requests) {
