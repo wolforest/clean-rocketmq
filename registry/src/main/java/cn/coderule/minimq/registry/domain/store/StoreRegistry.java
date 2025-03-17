@@ -220,7 +220,12 @@ public class StoreRegistry {
     }
 
     private void saveQueueMap(StoreInfo store, TopicConfigSerializeWrapper topicInfo, boolean isFirst, Map<String, TopicQueueMappingInfo> queueMap) {
-
+        if (!isGroupChanged(store, topicInfo) && !isFirst) {
+            return;
+        }
+        for (Map.Entry<String, TopicQueueMappingInfo> entry : queueMap.entrySet()) {
+            route.saveQueueMap(entry.getKey(), entry.getValue());
+        }
     }
 
     private void registerTopicInfo(StoreInfo store, GroupInfo group, TopicConfigSerializeWrapper topicInfo, boolean isFirst) {

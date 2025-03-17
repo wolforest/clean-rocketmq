@@ -23,6 +23,7 @@ import java.util.concurrent.ConcurrentMap;
 import lombok.Getter;
 import lombok.Setter;
 
+@Deprecated
 @Setter @Getter
 public class QueueMap extends RpcSerializable {
     public static final int LEVEL_0 = 0;

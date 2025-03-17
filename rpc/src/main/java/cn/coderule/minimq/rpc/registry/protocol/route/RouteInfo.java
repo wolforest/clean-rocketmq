@@ -22,6 +22,7 @@ package cn.coderule.minimq.rpc.registry.protocol.route;
 
 import cn.coderule.minimq.rpc.common.protocol.codec.RpcSerializable;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.GroupInfo;
+import cn.coderule.minimq.rpc.registry.protocol.statictopic.TopicQueueMappingInfo;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -83,7 +84,7 @@ public class RouteInfo extends RpcSerializable {
      *          - logicalId
      *          - physicalId
      */
-    private Map<String/*brokerName*/, QueueMap> topicQueueMappingByBroker;
+    private Map<String/*brokerName*/, TopicQueueMappingInfo> topicQueueMappingByBroker;
 
     public RouteInfo() {
         queueList = new ArrayList<>();
@@ -125,7 +126,7 @@ public class RouteInfo extends RpcSerializable {
         routeInfo.getBrokerList().addAll(this.brokerList);
         routeInfo.getFilterServerTable().putAll(this.filterServerTable);
         if (this.topicQueueMappingByBroker != null) {
-            Map<String, QueueMap> cloneMap = new HashMap<>(this.topicQueueMappingByBroker);
+            Map<String, TopicQueueMappingInfo> cloneMap = new HashMap<>(this.topicQueueMappingByBroker);
             routeInfo.setTopicQueueMappingByBroker(cloneMap);
         }
         return routeInfo;
@@ -149,9 +150,9 @@ public class RouteInfo extends RpcSerializable {
                 new ArrayList<>(listEntry.getValue()));
         }
         if (this.topicQueueMappingByBroker != null) {
-            Map<String, QueueMap> cloneMap = new HashMap<>(this.topicQueueMappingByBroker.size());
-            for (final Map.Entry<String, QueueMap> entry : this.getTopicQueueMappingByBroker().entrySet()) {
-                QueueMap topicQueueMappingInfo = new QueueMap(entry.getValue().getTopic(), entry.getValue().getTotalQueues(), entry.getValue().getBname(), entry.getValue().getEpoch());
+            Map<String, TopicQueueMappingInfo> cloneMap = new HashMap<>(this.topicQueueMappingByBroker.size());
+            for (final Map.Entry<String, TopicQueueMappingInfo> entry : this.getTopicQueueMappingByBroker().entrySet()) {
+                TopicQueueMappingInfo topicQueueMappingInfo = new TopicQueueMappingInfo(entry.getValue().getTopic(), entry.getValue().getTotalQueues(), entry.getValue().getBname(), entry.getValue().getEpoch());
                 topicQueueMappingInfo.setDirty(entry.getValue().isDirty());
                 topicQueueMappingInfo.setScope(entry.getValue().getScope());
                 ConcurrentMap<Integer, Integer> concurrentMap = new ConcurrentHashMap<>(entry.getValue().getCurrIdMap());

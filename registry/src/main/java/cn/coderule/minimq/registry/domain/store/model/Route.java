@@ -4,7 +4,7 @@ import cn.coderule.minimq.domain.model.Topic;
 import cn.coderule.minimq.rpc.common.protocol.DataVersion;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.GroupInfo;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.StoreInfo;
-import cn.coderule.minimq.rpc.registry.protocol.route.QueueMap;
+import cn.coderule.minimq.rpc.registry.protocol.statictopic.TopicQueueMappingInfo;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -34,7 +34,7 @@ public class Route implements Serializable {
     // filterMap: storeInfo -> filterServerList
     private final ConcurrentMap<StoreInfo, List<String>> filterMap;
     // topicQueue: topicName -> groupName -> QueueMap
-    private final ConcurrentMap<String, Map<String, QueueMap>> topicQueueMap;
+    private final ConcurrentMap<String, Map<String, TopicQueueMappingInfo>> topicQueueMap;
 
     public Route() {
         this.topicMap = new ConcurrentHashMap<>(1024);
@@ -176,5 +176,12 @@ public class Route implements Serializable {
         }
 
         return map.containsKey(groupName);
+    }
+
+    public void saveQueueMap(String topicName, TopicQueueMappingInfo queueMap) {
+        Map<String, TopicQueueMappingInfo> map = this.topicQueueMap.computeIfAbsent(topicName, k -> new HashMap<>());
+
+        String groupName = queueMap.getBname();
+        map.put(groupName, queueMap);
     }
 }
