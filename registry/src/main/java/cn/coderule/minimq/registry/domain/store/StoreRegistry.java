@@ -293,7 +293,7 @@ public class StoreRegistry {
 
     }
 
-    private void notifyMinIdChanged() {
+    private void notifyMinIdChanged(GroupInfo group, String offlineAddress, String haAddress ) {
         if (!config.isNotifyMinIdChanged()) {
             return;
         }
@@ -324,7 +324,9 @@ public class StoreRegistry {
             saveFilterList(store, filterList);
             setHaAndMasterInfo(store, group, result);
 
-            if (isMinIdChanged) notifyMinIdChanged();
+            if (isMinIdChanged) {
+                notifyMinIdChanged(group, null, route.getHealthHaAddress(store));
+            }
         } catch (Exception e) {
             log.error("register store error", e);
         } finally {

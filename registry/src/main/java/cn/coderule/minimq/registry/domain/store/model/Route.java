@@ -117,6 +117,15 @@ public class Route implements Serializable {
         return this.healthMap.remove(storeInfo);
     }
 
+    public String getHealthHaAddress(StoreInfo storeInfo) {
+        StoreHealthInfo healthInfo = this.healthMap.get(storeInfo);
+        if (healthInfo == null) {
+            return null;
+        }
+
+        return healthInfo.getHaServerAddr();
+    }
+
     public DataVersion getHealthVersion(StoreInfo storeInfo) {
         StoreHealthInfo healthInfo = this.healthMap.get(storeInfo);
         if (healthInfo == null) {

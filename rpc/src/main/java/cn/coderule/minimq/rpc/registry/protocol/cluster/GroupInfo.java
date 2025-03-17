@@ -91,6 +91,14 @@ public class GroupInfo extends RpcSerializable implements Comparable<GroupInfo> 
         return Collections.min(brokerAddrs.keySet());
     }
 
+    public String getMasterAddr() {
+        return brokerAddrs.get(MQConstants.MASTER_ID);
+    }
+
+    public String getAddress(long groupNo) {
+        return brokerAddrs.get(groupNo);
+    }
+
     public String putAddress(long brokerId, String brokerAddress) {
         return brokerAddrs.put(brokerId, brokerAddress);
     }
