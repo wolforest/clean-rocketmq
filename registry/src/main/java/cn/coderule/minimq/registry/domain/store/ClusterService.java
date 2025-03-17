@@ -12,6 +12,7 @@ import cn.coderule.minimq.rpc.registry.protocol.cluster.ClusterInfo;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.GroupInfo;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.StoreInfo;
 import java.util.Map;
+import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -88,6 +89,37 @@ public class ClusterService {
             route.unlockWrite();
         }
         return 0;
+    }
+
+    public void logClusterStatus() {
+        try {
+            route.lockRead();
+            log.info("--------------------------------------------------------");
+
+            log.info("topicQueueTable SIZE: {}", route.getTopicMap().size());
+            for (Map.Entry<String, Map<String, Topic>> next : route.getTopicMap().entrySet()) {
+                log.info("topicQueueTable Topic: {} {}", next.getKey(), next.getValue());
+            }
+
+            log.info("brokerAddrTable SIZE: {}", route.getGroupMap().size());
+            for (Map.Entry<String, GroupInfo> next : route.getGroupMap().entrySet()) {
+                log.info("brokerAddrTable brokerName: {} {}", next.getKey(), next.getValue());
+            }
+
+            log.info("brokerLiveTable SIZE: {}", route.getHealthMap().size());
+            for (Map.Entry<StoreInfo, StoreHealthInfo> next : route.getHealthMap().entrySet()) {
+                log.info("brokerLiveTable brokerAddr: {} {}", next.getKey(), next.getValue());
+            }
+
+            log.info("clusterAddrTable SIZE: {}", route.getClusterMap().size());
+            for (Map.Entry<String, Set<String>> next : route.getClusterMap().entrySet()) {
+                log.info("clusterAddrTable clusterName: {} {}", next.getKey(), next.getValue());
+            }
+        } catch (Exception e) {
+            log.error("printAllPeriodically Exception", e);
+        } finally {
+            route.unlockRead();
+        }
     }
 
     private int operateGroupPermission(final String brokerName, final int requestCode) {
