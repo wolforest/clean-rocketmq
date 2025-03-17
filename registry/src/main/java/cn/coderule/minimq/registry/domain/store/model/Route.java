@@ -1,6 +1,7 @@
 package cn.coderule.minimq.registry.domain.store.model;
 
 import cn.coderule.minimq.domain.model.Topic;
+import cn.coderule.minimq.rpc.common.protocol.DataVersion;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.GroupInfo;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.StoreInfo;
 import cn.coderule.minimq.rpc.registry.protocol.route.QueueMap;
@@ -65,7 +66,7 @@ public class Route implements Serializable {
         groupNames.add(groupName);
     }
 
-    public boolean existGroup(String groupName) {
+    public boolean containsGroup(String groupName) {
         return this.groupMap.containsKey(groupName);
     }
 
@@ -109,6 +110,15 @@ public class Route implements Serializable {
 
     public StoreHealthInfo removeHealthInfo(StoreInfo storeInfo) {
         return this.healthMap.remove(storeInfo);
+    }
+
+    public DataVersion getHealthVersion(StoreInfo storeInfo) {
+        StoreHealthInfo healthInfo = this.healthMap.get(storeInfo);
+        if (healthInfo == null) {
+            return null;
+        }
+
+        return healthInfo.getDataVersion();
     }
 
     public void removeFilter(StoreInfo storeInfo) {
@@ -157,5 +167,14 @@ public class Route implements Serializable {
             log.info("Topic removed, topic: {}", topicName);
             this.topicMap.remove(topicName);
         }
+    }
+
+    public boolean containsTopic(String groupName, String topicName) {
+        Map<String, Topic> map = this.topicMap.get(topicName);
+        if (map == null) {
+            return false;
+        }
+
+        return map.containsKey(groupName);
     }
 }

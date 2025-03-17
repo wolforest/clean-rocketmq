@@ -9,6 +9,7 @@ import cn.coderule.minimq.registry.domain.store.model.Route;
 import cn.coderule.minimq.registry.domain.store.model.StoreHealthInfo;
 import cn.coderule.minimq.registry.domain.store.model.StoreStatusInfo;
 import cn.coderule.minimq.rpc.common.RpcClient;
+import cn.coderule.minimq.rpc.common.protocol.DataVersion;
 import cn.coderule.minimq.rpc.registry.protocol.body.StoreRegisterResult;
 import cn.coderule.minimq.rpc.registry.protocol.body.TopicConfigAndMappingSerializeWrapper;
 import cn.coderule.minimq.rpc.registry.protocol.body.TopicConfigSerializeWrapper;
@@ -189,9 +190,17 @@ public class StoreRegistry {
         saveQueueMap(store, topicInfo, isFirst, queueMap);
     }
 
-    private boolean isTopicChanged(StoreInfo store, TopicConfigSerializeWrapper topicInfo, String topicName) {
+    private boolean isGroupChanged(StoreInfo store, TopicConfigSerializeWrapper topicInfo) {
+        DataVersion prevVersion = route.getHealthVersion(store);
+        return prevVersion == null || !prevVersion.equals(topicInfo.getDataVersion());
+    }
 
-        return false;
+    private boolean isTopicChanged(StoreInfo store, TopicConfigSerializeWrapper topicInfo, String topicName) {
+        if (isGroupChanged(store, topicInfo)) {
+            return true;
+        }
+
+        return !route.containsTopic(store.getGroupName(), topicName);
     }
 
     private void saveQueueInfo(StoreInfo store, TopicConfigSerializeWrapper topicInfo, boolean isFirst, boolean isPrimarySlave) {
