@@ -17,6 +17,7 @@ import cn.coderule.minimq.rpc.registry.protocol.cluster.StoreInfo;
 import cn.coderule.minimq.rpc.registry.protocol.header.UnRegisterBrokerRequestHeader;
 import cn.coderule.minimq.rpc.registry.protocol.route.RouteInfo;
 import cn.coderule.minimq.rpc.registry.protocol.statictopic.TopicQueueMappingInfo;
+import com.google.common.collect.Sets;
 import java.nio.channels.Channel;
 import java.util.Collections;
 import java.util.HashMap;
@@ -146,15 +147,26 @@ public class StoreRegistry {
         return topicWrapper.getTopicQueueMappingInfoMap();
     }
 
+    /**
+     * Delete the topics that don't exist in tcTable from the current broker
+     * Static topic is not supported currently
+     *
+     * @param store store
+     * @param topicInfo topicInfo
+     */
     private void deleteNotExistTopic(StoreInfo store, TopicConfigSerializeWrapper topicInfo) {
+        // false in default setting
         if (!config.isDeleteTopicWhileRegistration()) {
             return;
         }
 
-        // Delete the topics that don't exist in tcTable from the current broker
-        // Static topic is not supported currently
-        // false in default setting
+        Set<String> oldTopicSet = route.getTopicByGroup(store.getGroupName());
+        Set<String> newTopicSet = topicInfo.getTopicConfigTable().keySet();
+        Sets.SetView<String> diffSet = Sets.difference(oldTopicSet, newTopicSet);
 
+        for (String topicName : diffSet) {
+            route.removeTopic(store.getGroupName(), topicName);
+        }
     }
 
     private void saveTopicInfo(StoreInfo store, GroupInfo group, TopicConfigSerializeWrapper topicInfo, boolean isFirst) {

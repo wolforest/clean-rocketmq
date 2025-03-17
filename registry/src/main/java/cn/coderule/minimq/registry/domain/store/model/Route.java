@@ -142,4 +142,20 @@ public class Route implements Serializable {
         }
         return topicSet;
     }
+
+    public void removeTopic(String groupName, String topicName) {
+        Map<String, Topic> map = this.topicMap.get(topicName);
+        if (map == null) {
+            return;
+        }
+        Topic tmpTopic = map.remove(groupName);
+        if (tmpTopic != null) {
+            log.info("Topic removed, topic: {}, group: {}", topicName, groupName);
+        }
+
+        if (map.isEmpty()) {
+            log.info("Topic removed, topic: {}", topicName);
+            this.topicMap.remove(topicName);
+        }
+    }
 }
