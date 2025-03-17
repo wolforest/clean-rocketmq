@@ -11,16 +11,20 @@ import cn.coderule.minimq.registry.domain.store.model.Route;
 import cn.coderule.minimq.registry.domain.store.model.StoreHealthInfo;
 import cn.coderule.minimq.registry.domain.store.model.StoreStatusInfo;
 import cn.coderule.minimq.rpc.common.RpcClient;
+import cn.coderule.minimq.rpc.common.core.invoke.RpcCommand;
 import cn.coderule.minimq.rpc.common.protocol.DataVersion;
+import cn.coderule.minimq.rpc.common.protocol.code.RequestCode;
 import cn.coderule.minimq.rpc.registry.protocol.body.StoreRegisterResult;
 import cn.coderule.minimq.rpc.registry.protocol.body.TopicConfigAndMappingSerializeWrapper;
 import cn.coderule.minimq.rpc.registry.protocol.body.TopicConfigSerializeWrapper;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.GroupInfo;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.StoreInfo;
+import cn.coderule.minimq.rpc.registry.protocol.header.NotifyMinBrokerIdChangeRequestHeader;
 import cn.coderule.minimq.rpc.registry.protocol.header.UnRegisterBrokerRequestHeader;
 import cn.coderule.minimq.rpc.registry.protocol.statictopic.TopicQueueMappingInfo;
 import com.google.common.collect.Sets;
 import io.netty.channel.Channel;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -323,13 +327,42 @@ public class StoreRegistry {
         return null != rpcClient;
     }
 
-    private void notifyMinIdChanged(GroupInfo group, String offlineAddress, String haAddress ) {
+    private List<String> chooseBrokerAddrsToNotify(Map<Long, String> brokerAddrMap, String offlineBrokerAddr) {
+        if (offlineBrokerAddr != null || brokerAddrMap.size() == 1) {
+            // notify the reset brokers.
+            return new ArrayList<>(brokerAddrMap.values());
+        }
+
+        // new broker registered, notify previous brokers.
+        long minBrokerId = Collections.min(brokerAddrMap.keySet());
+        List<String> brokerAddrList = new ArrayList<>();
+        for (Long brokerId : brokerAddrMap.keySet()) {
+            if (brokerId != minBrokerId) {
+                brokerAddrList.add(brokerAddrMap.get(brokerId));
+            }
+        }
+        return brokerAddrList;
+    }
+
+    private void notifyMinIdChanged(GroupInfo group, String offlineAddress, String haAddress ) throws Exception {
         if (!needNotifyMinIdChanged(group)) {
             return;
         }
 
-//        NotifyMinBrokerIdChangeRequestHeader requestHeader = new NotifyMinBrokerIdChangeRequestHeader();
+        NotifyMinBrokerIdChangeRequestHeader requestHeader = new NotifyMinBrokerIdChangeRequestHeader();
+        long minNo = group.getMinNo();
+        requestHeader.setMinBrokerId(minNo);
+        requestHeader.setMinBrokerAddr(group.getAddress(minNo));
+        requestHeader.setOfflineBrokerAddr(offlineAddress);
+        requestHeader.setHaBrokerAddr(haAddress);
 
+        List<String> addrList = chooseBrokerAddrsToNotify(group.getBrokerAddrs(), offlineAddress);
+        log.info("NotifyMinBrokerIdChangeRequestHeader: {}, notify address list: {}", requestHeader, addrList);
+
+        RpcCommand request = RpcCommand.createRequestCommand(RequestCode.NOTIFY_MIN_BROKER_ID_CHANGE, requestHeader);
+        for (String addr : addrList) {
+            rpcClient.invokeOneway(addr, request, 5000);
+        }
     }
 
     public StoreRegisterResult register(StoreInfo store, TopicConfigSerializeWrapper topicInfo, List<String> filterList, Channel channel) {
