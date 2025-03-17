@@ -137,45 +137,6 @@ public class StoreRegistry {
         return !route.containsTopic(store.getGroupName(), topicName);
     }
 
-    public DataVersion getStoreVersion(StoreInfo store) {
-        return route.getHealthVersion(store);
-    }
-
-    public ClusterInfo getClusterInfo() {
-        ClusterInfo clusterInfo = new ClusterInfo();
-        clusterInfo.setBrokerAddrTable(route.getGroupMap());
-        clusterInfo.setClusterAddrTable(route.getClusterMap());
-        return clusterInfo;
-    }
-
-    public BrokerMemberGroup getGroupInfo(String clusterName, String groupName) {
-        BrokerMemberGroup memberGroup = new BrokerMemberGroup(clusterName, groupName);
-
-        try {
-            route.lockRead();
-            GroupInfo groupInfo = route.getGroup(groupName);
-            if (groupInfo != null) {
-                memberGroup.setBrokerAddrs(groupInfo.getBrokerAddrs());
-            }
-        } catch (Exception e) {
-            log.error("get group info error", e);
-        } finally {
-            route.unlockRead();
-        }
-
-        return memberGroup;
-    }
-
-    public void flushStoreUpdateTime(String clusterName, String address) {
-        StoreInfo store = new StoreInfo(clusterName, address);
-        StoreHealthInfo healthInfo = route.getHealthInfo(store);
-        if (healthInfo == null) {
-            return;
-        }
-
-        healthInfo.setLastUpdateTimestamp(System.currentTimeMillis());
-    }
-
     private GroupInfo getOrCreateGroup(StoreInfo storeInfo) {
         return route.getOrCreateGroup(
             storeInfo.getZoneName(),
