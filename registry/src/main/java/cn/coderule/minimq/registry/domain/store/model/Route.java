@@ -104,8 +104,13 @@ public class Route implements Serializable {
         return this.healthMap.get(storeInfo);
     }
 
-    public StoreHealthInfo putHealthInfo(StoreInfo storeInfo, StoreHealthInfo healthInfo) {
-        return this.healthMap.put(storeInfo, healthInfo);
+    public StoreHealthInfo saveHealthInfo(StoreInfo storeInfo, StoreHealthInfo healthInfo) {
+        StoreHealthInfo prev = this.healthMap.put(storeInfo, healthInfo);
+        if (prev != null) {
+            log.info("StoreHealthInfo changed, Old: {}; NEW: {}", prev, healthInfo);
+        }
+
+        return prev;
     }
 
     public StoreHealthInfo removeHealthInfo(StoreInfo storeInfo) {

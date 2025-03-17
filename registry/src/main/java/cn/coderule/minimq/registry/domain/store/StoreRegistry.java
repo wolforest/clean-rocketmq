@@ -16,10 +16,9 @@ import cn.coderule.minimq.rpc.registry.protocol.body.TopicConfigSerializeWrapper
 import cn.coderule.minimq.rpc.registry.protocol.cluster.GroupInfo;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.StoreInfo;
 import cn.coderule.minimq.rpc.registry.protocol.header.UnRegisterBrokerRequestHeader;
-import cn.coderule.minimq.rpc.registry.protocol.route.RouteInfo;
 import cn.coderule.minimq.rpc.registry.protocol.statictopic.TopicQueueMappingInfo;
 import com.google.common.collect.Sets;
-import java.nio.channels.Channel;
+import io.netty.channel.Channel;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -31,6 +30,8 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class StoreRegistry {
+    private static final long DEFAULT_BROKER_CHANNEL_EXPIRED_TIME = 1000 * 60 * 2;
+
     private final RegistryConfig config;
     private final Route route;
 
@@ -216,7 +217,6 @@ public class StoreRegistry {
 
             route.saveTopic(store.getGroupName(), topic);
         }
-
     }
 
     private void saveQueueMap(StoreInfo store, TopicConfigSerializeWrapper topicInfo, boolean isFirst, Map<String, TopicQueueMappingInfo> queueMap) {
@@ -254,7 +254,22 @@ public class StoreRegistry {
     }
 
     public void saveHealthInfo(StoreInfo store, TopicConfigSerializeWrapper topicInfo, Channel channel) {
+        long timeout = null != store.getHeartbeatTimeout()
+            ? store.getHeartbeatTimeout()
+            : DEFAULT_BROKER_CHANNEL_EXPIRED_TIME;
+        DataVersion version = null != topicInfo
+            ? topicInfo.getDataVersion()
+            : new DataVersion();
 
+        StoreHealthInfo healthInfo = StoreHealthInfo.builder()
+            .lastUpdateTimestamp(System.currentTimeMillis())
+            .heartbeatTimeoutMillis(timeout)
+            .dataVersion(version)
+            .channel(channel)
+            .haServerAddr(store.getHaAddress())
+            .build();
+
+        route.saveHealthInfo(store, healthInfo);
     }
 
     private void saveFilterList(StoreInfo store, List<String> filterList) {
