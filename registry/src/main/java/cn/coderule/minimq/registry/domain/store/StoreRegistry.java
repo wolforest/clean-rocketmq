@@ -311,7 +311,28 @@ public class StoreRegistry {
         result.setHaServerAddr(masterHealthInfo.getHaServerAddr());
     }
 
-    private void notifyMinIdChanged(Map<String, StoreStatusInfo> notifyMap) {
+    private void notifyMinIdChanged(Map<String, StoreStatusInfo> notifyMap) throws Exception {
+        if (MapUtil.isEmpty(notifyMap)) {
+            return;
+        }
+
+        if (!config.isNotifyMinIdChanged()) {
+            return;
+        }
+
+        for (Map.Entry<String, StoreStatusInfo> entry : notifyMap.entrySet()) {
+            StoreStatusInfo statusInfo = entry.getValue();
+            GroupInfo groupInfo = route.getGroup(entry.getKey());
+            if (null == groupInfo) {
+                continue;
+            }
+
+            if (!groupInfo.isEnableActingMaster()) {
+                continue;
+            }
+
+            notifyMinIdChanged(groupInfo, statusInfo.getOfflineBrokerAddr(), statusInfo.getHaBrokerAddr());
+        }
 
     }
 
