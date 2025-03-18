@@ -67,6 +67,29 @@ public class TopicService {
         return topicList;
     }
 
+    public TopicList getTopicByCluster(String clusterName) {
+        TopicList topicList = new TopicList();
+
+        try {
+            route.lockRead();
+
+            Set<String> groupSet = route.getGroupInCluster(clusterName);
+            if (CollectionUtil.isEmpty(groupSet)) {
+                return topicList;
+            }
+
+            for (String groupName : groupSet) {
+                getTopicByGroup(topicList, groupName);
+            }
+        } catch (Exception e) {
+            log.error("getTopicList error", e);
+        } finally {
+            route.unlockRead();
+        }
+
+        return topicList;
+    }
+
     public TopicList getSystemTopicList() {
         TopicList topicList = new TopicList();
 
@@ -115,6 +138,19 @@ public class TopicService {
             log.error("delete topic error", e);
         } finally {
             route.unlockWrite();
+        }
+    }
+
+    private void getTopicByGroup(TopicList topicList, String groupName) {
+        for (Map.Entry<String, Map<String, Topic>> entry: route.getTopicMap().entrySet()) {
+            // find topic by groupName
+            Topic topic = entry.getValue().get(groupName);
+            if (topic == null) {
+                continue;
+            }
+
+            // add topic to topicList
+            topicList.getTopicList().add(entry.getKey());
         }
     }
 
