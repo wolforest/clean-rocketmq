@@ -24,43 +24,27 @@ public class TopicService {
         this.config = config;
     }
 
-    private boolean setQueueList(RouteInfo routeInfo, String topicName) {
-        Map<String, Topic> topicMap = route.getTopicMap().get(topicName);
-        if (MapUtil.isEmpty(topicMap)) {
-            return false;
-        }
-
-        List<QueueInfo> queueInfoList = new ArrayList<>();
-        for (Map.Entry<String, Topic> entry: topicMap.entrySet()) {
-            QueueInfo queueInfo = QueueInfo.from(entry.getKey(), entry.getValue());
-            queueInfoList.add(queueInfo);
-        }
-
-        routeInfo.setQueueList(queueInfoList);
-        return true;
-    }
-
-    private void setGroupInfo(RouteInfo routeInfo, String topicName) {
-
-    }
-
     public RouteInfo getRoute(String topicName) {
         RouteInfo routeInfo = new RouteInfo();
 
         try {
             route.lockRead();
 
-            if (!setQueueList(routeInfo, topicName)) {
+            if (!getQueueList(routeInfo, topicName)) {
                 return null;
             }
 
-            setGroupInfo(routeInfo, topicName);
+            getGroupInfo(routeInfo, topicName);
+            getQueueMap(routeInfo, topicName);
         } catch (Exception e) {
             log.error("getRoute error", e);
         } finally {
             route.unlockRead();
         }
 
+        handleActingMaster(routeInfo, topicName);
+
+        log.debug("get route info, topic: {}, routeInfo: {}", topicName, routeInfo);
         return routeInfo;
     }
 
@@ -107,6 +91,34 @@ public class TopicService {
         } finally {
             route.unlockWrite();
         }
+    }
+
+    private boolean getQueueList(RouteInfo routeInfo, String topicName) {
+        Map<String, Topic> topicMap = route.getTopicMap().get(topicName);
+        if (MapUtil.isEmpty(topicMap)) {
+            return false;
+        }
+
+        List<QueueInfo> queueInfoList = new ArrayList<>();
+        for (Map.Entry<String, Topic> entry: topicMap.entrySet()) {
+            QueueInfo queueInfo = QueueInfo.from(entry.getKey(), entry.getValue());
+            queueInfoList.add(queueInfo);
+        }
+
+        routeInfo.setQueueList(queueInfoList);
+        return true;
+    }
+
+    private void getGroupInfo(RouteInfo routeInfo, String topicName) {
+
+    }
+
+    private void getQueueMap(RouteInfo routeInfo, String topicName) {
+
+    }
+
+    private void handleActingMaster(RouteInfo routeInfo, String topicName) {
+
     }
 
 }
