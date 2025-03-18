@@ -73,14 +73,11 @@ public class StoreRegistry {
             if (!checkHealthInfo(store, group, topicInfo)) {
                 return result;
             }
-
             if (hasRegistered(store, group, topicInfo)) {
                 return null;
             }
 
-            String preAddr = group.putAddress(store.getGroupNo(), store.getAddress());
-            boolean isFirst = StringUtil.isEmpty(preAddr);
-
+            boolean isFirst = saveAddress(store, group);
             registerTopicInfo(store, group, topicInfo, isFirst);
             saveHealthInfo(store, topicInfo, channel);
             saveFilterList(store, filterList);
@@ -94,7 +91,6 @@ public class StoreRegistry {
         } finally {
             route.unlockWrite();
         }
-
         return result;
     }
 
@@ -160,6 +156,11 @@ public class StoreRegistry {
             storeInfo.getGroupName(),
             storeInfo.isEnableActingMaster()
         );
+    }
+
+    private boolean saveAddress(StoreInfo store, GroupInfo group) {
+        String preAddr = group.putAddress(store.getGroupNo(), store.getAddress());
+        return StringUtil.isEmpty(preAddr);
     }
 
     private boolean checkMinIdChanged(StoreInfo store, GroupInfo group) {
