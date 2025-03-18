@@ -23,6 +23,6 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class KVConfigSerializeWrapper extends RpcSerializable {
+public class KvWrapper extends RpcSerializable {
     private HashMap<String/* Namespace */, HashMap<String/* Key */, String/* Value */>> configTable;
 }
