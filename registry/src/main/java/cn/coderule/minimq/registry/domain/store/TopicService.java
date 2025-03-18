@@ -2,9 +2,11 @@ package cn.coderule.minimq.registry.domain.store;
 
 import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.minimq.domain.config.RegistryConfig;
+import cn.coderule.minimq.domain.model.Topic;
 import cn.coderule.minimq.registry.domain.store.model.Route;
 import cn.coderule.minimq.rpc.registry.protocol.body.TopicList;
 import cn.coderule.minimq.rpc.registry.protocol.route.RouteInfo;
+import java.util.Map;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 
@@ -20,6 +22,17 @@ public class TopicService {
 
     public RouteInfo getRoute(String topicName) {
         RouteInfo routeInfo = new RouteInfo();
+
+        try {
+            route.lockRead();
+
+            Map<String, Topic> topicMap = route.getTopicMap().get(topicName);
+
+        } catch (Exception e) {
+            log.error("getRoute error", e);
+        } finally {
+            route.unlockRead();
+        }
 
         return routeInfo;
     }

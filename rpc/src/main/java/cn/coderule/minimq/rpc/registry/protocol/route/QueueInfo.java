@@ -20,12 +20,10 @@
  */
 package cn.coderule.minimq.rpc.registry.protocol.route;
 
+import cn.coderule.minimq.domain.model.Topic;
 import lombok.Getter;
 import lombok.Setter;
 
-/**
- * replaced by Topic
- */
 @Setter @Getter
 public class QueueInfo implements Comparable<QueueInfo> {
     private String brokerName;
@@ -36,6 +34,18 @@ public class QueueInfo implements Comparable<QueueInfo> {
 
     public QueueInfo() {
 
+    }
+
+    public static QueueInfo from(String groupName, Topic topic) {
+        QueueInfo queueInfo = new QueueInfo();
+        queueInfo.setBrokerName(groupName);
+
+        queueInfo.setReadQueueNums(topic.getReadQueueNums());
+        queueInfo.setWriteQueueNums(topic.getWriteQueueNums());
+        queueInfo.setPerm(topic.getPerm());
+        queueInfo.setTopicSysFlag(topic.getTopicSysFlag());
+
+        return queueInfo;
     }
 
     // Deep copy QueueData
