@@ -6,7 +6,7 @@ import cn.coderule.minimq.rpc.common.core.invoke.RpcContext;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class RouteFetchProcessor implements RpcProcessor {
+public class ClusterProcessor implements RpcProcessor {
     @Override
     public RpcCommand process(RpcContext ctx, RpcCommand request) {
         return null;
