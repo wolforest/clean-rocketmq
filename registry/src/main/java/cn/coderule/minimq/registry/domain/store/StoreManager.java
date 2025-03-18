@@ -1,4 +1,4 @@
-package cn.coderule.minimq.registry.domain.store.service;
+package cn.coderule.minimq.registry.domain.store;
 
 import cn.coderule.common.convention.service.Lifecycle;
 
