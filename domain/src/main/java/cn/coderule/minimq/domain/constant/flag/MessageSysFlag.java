@@ -14,10 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.coderule.minimq.domain.constant;
+package cn.coderule.minimq.domain.constant.flag;
 
 
-public class SysFlag {
+public class MessageSysFlag {
 
     /**
      * Meaning of each bit in the system flag

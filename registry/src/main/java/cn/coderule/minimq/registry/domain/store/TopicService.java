@@ -3,6 +3,7 @@ package cn.coderule.minimq.registry.domain.store;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.common.util.lang.collection.MapUtil;
 import cn.coderule.minimq.domain.config.RegistryConfig;
+import cn.coderule.minimq.domain.constant.flag.TopicSysFlag;
 import cn.coderule.minimq.domain.model.Topic;
 import cn.coderule.minimq.registry.domain.store.model.Route;
 import cn.coderule.minimq.rpc.registry.protocol.body.TopicList;
@@ -58,6 +59,69 @@ public class TopicService {
         try {
             route.lockRead();
             topicList.setTopicList(route.getTopicMap().keySet());
+        } catch (Exception e) {
+            log.error("getTopicList error", e);
+        } finally {
+            route.unlockRead();
+        }
+
+        return topicList;
+    }
+
+    public TopicList getUnitTopic() {
+        TopicList topicList = new TopicList();
+
+        try {
+            route.lockRead();
+
+            for (Map.Entry<String, Map<String, Topic>> topicEntry : route.getTopicMap().entrySet()) {
+                getUnitTopic(topicList, topicEntry);
+            }
+        } catch (Exception e) {
+            log.error("getUnitTopic error", e);
+        } finally {
+            route.unlockRead();
+        }
+
+        return topicList;
+    }
+
+    public TopicList getUnitTopic1() {
+        TopicList topicList = new TopicList();
+
+        try {
+            route.lockRead();
+
+        } catch (Exception e) {
+            log.error("getTopicList error", e);
+        } finally {
+            route.unlockRead();
+        }
+
+        return topicList;
+    }
+
+    public TopicList getUnitTopic2() {
+        TopicList topicList = new TopicList();
+
+        try {
+            route.lockRead();
+
+        } catch (Exception e) {
+            log.error("getTopicList error", e);
+        } finally {
+            route.unlockRead();
+        }
+
+        return topicList;
+    }
+
+    public TopicList getUnitTopic3() {
+        TopicList topicList = new TopicList();
+
+        try {
+            route.lockRead();
+
         } catch (Exception e) {
             log.error("getTopicList error", e);
         } finally {
@@ -138,6 +202,24 @@ public class TopicService {
             log.error("delete topic error", e);
         } finally {
             route.unlockWrite();
+        }
+    }
+
+    private void getUnitTopic(TopicList topicList, Map.Entry<String, Map<String, Topic>> topicEntry) {
+        String topicName = topicEntry.getKey();
+        Map<String, Topic> topicMap = topicEntry.getValue();
+
+        if (MapUtil.isEmpty(topicMap)) {
+            return;
+        }
+
+        int sysFlag = topicMap.values()
+            .iterator()
+            .next()
+            .getTopicSysFlag();
+
+        if (TopicSysFlag.hasUnitFlag(sysFlag)) {
+            topicList.getTopicList().add(topicName);
         }
     }
 

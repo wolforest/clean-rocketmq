@@ -2,7 +2,7 @@ package cn.coderule.minimq.domain.model.message;
 
 import cn.coderule.common.util.lang.StringUtil;
 import cn.coderule.common.util.lang.collection.MapUtil;
-import cn.coderule.minimq.domain.constant.SysFlag;
+import cn.coderule.minimq.domain.constant.flag.MessageSysFlag;
 import cn.coderule.minimq.domain.constant.MessageConst;
 import cn.coderule.minimq.domain.enums.MessageStatus;
 import cn.coderule.minimq.domain.enums.MessageVersion;
@@ -80,7 +80,7 @@ public class MessageBO extends Message implements Serializable {
     }
 
     public TagType getTagType() {
-        if ((this.sysFlag & SysFlag.MULTI_TAGS_FLAG) == SysFlag.MULTI_TAGS_FLAG) {
+        if ((this.sysFlag & MessageSysFlag.MULTI_TAGS_FLAG) == MessageSysFlag.MULTI_TAGS_FLAG) {
             return TagType.MULTI_TAG;
         }
 
