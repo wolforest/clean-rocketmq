@@ -6,6 +6,8 @@ import cn.coderule.minimq.domain.config.RegistryConfig;
 import cn.coderule.minimq.domain.model.Topic;
 import cn.coderule.minimq.registry.domain.store.model.Route;
 import cn.coderule.minimq.rpc.registry.protocol.body.TopicList;
+import cn.coderule.minimq.rpc.registry.protocol.cluster.GroupInfo;
+import cn.coderule.minimq.rpc.registry.protocol.cluster.StoreInfo;
 import cn.coderule.minimq.rpc.registry.protocol.route.QueueInfo;
 import cn.coderule.minimq.rpc.registry.protocol.route.RouteInfo;
 import java.util.ArrayList;
@@ -110,6 +112,32 @@ public class TopicService {
     }
 
     private void getGroupInfo(RouteInfo routeInfo, String topicName) {
+        Set<String> groupSet = route.getTopicByGroup(topicName);
+        for (String groupName : groupSet) {
+            GroupInfo groupInfo = route.getGroup(groupName);
+            if (groupInfo == null) {
+                continue;
+            }
+            GroupInfo groupClone = new GroupInfo(groupInfo);
+            routeInfo.getBrokerList().add(groupClone);
+
+            getFilterInfo(routeInfo, groupClone);
+        }
+    }
+
+    private void getFilterInfo(RouteInfo routeInfo, GroupInfo groupClone) {
+        if (route.isFilterEmpty()) {
+            return;
+        }
+
+        for (String address: groupClone.getBrokerAddrs().values()) {
+            StoreInfo storeInfo = new StoreInfo(groupClone.getCluster(), address);
+            List<String> filterList = route.getFilter(storeInfo);
+            if (CollectionUtil.isEmpty(filterList)) {
+                continue;
+            }
+            routeInfo.getFilterServerTable().put(address, filterList);
+        }
 
     }
 

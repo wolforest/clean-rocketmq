@@ -137,6 +137,14 @@ public class Route implements Serializable {
         return healthInfo.getDataVersion();
     }
 
+    public boolean isFilterEmpty() {
+        return this.filterMap.isEmpty();
+    }
+
+    public List<String> getFilter(StoreInfo storeInfo) {
+        return this.filterMap.get(storeInfo);
+    }
+
     public void removeFilter(StoreInfo storeInfo) {
         this.filterMap.remove(storeInfo);
     }
