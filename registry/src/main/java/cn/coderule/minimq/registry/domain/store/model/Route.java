@@ -141,6 +141,22 @@ public class Route implements Serializable {
         return this.filterMap.isEmpty();
     }
 
+    public boolean isGroupEmpty() {
+        return this.groupMap.isEmpty();
+    }
+
+    public boolean isTopicEmpty() {
+        return this.topicMap.isEmpty();
+    }
+
+    public boolean isClusterEmpty() {
+        return this.clusterMap.isEmpty();
+    }
+
+    public boolean isQueueMapEmpty() {
+        return this.topicQueueMap.isEmpty();
+    }
+
     public List<String> getFilter(StoreInfo storeInfo) {
         return this.filterMap.get(storeInfo);
     }

@@ -12,6 +12,7 @@ import cn.coderule.minimq.rpc.registry.protocol.route.QueueInfo;
 import cn.coderule.minimq.rpc.registry.protocol.route.RouteInfo;
 import cn.coderule.minimq.rpc.registry.protocol.statictopic.TopicQueueMappingInfo;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -66,6 +67,27 @@ public class TopicService {
         return topicList;
     }
 
+    public TopicList getSystemTopicList() {
+        TopicList topicList = new TopicList();
+
+        try {
+            route.lockRead();
+
+            for (Map.Entry<String, Set<String>> entry: route.getClusterMap().entrySet()) {
+                topicList.getTopicList().add(entry.getKey());
+                topicList.getTopicList().addAll(entry.getValue());
+            }
+
+            getFirstAddressFromGroupMap(topicList);
+        } catch (Exception e) {
+            log.error("getSystemTopicList error", e);
+        } finally {
+            route.unlockRead();
+        }
+
+        return topicList;
+    }
+
     public void deleteTopic(String topicName) {
         try {
             route.lockWrite();
@@ -93,6 +115,25 @@ public class TopicService {
             log.error("delete topic error", e);
         } finally {
             route.unlockWrite();
+        }
+    }
+
+    private void getFirstAddressFromGroupMap(TopicList topicList) {
+        if (route.isGroupEmpty()) {
+            return;
+        }
+
+        for (Map.Entry<String, GroupInfo> entry: route.getGroupMap().entrySet()) {
+            Map<Long, String> addrMap = entry.getValue().getBrokerAddrs();
+            if (MapUtil.isEmpty(addrMap)) {
+                continue;
+            }
+
+            Iterator<Long> iterator = addrMap.keySet().iterator();
+            topicList.setBrokerAddr(addrMap.get(iterator.next()));
+
+            // return the first address found
+            break;
         }
     }
 
