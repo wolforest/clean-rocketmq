@@ -1,5 +1,6 @@
 package cn.coderule.minimq.registry.domain.store.model;
 
+import cn.coderule.common.util.lang.collection.MapUtil;
 import cn.coderule.minimq.domain.model.Topic;
 import cn.coderule.minimq.rpc.common.protocol.DataVersion;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.GroupInfo;
@@ -160,6 +161,17 @@ public class Route implements Serializable {
         }
 
         map.put(groupName, topic);
+    }
+
+    public Set<String> getGroupByTopic(String topicName) {
+        Set<String> result = new HashSet<>();
+        Map<String, Topic> map = topicMap.get(topicName);
+        if (MapUtil.isEmpty(map)) {
+            return result;
+        }
+
+        result.addAll(map.keySet());
+        return result;
     }
 
     public Set<String> getTopicByGroup(String groupName) {
