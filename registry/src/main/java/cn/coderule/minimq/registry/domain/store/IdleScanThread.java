@@ -5,6 +5,7 @@ import cn.coderule.common.util.lang.ThreadUtil;
 import cn.coderule.minimq.domain.config.RegistryConfig;
 import cn.coderule.minimq.registry.domain.store.model.Route;
 import cn.coderule.minimq.registry.domain.store.model.StoreHealthInfo;
+import cn.coderule.minimq.registry.domain.store.service.StoreRegistry;
 import cn.coderule.minimq.rpc.common.netty.service.NettyHelper;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.GroupInfo;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.StoreInfo;
@@ -15,13 +16,13 @@ import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class IdleScanner {
+public class IdleScanThread {
     private final RegistryConfig config;
     private final StoreRegistry registry;
     private final Route route;
     private final ScheduledExecutorService scheduler;
 
-    public IdleScanner(RegistryConfig config, StoreRegistry registry, Route route) {
+    public IdleScanThread(RegistryConfig config, StoreRegistry registry, Route route) {
         this.config = config;
 
         this.route = route;
@@ -32,7 +33,7 @@ public class IdleScanner {
 
     public void start() {
         this.scheduler.scheduleWithFixedDelay(
-            IdleScanner.this::scan,
+            IdleScanThread.this::scan,
             5,
             config.getIdleScanInterval(),
             TimeUnit.MICROSECONDS

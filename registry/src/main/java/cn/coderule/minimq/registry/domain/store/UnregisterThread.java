@@ -2,6 +2,7 @@ package cn.coderule.minimq.registry.domain.store;
 
 import cn.coderule.common.lang.concurrent.ServiceThread;
 import cn.coderule.minimq.domain.config.RegistryConfig;
+import cn.coderule.minimq.registry.domain.store.service.StoreRegistry;
 import cn.coderule.minimq.rpc.registry.protocol.header.UnRegisterBrokerRequestHeader;
 import java.util.HashSet;
 import java.util.Set;
@@ -10,19 +11,19 @@ import java.util.concurrent.LinkedBlockingQueue;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class UnregisterService extends ServiceThread {
+public class UnregisterThread extends ServiceThread {
     private final StoreRegistry registry;
 
     private final BlockingQueue<UnRegisterBrokerRequestHeader> queue;
 
-    public UnregisterService(RegistryConfig config, StoreRegistry registry) {
+    public UnregisterThread(RegistryConfig config, StoreRegistry registry) {
         this.registry = registry;
         queue = new LinkedBlockingQueue<>(config.getUnregisterQueueCapacity());
     }
 
     @Override
     public String getServiceName() {
-        return UnregisterService.class.getSimpleName();
+        return UnregisterThread.class.getSimpleName();
     }
 
     public boolean submit(UnRegisterBrokerRequestHeader request) {

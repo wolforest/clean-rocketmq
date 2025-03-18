@@ -1,4 +1,4 @@
-package cn.coderule.minimq.registry.domain.store;
+package cn.coderule.minimq.registry.domain.store.service;
 
 import cn.coderule.common.util.lang.StringUtil;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
@@ -7,6 +7,7 @@ import cn.coderule.minimq.domain.config.RegistryConfig;
 import cn.coderule.minimq.domain.constant.MQConstants;
 import cn.coderule.minimq.domain.constant.PermName;
 import cn.coderule.minimq.domain.model.Topic;
+import cn.coderule.minimq.registry.domain.store.UnregisterThread;
 import cn.coderule.minimq.registry.domain.store.model.Route;
 import cn.coderule.minimq.registry.domain.store.model.StoreHealthInfo;
 import cn.coderule.minimq.registry.domain.store.model.StoreStatusInfo;
@@ -43,22 +44,22 @@ public class StoreRegistry {
     private final Route route;
 
     private final RpcClient rpcClient;
-    private final UnregisterService unregisterService;
+    private final UnregisterThread unregisterThread;
 
     public StoreRegistry(RegistryConfig config, RpcClient rpcClient, Route route) {
         this.route = route;
         this.config = config;
 
         this.rpcClient = rpcClient;
-        this.unregisterService = new UnregisterService(config, this);
+        this.unregisterThread = new UnregisterThread(config, this);
     }
 
     public void start() {
-        unregisterService.start();
+        unregisterThread.start();
     }
 
     public void shutdown() {
-        unregisterService.shutdown();
+        unregisterThread.shutdown();
     }
 
     public StoreRegisterResult register(StoreInfo store, TopicConfigSerializeWrapper topicInfo, List<String> filterList, Channel channel) {
@@ -116,7 +117,7 @@ public class StoreRegistry {
     }
 
     public boolean unregisterAsync(UnRegisterBrokerRequestHeader request) {
-        return unregisterService.submit(request);
+        return unregisterThread.submit(request);
     }
 
     public void registerTopic(String topicName, List<Topic> topicList) {

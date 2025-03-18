@@ -1,4 +1,4 @@
-package cn.coderule.minimq.registry.domain.store;
+package cn.coderule.minimq.registry.domain.store.service;
 
 import cn.coderule.minimq.domain.config.RegistryConfig;
 import cn.coderule.minimq.domain.constant.PermName;
