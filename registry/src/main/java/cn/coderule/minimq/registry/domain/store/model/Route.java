@@ -51,7 +51,11 @@ public class Route implements Serializable {
     }
 
     public void unlockWrite() {
-        this.lock.writeLock().unlock();
+        try {
+            this.lock.writeLock().unlock();
+        } catch (IllegalMonitorStateException e) {
+            log.error("Attempting to unlock a write lock that was not acquired.", e);
+        }
     }
 
     public void lockRead() throws InterruptedException {
@@ -59,7 +63,11 @@ public class Route implements Serializable {
     }
 
     public void unlockRead() {
-        this.lock.readLock().unlock();
+        try {
+            this.lock.readLock().unlock();
+        } catch (IllegalMonitorStateException e) {
+            log.error("Attempting to unlock a read lock that was not acquired.", e);
+        }
     }
 
     public void addGroupToCluster(String clusterName, String groupName) {
