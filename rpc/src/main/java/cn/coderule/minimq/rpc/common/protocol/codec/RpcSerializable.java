@@ -17,6 +17,7 @@
 package cn.coderule.minimq.rpc.common.protocol.codec;
 
 import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONWriter;
 import java.io.Serializable;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -58,6 +59,11 @@ public abstract class RpcSerializable implements Serializable {
 
     private static <T> T fromJson(byte[] data, Class<T> classOfT) {
         return JSON.parseObject(data, classOfT);
+    }
+
+    public byte[] encode(JSONWriter.Feature... features) {
+        String json = JSON.toJSONString(this, features);
+        return json.getBytes(CHARSET_UTF8);
     }
 
     public byte[] encode() {

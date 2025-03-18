@@ -23,6 +23,7 @@ package cn.coderule.minimq.rpc.registry.protocol.route;
 import cn.coderule.minimq.rpc.common.protocol.codec.RpcSerializable;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.GroupInfo;
 import cn.coderule.minimq.rpc.registry.protocol.statictopic.TopicQueueMappingInfo;
+import com.alibaba.fastjson2.JSONWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -113,6 +114,13 @@ public class RouteInfo extends RpcSerializable {
         if (routeInfo.topicQueueMappingByBroker != null) {
             this.topicQueueMappingByBroker = new HashMap<>(routeInfo.topicQueueMappingByBroker);
         }
+    }
+
+    public byte[] encode() {
+        return super.encode(
+            JSONWriter.Feature.BrowserCompatible,
+            JSONWriter.Feature.SortMapEntriesByKeys
+        );
     }
 
     public RouteInfo cloneRouteInfo() {

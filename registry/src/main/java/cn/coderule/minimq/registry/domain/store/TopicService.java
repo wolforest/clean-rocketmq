@@ -4,6 +4,7 @@ import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.minimq.domain.config.RegistryConfig;
 import cn.coderule.minimq.registry.domain.store.model.Route;
 import cn.coderule.minimq.rpc.registry.protocol.body.TopicList;
+import cn.coderule.minimq.rpc.registry.protocol.route.RouteInfo;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 
@@ -15,6 +16,12 @@ public class TopicService {
     public TopicService(RegistryConfig config, Route route) {
         this.route = route;
         this.config = config;
+    }
+
+    public RouteInfo getRoute(String topicName) {
+        RouteInfo routeInfo = new RouteInfo();
+
+        return routeInfo;
     }
 
     public TopicList getTopicList() {
