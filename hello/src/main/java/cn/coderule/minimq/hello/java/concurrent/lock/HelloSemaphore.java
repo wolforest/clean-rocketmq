@@ -1,7 +1,9 @@
 package cn.coderule.minimq.hello.java.concurrent.lock;
 
 import java.util.concurrent.Semaphore;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class HelloSemaphore {
     public static void main(String[] args) {
         Semaphore semaphore = new Semaphore(3);
@@ -14,7 +16,7 @@ public class HelloSemaphore {
 
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    log.error("InterruptedException", e);
                 } finally {
                     if (semaphore.availablePermits() == 0) {
                         System.out.println("\n\n\n");
