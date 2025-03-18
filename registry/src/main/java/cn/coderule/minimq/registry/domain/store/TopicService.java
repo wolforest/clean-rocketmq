@@ -21,12 +21,10 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class TopicService {
-    private final RegistryConfig config;
     private final Route route;
 
     public TopicService(RegistryConfig config, Route route) {
         this.route = route;
-        this.config = config;
     }
 
     public RouteInfo getRoute(String topicName) {
@@ -134,22 +132,7 @@ public class TopicService {
             }
 
         } catch (Exception e) {
-            log.error("getTopicList error", e);
-        } finally {
-            route.unlockRead();
-        }
-
-        return topicList;
-    }
-
-    public TopicList getUnitTopic3() {
-        TopicList topicList = new TopicList();
-
-        try {
-            route.lockRead();
-
-        } catch (Exception e) {
-            log.error("getTopicList error", e);
+            log.error("getSubAndNoUnitTopic error", e);
         } finally {
             route.unlockRead();
         }
