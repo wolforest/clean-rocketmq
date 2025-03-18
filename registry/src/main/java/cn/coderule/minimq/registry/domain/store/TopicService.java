@@ -114,11 +114,24 @@ public class TopicService {
         return topicList;
     }
 
-    public TopicList getUnitTopic2() {
+    public TopicList getSubAndNoUnitTopic() {
         TopicList topicList = new TopicList();
 
         try {
             route.lockRead();
+
+            for (Map.Entry<String, Map<String, Topic>> topicEntry : this.route.getTopicMap().entrySet()) {
+                String topic = topicEntry.getKey();
+                Map<String, Topic> topicMap = topicEntry.getValue();
+                if (MapUtil.isEmpty(topicMap)) {
+                    continue;
+                }
+
+                int sysFlag = topicMap.values().iterator().next().getTopicSysFlag();
+                if (!TopicSysFlag.hasUnitFlag(sysFlag) && TopicSysFlag.hasUnitSubFlag(sysFlag)) {
+                    topicList.getTopicList().add(topic);
+                }
+            }
 
         } catch (Exception e) {
             log.error("getTopicList error", e);
