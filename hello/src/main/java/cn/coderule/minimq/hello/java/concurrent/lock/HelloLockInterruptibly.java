@@ -9,6 +9,7 @@ public class HelloLockInterruptibly {
     public static void main(String[] args) {
         style1();
         style2();
+        style3();
     }
 
     public static void style1() {
@@ -44,6 +45,27 @@ public class HelloLockInterruptibly {
             }
         } catch (InterruptedException e) {
             log.error("InterruptedException", e);
+        }
+    }
+
+    public static void style3() {
+        Lock lock = new ReentrantLock();
+
+        try {
+            lock.lockInterruptibly();
+            log.info("style3 lock {}", lock);
+        } catch (InterruptedException e) {
+            log.error("style3 lockInterruptibly Exception", e);
+        }
+
+        try {
+            log.info("style3 after lock {}", lock);
+        } catch (Exception e) {
+            log.error("style3 lockInterruptibly Exception", e);
+        } finally {
+            log.info("style3 before unlock {}", lock);
+            lock.unlock();
+            log.info("style3 after unlock {}", lock);
         }
     }
 }
