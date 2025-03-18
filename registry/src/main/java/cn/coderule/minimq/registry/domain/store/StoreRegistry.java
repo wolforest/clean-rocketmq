@@ -1,4 +1,4 @@
-package cn.coderule.minimq.registry.domain.store.service;
+package cn.coderule.minimq.registry.domain.store;
 
 import cn.coderule.common.util.lang.StringUtil;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
@@ -7,10 +7,10 @@ import cn.coderule.minimq.domain.config.RegistryConfig;
 import cn.coderule.minimq.domain.constant.MQConstants;
 import cn.coderule.minimq.domain.constant.PermName;
 import cn.coderule.minimq.domain.model.Topic;
-import cn.coderule.minimq.registry.domain.store.UnregisterThread;
 import cn.coderule.minimq.registry.domain.store.model.Route;
 import cn.coderule.minimq.registry.domain.store.model.StoreHealthInfo;
 import cn.coderule.minimq.registry.domain.store.model.StoreStatusInfo;
+import cn.coderule.minimq.registry.domain.store.service.UnregisterService;
 import cn.coderule.minimq.rpc.common.RpcClient;
 import cn.coderule.minimq.rpc.common.core.invoke.RpcCommand;
 import cn.coderule.minimq.rpc.common.protocol.DataVersion;
@@ -44,22 +44,22 @@ public class StoreRegistry {
     private final Route route;
 
     private final RpcClient rpcClient;
-    private final UnregisterThread unregisterThread;
+    private final UnregisterService unregisterService;
 
     public StoreRegistry(RegistryConfig config, RpcClient rpcClient, Route route) {
         this.route = route;
         this.config = config;
 
         this.rpcClient = rpcClient;
-        this.unregisterThread = new UnregisterThread(config, this);
+        this.unregisterService = new UnregisterService(config, this);
     }
 
     public void start() {
-        unregisterThread.start();
+        unregisterService.start();
     }
 
     public void shutdown() {
-        unregisterThread.shutdown();
+        unregisterService.shutdown();
     }
 
     public StoreRegisterResult register(StoreInfo store, TopicConfigSerializeWrapper topicInfo, List<String> filterList, Channel channel) {
@@ -117,7 +117,7 @@ public class StoreRegistry {
     }
 
     public boolean unregisterAsync(UnRegisterBrokerRequestHeader request) {
-        return unregisterThread.submit(request);
+        return unregisterService.submit(request);
     }
 
     public void registerTopic(String topicName, List<Topic> topicList) {
