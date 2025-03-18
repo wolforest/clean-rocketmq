@@ -10,6 +10,7 @@ import cn.coderule.minimq.rpc.registry.protocol.cluster.GroupInfo;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.StoreInfo;
 import cn.coderule.minimq.rpc.registry.protocol.route.QueueInfo;
 import cn.coderule.minimq.rpc.registry.protocol.route.RouteInfo;
+import cn.coderule.minimq.rpc.registry.protocol.statictopic.TopicQueueMappingInfo;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -142,7 +143,12 @@ public class TopicService {
     }
 
     private void getQueueMap(RouteInfo routeInfo, String topicName) {
+        Map<String, TopicQueueMappingInfo> map = route.getQueueMap(topicName);
+        if (MapUtil.isEmpty(map)) {
+            return;
+        }
 
+        routeInfo.setTopicQueueMappingByBroker(map);
     }
 
     private void handleActingMaster(RouteInfo routeInfo, String topicName) {

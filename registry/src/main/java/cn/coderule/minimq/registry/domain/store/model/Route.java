@@ -221,6 +221,9 @@ public class Route implements Serializable {
         return map.containsKey(groupName);
     }
 
+    public Map<String, TopicQueueMappingInfo> getQueueMap(String topicName) {
+        return this.topicQueueMap.get(topicName);
+    }
     public void saveQueueMap(String topicName, TopicQueueMappingInfo queueMap) {
         Map<String, TopicQueueMappingInfo> map = this.topicQueueMap.computeIfAbsent(topicName, k -> new HashMap<>());
 
