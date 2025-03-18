@@ -11,6 +11,7 @@ public class HelloLockInterruptibly {
         style2();
         style3();
         style4();
+        style5();
     }
 
     public static void style1() {
@@ -88,6 +89,21 @@ public class HelloLockInterruptibly {
             }
 
             log.info("style4 after unlock {}", lock);
+        }
+
+    }
+
+    public static void style5() {
+        Lock lock = new ReentrantLock();
+
+        for (int i = 0; i < 10; i++) {
+            try {
+                log.info("style5 before unlock {}", lock);
+                lock.unlock();
+                log.info("style5 after unlock {}", lock);
+            } catch (IllegalMonitorStateException e) {
+                log.error("Attempting to unlock a read lock that was not acquired.", e);
+            }
         }
 
     }
