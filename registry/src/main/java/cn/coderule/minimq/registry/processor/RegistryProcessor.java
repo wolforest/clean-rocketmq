@@ -14,12 +14,11 @@ import cn.coderule.minimq.rpc.common.protocol.DataVersion;
 import cn.coderule.minimq.rpc.common.protocol.code.SystemResponseCode;
 import cn.coderule.minimq.rpc.registry.protocol.body.RegisterBrokerBody;
 import cn.coderule.minimq.rpc.registry.protocol.body.StoreRegisterResult;
-import cn.coderule.minimq.rpc.registry.protocol.body.TopicConfigSerializeWrapper;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.StoreInfo;
 import cn.coderule.minimq.rpc.registry.protocol.header.RegisterBrokerRequestHeader;
 import cn.coderule.minimq.rpc.registry.protocol.header.RegisterBrokerResponseHeader;
+import cn.coderule.minimq.rpc.registry.protocol.header.UnRegisterBrokerRequestHeader;
 import io.netty.channel.ChannelHandlerContext;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 import lombok.extern.slf4j.Slf4j;
 
@@ -61,7 +60,15 @@ public class RegistryProcessor implements RpcProcessor {
     }
 
     public RpcCommand unregisterStore(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
-        return null;
+        RpcCommand response = RpcCommand.createResponseCommand(null);
+        UnRegisterBrokerRequestHeader requestHeader = request.decodeHeader(UnRegisterBrokerRequestHeader.class);
+
+        boolean isSuccess = storeRegistry.unregisterAsync(requestHeader);
+        if (!isSuccess) {
+            log.warn("unregister store failed, request: {}", requestHeader);
+            return response.setCodeAndRemark(SystemResponseCode.SYSTEM_ERROR, "unregister failed");
+        }
+        return response.setCodeAndRemark(SystemResponseCode.SUCCESS, null);
     }
 
     public RpcCommand registerTopic(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
