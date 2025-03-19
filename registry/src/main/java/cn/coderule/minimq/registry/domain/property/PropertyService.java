@@ -1,8 +1,11 @@
 package cn.coderule.minimq.registry.domain.property;
 
+import cn.coderule.common.util.lang.BeanUtil;
 import cn.coderule.minimq.domain.config.RegistryConfig;
 import cn.coderule.minimq.rpc.common.config.Configuration;
 import cn.coderule.minimq.rpc.common.config.RpcServerConfig;
+import cn.coderule.minimq.rpc.common.protocol.code.ResponseCode;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Properties;
@@ -25,6 +28,23 @@ public class PropertyService {
         initConfigBlackList();
     }
 
+    public void update(Properties properties) {
+        configuration.update(properties);
+    }
+
+    public String getString() {
+        return configuration.getAllConfigsFormatString();
+    }
+
+    public boolean validateBlackList(Properties properties) {
+        for (String blackConfig : configBlackList) {
+            if (properties.containsKey(blackConfig)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private void initConfigBlackList() {
         configBlackList.add("configBlackList");
         configBlackList.add("configStorePath");
@@ -35,12 +55,5 @@ public class PropertyService {
         configBlackList.addAll(Arrays.asList(configArray));
     }
 
-    private boolean validateBlackList(Properties properties) {
-        for (String blackConfig : configBlackList) {
-            if (properties.containsKey(blackConfig)) {
-                return true;
-            }
-        }
-        return false;
-    }
+
 }
