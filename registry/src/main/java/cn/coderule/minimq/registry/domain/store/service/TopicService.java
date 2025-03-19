@@ -276,7 +276,7 @@ public class TopicService {
             queueInfoList.add(queueInfo);
         }
 
-        routeInfo.setQueueList(queueInfoList);
+        routeInfo.setQueueDatas(queueInfoList);
         return true;
     }
 
@@ -288,7 +288,7 @@ public class TopicService {
                 continue;
             }
             GroupInfo groupClone = new GroupInfo(groupInfo);
-            routeInfo.getBrokerList().add(groupClone);
+            routeInfo.getBrokerDatas().add(groupClone);
 
             getFilterInfo(routeInfo, groupClone);
         }

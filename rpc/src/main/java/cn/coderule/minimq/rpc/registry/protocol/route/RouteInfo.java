@@ -49,7 +49,7 @@ public class RouteInfo extends RpcSerializable {
      *  - readQueueNums
      *  - writeQueueNums
      */
-    private List<QueueInfo> queueList;
+    private List<QueueInfo> queueDatas;
 
     /**
      * Broker data list
@@ -62,7 +62,7 @@ public class RouteInfo extends RpcSerializable {
      *  - random
      *  - enableActingMaster
      */
-    private List<GroupInfo> brokerList;
+    private List<GroupInfo> brokerDatas;
 
     /**
      * Filter server table
@@ -88,23 +88,23 @@ public class RouteInfo extends RpcSerializable {
     private Map<String/*brokerName*/, TopicQueueMappingInfo> topicQueueMappingByBroker;
 
     public RouteInfo() {
-        queueList = new ArrayList<>();
-        brokerList = new ArrayList<>();
+        queueDatas = new ArrayList<>();
+        brokerDatas = new ArrayList<>();
         filterServerTable = new HashMap<>();
     }
 
     public RouteInfo(RouteInfo routeInfo) {
-        this.queueList = new ArrayList<>();
-        this.brokerList = new ArrayList<>();
+        this.queueDatas = new ArrayList<>();
+        this.brokerDatas = new ArrayList<>();
         this.filterServerTable = new HashMap<>();
         this.orderTopicConf = routeInfo.orderTopicConf;
 
-        if (routeInfo.queueList != null) {
-            this.queueList.addAll(routeInfo.queueList);
+        if (routeInfo.queueDatas != null) {
+            this.queueDatas.addAll(routeInfo.queueDatas);
         }
 
-        if (routeInfo.brokerList != null) {
-            this.brokerList.addAll(routeInfo.brokerList);
+        if (routeInfo.brokerDatas != null) {
+            this.brokerDatas.addAll(routeInfo.brokerDatas);
         }
 
         if (routeInfo.filterServerTable != null) {
@@ -137,13 +137,13 @@ public class RouteInfo extends RpcSerializable {
 
     public RouteInfo cloneRouteInfo() {
         RouteInfo routeInfo = new RouteInfo();
-        routeInfo.setQueueList(new ArrayList<>());
-        routeInfo.setBrokerList(new ArrayList<>());
+        routeInfo.setQueueDatas(new ArrayList<>());
+        routeInfo.setBrokerDatas(new ArrayList<>());
         routeInfo.setFilterServerTable(new HashMap<>());
         routeInfo.setOrderTopicConf(this.orderTopicConf);
 
-        routeInfo.getQueueList().addAll(this.queueList);
-        routeInfo.getBrokerList().addAll(this.brokerList);
+        routeInfo.getQueueDatas().addAll(this.queueDatas);
+        routeInfo.getBrokerDatas().addAll(this.brokerDatas);
         routeInfo.getFilterServerTable().putAll(this.filterServerTable);
         if (this.topicQueueMappingByBroker != null) {
             Map<String, TopicQueueMappingInfo> cloneMap = new HashMap<>(this.topicQueueMappingByBroker);
@@ -157,12 +157,12 @@ public class RouteInfo extends RpcSerializable {
 
         routeInfo.setOrderTopicConf(this.orderTopicConf);
 
-        for (final QueueInfo queueInfo : this.queueList) {
-            routeInfo.getQueueList().add(new QueueInfo(queueInfo));
+        for (final QueueInfo queueInfo : this.queueDatas) {
+            routeInfo.getQueueDatas().add(new QueueInfo(queueInfo));
         }
 
-        for (final GroupInfo brokerData : this.brokerList) {
-            routeInfo.getBrokerList().add(new GroupInfo(brokerData));
+        for (final GroupInfo brokerData : this.brokerDatas) {
+            routeInfo.getBrokerDatas().add(new GroupInfo(brokerData));
         }
 
         for (final Map.Entry<String, List<String>> listEntry : this.filterServerTable.entrySet()) {
@@ -190,10 +190,10 @@ public class RouteInfo extends RpcSerializable {
             return true;
         RouteInfo old = new RouteInfo(oldData);
         RouteInfo now = new RouteInfo(this);
-        Collections.sort(old.getQueueList());
-        Collections.sort(old.getBrokerList());
-        Collections.sort(now.getQueueList());
-        Collections.sort(now.getBrokerList());
+        Collections.sort(old.getQueueDatas());
+        Collections.sort(old.getBrokerDatas());
+        Collections.sort(now.getQueueDatas());
+        Collections.sort(now.getBrokerDatas());
         return !old.equals(now);
     }
 
@@ -201,9 +201,9 @@ public class RouteInfo extends RpcSerializable {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((brokerList == null) ? 0 : brokerList.hashCode());
+        result = prime * result + ((brokerDatas == null) ? 0 : brokerDatas.hashCode());
         result = prime * result + ((orderTopicConf == null) ? 0 : orderTopicConf.hashCode());
-        result = prime * result + ((queueList == null) ? 0 : queueList.hashCode());
+        result = prime * result + ((queueDatas == null) ? 0 : queueDatas.hashCode());
         result = prime * result + ((filterServerTable == null) ? 0 : filterServerTable.hashCode());
         result = prime * result + ((topicQueueMappingByBroker == null) ? 0 : topicQueueMappingByBroker.hashCode());
         return result;
@@ -218,20 +218,20 @@ public class RouteInfo extends RpcSerializable {
         if (getClass() != obj.getClass())
             return false;
         RouteInfo other = (RouteInfo) obj;
-        if (brokerList == null) {
-            if (other.brokerList != null)
+        if (brokerDatas == null) {
+            if (other.brokerDatas != null)
                 return false;
-        } else if (!brokerList.equals(other.brokerList))
+        } else if (!brokerDatas.equals(other.brokerDatas))
             return false;
         if (orderTopicConf == null) {
             if (other.orderTopicConf != null)
                 return false;
         } else if (!orderTopicConf.equals(other.orderTopicConf))
             return false;
-        if (queueList == null) {
-            if (other.queueList != null)
+        if (queueDatas == null) {
+            if (other.queueDatas != null)
                 return false;
-        } else if (!queueList.equals(other.queueList))
+        } else if (!queueDatas.equals(other.queueDatas))
             return false;
         if (filterServerTable == null) {
             if (other.filterServerTable != null)
@@ -246,7 +246,7 @@ public class RouteInfo extends RpcSerializable {
 
     @Override
     public String toString() {
-        return "TopicRouteData [orderTopicConf=" + orderTopicConf + ", queueDatas=" + queueList
-            + ", brokerDatas=" + brokerList + ", filterServerTable=" + filterServerTable + ", topicQueueMappingInfoTable=" + topicQueueMappingByBroker + "]";
+        return "TopicRouteData [orderTopicConf=" + orderTopicConf + ", queueDatas=" + queueDatas
+            + ", brokerDatas=" + brokerDatas + ", filterServerTable=" + filterServerTable + ", topicQueueMappingInfoTable=" + topicQueueMappingByBroker + "]";
     }
 }

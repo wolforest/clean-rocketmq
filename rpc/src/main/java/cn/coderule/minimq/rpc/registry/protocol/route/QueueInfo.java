@@ -48,6 +48,16 @@ public class QueueInfo implements Comparable<QueueInfo> {
         return queueInfo;
     }
 
+    public Topic toTopic(String topicName) {
+        Topic topic = new Topic();
+        topic.setTopicName(topicName);
+        topic.setReadQueueNums(readQueueNums);
+        topic.setWriteQueueNums(writeQueueNums);
+        topic.setPerm(perm);
+        topic.setTopicSysFlag(topicSysFlag);
+        return topic;
+    }
+
     // Deep copy QueueData
     public QueueInfo(QueueInfo queueInfo) {
         this.brokerName = queueInfo.brokerName;

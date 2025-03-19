@@ -1,8 +1,10 @@
 package cn.coderule.minimq.registry.processor;
 
 import cn.coderule.common.util.encrypt.HashUtil;
+import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.minimq.domain.config.RegistryConfig;
 import cn.coderule.minimq.domain.constant.MQConstants;
+import cn.coderule.minimq.domain.model.Topic;
 import cn.coderule.minimq.registry.domain.kv.KVService;
 import cn.coderule.minimq.registry.domain.store.StoreRegistry;
 import cn.coderule.minimq.rpc.common.RpcProcessor;
@@ -22,6 +24,7 @@ import cn.coderule.minimq.rpc.registry.protocol.header.RegisterTopicRequestHeade
 import cn.coderule.minimq.rpc.registry.protocol.header.UnRegisterBrokerRequestHeader;
 import cn.coderule.minimq.rpc.registry.protocol.route.RouteInfo;
 import io.netty.channel.ChannelHandlerContext;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 import lombok.extern.slf4j.Slf4j;
 
@@ -87,7 +90,20 @@ public class RegistryProcessor implements RpcProcessor {
 
         RouteInfo routeInfo = RouteInfo.decode(request.getBody());
 
-        return null;
+        if (null ==  routeInfo || CollectionUtil.isEmpty(routeInfo.getQueueDatas())) {
+            return response.setCodeAndRemark(SystemResponseCode.SUCCESS, null);
+        }
+
+        List<Topic> topicList = toTopicList(requestHeader.getTopic(), routeInfo);
+        storeRegistry.registerTopic(requestHeader.getTopic(), topicList);
+
+        return response.setCodeAndRemark(SystemResponseCode.SUCCESS, null);
+    }
+
+    private List<Topic> toTopicList(String topicName, RouteInfo routeInfo) {
+        return routeInfo.getQueueDatas().stream()
+            .map(queueData -> queueData.toTopic(topicName))
+            .toList();
     }
 
     private boolean checksum(ChannelHandlerContext ctx, RpcCommand request, RegisterBrokerRequestHeader requestHeader, RpcCommand response) {
