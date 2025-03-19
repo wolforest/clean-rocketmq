@@ -28,6 +28,8 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class KVService {
+    public static final String NAMESPACE_ORDER_TOPIC_CONFIG = "ORDER_TOPIC_CONFIG";
+
     private final RegistryConfig config;
 
     private final ReadWriteLock lock = new ReentrantReadWriteLock();

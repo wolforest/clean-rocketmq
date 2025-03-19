@@ -26,6 +26,12 @@ public class RegistryConfig implements Serializable {
 
     private int unregisterQueueCapacity = 3000;
 
+    private boolean enableOrderTopic = false;
+    private boolean returnOrderTopic = true;
+
+    private int serverStartupDelay = 45_000;
+    private volatile boolean waitServerStartup = false;
+
     /**
      * If enable this flag, the topics that don't exist in broker registration payload will be deleted from name server.
      *

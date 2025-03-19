@@ -117,6 +117,14 @@ public class RouteInfo extends RpcSerializable {
     }
 
     public byte[] encode() {
+        return encode(false);
+    }
+
+    public byte[] encode(boolean withFeatures) {
+        if (!withFeatures) {
+            return super.encode();
+        }
+
         return super.encode(
             JSONWriter.Feature.BrowserCompatible,
             JSONWriter.Feature.SortMapEntriesByKeys

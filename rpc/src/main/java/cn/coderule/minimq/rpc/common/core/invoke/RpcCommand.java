@@ -27,8 +27,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
@@ -185,7 +183,7 @@ public class RpcCommand {
             throw new RemotingCommandException("decode error, bad header length: " + headerLength);
         }
 
-        RpcCommand cmd = headerDecode(byteBuffer, headerLength, getProtocolType(oriHeaderLen));
+        RpcCommand cmd = decodeHeader(byteBuffer, headerLength, getProtocolType(oriHeaderLen));
 
         int bodyLength = length - 4 - headerLength;
         byte[] bodyData = null;
@@ -203,7 +201,7 @@ public class RpcCommand {
         return length & 0xFFFFFF;
     }
 
-    private static RpcCommand headerDecode(ByteBuf byteBuffer, int len,
+    private static RpcCommand decodeHeader(ByteBuf byteBuffer, int len,
         SerializeType type) throws RemotingCommandException {
         switch (type) {
             case JSON:
@@ -254,16 +252,16 @@ public class RpcCommand {
         return customHeader;
     }
 
-    public void writeCustomHeader(CommandHeader customHeader) {
+    public void writeHeader(CommandHeader customHeader) {
         this.customHeader = customHeader;
     }
 
-    public <T extends CommandHeader> T decodeCommandHeader(
+    public <T extends CommandHeader> T decodeHeader(
         Class<T> classHeader) throws RemotingCommandException {
-        return decodeCommandHeader(classHeader, false);
+        return decodeHeader(classHeader, false);
     }
 
-    public <T extends CommandHeader> T decodeCommandHeader(
+    public <T extends CommandHeader> T decodeHeader(
         Class<T> classHeader, boolean isCached) throws RemotingCommandException {
         if (isCached && cachedHeader != null) {
             return classHeader.cast(cachedHeader);
@@ -292,7 +290,7 @@ public class RpcCommand {
             return objectHeader;
         }
 
-        decodeCommandHeader(classHeader, objectHeader);
+        decodeHeader(classHeader, objectHeader);
         objectHeader.checkFields();
 
         return objectHeader;
@@ -346,7 +344,7 @@ public class RpcCommand {
         }
     }
 
-    private void decodeCommandHeader(Class<? extends CommandHeader> classHeader, CommandHeader objectHeader) {
+    private void decodeHeader(Class<? extends CommandHeader> classHeader, CommandHeader objectHeader) {
         Field[] fields = getClazzFields(classHeader);
         for (Field field : fields) {
             if (Modifier.isStatic(field.getModifiers())) {

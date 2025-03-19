@@ -4,8 +4,14 @@ import cn.coderule.minimq.domain.config.RegistryConfig;
 import cn.coderule.minimq.registry.domain.kv.KVService;
 import cn.coderule.minimq.registry.domain.store.service.TopicService;
 import cn.coderule.minimq.rpc.common.RpcProcessor;
+import cn.coderule.minimq.rpc.common.core.exception.RemotingCommandException;
 import cn.coderule.minimq.rpc.common.core.invoke.RpcCommand;
 import cn.coderule.minimq.rpc.common.core.invoke.RpcContext;
+import cn.coderule.minimq.rpc.common.protocol.code.ResponseCode;
+import cn.coderule.minimq.rpc.common.protocol.code.SystemResponseCode;
+import cn.coderule.minimq.rpc.registry.protocol.header.GetRouteInfoRequestHeader;
+import cn.coderule.minimq.rpc.registry.protocol.route.RouteInfo;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import lombok.extern.slf4j.Slf4j;
 
@@ -17,7 +23,7 @@ public class RouteProcessor implements RpcProcessor {
     private final KVService kvService;
 
     private final long startTime;
-    private final AtomicBoolean isServerReady;
+    private final AtomicBoolean isServerBooting;
 
     public RouteProcessor(RegistryConfig registryConfig, TopicService topicService, KVService kvService) {
         this.registryConfig = registryConfig;
@@ -26,16 +32,78 @@ public class RouteProcessor implements RpcProcessor {
         this.kvService = kvService;
 
         this.startTime = System.currentTimeMillis();
-        isServerReady = new AtomicBoolean(false);
+        isServerBooting = new AtomicBoolean(true);
+    }
+
+    private RpcCommand topicNotExist(GetRouteInfoRequestHeader requestHeader, RpcCommand response) {
+        String remark = "topic not exist: " + requestHeader.getTopic();
+        return response.setCodeAndRemark(ResponseCode.TOPIC_NOT_EXIST, remark);
     }
 
     @Override
-    public RpcCommand process(RpcContext ctx, RpcCommand request) {
-        return null;
+    public RpcCommand process(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
+        RpcCommand response = RpcCommand.createResponseCommand(null);
+        GetRouteInfoRequestHeader requestHeader = request.decodeHeader(GetRouteInfoRequestHeader.class);
+
+        if (isServerNotReady(request, response)) {
+            return response;
+        }
+
+        RouteInfo routeInfo = topicService.getRoute(requestHeader.getTopic());
+        if (routeInfo == null) {
+            return topicNotExist(requestHeader, response);
+        }
+
+        flushIsServerReady();
+        setOrderConfig(requestHeader, routeInfo);
+        response.setBody(getRouteBody(requestHeader, routeInfo));
+
+        return response.setCodeAndRemark(SystemResponseCode.SUCCESS, null);
     }
 
     @Override
     public boolean reject() {
         return false;
     }
+
+    private boolean isServerNotReady(RpcCommand request, RpcCommand response) {
+        boolean isOverDelay = System.currentTimeMillis() - startTime > registryConfig.getServerStartupDelay();
+        boolean serverNotReady = !(isServerBooting.get() && isOverDelay) && registryConfig.isWaitServerStartup();
+        if (serverNotReady) {
+            log.warn("registry server is not ready. request code: {}", request.getCode());
+            response.setCodeAndRemark(SystemResponseCode.SYSTEM_ERROR, "server not ready");
+            return true;
+        }
+
+        return false;
+    }
+
+    private void setOrderConfig(GetRouteInfoRequestHeader requestHeader, RouteInfo routeInfo) {
+        if (!registryConfig.isEnableOrderTopic()) {
+            return;
+        }
+
+        String orderTopicConfig = kvService.getKVConfig(
+            KVService.NAMESPACE_ORDER_TOPIC_CONFIG,
+            requestHeader.getTopic()
+        );
+        routeInfo.setOrderTopicConf(orderTopicConfig);
+    }
+
+    private byte[] getRouteBody(GetRouteInfoRequestHeader requestHeader, RouteInfo routeInfo) {
+        Boolean standardJson = Optional
+            .ofNullable(requestHeader.getAcceptStandardJsonOnly())
+            .orElse(false);
+
+        return routeInfo.encode(!standardJson);
+    }
+
+    private void flushIsServerReady() {
+        if (!isServerBooting.get()) {
+            return;
+        }
+
+        isServerBooting.set(false);
+    }
+
 }
