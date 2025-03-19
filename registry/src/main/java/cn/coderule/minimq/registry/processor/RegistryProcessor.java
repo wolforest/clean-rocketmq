@@ -11,6 +11,7 @@ import cn.coderule.minimq.rpc.common.core.invoke.RpcCommand;
 import cn.coderule.minimq.rpc.common.core.invoke.RpcContext;
 import cn.coderule.minimq.rpc.common.netty.service.NettyHelper;
 import cn.coderule.minimq.rpc.common.protocol.DataVersion;
+import cn.coderule.minimq.rpc.common.protocol.code.RequestCode;
 import cn.coderule.minimq.rpc.common.protocol.code.SystemResponseCode;
 import cn.coderule.minimq.rpc.registry.protocol.body.RegisterBrokerBody;
 import cn.coderule.minimq.rpc.registry.protocol.body.StoreRegisterResult;
@@ -29,9 +30,16 @@ public class RegistryProcessor implements RpcProcessor {
     private KVService kvService;
 
     @Override
-    public RpcCommand process(RpcContext ctx, RpcCommand request) {
-
-        return null;
+    public RpcCommand process(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
+        return switch (request.getCode()) {
+            case RequestCode.REGISTER_BROKER -> registerStore(ctx, request);
+            case RequestCode.UNREGISTER_BROKER -> unregisterStore(ctx, request);
+            case RequestCode.REGISTER_TOPIC_IN_NAMESRV -> registerTopic(ctx, request);
+            default -> {
+                String error = " request type " + request.getCode() + " not supported";
+                yield RpcCommand.buildErrorResponse(SystemResponseCode.SYSTEM_ERROR, error);
+            }
+        };
     }
 
     @Override
@@ -72,6 +80,7 @@ public class RegistryProcessor implements RpcProcessor {
     }
 
     public RpcCommand registerTopic(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
+
         return null;
     }
 
