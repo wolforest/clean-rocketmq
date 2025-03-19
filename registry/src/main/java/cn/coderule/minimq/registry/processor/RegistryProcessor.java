@@ -18,7 +18,9 @@ import cn.coderule.minimq.rpc.registry.protocol.body.StoreRegisterResult;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.StoreInfo;
 import cn.coderule.minimq.rpc.registry.protocol.header.RegisterBrokerRequestHeader;
 import cn.coderule.minimq.rpc.registry.protocol.header.RegisterBrokerResponseHeader;
+import cn.coderule.minimq.rpc.registry.protocol.header.RegisterTopicRequestHeader;
 import cn.coderule.minimq.rpc.registry.protocol.header.UnRegisterBrokerRequestHeader;
+import cn.coderule.minimq.rpc.registry.protocol.route.RouteInfo;
 import io.netty.channel.ChannelHandlerContext;
 import java.util.concurrent.atomic.AtomicLong;
 import lombok.extern.slf4j.Slf4j;
@@ -80,6 +82,10 @@ public class RegistryProcessor implements RpcProcessor {
     }
 
     public RpcCommand registerTopic(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
+        RpcCommand response = RpcCommand.createResponseCommand(null);
+        RegisterTopicRequestHeader requestHeader = request.decodeHeader(RegisterTopicRequestHeader.class);
+
+        RouteInfo routeInfo = RouteInfo.decode(request.getBody());
 
         return null;
     }

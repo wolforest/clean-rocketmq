@@ -131,6 +131,10 @@ public class RouteInfo extends RpcSerializable {
         );
     }
 
+    public static RouteInfo decode(final byte[] data) {
+        return RpcSerializable.decode(data, RouteInfo.class);
+    }
+
     public RouteInfo cloneRouteInfo() {
         RouteInfo routeInfo = new RouteInfo();
         routeInfo.setQueueList(new ArrayList<>());
