@@ -1,4 +1,4 @@
-package cn.coderule.minimq.registry.api;
+package cn.coderule.minimq.registry.processor;
 
 import cn.coderule.minimq.rpc.common.RpcProcessor;
 import cn.coderule.minimq.rpc.common.core.invoke.RpcCommand;
