@@ -35,11 +35,6 @@ public class RouteProcessor implements RpcProcessor {
         isServerBooting = new AtomicBoolean(true);
     }
 
-    private RpcCommand topicNotExist(GetRouteInfoRequestHeader requestHeader, RpcCommand response) {
-        String remark = "topic not exist: " + requestHeader.getTopic();
-        return response.setCodeAndRemark(ResponseCode.TOPIC_NOT_EXIST, remark);
-    }
-
     @Override
     public RpcCommand process(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
         RpcCommand response = RpcCommand.createResponseCommand(null);
@@ -76,6 +71,11 @@ public class RouteProcessor implements RpcProcessor {
         }
 
         return false;
+    }
+
+    private RpcCommand topicNotExist(GetRouteInfoRequestHeader requestHeader, RpcCommand response) {
+        String remark = "topic not exist: " + requestHeader.getTopic();
+        return response.setCodeAndRemark(ResponseCode.TOPIC_NOT_EXIST, remark);
     }
 
     private void setOrderConfig(GetRouteInfoRequestHeader requestHeader, RouteInfo routeInfo) {
