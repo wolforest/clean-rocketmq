@@ -40,5 +40,4 @@ public class PropertyProcessor implements RpcProcessor {
     private RpcCommand setProperty(RpcContext ctx, RpcCommand request) {
         return null;
     }
-
 }

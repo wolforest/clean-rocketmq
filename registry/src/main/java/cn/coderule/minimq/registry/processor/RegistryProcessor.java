@@ -58,7 +58,7 @@ public class RegistryProcessor implements RpcProcessor {
         return false;
     }
 
-    public RpcCommand registerStore(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
+    private RpcCommand registerStore(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
         RegisterBrokerRequestHeader requestHeader = request.decodeHeader(RegisterBrokerRequestHeader.class);
         RpcCommand response = RpcCommand.createResponseCommand(RegisterBrokerResponseHeader.class);
         RegisterBrokerResponseHeader responseHeader = (RegisterBrokerResponseHeader) response.readCustomHeader();
@@ -78,7 +78,7 @@ public class RegistryProcessor implements RpcProcessor {
         return response.setCodeAndRemark(SystemResponseCode.SUCCESS, null);
     }
 
-    public RpcCommand unregisterStore(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
+    private RpcCommand unregisterStore(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
         RpcCommand response = RpcCommand.createResponseCommand(null);
         UnRegisterBrokerRequestHeader requestHeader = request.decodeHeader(UnRegisterBrokerRequestHeader.class);
 
@@ -90,7 +90,7 @@ public class RegistryProcessor implements RpcProcessor {
         return response.setCodeAndRemark(SystemResponseCode.SUCCESS, null);
     }
 
-    public RpcCommand registerTopic(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
+    private RpcCommand registerTopic(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
         RpcCommand response = RpcCommand.createResponseCommand(null);
         RegisterTopicRequestHeader requestHeader = request.decodeHeader(RegisterTopicRequestHeader.class);
 

@@ -42,4 +42,11 @@ public class RegistryConfig implements Serializable {
     private boolean deleteTopicWhileRegistration = false;
     private boolean notifyMinIdChanged = false;
     private long idleScanInterval = 5 * 1000;
+
+    /**
+     * Config in this black list will be not allowed to update by command.
+     * Try to update this config black list by restart process.
+     * Try to update configures in black list by restart process.
+     */
+    private String configBlackList = "configBlackList;configStorePath;kvConfigPath";
 }
