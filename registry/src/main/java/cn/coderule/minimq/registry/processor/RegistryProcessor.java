@@ -30,9 +30,15 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class RegistryProcessor implements RpcProcessor {
-    private RegistryConfig registryConfig;
-    private StoreRegistry storeRegistry;
-    private KVService kvService;
+    private final RegistryConfig registryConfig;
+    private final StoreRegistry storeRegistry;
+    private final KVService kvService;
+
+    public RegistryProcessor(RegistryConfig registryConfig, StoreRegistry storeRegistry, KVService kvService) {
+        this.registryConfig = registryConfig;
+        this.storeRegistry = storeRegistry;
+        this.kvService = kvService;
+    }
 
     @Override
     public RpcCommand process(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
