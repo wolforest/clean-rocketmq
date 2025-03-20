@@ -1,5 +1,6 @@
 package cn.coderule.minimq.registry.processor;
 
+import cn.coderule.minimq.domain.config.RegistryConfig;
 import cn.coderule.minimq.registry.domain.store.service.TopicService;
 import cn.coderule.minimq.rpc.common.RpcProcessor;
 import cn.coderule.minimq.rpc.common.core.exception.RemotingCommandException;
@@ -7,12 +8,16 @@ import cn.coderule.minimq.rpc.common.core.invoke.RpcCommand;
 import cn.coderule.minimq.rpc.common.core.invoke.RpcContext;
 import cn.coderule.minimq.rpc.common.protocol.code.RequestCode;
 import cn.coderule.minimq.rpc.common.protocol.code.SystemResponseCode;
+import cn.coderule.minimq.rpc.registry.protocol.body.TopicList;
+import cn.coderule.minimq.rpc.registry.protocol.header.GetTopicsByClusterRequestHeader;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class TopicProcessor implements RpcProcessor {
+    private final RegistryConfig config;
     private final TopicService topicService;
-    public TopicProcessor(TopicService topicService) {
+    public TopicProcessor(RegistryConfig config, TopicService topicService) {
+        this.config = config;
         this.topicService = topicService;
     }
 
@@ -40,8 +45,29 @@ public class TopicProcessor implements RpcProcessor {
 
     private RpcCommand getTopicList(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
         RpcCommand response = RpcCommand.createResponseCommand(null);
+
+        if (!config.isReturnAllTopic()) {
+            return response.setCodeAndRemark(SystemResponseCode.SYSTEM_ERROR, "returnAllTopic is false");
+        }
+
+
+
         return response.success();
 
+    }
+
+    private RpcCommand getTopicByCluster(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
+        RpcCommand response = RpcCommand.createResponseCommand(null);
+
+        if (!config.isReturnTopicByCluster()) {
+            return response.setCodeAndRemark(SystemResponseCode.SYSTEM_ERROR, "returnAllTopic is false");
+        }
+
+        GetTopicsByClusterRequestHeader requestHeader = request.decodeHeader(GetTopicsByClusterRequestHeader.class);
+        TopicList topicList = topicService.getTopicByCluster(requestHeader.getCluster());
+        response.setBody(topicList.encode());
+
+        return response.success();
     }
 
     private RpcCommand getUnitTopic(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
@@ -62,11 +88,7 @@ public class TopicProcessor implements RpcProcessor {
 
     }
 
-    private RpcCommand getTopicByCluster(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
-        RpcCommand response = RpcCommand.createResponseCommand(null);
-        return response.success();
 
-    }
 
     private RpcCommand getSystemTopicList(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
         RpcCommand response = RpcCommand.createResponseCommand(null);

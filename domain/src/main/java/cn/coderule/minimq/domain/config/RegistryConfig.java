@@ -28,6 +28,8 @@ public class RegistryConfig implements Serializable {
 
     private boolean enableOrderTopic = false;
     private boolean returnOrderTopic = true;
+    private volatile boolean returnAllTopic = true;
+    private volatile boolean returnTopicByCluster = true;
 
     private int serverStartupDelay = 45_000;
     private volatile boolean waitServerStartup = false;
