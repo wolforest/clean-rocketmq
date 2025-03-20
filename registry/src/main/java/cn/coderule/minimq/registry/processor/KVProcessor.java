@@ -6,7 +6,10 @@ import cn.coderule.minimq.rpc.common.core.exception.RemotingCommandException;
 import cn.coderule.minimq.rpc.common.core.invoke.RpcCommand;
 import cn.coderule.minimq.rpc.common.core.invoke.RpcContext;
 import cn.coderule.minimq.rpc.common.protocol.code.RequestCode;
+import cn.coderule.minimq.rpc.common.protocol.code.ResponseCode;
 import cn.coderule.minimq.rpc.common.protocol.code.SystemResponseCode;
+import cn.coderule.minimq.rpc.registry.protocol.header.GetKVConfigRequestHeader;
+import cn.coderule.minimq.rpc.registry.protocol.header.GetKVConfigResponseHeader;
 import cn.coderule.minimq.rpc.registry.protocol.header.PutKVConfigRequestHeader;
 import lombok.extern.slf4j.Slf4j;
 
@@ -49,8 +52,21 @@ public class KVProcessor implements RpcProcessor {
         return response.setCodeAndRemark(SystemResponseCode.SUCCESS, null);
     }
 
-    private RpcCommand getKVConfig(RpcContext ctx, RpcCommand request) {
-        return null;
+    private RpcCommand getKVConfig(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
+        RpcCommand response = RpcCommand.createResponseCommand(GetKVConfigResponseHeader.class);
+        GetKVConfigResponseHeader responseHeader = (GetKVConfigResponseHeader) response.readCustomHeader();
+        GetKVConfigRequestHeader requestHeader = request.decodeHeader(GetKVConfigRequestHeader.class);
+
+        String value = kvService.getKVConfig(requestHeader.getNamespace(), requestHeader.getKey());
+        if (value == null) {
+            return response.setCodeAndRemark(
+                ResponseCode.QUERY_NOT_FOUND,
+                "No config found, namespace: " + requestHeader.getNamespace() + ", key: " + requestHeader.getKey()
+            );
+        }
+
+        responseHeader.setValue(value);
+        return response.setCodeAndRemark(SystemResponseCode.SUCCESS, null);
     }
 
     private RpcCommand deleteKVConfig(RpcContext ctx, RpcCommand request) {
