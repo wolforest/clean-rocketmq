@@ -7,6 +7,7 @@ import cn.coderule.minimq.rpc.common.core.invoke.RpcCommand;
 import cn.coderule.minimq.rpc.common.core.invoke.RpcContext;
 import cn.coderule.minimq.rpc.common.protocol.code.RequestCode;
 import cn.coderule.minimq.rpc.common.protocol.code.SystemResponseCode;
+import cn.coderule.minimq.rpc.registry.protocol.header.BrokerHeartbeatRequestHeader;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -70,8 +71,12 @@ public class ClusterProcessor implements RpcProcessor {
     }
 
     private RpcCommand flushStoreUpdateTime(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
+        RpcCommand response = RpcCommand.createResponseCommand(null);
+        BrokerHeartbeatRequestHeader requestHeader = request.decodeHeader(BrokerHeartbeatRequestHeader.class);
 
-        return null;
+        clusterService.flushStoreUpdateTime(requestHeader.getClusterName(), requestHeader.getBrokerAddr());
+
+        return response.setCodeAndRemark(SystemResponseCode.SUCCESS, null);
     }
 
 }
