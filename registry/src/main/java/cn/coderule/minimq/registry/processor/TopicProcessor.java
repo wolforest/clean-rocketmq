@@ -99,6 +99,14 @@ public class TopicProcessor implements RpcProcessor {
 
     private RpcCommand getSubUnitTopic(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
         RpcCommand response = RpcCommand.createResponseCommand(null);
+
+        if (!config.isReturnAllTopic()) {
+            return response.setCodeAndRemark(SystemResponseCode.SYSTEM_ERROR, "returnAllTopic is false");
+        }
+
+        TopicList topicList = topicService.getSubUnitTopic();
+        response.setBody(topicList.encode());
+
         return response.success();
 
     }
