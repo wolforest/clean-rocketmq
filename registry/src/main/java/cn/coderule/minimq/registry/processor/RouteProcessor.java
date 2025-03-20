@@ -53,7 +53,7 @@ public class RouteProcessor implements RpcProcessor {
         setOrderConfig(requestHeader, routeInfo);
         response.setBody(getRouteBody(requestHeader, routeInfo));
 
-        return response.setCodeAndRemark(SystemResponseCode.SUCCESS, null);
+        return response.success();
     }
 
     @Override

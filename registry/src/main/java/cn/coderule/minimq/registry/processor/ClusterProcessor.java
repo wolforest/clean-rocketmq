@@ -5,9 +5,13 @@ import cn.coderule.minimq.rpc.common.RpcProcessor;
 import cn.coderule.minimq.rpc.common.core.exception.RemotingCommandException;
 import cn.coderule.minimq.rpc.common.core.invoke.RpcCommand;
 import cn.coderule.minimq.rpc.common.core.invoke.RpcContext;
+import cn.coderule.minimq.rpc.common.netty.service.NettyHelper;
 import cn.coderule.minimq.rpc.common.protocol.code.RequestCode;
 import cn.coderule.minimq.rpc.common.protocol.code.SystemResponseCode;
+import cn.coderule.minimq.rpc.registry.protocol.header.AddWritePermOfBrokerResponseHeader;
 import cn.coderule.minimq.rpc.registry.protocol.header.BrokerHeartbeatRequestHeader;
+import cn.coderule.minimq.rpc.registry.protocol.header.WipeWritePermOfBrokerRequestHeader;
+import cn.coderule.minimq.rpc.registry.protocol.header.WipeWritePermOfBrokerResponseHeader;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -51,7 +55,7 @@ public class ClusterProcessor implements RpcProcessor {
         byte[] content = clusterService.getClusterInfo().encode();
         response.setBody(content);
 
-        return response.setCodeAndRemark(SystemResponseCode.SUCCESS, null);
+        return response.success();
 
     }
 
@@ -61,13 +65,39 @@ public class ClusterProcessor implements RpcProcessor {
     }
 
     private RpcCommand removeGroupWritePermission(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
+        RpcCommand response = RpcCommand.createResponseCommand(WipeWritePermOfBrokerResponseHeader.class);
+        WipeWritePermOfBrokerResponseHeader responseHeader = (WipeWritePermOfBrokerResponseHeader) response.readCustomHeader();
+        WipeWritePermOfBrokerRequestHeader requestHeader = request.decodeHeader(WipeWritePermOfBrokerRequestHeader.class);
 
-        return null;
+        int result = clusterService.removeGroupWritePermission(requestHeader.getBrokerName());
+
+        if (ctx != null) {
+            log.info("wipe write perm of group[{}], client: {}, {}",
+                requestHeader.getBrokerName(),
+                NettyHelper.getRemoteAddr(ctx.channel()),
+                result
+            );
+        }
+
+        responseHeader.setWipeTopicCount(result);
+        return response.success();
     }
 
     private RpcCommand addGroupWritePermission(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
+        RpcCommand response = RpcCommand.createResponseCommand(AddWritePermOfBrokerResponseHeader.class);
+        AddWritePermOfBrokerResponseHeader responseHeader = (AddWritePermOfBrokerResponseHeader) response.readCustomHeader();
+        WipeWritePermOfBrokerRequestHeader requestHeader = request.decodeHeader(WipeWritePermOfBrokerRequestHeader.class);
 
-        return null;
+        int result = clusterService.addGroupWritePermission(requestHeader.getBrokerName());
+
+        log.info("add write perm of group[{}], client: {}, {}",
+            requestHeader.getBrokerName(),
+            NettyHelper.getRemoteAddr(ctx.channel()),
+            result
+        );
+
+        responseHeader.setAddTopicCount(result);
+        return response.success();
     }
 
     private RpcCommand flushStoreUpdateTime(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
@@ -76,7 +106,7 @@ public class ClusterProcessor implements RpcProcessor {
 
         clusterService.flushStoreUpdateTime(requestHeader.getClusterName(), requestHeader.getBrokerAddr());
 
-        return response.setCodeAndRemark(SystemResponseCode.SUCCESS, null);
+        return response.success();
     }
 
 }

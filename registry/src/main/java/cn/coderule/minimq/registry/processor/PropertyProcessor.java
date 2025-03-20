@@ -53,7 +53,7 @@ public class PropertyProcessor implements RpcProcessor {
             return response.setCodeAndRemark(ResponseCode.SYSTEM_ERROR, "getProperty error " + e);
         }
 
-        return response.setCodeAndRemark(SystemResponseCode.SUCCESS, null);
+        return response.success();
     }
 
     private RpcCommand setProperty(RpcContext ctx, RpcCommand request) {
@@ -80,6 +80,6 @@ public class PropertyProcessor implements RpcProcessor {
 
         propertyService.update(properties);
 
-        return response.setCodeAndRemark(SystemResponseCode.SUCCESS, null);
+        return response.success();
     }
 }

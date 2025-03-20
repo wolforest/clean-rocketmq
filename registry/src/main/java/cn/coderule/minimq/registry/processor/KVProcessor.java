@@ -50,7 +50,7 @@ public class KVProcessor implements RpcProcessor {
 
         kvService.putKVConfig(requestHeader.getNamespace(), requestHeader.getKey(), requestHeader.getValue());
 
-        return response.setCodeAndRemark(SystemResponseCode.SUCCESS, null);
+        return response.success();
     }
 
     private RpcCommand getKVConfig(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
@@ -67,7 +67,7 @@ public class KVProcessor implements RpcProcessor {
         }
 
         responseHeader.setValue(value);
-        return response.setCodeAndRemark(SystemResponseCode.SUCCESS, null);
+        return response.success();
     }
 
     private RpcCommand deleteKVConfig(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
@@ -76,7 +76,7 @@ public class KVProcessor implements RpcProcessor {
 
         kvService.deleteKVConfig(requestHeader.getNamespace(), requestHeader.getKey());
 
-        return response.setCodeAndRemark(SystemResponseCode.SUCCESS, null);
+        return response.success();
     }
 
 }

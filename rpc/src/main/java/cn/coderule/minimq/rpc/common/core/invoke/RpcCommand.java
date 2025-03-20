@@ -5,6 +5,7 @@ import cn.coderule.minimq.rpc.common.core.enums.BoundaryType;
 import cn.coderule.minimq.rpc.common.core.exception.RemotingCommandException;
 import cn.coderule.minimq.rpc.common.core.enums.LanguageCode;
 import cn.coderule.minimq.rpc.common.core.enums.RemotingCommandType;
+import cn.coderule.minimq.rpc.common.protocol.code.ResponseCode;
 import cn.coderule.minimq.rpc.common.protocol.header.CommandHeader;
 import cn.coderule.minimq.rpc.common.protocol.header.FastCodesHeader;
 import cn.coderule.minimq.rpc.common.protocol.code.SystemResponseCode;
@@ -235,6 +236,10 @@ public class RpcCommand {
 
     public static int markProtocolType(int source, SerializeType type) {
         return (type.getCode() << 24) | (source & 0x00FFFFFF);
+    }
+
+    public RpcCommand success() {
+        return setCodeAndRemark(ResponseCode.SUCCESS, null);
     }
 
     public RpcCommand setCodeAndRemark(int code, String remark) {

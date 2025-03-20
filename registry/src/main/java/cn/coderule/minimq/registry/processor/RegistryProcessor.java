@@ -75,7 +75,7 @@ public class RegistryProcessor implements RpcProcessor {
         formatResponseHeader(result, responseHeader);
         addOrderConfig(response);
 
-        return response.setCodeAndRemark(SystemResponseCode.SUCCESS, null);
+        return response.success();
     }
 
     private RpcCommand unregisterStore(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
@@ -87,7 +87,7 @@ public class RegistryProcessor implements RpcProcessor {
             log.warn("unregister store failed, request: {}", requestHeader);
             return response.setCodeAndRemark(SystemResponseCode.SYSTEM_ERROR, "unregister failed");
         }
-        return response.setCodeAndRemark(SystemResponseCode.SUCCESS, null);
+        return response.success();
     }
 
     private RpcCommand registerTopic(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
@@ -97,13 +97,13 @@ public class RegistryProcessor implements RpcProcessor {
         RouteInfo routeInfo = RouteInfo.decode(request.getBody());
 
         if (null ==  routeInfo || CollectionUtil.isEmpty(routeInfo.getQueueDatas())) {
-            return response.setCodeAndRemark(SystemResponseCode.SUCCESS, null);
+            return response.success();
         }
 
         List<Topic> topicList = toTopicList(requestHeader.getTopic(), routeInfo);
         storeRegistry.registerTopic(requestHeader.getTopic(), topicList);
 
-        return response.setCodeAndRemark(SystemResponseCode.SUCCESS, null);
+        return response.success();
     }
 
     private List<Topic> toTopicList(String topicName, RouteInfo routeInfo) {
