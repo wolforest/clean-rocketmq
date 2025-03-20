@@ -1,6 +1,5 @@
 package cn.coderule.minimq.registry.processor;
 
-import cn.coderule.minimq.registry.domain.store.StoreRegistry;
 import cn.coderule.minimq.registry.domain.store.service.ClusterService;
 import cn.coderule.minimq.rpc.common.RpcProcessor;
 import cn.coderule.minimq.rpc.common.core.exception.RemotingCommandException;
@@ -25,7 +24,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ClusterProcessor implements RpcProcessor {
     private final ClusterService clusterService;
-    private StoreRegistry storeRegistry;
 
     public ClusterProcessor(ClusterService clusterService) {
         this.clusterService = clusterService;
@@ -62,15 +60,15 @@ public class ClusterProcessor implements RpcProcessor {
         DataVersion requestVersion = DataVersion.decode(request.getBody(), DataVersion.class);
         StoreInfo store = new StoreInfo(requestHeader.getClusterName(), requestHeader.getBrokerAddr());
 
-        Boolean changed = storeRegistry.isStoreChanged(store, requestVersion);
-        responseHeader.setChanged(changed);
-
         clusterService.flushStoreUpdateTime(requestHeader.getClusterName(), requestHeader.getBrokerAddr());
 
         DataVersion version = clusterService.getStoreVersion(store);
         if (version != null) {
             response.setBody(version.encode());
         }
+
+        boolean changed = version == null || !version.equals(requestVersion);
+        responseHeader.setChanged(changed);
 
         return response.success();
     }
@@ -105,13 +103,11 @@ public class ClusterProcessor implements RpcProcessor {
 
         int result = clusterService.removeGroupWritePermission(requestHeader.getBrokerName());
 
-        if (ctx != null) {
-            log.info("wipe write perm of group[{}], client: {}, {}",
-                requestHeader.getBrokerName(),
-                NettyHelper.getRemoteAddr(ctx.channel()),
-                result
-            );
-        }
+        log.info("wipe write perm of group[{}], client: {}, {}",
+            requestHeader.getBrokerName(),
+            NettyHelper.getRemoteAddr(ctx.channel()),
+            result
+        );
 
         responseHeader.setWipeTopicCount(result);
         return response.success();

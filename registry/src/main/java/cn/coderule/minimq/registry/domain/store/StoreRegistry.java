@@ -137,12 +137,12 @@ public class StoreRegistry {
         }
     }
 
-    public boolean isStoreChanged(StoreInfo store, DataVersion version) {
+    private boolean isStoreChanged(StoreInfo store, DataVersion version) {
         DataVersion prevVersion = route.getHealthVersion(store);
         return prevVersion == null || !prevVersion.equals(version);
     }
 
-    public boolean isTopicChanged(StoreInfo store,  String topicName, DataVersion version) {
+    private boolean isTopicChanged(StoreInfo store,  String topicName, DataVersion version) {
         if (isStoreChanged(store, version)) {
             return true;
         }
