@@ -1,5 +1,6 @@
 package cn.coderule.minimq.registry.processor;
 
+import cn.coderule.common.util.lang.StringUtil;
 import cn.coderule.minimq.domain.config.RegistryConfig;
 import cn.coderule.minimq.registry.domain.store.service.TopicService;
 import cn.coderule.minimq.rpc.common.RpcProcessor;
@@ -9,6 +10,7 @@ import cn.coderule.minimq.rpc.common.core.invoke.RpcContext;
 import cn.coderule.minimq.rpc.common.protocol.code.RequestCode;
 import cn.coderule.minimq.rpc.common.protocol.code.SystemResponseCode;
 import cn.coderule.minimq.rpc.registry.protocol.body.TopicList;
+import cn.coderule.minimq.rpc.registry.protocol.header.DeleteTopicFromNamesrvRequestHeader;
 import cn.coderule.minimq.rpc.registry.protocol.header.GetTopicsByClusterRequestHeader;
 import lombok.extern.slf4j.Slf4j;
 
@@ -71,6 +73,12 @@ public class TopicProcessor implements RpcProcessor {
         return response.success();
     }
 
+    private RpcCommand getSystemTopicList(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
+        RpcCommand response = RpcCommand.createResponseCommand(null);
+        return response.success();
+
+    }
+
     private RpcCommand getUnitTopic(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
         RpcCommand response = RpcCommand.createResponseCommand(null);
         return response.success();
@@ -89,16 +97,16 @@ public class TopicProcessor implements RpcProcessor {
 
     }
 
-
-
-    private RpcCommand getSystemTopicList(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
-        RpcCommand response = RpcCommand.createResponseCommand(null);
-        return response.success();
-
-    }
-
     private RpcCommand deleteTopic(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
         RpcCommand response = RpcCommand.createResponseCommand(null);
+        DeleteTopicFromNamesrvRequestHeader requestHeader = request.decodeHeader(DeleteTopicFromNamesrvRequestHeader.class);
+
+        if (StringUtil.notBlank(requestHeader.getClusterName())) {
+            topicService.deleteTopic(requestHeader.getClusterName(), requestHeader.getTopic());
+        } else {
+            topicService.deleteTopic(requestHeader.getTopic());
+        }
+
         return response.success();
 
     }
