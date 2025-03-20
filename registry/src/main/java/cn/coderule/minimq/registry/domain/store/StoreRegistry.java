@@ -137,13 +137,13 @@ public class StoreRegistry {
         }
     }
 
-    public boolean isGroupChanged(StoreInfo store, DataVersion version) {
+    public boolean isStoreChanged(StoreInfo store, DataVersion version) {
         DataVersion prevVersion = route.getHealthVersion(store);
         return prevVersion == null || !prevVersion.equals(version);
     }
 
     public boolean isTopicChanged(StoreInfo store,  String topicName, DataVersion version) {
-        if (isGroupChanged(store, version)) {
+        if (isStoreChanged(store, version)) {
             return true;
         }
 
@@ -308,7 +308,7 @@ public class StoreRegistry {
     }
 
     private void saveQueueMap(StoreInfo store, TopicConfigSerializeWrapper topicInfo, boolean isFirst, Map<String, TopicQueueMappingInfo> queueMap) {
-        if (!isGroupChanged(store, topicInfo.getDataVersion()) && !isFirst) {
+        if (!isStoreChanged(store, topicInfo.getDataVersion()) && !isFirst) {
             return;
         }
         for (Map.Entry<String, TopicQueueMappingInfo> entry : queueMap.entrySet()) {

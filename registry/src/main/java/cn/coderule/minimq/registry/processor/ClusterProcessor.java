@@ -1,19 +1,23 @@
 package cn.coderule.minimq.registry.processor;
 
+import cn.coderule.minimq.registry.domain.store.StoreRegistry;
 import cn.coderule.minimq.registry.domain.store.service.ClusterService;
 import cn.coderule.minimq.rpc.common.RpcProcessor;
 import cn.coderule.minimq.rpc.common.core.exception.RemotingCommandException;
 import cn.coderule.minimq.rpc.common.core.invoke.RpcCommand;
 import cn.coderule.minimq.rpc.common.core.invoke.RpcContext;
 import cn.coderule.minimq.rpc.common.netty.service.NettyHelper;
+import cn.coderule.minimq.rpc.common.protocol.DataVersion;
 import cn.coderule.minimq.rpc.common.protocol.code.RequestCode;
 import cn.coderule.minimq.rpc.common.protocol.code.SystemResponseCode;
 import cn.coderule.minimq.rpc.registry.protocol.body.BrokerMemberGroup;
 import cn.coderule.minimq.rpc.registry.protocol.body.GetBrokerMemberGroupResponseBody;
-import cn.coderule.minimq.rpc.registry.protocol.cluster.GroupInfo;
+import cn.coderule.minimq.rpc.registry.protocol.cluster.StoreInfo;
 import cn.coderule.minimq.rpc.registry.protocol.header.AddWritePermOfBrokerResponseHeader;
 import cn.coderule.minimq.rpc.registry.protocol.header.BrokerHeartbeatRequestHeader;
 import cn.coderule.minimq.rpc.registry.protocol.header.GetBrokerMemberGroupRequestHeader;
+import cn.coderule.minimq.rpc.registry.protocol.header.QueryDataVersionRequestHeader;
+import cn.coderule.minimq.rpc.registry.protocol.header.QueryDataVersionResponseHeader;
 import cn.coderule.minimq.rpc.registry.protocol.header.WipeWritePermOfBrokerRequestHeader;
 import cn.coderule.minimq.rpc.registry.protocol.header.WipeWritePermOfBrokerResponseHeader;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ClusterProcessor implements RpcProcessor {
     private final ClusterService clusterService;
+    private StoreRegistry storeRegistry;
 
     public ClusterProcessor(ClusterService clusterService) {
         this.clusterService = clusterService;
@@ -50,7 +55,24 @@ public class ClusterProcessor implements RpcProcessor {
     }
 
     private RpcCommand getStoreVersion(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
-        return null;
+        RpcCommand response = RpcCommand.createResponseCommand(QueryDataVersionResponseHeader.class);
+        QueryDataVersionResponseHeader responseHeader = (QueryDataVersionResponseHeader) response.readCustomHeader();
+        QueryDataVersionRequestHeader requestHeader = request.decodeHeader(QueryDataVersionRequestHeader.class);
+
+        DataVersion requestVersion = DataVersion.decode(request.getBody(), DataVersion.class);
+        StoreInfo store = new StoreInfo(requestHeader.getClusterName(), requestHeader.getBrokerAddr());
+
+        Boolean changed = storeRegistry.isStoreChanged(store, requestVersion);
+        responseHeader.setChanged(changed);
+
+        clusterService.flushStoreUpdateTime(requestHeader.getClusterName(), requestHeader.getBrokerAddr());
+
+        DataVersion version = clusterService.getStoreVersion(store);
+        if (version != null) {
+            response.setBody(version.encode());
+        }
+
+        return response.success();
     }
 
     private RpcCommand getClusterInfo(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
