@@ -50,7 +50,8 @@ public class TopicProcessor implements RpcProcessor {
             return response.setCodeAndRemark(SystemResponseCode.SYSTEM_ERROR, "returnAllTopic is false");
         }
 
-
+        TopicList topicList = topicService.getTopicList();
+        response.setBody(topicList.encode());
 
         return response.success();
 
@@ -60,7 +61,7 @@ public class TopicProcessor implements RpcProcessor {
         RpcCommand response = RpcCommand.createResponseCommand(null);
 
         if (!config.isReturnTopicByCluster()) {
-            return response.setCodeAndRemark(SystemResponseCode.SYSTEM_ERROR, "returnAllTopic is false");
+            return response.setCodeAndRemark(SystemResponseCode.SYSTEM_ERROR, "returnTopicByCluster is false");
         }
 
         GetTopicsByClusterRequestHeader requestHeader = request.decodeHeader(GetTopicsByClusterRequestHeader.class);
