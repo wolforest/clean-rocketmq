@@ -75,6 +75,10 @@ public class TopicProcessor implements RpcProcessor {
 
     private RpcCommand getSystemTopicList(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
         RpcCommand response = RpcCommand.createResponseCommand(null);
+
+        TopicList topicList = topicService.getSystemTopicList();
+        response.setBody(topicList.encode());
+
         return response.success();
 
     }
