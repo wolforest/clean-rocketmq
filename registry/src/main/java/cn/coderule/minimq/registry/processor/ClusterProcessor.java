@@ -8,8 +8,12 @@ import cn.coderule.minimq.rpc.common.core.invoke.RpcContext;
 import cn.coderule.minimq.rpc.common.netty.service.NettyHelper;
 import cn.coderule.minimq.rpc.common.protocol.code.RequestCode;
 import cn.coderule.minimq.rpc.common.protocol.code.SystemResponseCode;
+import cn.coderule.minimq.rpc.registry.protocol.body.BrokerMemberGroup;
+import cn.coderule.minimq.rpc.registry.protocol.body.GetBrokerMemberGroupResponseBody;
+import cn.coderule.minimq.rpc.registry.protocol.cluster.GroupInfo;
 import cn.coderule.minimq.rpc.registry.protocol.header.AddWritePermOfBrokerResponseHeader;
 import cn.coderule.minimq.rpc.registry.protocol.header.BrokerHeartbeatRequestHeader;
+import cn.coderule.minimq.rpc.registry.protocol.header.GetBrokerMemberGroupRequestHeader;
 import cn.coderule.minimq.rpc.registry.protocol.header.WipeWritePermOfBrokerRequestHeader;
 import cn.coderule.minimq.rpc.registry.protocol.header.WipeWritePermOfBrokerResponseHeader;
 import lombok.extern.slf4j.Slf4j;
@@ -60,8 +64,16 @@ public class ClusterProcessor implements RpcProcessor {
     }
 
     private RpcCommand getGroupInfo(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
+        RpcCommand response = RpcCommand.createResponseCommand(null);
+        GetBrokerMemberGroupRequestHeader requestHeader = request.decodeHeader(GetBrokerMemberGroupRequestHeader.class);
 
-        return null;
+        BrokerMemberGroup groupInfo = clusterService.getGroupInfo(requestHeader.getClusterName(), requestHeader.getBrokerName());
+
+        GetBrokerMemberGroupResponseBody body = new GetBrokerMemberGroupResponseBody();
+        body.setBrokerMemberGroup(groupInfo);
+        response.setBody(body.encode());
+
+        return response.success();
     }
 
     private RpcCommand removeGroupWritePermission(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
