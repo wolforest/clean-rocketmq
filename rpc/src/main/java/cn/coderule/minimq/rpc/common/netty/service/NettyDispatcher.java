@@ -9,9 +9,7 @@ import cn.coderule.minimq.rpc.common.core.invoke.ResponseFuture;
 import cn.coderule.minimq.rpc.common.core.invoke.RpcCommand;
 import cn.coderule.minimq.rpc.common.RpcProcessor;
 import cn.coderule.minimq.rpc.common.core.invoke.RpcContext;
-import io.netty.util.HashedWheelTimer;
-import io.netty.util.Timeout;
-import io.netty.util.TimerTask;
+import cn.coderule.minimq.rpc.common.protocol.code.SystemResponseCode;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -20,7 +18,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.RejectedExecutionException;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -43,8 +40,7 @@ public class NettyDispatcher {
 
     private Pair<RpcProcessor, ExecutorService> defaultProcessor;
 
-    public NettyDispatcher() {
-    }
+    public NettyDispatcher() {}
 
     public void start() {
         this.stopping.set(false);
@@ -150,28 +146,33 @@ public class NettyDispatcher {
             processor.getRight().submit(task);
         } catch (RejectedExecutionException e) {
             flowControl(ctx, request);
-        } catch (Throwable t) {
-            requestFailed(ctx, request, t);
+        } catch (Throwable throwable) {
+            requestFailed(ctx, request, throwable);
         }
     }
 
-    private void processResponse(RpcContext ctx, RpcCommand command) {
+    private void processResponse(RpcContext ctx, RpcCommand response) {
 
     }
 
-    private void illegalRequestCode(RpcContext ctx, RpcCommand command) {
+    private void illegalRequestCode(RpcContext ctx, RpcCommand request) {
+        String error = "illegal request code: " + request.getCode();
+        RpcCommand response = RpcCommand.createResponseCommand(SystemResponseCode.REQUEST_CODE_NOT_SUPPORTED, error);
+        response.setOpaque(request.getOpaque());
+
+        writeResponse(ctx, request, response);
+        log.error("{}, remoteAddr: {}", error, NettyHelper.getRemoteAddr(ctx.channel()));
+    }
+
+    private void rejectByServer(RpcContext ctx, RpcCommand request) {
 
     }
 
-    private void rejectByServer(RpcContext ctx, RpcCommand command) {
+    private void rejectByBusiness(RpcContext ctx, RpcCommand request) {
 
     }
 
-    private void rejectByBusiness(RpcContext ctx, RpcCommand command) {
-
-    }
-
-    private void flowControl(RpcContext ctx, RpcCommand command) {
+    private void flowControl(RpcContext ctx, RpcCommand request) {
 
     }
 
@@ -179,15 +180,15 @@ public class NettyDispatcher {
 
     }
 
-    private void requestFailed(RpcContext ctx, RpcCommand command, Throwable t) {
+    private void requestFailed(RpcContext ctx, RpcCommand request, Throwable t) {
 
     }
 
-    private void abortProcess(RpcContext ctx, RpcCommand command, Throwable t) {
+    private void abortProcess(RpcContext ctx, RpcCommand request, Throwable t) {
 
     }
 
-    private void processFailed(RpcContext ctx, RpcCommand command, Throwable t) {
+    private void processFailed(RpcContext ctx, RpcCommand request, Throwable t) {
 
     }
 
@@ -201,8 +202,8 @@ public class NettyDispatcher {
                 writeResponse(ctx, request, response);
             } catch (AbortProcessException e) {
                 abortProcess(ctx, request, e);
-            } catch (Throwable e) {
-                processFailed(ctx, request, e);
+            } catch (Throwable t) {
+                processFailed(ctx, request, t);
             }
         };
     }
