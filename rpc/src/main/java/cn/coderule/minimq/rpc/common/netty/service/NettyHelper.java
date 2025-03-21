@@ -151,19 +151,8 @@ public class NettyHelper {
         response.markResponseType();
 
         try {
-            channel.writeAndFlush(response).addListener((ChannelFutureListener) future -> {
-                if (future.isSuccess()) {
-                    log.debug("Response[request code: {}, response code: {}, opaque: {}] is written to channel{}",
-                        request.getCode(), response.getCode(), response.getOpaque(), channel);
-                } else {
-                    log.error("Failed to write response[request code: {}, response code: {}, opaque: {}] to channel{}",
-                        request.getCode(), response.getCode(), response.getOpaque(), channel, future.cause());
-                }
-
-                if (callback != null) {
-                    callback.accept(future);
-                }
-            });
+            channel.writeAndFlush(response)
+                .addListener(createResponseListener(channel, request, response, callback));
         } catch (Throwable e) {
             log.error("process request over, but response failed. request: {}", request, e);
         }
@@ -231,6 +220,23 @@ public class NettyHelper {
     }
 
     /************************************* private methods start ***********************************/
+    private static ChannelFutureListener createResponseListener(Channel channel, RpcCommand request, @Nullable RpcCommand response,
+        Consumer<Future<?>> callback) {
+        return future -> {
+            if (future.isSuccess()) {
+                log.debug("Response[request code: {}, response code: {}, opaque: {}] is written to channel{}",
+                    request.getCode(), response.getCode(), response.getOpaque(), channel);
+            } else {
+                log.error("Failed to write response[request code: {}, response code: {}, opaque: {}] to channel{}",
+                    request.getCode(), response.getCode(), response.getOpaque(), channel, future.cause());
+            }
+
+            if (callback != null) {
+                callback.accept(future);
+            }
+        };
+    }
+
     private static SocketChannel openSocketChannel(String addr) throws RemotingConnectException {
         SocketAddress socketAddress = NetworkUtil.toSocketAddress(addr);
         SocketChannel socketChannel = connect(socketAddress);
