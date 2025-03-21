@@ -1,6 +1,7 @@
 package cn.coderule.minimq.rpc.common.netty.service;
 
 import cn.coderule.common.ds.Pair;
+import cn.coderule.common.util.lang.ExceptionUtil;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.minimq.domain.exception.AbortProcessException;
 import cn.coderule.minimq.rpc.common.RpcHook;
@@ -202,15 +203,25 @@ public class NettyDispatcher {
     }
 
     private void requestFailed(RpcContext ctx, RpcCommand request, Throwable t) {
-
+        log.error("request failed. request code: {}", request.getCode(), t);
     }
 
-    private void abortProcess(RpcContext ctx, RpcCommand request, Throwable t) {
-
+    private void abortProcess(RpcContext ctx, RpcCommand request, AbortProcessException e) {
+        RpcCommand response = RpcCommand.createResponseCommand((int)e.getCode(), e.getMessage());
+        response.setOpaque(request.getOpaque());
+        writeResponse(ctx, request, response);
     }
 
     private void processFailed(RpcContext ctx, RpcCommand request, Throwable t) {
+        log.error("process request failed, request: {}", request, t);
 
+        if (request.isOnewayRPC()) {
+            return;
+        }
+
+        RpcCommand response = RpcCommand.createResponseCommand(ResponseCode.SYSTEM_ERROR, ExceptionUtil.getName(t));
+        response.setOpaque(request.getOpaque());
+        writeResponse(ctx, request, response);
     }
 
     private Runnable createProcessTask(RpcContext ctx, RpcCommand request, RpcProcessor processor) {
