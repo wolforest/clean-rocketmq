@@ -1,20 +1,20 @@
 package cn.coderule.minimq.registry;
 
 import cn.coderule.common.convention.service.Lifecycle;
+import cn.coderule.common.convention.service.LifecycleManager;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class Registry implements Lifecycle {
     public static void main(String[] args) {
-        new Registry().start();
+        new Registry(args).start();
     }
 
-    @Override
-    public void start() {
+    private final String[] args;
+    private LifecycleManager componentManager;
 
-    }
-
-    @Override
-    public void shutdown() {
-
+    public Registry(String[] args) {
+        this.args = args;
     }
 
     @Override
@@ -23,12 +23,43 @@ public class Registry implements Lifecycle {
     }
 
     @Override
-    public void cleanup() {
+    public void start() {
+        try {
+            this.initialize();
+            this.componentManager.start();
+            addShutdownHook();
+        } catch (Exception e) {
+            log.error("start Registry error", e);
+            System.exit(1);
+        }
 
+        log.info("Registry start successfully");
     }
 
     @Override
-    public State getState() {
-        return null;
+    public void shutdown() {
+        log.info("Registry is shutting down ...");
+
+        try {
+            this.cleanup();
+            this.componentManager.shutdown();
+
+        } catch (Exception e) {
+            log.error("shutdown Registry error", e);
+        }
+
+        log.info("Registry is terminated.");
     }
+
+    @Override
+    public void cleanup() {
+        this.componentManager.cleanup();
+    }
+
+    private void addShutdownHook() {
+        Runtime.getRuntime().addShutdownHook(
+            new Thread(this::shutdown)
+        );
+    }
+
 }
