@@ -11,7 +11,6 @@ import cn.coderule.minimq.rpc.common.core.invoke.RpcCommand;
 import cn.coderule.minimq.rpc.common.RpcProcessor;
 import cn.coderule.minimq.rpc.common.core.invoke.RpcContext;
 import cn.coderule.minimq.rpc.common.protocol.code.ResponseCode;
-import cn.coderule.minimq.rpc.common.protocol.code.SystemResponseCode;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -41,8 +40,11 @@ public class NettyDispatcher {
     private final AtomicBoolean stopping = new AtomicBoolean(false);
 
     private Pair<RpcProcessor, ExecutorService> defaultProcessor;
+    private final ExecutorService callbackExecutor;
 
-    public NettyDispatcher() {}
+    public NettyDispatcher(ExecutorService callbackExecutor) {
+        this.callbackExecutor = callbackExecutor;
+    }
 
     public void start() {
         this.stopping.set(false);
@@ -154,8 +156,69 @@ public class NettyDispatcher {
     }
 
     private void processResponse(RpcContext ctx, RpcCommand response) {
+        int opaque = response.getOpaque();
+        ResponseFuture future = responseMap.get(opaque);
+        if (future == null) {
+            log.warn("receive response, but not matched any request, opaque: {}; remoteAddr: {}",
+                response.getOpaque(),
+                NettyHelper.getRemoteAddr(ctx.channel())
+            );
+            return;
+        }
 
+        future.setResponse(response);
+        responseMap.remove(response.getOpaque());
+
+        if (null != future.getInvokeCallback()) {
+            executeInvokeCallback(future);
+            return;
+        }
+
+        future.putResponse(response);
+        future.release();
     }
+
+    /**
+     * Execute callback in callback executor. If callback executor is null, run directly in current thread
+     */
+    private void executeInvokeCallback(final ResponseFuture responseFuture) {
+        ExecutorService executor = this.callbackExecutor;
+        boolean runInThisThread = executor == null || executor.isShutdown();
+
+        if (!runInThisThread) {
+            runInThisThread = submitInvokeCallback(responseFuture, executor);
+        }
+
+        if (runInThisThread) {
+            callInvokeCallback(responseFuture);
+        }
+    }
+
+    private boolean submitInvokeCallback(final ResponseFuture responseFuture, ExecutorService executor) {
+        boolean runInThisThread = false;
+
+        try {
+            executor.submit(() -> {
+                callInvokeCallback(responseFuture);
+            });
+        } catch (Exception e) {
+            runInThisThread = true;
+            log.warn("execute callback in executor exception, maybe executor busy", e);
+        }
+
+        return runInThisThread;
+    }
+
+    private void callInvokeCallback(final ResponseFuture responseFuture) {
+        try {
+            responseFuture.executeRpcCallback();
+        } catch (Throwable e) {
+            log.warn("executeInvokeCallback Exception", e);
+        } finally {
+            responseFuture.release();
+        }
+    }
+
 
     private void illegalRequestCode(RpcContext ctx, RpcCommand request) {
         String error = "illegal request code: " + request.getCode();

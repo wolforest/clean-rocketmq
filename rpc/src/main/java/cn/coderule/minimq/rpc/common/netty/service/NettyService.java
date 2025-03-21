@@ -25,8 +25,8 @@ public abstract class NettyService implements RpcService {
     protected AtomicBoolean stopping = new AtomicBoolean(false);
 
     public NettyService(int onewaySemaphorePermits, int asyncSemaphorePermits, int callbackThreadNum) {
-        this.dispatcher = new NettyDispatcher();
         this.callbackExecutor = buildCallbackExecutor(callbackThreadNum);
+        this.dispatcher = new NettyDispatcher();
         this.invoker = new ChannelInvoker(onewaySemaphorePermits, asyncSemaphorePermits, callbackExecutor);
     }
 
