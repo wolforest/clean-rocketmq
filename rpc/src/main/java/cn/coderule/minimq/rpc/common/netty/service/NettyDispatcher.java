@@ -9,6 +9,7 @@ import cn.coderule.minimq.rpc.common.core.invoke.ResponseFuture;
 import cn.coderule.minimq.rpc.common.core.invoke.RpcCommand;
 import cn.coderule.minimq.rpc.common.RpcProcessor;
 import cn.coderule.minimq.rpc.common.core.invoke.RpcContext;
+import cn.coderule.minimq.rpc.common.protocol.code.ResponseCode;
 import cn.coderule.minimq.rpc.common.protocol.code.SystemResponseCode;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -157,7 +158,7 @@ public class NettyDispatcher {
 
     private void illegalRequestCode(RpcContext ctx, RpcCommand request) {
         String error = "illegal request code: " + request.getCode();
-        RpcCommand response = RpcCommand.createResponseCommand(SystemResponseCode.REQUEST_CODE_NOT_SUPPORTED, error);
+        RpcCommand response = RpcCommand.createResponseCommand(ResponseCode.REQUEST_CODE_NOT_SUPPORTED, error);
         response.setOpaque(request.getOpaque());
 
         writeResponse(ctx, request, response);
@@ -165,7 +166,11 @@ public class NettyDispatcher {
     }
 
     private void rejectByServer(RpcContext ctx, RpcCommand request) {
+        String error = "Server is shutting down, Request is rejected.";
+        RpcCommand response = RpcCommand.createResponseCommand(ResponseCode.GO_AWAY, error);
+        response.setOpaque(request.getOpaque());
 
+        writeResponse(ctx, request, response);
     }
 
     private void rejectByBusiness(RpcContext ctx, RpcCommand request) {
