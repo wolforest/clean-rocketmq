@@ -11,7 +11,7 @@ public interface RpcProcessor {
     RpcCommand process(RpcContext ctx, RpcCommand request) throws RemotingCommandException;
     boolean reject();
 
-    default Collection<String> getCodeSet() {
+    default Collection<Integer> getCodeSet() {
         return Set.of();
     }
 

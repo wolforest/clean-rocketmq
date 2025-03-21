@@ -1,6 +1,7 @@
 package cn.coderule.minimq.rpc.common.netty.service;
 
 import cn.coderule.common.lang.concurrent.DefaultThreadFactory;
+import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.minimq.rpc.common.core.RpcService;
 import cn.coderule.minimq.rpc.common.RpcHook;
 import cn.coderule.minimq.rpc.common.RpcProcessor;
@@ -42,6 +43,15 @@ public abstract class NettyService implements RpcService {
     @Override
     public void registerDefaultProcessor(RpcProcessor processor, ExecutorService executor) {
         dispatcher.registerDefaultProcessor(processor, executor);
+    }
+
+    @Override
+    public void registerProcessor(RpcProcessor processor) {
+        if (CollectionUtil.isEmpty(processor.getCodeSet())) {
+            return;
+        }
+
+        dispatcher.registerProcessor(processor.getCodeSet(), processor, processor.getExecutor());
     }
 
     @Override
