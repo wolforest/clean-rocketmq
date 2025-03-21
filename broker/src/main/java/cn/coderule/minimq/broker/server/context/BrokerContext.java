@@ -1,4 +1,4 @@
-package cn.coderule.minimq.broker.server.model;
+package cn.coderule.minimq.broker.server.context;
 
 import cn.coderule.common.convention.container.ApplicationContext;
 

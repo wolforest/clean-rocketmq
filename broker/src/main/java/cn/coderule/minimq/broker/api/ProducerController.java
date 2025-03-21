@@ -1,7 +1,7 @@
 package cn.coderule.minimq.broker.api;
 
 import cn.coderule.minimq.broker.domain.producer.Producer;
-import cn.coderule.minimq.broker.server.model.RequestContext;
+import cn.coderule.minimq.broker.server.context.RequestContext;
 import cn.coderule.minimq.domain.model.message.MessageBO;
 import cn.coderule.minimq.domain.dto.EnqueueResult;
 import java.util.List;

@@ -2,7 +2,7 @@ package cn.coderule.minimq.broker.domain.consumer;
 
 import cn.coderule.minimq.broker.api.ConsumerController;
 import cn.coderule.common.convention.service.Lifecycle;
-import cn.coderule.minimq.broker.server.model.BrokerContext;
+import cn.coderule.minimq.broker.server.context.BrokerContext;
 
 public class ConsumerManager implements Lifecycle {
     private Consumer consumer;

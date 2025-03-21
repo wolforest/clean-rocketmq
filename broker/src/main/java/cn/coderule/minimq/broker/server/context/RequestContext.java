@@ -1,4 +1,4 @@
-package cn.coderule.minimq.broker.server.model;
+package cn.coderule.minimq.broker.server.context;
 
 import io.netty.channel.Channel;
 import java.util.HashMap;

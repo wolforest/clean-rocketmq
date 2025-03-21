@@ -3,8 +3,8 @@ package cn.coderule.minimq.registry;
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.convention.service.LifecycleManager;
 import cn.coderule.minimq.registry.server.ComponentRegister;
-import cn.coderule.minimq.registry.server.ConfigLoader;
-import cn.coderule.minimq.registry.server.ContextInitializer;
+import cn.coderule.minimq.registry.server.context.ConfigLoader;
+import cn.coderule.minimq.registry.server.context.ContextInitializer;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

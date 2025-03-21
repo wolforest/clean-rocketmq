@@ -4,7 +4,7 @@ import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.convention.service.LifecycleManager;
 import cn.coderule.minimq.broker.server.ComponentRegister;
 import cn.coderule.minimq.broker.server.ConfigLoader;
-import cn.coderule.minimq.broker.server.ContextInitializer;
+import cn.coderule.minimq.broker.server.context.ContextInitializer;
 import lombok.extern.slf4j.Slf4j;
 
 /**

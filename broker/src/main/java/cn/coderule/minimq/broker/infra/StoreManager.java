@@ -2,7 +2,7 @@ package cn.coderule.minimq.broker.infra;
 
 import cn.coderule.common.convention.container.ApplicationContext;
 import cn.coderule.common.convention.service.Lifecycle;
-import cn.coderule.minimq.broker.server.model.BrokerContext;
+import cn.coderule.minimq.broker.server.context.BrokerContext;
 import cn.coderule.minimq.store.Store;
 import cn.coderule.minimq.store.server.StoreArgument;
 

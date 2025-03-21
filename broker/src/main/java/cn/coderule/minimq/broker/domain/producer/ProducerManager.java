@@ -2,7 +2,7 @@ package cn.coderule.minimq.broker.domain.producer;
 
 import cn.coderule.minimq.broker.api.ProducerController;
 import cn.coderule.common.convention.service.Lifecycle;
-import cn.coderule.minimq.broker.server.model.BrokerContext;
+import cn.coderule.minimq.broker.server.context.BrokerContext;
 
 public class ProducerManager implements Lifecycle {
     private Producer producer;

@@ -1,7 +1,8 @@
-package cn.coderule.minimq.registry.server;
+package cn.coderule.minimq.broker.server.context;
 
 public class ContextInitializer {
     private final String[] args;
+    private final BrokerArgument argument;
 
     public static void init(String[] args) {
         ContextInitializer initializer = new ContextInitializer(args);
@@ -10,6 +11,7 @@ public class ContextInitializer {
 
     public ContextInitializer(String[] args) {
         this.args = args;
+        this.argument = new BrokerArgument();
     }
 
     public void initialize() {
