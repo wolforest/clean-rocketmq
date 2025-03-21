@@ -198,7 +198,7 @@ public class NettyDispatcher {
     }
 
     private void writeResponse(RpcContext ctx, RpcCommand request, RpcCommand response) {
-
+        NettyHelper.writeResponse(ctx.channel(), request, response);
     }
 
     private void requestFailed(RpcContext ctx, RpcCommand request, Throwable t) {
