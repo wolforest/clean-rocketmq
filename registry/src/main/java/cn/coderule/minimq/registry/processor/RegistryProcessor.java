@@ -25,7 +25,11 @@ import cn.coderule.minimq.rpc.registry.protocol.header.UnRegisterBrokerRequestHe
 import cn.coderule.minimq.rpc.registry.protocol.route.RouteInfo;
 import io.netty.channel.ChannelHandlerContext;
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicLong;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -33,6 +37,15 @@ public class RegistryProcessor implements RpcProcessor {
     private final RegistryConfig registryConfig;
     private final StoreRegistry storeRegistry;
     private final KVService kvService;
+
+    @Getter @Setter
+    private ExecutorService executor = null;
+    @Getter
+    private final Set<Integer> codeSet = Set.of(
+        RequestCode.REGISTER_BROKER,
+        RequestCode.UNREGISTER_BROKER,
+        RequestCode.REGISTER_TOPIC_IN_NAMESRV
+    );
 
     public RegistryProcessor(RegistryConfig registryConfig, StoreRegistry storeRegistry, KVService kvService) {
         this.registryConfig = registryConfig;

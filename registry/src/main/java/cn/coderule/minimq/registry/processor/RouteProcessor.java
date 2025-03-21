@@ -12,7 +12,11 @@ import cn.coderule.minimq.rpc.common.protocol.code.SystemResponseCode;
 import cn.coderule.minimq.rpc.registry.protocol.header.GetRouteInfoRequestHeader;
 import cn.coderule.minimq.rpc.registry.protocol.route.RouteInfo;
 import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicBoolean;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -24,6 +28,16 @@ public class RouteProcessor implements RpcProcessor {
 
     private final long startTime;
     private final AtomicBoolean isServerBooting;
+
+    @Getter @Setter
+    private ExecutorService executor = null;
+    @Getter
+    private final Set<Integer> codeSet = Set.of(
+        ResponseCode.SUCCESS,
+        SystemResponseCode.SYSTEM_ERROR,
+        ResponseCode.TOPIC_NOT_EXIST
+    );
+
 
     public RouteProcessor(RegistryConfig registryConfig, TopicService topicService, KVService kvService) {
         this.registryConfig = registryConfig;

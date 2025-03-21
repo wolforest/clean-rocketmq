@@ -19,11 +19,28 @@ import cn.coderule.minimq.rpc.registry.protocol.header.QueryDataVersionRequestHe
 import cn.coderule.minimq.rpc.registry.protocol.header.QueryDataVersionResponseHeader;
 import cn.coderule.minimq.rpc.registry.protocol.header.WipeWritePermOfBrokerRequestHeader;
 import cn.coderule.minimq.rpc.registry.protocol.header.WipeWritePermOfBrokerResponseHeader;
+import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class ClusterProcessor implements RpcProcessor {
     private final ClusterService clusterService;
+
+    @Getter @Setter
+    private ExecutorService executor = null;
+    @Getter
+    private final Set<Integer> codeSet = Set.of(
+        RequestCode.GET_BROKER_CLUSTER_INFO,
+        RequestCode.GET_BROKER_MEMBER_GROUP,
+        RequestCode.QUERY_DATA_VERSION,
+        RequestCode.BROKER_HEARTBEAT,
+        RequestCode.WIPE_WRITE_PERM_OF_BROKER,
+        RequestCode.ADD_WRITE_PERM_OF_BROKER
+    );
+
 
     public ClusterProcessor(ClusterService clusterService) {
         this.clusterService = clusterService;

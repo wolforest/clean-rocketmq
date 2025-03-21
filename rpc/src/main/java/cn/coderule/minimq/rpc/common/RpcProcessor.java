@@ -18,4 +18,7 @@ public interface RpcProcessor {
     default ExecutorService getExecutor() {
         return null;
     }
+
+    default void setExecutor(ExecutorService executor) {
+    }
 }

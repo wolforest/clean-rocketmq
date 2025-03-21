@@ -13,13 +13,18 @@ import cn.coderule.minimq.rpc.registry.protocol.body.TopicList;
 import cn.coderule.minimq.rpc.registry.protocol.header.DeleteTopicFromNamesrvRequestHeader;
 import cn.coderule.minimq.rpc.registry.protocol.header.GetTopicsByClusterRequestHeader;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class TopicProcessor implements RpcProcessor {
     private final RegistryConfig config;
     private final TopicService topicService;
+
+    @Getter @Setter
+    private ExecutorService executor = null;
 
     @Getter
     private final Set<Integer> codeSet = Set.of(
