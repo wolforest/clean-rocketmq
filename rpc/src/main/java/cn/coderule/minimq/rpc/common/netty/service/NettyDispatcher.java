@@ -182,6 +182,18 @@ public class NettyDispatcher {
     }
 
     private void flowControl(RpcContext ctx, RpcCommand request) {
+        if (System.currentTimeMillis() % 1000 == 0) {
+            log.warn("[OVERLOAD]system busy, get RejectedExecutionException, request code: {}, remote addr: {}",
+                request.getCode(),
+                NettyHelper.getRemoteAddr(ctx.channel())
+            );
+        }
+
+        String error = "[OVERLOAD]system busy, start flow control for a while";
+        RpcCommand response = RpcCommand.createResponseCommand(ResponseCode.SYSTEM_BUSY, error);
+        response.setOpaque(request.getOpaque());
+
+        writeResponse(ctx, request, response);
 
     }
 
