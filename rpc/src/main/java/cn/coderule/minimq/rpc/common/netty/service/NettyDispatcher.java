@@ -174,7 +174,11 @@ public class NettyDispatcher {
     }
 
     private void rejectByBusiness(RpcContext ctx, RpcCommand request) {
+        String error = "[REJECTREQUEST]system busy, start flow control for a while";
+        RpcCommand response = RpcCommand.createResponseCommand(ResponseCode.SYSTEM_BUSY, error);
+        response.setOpaque(request.getOpaque());
 
+        writeResponse(ctx, request, response);
     }
 
     private void flowControl(RpcContext ctx, RpcCommand request) {
