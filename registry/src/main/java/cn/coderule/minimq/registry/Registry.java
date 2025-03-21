@@ -2,6 +2,7 @@ package cn.coderule.minimq.registry;
 
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.convention.service.LifecycleManager;
+import cn.coderule.minimq.registry.server.ComponentRegister;
 import cn.coderule.minimq.registry.server.ConfigLoader;
 import cn.coderule.minimq.registry.server.ContextInitializer;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +24,9 @@ public class Registry implements Lifecycle {
     public void initialize() {
         ContextInitializer.init(args);
         ConfigLoader.load();
+
+        this.componentManager = ComponentRegister.register();
+        this.componentManager.initialize();
     }
 
     @Override
