@@ -12,12 +12,24 @@ import cn.coderule.minimq.rpc.common.protocol.code.SystemResponseCode;
 import cn.coderule.minimq.rpc.registry.protocol.body.TopicList;
 import cn.coderule.minimq.rpc.registry.protocol.header.DeleteTopicFromNamesrvRequestHeader;
 import cn.coderule.minimq.rpc.registry.protocol.header.GetTopicsByClusterRequestHeader;
+import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class TopicProcessor implements RpcProcessor {
     private final RegistryConfig config;
     private final TopicService topicService;
+
+    private final Set<Integer> codeList = Set.of(
+        RequestCode.GET_ALL_TOPIC_LIST_FROM_NAMESERVER,
+        RequestCode.DELETE_TOPIC_IN_NAMESRV,
+        RequestCode.GET_TOPICS_BY_CLUSTER,
+        RequestCode.GET_SYSTEM_TOPIC_LIST_FROM_NS,
+        RequestCode.GET_UNIT_TOPIC_LIST,
+        RequestCode.GET_HAS_UNIT_SUB_TOPIC_LIST,
+        RequestCode.GET_HAS_UNIT_SUB_UNUNIT_TOPIC_LIST
+    );
+
     public TopicProcessor(RegistryConfig config, TopicService topicService) {
         this.config = config;
         this.topicService = topicService;
