@@ -16,7 +16,6 @@ import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicBoolean;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -29,8 +28,8 @@ public class RouteProcessor implements RpcProcessor {
     private final long startTime;
     private final AtomicBoolean isServerBooting;
 
-    @Getter @Setter
-    private ExecutorService executor = null;
+    @Getter
+    private final ExecutorService executor;
     @Getter
     private final Set<Integer> codeSet = Set.of(
         ResponseCode.SUCCESS,
@@ -39,11 +38,16 @@ public class RouteProcessor implements RpcProcessor {
     );
 
 
-    public RouteProcessor(RegistryConfig registryConfig, TopicService topicService, KVService kvService) {
+    public RouteProcessor(
+        RegistryConfig registryConfig,
+        TopicService topicService,
+        KVService kvService,
+        ExecutorService executor) {
         this.registryConfig = registryConfig;
 
         this.topicService = topicService;
         this.kvService = kvService;
+        this.executor = executor;
 
         this.startTime = System.currentTimeMillis();
         isServerBooting = new AtomicBoolean(true);

@@ -22,15 +22,14 @@ import cn.coderule.minimq.rpc.registry.protocol.header.WipeWritePermOfBrokerResp
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class ClusterProcessor implements RpcProcessor {
     private final ClusterService clusterService;
 
-    @Getter @Setter
-    private ExecutorService executor = null;
+    @Getter
+    private final ExecutorService executor;
     @Getter
     private final Set<Integer> codeSet = Set.of(
         RequestCode.GET_BROKER_CLUSTER_INFO,
@@ -42,8 +41,9 @@ public class ClusterProcessor implements RpcProcessor {
     );
 
 
-    public ClusterProcessor(ClusterService clusterService) {
+    public ClusterProcessor(ClusterService clusterService, ExecutorService executor) {
         this.clusterService = clusterService;
+        this.executor = executor;
     }
 
     @Override

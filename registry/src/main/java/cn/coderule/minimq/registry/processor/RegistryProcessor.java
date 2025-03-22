@@ -29,7 +29,6 @@ import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicLong;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -38,8 +37,8 @@ public class RegistryProcessor implements RpcProcessor {
     private final StoreRegistry storeRegistry;
     private final KVService kvService;
 
-    @Getter @Setter
-    private ExecutorService executor = null;
+    @Getter
+    private final ExecutorService executor;
     @Getter
     private final Set<Integer> codeSet = Set.of(
         RequestCode.REGISTER_BROKER,
@@ -47,10 +46,11 @@ public class RegistryProcessor implements RpcProcessor {
         RequestCode.REGISTER_TOPIC_IN_NAMESRV
     );
 
-    public RegistryProcessor(RegistryConfig registryConfig, StoreRegistry storeRegistry, KVService kvService) {
+    public RegistryProcessor(RegistryConfig registryConfig, StoreRegistry storeRegistry, KVService kvService, ExecutorService executor) {
         this.registryConfig = registryConfig;
         this.storeRegistry = storeRegistry;
         this.kvService = kvService;
+        this.executor = executor;
     }
 
     @Override

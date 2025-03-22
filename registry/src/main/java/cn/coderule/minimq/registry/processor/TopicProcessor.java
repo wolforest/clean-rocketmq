@@ -15,7 +15,6 @@ import cn.coderule.minimq.rpc.registry.protocol.header.GetTopicsByClusterRequest
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -23,8 +22,8 @@ public class TopicProcessor implements RpcProcessor {
     private final RegistryConfig config;
     private final TopicService topicService;
 
-    @Getter @Setter
-    private ExecutorService executor = null;
+    @Getter
+    private final ExecutorService executor;
 
     @Getter
     private final Set<Integer> codeSet = Set.of(
@@ -37,9 +36,10 @@ public class TopicProcessor implements RpcProcessor {
         RequestCode.GET_HAS_UNIT_SUB_UNUNIT_TOPIC_LIST
     );
 
-    public TopicProcessor(RegistryConfig config, TopicService topicService) {
+    public TopicProcessor(RegistryConfig config, TopicService topicService, ExecutorService executor) {
         this.config = config;
         this.topicService = topicService;
+        this.executor = executor;
     }
 
     @Override
@@ -75,7 +75,6 @@ public class TopicProcessor implements RpcProcessor {
         response.setBody(topicList.encode());
 
         return response.success();
-
     }
 
     private RpcCommand getTopicByCluster(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
@@ -155,7 +154,6 @@ public class TopicProcessor implements RpcProcessor {
         }
 
         return response.success();
-
     }
 
 }
