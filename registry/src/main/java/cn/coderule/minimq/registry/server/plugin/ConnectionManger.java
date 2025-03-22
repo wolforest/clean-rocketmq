@@ -4,6 +4,7 @@ import cn.coderule.minimq.rpc.common.RpcListener;
 import io.netty.channel.Channel;
 
 public class ConnectionManger implements RpcListener {
+
     @Override
     public void onConnect(String address, Channel channel) {
 
