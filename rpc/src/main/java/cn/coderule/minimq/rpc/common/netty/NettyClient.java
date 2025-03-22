@@ -41,6 +41,9 @@ public class NettyClient extends NettyService implements RpcClient {
 
     private final AddressInvoker addressInvoker;
 
+    public NettyClient(RpcClientConfig config) {
+       this(config, null);
+    }
 
     public NettyClient(RpcClientConfig config, RpcListener rpcListener) {
         super(config.getOnewaySemaphorePermits(), config.getAsyncSemaphorePermits(), config.getCallbackThreadNum());
