@@ -10,7 +10,7 @@ import cn.coderule.minimq.registry.domain.store.service.ChannelCloser;
 import cn.coderule.minimq.registry.processor.KVProcessor;
 import cn.coderule.minimq.registry.processor.PropertyProcessor;
 import cn.coderule.minimq.registry.server.context.RegistryContext;
-import cn.coderule.minimq.registry.server.plugin.ConnectionManger;
+import cn.coderule.minimq.registry.server.rpc.ConnectionManger;
 import cn.coderule.minimq.registry.server.rpc.HaClient;
 import cn.coderule.minimq.registry.server.rpc.RegistryServer;
 import cn.coderule.minimq.rpc.common.config.RpcClientConfig;

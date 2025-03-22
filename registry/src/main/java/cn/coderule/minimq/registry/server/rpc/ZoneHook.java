@@ -1,4 +1,4 @@
-package cn.coderule.minimq.registry.server.plugin;
+package cn.coderule.minimq.registry.server.rpc;
 
 import cn.coderule.common.util.lang.StringUtil;
 import cn.coderule.common.util.lang.collection.MapUtil;

@@ -1,4 +1,4 @@
-package cn.coderule.minimq.registry.server.plugin;
+package cn.coderule.minimq.registry.server.rpc;
 
 import cn.coderule.minimq.registry.domain.store.service.ChannelCloser;
 import cn.coderule.minimq.rpc.common.RpcListener;
