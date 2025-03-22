@@ -11,7 +11,9 @@ import cn.coderule.minimq.registry.processor.KVProcessor;
 import cn.coderule.minimq.registry.processor.PropertyProcessor;
 import cn.coderule.minimq.registry.server.context.RegistryContext;
 import cn.coderule.minimq.registry.server.plugin.ConnectionManger;
+import cn.coderule.minimq.registry.server.rpc.HaClient;
 import cn.coderule.minimq.registry.server.rpc.RegistryServer;
+import cn.coderule.minimq.rpc.common.config.RpcClientConfig;
 import cn.coderule.minimq.rpc.common.config.RpcServerConfig;
 
 public class ComponentRegister {
@@ -26,6 +28,7 @@ public class ComponentRegister {
 
     public LifecycleManager execute() {
         registerExecutor();
+        registerHaClient();
 
         registerProperty();
         registerKV();
@@ -34,6 +37,15 @@ public class ComponentRegister {
 
         registerServer();
         return this.manager;
+    }
+
+    private void registerHaClient() {
+        HaClient haClient = new HaClient(
+            RegistryContext.getBean(RegistryConfig.class),
+            RegistryContext.getBean(RpcClientConfig.class)
+        );
+
+        manager.register(haClient);
     }
 
     private void registerExecutor() {
