@@ -14,23 +14,23 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class PropertyProcessor implements RpcProcessor {
     private final PropertyService propertyService;
 
-    @Getter @Setter
-    private ExecutorService executor = null;
+    @Getter
+    private final ExecutorService executor;
     @Getter
     private final Set<Integer> codeSet = Set.of(
         RequestCode.UPDATE_NAMESRV_CONFIG,
         RequestCode.GET_NAMESRV_CONFIG
     );
 
-    public PropertyProcessor(PropertyService propertyService) {
+    public PropertyProcessor(PropertyService propertyService, ExecutorService executor) {
         this.propertyService = propertyService;
+        this.executor = executor;
     }
 
     @Override

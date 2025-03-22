@@ -1,4 +1,4 @@
-package cn.coderule.minimq.registry.server.rpc;
+package cn.coderule.minimq.registry.server;
 
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.lang.concurrent.DefaultThreadFactory;
@@ -7,6 +7,7 @@ import cn.coderule.minimq.domain.config.RegistryConfig;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import lombok.Getter;
 
@@ -17,6 +18,8 @@ public class ExecutorFactory implements Lifecycle {
     private ExecutorService defaultExecutor;
     @Getter
     private ExecutorService routeExecutor;
+    @Getter
+    private ScheduledExecutorService scheduler;
 
     public ExecutorFactory(RegistryConfig config) {
         this.config = config;
@@ -26,6 +29,8 @@ public class ExecutorFactory implements Lifecycle {
     public void initialize() {
         initDefaultExecutor();
         initRouteExecutor();
+
+        initScheduler();
     }
 
     @Override
@@ -37,6 +42,7 @@ public class ExecutorFactory implements Lifecycle {
     public void shutdown() {
         defaultExecutor.shutdown();
         routeExecutor.shutdown();
+        scheduler.shutdown();
     }
 
     private void initDefaultExecutor() {
@@ -60,6 +66,13 @@ public class ExecutorFactory implements Lifecycle {
             TimeUnit.SECONDS,
             routeQueue,
             new DefaultThreadFactory("RegistryRouteThread_")
+        );
+    }
+
+    private void initScheduler() {
+        scheduler = ThreadUtil.newScheduledThreadPool(
+            1,
+            new DefaultThreadFactory("RegistrySchedulerThread_")
         );
     }
 }

@@ -15,15 +15,14 @@ import cn.coderule.minimq.rpc.registry.protocol.header.PutKVConfigRequestHeader;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class KVProcessor implements RpcProcessor {
     private final KVService kvService;
 
-    @Getter @Setter
-    private ExecutorService executor = null;
+    @Getter
+    private final ExecutorService executor;
     @Getter
     private final Set<Integer> codeSet = Set.of(
         RequestCode.PUT_KV_CONFIG,
@@ -31,8 +30,9 @@ public class KVProcessor implements RpcProcessor {
         RequestCode.DELETE_KV_CONFIG
     );
 
-    public KVProcessor(KVService kvService) {
+    public KVProcessor(KVService kvService, ExecutorService executor) {
         this.kvService = kvService;
+        this.executor = executor;
     }
 
     @Override
