@@ -7,6 +7,7 @@ import cn.coderule.minimq.registry.domain.kv.KVService;
 import cn.coderule.minimq.registry.domain.property.PropertyService;
 import cn.coderule.minimq.registry.domain.store.StoreManager;
 import cn.coderule.minimq.registry.server.context.RegistryContext;
+import cn.coderule.minimq.registry.server.rpc.RegistryServer;
 import cn.coderule.minimq.rpc.common.config.RpcServerConfig;
 
 public class ComponentRegister {

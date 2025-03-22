@@ -1,4 +1,4 @@
-package cn.coderule.minimq.registry.server;
+package cn.coderule.minimq.registry.server.rpc;
 
 import cn.coderule.common.convention.service.Lifecycle;
 import lombok.extern.slf4j.Slf4j;
@@ -18,8 +18,6 @@ public class RegistryServer implements Lifecycle {
     public void shutdown() {
 
     }
-
-
 
     @Override
     public void cleanup() {
