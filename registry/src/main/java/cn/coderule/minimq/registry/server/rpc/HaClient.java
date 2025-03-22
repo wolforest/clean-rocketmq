@@ -92,27 +92,23 @@ public class HaClient implements Lifecycle {
             return false;
         }
 
-        if (null == group || MapUtil.isEmpty(group.getBrokerAddrs())) {
-            return false;
-        }
-
-        return null != rpcClient;
+        return null != group && !MapUtil.isEmpty(group.getBrokerAddrs());
     }
 
     private List<String> chooseBrokerAddrsToNotify(Map<Long, String> addrMap, String offlineAddr) {
         if (offlineAddr != null || addrMap.size() == 1) {
-            // notify the reset brokers.
+            // notify the reset servers.
             return new ArrayList<>(addrMap.values());
         }
 
-        // new broker registered, notify previous brokers.
-        long minBrokerId = Collections.min(addrMap.keySet());
-        List<String> brokerAddrList = new ArrayList<>();
+        // new server registered, notify previous servers.
+        long minId = Collections.min(addrMap.keySet());
+        List<String> addrList = new ArrayList<>();
         for (Long brokerId : addrMap.keySet()) {
-            if (brokerId != minBrokerId) {
-                brokerAddrList.add(addrMap.get(brokerId));
+            if (brokerId != minId) {
+                addrList.add(addrMap.get(brokerId));
             }
         }
-        return brokerAddrList;
+        return addrList;
     }
 }

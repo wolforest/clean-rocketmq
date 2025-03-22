@@ -11,6 +11,7 @@ import cn.coderule.minimq.registry.domain.store.model.Route;
 import cn.coderule.minimq.registry.domain.store.model.StoreHealthInfo;
 import cn.coderule.minimq.registry.domain.store.model.StoreStatusInfo;
 import cn.coderule.minimq.registry.domain.store.service.UnregisterService;
+import cn.coderule.minimq.registry.server.rpc.HaClient;
 import cn.coderule.minimq.rpc.common.RpcClient;
 import cn.coderule.minimq.rpc.common.core.invoke.RpcCommand;
 import cn.coderule.minimq.rpc.common.protocol.DataVersion;
@@ -43,14 +44,14 @@ public class StoreRegistry {
     private final RegistryConfig config;
     private final Route route;
 
-    private final RpcClient rpcClient;
+    private final HaClient haClient;
     private final UnregisterService unregisterService;
 
-    public StoreRegistry(RegistryConfig config, RpcClient rpcClient, Route route) {
+    public StoreRegistry(RegistryConfig config, Route route, HaClient haClient) {
         this.route = route;
         this.config = config;
 
-        this.rpcClient = rpcClient;
+        this.haClient = haClient;
         this.unregisterService = new UnregisterService(config, this);
     }
 
@@ -85,7 +86,7 @@ public class StoreRegistry {
             setHaAndMasterInfo(store, result);
 
             if (isMinIdChanged) {
-                notifyMinIdChanged(group, null, route.getHealthHaAddress(store));
+                haClient.notifyMinIdChanged(group, route.getHealthHaAddress(store));
             }
         } catch (Exception e) {
             log.error("register store error", e);
@@ -108,7 +109,7 @@ public class StoreRegistry {
             }
 
             cleanTopicWhileUnRegister(removedSet, reducedSet);
-            notifyMinIdChanged(notifyMap);
+            haClient.notifyMinIdChanged(notifyMap, route);
         } catch (Exception e) {
             log.error("register store error", e);
         } finally {
@@ -391,80 +392,6 @@ public class StoreRegistry {
 
         result.setMasterAddr(masterAddr);
         result.setHaServerAddr(masterHealthInfo.getHaServerAddr());
-    }
-
-    private void notifyMinIdChanged(Map<String, StoreStatusInfo> notifyMap) throws Exception {
-        if (MapUtil.isEmpty(notifyMap)) {
-            return;
-        }
-
-        if (!config.isNotifyMinIdChanged()) {
-            return;
-        }
-
-        for (Map.Entry<String, StoreStatusInfo> entry : notifyMap.entrySet()) {
-            StoreStatusInfo statusInfo = entry.getValue();
-            GroupInfo groupInfo = route.getGroup(entry.getKey());
-            if (null == groupInfo) {
-                continue;
-            }
-
-            if (!groupInfo.isEnableActingMaster()) {
-                continue;
-            }
-
-            notifyMinIdChanged(groupInfo, statusInfo.getOfflineBrokerAddr(), statusInfo.getHaBrokerAddr());
-        }
-    }
-
-    private boolean needNotifyMinIdChanged(GroupInfo group) {
-        if (!config.isNotifyMinIdChanged()) {
-            return false;
-        }
-
-        if (null == group || MapUtil.isEmpty(group.getBrokerAddrs())) {
-            return false;
-        }
-
-        return null != rpcClient;
-    }
-
-    private List<String> chooseBrokerAddrsToNotify(Map<Long, String> brokerAddrMap, String offlineBrokerAddr) {
-        if (offlineBrokerAddr != null || brokerAddrMap.size() == 1) {
-            // notify the reset brokers.
-            return new ArrayList<>(brokerAddrMap.values());
-        }
-
-        // new broker registered, notify previous brokers.
-        long minBrokerId = Collections.min(brokerAddrMap.keySet());
-        List<String> brokerAddrList = new ArrayList<>();
-        for (Long brokerId : brokerAddrMap.keySet()) {
-            if (brokerId != minBrokerId) {
-                brokerAddrList.add(brokerAddrMap.get(brokerId));
-            }
-        }
-        return brokerAddrList;
-    }
-
-    private void notifyMinIdChanged(GroupInfo group, String offlineAddress, String haAddress ) throws Exception {
-        if (!needNotifyMinIdChanged(group)) {
-            return;
-        }
-
-        NotifyMinBrokerIdChangeRequestHeader requestHeader = new NotifyMinBrokerIdChangeRequestHeader();
-        long minNo = group.getMinNo();
-        requestHeader.setMinBrokerId(minNo);
-        requestHeader.setMinBrokerAddr(group.getAddress(minNo));
-        requestHeader.setOfflineBrokerAddr(offlineAddress);
-        requestHeader.setHaBrokerAddr(haAddress);
-
-        List<String> addrList = chooseBrokerAddrsToNotify(group.getBrokerAddrs(), offlineAddress);
-        log.info("NotifyMinBrokerIdChangeRequestHeader: {}, notify address list: {}", requestHeader, addrList);
-
-        RpcCommand request = RpcCommand.createRequestCommand(RequestCode.NOTIFY_MIN_BROKER_ID_CHANGE, requestHeader);
-        for (String addr : addrList) {
-            rpcClient.invokeOneway(addr, request, 5000);
-        }
     }
 
     private void cleanRemovedStore(Set<String> removedBroker, Map<String, Topic> topicMap, String topic) {
