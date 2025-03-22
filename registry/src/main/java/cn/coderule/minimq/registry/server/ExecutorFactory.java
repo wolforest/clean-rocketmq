@@ -23,10 +23,7 @@ public class ExecutorFactory implements Lifecycle {
 
     public ExecutorFactory(RegistryConfig config) {
         this.config = config;
-    }
 
-    @Override
-    public void initialize() {
         initDefaultExecutor();
         initRouteExecutor();
 
