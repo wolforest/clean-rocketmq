@@ -1,17 +1,22 @@
 package cn.coderule.minimq.rpc.registry.protocol.cluster;
 
+import cn.coderule.minimq.rpc.registry.protocol.body.TopicConfigSerializeWrapper;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
 public class StoreInfo extends ServerInfo {
     private String haAddress;
     private Boolean enableActingMaster;
+
+    private TopicConfigSerializeWrapper topicInfo;
+    private List<String> filterList;
+
+    private int hash;
 
     public StoreInfo(String clusterName, String address) {
         this.clusterName = clusterName;
@@ -21,4 +26,38 @@ public class StoreInfo extends ServerInfo {
     public boolean isEnableActingMaster() {
         return enableActingMaster != null && enableActingMaster;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+
+        if (obj instanceof StoreInfo addr) {
+            return clusterName.equals(addr.clusterName)
+                && address.equals(addr.address);
+        }
+
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        int h = hash;
+        if (h == 0 && clusterName.length() + address.length() > 0) {
+            for (int i = 0; i < clusterName.length(); i++) {
+                h = 31 * h + clusterName.charAt(i);
+            }
+            h = 31 * h + '_';
+            for (int i = 0; i < address.length(); i++) {
+                h = 31 * h + address.charAt(i);
+            }
+            hash = h;
+        }
+        return h;
+    }
+
 }

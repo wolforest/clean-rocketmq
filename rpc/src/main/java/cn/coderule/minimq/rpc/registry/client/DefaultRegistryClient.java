@@ -16,28 +16,13 @@ import java.util.List;
 public class DefaultRegistryClient implements RegistryClient, Lifecycle {
 
     @Override
+    public void setRegistryAddress(String address) {
+
+    }
+
+    @Override
     public List<String> getRegistryList() {
         return List.of();
-    }
-
-    @Override
-    public void setRegistryList(List<String> serverList) {
-
-    }
-
-    @Override
-    public void setRegistryString(String registryString) {
-
-    }
-
-    @Override
-    public void setRegistryDomain(String domain) {
-
-    }
-
-    @Override
-    public void scanRegistry() {
-
     }
 
     @Override
