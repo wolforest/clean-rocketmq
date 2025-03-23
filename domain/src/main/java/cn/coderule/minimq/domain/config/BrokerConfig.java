@@ -19,4 +19,9 @@ public class BrokerConfig implements Serializable {
     private int producerQueueCapacity = 10000;
     private int consumerThreadNum = SystemUtil.getProcessorNumber();
     private int consumerQueueCapacity = 10000;
+
+    private String registryAddress = null;
+    private boolean fetchRegistryAddressByDns = false;
+    private boolean fetchRegistryAddressByHttp = false;
+    private int fetchRegistryAddressInterval = 60 * 1000;
 }

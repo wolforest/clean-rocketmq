@@ -15,7 +15,6 @@ public class RegistryConfig implements Serializable {
     private Integer port = 9876;
 
 
-
     private int bossThreadNum = 1;
     private int workerThreadNum = 3;
     private int businessThreadNum = 8;
