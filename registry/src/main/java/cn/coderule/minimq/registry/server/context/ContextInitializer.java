@@ -1,5 +1,8 @@
 package cn.coderule.minimq.registry.server.context;
 
+/**
+ * ContextInitializer, parse command line args
+ */
 public class ContextInitializer {
     private final String[] args;
 

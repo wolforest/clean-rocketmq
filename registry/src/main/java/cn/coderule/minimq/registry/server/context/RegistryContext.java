@@ -3,7 +3,7 @@ package cn.coderule.minimq.registry.server.context;
 import cn.coderule.common.convention.container.ApplicationContext;
 
 /**
- * broker context, A very simple IOC container
+ * Registry context, A very simple IOC container
  */
 public class RegistryContext {
     public static final ApplicationContext APPLICATION = new ApplicationContext();
