@@ -1,12 +1,15 @@
 package cn.coderule.minimq.rpc.registry.protocol.cluster;
 
+import cn.coderule.minimq.rpc.common.core.enums.RequestType;
 import cn.coderule.minimq.rpc.registry.protocol.body.TopicConfigSerializeWrapper;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @Data
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 public class StoreInfo extends ServerInfo {
@@ -15,6 +18,9 @@ public class StoreInfo extends ServerInfo {
 
     private TopicConfigSerializeWrapper topicInfo;
     private List<String> filterList;
+
+    private int registerTimeout;
+    private RequestType registerType;
 
     private int hash;
 

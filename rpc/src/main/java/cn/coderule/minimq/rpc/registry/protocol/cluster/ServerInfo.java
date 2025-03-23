@@ -5,9 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
+@SuperBuilder
+@EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 @AllArgsConstructor
 public class ServerInfo extends RpcSerializable {
@@ -20,4 +22,6 @@ public class ServerInfo extends RpcSerializable {
 
     protected Long heartbeatInterval;
     protected Long heartbeatTimeout;
+
+    protected boolean inContainer = false;
 }
