@@ -32,7 +32,7 @@ public class IdleScanner {
     }
 
     public void start() {
-        this.scheduler.scheduleWithFixedDelay(
+        this.scheduler.scheduleAtFixedRate(
             IdleScanner.this::scan,
             5,
             config.getIdleScanInterval(),
