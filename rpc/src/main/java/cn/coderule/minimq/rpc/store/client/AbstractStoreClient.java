@@ -1,7 +1,7 @@
 package cn.coderule.minimq.rpc.store.client;
 
 import cn.coderule.minimq.rpc.common.RpcClient;
-import cn.coderule.minimq.rpc.registry.DefaultRegistryClient;
+import cn.coderule.minimq.rpc.registry.client.DefaultRegistryClient;
 import cn.coderule.minimq.rpc.store.StoreClient;
 import lombok.Setter;
 

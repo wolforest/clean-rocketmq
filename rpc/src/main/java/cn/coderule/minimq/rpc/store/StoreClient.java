@@ -1,7 +1,7 @@
 package cn.coderule.minimq.rpc.store;
 
 import cn.coderule.minimq.rpc.common.RpcClient;
-import cn.coderule.minimq.rpc.registry.DefaultRegistryClient;
+import cn.coderule.minimq.rpc.registry.client.DefaultRegistryClient;
 
 public interface StoreClient {
     void setRpcClient(RpcClient rpcClient);

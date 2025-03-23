@@ -1,8 +1,9 @@
-package cn.coderule.minimq.rpc.registry;
+package cn.coderule.minimq.rpc.registry.client;
 
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.minimq.domain.model.Topic;
 import cn.coderule.minimq.rpc.common.protocol.DataVersion;
+import cn.coderule.minimq.rpc.registry.RegistryClient;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.BrokerInfo;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.ClusterInfo;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.GroupInfo;
