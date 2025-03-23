@@ -11,14 +11,18 @@ import cn.coderule.minimq.registry.server.rpc.HaClient;
 import cn.coderule.minimq.registry.server.rpc.ServerManager;
 import cn.coderule.minimq.rpc.common.config.RpcClientConfig;
 
+/**
+ * Component register, all components registered
+ * will be initialized, start, shutdown, ... together.
+ * - The order of registration is important.
+ * - call RegistryContext.getBean() in xxxManager.initialize()
+ * - only config related bean can be got by RegistryContext.getBean()
+ */
 public class ComponentRegister {
     private final LifecycleManager manager = new LifecycleManager();
 
     public static LifecycleManager register() {
-        ComponentRegister register = new ComponentRegister();
-        RegistryContext.register(register);
-
-        return register.execute();
+        return new ComponentRegister().execute();
     }
 
     public LifecycleManager execute() {
@@ -37,6 +41,12 @@ public class ComponentRegister {
         return this.manager;
     }
 
+    /**
+     * register ExecutorService and ScheduledExecutorService, dependent by:
+     * - RouteProcessor: routeExecutor
+     * - other processors: defaultExecutor
+     * - monitor: scheduler
+     */
     private void registerExecutor() {
         RegistryConfig config = RegistryContext.getBean(RegistryConfig.class);
         ExecutorFactory factory = new ExecutorFactory(config);
@@ -45,6 +55,10 @@ public class ComponentRegister {
         RegistryContext.register(factory);
     }
 
+    /**
+     * register HA Client, dependent by:
+     * - StoreRegistry: notify M/S role change event
+     */
     private void registerHaClient() {
         HaClient haClient = new HaClient(
             RegistryContext.getBean(RegistryConfig.class),
