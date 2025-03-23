@@ -36,7 +36,7 @@ public class IdleScanner {
             IdleScanner.this::scan,
             5,
             config.getIdleScanInterval(),
-            TimeUnit.MICROSECONDS
+            TimeUnit.MILLISECONDS
         );
     }
 
