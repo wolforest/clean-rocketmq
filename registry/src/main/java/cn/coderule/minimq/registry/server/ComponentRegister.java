@@ -13,6 +13,7 @@ import cn.coderule.minimq.registry.server.context.RegistryContext;
 import cn.coderule.minimq.registry.server.rpc.ConnectionCloser;
 import cn.coderule.minimq.registry.server.rpc.HaClient;
 import cn.coderule.minimq.registry.server.rpc.RegistryServer;
+import cn.coderule.minimq.registry.server.rpc.ServerManager;
 import cn.coderule.minimq.rpc.common.config.RpcClientConfig;
 import cn.coderule.minimq.rpc.common.config.RpcServerConfig;
 
@@ -39,6 +40,14 @@ public class ComponentRegister {
         return this.manager;
     }
 
+    private void registerExecutor() {
+        RegistryConfig config = RegistryContext.getBean(RegistryConfig.class);
+        ExecutorFactory factory = new ExecutorFactory(config);
+
+        manager.register(factory);
+        RegistryContext.register(factory);
+    }
+
     private void registerHaClient() {
         HaClient haClient = new HaClient(
             RegistryContext.getBean(RegistryConfig.class),
@@ -46,24 +55,12 @@ public class ComponentRegister {
         );
 
         manager.register(haClient);
-    }
-
-    private void registerExecutor() {
-        RegistryConfig config = RegistryContext.getBean(RegistryConfig.class);
-        ExecutorFactory factory = new ExecutorFactory(config);
-        manager.register(factory);
-        RegistryContext.register(factory);
+        RegistryContext.register(haClient);
     }
 
     private void registerServer() {
-        ChannelCloser channelCloser = RegistryContext.getBean(ChannelCloser.class);
-        ConnectionCloser connectionCloser = new ConnectionCloser(channelCloser);
-
-        RegistryConfig registryConfig = RegistryContext.getBean(RegistryConfig.class);
-        RpcServerConfig serverConfig = RegistryContext.getBean(RpcServerConfig.class);
-        RegistryServer server = new RegistryServer(registryConfig, serverConfig, connectionCloser);
-
-        manager.register(server);
+        ServerManager serverManager = new ServerManager();
+        manager.register(serverManager);
     }
 
     private void registerProperty() {
