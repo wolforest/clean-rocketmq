@@ -4,10 +4,10 @@ import cn.coderule.minimq.registry.domain.store.service.ChannelCloser;
 import cn.coderule.minimq.rpc.common.RpcListener;
 import io.netty.channel.Channel;
 
-public class ConnectionManger implements RpcListener {
+public class ConnectionCloser implements RpcListener {
     private final ChannelCloser channelCloser;
 
-    public ConnectionManger(ChannelCloser channelCloser) {
+    public ConnectionCloser(ChannelCloser channelCloser) {
         this.channelCloser = channelCloser;
     }
 

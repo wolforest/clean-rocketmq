@@ -10,7 +10,7 @@ import cn.coderule.minimq.registry.domain.store.service.ChannelCloser;
 import cn.coderule.minimq.registry.processor.KVProcessor;
 import cn.coderule.minimq.registry.processor.PropertyProcessor;
 import cn.coderule.minimq.registry.server.context.RegistryContext;
-import cn.coderule.minimq.registry.server.rpc.ConnectionManger;
+import cn.coderule.minimq.registry.server.rpc.ConnectionCloser;
 import cn.coderule.minimq.registry.server.rpc.HaClient;
 import cn.coderule.minimq.registry.server.rpc.RegistryServer;
 import cn.coderule.minimq.rpc.common.config.RpcClientConfig;
@@ -57,11 +57,11 @@ public class ComponentRegister {
 
     private void registerServer() {
         ChannelCloser channelCloser = RegistryContext.getBean(ChannelCloser.class);
-        ConnectionManger connectionManger = new ConnectionManger(channelCloser);
+        ConnectionCloser connectionCloser = new ConnectionCloser(channelCloser);
 
         RegistryConfig registryConfig = RegistryContext.getBean(RegistryConfig.class);
         RpcServerConfig serverConfig = RegistryContext.getBean(RpcServerConfig.class);
-        RegistryServer server = new RegistryServer(registryConfig, serverConfig, connectionManger);
+        RegistryServer server = new RegistryServer(registryConfig, serverConfig, connectionCloser);
 
         manager.register(server);
     }
