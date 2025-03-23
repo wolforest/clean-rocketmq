@@ -7,4 +7,6 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class HeartBeat extends ServerInfo {
     private String role;
+
+    private int timeout;
 }
