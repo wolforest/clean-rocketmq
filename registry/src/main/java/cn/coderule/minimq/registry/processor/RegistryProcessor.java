@@ -113,10 +113,15 @@ public class RegistryProcessor implements RpcProcessor {
             return response.success();
         }
 
+        String groupName = getGroupName(routeInfo);
         List<Topic> topicList = toTopicList(requestHeader.getTopic(), routeInfo);
-        storeRegistry.registerTopic(requestHeader.getTopic(), topicList);
+        storeRegistry.registerTopic(groupName, topicList);
 
         return response.success();
+    }
+
+    private String getGroupName(RouteInfo routeInfo) {
+        return routeInfo.getQueueDatas().getFirst().getBrokerName();
     }
 
     private List<Topic> toTopicList(String topicName, RouteInfo routeInfo) {

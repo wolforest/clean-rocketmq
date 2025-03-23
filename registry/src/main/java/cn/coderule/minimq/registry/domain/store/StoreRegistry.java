@@ -115,7 +115,7 @@ public class StoreRegistry {
         return unregisterService.submit(request);
     }
 
-    public void registerTopic(String topicName, List<Topic> topicList) {
+    public void registerTopic(String groupName, List<Topic> topicList) {
         if (CollectionUtil.isEmpty(topicList)) {
             return;
         }
@@ -123,7 +123,7 @@ public class StoreRegistry {
         try {
             route.lockWrite();
             for (Topic topic : topicList) {
-                route.saveTopic(topicName, topic);
+                route.saveTopic(groupName, topic);
             }
         } catch (Exception e) {
             log.error("register topic error", e);
