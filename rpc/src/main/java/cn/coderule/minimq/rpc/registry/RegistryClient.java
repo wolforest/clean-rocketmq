@@ -12,9 +12,11 @@ import cn.coderule.minimq.rpc.registry.protocol.route.RouteInfo;
 import java.util.List;
 
 public interface RegistryClient {
-    List<String> getServerList();
-    void setServerList(List<String> serverList);
-    void scanServer();
+    List<String> getRegistryList();
+    void setRegistryList(List<String> serverList);
+    void setRegistryString(String registryString);
+    void setRegistryDomain(String  domain);
+    void scanRegistry();
 
     void registerBroker(BrokerInfo brokerInfo);
     void unregisterBroker(ServerInfo serverInfo);
