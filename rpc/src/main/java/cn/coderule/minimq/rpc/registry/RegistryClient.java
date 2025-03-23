@@ -9,6 +9,7 @@ import cn.coderule.minimq.rpc.registry.protocol.cluster.HeartBeat;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.ServerInfo;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.StoreInfo;
 import cn.coderule.minimq.rpc.registry.protocol.route.RouteInfo;
+import cn.coderule.minimq.rpc.registry.protocol.route.TopicInfo;
 import java.util.List;
 
 public interface RegistryClient {
@@ -22,7 +23,7 @@ public interface RegistryClient {
     void registerStore(StoreInfo storeInfo);
     void unregisterStore(ServerInfo serverInfo);
     void storeHeartbeat(HeartBeat heartBeat);
-    void registerTopic(Topic topic, DataVersion version);
+    void registerTopic(TopicInfo topicInfo);
 
     ClusterInfo syncClusterInfo(String clusterName);
     GroupInfo syncGroupInfo(String clusterName, String groupName);
