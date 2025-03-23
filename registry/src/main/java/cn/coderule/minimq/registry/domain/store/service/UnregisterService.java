@@ -43,11 +43,12 @@ public class UnregisterService extends ServiceThread {
 
     private void schedule() {
         try {
-            Set<UnRegisterBrokerRequestHeader> requests = new HashSet<>();
 
-            // from the opensource code
-            // UnRegisterBrokerRequestHeader request = queue.take();
-            // requests.add(request);
+            UnRegisterBrokerRequestHeader request = queue.take();
+
+            Set<UnRegisterBrokerRequestHeader> requests = new HashSet<>();
+            requests.add(request);
+
             queue.drainTo(requests);
 
             registry.unregister(requests);
