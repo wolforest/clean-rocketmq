@@ -3,6 +3,7 @@ package cn.coderule.minimq.registry.server;
 import cn.coderule.common.convention.service.LifecycleManager;
 import cn.coderule.minimq.domain.config.RegistryConfig;
 import cn.coderule.minimq.registry.domain.broker.BrokerManager;
+import cn.coderule.minimq.registry.domain.kv.KVManager;
 import cn.coderule.minimq.registry.domain.kv.KVService;
 import cn.coderule.minimq.registry.domain.property.PropertyService;
 import cn.coderule.minimq.registry.domain.store.StoreManager;
@@ -77,15 +78,7 @@ public class ComponentRegister {
     }
 
     private void registerKV() {
-        KVService kvService = new KVService(
-            RegistryContext.getBean(RegistryConfig.class)
-        );
-
-        ExecutorFactory factory = RegistryContext.getBean(ExecutorFactory.class);
-        KVProcessor processor = new KVProcessor(kvService, factory.getDefaultExecutor());
-
-        RegistryContext.register(kvService);
-        RegistryContext.register(processor);
+        manager.register(new KVManager());
     }
 
     private void registerBroker() {
