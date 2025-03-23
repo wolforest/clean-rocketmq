@@ -7,6 +7,17 @@ import cn.coderule.minimq.registry.server.context.ConfigLoader;
 import cn.coderule.minimq.registry.server.context.ContextInitializer;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * The entry point of the registry, registry is stateless.
+ * Registry is component-based,
+ * the start flow is:
+ * -> main() -> start() -> initialize()
+ * -> componentManager.start()
+ * -> addShutdownHook()
+ * the shutdown flow is:
+ * -> shutdown() -> cleanup()
+ * -> componentManager.shutdown()
+ */
 @Slf4j
 public class Registry implements Lifecycle {
     public static void main(String[] args) {
