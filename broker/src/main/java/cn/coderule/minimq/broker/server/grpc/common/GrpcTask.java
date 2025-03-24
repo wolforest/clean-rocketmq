@@ -1,6 +1,6 @@
 package cn.coderule.minimq.broker.server.grpc.common;
 
-import cn.coderule.minimq.broker.server.context.RequestContext;
+import cn.coderule.minimq.broker.server.bootstrap.RequestContext;
 import io.grpc.stub.StreamObserver;
 import lombok.Data;
 

@@ -1,17 +1,42 @@
-package cn.coderule.minimq.broker.server.context;
+package cn.coderule.minimq.store.server;
 
 import cn.coderule.common.convention.container.ApplicationContext;
+import cn.coderule.minimq.store.server.bootstrap.StoreCheckpoint;
+import cn.coderule.minimq.store.server.bootstrap.StoreScheduler;
+import lombok.extern.slf4j.Slf4j;
 
 /**
- * broker context, A very simple IOC container
+ * store bootstrap, A very simple IOC container
  */
-public class BrokerContext {
+@Slf4j
+public class StoreContext {
     public static final ApplicationContext APPLICATION = new ApplicationContext();
     public static final ApplicationContext API = new ApplicationContext();
-    public static final ApplicationContext MONITOR = new ApplicationContext();
+    public static ApplicationContext MONITOR = new ApplicationContext();
 
-    public static void registerContext(ApplicationContext context) {
-        APPLICATION.registerContext(context);
+    public static StoreCheckpoint CHECK_POINT;
+    public static StoreScheduler SCHEDULER;
+
+    public static void setScheduler(StoreScheduler scheduler) {
+        SCHEDULER = scheduler;
+    }
+
+    public static StoreScheduler getScheduler() {
+        if (SCHEDULER == null) {
+            throw new RuntimeException("scheduler is null");
+        }
+        return SCHEDULER;
+    }
+
+    public static void setCheckPoint(StoreCheckpoint checkPoint) {
+        if (CHECK_POINT != null) {
+            throw new RuntimeException("checkPoint is not null");
+        }
+        CHECK_POINT = checkPoint;
+    }
+
+    public static StoreCheckpoint getCheckPoint() {
+        return CHECK_POINT;
     }
 
     public static void register(Object bean) {

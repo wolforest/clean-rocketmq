@@ -12,7 +12,7 @@ import cn.coderule.minimq.broker.server.grpc.activity.ClientActivity;
 import cn.coderule.minimq.broker.server.grpc.activity.ConsumerActivity;
 import cn.coderule.minimq.broker.server.grpc.activity.ProducerActivity;
 import cn.coderule.minimq.broker.server.grpc.activity.RouteActivity;
-import cn.coderule.minimq.broker.server.context.BrokerContext;
+import cn.coderule.minimq.broker.server.BrokerContext;
 import cn.coderule.minimq.domain.config.GrpcConfig;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;

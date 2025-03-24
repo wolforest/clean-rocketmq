@@ -4,7 +4,7 @@ import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.minimq.broker.domain.meta.RouteMocker;
 import cn.coderule.minimq.broker.domain.meta.RouteService;
 import cn.coderule.minimq.broker.domain.meta.TopicService;
-import cn.coderule.minimq.broker.server.context.RequestContext;
+import cn.coderule.minimq.broker.server.bootstrap.RequestContext;
 import cn.coderule.minimq.domain.model.MessageQueue;
 import cn.coderule.minimq.domain.model.Topic;
 import java.util.Set;

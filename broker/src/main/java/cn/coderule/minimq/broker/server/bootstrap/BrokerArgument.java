@@ -1,4 +1,4 @@
-package cn.coderule.minimq.broker.server.context;
+package cn.coderule.minimq.broker.server.bootstrap;
 
 import java.io.Serializable;
 import lombok.AllArgsConstructor;

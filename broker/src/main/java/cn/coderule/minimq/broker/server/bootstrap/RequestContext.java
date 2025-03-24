@@ -1,4 +1,4 @@
-package cn.coderule.minimq.broker.server.context;
+package cn.coderule.minimq.broker.server.bootstrap;
 
 import io.netty.channel.Channel;
 import java.util.HashMap;
@@ -13,7 +13,7 @@ public class RequestContext {
     public static final String CLIENT_VERSION = "client-version";
     /**
      * polling timeout related parameter
-     * set by (grpc)context.getDeadline().timeRemaining()
+     * set by (grpc)bootstrap.getDeadline().timeRemaining()
      */
     public static final String REMAINING_MS = "remaining-ms";
     public static final String ACTION = "action";

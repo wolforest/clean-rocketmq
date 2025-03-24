@@ -1,4 +1,4 @@
-package cn.coderule.minimq.broker.server.context;
+package cn.coderule.minimq.broker.server.bootstrap;
 
 public class ContextInitializer {
     private final String[] args;

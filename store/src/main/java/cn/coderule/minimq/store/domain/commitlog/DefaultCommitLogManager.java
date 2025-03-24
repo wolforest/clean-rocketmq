@@ -13,7 +13,7 @@ import cn.coderule.minimq.store.domain.commitlog.flush.FlushManager;
 import cn.coderule.minimq.store.infra.file.AllocateMappedFileService;
 import cn.coderule.minimq.store.infra.file.DefaultMappedFileQueue;
 import cn.coderule.minimq.store.infra.memory.CLibrary;
-import cn.coderule.minimq.store.server.bootstrap.StoreContext;
+import cn.coderule.minimq.store.server.StoreContext;
 import java.io.File;
 
 /**

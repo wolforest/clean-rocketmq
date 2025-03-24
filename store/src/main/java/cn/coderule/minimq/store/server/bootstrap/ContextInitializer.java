@@ -5,6 +5,7 @@ import cn.coderule.minimq.domain.config.ConsumeQueueConfig;
 import cn.coderule.minimq.domain.config.MessageConfig;
 import cn.coderule.minimq.domain.config.StoreConfig;
 import cn.coderule.minimq.domain.config.TimerConfig;
+import cn.coderule.minimq.store.server.StoreContext;
 
 public class ContextInitializer {
     private final StoreArgument argument;
