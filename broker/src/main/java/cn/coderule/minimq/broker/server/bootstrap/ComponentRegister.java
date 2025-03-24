@@ -1,4 +1,4 @@
-package cn.coderule.minimq.broker.server;
+package cn.coderule.minimq.broker.server.bootstrap;
 
 import cn.coderule.common.convention.service.LifecycleManager;
 import cn.coderule.minimq.broker.domain.consumer.ConsumerManager;

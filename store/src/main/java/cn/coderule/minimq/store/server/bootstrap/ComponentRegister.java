@@ -1,4 +1,4 @@
-package cn.coderule.minimq.store.server;
+package cn.coderule.minimq.store.server.bootstrap;
 
 import cn.coderule.common.convention.service.LifecycleManager;
 import cn.coderule.minimq.domain.config.StoreConfig;
@@ -18,6 +18,7 @@ import cn.coderule.minimq.store.domain.meta.DefaultMetaManager;
 import cn.coderule.minimq.store.domain.timer.DefaultTimerManager;
 import cn.coderule.minimq.store.infra.file.AllocateMappedFileService;
 import cn.coderule.minimq.store.infra.memory.TransientPool;
+import cn.coderule.minimq.store.server.StoreContext;
 
 public class ComponentRegister {
     private final LifecycleManager manager = new LifecycleManager();

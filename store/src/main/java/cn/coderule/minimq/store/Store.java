@@ -7,7 +7,7 @@ import cn.coderule.minimq.domain.config.StoreConfig;
 import cn.coderule.minimq.domain.utils.lock.StartupLock;
 import cn.coderule.minimq.domain.utils.lock.ShutdownLock;
 import cn.coderule.minimq.store.server.bootstrap.ContextInitializer;
-import cn.coderule.minimq.store.server.ComponentRegister;
+import cn.coderule.minimq.store.server.bootstrap.ComponentRegister;
 import cn.coderule.minimq.store.server.bootstrap.StoreArgument;
 import cn.coderule.minimq.store.server.bootstrap.StoreCheckpoint;
 import cn.coderule.minimq.store.server.StoreContext;
