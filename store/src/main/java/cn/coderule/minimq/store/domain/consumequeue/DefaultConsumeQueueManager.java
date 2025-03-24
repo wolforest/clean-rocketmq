@@ -9,8 +9,8 @@ import cn.coderule.minimq.store.domain.consumequeue.queue.ConsumeQueueFactory;
 import cn.coderule.minimq.store.domain.consumequeue.service.ConsumeQueueFlusher;
 import cn.coderule.minimq.store.domain.consumequeue.service.ConsumeQueueLoader;
 import cn.coderule.minimq.store.domain.consumequeue.service.ConsumeQueueRecovery;
-import cn.coderule.minimq.store.server.StoreContext;
-import cn.coderule.minimq.store.server.StorePath;
+import cn.coderule.minimq.store.server.bootstrap.StoreContext;
+import cn.coderule.minimq.store.server.bootstrap.StorePath;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

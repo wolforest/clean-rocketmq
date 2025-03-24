@@ -5,7 +5,7 @@ import cn.coderule.common.lang.concurrent.ServiceThread;
 import cn.coderule.minimq.domain.config.ConsumeQueueConfig;
 import cn.coderule.minimq.domain.service.store.domain.ConsumeQueue;
 import cn.coderule.minimq.domain.service.store.infra.MappedFileQueue;
-import cn.coderule.minimq.store.server.StoreCheckpoint;
+import cn.coderule.minimq.store.server.bootstrap.StoreCheckpoint;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;

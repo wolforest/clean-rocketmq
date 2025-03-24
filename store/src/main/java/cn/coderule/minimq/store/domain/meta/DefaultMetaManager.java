@@ -5,8 +5,8 @@ import cn.coderule.minimq.domain.service.store.domain.meta.ConsumeOffsetService;
 import cn.coderule.minimq.domain.service.store.domain.meta.TopicService;
 import cn.coderule.minimq.domain.service.store.manager.MetaManager;
 import cn.coderule.minimq.store.api.TopicStoreImpl;
-import cn.coderule.minimq.store.server.StoreContext;
-import cn.coderule.minimq.store.server.StorePath;
+import cn.coderule.minimq.store.server.bootstrap.StoreContext;
+import cn.coderule.minimq.store.server.bootstrap.StorePath;
 
 public class DefaultMetaManager implements MetaManager {
     @Override

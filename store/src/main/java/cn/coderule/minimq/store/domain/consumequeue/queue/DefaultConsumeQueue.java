@@ -11,7 +11,7 @@ import cn.coderule.minimq.domain.service.store.domain.ConsumeQueue;
 import cn.coderule.minimq.domain.service.store.infra.MappedFile;
 import cn.coderule.minimq.domain.service.store.infra.MappedFileQueue;
 import cn.coderule.minimq.store.infra.file.DefaultMappedFileQueue;
-import cn.coderule.minimq.store.server.StoreCheckpoint;
+import cn.coderule.minimq.store.server.bootstrap.StoreCheckpoint;
 import java.io.File;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;

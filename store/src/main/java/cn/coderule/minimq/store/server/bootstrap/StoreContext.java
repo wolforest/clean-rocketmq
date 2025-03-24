@@ -1,4 +1,4 @@
-package cn.coderule.minimq.store.server;
+package cn.coderule.minimq.store.server.bootstrap;
 
 import cn.coderule.common.convention.container.ApplicationContext;
 import lombok.extern.slf4j.Slf4j;

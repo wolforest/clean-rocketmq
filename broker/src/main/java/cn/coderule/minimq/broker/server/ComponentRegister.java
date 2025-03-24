@@ -6,7 +6,7 @@ import cn.coderule.minimq.broker.domain.producer.ProducerManager;
 import cn.coderule.minimq.broker.domain.transaction.TransactionManager;
 import cn.coderule.minimq.broker.infra.StoreManager;
 import cn.coderule.minimq.broker.server.grpc.GrpcManager;
-import cn.coderule.minimq.store.server.StoreContext;
+import cn.coderule.minimq.store.server.bootstrap.StoreContext;
 
 public class ComponentRegister {
     private final LifecycleManager manager = new LifecycleManager();

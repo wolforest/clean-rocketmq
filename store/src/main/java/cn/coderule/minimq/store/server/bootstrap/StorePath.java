@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.coderule.minimq.store.server;
+package cn.coderule.minimq.store.server.bootstrap;
 
 import cn.coderule.common.util.io.DirUtil;
 import java.io.File;

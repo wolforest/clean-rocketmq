@@ -1,4 +1,4 @@
-package cn.coderule.minimq.store.server;
+package cn.coderule.minimq.store.server.bootstrap;
 
 import cn.coderule.minimq.domain.config.CommitLogConfig;
 import cn.coderule.minimq.domain.config.ConsumeQueueConfig;

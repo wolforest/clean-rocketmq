@@ -13,7 +13,7 @@ import cn.coderule.minimq.domain.service.store.domain.ConsumeQueueGateway;
 import cn.coderule.minimq.domain.service.store.domain.MessageQueue;
 import cn.coderule.minimq.domain.dto.EnqueueResult;
 import cn.coderule.minimq.domain.model.message.MessageBO;
-import cn.coderule.minimq.store.server.StoreContext;
+import cn.coderule.minimq.store.server.bootstrap.StoreContext;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
