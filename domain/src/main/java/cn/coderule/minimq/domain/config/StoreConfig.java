@@ -23,7 +23,8 @@ public class StoreConfig implements Serializable {
     private int groupNo;
 
     private String host;
-    private int port;
+    private int port = 6888;
+    private int haPort = 10912;
 
     private String registryAddress = null;
     private boolean fetchRegistryAddressByDns = false;

@@ -8,7 +8,7 @@ import lombok.Data;
 @Data
 public class BrokerConfig implements Serializable {
     private String host = NetworkUtil.getLocalAddress();
-    private Integer port = 8081;
+    private Integer port = 8080;
 
     /**
      * should be false in production env
