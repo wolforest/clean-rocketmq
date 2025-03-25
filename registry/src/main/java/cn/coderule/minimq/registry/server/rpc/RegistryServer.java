@@ -20,10 +20,10 @@ public class RegistryServer implements Lifecycle {
 
     private final RpcServer rpcServer;
 
-    public RegistryServer(RegistryConfig registryConfig, RpcServerConfig serverConfig, ConnectionCloser connectionCloser) {
+    public RegistryServer(RegistryConfig registryConfig, RpcServerConfig serverConfig, ConnectionManager connectionManager) {
         this.registryConfig = registryConfig;
 
-        this.rpcServer = new NettyServer(serverConfig, connectionCloser);
+        this.rpcServer = new NettyServer(serverConfig, connectionManager);
     }
 
     @Override

@@ -12,11 +12,11 @@ public class RpcManager implements Lifecycle {
     @Override
     public void initialize() {
         ChannelCloser channelCloser = RegistryContext.getBean(ChannelCloser.class);
-        ConnectionCloser connectionCloser = new ConnectionCloser(channelCloser);
+        ConnectionManager connectionManager = new ConnectionManager(channelCloser);
 
         RegistryConfig registryConfig = RegistryContext.getBean(RegistryConfig.class);
         RpcServerConfig serverConfig = RegistryContext.getBean(RpcServerConfig.class);
-        server = new RegistryServer(registryConfig, serverConfig, connectionCloser);
+        server = new RegistryServer(registryConfig, serverConfig, connectionManager);
     }
 
     @Override
