@@ -6,7 +6,7 @@ import cn.coderule.minimq.registry.domain.store.service.ChannelCloser;
 import cn.coderule.minimq.registry.server.RegistryContext;
 import cn.coderule.minimq.rpc.common.config.RpcServerConfig;
 
-public class ServerManager implements Lifecycle {
+public class RpcManager implements Lifecycle {
     private RegistryServer server;
 
     @Override

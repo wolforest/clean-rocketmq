@@ -8,7 +8,7 @@ import cn.coderule.minimq.registry.domain.property.PropertyManager;
 import cn.coderule.minimq.registry.domain.store.StoreManager;
 import cn.coderule.minimq.registry.server.RegistryContext;
 import cn.coderule.minimq.registry.server.rpc.HaClient;
-import cn.coderule.minimq.registry.server.rpc.ServerManager;
+import cn.coderule.minimq.registry.server.rpc.RpcManager;
 import cn.coderule.minimq.rpc.common.config.RpcClientConfig;
 
 /**
@@ -37,7 +37,7 @@ public class ComponentRegister {
         manager.register(new BrokerManager());
 
         // server
-        manager.register(new ServerManager());
+        manager.register(new RpcManager());
         return this.manager;
     }
 
