@@ -2,7 +2,7 @@ package cn.coderule.minimq.registry;
 
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.convention.service.LifecycleManager;
-import cn.coderule.minimq.registry.server.ComponentRegister;
+import cn.coderule.minimq.registry.server.bootstrap.ComponentRegister;
 import cn.coderule.minimq.registry.server.bootstrap.ConfigLoader;
 import cn.coderule.minimq.registry.server.bootstrap.ContextInitializer;
 import lombok.extern.slf4j.Slf4j;
