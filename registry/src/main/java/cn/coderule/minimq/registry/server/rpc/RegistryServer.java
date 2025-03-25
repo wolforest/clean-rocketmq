@@ -8,7 +8,7 @@ import cn.coderule.minimq.registry.processor.PropertyProcessor;
 import cn.coderule.minimq.registry.processor.RegistryProcessor;
 import cn.coderule.minimq.registry.processor.RouteProcessor;
 import cn.coderule.minimq.registry.processor.TopicProcessor;
-import cn.coderule.minimq.registry.server.context.RegistryContext;
+import cn.coderule.minimq.registry.server.RegistryContext;
 import cn.coderule.minimq.rpc.common.RpcServer;
 import cn.coderule.minimq.rpc.common.config.RpcServerConfig;
 import cn.coderule.minimq.rpc.common.netty.NettyServer;

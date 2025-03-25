@@ -1,4 +1,4 @@
-package cn.coderule.minimq.registry.server.context;
+package cn.coderule.minimq.registry.server.bootstrap;
 
 /**
  * ContextInitializer, parse command line args

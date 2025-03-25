@@ -1,4 +1,4 @@
-package cn.coderule.minimq.registry.server;
+package cn.coderule.minimq.registry.server.bootstrap;
 
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.lang.concurrent.DefaultThreadFactory;

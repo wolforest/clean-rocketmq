@@ -1,4 +1,4 @@
-package cn.coderule.minimq.registry.server.context;
+package cn.coderule.minimq.registry.server;
 
 import cn.coderule.common.convention.container.ApplicationContext;
 

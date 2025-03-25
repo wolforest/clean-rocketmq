@@ -3,8 +3,8 @@ package cn.coderule.minimq.registry.domain.kv;
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.minimq.domain.config.RegistryConfig;
 import cn.coderule.minimq.registry.processor.KVProcessor;
-import cn.coderule.minimq.registry.server.ExecutorFactory;
-import cn.coderule.minimq.registry.server.context.RegistryContext;
+import cn.coderule.minimq.registry.server.bootstrap.ExecutorFactory;
+import cn.coderule.minimq.registry.server.RegistryContext;
 
 public class KVManager implements Lifecycle {
     @Override
