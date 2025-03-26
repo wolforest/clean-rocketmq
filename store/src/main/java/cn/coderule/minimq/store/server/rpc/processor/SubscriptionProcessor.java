@@ -29,9 +29,9 @@ public class SubscriptionProcessor implements RpcProcessor {
     @Override
     public RpcCommand process(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
         return switch (request.getCode()) {
-            case RequestCode.GET_ALL_SUBSCRIPTIONGROUP_CONFIG -> this.get(ctx, request);
-            case RequestCode.DELETE_SUBSCRIPTIONGROUP -> this.delete(ctx, request);
-            case RequestCode.UPDATE_AND_CREATE_SUBSCRIPTIONGROUP -> this.save(ctx, request);
+            case RequestCode.GET_ALL_SUBSCRIPTIONGROUP_CONFIG -> this.getGroup(ctx, request);
+            case RequestCode.DELETE_SUBSCRIPTIONGROUP -> this.deleteGroup(ctx, request);
+            case RequestCode.UPDATE_AND_CREATE_SUBSCRIPTIONGROUP -> this.saveGroup(ctx, request);
             default -> this.unsupportedCode(ctx, request);
         };
     }
@@ -41,19 +41,19 @@ public class SubscriptionProcessor implements RpcProcessor {
         return false;
     }
 
-    private RpcCommand save(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
+    private RpcCommand saveGroup(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
         RpcCommand response = RpcCommand.createResponseCommand(null);
 
         return response.success();
     }
 
-    private RpcCommand get(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
+    private RpcCommand getGroup(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
         RpcCommand response = RpcCommand.createResponseCommand(null);
 
         return response.success();
     }
 
-    private RpcCommand delete(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
+    private RpcCommand deleteGroup(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
         RpcCommand response = RpcCommand.createResponseCommand(null);
 
         return response.success();

@@ -1,8 +1,8 @@
 package cn.coderule.minimq.domain.service.store.api;
 
 public interface SubscriptionStore {
-    boolean exists(String topicName);
-    void get(String topicName);
-    void save();
-    void delete(String groupName);
+    boolean existsGroup(String topicName);
+    void getGroup(String groupName);
+    void saveGroup();
+    void deleteGroup(String groupName);
 }
