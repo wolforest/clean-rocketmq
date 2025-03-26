@@ -6,7 +6,7 @@ import cn.coderule.minimq.rpc.common.RpcServer;
 import cn.coderule.minimq.rpc.common.config.RpcServerConfig;
 import cn.coderule.minimq.rpc.common.netty.NettyServer;
 import cn.coderule.minimq.store.server.StoreContext;
-import cn.coderule.minimq.store.server.rpc.processor.GroupProcessor;
+import cn.coderule.minimq.store.server.rpc.processor.SubscriptionProcessor;
 import cn.coderule.minimq.store.server.rpc.processor.TopicProcessor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -37,6 +37,6 @@ public class StoreServer implements Lifecycle {
     @Override
     public void initialize() {
         rpcServer.registerProcessor(StoreContext.getBean(TopicProcessor.class));
-        rpcServer.registerProcessor(StoreContext.getBean(GroupProcessor.class));
+        rpcServer.registerProcessor(StoreContext.getBean(SubscriptionProcessor.class));
     }
 }

@@ -6,13 +6,13 @@ import cn.coderule.minimq.rpc.common.core.invoke.RpcCommand;
 import cn.coderule.minimq.rpc.common.core.invoke.RpcContext;
 import cn.coderule.minimq.rpc.common.protocol.code.RequestCode;
 
-public class GroupProcessor implements RpcProcessor {
+public class SubscriptionProcessor implements RpcProcessor {
     @Override
     public RpcCommand process(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
         return switch (request.getCode()) {
-            case RequestCode.GET_ALL_TOPIC_CONFIG -> this.getTopic(ctx, request);
-            case RequestCode.DELETE_TOPIC_IN_BROKER -> this.deleteTopic(ctx, request);
-            case RequestCode.UPDATE_AND_CREATE_TOPIC -> this.saveTopic(ctx, request);
+            case RequestCode.GET_ALL_SUBSCRIPTIONGROUP_CONFIG -> this.get(ctx, request);
+            case RequestCode.DELETE_SUBSCRIPTIONGROUP -> this.delete(ctx, request);
+            case RequestCode.UPDATE_AND_CREATE_SUBSCRIPTIONGROUP -> this.save(ctx, request);
             default -> this.unsupportedCode(ctx, request);
         };
     }
@@ -22,19 +22,19 @@ public class GroupProcessor implements RpcProcessor {
         return false;
     }
 
-    private RpcCommand saveTopic(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
+    private RpcCommand save(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
         RpcCommand response = RpcCommand.createResponseCommand(null);
 
         return response.success();
     }
 
-    private RpcCommand getTopic(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
+    private RpcCommand get(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
         RpcCommand response = RpcCommand.createResponseCommand(null);
 
         return response.success();
     }
 
-    private RpcCommand deleteTopic(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
+    private RpcCommand delete(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
         RpcCommand response = RpcCommand.createResponseCommand(null);
 
         return response.success();
