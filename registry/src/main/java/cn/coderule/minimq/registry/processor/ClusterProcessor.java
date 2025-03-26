@@ -57,10 +57,7 @@ public class ClusterProcessor implements RpcProcessor {
 
             case RequestCode.WIPE_WRITE_PERM_OF_BROKER -> this.removeGroupWritePermission(ctx, request);
             case RequestCode.ADD_WRITE_PERM_OF_BROKER -> this.addGroupWritePermission(ctx, request);
-            default -> {
-                String error = " request type " + request.getCode() + " not supported";
-                yield RpcCommand.createResponseCommand(SystemResponseCode.REQUEST_CODE_NOT_SUPPORTED, error);
-            }
+            default -> this.unsupportedCode(ctx, request);
         };
     }
 

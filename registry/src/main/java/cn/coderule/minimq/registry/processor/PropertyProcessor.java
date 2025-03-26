@@ -38,10 +38,7 @@ public class PropertyProcessor implements RpcProcessor {
         return switch (request.getCode()) {
             case RequestCode.UPDATE_NAMESRV_CONFIG -> this.setProperty(ctx, request);
             case RequestCode.GET_NAMESRV_CONFIG -> this.getProperty(ctx, request);
-            default -> {
-                String error = " request type " + request.getCode() + " not supported";
-                yield RpcCommand.createResponseCommand(SystemResponseCode.REQUEST_CODE_NOT_SUPPORTED, error);
-            }
+            default -> this.unsupportedCode(ctx, request);
         };
     }
 

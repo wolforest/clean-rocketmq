@@ -59,10 +59,7 @@ public class RegistryProcessor implements RpcProcessor {
             case RequestCode.REGISTER_BROKER -> registerStore(ctx, request);
             case RequestCode.UNREGISTER_BROKER -> unregisterStore(ctx, request);
             case RequestCode.REGISTER_TOPIC_IN_NAMESRV -> registerTopic(ctx, request);
-            default -> {
-                String error = " request type " + request.getCode() + " not supported";
-                yield RpcCommand.buildErrorResponse(SystemResponseCode.SYSTEM_ERROR, error);
-            }
+            default -> this.unsupportedCode(ctx, request);
         };
     }
 

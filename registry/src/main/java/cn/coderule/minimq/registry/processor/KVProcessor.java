@@ -41,10 +41,7 @@ public class KVProcessor implements RpcProcessor {
             case RequestCode.PUT_KV_CONFIG -> this.putKVConfig(ctx, request);
             case RequestCode.GET_KV_CONFIG -> this.getKVConfig(ctx, request);
             case RequestCode.DELETE_KV_CONFIG -> this.deleteKVConfig(ctx, request);
-            default -> {
-                String error = " request type " + request.getCode() + " not supported";
-                yield RpcCommand.createResponseCommand(SystemResponseCode.REQUEST_CODE_NOT_SUPPORTED, error);
-            }
+            default -> this.unsupportedCode(ctx, request);
         };
     }
 

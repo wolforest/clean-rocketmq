@@ -52,10 +52,7 @@ public class TopicProcessor implements RpcProcessor {
             case RequestCode.GET_UNIT_TOPIC_LIST -> this.getUnitTopic(ctx, request);
             case RequestCode.GET_HAS_UNIT_SUB_TOPIC_LIST -> this.getSubUnitTopic(ctx, request);
             case RequestCode.GET_HAS_UNIT_SUB_UNUNIT_TOPIC_LIST -> this.getSubAndNoUnitTopic(ctx, request);
-            default -> {
-                String error = " request type " + request.getCode() + " not supported";
-                yield RpcCommand.createResponseCommand(SystemResponseCode.REQUEST_CODE_NOT_SUPPORTED, error);
-            }
+            default -> this.unsupportedCode(ctx, request);
         };
     }
 
