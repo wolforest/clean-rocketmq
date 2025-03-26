@@ -28,9 +28,9 @@ public class TopicClient extends AbstractStoreClient implements StoreClient, Top
     }
 
     @Override
-    public void putTopic(Topic topic) {
+    public void saveTopic(Topic topic) {
         if (isLocal(topic.getTopicName())) {
-            localTopicStore.putTopic(topic);
+            localTopicStore.saveTopic(topic);
             return;
         }
     }

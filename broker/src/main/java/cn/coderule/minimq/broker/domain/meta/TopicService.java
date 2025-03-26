@@ -34,7 +34,7 @@ public class TopicService {
     }
 
     public void save(Topic topicName) {
-        topicClient.putTopic(topicName);
+        topicClient.saveTopic(topicName);
     }
 
     public void delete(String topicName) {

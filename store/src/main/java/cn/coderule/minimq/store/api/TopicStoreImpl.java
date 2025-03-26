@@ -22,7 +22,7 @@ public class TopicStoreImpl implements TopicStore {
     }
 
     @Override
-    public void putTopic(Topic topic) {
+    public void saveTopic(Topic topic) {
         topicService.putTopic(topic);
     }
 
