@@ -1,5 +1,6 @@
 package cn.coderule.minimq.store.server.rpc.processor;
 
+import cn.coderule.common.util.lang.StringUtil;
 import cn.coderule.minimq.domain.config.TopicConfig;
 import cn.coderule.minimq.domain.enums.MessageType;
 import cn.coderule.minimq.domain.model.Topic;
@@ -13,6 +14,7 @@ import cn.coderule.minimq.rpc.common.netty.service.NettyHelper;
 import cn.coderule.minimq.rpc.common.protocol.code.RequestCode;
 import cn.coderule.minimq.rpc.common.protocol.code.ResponseCode;
 import cn.coderule.minimq.rpc.store.protocol.header.CreateTopicRequestHeader;
+import cn.coderule.minimq.rpc.store.protocol.header.DeleteTopicRequestHeader;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import lombok.Getter;
@@ -59,7 +61,7 @@ public class TopicProcessor implements RpcProcessor {
         log.info("receive request to update or create topic={}, caller address={}",
             requestHeader.getTopic(), NettyHelper.getRemoteAddr(ctx.channel()));
 
-        if (!validateTopicName(requestHeader.getTopic(), response)) {
+        if (isTopicNameInvalid(requestHeader.getTopic(), response)) {
             return response;
         }
 
@@ -72,7 +74,13 @@ public class TopicProcessor implements RpcProcessor {
             return response.success();
         }
 
-        topicStore.saveTopic(topic);
+        try {
+            topicStore.saveTopic(topic);
+        } catch (Exception e) {
+            log.error("save topic={} error", topic.getTopicName(), e);
+            return response.setCodeAndRemark(ResponseCode.SYSTEM_ERROR, "save topic error");
+        }
+
         return response.success();
     }
 
@@ -84,18 +92,40 @@ public class TopicProcessor implements RpcProcessor {
 
     private RpcCommand deleteTopic(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
         RpcCommand response = RpcCommand.createResponseCommand(null);
+        DeleteTopicRequestHeader requestHeader = request.decodeHeader(DeleteTopicRequestHeader.class);
+        log.info("receive request to delete topic={}, caller address={}",
+            requestHeader.getTopic(), NettyHelper.getRemoteAddr(ctx.channel()));
+
+        if (isTopicNameInvalid(requestHeader.getTopic(), response)) {
+            return response;
+        }
+
+        try {
+            topicStore.deleteTopic(requestHeader.getTopic());
+        } catch (Exception e) {
+            log.error("delete topic={} error", requestHeader.getTopic(), e);
+            return response.setCodeAndRemark(ResponseCode.SYSTEM_ERROR, "delete topic error");
+        }
 
         return response.success();
     }
 
-    private boolean validateTopicName(String topicName, RpcCommand response) {
+    private boolean isTopicNameInvalid(String topicName, RpcCommand response) {
+        if (StringUtil.isBlank(topicName)) {
+            response.setCodeAndRemark(
+                ResponseCode.SYSTEM_ERROR,
+                "TopicName can't be blank"
+            );
+            return true;
+        }
+
         TopicValidator.ValidateTopicResult validateResult = TopicValidator.validateTopic(topicName);
         if (!validateResult.isValid()) {
             response.setCodeAndRemark(
                 ResponseCode.SYSTEM_ERROR,
                 validateResult.getRemark()
             );
-            return false;
+            return true;
         }
 
         if (TopicValidator.isSystemTopic(topicName)) {
@@ -103,10 +133,10 @@ public class TopicProcessor implements RpcProcessor {
                 ResponseCode.SYSTEM_ERROR,
                 "can't use system topic: " + topicName
             );
-            return false;
+            return true;
         }
 
-        return true;
+        return false;
     }
 
     private boolean validateTopicType(MessageType type, RpcCommand response) {
