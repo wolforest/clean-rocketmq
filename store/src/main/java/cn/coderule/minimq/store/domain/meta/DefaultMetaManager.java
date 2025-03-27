@@ -40,11 +40,12 @@ public class DefaultMetaManager implements MetaManager {
     }
 
     private void initTopic() {
-        TopicService topicStore = new DefaultTopicService(StorePath.getTopicPath());
+        ConsumeOffsetService offsetService = StoreContext.getBean(ConsumeOffsetService.class);
+        StoreRegister storeRegister = StoreContext.getBean(StoreRegister.class);
+        TopicService topicStore = new DefaultTopicService(StorePath.getTopicPath(), offsetService, storeRegister);
         topicStore.load();
 
-        StoreRegister storeRegister = StoreContext.getBean(StoreRegister.class);
-        TopicStore topicService = new TopicStoreImpl(topicStore, storeRegister);
+        TopicStore topicService = new TopicStoreImpl(topicStore);
         StoreContext.registerAPI(topicService, TopicStore.class);
     }
 

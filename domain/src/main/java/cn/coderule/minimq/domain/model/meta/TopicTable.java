@@ -7,17 +7,23 @@ import lombok.Data;
 
 @Data
 public class TopicTable implements Serializable {
-    private ConcurrentHashMap<String, Topic> topicMap = new ConcurrentHashMap<>();
-
-    public Topic getTopic(String topicName) {
-        return topicMap.get(topicName);
-    }
-
-    public void putTopic(Topic topic) {
-        topicMap.put(topic.getTopicName(), topic);
-    }
+    private ConcurrentHashMap<String, Topic> topicTable = new ConcurrentHashMap<>();
 
     public boolean exists(String topicName) {
-        return topicMap.containsKey(topicName);
+        return topicTable.containsKey(topicName);
     }
+
+    public Topic getTopic(String topicName) {
+        return topicTable.get(topicName);
+    }
+
+    public void saveTopic(Topic topic) {
+        topicTable.put(topic.getTopicName(), topic);
+    }
+
+    public void deleteTopic(String topicName) {
+        topicTable.remove(topicName);
+    }
+
+
 }

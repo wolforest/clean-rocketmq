@@ -54,7 +54,7 @@ public class SystemTopicRegister {
             topic.setPerm(perm);
         }
 
-        topicService.putTopic(topic);
+        topicService.saveTopic(topic);
     }
 
 }

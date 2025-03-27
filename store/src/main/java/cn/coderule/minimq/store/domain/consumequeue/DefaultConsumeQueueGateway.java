@@ -52,6 +52,11 @@ public class DefaultConsumeQueueGateway implements ConsumeQueueGateway {
         return getQueueStore(topic, queueId).getMaxOffset();
     }
 
+    @Override
+    public void deleteByTopic(String topicName) {
+
+    }
+
     private ConsumeQueue getQueueStore(String topic, int queueId) {
         return consumeQueueFactory.getOrCreate(topic, queueId);
     }
