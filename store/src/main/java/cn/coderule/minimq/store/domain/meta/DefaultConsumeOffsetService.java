@@ -5,6 +5,7 @@ import cn.coderule.common.util.lang.StringUtil;
 import cn.coderule.common.util.lang.string.JSONUtil;
 import cn.coderule.minimq.domain.model.meta.ConsumeOffset;
 import cn.coderule.minimq.domain.service.store.domain.meta.ConsumeOffsetService;
+import java.util.Set;
 
 public class DefaultConsumeOffsetService implements ConsumeOffsetService {
     private final String storePath;
@@ -27,6 +28,16 @@ public class DefaultConsumeOffsetService implements ConsumeOffsetService {
     @Override
     public void putOffset(String group, String topic, int queueId, long offset) {
         consumeOffset.putOffset(group, topic, queueId, offset);
+    }
+
+    @Override
+    public Set<String> findTopicByGroup(String group) {
+        return consumeOffset.findTopicByGroup(group);
+    }
+
+    @Override
+    public Set<String> findGroupByTopic(String topic) {
+        return consumeOffset.findGroupByTopic(topic);
     }
 
     @Override
