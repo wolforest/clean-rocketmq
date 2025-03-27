@@ -10,8 +10,14 @@ import lombok.Data;
 @Data
 public class ConsumeOffset implements Serializable {
 
-    private ConcurrentMap<String, ConcurrentMap<Integer, Long>> offsetMap
-        = new ConcurrentHashMap<>(512);
+    /**
+     * topic@group -> queueId -> offset
+     */
+    private ConcurrentMap<String, ConcurrentMap<Integer, Long>> offsetMap;
+
+    public ConsumeOffset() {
+        offsetMap = new ConcurrentHashMap<>(512);
+    }
 
     @JSONField(serialize = false)
     public long getOffset(String group, String topic, int queueId) {

@@ -7,6 +7,7 @@ import cn.coderule.minimq.domain.service.store.manager.MetaManager;
 import cn.coderule.minimq.store.api.TopicStoreImpl;
 import cn.coderule.minimq.store.server.StoreContext;
 import cn.coderule.minimq.store.server.bootstrap.StorePath;
+import cn.coderule.minimq.store.server.bootstrap.StoreRegister;
 
 public class DefaultMetaManager implements MetaManager {
     @Override
@@ -42,7 +43,8 @@ public class DefaultMetaManager implements MetaManager {
         TopicService topicStore = new DefaultTopicService(StorePath.getTopicPath());
         topicStore.load();
 
-        TopicStore topicService = new TopicStoreImpl(topicStore);
+        StoreRegister storeRegister = StoreContext.getBean(StoreRegister.class);
+        TopicStore topicService = new TopicStoreImpl(topicStore, storeRegister);
         StoreContext.registerAPI(topicService, TopicStore.class);
     }
 
