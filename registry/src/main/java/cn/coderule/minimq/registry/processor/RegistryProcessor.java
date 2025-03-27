@@ -164,7 +164,7 @@ public class RegistryProcessor implements RpcProcessor {
         return body;
     }
 
-    private StoreInfo getStoreInfo(RpcCommand request, RegisterBrokerRequestHeader requestHeader) {
+    private StoreInfo getStoreInfo(RpcCommand request, RegisterBrokerRequestHeader requestHeader, RegisterBrokerBody body) {
         StoreInfo storeInfo = new StoreInfo();
         storeInfo.setClusterName(requestHeader.getClusterName());
         storeInfo.setGroupName(requestHeader.getBrokerName());
@@ -175,19 +175,17 @@ public class RegistryProcessor implements RpcProcessor {
         storeInfo.setHeartbeatTimeout(requestHeader.getHeartbeatTimeoutMillis());
         storeInfo.setEnableActingMaster(requestHeader.getEnableActingMaster());
 
+        storeInfo.setTopicInfo(body.getTopicConfigSerializeWrapper());
+        storeInfo.setFilterList(body.getFilterServerList());
+
         return storeInfo;
     }
 
     private StoreRegisterResult registerStore(RpcContext ctx, RpcCommand request, RegisterBrokerRequestHeader requestHeader) throws RemotingCommandException {
         RegisterBrokerBody body = extractBody(request, requestHeader);
-        StoreInfo storeInfo = getStoreInfo(request, requestHeader);
+        StoreInfo storeInfo = getStoreInfo(request, requestHeader, body);
 
-        return storeRegistry.register(
-            storeInfo,
-            body.getTopicConfigSerializeWrapper(),
-            body.getFilterServerList(),
-            ctx.channel()
-        );
+        return storeRegistry.register(storeInfo, ctx.channel());
     }
 
     private void formatResponseHeader(StoreRegisterResult result, RegisterBrokerResponseHeader responseHeader) {

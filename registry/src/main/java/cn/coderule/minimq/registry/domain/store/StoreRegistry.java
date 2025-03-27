@@ -57,7 +57,7 @@ public class StoreRegistry {
         unregisterService.shutdown();
     }
 
-    public StoreRegisterResult register(StoreInfo store, TopicConfigSerializeWrapper topicInfo, List<String> filterList, Channel channel) {
+    public StoreRegisterResult register(StoreInfo store, Channel channel) {
         StoreRegisterResult result = new StoreRegisterResult();
         try {
             route.lockWrite();
@@ -66,17 +66,17 @@ public class StoreRegistry {
             boolean isMinIdChanged = checkMinIdChanged(store, group);
             removeExistAddress(store, group);
 
-            if (!checkHealthInfo(store, group, topicInfo)) {
+            if (!checkHealthInfo(store, group, store.getTopicInfo())) {
                 return result;
             }
-            if (hasRegistered(store, group, topicInfo)) {
+            if (hasRegistered(store, group, store.getTopicInfo())) {
                 return null;
             }
 
             boolean isFirst = saveAddress(store, group);
-            registerTopicInfo(store, group, topicInfo, isFirst);
-            saveHealthInfo(store, topicInfo, channel);
-            saveFilterList(store, filterList);
+            registerTopicInfo(store, group, store.getTopicInfo(), isFirst);
+            saveHealthInfo(store, store.getTopicInfo(), channel);
+            saveFilterList(store, store.getFilterList());
             setHaAndMasterInfo(store, result);
 
             if (isMinIdChanged) {
