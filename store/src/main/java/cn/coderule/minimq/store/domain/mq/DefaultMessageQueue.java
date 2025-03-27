@@ -14,6 +14,7 @@ import cn.coderule.minimq.domain.service.store.domain.MessageQueue;
 import cn.coderule.minimq.domain.dto.EnqueueResult;
 import cn.coderule.minimq.domain.model.message.MessageBO;
 import cn.coderule.minimq.store.server.StoreContext;
+import cn.coderule.minimq.store.server.ha.commitlog.CommitLogSynchronizer;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
@@ -25,16 +26,19 @@ public class DefaultMessageQueue implements MessageQueue {
     private final ConsumeQueueLock consumeQueueLock;
     private final MessageConfig messageConfig;
     private final ConsumeQueueGateway consumeQueueGateway;
+    private final CommitLogSynchronizer commitLogSynchronizer;
     private final CommitLog commitLog;
 
     public DefaultMessageQueue(
         MessageConfig messageConfig,
         CommitLog commitLog,
-        ConsumeQueueGateway consumeQueueGateway) {
+        ConsumeQueueGateway consumeQueueGateway,
+        CommitLogSynchronizer commitLogSynchronizer) {
 
         this.messageConfig = messageConfig;
         this.commitLog = commitLog;
         this.consumeQueueGateway = consumeQueueGateway;
+        this.commitLogSynchronizer = commitLogSynchronizer;
 
         this.consumeQueueLock = new ConsumeQueueLock();
     }
@@ -66,7 +70,7 @@ public class DefaultMessageQueue implements MessageQueue {
                 consumeQueueGateway.increaseOffset(messageBO.getTopic(), messageBO.getQueueId());
             }
 
-            return result.getFuture();
+            return commitLogSynchronizer.sync(result);
         } catch (Exception e) {
             return CompletableFuture.completedFuture(EnqueueResult.failure());
         } finally {
