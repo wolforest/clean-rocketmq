@@ -74,7 +74,7 @@ public class SubscriptionProcessor implements RpcProcessor {
             requestHeader.getGroupName(), NettyHelper.getRemoteAddr(ctx.channel()));
 
         try {
-            subscriptionStore.deleteGroup(requestHeader.getGroupName());
+            subscriptionStore.deleteGroup(requestHeader.getGroupName(), requestHeader.isCleanOffset());
         } catch (Exception e) {
             log.error("delete group error", e);
             return response.setCodeAndRemark(ResponseCode.SYSTEM_ERROR, "delete group error");

@@ -6,5 +6,9 @@ public interface SubscriptionStore {
     boolean existsGroup(String topicName);
     void getGroup(String groupName);
     void saveGroup(SubscriptionGroup group);
-    void deleteGroup(String groupName);
+    default void deleteGroup(String groupName) {
+        this.deleteGroup(groupName, false);
+    }
+
+    void deleteGroup(String groupName, boolean cleanOffset);
 }
