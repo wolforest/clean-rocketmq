@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,14 +15,9 @@
  * limitations under the License.
  */
 
-package cn.coderule.minimq.rpc.registry.protocol.subscription;
+package cn.coderule.minimq.domain.model.subscription;
 
-public interface RetryPolicy {
-    /**
-     * Compute message's next delay duration by specify reconsumeTimes
-     *
-     * @param reconsumeTimes Message reconsumeTimes
-     * @return Message's nextDelayDuration in milliseconds
-     */
-    long nextDelayDuration(int reconsumeTimes);
+public enum GroupRetryPolicyType {
+    EXPONENTIAL,
+    CUSTOMIZED
 }

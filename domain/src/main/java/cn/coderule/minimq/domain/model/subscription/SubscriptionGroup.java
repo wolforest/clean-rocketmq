@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package cn.coderule.minimq.rpc.registry.protocol.subscription;
+package cn.coderule.minimq.domain.model.subscription;
 
 import cn.coderule.minimq.domain.constant.MQConstants;
 import com.google.common.base.MoreObjects;
@@ -24,7 +24,7 @@ import java.util.Map;
 import java.util.Set;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 
-public class SubscriptionGroupConfig {
+public class SubscriptionGroup {
 
     private String groupName;
 
@@ -203,7 +203,7 @@ public class SubscriptionGroupConfig {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        SubscriptionGroupConfig other = (SubscriptionGroupConfig) obj;
+        SubscriptionGroup other = (SubscriptionGroup) obj;
         return new EqualsBuilder()
             .append(groupName, other.groupName)
             .append(consumeEnable, other.consumeEnable)

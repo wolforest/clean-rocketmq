@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package cn.coderule.minimq.rpc.registry.protocol.subscription;
+package cn.coderule.minimq.domain.model.subscription;
 
 import com.google.common.base.MoreObjects;
 import java.util.concurrent.TimeUnit;

@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package cn.coderule.minimq.rpc.registry.protocol.subscription;
+package cn.coderule.minimq.domain.model.subscription;
 
 import com.alibaba.fastjson2.annotation.JSONField;
 import com.google.common.base.MoreObjects;

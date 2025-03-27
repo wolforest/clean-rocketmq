@@ -44,7 +44,7 @@ public class TopicProcessor implements RpcProcessor {
     public RpcCommand process(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
         return switch (request.getCode()) {
             case RequestCode.UPDATE_AND_CREATE_TOPIC -> this.saveTopic(ctx, request);
-            case RequestCode.GET_ALL_TOPIC_CONFIG -> this.getTopic(ctx, request);
+            case RequestCode.GET_ALL_TOPIC_CONFIG -> this.getTopicList(ctx, request);
             case RequestCode.DELETE_TOPIC_IN_BROKER -> this.deleteTopic(ctx, request);
             default -> this.unsupportedCode(ctx, request);
         };
@@ -84,7 +84,7 @@ public class TopicProcessor implements RpcProcessor {
         return response.success();
     }
 
-    private RpcCommand getTopic(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
+    private RpcCommand getTopicList(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
         RpcCommand response = RpcCommand.createResponseCommand(null);
 
         return response.success();

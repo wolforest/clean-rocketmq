@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.coderule.minimq.rpc.registry.protocol.subscription;
+package cn.coderule.minimq.domain.model.subscription;
 
 import cn.coderule.minimq.rpc.common.protocol.codec.RpcSerializable;
 import org.apache.commons.lang3.builder.EqualsBuilder;
