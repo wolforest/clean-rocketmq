@@ -8,6 +8,5 @@ public class TopicConfig implements Serializable {
     private boolean enableAutoCreation = false;
 
     private boolean enableMixedMessageType = false;
-
     private int defaultQueueNum = 1;
 }
