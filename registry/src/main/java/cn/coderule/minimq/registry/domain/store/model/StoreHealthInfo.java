@@ -1,6 +1,6 @@
 package cn.coderule.minimq.registry.domain.store.model;
 
-import cn.coderule.minimq.rpc.common.protocol.DataVersion;
+import cn.coderule.minimq.domain.model.DataVersion;
 import io.netty.channel.Channel;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;

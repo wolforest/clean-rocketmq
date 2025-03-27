@@ -18,7 +18,7 @@
 package cn.coderule.minimq.rpc.registry.protocol.body;
 
 import cn.coderule.minimq.domain.model.Topic;
-import cn.coderule.minimq.rpc.common.protocol.DataVersion;
+import cn.coderule.minimq.domain.model.DataVersion;
 import cn.coderule.minimq.rpc.common.protocol.codec.RpcSerializable;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;

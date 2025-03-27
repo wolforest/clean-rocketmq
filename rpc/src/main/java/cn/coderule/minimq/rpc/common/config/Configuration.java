@@ -19,7 +19,7 @@ package cn.coderule.minimq.rpc.common.config;
 
 import cn.coderule.common.util.io.FileUtil;
 import cn.coderule.common.util.lang.BeanUtil;
-import cn.coderule.minimq.rpc.common.protocol.DataVersion;
+import cn.coderule.minimq.domain.model.DataVersion;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
