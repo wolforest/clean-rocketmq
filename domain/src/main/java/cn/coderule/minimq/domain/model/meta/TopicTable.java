@@ -1,5 +1,6 @@
 package cn.coderule.minimq.domain.model.meta;
 
+import cn.coderule.minimq.domain.model.DataVersion;
 import cn.coderule.minimq.domain.model.Topic;
 import java.io.Serializable;
 import java.util.concurrent.ConcurrentHashMap;
@@ -8,6 +9,7 @@ import lombok.Data;
 @Data
 public class TopicTable implements Serializable {
     private ConcurrentHashMap<String, Topic> topicTable = new ConcurrentHashMap<>();
+    private DataVersion dataVersion = new DataVersion();
 
     public boolean exists(String topicName) {
         return topicTable.containsKey(topicName);

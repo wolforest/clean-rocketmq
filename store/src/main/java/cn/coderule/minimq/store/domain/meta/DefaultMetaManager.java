@@ -1,6 +1,7 @@
 package cn.coderule.minimq.store.domain.meta;
 
 import cn.coderule.minimq.domain.service.store.api.TopicStore;
+import cn.coderule.minimq.domain.service.store.domain.ConsumeQueueGateway;
 import cn.coderule.minimq.domain.service.store.domain.meta.ConsumeOffsetService;
 import cn.coderule.minimq.domain.service.store.domain.meta.TopicService;
 import cn.coderule.minimq.domain.service.store.manager.MetaManager;
@@ -14,8 +15,6 @@ public class DefaultMetaManager implements MetaManager {
     public void initialize() {
         initTopic();
     }
-
-
 
     @Override
     public void start() {
@@ -41,8 +40,9 @@ public class DefaultMetaManager implements MetaManager {
 
     private void initTopic() {
         ConsumeOffsetService offsetService = StoreContext.getBean(ConsumeOffsetService.class);
+        ConsumeQueueGateway consumeQueueGateway = StoreContext.getBean(ConsumeQueueGateway.class);
         StoreRegister storeRegister = StoreContext.getBean(StoreRegister.class);
-        TopicService topicStore = new DefaultTopicService(StorePath.getTopicPath(), offsetService, storeRegister);
+        TopicService topicStore = new DefaultTopicService(StorePath.getTopicPath(), offsetService, consumeQueueGateway, storeRegister);
         topicStore.load();
 
         TopicStore topicService = new TopicStoreImpl(topicStore);

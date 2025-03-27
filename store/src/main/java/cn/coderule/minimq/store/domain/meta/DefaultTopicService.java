@@ -11,12 +11,14 @@ import cn.coderule.minimq.domain.service.store.domain.meta.TopicService;
 import cn.coderule.minimq.domain.utils.topic.KeyBuilder;
 import cn.coderule.minimq.store.server.bootstrap.StoreRegister;
 import java.util.Set;
+import lombok.Getter;
 
 public class DefaultTopicService implements TopicService {
     private final String storePath;
     private final ConsumeOffsetService consumeOffsetService;
     private final ConsumeQueueGateway consumeQueueGateway;
     private final StoreRegister storeRegister;
+    @Getter
     private TopicTable topicTable;
 
     public DefaultTopicService(String storePath,
