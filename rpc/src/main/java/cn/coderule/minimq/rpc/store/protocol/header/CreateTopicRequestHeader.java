@@ -69,8 +69,10 @@ public class CreateTopicRequestHeader extends RpcRequestHeader {
         topic.setReadQueueNums(this.readQueueNums);
         topic.setWriteQueueNums(this.writeQueueNums);
         topic.setPerm(this.perm);
-        topic.setTopicSysFlag(this.topicSysFlag);
         topic.setOrder(this.order);
+
+        int sysFlag = null != this.topicSysFlag ? this.topicSysFlag : 0;
+        topic.setTopicSysFlag(sysFlag);
 
         topic.setAttributes(AttributeParser.toMap(this.attributes));
 
