@@ -10,6 +10,7 @@ import cn.coderule.minimq.rpc.common.protocol.code.RequestCode;
 import cn.coderule.minimq.rpc.common.protocol.code.ResponseCode;
 import cn.coderule.minimq.rpc.common.protocol.codec.RpcSerializable;
 import cn.coderule.minimq.domain.model.subscription.SubscriptionGroup;
+import cn.coderule.minimq.rpc.store.protocol.header.DeleteSubscriptionGroupRequestHeader;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import lombok.Getter;
@@ -68,6 +69,16 @@ public class SubscriptionProcessor implements RpcProcessor {
 
     private RpcCommand deleteGroup(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
         RpcCommand response = RpcCommand.createResponseCommand(null);
+        DeleteSubscriptionGroupRequestHeader requestHeader = request.decodeHeader(DeleteSubscriptionGroupRequestHeader.class);
+        log.info("receive request to delete group={}, caller address={}",
+            requestHeader.getGroupName(), NettyHelper.getRemoteAddr(ctx.channel()));
+
+        try {
+            subscriptionStore.deleteGroup(requestHeader.getGroupName());
+        } catch (Exception e) {
+            log.error("delete group error", e);
+            return response.setCodeAndRemark(ResponseCode.SYSTEM_ERROR, "delete group error");
+        }
 
         return response.success();
     }
