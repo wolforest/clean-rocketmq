@@ -16,17 +16,22 @@ import lombok.Getter;
 public class DefaultTopicService implements TopicService {
     private final String storePath;
     private final ConsumeOffsetService consumeOffsetService;
-    private final ConsumeQueueGateway consumeQueueGateway;
-    private final StoreRegister storeRegister;
+
+    // dependency from other package, injected by module manager
+    private ConsumeQueueGateway consumeQueueGateway;
+    private StoreRegister storeRegister;
+
     @Getter
     private TopicTable topicTable;
 
     public DefaultTopicService(String storePath,
-        ConsumeOffsetService consumeOffsetService,
-        ConsumeQueueGateway consumeQueueGateway,
-        StoreRegister storeRegister) {
+        ConsumeOffsetService consumeOffsetService) {
         this.storePath = storePath;
         this.consumeOffsetService = consumeOffsetService;
+
+    }
+
+    public void inject(ConsumeQueueGateway consumeQueueGateway, StoreRegister storeRegister) {
         this.consumeQueueGateway = consumeQueueGateway;
         this.storeRegister = storeRegister;
     }
@@ -99,8 +104,8 @@ public class DefaultTopicService implements TopicService {
     }
 
     private void cleanTopicInfo(String topicName) {
-        topicTable.deleteTopic(topicName);
         consumeOffsetService.deleteByTopic(topicName);
         consumeQueueGateway.deleteByTopic(topicName);
+        topicTable.deleteTopic(topicName);
     }
 }
