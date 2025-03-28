@@ -20,6 +20,7 @@ import cn.coderule.minimq.store.infra.StoreRegister;
 import cn.coderule.minimq.store.infra.file.AllocateMappedFileService;
 import cn.coderule.minimq.store.infra.memory.TransientPool;
 import cn.coderule.minimq.store.server.StoreContext;
+import cn.coderule.minimq.store.server.ha.HAManager;
 import cn.coderule.minimq.store.server.rpc.RpcManager;
 
 public class ComponentRegister {
@@ -107,7 +108,8 @@ public class ComponentRegister {
     }
 
     private void registerHA() {
-
+        HAManager component = new HAManager();
+        manager.register(component);
     }
 
     private void registerRegistry() {
