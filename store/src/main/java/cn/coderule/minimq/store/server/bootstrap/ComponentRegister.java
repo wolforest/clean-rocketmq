@@ -34,6 +34,8 @@ public class ComponentRegister {
     }
 
     public LifecycleManager execute() {
+        registerScheduler();
+
         registerInfra();
         registerDomain();
         registerServer();
@@ -61,6 +63,14 @@ public class ComponentRegister {
         registerRpc();
         registerHA();
         registerRegistry();
+    }
+
+    private void registerScheduler() {
+        StoreConfig storeConfig = StoreContext.getBean(StoreConfig.class);
+        StoreScheduler scheduler = new StoreScheduler(storeConfig);
+
+        manager.register(scheduler);
+        StoreContext.setScheduler(scheduler);
     }
 
     private void registerMeta() {

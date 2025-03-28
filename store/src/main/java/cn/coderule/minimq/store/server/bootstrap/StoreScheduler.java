@@ -1,5 +1,6 @@
 package cn.coderule.minimq.store.server.bootstrap;
 
+import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.minimq.domain.config.StoreConfig;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -8,7 +9,7 @@ import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class StoreScheduler {
+public class StoreScheduler implements Lifecycle {
     private final StoreConfig storeConfig;
     private final ScheduledExecutorService service;
     private final TimeUnit defaultUnit = TimeUnit.SECONDS;
@@ -18,6 +19,29 @@ public class StoreScheduler {
 
         int poolSize = storeConfig.getSchedulerPoolSize();
         this.service = new ScheduledThreadPoolExecutor(poolSize);
+    }
+
+    @Override
+    public void start() {
+
+    }
+
+    @Override
+    public void shutdown() {
+        service.shutdown();
+
+        try {
+            int shutdownTimeout = storeConfig.getSchedulerShutdownTimeout();
+            boolean status = service.awaitTermination(shutdownTimeout, defaultUnit);
+
+            if (!status) {
+                log.error("shutdown store scheduler failed");
+            }
+
+            Thread.sleep(3 * 1000);
+        } catch (InterruptedException e) {
+            log.error("shutdown store scheduler error", e);
+        }
     }
 
     public ScheduledFuture<?> schedule(Runnable runnable, long delay) {
@@ -43,21 +67,5 @@ public class StoreScheduler {
         return service.scheduleWithFixedDelay(runnable, initialDelay, delay, timeUnit);
     }
 
-    public void shutdown() {
-        service.shutdown();
-
-        try {
-            int shutdownTimeout = storeConfig.getSchedulerShutdownTimeout();
-            boolean status = service.awaitTermination(shutdownTimeout, defaultUnit);
-
-            if (!status) {
-                log.error("shutdown store scheduler failed");
-            }
-
-            Thread.sleep(3 * 1000);
-        } catch (InterruptedException e) {
-            log.error("shutdown store scheduler error", e);
-        }
-    }
 
 }

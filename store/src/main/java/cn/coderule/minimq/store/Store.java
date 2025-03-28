@@ -29,7 +29,6 @@ import lombok.NonNull;
 public class Store implements Lifecycle {
     private final StoreArgument argument;
 
-    private State state = State.INITIALIZING;
     private LifecycleManager componentManager;
 
     private StartupLock startupLock;
@@ -50,8 +49,6 @@ public class Store implements Lifecycle {
 
         startupLock = new StartupLock(StorePath.getLockFile());
         shutdownLock = new ShutdownLock(StorePath.getAbortFile());
-
-        this.initScheduler();
         this.initCheckPoint();
 
         this.componentManager = ComponentRegister.register();
@@ -60,44 +57,25 @@ public class Store implements Lifecycle {
 
     @Override
     public void start() {
-        this.state = State.STARTING;
         startupLock.lock();
 
         this.componentManager.start();
 
         shutdownLock.lock();
-        this.state = State.RUNNING;
     }
 
     @Override
     public void shutdown() {
-        this.state = State.SHUTTING_DOWN;
-
         this.componentManager.shutdown();
-
-        StoreContext.getScheduler().shutdown();
         StoreContext.getCheckPoint().save();
 
         startupLock.unlock();
         shutdownLock.unlock();
-
-        this.state = State.TERMINATED;
     }
 
     @Override
     public void cleanup() {
         this.componentManager.cleanup();
-    }
-
-    @Override
-    public State getState() {
-        return this.state;
-    }
-
-    private void initScheduler() {
-        StoreConfig storeConfig = StoreContext.getBean(StoreConfig.class);
-        StoreScheduler scheduler = new StoreScheduler(storeConfig);
-        StoreContext.setScheduler(scheduler);
     }
 
     private void initCheckPoint() {
