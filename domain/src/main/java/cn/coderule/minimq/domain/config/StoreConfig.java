@@ -39,6 +39,8 @@ public class StoreConfig implements Serializable {
     private boolean fetchRegistryAddressByDns = false;
     private boolean fetchRegistryAddressByHttp = false;
     private int fetchRegistryAddressInterval = 60 * 1000;
+    private int registryHeartbeatInterval = 1_000;
+
 
     private int syncFlushTimeout = 5 * 1000;
     private String rootDir = System.getProperty("user.home") + File.separator + "mq";
