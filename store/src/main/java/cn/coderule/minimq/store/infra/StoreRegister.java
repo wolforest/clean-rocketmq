@@ -34,11 +34,6 @@ public class StoreRegister implements Lifecycle {
     }
 
     @Override
-    public void initialize() {
-        StoreContext.register(this);
-    }
-
-    @Override
     public void start() {
         registerStore();
 

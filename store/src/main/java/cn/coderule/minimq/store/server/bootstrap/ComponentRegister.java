@@ -16,9 +16,11 @@ import cn.coderule.minimq.store.domain.index.DefaultIndexManager;
 import cn.coderule.minimq.store.domain.mq.DefaultMessageQueueManager;
 import cn.coderule.minimq.store.domain.meta.DefaultMetaManager;
 import cn.coderule.minimq.store.domain.timer.DefaultTimerManager;
+import cn.coderule.minimq.store.infra.StoreRegister;
 import cn.coderule.minimq.store.infra.file.AllocateMappedFileService;
 import cn.coderule.minimq.store.infra.memory.TransientPool;
 import cn.coderule.minimq.store.server.StoreContext;
+import cn.coderule.minimq.store.server.rpc.RpcManager;
 
 public class ComponentRegister {
     private final LifecycleManager manager = new LifecycleManager();
@@ -42,6 +44,10 @@ public class ComponentRegister {
 
         registerMessageQueue();
         registerTimer();
+
+        registerRpc();
+        registerHA();
+        registerRegistry();
 
         return this.manager;
     }
@@ -91,6 +97,22 @@ public class ComponentRegister {
         }
 
         AllocateMappedFileService component = new AllocateMappedFileService(storeConfig, transientPool);
+        manager.register(component);
+        StoreContext.register(component);
+    }
+
+    private void registerRpc() {
+        RpcManager component = new RpcManager();
+        manager.register(component);
+    }
+
+    private void registerHA() {
+
+    }
+
+    private void registerRegistry() {
+        StoreConfig storeConfig = StoreContext.getBean(StoreConfig.class);
+        StoreRegister component = new StoreRegister(storeConfig);
         manager.register(component);
         StoreContext.register(component);
     }
