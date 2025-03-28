@@ -7,7 +7,7 @@ import cn.coderule.minimq.domain.service.store.manager.MetaManager;
 import cn.coderule.minimq.store.api.TopicStoreImpl;
 import cn.coderule.minimq.store.server.StoreContext;
 import cn.coderule.minimq.store.server.bootstrap.StorePath;
-import cn.coderule.minimq.store.server.bootstrap.StoreRegister;
+import cn.coderule.minimq.store.infra.StoreRegister;
 
 public class DefaultMetaManager implements MetaManager {
     private DefaultTopicService topicService;
