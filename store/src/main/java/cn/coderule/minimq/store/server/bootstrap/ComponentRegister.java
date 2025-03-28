@@ -34,8 +34,18 @@ public class ComponentRegister {
     }
 
     public LifecycleManager execute() {
-        registerMappedFileService();
+        registerInfra();
+        registerDomain();
+        registerServer();
 
+        return this.manager;
+    }
+
+    private void registerInfra() {
+        registerMappedFileService();
+    }
+
+    private void registerDomain() {
         registerMeta();
         registerCommitLog();
         registerDispatcher();
@@ -45,12 +55,12 @@ public class ComponentRegister {
 
         registerMessageQueue();
         registerTimer();
+    }
 
+    private void registerServer() {
         registerRpc();
         registerHA();
         registerRegistry();
-
-        return this.manager;
     }
 
     private void registerMeta() {
