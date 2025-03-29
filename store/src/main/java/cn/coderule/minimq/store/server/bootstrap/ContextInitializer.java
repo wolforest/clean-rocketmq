@@ -5,6 +5,7 @@ import cn.coderule.minimq.domain.config.ConsumeQueueConfig;
 import cn.coderule.minimq.domain.config.MessageConfig;
 import cn.coderule.minimq.domain.config.StoreConfig;
 import cn.coderule.minimq.domain.config.TimerConfig;
+import cn.coderule.minimq.domain.config.TopicConfig;
 import cn.coderule.minimq.store.server.StoreContext;
 
 public class ContextInitializer {
@@ -31,6 +32,7 @@ public class ContextInitializer {
 
         StoreContext.register(storeConfig);
         StoreContext.register(new MessageConfig());
+        StoreContext.register(new TopicConfig());
         StoreContext.register(new CommitLogConfig());
         StoreContext.register(new ConsumeQueueConfig());
         StoreContext.register(new TimerConfig());
