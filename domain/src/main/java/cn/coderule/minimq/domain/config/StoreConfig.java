@@ -1,5 +1,6 @@
 package cn.coderule.minimq.domain.config;
 
+import cn.coderule.common.util.lang.SystemUtil;
 import cn.coderule.minimq.domain.constant.PermName;
 import java.io.File;
 import java.io.Serializable;
@@ -7,6 +8,7 @@ import lombok.Data;
 
 @Data
 public class StoreConfig implements Serializable {
+
     /**
      * store cluster name
      */
@@ -34,12 +36,22 @@ public class StoreConfig implements Serializable {
     private int permission = PermName.PERM_READ | PermName.PERM_WRITE;
 
 
-
     private String registryAddress = null;
     private boolean fetchRegistryAddressByDns = false;
     private boolean fetchRegistryAddressByHttp = false;
     private int fetchRegistryAddressInterval = 60 * 1000;
     private int registryHeartbeatInterval = 1_000;
+
+
+    private int bossThreadNum = 1;
+    private int workerThreadNum = 3;
+    private int businessThreadNum = 8;
+    private int callbackThreadNum = 0;
+
+    private int enqueueThreadNum = Math.min(4, SystemUtil.getProcessorNumber());
+    private int pullThreadNum = SystemUtil.getProcessorNumber() * 2;
+    private int metaThreadNum = Math.min(4, SystemUtil.getProcessorNumber());
+    private int adminThreadNum = Math.min(4, SystemUtil.getProcessorNumber());
 
 
     private int syncFlushTimeout = 5 * 1000;
