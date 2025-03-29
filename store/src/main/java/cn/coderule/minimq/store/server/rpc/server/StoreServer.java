@@ -2,6 +2,7 @@ package cn.coderule.minimq.store.server.rpc.server;
 
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.minimq.domain.config.StoreConfig;
+import cn.coderule.minimq.rpc.common.RpcProcessor;
 import cn.coderule.minimq.rpc.common.RpcServer;
 import cn.coderule.minimq.rpc.common.config.RpcServerConfig;
 import cn.coderule.minimq.rpc.common.netty.NettyServer;
@@ -36,7 +37,9 @@ public class StoreServer implements Lifecycle {
 
     @Override
     public void initialize() {
-        rpcServer.registerProcessor(StoreContext.getBean(TopicProcessor.class));
-        rpcServer.registerProcessor(StoreContext.getBean(SubscriptionProcessor.class));
+    }
+
+    public void registerProcessor(RpcProcessor processor) {
+        rpcServer.registerProcessor(processor);
     }
 }
