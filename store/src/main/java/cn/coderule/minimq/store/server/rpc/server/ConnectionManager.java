@@ -1,4 +1,4 @@
-package cn.coderule.minimq.store.server.rpc;
+package cn.coderule.minimq.store.server.rpc.server;
 
 import cn.coderule.minimq.rpc.common.RpcListener;
 import io.netty.channel.Channel;

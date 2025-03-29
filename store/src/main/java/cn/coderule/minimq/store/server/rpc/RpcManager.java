@@ -3,6 +3,7 @@ package cn.coderule.minimq.store.server.rpc;
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.minimq.domain.config.StoreConfig;
 import cn.coderule.minimq.store.server.StoreContext;
+import cn.coderule.minimq.store.server.rpc.server.ConnectionManager;
 
 public class RpcManager implements Lifecycle {
     @Override

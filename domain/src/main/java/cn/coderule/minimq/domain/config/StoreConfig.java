@@ -49,10 +49,11 @@ public class StoreConfig implements Serializable {
     private int callbackThreadNum = 0;
 
     private int enqueueThreadNum = Math.min(4, SystemUtil.getProcessorNumber());
+    private int enqueueQueueCapacity = 10000;
     private int pullThreadNum = SystemUtil.getProcessorNumber() * 2;
-    private int metaThreadNum = Math.min(4, SystemUtil.getProcessorNumber());
+    private int pullQueueCapacity = 10000;
     private int adminThreadNum = Math.min(4, SystemUtil.getProcessorNumber());
-
+    private int adminQueueCapacity = 10000;
 
     private int syncFlushTimeout = 5 * 1000;
     private String rootDir = System.getProperty("user.home") + File.separator + "mq";

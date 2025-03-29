@@ -1,9 +1,15 @@
 package cn.coderule.minimq.rpc.common.config;
 
 import java.io.Serializable;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class RpcServerConfig implements Serializable {
     /**
      * Bind address may be hostname, IPv4 or IPv6.
