@@ -86,12 +86,12 @@ public class MessageManager implements Lifecycle {
 
     private void initClientActivity() {
         this.clientThreadPoolExecutor = ThreadPoolFactory.create(
-            grpcConfig.getGrpcClientThreadNum(),
-            grpcConfig.getGrpcClientThreadNum(),
+            grpcConfig.getClientThreadNum(),
+            grpcConfig.getClientThreadNum(),
             1,
             TimeUnit.MINUTES,
             "client-activity-thread-pool",
-            grpcConfig.getGrpcClientQueueCapacity()
+            grpcConfig.getClientQueueCapacity()
         );
 
         this.clientThreadPoolExecutor.setRejectedExecutionHandler(rejectActivity);
@@ -103,12 +103,12 @@ public class MessageManager implements Lifecycle {
 
     private void initRouteActivity() {
         this.routeThreadPoolExecutor = ThreadPoolFactory.create(
-            grpcConfig.getGrpcRouteThreadNum(),
-            grpcConfig.getGrpcRouteThreadNum(),
+            grpcConfig.getRouteThreadNum(),
+            grpcConfig.getRouteThreadNum(),
             1,
             TimeUnit.MINUTES,
             "route-activity-thread-pool",
-            grpcConfig.getGrpcRouteQueueCapacity()
+            grpcConfig.getRouteQueueCapacity()
         );
 
         this.routeThreadPoolExecutor.setRejectedExecutionHandler(rejectActivity);
@@ -120,12 +120,12 @@ public class MessageManager implements Lifecycle {
 
     private void initProducerActivity() {
         this.producerThreadPoolExecutor = ThreadPoolFactory.create(
-            grpcConfig.getGrpcProducerThreadNum(),
-            grpcConfig.getGrpcProducerThreadNum(),
+            grpcConfig.getProducerThreadNum(),
+            grpcConfig.getProducerThreadNum(),
             1,
             TimeUnit.MINUTES,
             "producer-activity-thread-pool",
-            grpcConfig.getGrpcProducerQueueCapacity()
+            grpcConfig.getProducerQueueCapacity()
         );
 
         this.producerThreadPoolExecutor.setRejectedExecutionHandler(rejectActivity);
@@ -137,12 +137,12 @@ public class MessageManager implements Lifecycle {
 
     private void initConsumerActivity() {
         this.consumerThreadPoolExecutor = ThreadPoolFactory.create(
-            grpcConfig.getGrpcConsumerThreadNum(),
-            grpcConfig.getGrpcConsumerThreadNum(),
+            grpcConfig.getConsumerThreadNum(),
+            grpcConfig.getConsumerThreadNum(),
             1,
             TimeUnit.MINUTES,
             "consumer-activity-thread-pool",
-            grpcConfig.getGrpcConsumerQueueCapacity()
+            grpcConfig.getConsumerQueueCapacity()
         );
 
         this.consumerThreadPoolExecutor.setRejectedExecutionHandler(rejectActivity);
@@ -154,12 +154,12 @@ public class MessageManager implements Lifecycle {
 
     private void initTransactionActivity() {
         this.transactionThreadPoolExecutor = ThreadPoolFactory.create(
-            grpcConfig.getGrpcTransactionThreadNum(),
-            grpcConfig.getGrpcTransactionThreadNum(),
+            grpcConfig.getTransactionThreadNum(),
+            grpcConfig.getTransactionThreadNum(),
             1,
             TimeUnit.MINUTES,
             "transaction-activity-thread-pool",
-            grpcConfig.getGrpcTransactionQueueCapacity()
+            grpcConfig.getTransactionQueueCapacity()
         );
 
         this.transactionThreadPoolExecutor.setRejectedExecutionHandler(rejectActivity);

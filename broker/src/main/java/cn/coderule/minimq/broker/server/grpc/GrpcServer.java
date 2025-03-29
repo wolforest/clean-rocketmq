@@ -64,7 +64,7 @@ public class GrpcServer implements Lifecycle {
             this.businessThreadPool.shutdown();
 
             this.server.shutdown()
-                .awaitTermination(config.getGrpcShutdownTimeout(), TimeUnit.SECONDS);
+                .awaitTermination(config.getShutdownTimeout(), TimeUnit.SECONDS);
         } catch (Exception e) {
             log.error("shutdown grpc server error", e);
         }
@@ -82,22 +82,22 @@ public class GrpcServer implements Lifecycle {
 
     private void initBusinessThreadPool() {
         this.businessThreadPool = ThreadPoolFactory.create(
-            config.getGrpcBusinessThreadNum(),
-            config.getGrpcBusinessThreadNum(),
+            config.getBusinessThreadNum(),
+            config.getBusinessThreadNum(),
             1,
             TimeUnit.MINUTES,
             "grpc-business-thread-pool",
-            config.getGrpcBusinessQueueCapacity()
+            config.getBusinessQueueCapacity()
         );
     }
 
     private void initEventLoopGroup() {
         initBusinessThreadPool();
 
-        if (config.isEnableGrpcEpoll()) {
+        if (config.isEnableEpoll()) {
             serverBuilder.channelType(EpollServerSocketChannel.class)
-                .bossEventLoopGroup(new EpollEventLoopGroup(config.getGrpcBossThreadNum()))
-                .workerEventLoopGroup(new EpollEventLoopGroup(config.getGrpcWorkerThreadNum()))
+                .bossEventLoopGroup(new EpollEventLoopGroup(config.getBossThreadNum()))
+                .workerEventLoopGroup(new EpollEventLoopGroup(config.getWorkerThreadNum()))
                 .executor(businessThreadPool)
             ;
 
@@ -105,8 +105,8 @@ public class GrpcServer implements Lifecycle {
         }
 
         serverBuilder.channelType(NioServerSocketChannel.class)
-            .bossEventLoopGroup(new NioEventLoopGroup(config.getGrpcBossThreadNum()))
-            .workerEventLoopGroup(new NioEventLoopGroup(config.getGrpcWorkerThreadNum()))
+            .bossEventLoopGroup(new NioEventLoopGroup(config.getBossThreadNum()))
+            .workerEventLoopGroup(new NioEventLoopGroup(config.getWorkerThreadNum()))
             .executor(businessThreadPool)
         ;
     }
