@@ -5,7 +5,7 @@ import cn.coderule.common.lang.concurrent.DefaultThreadFactory;
 import cn.coderule.common.util.lang.ThreadUtil;
 import cn.coderule.minimq.domain.config.StoreConfig;
 import cn.coderule.minimq.domain.model.Topic;
-import cn.coderule.minimq.domain.model.meta.TopicTable;
+import cn.coderule.minimq.domain.model.meta.TopicMap;
 import cn.coderule.minimq.domain.service.store.domain.meta.TopicService;
 import cn.coderule.minimq.rpc.registry.RegistryClient;
 import cn.coderule.minimq.rpc.registry.client.DefaultRegistryClient;
@@ -53,11 +53,11 @@ public class StoreRegister implements Lifecycle {
 
     private void registerStore() {
         TopicService topicService = StoreContext.getBean(TopicService.class);
-        TopicTable topicTable = topicService.getTopicTable();
+        TopicMap topicMap = topicService.getTopicTable();
 
         TopicConfigSerializeWrapper topicInfo = new TopicConfigSerializeWrapper();
-        topicInfo.setTopicConfigTable(topicTable.getTopicTable());
-        topicInfo.setDataVersion(topicTable.getDataVersion());
+        topicInfo.setTopicConfigTable(topicMap.getTopicTable());
+        topicInfo.setDataVersion(topicMap.getDataVersion());
 
         StoreInfo storeInfo = StoreInfo.builder()
             .clusterName(storeConfig.getCluster())

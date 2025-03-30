@@ -7,7 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import lombok.Data;
 
 @Data
-public class TopicTable implements Serializable {
+public class TopicMap implements Serializable {
     private ConcurrentHashMap<String, Topic> topicTable = new ConcurrentHashMap<>();
     private DataVersion dataVersion = new DataVersion();
 

@@ -4,7 +4,7 @@ import cn.coderule.common.util.io.FileUtil;
 import cn.coderule.common.util.lang.StringUtil;
 import cn.coderule.common.util.lang.string.JSONUtil;
 import cn.coderule.minimq.domain.model.Topic;
-import cn.coderule.minimq.domain.model.meta.TopicTable;
+import cn.coderule.minimq.domain.model.meta.TopicMap;
 import cn.coderule.minimq.domain.service.store.domain.ConsumeQueueGateway;
 import cn.coderule.minimq.domain.service.store.domain.meta.ConsumeOffsetService;
 import cn.coderule.minimq.domain.service.store.domain.meta.TopicService;
@@ -22,7 +22,7 @@ public class DefaultTopicService implements TopicService {
     private StoreRegister storeRegister;
 
     @Getter
-    private TopicTable topicTable;
+    private TopicMap topicMap;
 
     public DefaultTopicService(String storePath,
         ConsumeOffsetService consumeOffsetService) {
@@ -38,11 +38,11 @@ public class DefaultTopicService implements TopicService {
 
     @Override
     public boolean exists(String topicName) {
-        if (null == topicTable) {
+        if (null == topicMap) {
             return false;
         }
 
-        return topicTable.exists(topicName);
+        return topicMap.exists(topicName);
     }
 
     @Override
@@ -52,7 +52,9 @@ public class DefaultTopicService implements TopicService {
 
     @Override
     public void saveTopic(Topic topic) {
-        topicTable.saveTopic(topic);
+        topicMap.saveTopic(topic);
+        this.store();
+
         storeRegister.registerTopic(topic);
     }
 
@@ -75,7 +77,7 @@ public class DefaultTopicService implements TopicService {
 
     @Override
     public void store() {
-        String data = JSONUtil.toJSONString(topicTable);
+        String data = JSONUtil.toJSONString(topicMap);
         FileUtil.stringToFile(data, storePath);
     }
 
@@ -90,14 +92,14 @@ public class DefaultTopicService implements TopicService {
             return;
         }
 
-        this.topicTable = JSONUtil.parse(data, TopicTable.class);
+        this.topicMap = JSONUtil.parse(data, TopicMap.class);
     }
 
     private void deleteRetryTopic(String topicName) {
         Set<String> groupSet = consumeOffsetService.findGroupByTopic(topicName);
         for (String group : groupSet) {
             String retryTopic = KeyBuilder.buildPopRetryTopic(topicName, group);
-            if (topicTable.exists(retryTopic)) {
+            if (topicMap.exists(retryTopic)) {
                 cleanTopicInfo(retryTopic);
             }
         }
@@ -106,6 +108,6 @@ public class DefaultTopicService implements TopicService {
     private void cleanTopicInfo(String topicName) {
         consumeOffsetService.deleteByTopic(topicName);
         consumeQueueGateway.deleteByTopic(topicName);
-        topicTable.deleteTopic(topicName);
+        topicMap.deleteTopic(topicName);
     }
 }
