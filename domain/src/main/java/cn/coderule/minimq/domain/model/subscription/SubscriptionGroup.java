@@ -19,12 +19,13 @@ package cn.coderule.minimq.domain.model.subscription;
 
 import cn.coderule.minimq.domain.constant.MQConstants;
 import com.google.common.base.MoreObjects;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 
-public class SubscriptionGroup {
+public class SubscriptionGroup implements Serializable {
 
     private String groupName;
 
@@ -177,7 +178,7 @@ public class SubscriptionGroup {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + (int) (brokerId ^ (brokerId >>> 32));
+        result = prime * result + Long.hashCode(brokerId);
         result = prime * result + (consumeBroadcastEnable ? 1231 : 1237);
         result = prime * result + (consumeEnable ? 1231 : 1237);
         result = prime * result + (consumeFromMinEnable ? 1231 : 1237);
@@ -187,7 +188,7 @@ public class SubscriptionGroup {
         result = prime * result + retryMaxTimes;
         result = prime * result + retryQueueNums;
         result =
-            prime * result + (int) (whichBrokerWhenConsumeSlowly ^ (whichBrokerWhenConsumeSlowly >>> 32));
+            prime * result + Long.hashCode(whichBrokerWhenConsumeSlowly);
         result = prime * result + groupSysFlag;
         result = prime * result + consumeTimeoutMinute;
         result = prime * result + subscriptionDataSet.hashCode();
