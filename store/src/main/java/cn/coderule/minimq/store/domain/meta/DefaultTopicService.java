@@ -109,6 +109,8 @@ public class DefaultTopicService implements TopicService {
     private void cleanTopicInfo(String topicName) {
         consumeOffsetService.deleteByTopic(topicName);
         consumeQueueGateway.deleteByTopic(topicName);
-        topicMap.deleteTopic(topicName);
+
+        topicMap.deleteTopic(topicName, StoreContext.getStateMachineVersion());
+        this.store();
     }
 }

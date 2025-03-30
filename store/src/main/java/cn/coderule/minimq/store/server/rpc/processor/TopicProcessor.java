@@ -85,18 +85,6 @@ public class TopicProcessor implements RpcProcessor {
         return response.success();
     }
 
-    private RpcCommand getTopicList(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
-        RpcCommand response = RpcCommand.createResponseCommand(null);
-
-        return response.success();
-    }
-
-    private RpcCommand getTopicStats(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
-        RpcCommand response = RpcCommand.createResponseCommand(null);
-
-        return response.success();
-    }
-
     private RpcCommand deleteTopic(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
         RpcCommand response = RpcCommand.createResponseCommand(null);
         DeleteTopicRequestHeader requestHeader = request.decodeHeader(DeleteTopicRequestHeader.class);
@@ -113,6 +101,18 @@ public class TopicProcessor implements RpcProcessor {
             log.error("delete topic={} error", requestHeader.getTopic(), e);
             return response.setCodeAndRemark(ResponseCode.SYSTEM_ERROR, "delete topic error");
         }
+
+        return response.success();
+    }
+
+    private RpcCommand getTopicList(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
+        RpcCommand response = RpcCommand.createResponseCommand(null);
+
+        return response.success();
+    }
+
+    private RpcCommand getTopicStats(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
+        RpcCommand response = RpcCommand.createResponseCommand(null);
 
         return response.success();
     }

@@ -72,8 +72,15 @@ public class TopicMap implements Serializable {
 
 
 
-    public void deleteTopic(String topicName) {
-        topicTable.remove(topicName);
+    public void deleteTopic(String topicName, long stateVersion) {
+        Topic old = topicTable.remove(topicName);
+        if (old == null) {
+            log.info("fail to delete topic, topicName: {}", topicName);
+            return;
+        }
+
+        log.info("Topic deleted, topic: {}", old);
+        dataVersion.nextVersion(stateVersion);
     }
 
 
