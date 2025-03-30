@@ -16,6 +16,16 @@ public class StoreContext {
 
     public static StoreCheckpoint CHECK_POINT;
     public static StoreScheduler SCHEDULER;
+    public static long STATE_MACHINE_VERSION = 0L;
+
+
+    public static void setStateMachineVersion(long version) {
+        STATE_MACHINE_VERSION = version;
+    }
+
+    public static long getStateMachineVersion() {
+        return STATE_MACHINE_VERSION;
+    }
 
     public static void setScheduler(StoreScheduler scheduler) {
         SCHEDULER = scheduler;

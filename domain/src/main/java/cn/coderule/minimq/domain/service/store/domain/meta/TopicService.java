@@ -8,5 +8,5 @@ public interface TopicService extends MetaService {
     Topic getTopic(String topicName);
     void saveTopic(Topic topic);
     void deleteTopic(String topicName);
-    TopicMap getTopicTable();
+    TopicMap getTopicMap();
 }

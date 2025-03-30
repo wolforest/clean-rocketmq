@@ -53,7 +53,7 @@ public class StoreRegister implements Lifecycle {
 
     private void registerStore() {
         TopicService topicService = StoreContext.getBean(TopicService.class);
-        TopicMap topicMap = topicService.getTopicTable();
+        TopicMap topicMap = topicService.getTopicMap();
 
         TopicConfigSerializeWrapper topicInfo = new TopicConfigSerializeWrapper();
         topicInfo.setTopicConfigTable(topicMap.getTopicTable());

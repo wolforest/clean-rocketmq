@@ -17,6 +17,8 @@
 
 package cn.coderule.minimq.domain.enums;
 
+import com.google.common.collect.Sets;
+import java.util.Set;
 import lombok.Getter;
 
 @Getter
@@ -34,4 +36,7 @@ public enum MessageType {
         this.value = value;
     }
 
+    public static Set<String> typeSet() {
+        return Sets.newHashSet(UNSPECIFIED.value, NORMAL.value, FIFO.value, DELAY.value, TRANSACTION.value, MIXED.value);
+    }
 }
