@@ -60,6 +60,11 @@ public class DefaultTopicService implements TopicService {
     }
 
     @Override
+    public void putTopic(Topic topic) {
+        topicMap.putTopic(topic);
+    }
+
+    @Override
     public void deleteTopic(String topicName) {
         deleteRetryTopic(topicName);
         cleanTopicInfo(topicName);
