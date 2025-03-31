@@ -13,9 +13,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class StoreArgument implements Serializable {
+    private String[] args;
     private StoreConfig storeConfig;
     private ApplicationContext monitorContext;
 
+    public StoreArgument(String[] args) {
+        this.args = args;
+    }
 
     public void validate() {
 

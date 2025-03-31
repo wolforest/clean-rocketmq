@@ -21,6 +21,8 @@ public class ContextInitializer {
     }
 
     public void initialize() {
+        this.argument.validate();
+
         initializeConfig();
         initializeMonitor();
     }

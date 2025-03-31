@@ -1,9 +1,7 @@
 package cn.coderule.minimq.store;
 
-import cn.coderule.common.convention.container.ApplicationContext;
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.convention.service.LifecycleManager;
-import cn.coderule.minimq.domain.config.StoreConfig;
 import cn.coderule.minimq.domain.utils.lock.StartupLock;
 import cn.coderule.minimq.domain.utils.lock.ShutdownLock;
 import cn.coderule.minimq.store.server.bootstrap.ContextInitializer;
@@ -12,65 +10,75 @@ import cn.coderule.minimq.store.server.bootstrap.StoreArgument;
 import cn.coderule.minimq.store.server.bootstrap.StoreCheckpoint;
 import cn.coderule.minimq.store.server.StoreContext;
 import cn.coderule.minimq.store.server.bootstrap.StorePath;
-import cn.coderule.minimq.store.server.bootstrap.StoreScheduler;
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * gateway of store module
- *  - start()
- *  - ...
- *  input:
- *   - StoreConfig
- *   - monitor bootstrap
- *  output:
- *   - self
- *   - API bootstrap
+ *  - main()
+ *  - input:
+ *   * StoreConfig
+ *   * monitor bootstrap
+ *  - output:
+ *   * self
+ *   * API bootstrap
  */
+@Slf4j
 public class Store implements Lifecycle {
-    private final StoreArgument argument;
+    public static void main(String[] args) {
+        Store store = new Store(args);
+        store.initialize();
+        store.start();
+    }
 
+    private final StoreArgument argument;
     private LifecycleManager componentManager;
 
     private StartupLock startupLock;
     private ShutdownLock shutdownLock;
 
+    public Store(String[] args) {
+        this(new StoreArgument(args));
+    }
+
     public Store(@NonNull StoreArgument argument) {
         this.argument = argument;
     }
 
-    public ApplicationContext getAPIContext() {
-        return StoreContext.API;
-    }
-
     @Override
     public void initialize() {
-        this.argument.validate();
         ContextInitializer.init(argument);
 
         startupLock = new StartupLock(StorePath.getLockFile());
         shutdownLock = new ShutdownLock(StorePath.getAbortFile());
-        this.initCheckPoint();
 
+        this.initCheckPoint();
         this.componentManager = ComponentRegister.register();
         this.componentManager.initialize();
     }
 
     @Override
     public void start() {
+        log.info("Store is starting");
+
         startupLock.lock();
-
         this.componentManager.start();
-
         shutdownLock.lock();
+
+        log.info("Store start successfully");
     }
 
     @Override
     public void shutdown() {
+        log.info("Store is shutting down ...");
+
         this.componentManager.shutdown();
         StoreContext.getCheckPoint().save();
 
         startupLock.unlock();
         shutdownLock.unlock();
+
+        log.info("Store is terminated.");
     }
 
     @Override
