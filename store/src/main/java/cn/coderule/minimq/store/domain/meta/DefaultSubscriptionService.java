@@ -21,6 +21,8 @@ public class DefaultSubscriptionService implements SubscriptionService {
     public DefaultSubscriptionService(String storePath, ConsumeOffsetService consumeOffsetService) {
         this.storePath = storePath;
         this.consumeOffsetService = consumeOffsetService;
+
+        subscriptionMap = new SubscriptionMap();
     }
 
     @Override

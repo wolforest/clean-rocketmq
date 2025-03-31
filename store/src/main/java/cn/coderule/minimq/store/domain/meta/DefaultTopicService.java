@@ -30,6 +30,7 @@ public class DefaultTopicService implements TopicService {
         this.storePath = storePath;
         this.consumeOffsetService = consumeOffsetService;
 
+        this.topicMap = new TopicMap();
     }
 
     public void inject(ConsumeQueueGateway consumeQueueGateway, StoreRegister storeRegister) {

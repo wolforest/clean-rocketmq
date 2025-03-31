@@ -27,14 +27,11 @@ public class DefaultMetaManager implements MetaManager {
 
     }
 
-    @Override
-    public void cleanup() {
+    private void injectDependency() {
+        ConsumeQueueGateway consumeQueueGateway = StoreContext.getBean(ConsumeQueueGateway.class);
+        StoreRegister storeRegister = StoreContext.getBean(StoreRegister.class);
 
-    }
-
-    @Override
-    public State getState() {
-        return State.RUNNING;
+        topicService.inject(consumeQueueGateway, storeRegister);
     }
 
     private void initTopic() {
@@ -44,13 +41,6 @@ public class DefaultMetaManager implements MetaManager {
 
         TopicStore topicApi = new TopicStoreImpl(topicService);
         StoreContext.registerAPI(topicApi, TopicStore.class);
-    }
-
-    private void injectDependency() {
-        ConsumeQueueGateway consumeQueueGateway = StoreContext.getBean(ConsumeQueueGateway.class);
-        StoreRegister storeRegister = StoreContext.getBean(StoreRegister.class);
-
-        topicService.inject(consumeQueueGateway, storeRegister);
     }
 
     private void initConsumerOffset() {
