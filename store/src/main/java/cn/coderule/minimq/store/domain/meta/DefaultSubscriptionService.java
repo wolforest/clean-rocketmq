@@ -5,18 +5,22 @@ import cn.coderule.common.util.lang.StringUtil;
 import cn.coderule.common.util.lang.string.JSONUtil;
 import cn.coderule.minimq.domain.model.meta.SubscriptionMap;
 import cn.coderule.minimq.domain.model.subscription.SubscriptionGroup;
+import cn.coderule.minimq.domain.service.store.domain.meta.ConsumeOffsetService;
 import cn.coderule.minimq.domain.service.store.domain.meta.SubscriptionService;
+import cn.coderule.minimq.store.server.StoreContext;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class DefaultSubscriptionService implements SubscriptionService {
     private final String storePath;
+    private final ConsumeOffsetService consumeOffsetService;
     @Getter
     private SubscriptionMap subscriptionMap;
 
-    public DefaultSubscriptionService(String storePath) {
+    public DefaultSubscriptionService(String storePath, ConsumeOffsetService consumeOffsetService) {
         this.storePath = storePath;
+        this.consumeOffsetService = consumeOffsetService;
     }
 
     @Override
@@ -36,7 +40,8 @@ public class DefaultSubscriptionService implements SubscriptionService {
 
     @Override
     public void saveGroup(SubscriptionGroup group) {
-
+        subscriptionMap.saveGroup(group, StoreContext.getStateMachineVersion());
+        this.store();
     }
 
     @Override

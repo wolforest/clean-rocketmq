@@ -36,6 +36,11 @@ public class DefaultConsumeOffsetService implements ConsumeOffsetService {
     }
 
     @Override
+    public void deleteByGroup(String groupName) {
+
+    }
+
+    @Override
     public Set<String> findTopicByGroup(String group) {
         return consumeOffset.findTopicByGroup(group);
     }

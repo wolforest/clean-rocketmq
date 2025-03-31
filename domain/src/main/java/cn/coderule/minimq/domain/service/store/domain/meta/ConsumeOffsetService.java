@@ -8,6 +8,7 @@ public interface ConsumeOffsetService extends MetaService {
     void putOffset(String group, String topic, int queueId, long offset);
 
     void deleteByTopic(String topicName);
+    void deleteByGroup(String groupName);
 
     Set<String> findTopicByGroup(String group);
     Set<String> findGroupByTopic(String topic);

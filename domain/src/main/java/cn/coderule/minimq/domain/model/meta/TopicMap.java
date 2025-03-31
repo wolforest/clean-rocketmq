@@ -37,6 +37,13 @@ public class TopicMap implements Serializable {
     }
 
     public void saveTopic(@NonNull Topic topic, long stateVersion) {
+        setAttributes(topic);
+        putTopic(topic);
+
+        dataVersion.nextVersion(stateVersion);
+    }
+
+    private void setAttributes(Topic topic) {
         Map<String, String> newAttributes = getNewAttributes(topic);
         Map<String, String> oldAttributes = getOldAttributes(topic.getTopicName());
 
@@ -48,9 +55,6 @@ public class TopicMap implements Serializable {
         );
 
         topic.setAttributes(attributes);
-        putTopic(topic);
-
-        dataVersion.nextVersion(stateVersion);
     }
 
     private Map<String, String> getNewAttributes(Topic topic) {
