@@ -1,5 +1,6 @@
 package cn.coderule.minimq.store.domain.meta;
 
+import cn.coderule.minimq.domain.service.store.api.ConsumeOffsetStore;
 import cn.coderule.minimq.domain.service.store.api.SubscriptionStore;
 import cn.coderule.minimq.domain.service.store.api.TopicStore;
 import cn.coderule.minimq.domain.service.store.domain.ConsumeQueueGateway;
@@ -7,6 +8,7 @@ import cn.coderule.minimq.domain.service.store.domain.meta.ConsumeOffsetService;
 import cn.coderule.minimq.domain.service.store.domain.meta.SubscriptionService;
 import cn.coderule.minimq.domain.service.store.domain.meta.TopicService;
 import cn.coderule.minimq.domain.service.store.manager.MetaManager;
+import cn.coderule.minimq.store.api.ConsumeOffsetStoreImpl;
 import cn.coderule.minimq.store.api.SubscriptionStoreImpl;
 import cn.coderule.minimq.store.api.TopicStoreImpl;
 import cn.coderule.minimq.store.server.StoreContext;
@@ -47,6 +49,11 @@ public class DefaultMetaManager implements MetaManager {
     private void initConsumerOffset() {
         offsetService = new DefaultConsumeOffsetService(StorePath.getConsumerOffsetPath());
         StoreContext.register(offsetService, ConsumeOffsetService.class);
+
+        offsetService.load();
+
+        ConsumeOffsetStore offsetStore = new ConsumeOffsetStoreImpl(offsetService);
+        StoreContext.registerAPI(offsetStore, ConsumeOffsetStore.class);
     }
 
     private void initTopic() {
