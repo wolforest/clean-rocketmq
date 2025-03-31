@@ -46,7 +46,14 @@ public class DefaultSubscriptionService implements SubscriptionService {
 
     @Override
     public void deleteGroup(String groupName, boolean cleanOffset) {
+        subscriptionMap.deleteGroup(groupName, StoreContext.getStateMachineVersion());
+        this.store();
 
+        if (!cleanOffset) {
+            return;
+        }
+
+        consumeOffsetService.deleteByGroup(groupName);
     }
 
     @Override
