@@ -14,7 +14,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 public class StoreInfo extends ServerInfo {
     private String haAddress;
-    private Boolean enableActingMaster;
+    private Boolean enableMasterElection;
 
     private TopicConfigSerializeWrapper topicInfo;
     private List<String> filterList;
@@ -29,8 +29,8 @@ public class StoreInfo extends ServerInfo {
         this.address = address;
     }
 
-    public boolean isEnableActingMaster() {
-        return enableActingMaster != null && enableActingMaster;
+    public boolean isEnableMasterElection() {
+        return enableMasterElection != null && enableMasterElection;
     }
 
     @Override

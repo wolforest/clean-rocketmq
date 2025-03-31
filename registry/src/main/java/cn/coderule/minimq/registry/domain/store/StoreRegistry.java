@@ -150,7 +150,7 @@ public class StoreRegistry {
             storeInfo.getZoneName(),
             storeInfo.getClusterName(),
             storeInfo.getGroupName(),
-            storeInfo.isEnableActingMaster()
+            storeInfo.isEnableMasterElection()
         );
     }
 
@@ -236,7 +236,7 @@ public class StoreRegistry {
 
     private boolean isPrimarySlave(StoreInfo store, GroupInfo group) {
         return  MQConstants.MASTER_ID != store.getGroupNo()
-            && null == store.getEnableActingMaster()
+            && null == store.getEnableMasterElection()
             && store.getGroupNo() == group.getMinNo();
     }
 
@@ -294,7 +294,7 @@ public class StoreRegistry {
             }
 
             Topic topic = entry.getValue();
-            if (isPrimarySlave && store.isEnableActingMaster()) {
+            if (isPrimarySlave && store.isEnableMasterElection()) {
                 topic.setPerm(topic.getPerm() & (~PermName.PERM_WRITE));
             }
 

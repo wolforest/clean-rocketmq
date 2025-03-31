@@ -20,8 +20,8 @@ public class ServerInfo extends RpcSerializable {
     protected String address;
     protected String zoneName;
 
-    protected Long heartbeatInterval;
-    protected Long heartbeatTimeout;
+    protected Integer heartbeatInterval;
+    protected Integer heartbeatTimeout;
 
     protected boolean inContainer = false;
 }

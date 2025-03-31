@@ -22,6 +22,7 @@ import cn.coderule.minimq.store.infra.memory.TransientPool;
 import cn.coderule.minimq.store.server.StoreContext;
 import cn.coderule.minimq.store.server.ha.HAManager;
 import cn.coderule.minimq.store.server.rpc.RpcManager;
+import java.util.concurrent.ScheduledExecutorService;
 
 public class ComponentRegister {
     private final LifecycleManager manager = new LifecycleManager();
@@ -139,6 +140,7 @@ public class ComponentRegister {
     private void registerRegistry() {
         StoreConfig storeConfig = StoreContext.getBean(StoreConfig.class);
         StoreRegister component = new StoreRegister(storeConfig);
+
         manager.register(component);
         StoreContext.register(component);
     }

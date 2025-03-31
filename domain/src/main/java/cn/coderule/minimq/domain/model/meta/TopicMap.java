@@ -17,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class TopicMap implements Serializable {
     private ConcurrentHashMap<String, Topic> topicTable = new ConcurrentHashMap<>();
-    private DataVersion dataVersion = new DataVersion();
+    private DataVersion version = new DataVersion();
 
     public boolean exists(String topicName) {
         return topicTable.containsKey(topicName);
@@ -40,7 +40,7 @@ public class TopicMap implements Serializable {
         setAttributes(topic);
         putTopic(topic);
 
-        dataVersion.nextVersion(stateVersion);
+        version.nextVersion(stateVersion);
     }
 
     private void setAttributes(Topic topic) {
@@ -84,7 +84,7 @@ public class TopicMap implements Serializable {
         }
 
         log.info("Topic deleted, topic: {}", old);
-        dataVersion.nextVersion(stateVersion);
+        version.nextVersion(stateVersion);
     }
 
 
