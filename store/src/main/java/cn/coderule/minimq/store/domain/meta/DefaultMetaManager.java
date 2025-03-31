@@ -66,6 +66,7 @@ public class DefaultMetaManager implements MetaManager {
 
         subscriptionService.load();
 
-        //SubscriptionStore subscriptionApi = new SubscriptionStoreImpl(subscriptionService);
+        SubscriptionStore subscriptionApi = new SubscriptionStoreImpl(subscriptionService);
+        StoreContext.registerAPI(subscriptionApi, SubscriptionStore.class);
     }
 }

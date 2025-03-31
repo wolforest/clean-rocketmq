@@ -3,8 +3,8 @@ package cn.coderule.minimq.domain.service.store.api;
 import cn.coderule.minimq.domain.model.subscription.SubscriptionGroup;
 
 public interface SubscriptionStore {
-    boolean existsGroup(String topicName);
-    void getGroup(String groupName);
+    boolean existsGroup(String groupName);
+    SubscriptionGroup getGroup(String groupName);
     void saveGroup(SubscriptionGroup group);
     default void deleteGroup(String groupName) {
         this.deleteGroup(groupName, false);
