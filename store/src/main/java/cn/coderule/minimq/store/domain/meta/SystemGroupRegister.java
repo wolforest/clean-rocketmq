@@ -11,7 +11,7 @@ public class SystemGroupRegister {
         this.subscriptionService = subscriptionService;
     }
 
-    private void register() {
+    public void register() {
         registerToolsConsumerGroup();
         registerFilterConsumerGroup();
         registerSelfTestConsumerGroup();
@@ -68,7 +68,7 @@ public class SystemGroupRegister {
         subscriptionService.putGroup(group);
     }
 
-    public void registerCidSYSTransGroup() {
+    private void registerCidSYSTransGroup() {
         SubscriptionGroup group = new SubscriptionGroup();
         group.setGroupName(MQConstants.CID_SYS_RMQ_TRANS);
         group.setConsumeBroadcastEnable(true);

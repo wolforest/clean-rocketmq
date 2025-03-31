@@ -73,12 +73,12 @@ public class DefaultTopicService implements TopicService {
     @Override
     public void load() {
         if (!FileUtil.exists(storePath)) {
-            initTopicTable();
+            registerSystemTopic();
             return;
         }
 
         String data = FileUtil.fileToString(storePath);
-        decodeTopicTable(data);
+        decode(data);
     }
 
     @Override
@@ -87,14 +87,14 @@ public class DefaultTopicService implements TopicService {
         FileUtil.stringToFile(data, storePath);
     }
 
-    private void initTopicTable() {
-        SystemTopicRegister Register = new SystemTopicRegister(this);
-        Register.register();
+    private void registerSystemTopic() {
+        SystemTopicRegister register = new SystemTopicRegister(this);
+        register.register();
     }
 
-    private void decodeTopicTable(String data) {
+    private void decode(String data) {
         if (StringUtil.isBlank(data)) {
-            initTopicTable();
+            registerSystemTopic();
             return;
         }
 

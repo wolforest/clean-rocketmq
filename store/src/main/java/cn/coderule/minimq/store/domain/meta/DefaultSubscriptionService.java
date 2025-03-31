@@ -1,6 +1,7 @@
 package cn.coderule.minimq.store.domain.meta;
 
 import cn.coderule.common.util.io.FileUtil;
+import cn.coderule.common.util.lang.StringUtil;
 import cn.coderule.common.util.lang.string.JSONUtil;
 import cn.coderule.minimq.domain.model.meta.SubscriptionMap;
 import cn.coderule.minimq.domain.model.subscription.SubscriptionGroup;
@@ -46,15 +47,31 @@ public class DefaultSubscriptionService implements SubscriptionService {
     @Override
     public void load() {
         if (!FileUtil.exists(storePath)) {
+            registerSystemGroup();
             return;
         }
 
         String data = FileUtil.fileToString(storePath);
+        decode(data);
     }
 
     @Override
     public void store() {
         String data = JSONUtil.toJSONString(subscriptionMap);
         FileUtil.stringToFile(data, storePath);
+    }
+
+    private void registerSystemGroup() {
+        SystemGroupRegister register = new SystemGroupRegister(this);
+        register.register();
+    }
+
+    private void decode(String data) {
+        if (StringUtil.isBlank(data)) {
+            registerSystemGroup();
+            return;
+        }
+
+        this.subscriptionMap = JSONUtil.parse(data, SubscriptionMap.class);
     }
 }
