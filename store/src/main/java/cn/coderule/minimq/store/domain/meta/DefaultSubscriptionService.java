@@ -1,5 +1,7 @@
 package cn.coderule.minimq.store.domain.meta;
 
+import cn.coderule.common.util.io.FileUtil;
+import cn.coderule.common.util.lang.string.JSONUtil;
 import cn.coderule.minimq.domain.model.meta.SubscriptionMap;
 import cn.coderule.minimq.domain.model.subscription.SubscriptionGroup;
 import cn.coderule.minimq.domain.service.store.domain.meta.SubscriptionService;
@@ -8,17 +10,27 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class DefaultSubscriptionService implements SubscriptionService {
+    private final String storePath;
     @Getter
     private SubscriptionMap subscriptionMap;
 
-    @Override
-    public boolean existsGroup(String topicName) {
-        return false;
+    public DefaultSubscriptionService(String storePath) {
+        this.storePath = storePath;
     }
 
     @Override
-    public void getGroup(String groupName) {
+    public boolean existsGroup(String groupName) {
+        return subscriptionMap.existsGroup(groupName);
+    }
 
+    @Override
+    public SubscriptionGroup getGroup(String groupName) {
+        return subscriptionMap.getGroup(groupName);
+    }
+
+    @Override
+    public void putGroup(SubscriptionGroup group) {
+        subscriptionMap.putGroup(group);
     }
 
     @Override
@@ -31,4 +43,18 @@ public class DefaultSubscriptionService implements SubscriptionService {
 
     }
 
+    @Override
+    public void load() {
+        if (!FileUtil.exists(storePath)) {
+            return;
+        }
+
+        String data = FileUtil.fileToString(storePath);
+    }
+
+    @Override
+    public void store() {
+        String data = JSONUtil.toJSONString(subscriptionMap);
+        FileUtil.stringToFile(data, storePath);
+    }
 }
