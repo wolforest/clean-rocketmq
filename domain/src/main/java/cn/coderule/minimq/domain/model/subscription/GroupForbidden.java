@@ -16,13 +16,13 @@
  */
 package cn.coderule.minimq.domain.model.subscription;
 
-import cn.coderule.minimq.rpc.common.protocol.codec.RpcSerializable;
+import java.io.Serializable;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 
 /**
  *
  */
-public class GroupForbidden extends RpcSerializable {
+public class GroupForbidden implements Serializable {
 
     private String  topic;
     private String  group;

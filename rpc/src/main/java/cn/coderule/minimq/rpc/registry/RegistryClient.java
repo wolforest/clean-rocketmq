@@ -12,7 +12,8 @@ import java.util.List;
 
 public interface RegistryClient {
     List<String> getRegistryList();
-    void setRegistryAddress(String address);
+    void setRegistryList(List<String> addressList);
+    void setRegistryList(String addressConfig);
 
     void registerBroker(BrokerInfo brokerInfo);
     void unregisterBroker(ServerInfo serverInfo);

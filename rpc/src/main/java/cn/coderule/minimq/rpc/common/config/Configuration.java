@@ -20,6 +20,7 @@ package cn.coderule.minimq.rpc.common.config;
 import cn.coderule.common.util.io.FileUtil;
 import cn.coderule.common.util.lang.BeanUtil;
 import cn.coderule.minimq.domain.model.DataVersion;
+import com.alibaba.fastjson2.JSON;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -251,7 +252,7 @@ public class Configuration {
     }
 
     public String getDataVersionJson() {
-        return this.dataVersion.toJson();
+        return JSON.toJSONString(this.dataVersion);
     }
 
     public Properties getAllConfigs() {

@@ -1,6 +1,8 @@
 package cn.coderule.minimq.rpc.registry.client;
 
 import cn.coderule.common.convention.service.Lifecycle;
+import cn.coderule.common.util.lang.StringUtil;
+import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.minimq.rpc.registry.RegistryClient;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.BrokerInfo;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.ClusterInfo;
@@ -11,13 +13,40 @@ import cn.coderule.minimq.rpc.registry.protocol.cluster.StoreInfo;
 import cn.coderule.minimq.rpc.registry.protocol.route.RouteInfo;
 import cn.coderule.minimq.rpc.registry.protocol.route.TopicInfo;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class DefaultRegistryClient implements RegistryClient, Lifecycle {
+    private AtomicReference<List<String>> addressList;
+    private String addressConfig;
 
+    public DefaultRegistryClient(String addressConfig) {
+        this.addressConfig = addressConfig;
+        this.addressList = new AtomicReference<>();
+
+        setRegistryList(addressConfig);
+    }
 
     @Override
-    public void setRegistryAddress(String address) {
+    public void setRegistryList(List<String> addressList) {
+        if (CollectionUtil.isEmpty(addressList)) {
+            return;
+        }
 
+
+    }
+
+    @Override
+    public void setRegistryList(String addressConfig) {
+        if (StringUtil.isBlank(addressConfig)) {
+            return;
+        }
+
+        String[] arr = addressConfig.split(";");
+        if (arr.length == 0) {
+            return;
+        }
+        this.addressConfig = addressConfig;
+        setRegistryList(List.of(arr));
     }
 
     @Override

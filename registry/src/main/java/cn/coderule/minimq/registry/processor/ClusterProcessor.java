@@ -8,6 +8,7 @@ import cn.coderule.minimq.rpc.common.core.invoke.RpcContext;
 import cn.coderule.minimq.rpc.common.netty.service.NettyHelper;
 import cn.coderule.minimq.domain.model.DataVersion;
 import cn.coderule.minimq.rpc.common.protocol.code.RequestCode;
+import cn.coderule.minimq.rpc.common.protocol.codec.RpcSerializable;
 import cn.coderule.minimq.rpc.registry.protocol.body.BrokerMemberGroup;
 import cn.coderule.minimq.rpc.registry.protocol.body.GetBrokerMemberGroupResponseBody;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.StoreInfo;
@@ -70,14 +71,14 @@ public class ClusterProcessor implements RpcProcessor {
         QueryDataVersionResponseHeader responseHeader = (QueryDataVersionResponseHeader) response.readCustomHeader();
         QueryDataVersionRequestHeader requestHeader = request.decodeHeader(QueryDataVersionRequestHeader.class);
 
-        DataVersion requestVersion = DataVersion.decode(request.getBody(), DataVersion.class);
+        DataVersion requestVersion = RpcSerializable.decode(request.getBody(), DataVersion.class);
         StoreInfo store = new StoreInfo(requestHeader.getClusterName(), requestHeader.getBrokerAddr());
 
         clusterService.flushStoreUpdateTime(requestHeader.getClusterName(), requestHeader.getBrokerAddr());
 
         DataVersion version = clusterService.getStoreVersion(store);
         if (version != null) {
-            response.setBody(version.encode());
+            response.setBody(RpcSerializable.encode(version));
         }
 
         boolean changed = version == null || !version.equals(requestVersion);

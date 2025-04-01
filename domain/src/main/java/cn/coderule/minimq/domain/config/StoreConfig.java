@@ -2,6 +2,7 @@ package cn.coderule.minimq.domain.config;
 
 import cn.coderule.common.util.lang.SystemUtil;
 import cn.coderule.minimq.domain.constant.PermName;
+import cn.coderule.minimq.domain.utils.RegistryUtils;
 import java.io.File;
 import java.io.Serializable;
 import lombok.Data;
@@ -38,7 +39,11 @@ public class StoreConfig implements Serializable {
     private int permission = PermName.PERM_READ | PermName.PERM_WRITE;
 
 
-    private String registryAddress = null;
+    private String registryAddress = System.getProperty(
+        RegistryUtils.NAMESRV_ADDR_PROPERTY,
+        System.getenv(RegistryUtils.NAMESRV_ADDR_ENV)
+    );
+
     private boolean fetchRegistryAddressByDns = false;
     private boolean fetchRegistryAddressByHttp = false;
     private int fetchRegistryAddressInterval = 60 * 1000;

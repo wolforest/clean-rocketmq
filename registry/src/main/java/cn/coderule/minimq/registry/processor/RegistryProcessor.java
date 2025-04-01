@@ -172,7 +172,11 @@ public class RegistryProcessor implements RpcProcessor {
         storeInfo.setAddress(requestHeader.getBrokerAddr());
         storeInfo.setZoneName(request.getExtFields().get(MQConstants.ZONE_MODE));
         storeInfo.setHaAddress(requestHeader.getHaServerAddr());
-        storeInfo.setHeartbeatTimeout(requestHeader.getHeartbeatTimeoutMillis());
+
+        Integer timeout = null != requestHeader.getHeartbeatTimeoutMillis()
+            ? requestHeader.getHeartbeatTimeoutMillis().intValue()
+            : null;
+        storeInfo.setHeartbeatTimeout(timeout);
         storeInfo.setEnableMasterElection(requestHeader.getEnableActingMaster());
 
         storeInfo.setTopicInfo(body.getTopicConfigSerializeWrapper());

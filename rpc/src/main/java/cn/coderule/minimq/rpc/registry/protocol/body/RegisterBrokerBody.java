@@ -59,7 +59,7 @@ public class RegisterBrokerBody extends RpcSerializable {
         ConcurrentMap<String, Topic> topicConfigTable = cloneTopicConfigTable(topicConfigSerializeWrapper.getTopicConfigTable());
         assert topicConfigTable != null;
         try {
-            byte[] buffer = dataVersion.encode();
+            byte[] buffer = RpcSerializable.encode(dataVersion);
 
             // write data version
             outputStream.write(convertIntToByteArray(buffer.length));
@@ -120,7 +120,7 @@ public class RegisterBrokerBody extends RpcSerializable {
         InflaterInputStream inflaterInputStream = new InflaterInputStream(new ByteArrayInputStream(data));
         int dataVersionLength = readInt(inflaterInputStream);
         byte[] dataVersionBytes = readBytes(inflaterInputStream, dataVersionLength);
-        DataVersion dataVersion = DataVersion.decode(dataVersionBytes, DataVersion.class);
+        DataVersion dataVersion = RpcSerializable.decode(dataVersionBytes, DataVersion.class);
 
         RegisterBrokerBody registerBrokerBody = new RegisterBrokerBody();
         registerBrokerBody.getTopicConfigSerializeWrapper().setDataVersion(dataVersion);

@@ -29,7 +29,7 @@ public class StoreRegister implements Lifecycle {
 
 
     public StoreRegister(StoreConfig storeConfig) {
-        this.registryClient = new DefaultRegistryClient();
+        this.registryClient = new DefaultRegistryClient(storeConfig.getRegistryAddress());
         this.storeConfig = storeConfig;
 
         heartbeatScheduler = ThreadUtil.newScheduledThreadPool(
@@ -43,8 +43,6 @@ public class StoreRegister implements Lifecycle {
         registerStore();
         startHeartbeat();
     }
-
-
 
     @Override
     public void shutdown() {
