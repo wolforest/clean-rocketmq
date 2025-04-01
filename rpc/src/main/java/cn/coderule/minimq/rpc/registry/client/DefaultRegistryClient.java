@@ -14,6 +14,7 @@ import java.util.List;
 
 public class DefaultRegistryClient implements RegistryClient, Lifecycle {
 
+
     @Override
     public void setRegistryAddress(String address) {
 
