@@ -3,6 +3,7 @@ package cn.coderule.minimq.rpc.registry.client;
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.util.lang.StringUtil;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
+import cn.coderule.minimq.rpc.common.netty.service.ChannelWrapper;
 import cn.coderule.minimq.rpc.registry.RegistryClient;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.BrokerInfo;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.ClusterInfo;
@@ -12,27 +13,45 @@ import cn.coderule.minimq.rpc.registry.protocol.cluster.ServerInfo;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.StoreInfo;
 import cn.coderule.minimq.rpc.registry.protocol.route.RouteInfo;
 import cn.coderule.minimq.rpc.registry.protocol.route.TopicInfo;
+import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicReference;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class DefaultRegistryClient implements RegistryClient, Lifecycle {
-    private AtomicReference<List<String>> addressList;
-    private String addressConfig;
+    private final AtomicReference<List<String>> addressList;
+    private final AtomicReference<String> activeAddress;
+    private final ConcurrentMap<String, ChannelWrapper> addressMap;
+    private final ConcurrentMap<String, ChannelWrapper> channelMap;
 
     public DefaultRegistryClient(String addressConfig) {
-        this.addressConfig = addressConfig;
         this.addressList = new AtomicReference<>();
+        this.activeAddress = new AtomicReference<>();
+        this.channelMap = new ConcurrentHashMap<>();
+        this.addressMap = new ConcurrentHashMap<>();
 
         setRegistryList(addressConfig);
     }
 
     @Override
-    public void setRegistryList(List<String> addressList) {
-        if (CollectionUtil.isEmpty(addressList)) {
+    public void setRegistryList(List<String> addrs) {
+        if (CollectionUtil.isEmpty(addrs)) {
             return;
         }
 
+        List<String> preList = this.addressList.get();
+        if (!CollectionUtil.isDifferent(preList, addrs)) {
+            return;
+        }
 
+        Collections.shuffle(addrs);
+        this.addressList.set(addrs);
+        log.info("set registry address list, pre: {}; new: {}", preList, addrs);
+
+        closeActiveChannel(addrs);
     }
 
     @Override
@@ -45,7 +64,6 @@ public class DefaultRegistryClient implements RegistryClient, Lifecycle {
         if (arr.length == 0) {
             return;
         }
-        this.addressConfig = addressConfig;
         setRegistryList(List.of(arr));
     }
 
@@ -112,5 +130,23 @@ public class DefaultRegistryClient implements RegistryClient, Lifecycle {
     @Override
     public void shutdown() {
 
+    }
+
+    private void closeActiveChannel(List<String> addrs) {
+        String activeAddr = this.activeAddress.get();
+        if (null == activeAddr || addrs.contains(activeAddr)) {
+            return;
+        }
+
+        for (String addr: this.addressMap.keySet()) {
+            if (!addr.contains(activeAddr)) {
+                continue;
+            }
+
+            ChannelWrapper channel = this.addressMap.get(addr);
+            if (channel != null) {
+                channel.close();
+            }
+        }
     }
 }
