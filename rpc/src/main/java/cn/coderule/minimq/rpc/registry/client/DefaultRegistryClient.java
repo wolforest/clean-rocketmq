@@ -3,6 +3,8 @@ package cn.coderule.minimq.rpc.registry.client;
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.util.lang.StringUtil;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
+import cn.coderule.minimq.rpc.common.config.RpcClientConfig;
+import cn.coderule.minimq.rpc.common.netty.NettyClient;
 import cn.coderule.minimq.rpc.common.netty.service.ChannelWrapper;
 import cn.coderule.minimq.rpc.registry.RegistryClient;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.BrokerInfo;
@@ -22,16 +24,16 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class DefaultRegistryClient implements RegistryClient, Lifecycle {
+    private final NettyClient nettyClient;
+
     private final AtomicReference<List<String>> addressList;
     private final AtomicReference<String> activeAddress;
-    private final ConcurrentMap<String, ChannelWrapper> addressMap;
-    private final ConcurrentMap<String, ChannelWrapper> channelMap;
 
-    public DefaultRegistryClient(String addressConfig) {
+    public DefaultRegistryClient(RpcClientConfig config, String addressConfig) {
+        nettyClient = new NettyClient(config);
+
         this.addressList = new AtomicReference<>();
         this.activeAddress = new AtomicReference<>();
-        this.channelMap = new ConcurrentHashMap<>();
-        this.addressMap = new ConcurrentHashMap<>();
 
         setRegistryList(addressConfig);
     }
@@ -138,15 +140,17 @@ public class DefaultRegistryClient implements RegistryClient, Lifecycle {
             return;
         }
 
-        for (String addr: this.addressMap.keySet()) {
-            if (!addr.contains(activeAddr)) {
-                continue;
-            }
+        nettyClient.closeChannel(activeAddr);
 
-            ChannelWrapper channel = this.addressMap.get(addr);
-            if (channel != null) {
-                channel.close();
-            }
-        }
+//        for (String addr: this.addressMap.keySet()) {
+//            if (!addr.contains(activeAddr)) {
+//                continue;
+//            }
+//
+//            ChannelWrapper channel = this.addressMap.get(addr);
+//            if (channel != null) {
+//                channel.close();
+//            }
+//        }
     }
 }

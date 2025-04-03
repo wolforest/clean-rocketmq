@@ -8,6 +8,7 @@ import cn.coderule.minimq.domain.model.DataVersion;
 import cn.coderule.minimq.domain.model.Topic;
 import cn.coderule.minimq.domain.model.meta.TopicMap;
 import cn.coderule.minimq.domain.service.store.domain.meta.TopicService;
+import cn.coderule.minimq.rpc.common.config.RpcClientConfig;
 import cn.coderule.minimq.rpc.registry.RegistryClient;
 import cn.coderule.minimq.rpc.registry.client.DefaultRegistryClient;
 import cn.coderule.minimq.rpc.registry.protocol.body.TopicConfigSerializeWrapper;
@@ -29,7 +30,10 @@ public class StoreRegister implements Lifecycle {
 
 
     public StoreRegister(StoreConfig storeConfig) {
-        this.registryClient = new DefaultRegistryClient(storeConfig.getRegistryAddress());
+        this.registryClient = new DefaultRegistryClient(
+            new RpcClientConfig(),
+            storeConfig.getRegistryAddress()
+        );
         this.storeConfig = storeConfig;
 
         heartbeatScheduler = ThreadUtil.newScheduledThreadPool(
