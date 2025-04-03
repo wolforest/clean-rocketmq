@@ -126,12 +126,12 @@ public class DefaultRegistryClient implements RegistryClient, Lifecycle {
 
     @Override
     public void start() {
-
+        this.nettyClient.start();
     }
 
     @Override
     public void shutdown() {
-
+        this.nettyClient.shutdown();
     }
 
     private void closeActiveChannel(List<String> addrs) {
