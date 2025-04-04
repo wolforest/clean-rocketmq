@@ -16,6 +16,7 @@ import cn.coderule.minimq.rpc.common.config.RpcClientConfig;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
@@ -88,8 +89,13 @@ public class NettyClient extends NettyService implements RpcClient {
     }
 
     @Override
-    public Channel getOrCreateChannel(String addr) {
+    public Channel getOrCreateChannel(String addr) throws InterruptedException {
         return addressInvoker.getOrCreateChannel(addr);
+    }
+
+    @Override
+    public ChannelFuture getOrCreateChannelAsync(String addr) throws InterruptedException {
+        return addressInvoker.getOrCreateChannelAsync(addr);
     }
 
     @Override
@@ -103,7 +109,7 @@ public class NettyClient extends NettyService implements RpcClient {
     }
 
     @Override
-    public void invokeAsync(String addr, RpcCommand request, long timeoutMillis, RpcCallback invokeCallback) {
+    public void invokeAsync(String addr, RpcCommand request, long timeoutMillis, RpcCallback invokeCallback) throws InterruptedException {
         addressInvoker.invokeAsync(addr, request, timeoutMillis, invokeCallback);
     }
 
@@ -126,6 +132,8 @@ public class NettyClient extends NettyService implements RpcClient {
     public void closeChannels(List<String> addrList) {
         addressInvoker.closeChannels(addrList);
     }
+
+
 
     @Override
     public void closeChannel(Channel channel) {

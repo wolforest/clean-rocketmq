@@ -7,7 +7,6 @@ import cn.coderule.common.util.lang.ThreadUtil;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.minimq.rpc.common.config.RpcClientConfig;
 import cn.coderule.minimq.rpc.common.netty.NettyClient;
-import cn.coderule.minimq.rpc.registry.client.DefaultRegistryClient;
 import io.netty.channel.Channel;
 import io.netty.util.HashedWheelTimer;
 import io.netty.util.Timeout;
@@ -23,10 +22,14 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class RegistryManager implements Lifecycle {
+    private static final long LOCK_TIMEOUT = 3000;
+
     private final RpcClientConfig config;
     private final NettyClient nettyClient;
 
@@ -34,21 +37,24 @@ public class RegistryManager implements Lifecycle {
     private final HashedWheelTimer timer;
 
     private final AtomicReference<List<String>> addressList;
-    private final AtomicReference<String> activeAddress;
+    private final AtomicReference<String> choseAddress;
     private final ConcurrentMap<String, Boolean> availableAddressMap;
     private final AtomicInteger addressIndex;
+
+    private final Lock channelLock;
 
     public RegistryManager(RpcClientConfig config, String addressConfig, NettyClient nettyClient) {
         this.config = config;
         this.nettyClient = nettyClient;
 
         this.addressList = new AtomicReference<>();
-        this.activeAddress = new AtomicReference<>();
+        this.choseAddress = new AtomicReference<>();
         this.availableAddressMap = new ConcurrentHashMap<>();
         this.addressIndex = initAddressIndex();
 
         this.timer = new HashedWheelTimer(r -> new Thread(r, "RegistryScanTimer"));
         this.scanExecutor = initScanService();
+        this.channelLock = new ReentrantLock();
 
         setRegistryList(addressConfig);
     }
@@ -67,6 +73,47 @@ public class RegistryManager implements Lifecycle {
         } catch (Exception e) {
             log.error("shutdown client error", e);
         }
+    }
+
+    public String chooseRegistry() throws InterruptedException {
+        String addr = choseAddress.get();
+        if (addr != null) {
+            return addr;
+        }
+
+        List<String> addressList = this.addressList.get();
+        if (CollectionUtil.isEmpty(addressList)) {
+            return null;
+        }
+
+        if (!channelLock.tryLock(LOCK_TIMEOUT, TimeUnit.MILLISECONDS)) {
+            return null;
+        }
+
+        try {
+            addr = choseAddress.get();
+            if (addr != null) {
+                return addr;
+            }
+
+            int index = addressIndex.incrementAndGet();
+            index = Math.abs(index);
+            index = index % addressList.size();
+
+            addr = addressList.get(index);
+            this.choseAddress.set(addr);
+            nettyClient.getOrCreateChannelAsync(addr);
+
+            log.info("choose registry address: {}", addr);
+
+            return addr;
+        } catch (Exception e) {
+            log.error("chooseRegistry exception", e);
+        } finally {
+            channelLock.unlock();
+        }
+
+        return null;
     }
 
     public void setRegistryList(List<String> addrs) {
@@ -186,7 +233,7 @@ public class RegistryManager implements Lifecycle {
     }
 
     private void closeActiveAddress(List<String> addrs) {
-        String activeAddr = this.activeAddress.get();
+        String activeAddr = this.choseAddress.get();
         if (null == activeAddr || addrs.contains(activeAddr)) {
             return;
         }

@@ -17,8 +17,6 @@ import cn.coderule.minimq.rpc.registry.protocol.route.TopicInfo;
 import cn.coderule.minimq.rpc.registry.service.RegistryManager;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -27,14 +25,14 @@ public class DefaultRegistryClient implements RegistryClient, Lifecycle {
     private final NettyClient nettyClient;
     private final RegistryManager registryManager;
 
-    private final Lock channelLock;
+
 
     public DefaultRegistryClient(RpcClientConfig config, String addressConfig) {
         this.config = config;
         this.nettyClient = new NettyClient(config);
 
         registryManager = new RegistryManager(config, addressConfig, nettyClient);
-        this.channelLock = new ReentrantLock();
+
     }
 
     @Override
@@ -107,16 +105,33 @@ public class DefaultRegistryClient implements RegistryClient, Lifecycle {
 
     @Override
     public ClusterInfo syncClusterInfo(String clusterName) {
+        try {
+            String registryAddress = registryManager.chooseRegistry();
+        } catch (Exception e) {
+            log.error("sync cluster info error", e);
+        }
+
         return null;
     }
 
     @Override
     public GroupInfo syncGroupInfo(String clusterName, String groupName) {
+        try {
+            String registryAddress = registryManager.chooseRegistry();
+        } catch (Exception e) {
+            log.error("sync group info error", e);
+        }
+
         return null;
     }
 
     @Override
     public RouteInfo syncRouteInfo(String topicName, long timeout) {
+        try {
+            String registryAddress = registryManager.chooseRegistry();
+        } catch (Exception e) {
+            log.error("sync route info error", e);
+        }
         return null;
     }
 

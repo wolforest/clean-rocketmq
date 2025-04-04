@@ -56,7 +56,20 @@ public class AddressInvoker {
         this.channelInvoker = channelInvoker;
     }
 
-    public Channel getOrCreateChannel(String addr) {
+    public ChannelFuture getOrCreateChannelAsync(String addr) throws InterruptedException {
+        if (StringUtil.isBlank(addr)) {
+            return null;
+        }
+
+        ChannelWrapper channelWrapper = this.addressMap.get(addr);
+        if (channelWrapper != null && channelWrapper.isOK()) {
+            return channelWrapper.getChannelFuture();
+        }
+
+        return createChannelAsync(addr);
+    }
+
+    public Channel getOrCreateChannel(String addr) throws InterruptedException {
         ChannelFuture channelFuture = getOrCreateChannelAsync(addr);
         if (channelFuture == null) {
             return null;
@@ -99,7 +112,7 @@ public class AddressInvoker {
         }
     }
 
-    public void invokeAsync(String addr, RpcCommand request, long timeout, RpcCallback rpcCallback) {
+    public void invokeAsync(String addr, RpcCommand request, long timeout, RpcCallback rpcCallback) throws InterruptedException {
         long startTime = System.currentTimeMillis();
         ChannelFuture future = getOrCreateChannelAsync(addr);
         if (future == null) {
@@ -300,18 +313,7 @@ public class AddressInvoker {
 
     /******************************* private methods start ***********************************/
 
-    private ChannelFuture getOrCreateChannelAsync(String addr) {
-        if (StringUtil.isBlank(addr)) {
-            return null;
-        }
 
-        ChannelWrapper channelWrapper = this.addressMap.get(addr);
-        if (channelWrapper != null && channelWrapper.isOK()) {
-            return channelWrapper.getChannelFuture();
-        }
-
-        return null;
-    }
 
 
 

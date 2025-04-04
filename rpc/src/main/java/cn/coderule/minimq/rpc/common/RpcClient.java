@@ -5,6 +5,7 @@ import cn.coderule.minimq.rpc.common.core.invoke.RpcCallback;
 import cn.coderule.minimq.rpc.common.core.invoke.RpcCommand;
 import cn.coderule.minimq.rpc.common.core.RpcService;
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -18,7 +19,9 @@ public interface RpcClient extends RpcService {
         closeChannels(List.of(addr));
     }
 
-    Channel getOrCreateChannel(final String addr);
+    ChannelFuture getOrCreateChannelAsync(String addr) throws InterruptedException;
+    Channel getOrCreateChannel(final String addr) throws InterruptedException;
+
     RpcCommand invokeSync(final String addr, final RpcCommand request, final long timeoutMillis) throws Exception;
     CompletableFuture<RpcCommand> invokeASync(final String addr, final RpcCommand request, final long timeoutMillis) throws Exception;
     void invokeAsync(final String addr, final RpcCommand request, final long timeoutMillis, final RpcCallback invokeCallback) throws Exception;
