@@ -13,6 +13,10 @@ public interface RpcService {
     void clearRpcHook();
 
     void registerProcessor(RpcProcessor processor);
+
+    /**
+     * to be deleted
+     */
     void registerProcessor(Collection<Integer> codes, RpcProcessor processor, ExecutorService executor);
     void registerProcessor(int requestCode, RpcProcessor processor, ExecutorService executor);
     void registerDefaultProcessor(RpcProcessor processor, ExecutorService executor);

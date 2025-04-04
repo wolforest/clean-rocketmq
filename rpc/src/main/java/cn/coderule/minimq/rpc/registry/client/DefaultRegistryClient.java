@@ -5,37 +5,56 @@ import cn.coderule.common.util.lang.StringUtil;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.minimq.rpc.common.config.RpcClientConfig;
 import cn.coderule.minimq.rpc.common.netty.NettyClient;
-import cn.coderule.minimq.rpc.common.netty.service.ChannelWrapper;
 import cn.coderule.minimq.rpc.registry.RegistryClient;
+import cn.coderule.minimq.rpc.registry.protocol.body.StoreRegisterResult;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.BrokerInfo;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.ClusterInfo;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.GroupInfo;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.HeartBeat;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.ServerInfo;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.StoreInfo;
+import cn.coderule.minimq.rpc.registry.protocol.header.RegisterBrokerRequestHeader;
 import cn.coderule.minimq.rpc.registry.protocol.route.RouteInfo;
 import cn.coderule.minimq.rpc.registry.protocol.route.TopicInfo;
+import io.netty.util.HashedWheelTimer;
+import io.netty.util.Timeout;
+import io.netty.util.TimerTask;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class DefaultRegistryClient implements RegistryClient, Lifecycle {
+    private final RpcClientConfig config;
     private final NettyClient nettyClient;
+    private final HashedWheelTimer timer;
 
     private final AtomicReference<List<String>> addressList;
     private final AtomicReference<String> activeAddress;
 
     public DefaultRegistryClient(RpcClientConfig config, String addressConfig) {
-        nettyClient = new NettyClient(config);
+        this.config = config;
+        this.nettyClient = new NettyClient(config);
+        this.timer = new HashedWheelTimer(r -> new Thread(r, "RegistryScanThread"));
 
         this.addressList = new AtomicReference<>();
         this.activeAddress = new AtomicReference<>();
 
         setRegistryList(addressConfig);
+    }
+
+    @Override
+    public void start() {
+        this.nettyClient.start();
+    }
+
+    @Override
+    public void shutdown() {
+        this.nettyClient.shutdown();
+        this.timer.stop();
     }
 
     @Override
@@ -53,7 +72,7 @@ public class DefaultRegistryClient implements RegistryClient, Lifecycle {
         this.addressList.set(addrs);
         log.info("set registry address list, pre: {}; new: {}", preList, addrs);
 
-        closeActiveChannel(addrs);
+        closeActiveAddress(addrs);
     }
 
     @Override
@@ -71,12 +90,15 @@ public class DefaultRegistryClient implements RegistryClient, Lifecycle {
 
     @Override
     public List<String> getRegistryList() {
-        return List.of();
+        return addressList.get();
     }
 
     @Override
     public void registerBroker(BrokerInfo brokerInfo) {
+        List<StoreRegisterResult> results = new CopyOnWriteArrayList<>();
 
+
+        RegisterBrokerRequestHeader requestHeader = new RegisterBrokerRequestHeader();
     }
 
     @Override
@@ -124,33 +146,34 @@ public class DefaultRegistryClient implements RegistryClient, Lifecycle {
         return null;
     }
 
-    @Override
-    public void start() {
-        this.nettyClient.start();
+    private void startScanService() {
+        int connectTimeout = config.getConnectTimeout();
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run(Timeout timeout) {
+                try {
+                    DefaultRegistryClient.this.scanAvailableRegistry();
+                } catch (Throwable t) {
+                    log.error("DefaultRegistryClient.scanAvailableRegistry exception", t);
+                } finally {
+                    timer.newTimeout(this, connectTimeout, TimeUnit.MILLISECONDS);
+                }
+            }
+        };
+
+        this.timer.newTimeout(task, 0, TimeUnit.MILLISECONDS);
     }
 
-    @Override
-    public void shutdown() {
-        this.nettyClient.shutdown();
+    private void scanAvailableRegistry() {
+
     }
 
-    private void closeActiveChannel(List<String> addrs) {
+    private void closeActiveAddress(List<String> addrs) {
         String activeAddr = this.activeAddress.get();
         if (null == activeAddr || addrs.contains(activeAddr)) {
             return;
         }
 
         nettyClient.closeChannel(activeAddr);
-
-//        for (String addr: this.addressMap.keySet()) {
-//            if (!addr.contains(activeAddr)) {
-//                continue;
-//            }
-//
-//            ChannelWrapper channel = this.addressMap.get(addr);
-//            if (channel != null) {
-//                channel.close();
-//            }
-//        }
     }
 }
