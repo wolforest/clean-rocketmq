@@ -96,14 +96,9 @@ public class RegistryManager implements Lifecycle {
                 return addr;
             }
 
-            int index = addressIndex.incrementAndGet();
-            index = Math.abs(index);
-            index = index % addressList.size();
-
-            addr = addressList.get(index);
+            addr = getAddressByIndex(addressList);
             this.choseAddress.set(addr);
             nettyClient.getOrCreateChannelAsync(addr);
-
             log.info("choose registry address: {}", addr);
 
             return addr;
@@ -114,6 +109,14 @@ public class RegistryManager implements Lifecycle {
         }
 
         return null;
+    }
+
+    private String getAddressByIndex(List<String> addressList) {
+        int index = addressIndex.incrementAndGet();
+        index = Math.abs(index);
+        index = index % addressList.size();
+
+        return addressList.get(index);
     }
 
     public void setRegistryList(List<String> addrs) {
