@@ -1,8 +1,6 @@
 package cn.coderule.minimq.rpc.registry.client;
 
 import cn.coderule.common.convention.service.Lifecycle;
-import cn.coderule.common.lang.concurrent.DefaultThreadFactory;
-import cn.coderule.common.util.lang.ThreadUtil;
 import cn.coderule.minimq.rpc.common.config.RpcClientConfig;
 import cn.coderule.minimq.rpc.common.netty.NettyClient;
 import cn.coderule.minimq.rpc.registry.RegistryClient;
@@ -17,15 +15,8 @@ import cn.coderule.minimq.rpc.registry.protocol.header.RegisterBrokerRequestHead
 import cn.coderule.minimq.rpc.registry.protocol.route.RouteInfo;
 import cn.coderule.minimq.rpc.registry.protocol.route.TopicInfo;
 import cn.coderule.minimq.rpc.registry.service.RegistryManager;
-import io.netty.util.Timeout;
-import io.netty.util.TimerTask;
 import java.util.List;
-import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import lombok.extern.slf4j.Slf4j;

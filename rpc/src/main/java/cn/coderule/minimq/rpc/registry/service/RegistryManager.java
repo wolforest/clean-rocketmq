@@ -8,6 +8,7 @@ import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.minimq.rpc.common.config.RpcClientConfig;
 import cn.coderule.minimq.rpc.common.netty.NettyClient;
 import cn.coderule.minimq.rpc.registry.client.DefaultRegistryClient;
+import io.netty.channel.Channel;
 import io.netty.util.HashedWheelTimer;
 import io.netty.util.Timeout;
 import io.netty.util.TimerTask;
@@ -105,9 +106,6 @@ public class RegistryManager implements Lifecycle {
         return availableAddressMap.keySet();
     }
 
-
-
-
     private AtomicInteger initAddressIndex() {
         return new AtomicInteger(
             ThreadLocalRandom.current().nextInt(999)
@@ -144,7 +142,47 @@ public class RegistryManager implements Lifecycle {
     }
 
     private void scanAvailableRegistry() {
+        List<String> addressList = this.addressList.get();
+        if (CollectionUtil.isEmpty(addressList)) {
+            log.debug("no registry address");
+            return;
+        }
 
+        removeUnavailableAddress(addressList);
+
+        for (String address : addressList) {
+            connectRegistry(address);
+        }
+    }
+
+    private void connectRegistry(String address) {
+        scanExecutor.execute(() -> {
+            try {
+                Channel channel = nettyClient.getOrCreateChannel(address);
+                if (channel != null) {
+                    RegistryManager.this.availableAddressMap.putIfAbsent(address, true);
+                    return;
+                }
+
+                Boolean exists = RegistryManager.this.availableAddressMap.remove(address);
+                if (exists != null) {
+                    log.warn("remove unavailable registry from availableAddressMap: {}", address);
+                }
+            } catch (Throwable t) {
+                log.error("connect registry exception", t);
+            }
+        });
+    }
+
+    private void removeUnavailableAddress(List<String> addressList) {
+        for (String addr : RegistryManager.this.availableAddressMap.keySet()) {
+            if (addressList.contains(addr)) {
+                continue;
+            }
+
+            RegistryManager.this.availableAddressMap.remove(addr);
+            log.warn("remove unavailable registry address: {}", addr);
+        }
     }
 
     private void closeActiveAddress(List<String> addrs) {

@@ -88,6 +88,11 @@ public class NettyClient extends NettyService implements RpcClient {
     }
 
     @Override
+    public Channel getOrCreateChannel(String addr) {
+        return addressInvoker.getOrCreateChannel(addr);
+    }
+
+    @Override
     public RpcCommand invokeSync(String addr, RpcCommand request, long timeoutMillis) throws Exception {
         return addressInvoker.invokeSync(addr, request, timeoutMillis);
     }

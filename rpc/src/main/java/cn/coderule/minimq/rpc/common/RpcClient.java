@@ -18,6 +18,7 @@ public interface RpcClient extends RpcService {
         closeChannels(List.of(addr));
     }
 
+    Channel getOrCreateChannel(final String addr);
     RpcCommand invokeSync(final String addr, final RpcCommand request, final long timeoutMillis) throws Exception;
     CompletableFuture<RpcCommand> invokeASync(final String addr, final RpcCommand request, final long timeoutMillis) throws Exception;
     void invokeAsync(final String addr, final RpcCommand request, final long timeoutMillis, final RpcCallback invokeCallback) throws Exception;
