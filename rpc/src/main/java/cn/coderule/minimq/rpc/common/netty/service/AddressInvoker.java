@@ -56,6 +56,15 @@ public class AddressInvoker {
         this.channelInvoker = channelInvoker;
     }
 
+    public Channel getOrCreateChannel(String addr) {
+        ChannelFuture channelFuture = getOrCreateChannelAsync(addr);
+        if (channelFuture == null) {
+            return null;
+        }
+
+        return channelFuture.awaitUninterruptibly().channel();
+    }
+
     public RpcCommand invokeSync(String addr, RpcCommand request, long timeout) throws Exception {
         long startTime = System.currentTimeMillis();
         Channel channel = getOrCreateChannel(addr);
@@ -67,6 +76,7 @@ public class AddressInvoker {
 
         long leftTime = timeout;
         String remoteAddr = NettyHelper.getRemoteAddr(channel);
+
         try {
             long costTime = System.currentTimeMillis() - startTime;
             leftTime -= costTime;
@@ -303,14 +313,7 @@ public class AddressInvoker {
         return null;
     }
 
-    private Channel getOrCreateChannel(String addr) {
-        ChannelFuture channelFuture = getOrCreateChannelAsync(addr);
-        if (channelFuture == null) {
-            return null;
-        }
 
-        return channelFuture.awaitUninterruptibly().channel();
-    }
 
     private ChannelFuture createChannelAsync(final String addr) throws InterruptedException {
         ChannelWrapper channelWrapper = this.addressMap.get(addr);
