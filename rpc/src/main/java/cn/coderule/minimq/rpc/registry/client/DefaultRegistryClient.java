@@ -1,7 +1,9 @@
 package cn.coderule.minimq.rpc.registry.client;
 
 import cn.coderule.common.convention.service.Lifecycle;
+import cn.coderule.common.lang.concurrent.DefaultThreadFactory;
 import cn.coderule.common.util.lang.StringUtil;
+import cn.coderule.common.util.lang.ThreadUtil;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.minimq.rpc.common.config.RpcClientConfig;
 import cn.coderule.minimq.rpc.common.netty.NettyClient;
@@ -21,34 +23,55 @@ import io.netty.util.Timeout;
 import io.netty.util.TimerTask;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class DefaultRegistryClient implements RegistryClient, Lifecycle {
     private final RpcClientConfig config;
     private final NettyClient nettyClient;
+
+    private final ExecutorService scanExecutor;
     private final HashedWheelTimer timer;
 
     private final AtomicReference<List<String>> addressList;
     private final AtomicReference<String> activeAddress;
+    private final ConcurrentMap<String, Boolean> availableAddressMap;
+    private final AtomicInteger addressIndex;
+
+    private final Lock channelLock;
 
     public DefaultRegistryClient(RpcClientConfig config, String addressConfig) {
         this.config = config;
         this.nettyClient = new NettyClient(config);
-        this.timer = new HashedWheelTimer(r -> new Thread(r, "RegistryScanThread"));
 
         this.addressList = new AtomicReference<>();
         this.activeAddress = new AtomicReference<>();
+        this.availableAddressMap = new ConcurrentHashMap<>();
+        this.addressIndex = initAddressIndex();
+
+        this.channelLock = new ReentrantLock();
+        this.timer = new HashedWheelTimer(r -> new Thread(r, "RegistryScanTimer"));
+        this.scanExecutor = initScanService();
 
         setRegistryList(addressConfig);
     }
 
+
     @Override
     public void start() {
         this.nettyClient.start();
+        this.startScanService();
     }
 
     @Override
@@ -144,6 +167,24 @@ public class DefaultRegistryClient implements RegistryClient, Lifecycle {
     @Override
     public RouteInfo syncRouteInfo(String topicName, long timeout) {
         return null;
+    }
+
+
+    private AtomicInteger initAddressIndex() {
+        return new AtomicInteger(
+            ThreadLocalRandom.current().nextInt(999)
+        );
+    }
+
+    private ExecutorService initScanService() {
+        return ThreadUtil.newThreadPoolExecutor(
+            4,
+            10,
+            60,
+            TimeUnit.SECONDS,
+            new ArrayBlockingQueue<>(32),
+            new DefaultThreadFactory("RegistryScanThread")
+        );
     }
 
     private void startScanService() {
