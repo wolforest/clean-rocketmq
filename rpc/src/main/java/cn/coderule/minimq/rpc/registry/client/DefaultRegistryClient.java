@@ -161,7 +161,15 @@ public class DefaultRegistryClient implements RegistryClient, Lifecycle {
     }
 
     private void storeHeartbeat(String registryAddress, HeartBeat heartBeat) {
+        RpcCommand request = createStoreHeartbeatRequest(heartBeat);
 
+        registerExecutor.execute(() -> {
+            try {
+                nettyClient.invokeOneway(registryAddress, request, DEFAULT_RPC_TIMEOUT);
+            } catch (Exception e) {
+                log.error("store heartbeat error, registry address: {}", registryAddress, e);
+            }
+        });
     }
 
     @Override
