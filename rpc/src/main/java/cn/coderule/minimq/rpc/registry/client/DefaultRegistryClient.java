@@ -1,11 +1,14 @@
 package cn.coderule.minimq.rpc.registry.client;
 
 import cn.coderule.common.convention.service.Lifecycle;
+import cn.coderule.common.util.encrypt.HashUtil;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.minimq.rpc.common.config.RpcClientConfig;
 import cn.coderule.minimq.rpc.common.netty.NettyClient;
 import cn.coderule.minimq.rpc.registry.RegistryClient;
+import cn.coderule.minimq.rpc.registry.protocol.body.RegisterBrokerBody;
 import cn.coderule.minimq.rpc.registry.protocol.body.RegisterStoreResult;
+import cn.coderule.minimq.rpc.registry.protocol.body.TopicConfigAndMappingSerializeWrapper;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.BrokerInfo;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.ClusterInfo;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.GroupInfo;
@@ -101,6 +104,16 @@ public class DefaultRegistryClient implements RegistryClient, Lifecycle {
         return requestHeader;
     }
 
+    private RegisterBrokerBody createRegisterStoreRequestBody(StoreInfo storeInfo) {
+        RegisterBrokerBody requestBody = new RegisterBrokerBody();
+        requestBody.setFilterServerList(storeInfo.getFilterList());
+        requestBody.setTopicConfigSerializeWrapper(
+            TopicConfigAndMappingSerializeWrapper.from(storeInfo.getTopicInfo())
+        );
+
+        return requestBody;
+    }
+
     @Override
     public void registerStore(StoreInfo storeInfo) {
         List<RegisterStoreResult> results = new CopyOnWriteArrayList<>();
@@ -110,6 +123,12 @@ public class DefaultRegistryClient implements RegistryClient, Lifecycle {
         }
 
         RegisterBrokerRequestHeader requestHeader = createRegisterStoreRequestHeader(storeInfo);
+        RegisterBrokerBody requestBody = createRegisterStoreRequestBody(storeInfo);
+
+        byte[] body = requestBody.encode(storeInfo.isCompressed());
+        int crc32 = HashUtil.crc32(body);
+        requestHeader.setBodyCrc32(crc32);
+
         for (String addr : registrySet) {
 
         }
