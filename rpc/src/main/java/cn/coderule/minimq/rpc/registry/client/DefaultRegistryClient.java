@@ -11,6 +11,7 @@ import cn.coderule.minimq.rpc.common.core.exception.RemotingCommandException;
 import cn.coderule.minimq.rpc.common.core.invoke.RpcCommand;
 import cn.coderule.minimq.rpc.common.netty.NettyClient;
 import cn.coderule.minimq.rpc.common.protocol.code.RequestCode;
+import cn.coderule.minimq.rpc.common.protocol.codec.RpcSerializable;
 import cn.coderule.minimq.rpc.registry.RegistryClient;
 import cn.coderule.minimq.rpc.registry.protocol.body.KVTable;
 import cn.coderule.minimq.rpc.registry.protocol.body.RegisterBrokerBody;
@@ -23,6 +24,7 @@ import cn.coderule.minimq.rpc.registry.protocol.cluster.HeartBeat;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.ServerInfo;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.StoreInfo;
 import cn.coderule.minimq.rpc.registry.protocol.header.BrokerHeartbeatRequestHeader;
+import cn.coderule.minimq.rpc.registry.protocol.header.QueryDataVersionRequestHeader;
 import cn.coderule.minimq.rpc.registry.protocol.header.RegisterBrokerRequestHeader;
 import cn.coderule.minimq.rpc.registry.protocol.header.RegisterBrokerResponseHeader;
 import cn.coderule.minimq.rpc.registry.protocol.header.UnRegisterBrokerRequestHeader;
@@ -125,9 +127,21 @@ public class DefaultRegistryClient implements RegistryClient, Lifecycle {
     }
 
     private RpcCommand createQueryDataVersionRequest(HeartBeat heartBeat) {
+        QueryDataVersionRequestHeader requestHeader = new QueryDataVersionRequestHeader();
+        requestHeader.setClusterName(heartBeat.getClusterName());
+        requestHeader.setBrokerName(heartBeat.getGroupName());
+        requestHeader.setBrokerId(heartBeat.getGroupNo());
+        requestHeader.setBrokerAddr(heartBeat.getAddress());
 
+        RpcCommand request = RpcCommand.createRequestCommand(
+            RequestCode.QUERY_DATA_VERSION,
+            requestHeader
+        );
 
-        return null;
+        byte[] body = RpcSerializable.encode(heartBeat.getVersion());
+        request.setBody(body);
+
+        return request;
     }
 
     private RpcCommand createStoreHeartbeatRequest(HeartBeat heartBeat) {
