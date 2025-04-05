@@ -4,7 +4,9 @@ import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.util.encrypt.HashUtil;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.minimq.rpc.common.config.RpcClientConfig;
+import cn.coderule.minimq.rpc.common.core.invoke.RpcCommand;
 import cn.coderule.minimq.rpc.common.netty.NettyClient;
+import cn.coderule.minimq.rpc.common.protocol.code.RequestCode;
 import cn.coderule.minimq.rpc.registry.RegistryClient;
 import cn.coderule.minimq.rpc.registry.protocol.body.RegisterBrokerBody;
 import cn.coderule.minimq.rpc.registry.protocol.body.RegisterStoreResult;
@@ -114,6 +116,21 @@ public class DefaultRegistryClient implements RegistryClient, Lifecycle {
         return requestBody;
     }
 
+    private RpcCommand createRegisterStoreRequest(StoreInfo storeInfo) {
+        RegisterBrokerRequestHeader requestHeader = createRegisterStoreRequestHeader(storeInfo);
+        RegisterBrokerBody requestBody = createRegisterStoreRequestBody(storeInfo);
+
+        byte[] body = requestBody.encode(storeInfo.isCompressed());
+        int crc32 = HashUtil.crc32(body);
+        requestHeader.setBodyCrc32(crc32);
+
+        RpcCommand request = RpcCommand.createRequestCommand(RequestCode.REGISTER_BROKER, requestHeader);
+        request.setBody(body);
+
+        return request;
+    }
+
+
     @Override
     public void registerStore(StoreInfo storeInfo) {
         List<RegisterStoreResult> results = new CopyOnWriteArrayList<>();
@@ -122,13 +139,7 @@ public class DefaultRegistryClient implements RegistryClient, Lifecycle {
             return;
         }
 
-        RegisterBrokerRequestHeader requestHeader = createRegisterStoreRequestHeader(storeInfo);
-        RegisterBrokerBody requestBody = createRegisterStoreRequestBody(storeInfo);
-
-        byte[] body = requestBody.encode(storeInfo.isCompressed());
-        int crc32 = HashUtil.crc32(body);
-        requestHeader.setBodyCrc32(crc32);
-
+        RpcCommand request = createRegisterStoreRequest(storeInfo);
         for (String addr : registrySet) {
 
         }
