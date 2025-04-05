@@ -242,6 +242,10 @@ public class RpcCommand {
         return setCodeAndRemark(ResponseCode.SUCCESS, null);
     }
 
+    public boolean isSuccess() {
+        return getCode() == ResponseCode.SUCCESS;
+    }
+
     public RpcCommand setCodeAndRemark(int code, String remark) {
         setCode(code);
         setRemark(remark);
