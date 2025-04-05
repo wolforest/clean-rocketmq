@@ -126,52 +126,6 @@ public class DefaultRegistryClient implements RegistryClient, Lifecycle {
         }
     }
 
-    private RpcCommand createQueryDataVersionRequest(HeartBeat heartBeat) {
-        QueryDataVersionRequestHeader requestHeader = new QueryDataVersionRequestHeader();
-        requestHeader.setClusterName(heartBeat.getClusterName());
-        requestHeader.setBrokerName(heartBeat.getGroupName());
-        requestHeader.setBrokerId(heartBeat.getGroupNo());
-        requestHeader.setBrokerAddr(heartBeat.getAddress());
-
-        RpcCommand request = RpcCommand.createRequestCommand(
-            RequestCode.QUERY_DATA_VERSION,
-            requestHeader
-        );
-
-        byte[] body = RpcSerializable.encode(heartBeat.getVersion());
-        request.setBody(body);
-
-        return request;
-    }
-
-    private RpcCommand createStoreHeartbeatRequest(HeartBeat heartBeat) {
-        if (null != heartBeat.getVersion()) {
-            return createQueryDataVersionRequest(heartBeat);
-        }
-
-        BrokerHeartbeatRequestHeader requestHeader = new BrokerHeartbeatRequestHeader();
-        requestHeader.setClusterName(heartBeat.getClusterName());
-        requestHeader.setBrokerAddr(heartBeat.getAddress());
-        requestHeader.setBrokerName(heartBeat.getGroupName());
-
-        return RpcCommand.createRequestCommand(
-            RequestCode.BROKER_HEARTBEAT,
-            requestHeader
-        );
-    }
-
-    private void storeHeartbeat(String registryAddress, HeartBeat heartBeat) {
-        RpcCommand request = createStoreHeartbeatRequest(heartBeat);
-
-        registerExecutor.execute(() -> {
-            try {
-                nettyClient.invokeOneway(registryAddress, request, DEFAULT_RPC_TIMEOUT);
-            } catch (Exception e) {
-                log.error("store heartbeat error, registry address: {}", registryAddress, e);
-            }
-        });
-    }
-
     @Override
     public void storeHeartbeat(HeartBeat heartBeat) {
         Set<String> registrySet = registryManager.getAvailableRegistry();
@@ -200,8 +154,20 @@ public class DefaultRegistryClient implements RegistryClient, Lifecycle {
 
     }
 
+    private void registerTopic(String registryAddress, TopicInfo topicInfo) {
+
+    }
+
     @Override
     public void registerTopic(TopicInfo topicInfo) {
+        Set<String> registrySet = registryManager.getAvailableRegistry();
+        if (CollectionUtil.isEmpty(registrySet)) {
+            return ;
+        }
+
+        for (String addr : registrySet) {
+            registerTopic(addr, topicInfo);
+        }
 
     }
 
@@ -376,6 +342,52 @@ public class DefaultRegistryClient implements RegistryClient, Lifecycle {
         } catch (Exception e) {
             log.warn("unregister store error, registry address: {}", registryAddress, e);
         }
+    }
+
+    private RpcCommand createQueryDataVersionRequest(HeartBeat heartBeat) {
+        QueryDataVersionRequestHeader requestHeader = new QueryDataVersionRequestHeader();
+        requestHeader.setClusterName(heartBeat.getClusterName());
+        requestHeader.setBrokerName(heartBeat.getGroupName());
+        requestHeader.setBrokerId(heartBeat.getGroupNo());
+        requestHeader.setBrokerAddr(heartBeat.getAddress());
+
+        RpcCommand request = RpcCommand.createRequestCommand(
+            RequestCode.QUERY_DATA_VERSION,
+            requestHeader
+        );
+
+        byte[] body = RpcSerializable.encode(heartBeat.getVersion());
+        request.setBody(body);
+
+        return request;
+    }
+
+    private RpcCommand createStoreHeartbeatRequest(HeartBeat heartBeat) {
+        if (null != heartBeat.getVersion()) {
+            return createQueryDataVersionRequest(heartBeat);
+        }
+
+        BrokerHeartbeatRequestHeader requestHeader = new BrokerHeartbeatRequestHeader();
+        requestHeader.setClusterName(heartBeat.getClusterName());
+        requestHeader.setBrokerAddr(heartBeat.getAddress());
+        requestHeader.setBrokerName(heartBeat.getGroupName());
+
+        return RpcCommand.createRequestCommand(
+            RequestCode.BROKER_HEARTBEAT,
+            requestHeader
+        );
+    }
+
+    private void storeHeartbeat(String registryAddress, HeartBeat heartBeat) {
+        RpcCommand request = createStoreHeartbeatRequest(heartBeat);
+
+        registerExecutor.execute(() -> {
+            try {
+                nettyClient.invokeOneway(registryAddress, request, DEFAULT_RPC_TIMEOUT);
+            } catch (Exception e) {
+                log.error("store heartbeat error, registry address: {}", registryAddress, e);
+            }
+        });
     }
 
 }
