@@ -22,6 +22,7 @@ import cn.coderule.minimq.rpc.registry.protocol.cluster.GroupInfo;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.HeartBeat;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.ServerInfo;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.StoreInfo;
+import cn.coderule.minimq.rpc.registry.protocol.header.BrokerHeartbeatRequestHeader;
 import cn.coderule.minimq.rpc.registry.protocol.header.RegisterBrokerRequestHeader;
 import cn.coderule.minimq.rpc.registry.protocol.header.RegisterBrokerResponseHeader;
 import cn.coderule.minimq.rpc.registry.protocol.header.UnRegisterBrokerRequestHeader;
@@ -121,6 +122,28 @@ public class DefaultRegistryClient implements RegistryClient, Lifecycle {
         for (String addr : registrySet) {
             unregisterStore(addr, serverInfo);
         }
+    }
+
+    private RpcCommand createQueryDataVersionRequest(HeartBeat heartBeat) {
+
+
+        return null;
+    }
+
+    private RpcCommand createStoreHeartbeatRequest(HeartBeat heartBeat) {
+        if (null != heartBeat.getVersion()) {
+            return createQueryDataVersionRequest(heartBeat);
+        }
+
+        BrokerHeartbeatRequestHeader requestHeader = new BrokerHeartbeatRequestHeader();
+        requestHeader.setClusterName(heartBeat.getClusterName());
+        requestHeader.setBrokerAddr(heartBeat.getAddress());
+        requestHeader.setBrokerName(heartBeat.getGroupName());
+
+        return RpcCommand.createRequestCommand(
+            RequestCode.BROKER_HEARTBEAT,
+            requestHeader
+        );
     }
 
     private void storeHeartbeat(String registryAddress, HeartBeat heartBeat) {
