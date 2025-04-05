@@ -23,6 +23,7 @@ public class StoreInfo extends ServerInfo {
     private RequestType registerType;
 
     private int hash;
+    private boolean compressed;
 
     public StoreInfo(String clusterName, String address) {
         this.clusterName = clusterName;

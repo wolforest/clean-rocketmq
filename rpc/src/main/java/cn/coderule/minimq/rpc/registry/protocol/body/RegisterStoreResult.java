@@ -21,7 +21,7 @@ import java.io.Serializable;
 import lombok.Data;
 
 @Data
-public class StoreRegisterResult implements Serializable {
+public class RegisterStoreResult implements Serializable {
     private String haServerAddr;
     private String masterAddr;
     private KVTable kvTable;

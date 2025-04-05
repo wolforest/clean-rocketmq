@@ -16,7 +16,7 @@ import cn.coderule.minimq.domain.model.DataVersion;
 import cn.coderule.minimq.rpc.common.protocol.code.RequestCode;
 import cn.coderule.minimq.rpc.common.protocol.code.SystemResponseCode;
 import cn.coderule.minimq.rpc.registry.protocol.body.RegisterBrokerBody;
-import cn.coderule.minimq.rpc.registry.protocol.body.StoreRegisterResult;
+import cn.coderule.minimq.rpc.registry.protocol.body.RegisterStoreResult;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.StoreInfo;
 import cn.coderule.minimq.rpc.registry.protocol.header.RegisterBrokerRequestHeader;
 import cn.coderule.minimq.rpc.registry.protocol.header.RegisterBrokerResponseHeader;
@@ -77,7 +77,7 @@ public class RegistryProcessor implements RpcProcessor {
             return response;
         }
 
-        StoreRegisterResult result = registerStore(ctx, request, requestHeader);
+        RegisterStoreResult result = registerStore(ctx, request, requestHeader);
         if (result == null) {
             return response.setCodeAndRemark(SystemResponseCode.SYSTEM_ERROR, "register failed");
         }
@@ -185,14 +185,14 @@ public class RegistryProcessor implements RpcProcessor {
         return storeInfo;
     }
 
-    private StoreRegisterResult registerStore(RpcContext ctx, RpcCommand request, RegisterBrokerRequestHeader requestHeader) throws RemotingCommandException {
+    private RegisterStoreResult registerStore(RpcContext ctx, RpcCommand request, RegisterBrokerRequestHeader requestHeader) throws RemotingCommandException {
         RegisterBrokerBody body = extractBody(request, requestHeader);
         StoreInfo storeInfo = getStoreInfo(request, requestHeader, body);
 
         return storeRegistry.register(storeInfo, ctx.channel());
     }
 
-    private void formatResponseHeader(StoreRegisterResult result, RegisterBrokerResponseHeader responseHeader) {
+    private void formatResponseHeader(RegisterStoreResult result, RegisterBrokerResponseHeader responseHeader) {
         responseHeader.setHaServerAddr(result.getHaServerAddr());
         responseHeader.setMasterAddr(result.getMasterAddr());
     }

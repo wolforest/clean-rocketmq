@@ -12,7 +12,7 @@ import cn.coderule.minimq.registry.domain.store.model.StoreStatusInfo;
 import cn.coderule.minimq.registry.domain.store.service.UnregisterService;
 import cn.coderule.minimq.registry.server.rpc.HaClient;
 import cn.coderule.minimq.domain.model.DataVersion;
-import cn.coderule.minimq.rpc.registry.protocol.body.StoreRegisterResult;
+import cn.coderule.minimq.rpc.registry.protocol.body.RegisterStoreResult;
 import cn.coderule.minimq.rpc.registry.protocol.body.TopicConfigAndMappingSerializeWrapper;
 import cn.coderule.minimq.rpc.registry.protocol.body.TopicConfigSerializeWrapper;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.GroupInfo;
@@ -57,8 +57,8 @@ public class StoreRegistry {
         unregisterService.shutdown();
     }
 
-    public StoreRegisterResult register(StoreInfo store, Channel channel) {
-        StoreRegisterResult result = new StoreRegisterResult();
+    public RegisterStoreResult register(StoreInfo store, Channel channel) {
+        RegisterStoreResult result = new RegisterStoreResult();
         try {
             route.lockWrite();
 
@@ -368,7 +368,7 @@ public class StoreRegistry {
         route.saveFilter(store, filterList);
     }
 
-    private void setHaAndMasterInfo(StoreInfo store, StoreRegisterResult result) {
+    private void setHaAndMasterInfo(StoreInfo store, RegisterStoreResult result) {
         if (MQConstants.MASTER_ID == store.getGroupNo()) {
             return;
         }

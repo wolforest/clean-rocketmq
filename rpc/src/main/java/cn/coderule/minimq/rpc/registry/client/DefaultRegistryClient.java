@@ -5,7 +5,7 @@ import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.minimq.rpc.common.config.RpcClientConfig;
 import cn.coderule.minimq.rpc.common.netty.NettyClient;
 import cn.coderule.minimq.rpc.registry.RegistryClient;
-import cn.coderule.minimq.rpc.registry.protocol.body.StoreRegisterResult;
+import cn.coderule.minimq.rpc.registry.protocol.body.RegisterStoreResult;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.BrokerInfo;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.ClusterInfo;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.GroupInfo;
@@ -70,18 +70,11 @@ public class DefaultRegistryClient implements RegistryClient, Lifecycle {
         return registryManager.getRegistryList();
     }
 
+
+
     @Override
     public void registerBroker(BrokerInfo brokerInfo) {
-        List<StoreRegisterResult> results = new CopyOnWriteArrayList<>();
-        Set<String> registrySet = registryManager.getAvailableRegistry();
-        if (CollectionUtil.isEmpty(registrySet)) {
-            return;
-        }
 
-        RegisterBrokerRequestHeader requestHeader = new RegisterBrokerRequestHeader();
-        for (String addr : registrySet) {
-
-        }
 
     }
 
@@ -95,9 +88,31 @@ public class DefaultRegistryClient implements RegistryClient, Lifecycle {
 
     }
 
+    private RegisterBrokerRequestHeader createRegisterStoreRequestHeader(StoreInfo storeInfo) {
+        RegisterBrokerRequestHeader requestHeader = new RegisterBrokerRequestHeader();
+        requestHeader.setBrokerAddr(storeInfo.getAddress());
+        requestHeader.setBrokerName(storeInfo.getGroupName());
+        requestHeader.setBrokerId(storeInfo.getGroupNo());
+        requestHeader.setClusterName(storeInfo.getClusterName());
+        requestHeader.setHaServerAddr(storeInfo.getHaAddress());
+        requestHeader.setHeartbeatTimeoutMillis(storeInfo.getHeartbeatTimeout().longValue());
+        requestHeader.setEnableActingMaster(storeInfo.isEnableMasterElection());
+
+        return requestHeader;
+    }
+
     @Override
     public void registerStore(StoreInfo storeInfo) {
+        List<RegisterStoreResult> results = new CopyOnWriteArrayList<>();
+        Set<String> registrySet = registryManager.getAvailableRegistry();
+        if (CollectionUtil.isEmpty(registrySet)) {
+            return;
+        }
 
+        RegisterBrokerRequestHeader requestHeader = createRegisterStoreRequestHeader(storeInfo);
+        for (String addr : registrySet) {
+
+        }
     }
 
     @Override
