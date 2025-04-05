@@ -1,5 +1,6 @@
 package cn.coderule.minimq.rpc.registry;
 
+import cn.coderule.minimq.rpc.registry.protocol.body.RegisterStoreResult;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.BrokerInfo;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.ClusterInfo;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.GroupInfo;
@@ -20,7 +21,7 @@ public interface RegistryClient {
     void unregisterBroker(ServerInfo serverInfo);
     void brokerHeartbeat(HeartBeat heartBeat);
 
-    void registerStore(StoreInfo storeInfo);
+    List<RegisterStoreResult> registerStore(StoreInfo storeInfo);
     void unregisterStore(ServerInfo serverInfo);
     void storeHeartbeat(HeartBeat heartBeat);
     void registerTopic(TopicInfo topicInfo);

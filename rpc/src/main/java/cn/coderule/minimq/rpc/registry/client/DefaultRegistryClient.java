@@ -130,19 +130,26 @@ public class DefaultRegistryClient implements RegistryClient, Lifecycle {
         return request;
     }
 
+    private RegisterStoreResult registerStore(StoreInfo storeInfo, String registryAddress, RpcCommand request) {
+        RegisterBrokerRequestHeader requestHeader = (RegisterBrokerRequestHeader) request.readCustomHeader();
+        return null;
+    }
 
     @Override
-    public void registerStore(StoreInfo storeInfo) {
+    public List<RegisterStoreResult>  registerStore(StoreInfo storeInfo) {
         List<RegisterStoreResult> results = new CopyOnWriteArrayList<>();
         Set<String> registrySet = registryManager.getAvailableRegistry();
         if (CollectionUtil.isEmpty(registrySet)) {
-            return;
+            return results;
         }
 
         RpcCommand request = createRegisterStoreRequest(storeInfo);
         for (String addr : registrySet) {
-
+            RegisterStoreResult result = registerStore(storeInfo, addr, request);
+            results.add(result);
         }
+
+        return results;
     }
 
     @Override
