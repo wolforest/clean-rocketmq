@@ -4,6 +4,7 @@ import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.lang.concurrent.DefaultThreadFactory;
 import cn.coderule.common.util.lang.ThreadUtil;
 import cn.coderule.minimq.domain.config.StoreConfig;
+import cn.coderule.minimq.domain.constant.PermName;
 import cn.coderule.minimq.domain.model.DataVersion;
 import cn.coderule.minimq.domain.model.Topic;
 import cn.coderule.minimq.domain.model.meta.TopicMap;
@@ -124,9 +125,16 @@ public class StoreRegister implements Lifecycle {
     }
 
     public void registerTopic(Topic topic) {
+        Topic registerTopic = topic;
+        if (!PermName.isWriteable(storeConfig.getPermission())
+            || !PermName.isReadable(storeConfig.getPermission())) {
+            registerTopic = new Topic(topic);
+            registerTopic.setPerm(topic.getPerm() & storeConfig.getPermission());
+        }
+
         TopicInfo topicInfo = TopicInfo.builder()
                 .groupName(storeConfig.getGroup())
-                .topic(topic)
+                .topic(registerTopic)
                 .build();
 
         registryClient.registerTopic(topicInfo);

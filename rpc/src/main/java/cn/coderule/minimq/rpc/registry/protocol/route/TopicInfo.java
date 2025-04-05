@@ -18,7 +18,8 @@ public class TopicInfo extends RpcSerializable {
     private String groupName;
     private Topic topic;
 
-    private int registerTimeout;
+    @Builder.Default
+    private int registerTimeout = 3_000;
     private RequestType registerType;
 
     public RouteInfo toRouteInfo() {

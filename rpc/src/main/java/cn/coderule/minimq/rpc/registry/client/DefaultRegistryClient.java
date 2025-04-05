@@ -27,6 +27,7 @@ import cn.coderule.minimq.rpc.registry.protocol.header.BrokerHeartbeatRequestHea
 import cn.coderule.minimq.rpc.registry.protocol.header.QueryDataVersionRequestHeader;
 import cn.coderule.minimq.rpc.registry.protocol.header.RegisterBrokerRequestHeader;
 import cn.coderule.minimq.rpc.registry.protocol.header.RegisterBrokerResponseHeader;
+import cn.coderule.minimq.rpc.registry.protocol.header.RegisterTopicRequestHeader;
 import cn.coderule.minimq.rpc.registry.protocol.header.UnRegisterBrokerRequestHeader;
 import cn.coderule.minimq.rpc.registry.protocol.route.RouteInfo;
 import cn.coderule.minimq.rpc.registry.protocol.route.TopicInfo;
@@ -109,10 +110,9 @@ public class DefaultRegistryClient implements RegistryClient, Lifecycle {
             registerStoreByExecutor(addr, storeInfo, request, results, latch);
         }
 
-        awaitLatch(latch, storeInfo);
+        awaitLatch(latch, storeInfo.getRegisterTimeout());
         return results;
     }
-
 
     @Override
     public void unregisterStore(ServerInfo serverInfo) {
@@ -121,8 +121,9 @@ public class DefaultRegistryClient implements RegistryClient, Lifecycle {
             return ;
         }
 
+        RpcCommand request = createUnregisterStoreRequest(serverInfo);
         for (String addr : registrySet) {
-            unregisterStore(addr, serverInfo);
+            unregisterStore(addr, request);
         }
     }
 
@@ -133,8 +134,9 @@ public class DefaultRegistryClient implements RegistryClient, Lifecycle {
             return ;
         }
 
+        RpcCommand request = createStoreHeartbeatRequest(heartBeat);
         for (String addr : registrySet) {
-            storeHeartbeat(addr, heartBeat);
+            storeHeartbeat(addr, request);
         }
     }
 
@@ -154,10 +156,6 @@ public class DefaultRegistryClient implements RegistryClient, Lifecycle {
 
     }
 
-    private void registerTopic(String registryAddress, TopicInfo topicInfo) {
-
-    }
-
     @Override
     public void registerTopic(TopicInfo topicInfo) {
         Set<String> registrySet = registryManager.getAvailableRegistry();
@@ -165,10 +163,13 @@ public class DefaultRegistryClient implements RegistryClient, Lifecycle {
             return ;
         }
 
+        RpcCommand request = createRegisterTopicRequest(topicInfo);
+        CountDownLatch latch = new CountDownLatch(registrySet.size());
         for (String addr : registrySet) {
-            registerTopic(addr, topicInfo);
+            registerTopic(addr, request, topicInfo.getRegisterTimeout(), latch);
         }
 
+        awaitLatch(latch, topicInfo.getRegisterTimeout());
     }
 
     @Override
@@ -307,11 +308,11 @@ public class DefaultRegistryClient implements RegistryClient, Lifecycle {
         });
     }
 
-    private void awaitLatch(CountDownLatch latch, StoreInfo storeInfo) {
+    private void awaitLatch(CountDownLatch latch, long timeout) {
         try {
-            boolean status = latch.await(storeInfo.getRegisterTimeout(), TimeUnit.MILLISECONDS);
+            boolean status = latch.await(timeout, TimeUnit.MILLISECONDS);
             if (!status) {
-                log.warn("register store timeout, {}ms", storeInfo.getRegisterTimeout());
+                log.warn("register store timeout, {}ms", timeout);
             }
         } catch (InterruptedException ignore) {
         }
@@ -329,9 +330,9 @@ public class DefaultRegistryClient implements RegistryClient, Lifecycle {
         );
     }
 
-    private void unregisterStore(String registryAddress, ServerInfo serverInfo) {
+    private void unregisterStore(String registryAddress, RpcCommand request) {
         try {
-            RpcCommand request = createUnregisterStoreRequest(serverInfo);
+
             RpcCommand response = nettyClient.invokeSync(registryAddress, request, DEFAULT_RPC_TIMEOUT);
 
             assert response != null;
@@ -378,9 +379,7 @@ public class DefaultRegistryClient implements RegistryClient, Lifecycle {
         );
     }
 
-    private void storeHeartbeat(String registryAddress, HeartBeat heartBeat) {
-        RpcCommand request = createStoreHeartbeatRequest(heartBeat);
-
+    private void storeHeartbeat(String registryAddress, RpcCommand request) {
         registerExecutor.execute(() -> {
             try {
                 nettyClient.invokeOneway(registryAddress, request, DEFAULT_RPC_TIMEOUT);
@@ -388,6 +387,38 @@ public class DefaultRegistryClient implements RegistryClient, Lifecycle {
                 log.error("store heartbeat error, registry address: {}", registryAddress, e);
             }
         });
+    }
+
+    private void registerTopic(String registryAddress, RpcCommand request, int timeout, CountDownLatch latch) {
+        registerExecutor.execute(() -> {
+            try {
+                RpcCommand response = nettyClient.invokeSync(registryAddress, request, timeout);
+                assert response != null;
+                log.info("register topic success, registry address: {}, response code: {}",
+                    registryAddress, response.getCode());
+            } catch (Exception e) {
+                log.warn("register topic error, registry address: {}", registryAddress, e);
+            } finally {
+                latch.countDown();
+            }
+        });
+    }
+
+    private RpcCommand createRegisterTopicRequest(TopicInfo topicInfo) {
+        RegisterTopicRequestHeader requestHeader = new RegisterTopicRequestHeader();
+
+        String topicName = topicInfo.getTopic().getTopicName();
+        requestHeader.setTopic(topicName);
+
+        RpcCommand request = RpcCommand.createRequestCommand(
+            RequestCode.REGISTER_TOPIC_IN_NAMESRV,
+            requestHeader
+        );
+
+        RouteInfo routeInfo = topicInfo.toRouteInfo();
+        request.setBody(routeInfo.encode());
+
+        return request;
     }
 
 }
