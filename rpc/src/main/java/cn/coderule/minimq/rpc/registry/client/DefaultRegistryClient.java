@@ -43,7 +43,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class DefaultRegistryClient implements RegistryClient, Lifecycle {
-    private static final int DEFAULT_RPC_TIMEOUT = 3_000;
+    public static final int DEFAULT_RPC_TIMEOUT = 3_000;
 
     private final RpcClientConfig config;
     private final NettyClient nettyClient;
@@ -51,12 +51,16 @@ public class DefaultRegistryClient implements RegistryClient, Lifecycle {
     private final RegistryManager registryManager;
     private final ExecutorService registerExecutor;
 
+    private final StoreRegistryClient storeRegister;
+
     public DefaultRegistryClient(RpcClientConfig config, String addressConfig) {
         this.config = config;
         this.nettyClient = new NettyClient(config);
 
         registryManager = new RegistryManager(config, addressConfig, nettyClient);
         registerExecutor = initRegisterExecutor();
+
+        storeRegister = new StoreRegistryClient(registryManager, nettyClient, registerExecutor);
     }
 
     @Override
@@ -98,46 +102,17 @@ public class DefaultRegistryClient implements RegistryClient, Lifecycle {
 
     @Override
     public List<RegisterStoreResult>  registerStore(StoreInfo storeInfo) {
-        List<RegisterStoreResult> results = new CopyOnWriteArrayList<>();
-        Set<String> registrySet = registryManager.getAvailableRegistry();
-        if (CollectionUtil.isEmpty(registrySet)) {
-            return results;
-        }
-
-        RpcCommand request = createRegisterStoreRequest(storeInfo);
-        CountDownLatch latch = new CountDownLatch(registrySet.size());
-        for (String addr : registrySet) {
-            registerStoreByExecutor(addr, storeInfo, request, results, latch);
-        }
-
-        awaitLatch(latch, storeInfo.getRegisterTimeout());
-        return results;
+        return storeRegister.registerStore(storeInfo);
     }
 
     @Override
     public void unregisterStore(ServerInfo serverInfo) {
-        Set<String> registrySet = registryManager.getAvailableRegistry();
-        if (CollectionUtil.isEmpty(registrySet)) {
-            return ;
-        }
-
-        RpcCommand request = createUnregisterStoreRequest(serverInfo);
-        for (String addr : registrySet) {
-            unregisterStore(addr, request);
-        }
+        storeRegister.unregisterStore(serverInfo);
     }
 
     @Override
     public void storeHeartbeat(HeartBeat heartBeat) {
-        Set<String> registrySet = registryManager.getAvailableRegistry();
-        if (CollectionUtil.isEmpty(registrySet)) {
-            return ;
-        }
-
-        RpcCommand request = createStoreHeartbeatRequest(heartBeat);
-        for (String addr : registrySet) {
-            storeHeartbeat(addr, request);
-        }
+        storeRegister.storeHeartbeat(heartBeat);
     }
 
     @Override
@@ -158,18 +133,7 @@ public class DefaultRegistryClient implements RegistryClient, Lifecycle {
 
     @Override
     public void registerTopic(TopicInfo topicInfo) {
-        Set<String> registrySet = registryManager.getAvailableRegistry();
-        if (CollectionUtil.isEmpty(registrySet)) {
-            return ;
-        }
-
-        RpcCommand request = createRegisterTopicRequest(topicInfo);
-        CountDownLatch latch = new CountDownLatch(registrySet.size());
-        for (String addr : registrySet) {
-            registerTopic(addr, request, topicInfo.getRegisterTimeout(), latch);
-        }
-
-        awaitLatch(latch, topicInfo.getRegisterTimeout());
+        storeRegister.registerTopic(topicInfo);
     }
 
     @Override
@@ -213,212 +177,6 @@ public class DefaultRegistryClient implements RegistryClient, Lifecycle {
             new ArrayBlockingQueue<>(32),
             new DefaultThreadFactory("ServerRegisterThread")
         );
-    }
-
-    private RegisterBrokerRequestHeader createRegisterStoreRequestHeader(StoreInfo storeInfo) {
-        RegisterBrokerRequestHeader requestHeader = new RegisterBrokerRequestHeader();
-        requestHeader.setBrokerAddr(storeInfo.getAddress());
-        requestHeader.setBrokerName(storeInfo.getGroupName());
-        requestHeader.setBrokerId(storeInfo.getGroupNo());
-        requestHeader.setClusterName(storeInfo.getClusterName());
-        requestHeader.setHaServerAddr(storeInfo.getHaAddress());
-        requestHeader.setHeartbeatTimeoutMillis(storeInfo.getHeartbeatTimeout().longValue());
-        requestHeader.setEnableActingMaster(storeInfo.isEnableMasterElection());
-
-        return requestHeader;
-    }
-
-    private RegisterBrokerBody createRegisterStoreRequestBody(StoreInfo storeInfo) {
-        RegisterBrokerBody requestBody = new RegisterBrokerBody();
-        requestBody.setFilterServerList(storeInfo.getFilterList());
-
-        requestBody.setTopicConfigSerializeWrapper(
-            TopicConfigAndMappingSerializeWrapper.from(storeInfo.getTopicInfo())
-        );
-
-        return requestBody;
-    }
-
-    private RpcCommand createRegisterStoreRequest(StoreInfo storeInfo) {
-        RegisterBrokerRequestHeader requestHeader = createRegisterStoreRequestHeader(storeInfo);
-        RegisterBrokerBody requestBody = createRegisterStoreRequestBody(storeInfo);
-
-        byte[] body = requestBody.encode(storeInfo.isCompressed());
-        int crc32 = HashUtil.crc32(body);
-        requestHeader.setBodyCrc32(crc32);
-
-        RpcCommand request = RpcCommand.createRequestCommand(RequestCode.REGISTER_BROKER, requestHeader);
-        request.setBody(body);
-
-        return request;
-    }
-
-    private RegisterStoreResult toRegisterStoreResult(RpcCommand response) throws RemotingCommandException {
-        RegisterBrokerResponseHeader responseHeader = response.decodeHeader(RegisterBrokerResponseHeader.class);
-
-        RegisterStoreResult result = new RegisterStoreResult();
-        result.setMasterAddr(responseHeader.getMasterAddr());
-        result.setHaServerAddr(responseHeader.getHaServerAddr());
-
-        if (null != response.getBody()) {
-            result.setKvTable(KVTable.decode(response.getBody(), KVTable.class));
-        }
-
-        return result;
-    }
-
-    private RegisterStoreResult invokeOneway(String registryAddress, StoreInfo storeInfo, RpcCommand request) {
-        try {
-            nettyClient.invokeOneway(registryAddress, request, storeInfo.getRegisterTimeout());
-        } catch (Exception ignore) {
-        }
-
-        return null;
-    }
-
-    private RegisterStoreResult invoke(String registryAddress, StoreInfo storeInfo, RpcCommand request) throws Exception {
-        if (request.isOnewayRPC()) {
-            return invokeOneway(registryAddress, storeInfo, request);
-        }
-
-        RpcCommand response = nettyClient.invokeSync(registryAddress, request, storeInfo.getRegisterTimeout());
-        assert response != null;
-
-        RegisterBrokerRequestHeader requestHeader = (RegisterBrokerRequestHeader) request.readCustomHeader();
-        if (!response.isSuccess()) {
-            throw new MQException(response.getCode(), response.getRemark(), requestHeader.getBrokerAddr());
-        }
-
-        return toRegisterStoreResult(response);
-    }
-
-    private void registerStoreByExecutor(String registryAddress, StoreInfo storeInfo, RpcCommand request, List<RegisterStoreResult> results, CountDownLatch latch) {
-        registerExecutor.execute(() -> {
-            try {
-                RegisterStoreResult result = invoke(registryAddress, storeInfo, request);
-                if (result != null) {
-                    results.add(result);
-                }
-                log.info("register store success, registry address: {}, result: {}", registryAddress, result);
-            } catch (Exception e) {
-                log.error("register store error, registry address: {}", registryAddress, e);
-            } finally {
-                latch.countDown();
-            }
-        });
-    }
-
-    private void awaitLatch(CountDownLatch latch, long timeout) {
-        try {
-            boolean status = latch.await(timeout, TimeUnit.MILLISECONDS);
-            if (!status) {
-                log.warn("register store timeout, {}ms", timeout);
-            }
-        } catch (InterruptedException ignore) {
-        }
-    }
-
-    private RpcCommand createUnregisterStoreRequest(ServerInfo serverInfo) {
-        UnRegisterBrokerRequestHeader requestHeader = new UnRegisterBrokerRequestHeader();
-        requestHeader.setClusterName(serverInfo.getClusterName());
-        requestHeader.setBrokerName(serverInfo.getGroupName());
-        requestHeader.setBrokerId(serverInfo.getGroupNo());
-        requestHeader.setBrokerAddr(serverInfo.getAddress());
-
-        return RpcCommand.createRequestCommand(
-            RequestCode.UNREGISTER_BROKER, requestHeader
-        );
-    }
-
-    private void unregisterStore(String registryAddress, RpcCommand request) {
-        try {
-
-            RpcCommand response = nettyClient.invokeSync(registryAddress, request, DEFAULT_RPC_TIMEOUT);
-
-            assert response != null;
-            if (!response.isSuccess()) {
-                throw new MQException(response.getCode(), "unregister store error, registry address: " + registryAddress);
-            }
-
-        } catch (Exception e) {
-            log.warn("unregister store error, registry address: {}", registryAddress, e);
-        }
-    }
-
-    private RpcCommand createQueryDataVersionRequest(HeartBeat heartBeat) {
-        QueryDataVersionRequestHeader requestHeader = new QueryDataVersionRequestHeader();
-        requestHeader.setClusterName(heartBeat.getClusterName());
-        requestHeader.setBrokerName(heartBeat.getGroupName());
-        requestHeader.setBrokerId(heartBeat.getGroupNo());
-        requestHeader.setBrokerAddr(heartBeat.getAddress());
-
-        RpcCommand request = RpcCommand.createRequestCommand(
-            RequestCode.QUERY_DATA_VERSION,
-            requestHeader
-        );
-
-        byte[] body = RpcSerializable.encode(heartBeat.getVersion());
-        request.setBody(body);
-
-        return request;
-    }
-
-    private RpcCommand createStoreHeartbeatRequest(HeartBeat heartBeat) {
-        if (null != heartBeat.getVersion()) {
-            return createQueryDataVersionRequest(heartBeat);
-        }
-
-        BrokerHeartbeatRequestHeader requestHeader = new BrokerHeartbeatRequestHeader();
-        requestHeader.setClusterName(heartBeat.getClusterName());
-        requestHeader.setBrokerAddr(heartBeat.getAddress());
-        requestHeader.setBrokerName(heartBeat.getGroupName());
-
-        return RpcCommand.createRequestCommand(
-            RequestCode.BROKER_HEARTBEAT,
-            requestHeader
-        );
-    }
-
-    private void storeHeartbeat(String registryAddress, RpcCommand request) {
-        registerExecutor.execute(() -> {
-            try {
-                nettyClient.invokeOneway(registryAddress, request, DEFAULT_RPC_TIMEOUT);
-            } catch (Exception e) {
-                log.error("store heartbeat error, registry address: {}", registryAddress, e);
-            }
-        });
-    }
-
-    private void registerTopic(String registryAddress, RpcCommand request, int timeout, CountDownLatch latch) {
-        registerExecutor.execute(() -> {
-            try {
-                RpcCommand response = nettyClient.invokeSync(registryAddress, request, timeout);
-                assert response != null;
-                log.info("register topic success, registry address: {}, response code: {}",
-                    registryAddress, response.getCode());
-            } catch (Exception e) {
-                log.warn("register topic error, registry address: {}", registryAddress, e);
-            } finally {
-                latch.countDown();
-            }
-        });
-    }
-
-    private RpcCommand createRegisterTopicRequest(TopicInfo topicInfo) {
-        RegisterTopicRequestHeader requestHeader = new RegisterTopicRequestHeader();
-
-        String topicName = topicInfo.getTopic().getTopicName();
-        requestHeader.setTopic(topicName);
-
-        RpcCommand request = RpcCommand.createRequestCommand(
-            RequestCode.REGISTER_TOPIC_IN_NAMESRV,
-            requestHeader
-        );
-
-        RouteInfo routeInfo = topicInfo.toRouteInfo();
-        request.setBody(routeInfo.encode());
-
-        return request;
     }
 
 }
