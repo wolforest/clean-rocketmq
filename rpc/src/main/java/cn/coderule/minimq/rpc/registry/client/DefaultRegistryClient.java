@@ -123,9 +123,20 @@ public class DefaultRegistryClient implements RegistryClient, Lifecycle {
         }
     }
 
+    private void storeHeartbeat(String registryAddress, HeartBeat heartBeat) {
+
+    }
+
     @Override
     public void storeHeartbeat(HeartBeat heartBeat) {
+        Set<String> registrySet = registryManager.getAvailableRegistry();
+        if (CollectionUtil.isEmpty(registrySet)) {
+            return ;
+        }
 
+        for (String addr : registrySet) {
+            storeHeartbeat(addr, heartBeat);
+        }
     }
 
     @Override
