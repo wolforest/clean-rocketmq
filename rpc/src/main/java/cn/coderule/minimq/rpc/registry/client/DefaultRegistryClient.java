@@ -24,6 +24,7 @@ import cn.coderule.minimq.rpc.registry.protocol.cluster.ServerInfo;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.StoreInfo;
 import cn.coderule.minimq.rpc.registry.protocol.header.RegisterBrokerRequestHeader;
 import cn.coderule.minimq.rpc.registry.protocol.header.RegisterBrokerResponseHeader;
+import cn.coderule.minimq.rpc.registry.protocol.header.UnRegisterBrokerRequestHeader;
 import cn.coderule.minimq.rpc.registry.protocol.route.RouteInfo;
 import cn.coderule.minimq.rpc.registry.protocol.route.TopicInfo;
 import cn.coderule.minimq.rpc.registry.service.RegistryManager;
@@ -38,6 +39,8 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class DefaultRegistryClient implements RegistryClient, Lifecycle {
+    private static final int DEFAULT_RPC_TIMEOUT = 3_000;
+
     private final RpcClientConfig config;
     private final NettyClient nettyClient;
 
@@ -107,9 +110,17 @@ public class DefaultRegistryClient implements RegistryClient, Lifecycle {
         return results;
     }
 
+
     @Override
     public void unregisterStore(ServerInfo serverInfo) {
+        Set<String> registrySet = registryManager.getAvailableRegistry();
+        if (CollectionUtil.isEmpty(registrySet)) {
+            return ;
+        }
 
+        for (String addr : registrySet) {
+            unregisterStore(addr, serverInfo);
+        }
     }
 
     @Override
@@ -281,6 +292,33 @@ public class DefaultRegistryClient implements RegistryClient, Lifecycle {
                 log.warn("register store timeout, {}ms", storeInfo.getRegisterTimeout());
             }
         } catch (InterruptedException ignore) {
+        }
+    }
+
+    private RpcCommand createUnregisterStoreRequest(ServerInfo serverInfo) {
+        UnRegisterBrokerRequestHeader requestHeader = new UnRegisterBrokerRequestHeader();
+        requestHeader.setClusterName(serverInfo.getClusterName());
+        requestHeader.setBrokerName(serverInfo.getGroupName());
+        requestHeader.setBrokerId(serverInfo.getGroupNo());
+        requestHeader.setBrokerAddr(serverInfo.getAddress());
+
+        return RpcCommand.createRequestCommand(
+            RequestCode.UNREGISTER_BROKER, requestHeader
+        );
+    }
+
+    private void unregisterStore(String registryAddress, ServerInfo serverInfo) {
+        try {
+            RpcCommand request = createUnregisterStoreRequest(serverInfo);
+            RpcCommand response = nettyClient.invokeSync(registryAddress, request, DEFAULT_RPC_TIMEOUT);
+
+            assert response != null;
+            if (!response.isSuccess()) {
+                throw new MQException(response.getCode(), "unregister store error, registry address: " + registryAddress);
+            }
+
+        } catch (Exception e) {
+            log.warn("unregister store error, registry address: {}", registryAddress, e);
         }
     }
 
