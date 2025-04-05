@@ -14,6 +14,7 @@ public interface RegistryClient {
     List<String> getRegistryList();
     void setRegistryList(List<String> addressList);
     void setRegistryList(String addressConfig);
+    String chooseRegistry() throws InterruptedException;
 
     void registerBroker(BrokerInfo brokerInfo);
     void unregisterBroker(ServerInfo serverInfo);

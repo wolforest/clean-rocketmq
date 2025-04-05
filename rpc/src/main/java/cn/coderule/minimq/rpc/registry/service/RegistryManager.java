@@ -100,14 +100,12 @@ public class RegistryManager implements Lifecycle {
             this.choseAddress.set(addr);
             nettyClient.getOrCreateChannelAsync(addr);
             log.info("choose registry address: {}", addr);
-
             return addr;
         } catch (Exception e) {
             log.error("chooseRegistry exception", e);
         } finally {
             channelLock.unlock();
         }
-
         return null;
     }
 

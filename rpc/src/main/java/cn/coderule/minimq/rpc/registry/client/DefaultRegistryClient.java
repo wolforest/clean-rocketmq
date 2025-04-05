@@ -1,6 +1,7 @@
 package cn.coderule.minimq.rpc.registry.client;
 
 import cn.coderule.common.convention.service.Lifecycle;
+import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.minimq.rpc.common.config.RpcClientConfig;
 import cn.coderule.minimq.rpc.common.netty.NettyClient;
 import cn.coderule.minimq.rpc.registry.RegistryClient;
@@ -16,6 +17,7 @@ import cn.coderule.minimq.rpc.registry.protocol.route.RouteInfo;
 import cn.coderule.minimq.rpc.registry.protocol.route.TopicInfo;
 import cn.coderule.minimq.rpc.registry.service.RegistryManager;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 import lombok.extern.slf4j.Slf4j;
 
@@ -25,19 +27,17 @@ public class DefaultRegistryClient implements RegistryClient, Lifecycle {
     private final NettyClient nettyClient;
     private final RegistryManager registryManager;
 
-
-
     public DefaultRegistryClient(RpcClientConfig config, String addressConfig) {
         this.config = config;
         this.nettyClient = new NettyClient(config);
 
         registryManager = new RegistryManager(config, addressConfig, nettyClient);
-
     }
 
     @Override
     public void start() {
         this.nettyClient.start();
+        this.registryManager.start();
     }
 
     @Override
@@ -61,6 +61,11 @@ public class DefaultRegistryClient implements RegistryClient, Lifecycle {
     }
 
     @Override
+    public String chooseRegistry() throws InterruptedException {
+        return registryManager.chooseRegistry();
+    }
+
+    @Override
     public List<String> getRegistryList() {
         return registryManager.getRegistryList();
     }
@@ -68,9 +73,16 @@ public class DefaultRegistryClient implements RegistryClient, Lifecycle {
     @Override
     public void registerBroker(BrokerInfo brokerInfo) {
         List<StoreRegisterResult> results = new CopyOnWriteArrayList<>();
-
+        Set<String> registrySet = registryManager.getAvailableRegistry();
+        if (CollectionUtil.isEmpty(registrySet)) {
+            return;
+        }
 
         RegisterBrokerRequestHeader requestHeader = new RegisterBrokerRequestHeader();
+        for (String addr : registrySet) {
+
+        }
+
     }
 
     @Override
