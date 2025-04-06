@@ -25,6 +25,7 @@ public class StoreConfig implements Serializable {
      *  - 1 ... : slave
      */
     private int groupNo;
+
     private boolean enableMasterElection = false;
     private boolean inContainer = false;
 
@@ -38,11 +39,12 @@ public class StoreConfig implements Serializable {
      */
     private int permission = PermName.PERM_READ | PermName.PERM_WRITE;
 
+    private boolean refreshMasterAddress = false;
+    private boolean refreshHaAddress = false;
 
-    private String registryAddress = System.getProperty(
-        RegistryUtils.NAMESRV_ADDR_PROPERTY,
-        System.getenv(RegistryUtils.NAMESRV_ADDR_ENV)
-    );
+    private String masterAddress;
+    private String haAddress;
+    private String registryAddress = System.getProperty(RegistryUtils.NAMESRV_ADDR_PROPERTY, System.getenv(RegistryUtils.NAMESRV_ADDR_ENV));
 
     private boolean fetchRegistryAddressByDns = false;
     private boolean fetchRegistryAddressByHttp = false;

@@ -11,6 +11,7 @@ import cn.coderule.minimq.domain.service.store.domain.meta.TopicService;
 import cn.coderule.minimq.domain.utils.topic.KeyBuilder;
 import cn.coderule.minimq.store.infra.StoreRegister;
 import cn.coderule.minimq.store.server.StoreContext;
+import java.util.Map;
 import java.util.Set;
 import lombok.Getter;
 
@@ -69,6 +70,11 @@ public class DefaultTopicService implements TopicService {
     public void deleteTopic(String topicName) {
         deleteRetryTopic(topicName);
         cleanTopicInfo(topicName);
+    }
+
+    @Override
+    public void updateOrderConfig(Map<String, String> orderMap) {
+
     }
 
     @Override

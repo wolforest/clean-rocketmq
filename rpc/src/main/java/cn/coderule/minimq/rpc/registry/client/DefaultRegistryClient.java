@@ -2,44 +2,28 @@ package cn.coderule.minimq.rpc.registry.client;
 
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.lang.concurrent.DefaultThreadFactory;
-import cn.coderule.common.util.encrypt.HashUtil;
 import cn.coderule.common.util.lang.ThreadUtil;
-import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.minimq.domain.exception.MQException;
 import cn.coderule.minimq.rpc.common.config.RpcClientConfig;
-import cn.coderule.minimq.rpc.common.core.exception.RemotingCommandException;
 import cn.coderule.minimq.rpc.common.core.invoke.RpcCommand;
 import cn.coderule.minimq.rpc.common.netty.NettyClient;
 import cn.coderule.minimq.rpc.common.protocol.code.RequestCode;
-import cn.coderule.minimq.rpc.common.protocol.codec.RpcSerializable;
 import cn.coderule.minimq.rpc.registry.RegistryClient;
 import cn.coderule.minimq.rpc.registry.protocol.body.GetBrokerMemberGroupResponseBody;
-import cn.coderule.minimq.rpc.registry.protocol.body.KVTable;
-import cn.coderule.minimq.rpc.registry.protocol.body.RegisterBrokerBody;
 import cn.coderule.minimq.rpc.registry.protocol.body.RegisterStoreResult;
-import cn.coderule.minimq.rpc.registry.protocol.body.TopicConfigAndMappingSerializeWrapper;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.BrokerInfo;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.ClusterInfo;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.GroupInfo;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.HeartBeat;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.ServerInfo;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.StoreInfo;
-import cn.coderule.minimq.rpc.registry.protocol.header.BrokerHeartbeatRequestHeader;
 import cn.coderule.minimq.rpc.registry.protocol.header.GetBrokerMemberGroupRequestHeader;
 import cn.coderule.minimq.rpc.registry.protocol.header.GetRouteInfoRequestHeader;
-import cn.coderule.minimq.rpc.registry.protocol.header.QueryDataVersionRequestHeader;
-import cn.coderule.minimq.rpc.registry.protocol.header.RegisterBrokerRequestHeader;
-import cn.coderule.minimq.rpc.registry.protocol.header.RegisterBrokerResponseHeader;
-import cn.coderule.minimq.rpc.registry.protocol.header.RegisterTopicRequestHeader;
-import cn.coderule.minimq.rpc.registry.protocol.header.UnRegisterBrokerRequestHeader;
 import cn.coderule.minimq.rpc.registry.protocol.route.RouteInfo;
 import cn.coderule.minimq.rpc.registry.protocol.route.TopicInfo;
 import cn.coderule.minimq.rpc.registry.service.RegistryManager;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
@@ -48,16 +32,13 @@ import lombok.extern.slf4j.Slf4j;
 public class DefaultRegistryClient implements RegistryClient, Lifecycle {
     public static final int DEFAULT_RPC_TIMEOUT = 3_000;
 
-    private final RpcClientConfig config;
     private final NettyClient nettyClient;
-
     private final RegistryManager registryManager;
     private final ExecutorService registerExecutor;
 
     private final StoreRegistryClient storeRegister;
 
     public DefaultRegistryClient(RpcClientConfig config, String addressConfig) {
-        this.config = config;
         this.nettyClient = new NettyClient(config);
 
         registryManager = new RegistryManager(config, addressConfig, nettyClient);

@@ -2,6 +2,7 @@ package cn.coderule.minimq.domain.service.store.domain.meta;
 
 import cn.coderule.minimq.domain.model.Topic;
 import cn.coderule.minimq.domain.model.meta.TopicMap;
+import java.util.Map;
 
 public interface TopicService extends MetaService {
     boolean exists(String topicName);
@@ -10,4 +11,5 @@ public interface TopicService extends MetaService {
     void putTopic(Topic topic);
     void deleteTopic(String topicName);
     TopicMap getTopicMap();
+    void updateOrderConfig(Map<String, String> orderMap);
 }
