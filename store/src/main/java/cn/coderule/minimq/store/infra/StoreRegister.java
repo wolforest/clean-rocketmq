@@ -130,22 +130,34 @@ public class StoreRegister implements Lifecycle {
                 continue;
             }
 
-            if (storeConfig.isRefreshMasterAddress()
-                && StringUtil.notBlank(result.getMasterAddr())
-                && !result.getMasterAddr().equals(storeConfig.getMasterAddress())) {
+            if (shouldUpdateMasterAddress(result)) {
                 storeConfig.setMasterAddress(result.getMasterAddr());
             }
 
-            if (storeConfig.isRefreshHaAddress()
-                && StringUtil.notBlank(result.getHaServerAddr())
-                && !result.getHaServerAddr().equals(storeConfig.getHaAddress())) {
+            if (shouldUpdateHaAddress(result)) {
                 storeConfig.setHaAddress(result.getHaServerAddr());
             }
 
-            if (MapUtil.notEmpty(result.getKvTable().getTable())) {
+            if (shouldUpdateOrderConfig(result)) {
                 topicService.updateOrderConfig(result.getKvTable().getTable());
             }
         }
+    }
+
+    private boolean shouldUpdateOrderConfig(RegisterStoreResult result) {
+        return MapUtil.notEmpty(result.getKvTable().getTable());
+    }
+
+    private boolean shouldUpdateMasterAddress(RegisterStoreResult result) {
+        return storeConfig.isRefreshMasterAddress()
+            && StringUtil.notBlank(result.getMasterAddr())
+            && !result.getMasterAddr().equals(storeConfig.getMasterAddress());
+    }
+
+    private boolean shouldUpdateHaAddress(RegisterStoreResult result) {
+        return storeConfig.isRefreshHaAddress()
+            && StringUtil.notBlank(result.getHaServerAddr())
+            && !result.getHaServerAddr().equals(storeConfig.getHaAddress());
     }
 
     private HeartBeat createHeartBeat() {
