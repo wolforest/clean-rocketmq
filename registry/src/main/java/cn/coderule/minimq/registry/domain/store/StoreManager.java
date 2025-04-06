@@ -4,6 +4,7 @@ import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.minimq.domain.config.RegistryConfig;
 import cn.coderule.minimq.registry.domain.kv.KVService;
 import cn.coderule.minimq.registry.domain.store.model.Route;
+import cn.coderule.minimq.registry.domain.store.service.ChannelCloser;
 import cn.coderule.minimq.registry.domain.store.service.ClusterService;
 import cn.coderule.minimq.registry.domain.store.service.IdleScanner;
 import cn.coderule.minimq.registry.domain.store.service.TopicService;
@@ -54,6 +55,9 @@ public class StoreManager implements Lifecycle {
         this.idleScanner = new IdleScanner(registryConfig, storeRegistry, route);
         this.clusterService = new ClusterService(registryConfig, route);
         this.topicService = new TopicService(registryConfig, route);
+
+        ChannelCloser channelCloser = new ChannelCloser(storeRegistry, route);
+        RegistryContext.register(channelCloser);
     }
 
     private void initProcessor() {

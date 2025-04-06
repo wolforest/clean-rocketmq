@@ -29,7 +29,7 @@ public class StoreConfig implements Serializable {
     private boolean enableMasterElection = false;
     private boolean inContainer = false;
 
-    private String host;
+    private String host = "0.0.0.0";
     private int port = 6888;
     private int haPort = 10912;
 
@@ -44,7 +44,8 @@ public class StoreConfig implements Serializable {
 
     private String masterAddress;
     private String haAddress;
-    private String registryAddress = System.getProperty(RegistryUtils.NAMESRV_ADDR_PROPERTY, System.getenv(RegistryUtils.NAMESRV_ADDR_ENV));
+    private String registryAddress = "127.0.0.1:9876";
+    // private String registryAddress = System.getProperty(RegistryUtils.NAMESRV_ADDR_PROPERTY, System.getenv(RegistryUtils.NAMESRV_ADDR_ENV));
 
     private boolean fetchRegistryAddressByDns = false;
     private boolean fetchRegistryAddressByHttp = false;
