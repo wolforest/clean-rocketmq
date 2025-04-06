@@ -220,7 +220,7 @@ public class NettyHelper {
     }
 
     /************************************* private methods start ***********************************/
-    private static ChannelFutureListener createResponseListener(Channel channel, RpcCommand request, @Nullable RpcCommand response,
+    private static ChannelFutureListener createResponseListener(Channel channel, RpcCommand request, RpcCommand response,
         Consumer<Future<?>> callback) {
         return future -> {
             if (future.isSuccess()) {

@@ -1,5 +1,6 @@
 package cn.coderule.minimq.rpc.common.core.invoke;
 
+import cn.coderule.common.util.lang.StringUtil;
 import cn.coderule.minimq.rpc.common.core.annotation.CFNotNull;
 import cn.coderule.minimq.rpc.common.core.enums.BoundaryType;
 import cn.coderule.minimq.rpc.common.core.exception.RemotingCommandException;
@@ -16,6 +17,7 @@ import com.alibaba.fastjson2.annotation.JSONField;
 import com.google.common.base.Stopwatch;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
+import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -29,11 +31,10 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 
-@Slf4j
 @Data
-public class RpcCommand {
+@Slf4j
+public class RpcCommand implements Serializable {
     public static final String SERIALIZE_TYPE_PROPERTY = "rocketmq.serialize.type";
     public static final String SERIALIZE_TYPE_ENV = "ROCKETMQ_SERIALIZE_TYPE";
     public static final String REMOTING_VERSION_KEY = "rocketmq.remoting.version";
@@ -61,7 +62,7 @@ public class RpcCommand {
 
     static {
         final String protocol = System.getProperty(SERIALIZE_TYPE_PROPERTY, System.getenv(SERIALIZE_TYPE_ENV));
-        if (!StringUtils.isBlank(protocol)) {
+        if (!StringUtil.isBlank(protocol)) {
             try {
                 serializeTypeConfigInThisServer = SerializeType.valueOf(protocol);
             } catch (IllegalArgumentException e) {

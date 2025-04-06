@@ -40,7 +40,6 @@ public class ClusterProcessor implements RpcProcessor {
         RequestCode.ADD_WRITE_PERM_OF_BROKER
     );
 
-
     public ClusterProcessor(ClusterService clusterService, ExecutorService executor) {
         this.clusterService = clusterService;
         this.executor = executor;

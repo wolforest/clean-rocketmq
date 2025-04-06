@@ -16,6 +16,7 @@
  */
 package cn.coderule.minimq.rpc.common.netty.handler;
 
+import cn.coderule.common.util.net.NetworkUtil;
 import cn.coderule.minimq.rpc.common.core.invoke.RpcCommand;
 import cn.coderule.minimq.rpc.common.core.invoke.RpcContext;
 import cn.coderule.minimq.rpc.common.netty.service.NettyDispatcher;
@@ -38,11 +39,14 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<RpcCommand> 
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, RpcCommand msg) {
+        int localPort = NetworkUtil.getPort(ctx.channel().localAddress());
+        if (-1 == localPort) {
+            NettyHelper.close(ctx.channel());
+            return;
+        }
+
         RpcContext context = new RpcContext(ctx);
         this.dispatcher.dispatch(context, msg);
-
-        // The related remoting server has been shutdown, so close the connected channel
-        NettyHelper.close(ctx.channel());
     }
 
     @Override

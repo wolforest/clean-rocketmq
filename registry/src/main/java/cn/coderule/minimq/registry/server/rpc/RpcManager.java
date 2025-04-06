@@ -17,6 +17,8 @@ public class RpcManager implements Lifecycle {
         RegistryConfig registryConfig = RegistryContext.getBean(RegistryConfig.class);
         RpcServerConfig serverConfig = RegistryContext.getBean(RpcServerConfig.class);
         server = new RegistryServer(registryConfig, serverConfig, connectionManager);
+
+        server.initialize();
     }
 
     @Override
