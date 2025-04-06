@@ -57,6 +57,13 @@ public class StoreRegister implements Lifecycle {
         heartbeatScheduler.shutdown();
     }
 
+    public void registerTopic(Topic topic) {
+        Topic registerTopic = mergeServerPermission(topic);
+        TopicInfo topicInfo = createTopicInfo(registerTopic);
+
+        registryClient.registerTopic(topicInfo);
+    }
+
     private void registerStore() {
         StoreInfo storeInfo = createStoreInfo();
         List<RegisterStoreResult> results = registryClient.registerStore(storeInfo);
@@ -83,8 +90,6 @@ public class StoreRegister implements Lifecycle {
         );
     }
 
-
-
     private void heartbeat() {
         if (!storeConfig.isEnableMasterElection()) {
             return;
@@ -96,22 +101,6 @@ public class StoreRegister implements Lifecycle {
         } catch (Exception e) {
             log.error("store registry heartbeat error", e);
         }
-    }
-
-    public void registerTopic(Topic topic) {
-        Topic registerTopic = topic;
-        if (!PermName.isWriteable(storeConfig.getPermission())
-            || !PermName.isReadable(storeConfig.getPermission())) {
-            registerTopic = new Topic(topic);
-            registerTopic.setPerm(topic.getPerm() & storeConfig.getPermission());
-        }
-
-        TopicInfo topicInfo = TopicInfo.builder()
-                .groupName(storeConfig.getGroup())
-                .topic(registerTopic)
-                .build();
-
-        registryClient.registerTopic(topicInfo);
     }
 
     private StoreInfo createStoreInfo() {
@@ -172,6 +161,24 @@ public class StoreRegister implements Lifecycle {
             .heartbeatTimeout(storeConfig.getRegistryHeartbeatTimeout())
             .inContainer(storeConfig.isInContainer())
             .version(version)
+            .build();
+    }
+
+    private Topic mergeServerPermission(Topic topic) {
+        Topic registerTopic = topic;
+        if (!PermName.isWriteable(storeConfig.getPermission())
+            || !PermName.isReadable(storeConfig.getPermission())) {
+            registerTopic = new Topic(topic);
+            registerTopic.setPerm(topic.getPerm() & storeConfig.getPermission());
+        }
+
+        return registerTopic;
+    }
+
+    private TopicInfo createTopicInfo(Topic registerTopic) {
+        return TopicInfo.builder()
+            .groupName(storeConfig.getGroup())
+            .topic(registerTopic)
             .build();
     }
 
