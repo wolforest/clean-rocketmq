@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -24,7 +25,7 @@ public class GroupInfo extends RpcSerializable implements Comparable<GroupInfo> 
      * The container that store the all single instances for the current broker replication cluster.
      * The key is the brokerId, and the value is the address of the single broker instance.
      */
-    private HashMap<Long, String> brokerAddrs;
+    private Map<Long, String> brokerAddrs;
     private String zoneName;
     private final Random random = new Random();
 
@@ -41,6 +42,11 @@ public class GroupInfo extends RpcSerializable implements Comparable<GroupInfo> 
         }
         this.zoneName = brokerData.getZoneName();
         this.enableActingMaster = brokerData.isEnableActingMaster();
+    }
+
+    public GroupInfo(String cluster, String brokerName) {
+        this.cluster = cluster;
+        this.brokerName = brokerName;
     }
 
     public GroupInfo(String cluster, String brokerName, HashMap<Long, String> brokerAddrs) {

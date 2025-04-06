@@ -13,6 +13,7 @@ import cn.coderule.minimq.rpc.common.netty.NettyClient;
 import cn.coderule.minimq.rpc.common.protocol.code.RequestCode;
 import cn.coderule.minimq.rpc.common.protocol.codec.RpcSerializable;
 import cn.coderule.minimq.rpc.registry.RegistryClient;
+import cn.coderule.minimq.rpc.registry.protocol.body.GetBrokerMemberGroupResponseBody;
 import cn.coderule.minimq.rpc.registry.protocol.body.KVTable;
 import cn.coderule.minimq.rpc.registry.protocol.body.RegisterBrokerBody;
 import cn.coderule.minimq.rpc.registry.protocol.body.RegisterStoreResult;
@@ -24,6 +25,7 @@ import cn.coderule.minimq.rpc.registry.protocol.cluster.HeartBeat;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.ServerInfo;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.StoreInfo;
 import cn.coderule.minimq.rpc.registry.protocol.header.BrokerHeartbeatRequestHeader;
+import cn.coderule.minimq.rpc.registry.protocol.header.GetBrokerMemberGroupRequestHeader;
 import cn.coderule.minimq.rpc.registry.protocol.header.GetRouteInfoRequestHeader;
 import cn.coderule.minimq.rpc.registry.protocol.header.QueryDataVersionRequestHeader;
 import cn.coderule.minimq.rpc.registry.protocol.header.RegisterBrokerRequestHeader;
@@ -156,17 +158,14 @@ public class DefaultRegistryClient implements RegistryClient, Lifecycle {
     }
 
     @Override
-    public GroupInfo syncGroupInfo(String clusterName, String groupName) throws InterruptedException {
+    public GroupInfo syncGroupInfo(String clusterName, String groupName) throws Exception {
         String registryAddress = registryManager.chooseRegistry();
+        RpcCommand request = createGroupQueryRequest(clusterName, groupName);
 
+        RpcCommand response = nettyClient.invokeSync(registryAddress, request, DEFAULT_RPC_TIMEOUT);
+        assert response != null;
 
-        return null;
-    }
-
-    private RpcCommand createRouteQueryRequest(String topicName) {
-        GetRouteInfoRequestHeader requestHeader = new GetRouteInfoRequestHeader();
-        requestHeader.setTopic(topicName);
-        return RpcCommand.createRequestCommand(RequestCode.GET_ROUTEINFO_BY_TOPIC, requestHeader);
+        return formatGroupInfo(clusterName, groupName, response);
     }
 
     @Override
@@ -199,5 +198,35 @@ public class DefaultRegistryClient implements RegistryClient, Lifecycle {
             new DefaultThreadFactory("ServerRegisterThread")
         );
     }
+
+    private RpcCommand createRouteQueryRequest(String topicName) {
+        GetRouteInfoRequestHeader requestHeader = new GetRouteInfoRequestHeader();
+        requestHeader.setTopic(topicName);
+        return RpcCommand.createRequestCommand(RequestCode.GET_ROUTEINFO_BY_TOPIC, requestHeader);
+    }
+
+    private RpcCommand createGroupQueryRequest(String clusterName, String groupName) {
+        GetBrokerMemberGroupRequestHeader requestHeader = new GetBrokerMemberGroupRequestHeader();
+        requestHeader.setClusterName(clusterName);
+        requestHeader.setBrokerName(groupName);
+        return RpcCommand.createRequestCommand(RequestCode.GET_BROKER_MEMBER_GROUP, requestHeader);
+    }
+
+    private GroupInfo formatGroupInfo(String clusterName, String groupName, RpcCommand response) {
+        GroupInfo groupInfo = new GroupInfo(clusterName, groupName);
+        if (!response.isSuccess()) {
+            return groupInfo;
+        }
+
+        byte[] body = response.getBody();
+        if (body == null) {
+            return groupInfo;
+        }
+
+        GetBrokerMemberGroupResponseBody responseBody = GetBrokerMemberGroupResponseBody.decode(body, GetBrokerMemberGroupResponseBody.class);
+        groupInfo.setBrokerAddrs(responseBody.getBrokerMemberGroup().getBrokerAddrs());
+        return groupInfo;
+    }
+
 
 }

@@ -27,6 +27,6 @@ public interface RegistryClient {
     void registerTopic(TopicInfo topicInfo);
 
     ClusterInfo syncClusterInfo(String clusterName) throws Exception;
-    GroupInfo syncGroupInfo(String clusterName, String groupName) throws InterruptedException;
+    GroupInfo syncGroupInfo(String clusterName, String groupName) throws Exception;
     RouteInfo syncRouteInfo(String topicName, long timeout) throws Exception;
 }
