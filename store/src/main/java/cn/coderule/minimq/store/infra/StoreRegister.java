@@ -83,26 +83,15 @@ public class StoreRegister implements Lifecycle {
         );
     }
 
+
+
     private void heartbeat() {
         if (!storeConfig.isEnableMasterElection()) {
             return;
         }
 
-        TopicService topicService = StoreContext.getBean(TopicService.class);
-        DataVersion version = topicService.getTopicMap().getVersion();
-
-        HeartBeat heartBeat = HeartBeat.builder()
-            .clusterName(storeConfig.getCluster())
-            .groupName(storeConfig.getGroup())
-            .groupNo(storeConfig.getGroupNo())
-            .address(storeConfig.getHost() + ":" + storeConfig.getPort())
-            .heartbeatInterval(storeConfig.getRegistryHeartbeatInterval())
-            .heartbeatTimeout(storeConfig.getRegistryHeartbeatTimeout())
-            .inContainer(storeConfig.isInContainer())
-            .version(version)
-            .build();
-
         try {
+            HeartBeat heartBeat = createHeartBeat();
             registryClient.storeHeartbeat(heartBeat);
         } catch (Exception e) {
             log.error("store registry heartbeat error", e);
@@ -168,6 +157,22 @@ public class StoreRegister implements Lifecycle {
                 topicService.updateOrderConfig(result.getKvTable().getTable());
             }
         }
+    }
+
+    private HeartBeat createHeartBeat() {
+        TopicService topicService = StoreContext.getBean(TopicService.class);
+        DataVersion version = topicService.getTopicMap().getVersion();
+
+        return HeartBeat.builder()
+            .clusterName(storeConfig.getCluster())
+            .groupName(storeConfig.getGroup())
+            .groupNo(storeConfig.getGroupNo())
+            .address(storeConfig.getHost() + ":" + storeConfig.getPort())
+            .heartbeatInterval(storeConfig.getRegistryHeartbeatInterval())
+            .heartbeatTimeout(storeConfig.getRegistryHeartbeatTimeout())
+            .inContainer(storeConfig.isInContainer())
+            .version(version)
+            .build();
     }
 
 }
