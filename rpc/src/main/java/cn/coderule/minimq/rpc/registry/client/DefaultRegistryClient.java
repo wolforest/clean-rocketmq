@@ -24,6 +24,7 @@ import cn.coderule.minimq.rpc.registry.protocol.cluster.HeartBeat;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.ServerInfo;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.StoreInfo;
 import cn.coderule.minimq.rpc.registry.protocol.header.BrokerHeartbeatRequestHeader;
+import cn.coderule.minimq.rpc.registry.protocol.header.GetRouteInfoRequestHeader;
 import cn.coderule.minimq.rpc.registry.protocol.header.QueryDataVersionRequestHeader;
 import cn.coderule.minimq.rpc.registry.protocol.header.RegisterBrokerRequestHeader;
 import cn.coderule.minimq.rpc.registry.protocol.header.RegisterBrokerResponseHeader;
@@ -155,24 +156,37 @@ public class DefaultRegistryClient implements RegistryClient, Lifecycle {
     }
 
     @Override
-    public GroupInfo syncGroupInfo(String clusterName, String groupName) {
-        try {
-            String registryAddress = registryManager.chooseRegistry();
-        } catch (Exception e) {
-            log.error("sync group info error", e);
-        }
+    public GroupInfo syncGroupInfo(String clusterName, String groupName) throws InterruptedException {
+        String registryAddress = registryManager.chooseRegistry();
+
 
         return null;
     }
 
+    private RpcCommand createRouteQueryRequest(String topicName) {
+        GetRouteInfoRequestHeader requestHeader = new GetRouteInfoRequestHeader();
+        requestHeader.setTopic(topicName);
+        return RpcCommand.createRequestCommand(RequestCode.GET_ROUTEINFO_BY_TOPIC, requestHeader);
+    }
+
     @Override
-    public RouteInfo syncRouteInfo(String topicName, long timeout) {
-        try {
-            String registryAddress = registryManager.chooseRegistry();
-        } catch (Exception e) {
-            log.error("sync route info error", e);
+    public RouteInfo syncRouteInfo(String topicName, long timeout) throws Exception {
+        String registryAddress = registryManager.chooseRegistry();
+        RpcCommand request = createRouteQueryRequest(topicName);
+
+        RpcCommand response = nettyClient.invokeSync(registryAddress, request, timeout);
+        assert response != null;
+
+        if (!response.isSuccess()) {
+            throw new MQException(response.getCode(), "query route info error, registry address: " + registryAddress);
         }
-        return null;
+
+        byte[] body = response.getBody();
+        if (body != null) {
+            return RouteInfo.decode(body, RouteInfo.class);
+        }
+
+        throw new MQException(response.getCode(), "query route info error, registry address: " + registryAddress);
     }
 
     private ExecutorService initRegisterExecutor() {
