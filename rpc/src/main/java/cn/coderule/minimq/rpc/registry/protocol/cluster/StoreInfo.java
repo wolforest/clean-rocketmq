@@ -4,6 +4,7 @@ import cn.coderule.minimq.rpc.common.core.enums.RequestType;
 import cn.coderule.minimq.rpc.registry.protocol.body.TopicConfigSerializeWrapper;
 import java.util.List;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -21,6 +22,8 @@ public class StoreInfo extends ServerInfo {
 
     private int registerTimeout;
     private RequestType registerType;
+    @Builder.Default
+    private boolean forceRegister = false;
 
     private int hash;
     private boolean compressed;

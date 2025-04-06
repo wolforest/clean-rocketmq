@@ -3,6 +3,7 @@ package cn.coderule.minimq.rpc.registry.client;
 import cn.coderule.common.util.encrypt.HashUtil;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.minimq.domain.exception.MQException;
+import cn.coderule.minimq.domain.model.DataVersion;
 import cn.coderule.minimq.rpc.common.core.exception.RemotingCommandException;
 import cn.coderule.minimq.rpc.common.core.invoke.RpcCommand;
 import cn.coderule.minimq.rpc.common.netty.NettyClient;
@@ -17,6 +18,7 @@ import cn.coderule.minimq.rpc.registry.protocol.cluster.ServerInfo;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.StoreInfo;
 import cn.coderule.minimq.rpc.registry.protocol.header.BrokerHeartbeatRequestHeader;
 import cn.coderule.minimq.rpc.registry.protocol.header.QueryDataVersionRequestHeader;
+import cn.coderule.minimq.rpc.registry.protocol.header.QueryDataVersionResponseHeader;
 import cn.coderule.minimq.rpc.registry.protocol.header.RegisterBrokerRequestHeader;
 import cn.coderule.minimq.rpc.registry.protocol.header.RegisterBrokerResponseHeader;
 import cn.coderule.minimq.rpc.registry.protocol.header.RegisterTopicRequestHeader;
@@ -47,6 +49,10 @@ public class StoreRegistryClient  {
 
     public List<RegisterStoreResult>  registerStore(StoreInfo storeInfo) {
         List<RegisterStoreResult> results = new CopyOnWriteArrayList<>();
+        if (!needRegister(storeInfo)) {
+            return results;
+        }
+
         Set<String> registrySet = registryManager.getAvailableRegistry();
         if (CollectionUtil.isEmpty(registrySet)) {
             return results;
@@ -101,6 +107,95 @@ public class StoreRegistryClient  {
         awaitLatch(latch, topicInfo.getRegisterTimeout());
     }
 
+    private RpcCommand createQueryDataVersionRequest(StoreInfo storeInfo) {
+        QueryDataVersionRequestHeader requestHeader = new QueryDataVersionRequestHeader();
+        requestHeader.setClusterName(storeInfo.getClusterName());
+        requestHeader.setBrokerName(storeInfo.getGroupName());
+        requestHeader.setBrokerId(storeInfo.getGroupNo());
+        requestHeader.setBrokerAddr(storeInfo.getAddress());
+
+        RpcCommand request = RpcCommand.createRequestCommand(
+            RequestCode.QUERY_DATA_VERSION,
+            requestHeader
+        );
+
+        byte[] body = RpcSerializable.encode(storeInfo.getTopicInfo().getDataVersion());
+        request.setBody(body);
+
+        return request;
+    }
+
+    private boolean hasRegistryChanged(List<Boolean> changedList) {
+        boolean changed = false;
+        for (Boolean status : changedList) {
+            if (!status) {
+                continue;
+            }
+
+            changed = true;
+            break;
+        }
+
+        return changed;
+    }
+
+    private boolean isTopicInfoChanged(StoreInfo storeInfo, RpcCommand response) throws RemotingCommandException {
+        boolean changed = false;
+        if (!response.isSuccess()) {
+            return changed;
+        }
+
+        QueryDataVersionResponseHeader responseHeader = response.decodeHeader(QueryDataVersionResponseHeader.class);
+        if (null != responseHeader.getChanged() && responseHeader.getChanged()) {
+            changed = true;
+        }
+
+        byte[] body = response.getBody();
+        DataVersion requestVersion = storeInfo.getTopicInfo().getDataVersion();
+        DataVersion responseVersion = RpcSerializable.decode(body, DataVersion.class);
+        if (!requestVersion.equals(responseVersion)) {
+            changed = true;
+        }
+
+        return changed;
+    }
+
+    private void queryRegistryVersion(String registryAddress, RpcCommand request, StoreInfo storeInfo, List<Boolean> changedList, CountDownLatch latch) {
+        registerExecutor.execute(() -> {
+            try {
+                RpcCommand response = nettyClient.invokeSync(registryAddress, request, storeInfo.getRegisterTimeout());
+                if (isTopicInfoChanged(storeInfo, response)) {
+                    changedList.add(true);
+                }
+            } catch (Exception e) {
+                changedList.add(true);
+                log.error("query registry version error, registry address: {}", registryAddress, e);
+            } finally {
+                latch.countDown();
+            }
+        });
+    }
+
+    private boolean needRegister(StoreInfo storeInfo) {
+        if (storeInfo.isForceRegister()) {
+            return true;
+        }
+
+        Set<String> registrySet = registryManager.getAvailableRegistry();
+        if (CollectionUtil.isEmpty(registrySet)) {
+            return false;
+        }
+
+        List<Boolean> changedList = new CopyOnWriteArrayList<>();
+        CountDownLatch latch = new CountDownLatch(registrySet.size());
+        RpcCommand request = createQueryDataVersionRequest(storeInfo);
+        for (String registryAddr : registrySet) {
+            queryRegistryVersion(registryAddr, request, storeInfo, changedList, latch);
+        }
+
+        awaitLatch(latch, storeInfo.getRegisterTimeout());
+        return hasRegistryChanged(changedList);
+    }
 
     private RegisterBrokerRequestHeader createRegisterStoreRequestHeader(StoreInfo storeInfo) {
         RegisterBrokerRequestHeader requestHeader = new RegisterBrokerRequestHeader();
