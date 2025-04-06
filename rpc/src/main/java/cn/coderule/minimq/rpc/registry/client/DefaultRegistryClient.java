@@ -137,14 +137,21 @@ public class DefaultRegistryClient implements RegistryClient, Lifecycle {
     }
 
     @Override
-    public ClusterInfo syncClusterInfo(String clusterName) {
-        try {
-            String registryAddress = registryManager.chooseRegistry();
-        } catch (Exception e) {
-            log.error("sync cluster info error", e);
+    public ClusterInfo syncClusterInfo(String clusterName) throws Exception {
+        String registryAddress = registryManager.chooseRegistry();
+        RpcCommand request = RpcCommand.createRequestCommand(RequestCode.QUERY_DATA_VERSION);
+
+        RpcCommand response = nettyClient.invokeSync(registryAddress, request, DEFAULT_RPC_TIMEOUT);
+        assert response != null;
+
+        if (response.isSuccess()) {
+            return ClusterInfo.decode(response.getBody(), ClusterInfo.class);
         }
 
-        return null;
+        throw new MQException(
+            response.getCode(),
+            "sync cluster info error, registry address: " + registryAddress
+        );
     }
 
     @Override

@@ -26,7 +26,7 @@ public interface RegistryClient {
     void storeHeartbeat(HeartBeat heartBeat);
     void registerTopic(TopicInfo topicInfo);
 
-    ClusterInfo syncClusterInfo(String clusterName);
+    ClusterInfo syncClusterInfo(String clusterName) throws Exception;
     GroupInfo syncGroupInfo(String clusterName, String groupName);
     RouteInfo syncRouteInfo(String topicName, long timeout);
 }

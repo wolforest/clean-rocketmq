@@ -142,7 +142,7 @@ public class StoreRegistryClient  {
     private boolean isTopicInfoChanged(StoreInfo storeInfo, RpcCommand response) throws RemotingCommandException {
         boolean changed = false;
         if (!response.isSuccess()) {
-            return changed;
+            return false;
         }
 
         QueryDataVersionResponseHeader responseHeader = response.decodeHeader(QueryDataVersionResponseHeader.class);

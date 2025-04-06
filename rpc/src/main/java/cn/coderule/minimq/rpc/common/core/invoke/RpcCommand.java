@@ -89,6 +89,11 @@ public class RpcCommand {
     public RpcCommand() {
     }
 
+    public static RpcCommand createRequestCommand(int code) {
+        return createRequestCommand(code, null);
+
+    }
+
     public static RpcCommand createRequestCommand(int code, CommandHeader customHeader) {
         RpcCommand cmd = new RpcCommand();
         cmd.setCode(code);
