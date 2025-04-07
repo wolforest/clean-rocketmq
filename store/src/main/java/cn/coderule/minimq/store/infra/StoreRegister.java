@@ -115,9 +115,12 @@ public class StoreRegister implements Lifecycle {
             .clusterName(storeConfig.getCluster())
             .groupName(storeConfig.getGroup())
             .groupNo(storeConfig.getGroupNo())
-            .enableMasterElection(storeConfig.isEnableMasterElection())
             .address(storeConfig.getHost() + ":" + storeConfig.getPort())
             .haAddress(storeConfig.getHost() + ":" + storeConfig.getHaPort())
+            .registerTimeout(storeConfig.getRegistryTimeout())
+            .heartbeatTimeout(storeConfig.getRegistryHeartbeatTimeout())
+            .heartbeatInterval(storeConfig.getRegistryHeartbeatInterval())
+            .enableMasterElection(storeConfig.isEnableMasterElection())
             .topicInfo(topicInfo)
             .filterList(List.of())
             .build();
