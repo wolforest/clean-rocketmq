@@ -1,9 +1,7 @@
 package cn.coderule.minimq.store.infra;
 
 import cn.coderule.common.convention.service.Lifecycle;
-import cn.coderule.common.lang.concurrent.DefaultThreadFactory;
 import cn.coderule.common.util.lang.StringUtil;
-import cn.coderule.common.util.lang.ThreadUtil;
 import cn.coderule.common.util.lang.collection.MapUtil;
 import cn.coderule.minimq.domain.config.StoreConfig;
 import cn.coderule.minimq.domain.constant.PermName;
@@ -22,15 +20,13 @@ import cn.coderule.minimq.rpc.registry.protocol.cluster.StoreInfo;
 import cn.coderule.minimq.rpc.registry.protocol.route.TopicInfo;
 import cn.coderule.minimq.store.server.StoreContext;
 import java.util.List;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
+
 
 @Slf4j
 public class StoreRegister implements Lifecycle {
     private final StoreConfig storeConfig;
     private final RegistryClient registryClient;
-    private final ScheduledExecutorService heartbeatScheduler;
 
     public StoreRegister(StoreConfig storeConfig) {
         this.registryClient = new DefaultRegistryClient(
@@ -38,23 +34,14 @@ public class StoreRegister implements Lifecycle {
             storeConfig.getRegistryAddress()
         );
         this.storeConfig = storeConfig;
-
-        heartbeatScheduler = ThreadUtil.newScheduledThreadPool(
-            1,
-            new DefaultThreadFactory("StoreHeartbeatThread_")
-        );
     }
 
     @Override
     public void start() {
-        registerStore();
-        startHeartbeat();
     }
 
     @Override
     public void shutdown() {
-        unregisterStore();
-        heartbeatScheduler.shutdown();
     }
 
     public void registerTopic(Topic topic) {
@@ -64,7 +51,7 @@ public class StoreRegister implements Lifecycle {
         registryClient.registerTopic(topicInfo);
     }
 
-    private void registerStore() {
+    public void registerStore() {
         StoreInfo storeInfo = createStoreInfo();
         List<RegisterStoreResult> results = registryClient.registerStore(storeInfo);
         updateClusterInfo(results);
@@ -72,7 +59,7 @@ public class StoreRegister implements Lifecycle {
         log.info("register store, request: {}; response: {}", storeInfo, results);
     }
 
-    private void unregisterStore() {
+    public void unregisterStore() {
         ServerInfo serverInfo = ServerInfo.builder()
             .clusterName(storeConfig.getCluster())
             .groupName(storeConfig.getGroup())
@@ -83,16 +70,7 @@ public class StoreRegister implements Lifecycle {
         registryClient.unregisterStore(serverInfo);
     }
 
-    private void startHeartbeat() {
-        heartbeatScheduler.scheduleAtFixedRate(
-            this::heartbeat,
-            1000,
-            storeConfig.getRegistryHeartbeatInterval(),
-            TimeUnit.MILLISECONDS
-        );
-    }
-
-    private void heartbeat() {
+    public void heartbeat() {
         if (!storeConfig.isEnableRegistryHeartbeat()) {
             return;
         }
