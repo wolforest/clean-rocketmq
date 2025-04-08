@@ -11,6 +11,7 @@ import cn.coderule.minimq.rpc.common.protocol.code.ResponseCode;
 import cn.coderule.minimq.rpc.common.protocol.codec.RpcSerializable;
 import cn.coderule.minimq.domain.model.subscription.SubscriptionGroup;
 import cn.coderule.minimq.rpc.store.protocol.header.DeleteSubscriptionGroupRequestHeader;
+import cn.coderule.minimq.rpc.store.protocol.header.GetSubscriptionGroupConfigRequestHeader;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import lombok.Getter;
@@ -23,7 +24,7 @@ public class SubscriptionProcessor implements RpcProcessor {
     private final ExecutorService executor;
     @Getter
     private final Set<Integer> codeSet = Set.of(
-        RequestCode.GET_ALL_SUBSCRIPTIONGROUP_CONFIG,
+        RequestCode.GET_SUBSCRIPTIONGROUP_CONFIG,
         RequestCode.DELETE_SUBSCRIPTIONGROUP,
         RequestCode.UPDATE_AND_CREATE_SUBSCRIPTIONGROUP
     );
@@ -38,7 +39,7 @@ public class SubscriptionProcessor implements RpcProcessor {
         return switch (request.getCode()) {
             case RequestCode.UPDATE_AND_CREATE_SUBSCRIPTIONGROUP -> this.saveGroup(ctx, request);
             case RequestCode.DELETE_SUBSCRIPTIONGROUP -> this.deleteGroup(ctx, request);
-            case RequestCode.GET_ALL_SUBSCRIPTIONGROUP_CONFIG -> this.getGroupList(ctx, request);
+            case RequestCode.GET_SUBSCRIPTIONGROUP_CONFIG -> this.getGroup(ctx, request);
             default -> this.unsupportedCode(ctx, request);
         };
     }
@@ -83,8 +84,21 @@ public class SubscriptionProcessor implements RpcProcessor {
         return response.success();
     }
 
-    private RpcCommand getGroupList(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
+    private RpcCommand getGroup(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
         RpcCommand response = RpcCommand.createResponseCommand(null);
+        GetSubscriptionGroupConfigRequestHeader requestHeader = request.decodeHeader(GetSubscriptionGroupConfigRequestHeader.class);
+
+        try {
+            SubscriptionGroup group = subscriptionStore.getGroup(requestHeader.getGroup());
+            if (group == null) {
+                return response.setCodeAndRemark(ResponseCode.SYSTEM_ERROR, "group not exist");
+            }
+
+            response.setBody(RpcSerializable.encode(group));
+        } catch (Exception e) {
+            log.error("get group error", e);
+            return response.setCodeAndRemark(ResponseCode.SYSTEM_ERROR, "get group error");
+        }
 
         return response.success();
     }

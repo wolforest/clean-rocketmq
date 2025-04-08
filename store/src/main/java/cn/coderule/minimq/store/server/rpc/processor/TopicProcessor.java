@@ -1,6 +1,7 @@
 package cn.coderule.minimq.store.server.rpc.processor;
 
 import cn.coderule.common.util.lang.StringUtil;
+import cn.coderule.common.util.lang.string.JSONUtil;
 import cn.coderule.minimq.domain.config.TopicConfig;
 import cn.coderule.minimq.domain.enums.MessageType;
 import cn.coderule.minimq.domain.model.Topic;
@@ -13,8 +14,13 @@ import cn.coderule.minimq.rpc.common.core.invoke.RpcContext;
 import cn.coderule.minimq.rpc.common.netty.service.NettyHelper;
 import cn.coderule.minimq.rpc.common.protocol.code.RequestCode;
 import cn.coderule.minimq.rpc.common.protocol.code.ResponseCode;
+import cn.coderule.minimq.rpc.common.protocol.codec.RpcSerializable;
+import cn.coderule.minimq.rpc.registry.protocol.statictopic.TopicConfigAndQueueMapping;
 import cn.coderule.minimq.rpc.store.protocol.header.CreateTopicRequestHeader;
 import cn.coderule.minimq.rpc.store.protocol.header.DeleteTopicRequestHeader;
+import cn.coderule.minimq.rpc.store.protocol.header.GetTopicConfigRequestHeader;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import lombok.Getter;
@@ -29,8 +35,9 @@ public class TopicProcessor implements RpcProcessor {
     private final ExecutorService executor;
     @Getter
     private final Set<Integer> codeSet = Set.of(
-        RequestCode.GET_ALL_TOPIC_CONFIG,
+        RequestCode.GET_TOPIC_CONFIG,
         RequestCode.DELETE_TOPIC_IN_BROKER,
+        RequestCode.GET_TOPIC_STATS_INFO,
         RequestCode.UPDATE_AND_CREATE_TOPIC
     );
 
@@ -44,7 +51,7 @@ public class TopicProcessor implements RpcProcessor {
     public RpcCommand process(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
         return switch (request.getCode()) {
             case RequestCode.UPDATE_AND_CREATE_TOPIC -> this.saveTopic(ctx, request);
-            case RequestCode.GET_ALL_TOPIC_CONFIG -> this.getTopicList(ctx, request);
+            case RequestCode.GET_TOPIC_CONFIG -> this.getTopic(ctx, request);
             case RequestCode.DELETE_TOPIC_IN_BROKER -> this.deleteTopic(ctx, request);
             case RequestCode.GET_TOPIC_STATS_INFO -> this.getTopicStats(ctx, request);
             default -> this.unsupportedCode(ctx, request);
@@ -105,8 +112,24 @@ public class TopicProcessor implements RpcProcessor {
         return response.success();
     }
 
-    private RpcCommand getTopicList(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
+    private RpcCommand getTopic(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
         RpcCommand response = RpcCommand.createResponseCommand(null);
+        GetTopicConfigRequestHeader requestHeader = request.decodeHeader(GetTopicConfigRequestHeader.class);
+
+        Topic topic = topicStore.getTopic(requestHeader.getTopic());
+        if (topic == null) {
+            log.error("topic={} not exist", requestHeader.getTopic());
+            return response.setCodeAndRemark(ResponseCode.TOPIC_NOT_EXIST, "topic not exist");
+        }
+
+        TopicConfigAndQueueMapping topicInfo = new TopicConfigAndQueueMapping(topic, null);
+
+        try {
+            response.setBody(RpcSerializable.encode(topicInfo));
+        } catch (Exception e) {
+            log.error("encode topic={} error", requestHeader.getTopic(), e);
+            return response.setCodeAndRemark(ResponseCode.SYSTEM_ERROR, "encode topic error");
+        }
 
         return response.success();
     }

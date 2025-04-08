@@ -50,7 +50,7 @@ public class DefaultTopicService implements TopicService {
 
     @Override
     public Topic getTopic(String topicName) {
-        return null;
+        return topicMap.getTopic(topicName);
     }
 
     @Override

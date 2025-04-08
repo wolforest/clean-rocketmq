@@ -54,6 +54,7 @@ public class DefaultMetaManager implements MetaManager {
 
         ConsumeOffsetStore offsetStore = new ConsumeOffsetStoreImpl(offsetService);
         StoreContext.registerAPI(offsetStore, ConsumeOffsetStore.class);
+        StoreContext.register(offsetStore, ConsumeOffsetStore.class);
     }
 
     private void initTopic() {
@@ -64,6 +65,7 @@ public class DefaultMetaManager implements MetaManager {
 
         TopicStore topicApi = new TopicStoreImpl(topicService);
         StoreContext.registerAPI(topicApi, TopicStore.class);
+        StoreContext.register(topicApi, TopicStore.class);
     }
 
     private void initSubscription() {
@@ -75,5 +77,6 @@ public class DefaultMetaManager implements MetaManager {
 
         SubscriptionStore subscriptionApi = new SubscriptionStoreImpl(subscriptionService);
         StoreContext.registerAPI(subscriptionApi, SubscriptionStore.class);
+        StoreContext.register(subscriptionApi, SubscriptionStore.class);
     }
 }
