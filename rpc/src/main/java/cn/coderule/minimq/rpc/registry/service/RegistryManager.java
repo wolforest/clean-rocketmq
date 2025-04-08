@@ -61,7 +61,7 @@ public class RegistryManager implements Lifecycle {
 
     @Override
     public void start() {
-        this.initAvailableRegistry();
+        this.scanAvailableRegistry();
         this.startScanService();
     }
 
@@ -177,7 +177,7 @@ public class RegistryManager implements Lifecycle {
             @Override
             public void run(Timeout timeout) {
                 try {
-                    RegistryManager.this.scanAvailableRegistry();
+                    RegistryManager.this.scanAvailableRegistry(true);
                 } catch (Throwable t) {
                     log.error("DefaultRegistryClient.scanAvailableRegistry exception", t);
                 } finally {
@@ -190,6 +190,10 @@ public class RegistryManager implements Lifecycle {
     }
 
     private void scanAvailableRegistry() {
+        scanAvailableRegistry(false);
+    }
+
+    private void scanAvailableRegistry(boolean async) {
         List<String> addressList = this.addressList.get();
         if (CollectionUtil.isEmpty(addressList)) {
             log.debug("no registry address");
@@ -199,22 +203,14 @@ public class RegistryManager implements Lifecycle {
         removeUnavailableAddress(addressList);
 
         for (String address : addressList) {
+            if (!async) {
+                connectRegistry(address);
+                continue;
+            }
+
             scanExecutor.execute(() -> {
                 connectRegistry(address);
             });
-        }
-    }
-
-    private void initAvailableRegistry() {
-        List<String> addressList = this.addressList.get();
-        if (CollectionUtil.isEmpty(addressList)) {
-            log.debug("no registry address inited");
-            return;
-        }
-
-
-        for (String address : addressList) {
-            connectRegistry(address);
         }
     }
 
