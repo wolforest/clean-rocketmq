@@ -2,7 +2,7 @@ package cn.coderule.minimq.store.server;
 
 import cn.coderule.common.convention.container.ApplicationContext;
 import cn.coderule.minimq.store.server.bootstrap.StoreCheckpoint;
-import cn.coderule.minimq.store.server.bootstrap.StoreScheduler;
+import cn.coderule.minimq.store.infra.StoreScheduler;
 import lombok.extern.slf4j.Slf4j;
 
 /**

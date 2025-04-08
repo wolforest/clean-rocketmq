@@ -1,4 +1,4 @@
-package cn.coderule.minimq.store.server.bootstrap;
+package cn.coderule.minimq.store.infra;
 
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.minimq.domain.config.StoreConfig;

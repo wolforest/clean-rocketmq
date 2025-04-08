@@ -17,12 +17,12 @@ import cn.coderule.minimq.store.domain.mq.DefaultMessageQueueManager;
 import cn.coderule.minimq.store.domain.meta.DefaultMetaManager;
 import cn.coderule.minimq.store.domain.timer.DefaultTimerManager;
 import cn.coderule.minimq.store.infra.StoreRegister;
+import cn.coderule.minimq.store.infra.StoreScheduler;
 import cn.coderule.minimq.store.infra.file.AllocateMappedFileService;
 import cn.coderule.minimq.store.infra.memory.TransientPool;
 import cn.coderule.minimq.store.server.StoreContext;
 import cn.coderule.minimq.store.server.ha.HAManager;
 import cn.coderule.minimq.store.server.rpc.RpcManager;
-import java.util.concurrent.ScheduledExecutorService;
 
 public class ComponentRegister {
     private final LifecycleManager manager = new LifecycleManager();
