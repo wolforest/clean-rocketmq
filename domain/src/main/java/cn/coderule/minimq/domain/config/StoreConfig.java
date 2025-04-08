@@ -3,34 +3,17 @@ package cn.coderule.minimq.domain.config;
 import cn.coderule.common.util.lang.SystemUtil;
 import cn.coderule.minimq.domain.constant.PermName;
 import java.io.File;
-import java.io.Serializable;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
-public class StoreConfig implements Serializable {
-
-    /**
-     * store cluster name
-     */
-    private String cluster;
-    /**
-     * store (Master/slave) group name
-     */
-    private String group;
-    /**
-     * store group no
-     *  - -1 : local
-     *  - 0 : master
-     *  - 1 ... : slave
-     */
-    private int groupNo;
-
-    private boolean enableMasterElection = false;
-    private boolean inContainer = false;
-
+@EqualsAndHashCode(callSuper = true)
+public class StoreConfig extends ServerIdentity {
     private String host = "0.0.0.0";
     private int port = 6888;
     private int haPort = 10912;
+
+    private boolean enableMasterElection = false;
 
     /**
      * broker permission
