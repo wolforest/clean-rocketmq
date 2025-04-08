@@ -122,6 +122,14 @@ public class ComponentRegister {
         StoreContext.register(component);
     }
 
+    private void registerRegistry() {
+        StoreConfig storeConfig = StoreContext.getBean(StoreConfig.class);
+        StoreRegister component = new StoreRegister(storeConfig);
+
+        manager.register(component);
+        StoreContext.register(component);
+    }
+
     private void registerRpc() {
         RpcManager component = new RpcManager();
         manager.register(component);
@@ -132,11 +140,4 @@ public class ComponentRegister {
         manager.register(component);
     }
 
-    private void registerRegistry() {
-        StoreConfig storeConfig = StoreContext.getBean(StoreConfig.class);
-        StoreRegister component = new StoreRegister(storeConfig);
-
-        manager.register(component);
-        StoreContext.register(component);
-    }
 }

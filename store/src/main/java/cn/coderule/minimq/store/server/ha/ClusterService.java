@@ -24,7 +24,7 @@ public class ClusterService implements Lifecycle {
     private final StoreRegister storeRegister;
     private final ScheduledExecutorService heartbeatScheduler;
 
-    private boolean registered = false;
+    private boolean shouldRegister = true;
 
     public ClusterService(StoreConfig storeConfig, StoreRegister storeRegister) {
         this.storeConfig = storeConfig;
@@ -52,7 +52,7 @@ public class ClusterService implements Lifecycle {
     }
 
     private void registerStore() {
-        if (!registered) {
+        if (!shouldRegister) {
             return;
         }
 
@@ -60,7 +60,7 @@ public class ClusterService implements Lifecycle {
     }
 
     private void unregisterStore() {
-        if (!registered) {
+        if (!shouldRegister) {
             return;
         }
 
@@ -68,7 +68,7 @@ public class ClusterService implements Lifecycle {
     }
 
     private void startHeartbeat() {
-        if (!registered) {
+        if (!shouldRegister) {
             return;
         }
 
