@@ -133,8 +133,6 @@ public class NettyClient extends NettyService implements RpcClient {
         addressInvoker.closeChannels(addrList);
     }
 
-
-
     @Override
     public void closeChannel(Channel channel) {
         addressInvoker.closeChannel(channel);

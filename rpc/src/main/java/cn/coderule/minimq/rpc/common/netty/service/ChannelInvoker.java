@@ -64,7 +64,7 @@ public class ChannelInvoker {
                 }
             }
         };
-        timer.newTimeout(task, 1000, TimeUnit.MILLISECONDS);
+        timer.newTimeout(task, 3_000, TimeUnit.MILLISECONDS);
     }
 
     public void shutdown() {
@@ -123,7 +123,8 @@ public class ChannelInvoker {
         this.responseMap.put(request.getOpaque(), response);
 
         try {
-            return writeAndFlush(channel, request, response, future);
+            writeAndFlush(channel, request, response);
+            return future;
         } catch (Exception e) {
             return flushFailed(channel, request, response, future, e);
         }
@@ -174,17 +175,17 @@ public class ChannelInvoker {
 
         while (it.hasNext()) {
             Map.Entry<Integer, ResponseFuture> next = it.next();
-            ResponseFuture rep = next.getValue();
+            ResponseFuture responseFuture = next.getValue();
 
-            long maxTime = rep.getBeginTimestamp() + rep.getTimeoutMillis() + 1000;
+            long maxTime = responseFuture.getBeginTimestamp() + responseFuture.getTimeoutMillis() + 1000;
             if (maxTime > System.currentTimeMillis()) {
                 continue;
             }
 
-            rep.release();
+            responseFuture.release();
             it.remove();
-            rfList.add(rep);
-            log.warn("remove timeout request, {}", rep);
+            rfList.add(responseFuture);
+            log.warn("remove timeout request, {}", responseFuture);
         }
 
         executeInvokeCallback(rfList);
@@ -357,7 +358,7 @@ public class ChannelInvoker {
         }
     }
 
-    private CompletableFuture<ResponseFuture> writeAndFlush(Channel channel, RpcCommand request, ResponseFuture response, CompletableFuture<ResponseFuture> future) {
+    private void writeAndFlush(Channel channel, RpcCommand request, ResponseFuture response) {
         channel.writeAndFlush(request)
             .addListener((ChannelFutureListener) f -> {
                 if (f.isSuccess()) {
@@ -368,7 +369,6 @@ public class ChannelInvoker {
                 requestFailed(request.getOpaque());
                 log.warn("send a request command to channel <{}> failed.", NettyHelper.getRemoteAddr(channel));
             });
-        return future;
     }
 
     private CompletableFuture<ResponseFuture> flushFailed(Channel channel, RpcCommand request, ResponseFuture response, CompletableFuture<ResponseFuture> future, Exception e) {
