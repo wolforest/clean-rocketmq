@@ -10,6 +10,7 @@ import cn.coderule.minimq.domain.model.Topic;
 import cn.coderule.minimq.domain.model.meta.TopicMap;
 import cn.coderule.minimq.domain.service.store.domain.meta.TopicService;
 import cn.coderule.minimq.rpc.common.config.RpcClientConfig;
+import cn.coderule.minimq.rpc.common.core.enums.RequestType;
 import cn.coderule.minimq.rpc.registry.RegistryClient;
 import cn.coderule.minimq.rpc.registry.client.DefaultRegistryClient;
 import cn.coderule.minimq.rpc.registry.protocol.body.RegisterStoreResult;
@@ -53,10 +54,10 @@ public class StoreRegister implements Lifecycle {
         registryClient.registerTopic(topicInfo);
     }
 
-    public void registerStore() {
-        StoreInfo storeInfo = createStoreInfo();
+    public void registerStore(boolean updateOrderConfig, boolean oneway, boolean forceRegister) {
+        StoreInfo storeInfo = createStoreInfo(oneway, forceRegister);
         List<RegisterStoreResult> results = registryClient.registerStore(storeInfo);
-        updateClusterInfo(results);
+        updateClusterInfo(results, updateOrderConfig);
 
         log.info("register store, request: {}; response: {}", storeInfo, results);
     }
@@ -85,7 +86,7 @@ public class StoreRegister implements Lifecycle {
         }
     }
 
-    private StoreInfo createStoreInfo() {
+    private TopicConfigSerializeWrapper getTopicInfo() {
         TopicService topicService = StoreContext.getBean(TopicService.class);
         TopicMap topicMap = topicService.getTopicMap();
 
@@ -93,22 +94,30 @@ public class StoreRegister implements Lifecycle {
         topicInfo.setTopicConfigTable(topicMap.getTopicTable());
         topicInfo.setDataVersion(topicMap.getVersion());
 
+        return topicInfo;
+    }
+
+    private StoreInfo createStoreInfo(boolean oneway, boolean forceRegister) {
         return StoreInfo.builder()
             .clusterName(storeConfig.getCluster())
             .groupName(storeConfig.getGroup())
             .groupNo(storeConfig.getGroupNo())
             .address(storeConfig.getHost() + ":" + storeConfig.getPort())
             .haAddress(storeConfig.getHost() + ":" + storeConfig.getHaPort())
+
             .registerTimeout(storeConfig.getRegistryTimeout())
             .heartbeatTimeout(storeConfig.getRegistryHeartbeatTimeout())
             .heartbeatInterval(storeConfig.getRegistryHeartbeatInterval())
             .enableMasterElection(storeConfig.isEnableMasterElection())
-            .topicInfo(topicInfo)
+            .registerType(oneway ? RequestType.ONEWAY : RequestType.SYNC)
+            .forceRegister(forceRegister)
+
+            .topicInfo(getTopicInfo())
             .filterList(List.of())
             .build();
     }
 
-    private void updateClusterInfo(List<RegisterStoreResult> results) {
+    private void updateClusterInfo(List<RegisterStoreResult> results, boolean updateOrderConfig) {
         TopicService topicService = StoreContext.getBean(TopicService.class);
         for (RegisterStoreResult result : results) {
             if (result == null) {
@@ -123,14 +132,14 @@ public class StoreRegister implements Lifecycle {
                 storeConfig.setHaAddress(result.getHaServerAddr());
             }
 
-            if (shouldUpdateOrderConfig(result)) {
+            if (shouldUpdateOrderConfig(result, updateOrderConfig)) {
                 topicService.updateOrderConfig(result.getKvTable().getTable());
             }
         }
     }
 
-    private boolean shouldUpdateOrderConfig(RegisterStoreResult result) {
-        return MapUtil.notEmpty(result.getKvTable().getTable());
+    private boolean shouldUpdateOrderConfig(RegisterStoreResult result, boolean updateOrderConfig) {
+        return updateOrderConfig && MapUtil.notEmpty(result.getKvTable().getTable());
     }
 
     private boolean shouldUpdateMasterAddress(RegisterStoreResult result) {

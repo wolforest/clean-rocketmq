@@ -20,8 +20,10 @@ public class StoreInfo extends ServerInfo {
     private TopicConfigSerializeWrapper topicInfo;
     private List<String> filterList;
 
-    private int registerTimeout;
-    private RequestType registerType;
+    @Builder.Default
+    private int registerTimeout = 10_000;
+    @Builder.Default
+    private RequestType registerType = RequestType.SYNC;
     @Builder.Default
     private boolean forceRegister = false;
 
@@ -35,6 +37,14 @@ public class StoreInfo extends ServerInfo {
 
     public boolean isEnableMasterElection() {
         return enableMasterElection != null && enableMasterElection;
+    }
+
+    public boolean isOneway() {
+        return registerType == RequestType.ONEWAY;
+    }
+
+    public boolean isAsync() {
+        return registerType == RequestType.ASYNC;
     }
 
     @Override

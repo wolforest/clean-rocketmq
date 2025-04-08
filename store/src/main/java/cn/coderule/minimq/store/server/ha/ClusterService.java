@@ -44,6 +44,7 @@ public class ClusterService implements Lifecycle {
     public void start() {
         shouldRegister = storeConfig.isMaster();
         registerStore();
+        startHeartbeat();
     }
 
     @Override
@@ -57,7 +58,7 @@ public class ClusterService implements Lifecycle {
             return;
         }
 
-        storeRegister.registerStore();
+        storeRegister.registerStore(true, false, true);
     }
 
     private void unregisterStore() {

@@ -259,7 +259,7 @@ public class StoreRegistryClient  {
     }
 
     private RegisterStoreResult invoke(String registryAddress, StoreInfo storeInfo, RpcCommand request) throws Exception {
-        if (request.isOnewayRPC()) {
+        if (storeInfo.isOneway()) {
             return invokeOneway(registryAddress, storeInfo, request);
         }
 
