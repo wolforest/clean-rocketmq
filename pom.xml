@@ -23,6 +23,7 @@
         <module>registry</module>
         <module>store</module>
         <module>broker</module>
+        <module>test</module>
     </modules>
 
     <properties>
