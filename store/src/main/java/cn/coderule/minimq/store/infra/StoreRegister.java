@@ -38,10 +38,12 @@ public class StoreRegister implements Lifecycle {
 
     @Override
     public void start() {
+        this.registryClient.start();
     }
 
     @Override
     public void shutdown() {
+        this.registryClient.shutdown();
     }
 
     public void registerTopic(Topic topic) {

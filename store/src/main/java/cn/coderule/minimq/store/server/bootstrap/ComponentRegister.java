@@ -35,8 +35,6 @@ public class ComponentRegister {
     }
 
     public LifecycleManager execute() {
-        registerBaseComponent();
-
         registerInfra();
         registerDomain();
         registerServer();
@@ -45,7 +43,9 @@ public class ComponentRegister {
     }
 
     private void registerInfra() {
+        registerScheduler();
         registerMappedFileService();
+        registerRegistry();
     }
 
     private void registerDomain() {
@@ -63,11 +63,6 @@ public class ComponentRegister {
     private void registerServer() {
         registerRpc();
         registerHA();
-        registerRegistry();
-    }
-
-    private void registerBaseComponent() {
-        registerScheduler();
     }
 
     private void registerScheduler() {

@@ -1,5 +1,6 @@
 package cn.coderule.minimq.rpc.registry;
 
+import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.minimq.rpc.registry.protocol.body.RegisterStoreResult;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.BrokerInfo;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.ClusterInfo;
@@ -11,7 +12,7 @@ import cn.coderule.minimq.rpc.registry.protocol.route.RouteInfo;
 import cn.coderule.minimq.rpc.registry.protocol.route.TopicInfo;
 import java.util.List;
 
-public interface RegistryClient {
+public interface RegistryClient extends Lifecycle {
     List<String> getRegistryList();
     void setRegistryList(List<String> addressList);
     void setRegistryList(String addressConfig);

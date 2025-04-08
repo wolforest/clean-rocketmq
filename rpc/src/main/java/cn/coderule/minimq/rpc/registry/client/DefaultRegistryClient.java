@@ -29,7 +29,7 @@ import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class DefaultRegistryClient implements RegistryClient, Lifecycle {
+public class DefaultRegistryClient implements RegistryClient {
     public static final int DEFAULT_RPC_TIMEOUT = 3_000;
 
     private final NettyClient nettyClient;
