@@ -27,7 +27,7 @@ public abstract class NettyService implements RpcService {
     public NettyService(int onewaySemaphorePermits, int asyncSemaphorePermits, int callbackThreadNum) {
         this.callbackExecutor = buildCallbackExecutor(callbackThreadNum);
         this.dispatcher = new NettyDispatcher(this.callbackExecutor);
-        this.invoker = new ChannelInvoker(onewaySemaphorePermits, asyncSemaphorePermits, callbackExecutor);
+        this.invoker = new ChannelInvoker(onewaySemaphorePermits, asyncSemaphorePermits, dispatcher);
     }
 
     @Override
@@ -67,7 +67,7 @@ public abstract class NettyService implements RpcService {
     }
 
     public void failFast(Channel channel) {
-        this.invoker.failFast(channel);
+        this.dispatcher.failFast(channel);
     }
 
     private ExecutorService buildCallbackExecutor(int callbackThreadNum) {

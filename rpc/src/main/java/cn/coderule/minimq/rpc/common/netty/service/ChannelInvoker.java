@@ -9,66 +9,24 @@ import cn.coderule.minimq.rpc.common.core.invoke.RpcCallback;
 import cn.coderule.minimq.rpc.common.core.invoke.RpcCommand;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFutureListener;
-import io.netty.util.HashedWheelTimer;
-import io.netty.util.Timeout;
-import io.netty.util.TimerTask;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicReference;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class ChannelInvoker {
-    private final HashedWheelTimer timer;
+    private final NettyDispatcher dispatcher;
     private final Semaphore onewaySemaphore;
     private final Semaphore asyncSemaphore;
-    private final ExecutorService callbackExecutor;
 
-    /**
-     * response map
-     * { opaque : ResponseFuture }
-     */
-    @Getter
-    private final ConcurrentMap<Integer, ResponseFuture> responseMap
-        = new ConcurrentHashMap<>(256);
-
-    public ChannelInvoker(int onewayPermits, int asyncPermits, ExecutorService callbackExecutor) {
+    public ChannelInvoker(int onewayPermits, int asyncPermits, NettyDispatcher dispatcher) {
         this.onewaySemaphore = new Semaphore(onewayPermits);
         this.asyncSemaphore = new Semaphore(asyncPermits);
-        this.callbackExecutor = callbackExecutor;
-        this.timer = new HashedWheelTimer(r -> new Thread(r, "NettyTimer"));
-    }
-
-    public void start() {
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run (Timeout timeout) {
-                try {
-                    ChannelInvoker.this.scanResponse();
-                } catch (Throwable t) {
-                    log.error("NettyInvoker.scanResponse exception", t);
-                } finally {
-                    timer.newTimeout(this, 1000, TimeUnit.MILLISECONDS);
-                }
-            }
-        };
-        timer.newTimeout(task, 3_000, TimeUnit.MILLISECONDS);
-    }
-
-    public void shutdown() {
-        timer.stop();
+        this.dispatcher = dispatcher;
     }
 
     public void invokeOneway(Channel channel, RpcCommand request, long timeoutMillis)
@@ -120,7 +78,7 @@ public class ChannelInvoker {
         }
 
         ResponseFuture response = createResponseFuture(channel, request, timeoutMillis, future, semaphoreGuard);
-        this.responseMap.put(request.getOpaque(), response);
+        this.dispatcher.putResponse(request.getOpaque(), response);
 
         try {
             writeAndFlush(channel, request, response);
@@ -156,55 +114,6 @@ public class ChannelInvoker {
         });
     }
 
-    public void failFast(final Channel channel) {
-        for (Map.Entry<Integer, ResponseFuture> entry : responseMap.entrySet()) {
-            if (entry.getValue().getChannel() != channel) {
-                continue;
-            }
-
-            Integer opaque = entry.getKey();
-            if (opaque != null) {
-                requestFailed(opaque);
-            }
-        }
-    }
-
-    public void scanResponse() {
-        List<ResponseFuture> rfList = new LinkedList<>();
-        Iterator<Map.Entry<Integer, ResponseFuture>> it = this.responseMap.entrySet().iterator();
-
-        while (it.hasNext()) {
-            Map.Entry<Integer, ResponseFuture> next = it.next();
-            ResponseFuture responseFuture = next.getValue();
-
-            long maxTime = responseFuture.getBeginTimestamp() + responseFuture.getTimeoutMillis() + 1000;
-            if (maxTime > System.currentTimeMillis()) {
-                continue;
-            }
-
-            responseFuture.release();
-            it.remove();
-            rfList.add(responseFuture);
-            log.warn("remove timeout request, {}", responseFuture);
-        }
-
-        executeInvokeCallback(rfList);
-    }
-
-    public void interruptRequests(Set<String> brokerAddrSet) {
-        for (ResponseFuture responseFuture : responseMap.values()) {
-            RpcCommand cmd = responseFuture.getRequest();
-            if (cmd == null) {
-                continue;
-            }
-            String remoteAddr = NettyHelper.getRemoteAddr(responseFuture.getChannel());
-            // interrupt only pull message request
-            if (brokerAddrSet.contains(remoteAddr) && (cmd.getCode() == 11 || cmd.getCode() == 361)) {
-                log.info("interrupt {}", cmd);
-                responseFuture.interrupt();
-            }
-        }
-    }
 
     /*********************************** private methods ***********************************/
     private void acquireOnewaySemaphoreFailed(long timeoutMillis) throws RemotingTooMuchRequestException, RemotingTimeoutException {
@@ -293,70 +202,6 @@ public class ChannelInvoker {
         return responseFuture;
     }
 
-    private boolean submitInvokeCallback(final ResponseFuture responseFuture, ExecutorService executor) {
-        boolean runInThisThread = false;
-
-        try {
-            executor.submit(() -> {
-                callInvokeCallback(responseFuture);
-            });
-        } catch (Exception e) {
-            runInThisThread = true;
-            log.warn("execute callback in executor exception, maybe executor busy", e);
-        }
-
-        return runInThisThread;
-    }
-
-    private void callInvokeCallback(final ResponseFuture responseFuture) {
-        try {
-            responseFuture.executeRpcCallback();
-        } catch (Throwable e) {
-            log.warn("executeInvokeCallback Exception", e);
-        } finally {
-            responseFuture.release();
-        }
-    }
-
-    private void executeInvokeCallback(List<ResponseFuture> rfList) {
-        for (ResponseFuture rf : rfList) {
-            try {
-                executeInvokeCallback(rf);
-            } catch (Throwable e) {
-                log.warn("scanResponseTable, operationComplete Exception", e);
-            }
-        }
-    }
-
-    private void executeInvokeCallback(final ResponseFuture responseFuture) {
-        ExecutorService executor = this.callbackExecutor;
-        boolean runInThisThread = executor == null || executor.isShutdown();
-
-        if (!runInThisThread) {
-            runInThisThread = submitInvokeCallback(responseFuture, executor);
-        }
-
-        if (runInThisThread) {
-            callInvokeCallback(responseFuture);
-        }
-    }
-
-    private void requestFailed(final int opaque) {
-        ResponseFuture responseFuture = responseMap.remove(opaque);
-        if (responseFuture == null) {
-            return;
-        }
-
-        responseFuture.setSendRequestOK(false);
-        responseFuture.putResponse(null);
-        try {
-            executeInvokeCallback(responseFuture);
-        } catch (Throwable e) {
-            log.warn("execute callback in requestFail, and callback throw", e);
-        } finally {
-            responseFuture.release();
-        }
-    }
 
     private void writeAndFlush(Channel channel, RpcCommand request, ResponseFuture response) {
         channel.writeAndFlush(request)
@@ -366,15 +211,16 @@ public class ChannelInvoker {
                     return;
                 }
 
-                requestFailed(request.getOpaque());
+                dispatcher.failFast(request.getOpaque());
                 log.warn("send a request command to channel <{}> failed.", NettyHelper.getRemoteAddr(channel));
             });
     }
 
     private CompletableFuture<ResponseFuture> flushFailed(Channel channel, RpcCommand request, ResponseFuture response, CompletableFuture<ResponseFuture> future, Exception e) {
-        responseMap.remove(request.getOpaque());
+        dispatcher.removeResponse(request.getOpaque());
         response.release();
-        log.warn("send a request command to channel <{}> Exception", NettyHelper.getRemoteAddr(channel), e);
+
+        log.warn("send a request command to channel [{}] Exception", NettyHelper.getRemoteAddr(channel), e);
         future.completeExceptionally(new RemotingSendRequestException(NettyHelper.getRemoteAddr(channel), e));
         return future;
     }

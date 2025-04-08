@@ -139,7 +139,9 @@ public class StoreRegister implements Lifecycle {
     }
 
     private boolean shouldUpdateOrderConfig(RegisterStoreResult result, boolean updateOrderConfig) {
-        return updateOrderConfig && MapUtil.notEmpty(result.getKvTable().getTable());
+        return updateOrderConfig
+            && null != result.getKvTable()
+            && MapUtil.notEmpty(result.getKvTable().getTable());
     }
 
     private boolean shouldUpdateMasterAddress(RegisterStoreResult result) {

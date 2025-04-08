@@ -71,7 +71,6 @@ public class NettyServer extends NettyService implements RpcServer {
         startServer();
 
         eventExecutor.start();
-        invoker.start();
         dispatcher.start();
 
         monitor.start();
@@ -87,7 +86,6 @@ public class NettyServer extends NettyService implements RpcServer {
 
             monitor.shutdown();
             dispatcher.shutdown();
-            invoker.shutdown();
 
             bossGroup.shutdownGracefully();
             workerGroup.shutdownGracefully();

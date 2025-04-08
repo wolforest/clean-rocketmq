@@ -308,11 +308,10 @@ public class AddressInvoker {
             this.closeChannel(addr, wrapper.getChannel());
         }
 
-        channelInvoker.interruptRequests(new HashSet<>(addrList));
+        dispatcher.interruptRequests(new HashSet<>(addrList));
     }
 
     /******************************* private methods start ***********************************/
-
     private ChannelFuture createChannelAsync(final String addr) throws InterruptedException {
         ChannelWrapper channelWrapper = this.addressMap.get(addr);
         if (channelWrapper != null && channelWrapper.isOK()) {

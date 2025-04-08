@@ -62,7 +62,6 @@ public class NettyClient extends NettyService implements RpcClient {
     @Override
     public void start() {
         eventExecutor.start();
-        invoker.start();
         dispatcher.start();
     }
 
@@ -76,7 +75,6 @@ public class NettyClient extends NettyService implements RpcClient {
     public void shutdown() {
         try {
             dispatcher.shutdown();
-            invoker.shutdown();
 
             workerGroup.shutdownGracefully();
             businessGroup.shutdownGracefully();

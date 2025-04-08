@@ -11,14 +11,23 @@ import cn.coderule.minimq.rpc.common.core.invoke.RpcCommand;
 import cn.coderule.minimq.rpc.common.RpcProcessor;
 import cn.coderule.minimq.rpc.common.core.invoke.RpcContext;
 import cn.coderule.minimq.rpc.common.protocol.code.ResponseCode;
+import io.netty.channel.Channel;
+import io.netty.util.HashedWheelTimer;
+import io.netty.util.Timeout;
+import io.netty.util.TimerTask;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -40,18 +49,23 @@ public class NettyDispatcher {
     private final AtomicBoolean stopping = new AtomicBoolean(false);
 
     private Pair<RpcProcessor, ExecutorService> defaultProcessor;
+    private final HashedWheelTimer timer;
     private final ExecutorService callbackExecutor;
 
     public NettyDispatcher(ExecutorService callbackExecutor) {
         this.callbackExecutor = callbackExecutor;
+        this.timer = new HashedWheelTimer(r -> new Thread(r, "NettyTimer"));
     }
 
     public void start() {
         this.stopping.set(false);
+
+        this.startScanResponse();
     }
 
     public void shutdown() {
         this.stopping.set(true);
+        this.timer.stop();
     }
 
     public void dispatch(RpcContext ctx, RpcCommand command) {
@@ -69,6 +83,14 @@ public class NettyDispatcher {
             default:
                 break;
         }
+    }
+
+    public void putResponse(int opaque, ResponseFuture response) {
+        this.responseMap.put(opaque, response);
+    }
+
+    public void removeResponse(int opaque) {
+        this.responseMap.remove(opaque);
     }
 
     public void registerProcessor(Collection<Integer> codes, @NonNull RpcProcessor processor, @NonNull ExecutorService executor) {
@@ -121,7 +143,67 @@ public class NettyDispatcher {
         for (RpcHook rpcHook : rpcHooks) {
             rpcHook.onResponseComplete(ctx, request, response);
         }
+    }
 
+    public void interruptRequests(Set<String> brokerAddrSet) {
+        for (ResponseFuture responseFuture : responseMap.values()) {
+            RpcCommand cmd = responseFuture.getRequest();
+            if (cmd == null) {
+                continue;
+            }
+            String remoteAddr = NettyHelper.getRemoteAddr(responseFuture.getChannel());
+            // interrupt only pull message request
+            if (brokerAddrSet.contains(remoteAddr) && (cmd.getCode() == 11 || cmd.getCode() == 361)) {
+                log.info("interrupt {}", cmd);
+                responseFuture.interrupt();
+            }
+        }
+    }
+
+    public void failFast(final Channel channel) {
+        for (Map.Entry<Integer, ResponseFuture> entry : responseMap.entrySet()) {
+            if (entry.getValue().getChannel() != channel) {
+                continue;
+            }
+
+            Integer opaque = entry.getKey();
+            if (opaque != null) {
+                failFast(opaque);
+            }
+        }
+    }
+
+    public void failFast(final int opaque) {
+        ResponseFuture responseFuture = responseMap.remove(opaque);
+        if (responseFuture == null) {
+            return;
+        }
+
+        responseFuture.setSendRequestOK(false);
+        responseFuture.putResponse(null);
+        try {
+            executeInvokeCallback(responseFuture);
+        } catch (Throwable e) {
+            log.warn("execute callback in requestFail, and callback throw", e);
+        } finally {
+            responseFuture.release();
+        }
+    }
+
+    private void startScanResponse() {
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run (Timeout timeout) {
+                try {
+                    NettyDispatcher.this.scanResponse();
+                } catch (Throwable t) {
+                    log.error("NettyInvoker.scanResponse exception", t);
+                } finally {
+                    timer.newTimeout(this, 1000, TimeUnit.MILLISECONDS);
+                }
+            }
+        };
+        timer.newTimeout(task, 3_000, TimeUnit.MILLISECONDS);
     }
 
     private void processRequest(RpcContext ctx, RpcCommand request) {
@@ -151,7 +233,7 @@ public class NettyDispatcher {
         } catch (RejectedExecutionException e) {
             flowControl(ctx, request);
         } catch (Throwable throwable) {
-            requestFailed(ctx, request, throwable);
+            failFast(ctx, request, throwable);
         }
     }
 
@@ -265,7 +347,7 @@ public class NettyDispatcher {
         NettyHelper.writeResponse(ctx.channel(), request, response);
     }
 
-    private void requestFailed(RpcContext ctx, RpcCommand request, Throwable t) {
+    private void failFast(RpcContext ctx, RpcCommand request, Throwable t) {
         log.error("request failed. request code: {}", request.getCode(), t);
     }
 
@@ -306,6 +388,38 @@ public class NettyDispatcher {
     private RequestTask createRequestTask(RpcContext ctx, RpcCommand command, RpcProcessor processor) {
         Runnable task = createProcessTask(ctx, command, processor);
         return new RequestTask(task, ctx.channel(), command);
+    }
+
+    public void scanResponse() {
+        List<ResponseFuture> rfList = new LinkedList<>();
+        Iterator<Map.Entry<Integer, ResponseFuture>> it = this.responseMap.entrySet().iterator();
+
+        while (it.hasNext()) {
+            Map.Entry<Integer, ResponseFuture> next = it.next();
+            ResponseFuture responseFuture = next.getValue();
+
+            long maxTime = responseFuture.getBeginTimestamp() + responseFuture.getTimeoutMillis() + 1000;
+            if (maxTime > System.currentTimeMillis()) {
+                continue;
+            }
+
+            responseFuture.release();
+            it.remove();
+            rfList.add(responseFuture);
+            log.warn("remove timeout request, {}", responseFuture);
+        }
+
+        executeInvokeCallback(rfList);
+    }
+
+    private void executeInvokeCallback(List<ResponseFuture> rfList) {
+        for (ResponseFuture rf : rfList) {
+            try {
+                executeInvokeCallback(rf);
+            } catch (Throwable e) {
+                log.warn("scanResponseTable, operationComplete Exception", e);
+            }
+        }
     }
 
 }
