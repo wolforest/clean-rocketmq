@@ -14,7 +14,7 @@ public class ServerIdentity implements Serializable {
     /**
      * store cluster name
      */
-    private String cluster;
+    private String cluster = DEFAULT_CLUSTER_NAME;
     /**
      * store (Master/slave) group name
      */
