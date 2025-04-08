@@ -35,8 +35,4 @@ public class StoreManager implements Lifecycle {
         store.cleanup();
     }
 
-    @Override
-    public State getState() {
-        return State.RUNNING;
-    }
 }

@@ -49,6 +49,7 @@ public class StoreConfig implements Serializable {
 
     private boolean fetchRegistryAddressByDns = false;
     private boolean fetchRegistryAddressByHttp = false;
+    private boolean enableRegistryHeartbeat = true;
     private int fetchRegistryAddressInterval = 60 * 1000;
     private int registryTimeout = 24_1000;
     private int registryHeartbeatInterval = 1_000;

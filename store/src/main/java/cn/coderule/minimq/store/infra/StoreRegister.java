@@ -68,6 +68,8 @@ public class StoreRegister implements Lifecycle {
         StoreInfo storeInfo = createStoreInfo();
         List<RegisterStoreResult> results = registryClient.registerStore(storeInfo);
         updateClusterInfo(results);
+
+        log.info("register store, request: {}; response: {}", storeInfo, results);
     }
 
     private void unregisterStore() {
@@ -91,7 +93,7 @@ public class StoreRegister implements Lifecycle {
     }
 
     private void heartbeat() {
-        if (!storeConfig.isEnableMasterElection()) {
+        if (!storeConfig.isEnableRegistryHeartbeat()) {
             return;
         }
 

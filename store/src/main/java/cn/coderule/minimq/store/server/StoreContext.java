@@ -17,7 +17,15 @@ public class StoreContext {
     public static StoreCheckpoint CHECK_POINT;
     public static StoreScheduler SCHEDULER;
     public static long STATE_MACHINE_VERSION = 0L;
+    public static boolean ISOLATED = false;
 
+    public static void setIsolated(boolean isolated) {
+        ISOLATED = isolated;
+    }
+
+    public static boolean isIsolated() {
+        return ISOLATED;
+    }
 
     public static void setStateMachineVersion(long version) {
         STATE_MACHINE_VERSION = version;
