@@ -42,6 +42,7 @@ public class ClusterService implements Lifecycle {
 
     @Override
     public void start() {
+        shouldRegister = storeConfig.isMaster();
         registerStore();
     }
 
