@@ -61,13 +61,13 @@ public class RegistryManager implements Lifecycle {
 
     @Override
     public void start() {
+        this.initAvailableRegistry();
         this.startScanService();
     }
 
     @Override
     public void shutdown() {
         try {
-            this.nettyClient.shutdown();
             this.timer.stop();
             this.scanExecutor.shutdown();
         } catch (Exception e) {
@@ -186,7 +186,7 @@ public class RegistryManager implements Lifecycle {
             }
         };
 
-        this.timer.newTimeout(task, 0, TimeUnit.MILLISECONDS);
+        this.timer.newTimeout(task, connectTimeout, TimeUnit.MILLISECONDS);
     }
 
     private void scanAvailableRegistry() {
@@ -199,27 +199,40 @@ public class RegistryManager implements Lifecycle {
         removeUnavailableAddress(addressList);
 
         for (String address : addressList) {
+            scanExecutor.execute(() -> {
+                connectRegistry(address);
+            });
+        }
+    }
+
+    private void initAvailableRegistry() {
+        List<String> addressList = this.addressList.get();
+        if (CollectionUtil.isEmpty(addressList)) {
+            log.debug("no registry address inited");
+            return;
+        }
+
+
+        for (String address : addressList) {
             connectRegistry(address);
         }
     }
 
     private void connectRegistry(String address) {
-        scanExecutor.execute(() -> {
-            try {
-                Channel channel = nettyClient.getOrCreateChannel(address);
-                if (channel != null) {
-                    RegistryManager.this.availableAddressMap.putIfAbsent(address, true);
-                    return;
-                }
-
-                Boolean exists = RegistryManager.this.availableAddressMap.remove(address);
-                if (exists != null) {
-                    log.warn("remove unavailable registry from availableAddressMap: {}", address);
-                }
-            } catch (Throwable t) {
-                log.error("connect registry exception", t);
+        try {
+            Channel channel = nettyClient.getOrCreateChannel(address);
+            if (channel != null) {
+                RegistryManager.this.availableAddressMap.putIfAbsent(address, true);
+                return;
             }
-        });
+
+            Boolean exists = RegistryManager.this.availableAddressMap.remove(address);
+            if (exists != null) {
+                log.warn("remove unavailable registry from availableAddressMap: {}", address);
+            }
+        } catch (Throwable t) {
+            log.error("connect registry exception", t);
+        }
     }
 
     private void removeUnavailableAddress(List<String> addressList) {

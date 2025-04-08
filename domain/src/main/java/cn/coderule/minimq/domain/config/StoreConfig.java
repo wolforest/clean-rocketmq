@@ -2,7 +2,6 @@ package cn.coderule.minimq.domain.config;
 
 import cn.coderule.common.util.lang.SystemUtil;
 import cn.coderule.minimq.domain.constant.PermName;
-import cn.coderule.minimq.domain.utils.RegistryUtils;
 import java.io.File;
 import java.io.Serializable;
 import lombok.Data;
