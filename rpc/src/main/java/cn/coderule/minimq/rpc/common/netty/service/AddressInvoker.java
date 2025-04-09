@@ -207,15 +207,8 @@ public class AddressInvoker {
     }
 
     public void closeChannel(String addr, Channel channel) {
-        if (null == channel) {
-            return;
-        }
-
-        String remoteAddr = null != addr
-            ? addr
-            : NettyHelper.getRemoteAddr(channel);
-
-        if (StringUtil.isBlank(remoteAddr)) {
+        String remoteAddr = null != addr ? addr : NettyHelper.getRemoteAddr(channel);
+        if (!isChannelClosable(remoteAddr, channel)) {
             return;
         }
 
@@ -606,5 +599,13 @@ public class AddressInvoker {
         log.warn("invokeSync: send request exception, so close the channel[{}]", remoteAddr);
 
         this.closeChannel(addr, channel);
+    }
+
+    private boolean isChannelClosable(String remoteAddr, Channel channel) {
+        if (null == channel) {
+            return false;
+        }
+
+        return !StringUtil.isBlank(remoteAddr);
     }
 }
