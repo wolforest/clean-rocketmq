@@ -16,6 +16,7 @@ import com.google.common.base.Stopwatch;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelFutureListener;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +27,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.function.BiConsumer;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -112,6 +114,7 @@ public class AddressInvoker {
         }
     }
 
+
     public void invokeAsync(String addr, RpcCommand request, long timeout, RpcCallback rpcCallback) throws InterruptedException {
         long startTime = System.currentTimeMillis();
         ChannelFuture future = getOrCreateChannelAsync(addr);
@@ -120,47 +123,9 @@ public class AddressInvoker {
             return;
         }
 
-        future.addListener(f -> {
-            if (!f.isSuccess()) {
-                rpcCallback.onFailure(new RemotingConnectException(addr));
-                return;
-            }
-
-            Channel channel = future.channel();
-            String remoteAddr = NettyHelper.getRemoteAddr(channel);
-            if (remoteAddr == null || !channel.isActive()) {
-                this.closeChannel(addr, channel);
-                rpcCallback.onFailure(new RemotingConnectException(addr));
-                return;
-            }
-
-            long costTime = System.currentTimeMillis() - startTime;
-            if (timeout < costTime) {
-                rpcCallback.onFailure(new RemotingTooMuchRequestException("invokeAsync call the addr[" + remoteAddr + "] timeout"));
-                return;
-            }
-
-            CallbackWrapper callbackWrapper = new CallbackWrapper(this, rpcCallback, addr);
-            long newTimeout = timeout - costTime;
-            this.invokeWithRetry(channel, request, newTimeout)
-                .whenComplete((v, t) -> {
-                    if (t == null) {
-                        callbackWrapper.onComplete(v);
-                        return;
-                    }
-
-                    ResponseFuture responseFuture = new ResponseFuture(channel, request.getOpaque(), request, newTimeout, null, null);
-                    responseFuture.setCause(t);
-                    callbackWrapper.onComplete(responseFuture);
-                })
-                .thenAccept(responseFuture -> {
-                    callbackWrapper.onSuccess(responseFuture.getResponse());
-                })
-                .exceptionally(t -> {
-                    callbackWrapper.onFailure(t);
-                    return null;
-                }) ;
-        });
+        future.addListener(
+            createInvokeFutureListener(addr, request, timeout, rpcCallback, startTime, future)
+        );
     }
 
     public CompletableFuture<RpcCommand> invokeAsync(String addr, RpcCommand request, long timeout) {
@@ -569,6 +534,62 @@ public class AddressInvoker {
 
             return tmpWrapper;
         });
+    }
+
+    private boolean isSuccess(String addr, long timeout, RpcCallback rpcCallback, long costTime, ChannelFuture future, ChannelFuture f) {
+        if (!f.isSuccess()) {
+            rpcCallback.onFailure(new RemotingConnectException(addr));
+            return false;
+        }
+
+        Channel channel = future.channel();
+        String remoteAddr = NettyHelper.getRemoteAddr(channel);
+        if (remoteAddr == null || !channel.isActive()) {
+            this.closeChannel(addr, channel);
+            rpcCallback.onFailure(new RemotingConnectException(addr));
+            return false;
+        }
+
+        if (timeout < costTime) {
+            rpcCallback.onFailure(new RemotingTooMuchRequestException("invokeAsync call the addr[" + remoteAddr + "] timeout"));
+            return false;
+        }
+
+        return true;
+    }
+
+    private BiConsumer<ResponseFuture, Throwable> completeResponseFuture(CallbackWrapper callbackWrapper, RpcCommand request, long newTimeout, ChannelFuture future) {
+        return (v, t) -> {
+            if (t == null) {
+                callbackWrapper.onComplete(v);
+                return;
+            }
+
+            ResponseFuture responseFuture = new ResponseFuture(future.channel(), request.getOpaque(), request, newTimeout, null, null);
+            responseFuture.setCause(t);
+            callbackWrapper.onComplete(responseFuture);
+        };
+    }
+
+    private ChannelFutureListener createInvokeFutureListener(String addr, RpcCommand request, long timeout, RpcCallback rpcCallback, long startTime, ChannelFuture future) {
+        return f -> {
+            long costTime = System.currentTimeMillis() - startTime;
+            if (!isSuccess(addr, timeout, rpcCallback, costTime, future, f)) {
+                return;
+            }
+
+            CallbackWrapper callbackWrapper = new CallbackWrapper(this, rpcCallback, addr);
+            long newTimeout = timeout - costTime;
+            this.invokeWithRetry(future.channel(), request, newTimeout)
+                .whenComplete(
+                    completeResponseFuture(callbackWrapper, request, newTimeout, future)
+                ).thenAccept(responseFuture -> {
+                    callbackWrapper.onSuccess(responseFuture.getResponse());
+                }).exceptionally(t -> {
+                    callbackWrapper.onFailure(t);
+                    return null;
+                }) ;
+        };
     }
 
 }
