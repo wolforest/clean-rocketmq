@@ -69,11 +69,9 @@ public class ChannelInvoker {
     }
 
     public CompletableFuture<ResponseFuture> invokeAsync(Channel channel, RpcCommand request, long timeoutMillis) {
-        long startTime = System.currentTimeMillis();
         CompletableFuture<ResponseFuture> future = new CompletableFuture<>();
         SemaphoreGuard semaphoreGuard = new SemaphoreGuard(this.asyncSemaphore);
-
-        if (!tryAcquireAsyncSemaphore(timeoutMillis, future, semaphoreGuard, startTime)) {
+        if (!tryAcquireAsyncSemaphore(timeoutMillis, future, semaphoreGuard)) {
             return future;
         }
 
@@ -139,8 +137,9 @@ public class ChannelInvoker {
         future.completeExceptionally(new RemotingTimeoutException(info));
     }
 
-    private boolean tryAcquireAsyncSemaphore(long timeoutMillis, CompletableFuture<ResponseFuture> future, SemaphoreGuard semaphoreGuard, long startTime) {
+    private boolean tryAcquireAsyncSemaphore(long timeoutMillis, CompletableFuture<ResponseFuture> future, SemaphoreGuard semaphoreGuard) {
         boolean acquired;
+        long startTime = System.currentTimeMillis();
         try {
             acquired = this.asyncSemaphore.tryAcquire(timeoutMillis, TimeUnit.MILLISECONDS);
         } catch (Throwable t) {
@@ -163,9 +162,8 @@ public class ChannelInvoker {
         return true;
     }
 
-    private ResponseFuture createResponseFuture(Channel channel, RpcCommand request, long timeout, CompletableFuture<ResponseFuture> future, SemaphoreGuard semaphoreGuard) {
-        AtomicReference<ResponseFuture> responseReference = new AtomicReference<>();
-        RpcCallback rpcCallback = new RpcCallback() {
+    private RpcCallback createRpcCallback(CompletableFuture<ResponseFuture> future, AtomicReference<ResponseFuture> responseReference) {
+        return new RpcCallback() {
             @Override
             public void onComplete(ResponseFuture responseFuture) {
             }
@@ -180,6 +178,11 @@ public class ChannelInvoker {
                 future.completeExceptionally(throwable);
             }
         };
+    }
+
+    private ResponseFuture createResponseFuture(Channel channel, RpcCommand request, long timeout, CompletableFuture<ResponseFuture> future, SemaphoreGuard semaphoreGuard) {
+        AtomicReference<ResponseFuture> responseReference = new AtomicReference<>();
+        RpcCallback rpcCallback = createRpcCallback(future, responseReference);
 
         ResponseFuture responseFuture = new ResponseFuture(
             channel,
@@ -193,7 +196,6 @@ public class ChannelInvoker {
 
         return responseFuture;
     }
-
 
     private void writeAndFlush(Channel channel, RpcCommand request, ResponseFuture response) {
         channel.writeAndFlush(request)
