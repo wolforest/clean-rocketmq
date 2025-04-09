@@ -82,22 +82,12 @@ public class AddressInvoker {
 
     public RpcCommand invokeSync(String addr, RpcCommand request, long timeout) throws Exception {
         long startTime = System.currentTimeMillis();
-        Channel channel = getOrCreateChannel(addr);
-
-        if (channel == null || !channel.isActive()) {
-            this.closeChannel(addr, channel);
-            throw new RemotingConnectException(addr);
-        }
-
         long leftTime = timeout;
-        String remoteAddr = NettyHelper.getRemoteAddr(channel);
+        Channel channel = getOrCreateChannel(addr);
+        validateChannel(channel, addr);
 
         try {
-            long costTime = System.currentTimeMillis() - startTime;
-            leftTime -= costTime;
-            if (leftTime <= 0) {
-                throw new RemotingTimeoutException(addr, timeout);
-            }
+            leftTime = calculateLeftTime(addr, startTime, leftTime, timeout);
             RpcCommand response = this.invokeWithRetry(channel, request, leftTime)
                 .thenApply(ResponseFuture::getResponse)
                 .get(leftTime, TimeUnit.MILLISECONDS);
@@ -105,15 +95,13 @@ public class AddressInvoker {
             updateLastResponseTime(addr);
             return response;
         } catch (ExecutionException e) {
-            log.warn("invokeSync: send request exception, so close the channel[{}]", remoteAddr);
-            this.closeChannel(addr, channel);
+            invokeSyncFailed(addr, channel);
             throw e;
         } catch (RemotingTimeoutException e) {
-            invokeSyncTimeout(addr, channel, leftTime, timeout);
+            invokeSyncTimeout(addr, channel, leftTime, timeout, e);
             throw e;
         }
     }
-
 
     public void invokeAsync(String addr, RpcCommand request, long timeout, RpcCallback rpcCallback) throws InterruptedException {
         long startTime = System.currentTimeMillis();
@@ -421,7 +409,7 @@ public class AddressInvoker {
         });
     }
 
-    private void invokeSyncTimeout(String addr, Channel channel, long leftTime, long timeout) throws Exception {
+    private void invokeSyncTimeout(String addr, Channel channel, long leftTime, long timeout, RemotingTimeoutException e) throws Exception {
         // avoid close the success channel if left timeout is small,
         // since it may cost too much time in get the success channel, the left timeout for read is small
         boolean shouldClose = leftTime > MIN_CLOSE_TIMEOUT_MILLIS || leftTime > timeout / 4;
@@ -431,6 +419,7 @@ public class AddressInvoker {
         }
 
         log.warn("invokeSync: wait response timeout exception, the channel[{}]", addr);
+        throw e;
     }
 
     private CompletableFuture<ResponseFuture> invokeWithRetry(Channel channel, RpcCommand request, long timeout) {
@@ -592,4 +581,30 @@ public class AddressInvoker {
         };
     }
 
+    private void validateChannel(Channel channel, String addr) throws RemotingConnectException {
+        if (null != channel && channel.isActive()) {
+            return;
+        }
+
+        this.closeChannel(addr, channel);
+        throw new RemotingConnectException(addr);
+    }
+
+    private long calculateLeftTime(String addr, long startTime, long leftTime, long timeout) throws RemotingTimeoutException {
+        long costTime = System.currentTimeMillis() - startTime;
+        leftTime -= costTime;
+
+        if (leftTime <= 0) {
+            throw new RemotingTimeoutException(addr, timeout);
+        }
+
+        return leftTime;
+    }
+
+    private void invokeSyncFailed(String addr, Channel channel) {
+        String remoteAddr = NettyHelper.getRemoteAddr(channel);
+        log.warn("invokeSync: send request exception, so close the channel[{}]", remoteAddr);
+
+        this.closeChannel(addr, channel);
+    }
 }
