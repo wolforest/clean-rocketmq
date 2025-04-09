@@ -88,24 +88,17 @@ public class ChannelInvoker {
         }
     }
 
-    public void invokeAsync(Channel channel, RpcCommand request, long timeoutMillis, RpcCallback rpcCallback) {
-        invokeAsync(channel, request, timeoutMillis)
+    public void invokeAsync(Channel channel, RpcCommand request, long timeout, RpcCallback rpcCallback) {
+        invokeAsync(channel, request, timeout)
         .whenComplete((v, t) -> {
             if (t == null) {
                 rpcCallback.onComplete(v);
-            } else {
-                ResponseFuture responseFuture = new ResponseFuture(
-                    channel,
-                    request.getOpaque(),
-                    request,
-                    timeoutMillis,
-                    null,
-                    null
-                );
-
-                responseFuture.setCause(t);
-                rpcCallback.onComplete(responseFuture);
+                return;
             }
+
+            ResponseFuture responseFuture = new ResponseFuture(channel, request, timeout);
+            responseFuture.setCause(t);
+            rpcCallback.onComplete(responseFuture);
         }).thenAccept(responseFuture -> {
             rpcCallback.onSuccess(responseFuture.getResponse());
         }).exceptionally(t -> {
@@ -113,7 +106,6 @@ public class ChannelInvoker {
             return null;
         });
     }
-
 
     /*********************************** private methods ***********************************/
     private void acquireOnewaySemaphoreFailed(long timeoutMillis) throws RemotingTooMuchRequestException, RemotingTimeoutException {

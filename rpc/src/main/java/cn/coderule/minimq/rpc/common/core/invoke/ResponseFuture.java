@@ -49,6 +49,10 @@ public class ResponseFuture {
         this(channel, opaque, null, timeoutMillis, invokeCallback, semaphoreGuard);
     }
 
+    public ResponseFuture(Channel channel, RpcCommand request, long timeoutMillis) {
+        this(channel, request.getOpaque(), request, timeoutMillis, null, null);
+    }
+
     public ResponseFuture(Channel channel, int opaque, RpcCommand request, long timeoutMillis, RpcCallback invokeCallback,
                           SemaphoreGuard semaphoreGuard) {
         this.channel = channel;
