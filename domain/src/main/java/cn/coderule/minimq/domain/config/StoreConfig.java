@@ -1,6 +1,7 @@
 package cn.coderule.minimq.domain.config;
 
 import cn.coderule.common.util.lang.SystemUtil;
+import cn.coderule.common.util.net.NetworkUtil;
 import cn.coderule.minimq.domain.constant.PermName;
 import java.io.File;
 import lombok.Data;
@@ -9,7 +10,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class StoreConfig extends ServerIdentity {
-    private String host = "0.0.0.0";
+    private String host = NetworkUtil.getLocalAddress();
     private int port = 6888;
     private int haPort = 10912;
 
@@ -31,7 +32,7 @@ public class StoreConfig extends ServerIdentity {
 
     private boolean fetchRegistryAddressByDns = false;
     private boolean fetchRegistryAddressByHttp = false;
-    private boolean enableRegistryHeartbeat = true;
+    private boolean enableRegistryHeartbeat = false;
     private int fetchRegistryAddressInterval = 60 * 1000;
     private int registryTimeout = 24_000;
     private int registryHeartbeatInterval = 1_000;
