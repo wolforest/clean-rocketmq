@@ -49,11 +49,16 @@ public class ComponentRegister {
 
     private void registerServer() {
         registerGrpc();
+        registerRpc();
     }
 
     private void registerGrpc() {
         GrpcManager component = new GrpcManager();
         manager.register(component);
+    }
+
+    private void registerRpc() {
+
     }
 
     private void registerStore() {
