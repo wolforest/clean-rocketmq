@@ -7,7 +7,7 @@ testhttp/
 **/*.env
 **/target/
 
-broker/src/main/java/apache/
+rpc/src/main/java/apache/
 
 
 # Log file
