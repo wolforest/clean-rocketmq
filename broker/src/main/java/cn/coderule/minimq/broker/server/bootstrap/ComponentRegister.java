@@ -4,12 +4,18 @@ import cn.coderule.common.convention.service.LifecycleManager;
 import cn.coderule.minimq.broker.domain.consumer.ConsumerManager;
 import cn.coderule.minimq.broker.domain.producer.ProducerManager;
 import cn.coderule.minimq.broker.domain.transaction.TransactionManager;
+import cn.coderule.minimq.broker.infra.BrokerRegister;
 import cn.coderule.minimq.broker.infra.StoreManager;
+import cn.coderule.minimq.broker.server.BrokerContext;
 import cn.coderule.minimq.broker.server.grpc.GrpcManager;
+import cn.coderule.minimq.domain.config.BrokerConfig;
+import cn.coderule.minimq.domain.config.StoreConfig;
+import cn.coderule.minimq.store.infra.StoreRegister;
 import cn.coderule.minimq.store.server.StoreContext;
 
 public class ComponentRegister {
     private final LifecycleManager manager = new LifecycleManager();
+    private BrokerConfig brokerConfig;
 
     public static LifecycleManager register() {
         ComponentRegister register = new ComponentRegister();
@@ -19,15 +25,28 @@ public class ComponentRegister {
     }
 
     public LifecycleManager execute() {
-        registerGrpc();
+        brokerConfig = BrokerContext.getBean(BrokerConfig.class);
 
+        registerInfra();
+        registerDomain();
+        registerServer();
+
+        return this.manager;
+    }
+
+    private void registerInfra() {
+        registerStoreRegister();
         registerStore();
+    }
 
+    private void registerDomain() {
         registerTransaction();
         registerProducer();
         registerConsumer();
+    }
 
-        return this.manager;
+    private void registerServer() {
+        registerGrpc();
     }
 
     private void registerGrpc() {
@@ -38,6 +57,12 @@ public class ComponentRegister {
     private void registerStore() {
         StoreManager component = new StoreManager();
         manager.register(component);
+    }
+
+    private void registerStoreRegister() {
+        BrokerRegister component = new BrokerRegister(brokerConfig);
+        manager.register(component);
+        BrokerContext.register(component);
     }
 
     private void registerProducer() {
