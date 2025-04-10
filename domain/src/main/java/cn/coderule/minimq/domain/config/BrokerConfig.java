@@ -30,4 +30,6 @@ public class BrokerConfig implements Serializable {
     private int registryTimeout = 24_000;
     private int registryHeartbeatInterval = 1_000;
     private int registryHeartbeatTimeout = 1_000;
+
+    private int syncRouteTimeout = 3_000;
 }
