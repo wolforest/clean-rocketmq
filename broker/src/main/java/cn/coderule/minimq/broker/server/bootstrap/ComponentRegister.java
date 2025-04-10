@@ -15,7 +15,7 @@ import cn.coderule.minimq.store.server.StoreContext;
 
 public class ComponentRegister {
     private final LifecycleManager manager = new LifecycleManager();
-    private BrokerConfig brokerConfig;
+    private final BrokerConfig brokerConfig;
 
     public static LifecycleManager register() {
         ComponentRegister register = new ComponentRegister();
@@ -24,9 +24,11 @@ public class ComponentRegister {
         return register.execute();
     }
 
-    public LifecycleManager execute() {
-        brokerConfig = BrokerContext.getBean(BrokerConfig.class);
+    public ComponentRegister() {
+        this.brokerConfig = BrokerContext.getBean(BrokerConfig.class);
+    }
 
+    public LifecycleManager execute() {
         registerInfra();
         registerDomain();
         registerServer();
