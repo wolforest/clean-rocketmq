@@ -1,4 +1,4 @@
-package cn.coderule.minimq.domain.utils;
+package cn.coderule.minimq.domain.utils.message;
 
 import cn.coderule.minimq.domain.config.MessageConfig;
 import cn.coderule.minimq.domain.enums.EnqueueStatus;

@@ -11,7 +11,7 @@ import cn.coderule.minimq.domain.dto.InsertFuture;
 import cn.coderule.minimq.domain.dto.InsertResult;
 import cn.coderule.minimq.domain.dto.SelectedMappedBuffer;
 import cn.coderule.minimq.domain.service.store.infra.MappedFile;
-import cn.coderule.minimq.domain.utils.MessageDecoder;
+import cn.coderule.minimq.domain.utils.message.MessageDecoder;
 import cn.coderule.minimq.domain.utils.lock.CommitLogLock;
 import cn.coderule.minimq.domain.utils.lock.CommitLogReentrantLock;
 import cn.coderule.minimq.domain.service.store.domain.CommitLog;
