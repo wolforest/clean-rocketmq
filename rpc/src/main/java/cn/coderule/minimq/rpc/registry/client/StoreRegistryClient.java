@@ -2,8 +2,8 @@ package cn.coderule.minimq.rpc.registry.client;
 
 import cn.coderule.common.util.encrypt.HashUtil;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
-import cn.coderule.minimq.domain.exception.MQException;
-import cn.coderule.minimq.domain.model.DataVersion;
+import cn.coderule.minimq.domain.domain.exception.MQException;
+import cn.coderule.minimq.domain.domain.model.DataVersion;
 import cn.coderule.minimq.rpc.common.core.exception.RemotingCommandException;
 import cn.coderule.minimq.rpc.common.core.invoke.RpcCommand;
 import cn.coderule.minimq.rpc.common.netty.NettyClient;

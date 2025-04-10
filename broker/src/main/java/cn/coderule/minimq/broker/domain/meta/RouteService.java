@@ -2,7 +2,7 @@ package cn.coderule.minimq.broker.domain.meta;
 
 import cn.coderule.minimq.broker.server.bootstrap.RequestContext;
 import cn.coderule.minimq.domain.config.TopicConfig;
-import cn.coderule.minimq.domain.model.MessageQueue;
+import cn.coderule.minimq.domain.domain.model.MessageQueue;
 import java.util.Set;
 
 /**

@@ -1,8 +1,8 @@
 package cn.coderule.minimq.domain.service.store.domain;
 
-import cn.coderule.minimq.domain.enums.QueueType;
-import cn.coderule.minimq.domain.model.CommitLogEvent;
-import cn.coderule.minimq.domain.model.QueueUnit;
+import cn.coderule.minimq.domain.domain.enums.QueueType;
+import cn.coderule.minimq.domain.domain.model.CommitLogEvent;
+import cn.coderule.minimq.domain.domain.model.QueueUnit;
 import cn.coderule.minimq.domain.service.store.infra.MappedFileQueue;
 import java.util.List;
 

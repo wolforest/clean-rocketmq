@@ -20,8 +20,8 @@
  */
 package cn.coderule.minimq.rpc.store.protocol.header;
 
-import cn.coderule.minimq.domain.enums.TagType;
-import cn.coderule.minimq.domain.model.Topic;
+import cn.coderule.minimq.domain.domain.enums.TagType;
+import cn.coderule.minimq.domain.domain.model.Topic;
 import cn.coderule.minimq.domain.utils.attribute.AttributeParser;
 import cn.coderule.minimq.rpc.common.core.annotation.CFNotNull;
 import cn.coderule.minimq.rpc.common.core.annotation.CFNullable;

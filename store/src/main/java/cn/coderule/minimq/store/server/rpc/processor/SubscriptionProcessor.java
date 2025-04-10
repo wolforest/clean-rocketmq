@@ -9,7 +9,7 @@ import cn.coderule.minimq.rpc.common.netty.service.NettyHelper;
 import cn.coderule.minimq.rpc.common.protocol.code.RequestCode;
 import cn.coderule.minimq.rpc.common.protocol.code.ResponseCode;
 import cn.coderule.minimq.rpc.common.protocol.codec.RpcSerializable;
-import cn.coderule.minimq.domain.model.subscription.SubscriptionGroup;
+import cn.coderule.minimq.domain.domain.model.subscription.SubscriptionGroup;
 import cn.coderule.minimq.rpc.store.protocol.header.DeleteSubscriptionGroupRequestHeader;
 import cn.coderule.minimq.rpc.store.protocol.header.GetSubscriptionGroupConfigRequestHeader;
 import java.util.Set;

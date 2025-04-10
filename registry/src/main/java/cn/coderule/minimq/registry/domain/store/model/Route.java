@@ -1,8 +1,8 @@
 package cn.coderule.minimq.registry.domain.store.model;
 
 import cn.coderule.common.util.lang.collection.MapUtil;
-import cn.coderule.minimq.domain.model.Topic;
-import cn.coderule.minimq.domain.model.DataVersion;
+import cn.coderule.minimq.domain.domain.model.Topic;
+import cn.coderule.minimq.domain.domain.model.DataVersion;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.GroupInfo;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.StoreInfo;
 import cn.coderule.minimq.rpc.registry.protocol.statictopic.TopicQueueMappingInfo;

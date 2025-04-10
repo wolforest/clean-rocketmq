@@ -16,7 +16,7 @@
  */
 package cn.coderule.minimq.rpc.registry.protocol.route;
 
-import cn.coderule.minimq.domain.constant.MQConstants;
+import cn.coderule.minimq.domain.domain.constant.MQConstants;
 import cn.coderule.minimq.rpc.common.protocol.codec.RpcSerializable;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;

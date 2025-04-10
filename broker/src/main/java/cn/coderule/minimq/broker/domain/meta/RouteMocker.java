@@ -1,7 +1,7 @@
 package cn.coderule.minimq.broker.domain.meta;
 
-import cn.coderule.minimq.domain.model.MessageQueue;
-import cn.coderule.minimq.domain.model.Topic;
+import cn.coderule.minimq.domain.domain.model.MessageQueue;
+import cn.coderule.minimq.domain.domain.model.Topic;
 import java.util.LinkedHashSet;
 import java.util.Set;
 

@@ -1,6 +1,6 @@
 package cn.coderule.minimq.domain.service.store.api;
 
-import cn.coderule.minimq.domain.model.Topic;
+import cn.coderule.minimq.domain.domain.model.Topic;
 
 public interface TopicStore {
     boolean exists(String topicName);

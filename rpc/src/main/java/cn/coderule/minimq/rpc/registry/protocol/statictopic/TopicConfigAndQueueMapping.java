@@ -16,7 +16,7 @@
  */
 package cn.coderule.minimq.rpc.registry.protocol.statictopic;
 
-import cn.coderule.minimq.domain.model.Topic;
+import cn.coderule.minimq.domain.domain.model.Topic;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;

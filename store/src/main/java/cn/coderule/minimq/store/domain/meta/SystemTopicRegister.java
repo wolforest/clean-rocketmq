@@ -1,6 +1,6 @@
 package cn.coderule.minimq.store.domain.meta;
 
-import cn.coderule.minimq.domain.model.Topic;
+import cn.coderule.minimq.domain.domain.model.Topic;
 import cn.coderule.minimq.domain.service.store.domain.meta.TopicService;
 import cn.coderule.minimq.domain.utils.topic.KeyBuilder;
 import cn.coderule.minimq.domain.utils.topic.TopicValidator;

@@ -2,11 +2,11 @@ package cn.coderule.minimq.store.domain.consumequeue.queue;
 
 import cn.coderule.common.util.lang.ThreadUtil;
 import cn.coderule.minimq.domain.config.ConsumeQueueConfig;
-import cn.coderule.minimq.domain.enums.QueueType;
-import cn.coderule.minimq.domain.model.CommitLogEvent;
-import cn.coderule.minimq.domain.model.message.MessageBO;
-import cn.coderule.minimq.domain.model.QueueUnit;
-import cn.coderule.minimq.domain.dto.SelectedMappedBuffer;
+import cn.coderule.minimq.domain.domain.enums.QueueType;
+import cn.coderule.minimq.domain.domain.model.CommitLogEvent;
+import cn.coderule.minimq.domain.domain.model.message.MessageBO;
+import cn.coderule.minimq.domain.domain.model.QueueUnit;
+import cn.coderule.minimq.domain.domain.dto.SelectedMappedBuffer;
 import cn.coderule.minimq.domain.service.store.domain.ConsumeQueue;
 import cn.coderule.minimq.domain.service.store.infra.MappedFile;
 import cn.coderule.minimq.domain.service.store.infra.MappedFileQueue;

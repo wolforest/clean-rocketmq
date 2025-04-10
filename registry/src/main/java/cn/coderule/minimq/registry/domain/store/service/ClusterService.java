@@ -1,11 +1,11 @@
 package cn.coderule.minimq.registry.domain.store.service;
 
 import cn.coderule.minimq.domain.config.RegistryConfig;
-import cn.coderule.minimq.domain.constant.PermName;
-import cn.coderule.minimq.domain.model.Topic;
+import cn.coderule.minimq.domain.domain.constant.PermName;
+import cn.coderule.minimq.domain.domain.model.Topic;
 import cn.coderule.minimq.registry.domain.store.model.Route;
 import cn.coderule.minimq.registry.domain.store.model.StoreHealthInfo;
-import cn.coderule.minimq.domain.model.DataVersion;
+import cn.coderule.minimq.domain.domain.model.DataVersion;
 import cn.coderule.minimq.rpc.common.protocol.code.RequestCode;
 import cn.coderule.minimq.rpc.registry.protocol.body.BrokerMemberGroup;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.ClusterInfo;

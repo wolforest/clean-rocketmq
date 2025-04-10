@@ -7,7 +7,7 @@ import apache.rocketmq.v2.SendMessageResponse;
 import apache.rocketmq.v2.Status;
 import cn.coderule.minimq.broker.api.ProducerController;
 import cn.coderule.minimq.broker.server.bootstrap.RequestContext;
-import cn.coderule.minimq.domain.model.message.MessageBO;
+import cn.coderule.minimq.domain.domain.model.message.MessageBO;
 import io.grpc.stub.StreamObserver;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.function.Function;

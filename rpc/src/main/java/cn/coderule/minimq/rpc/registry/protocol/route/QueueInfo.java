@@ -20,7 +20,7 @@
  */
 package cn.coderule.minimq.rpc.registry.protocol.route;
 
-import cn.coderule.minimq.domain.model.Topic;
+import cn.coderule.minimq.domain.domain.model.Topic;
 import lombok.Getter;
 import lombok.Setter;
 

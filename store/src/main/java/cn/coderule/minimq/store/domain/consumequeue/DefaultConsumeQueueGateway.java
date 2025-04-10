@@ -1,7 +1,7 @@
 package cn.coderule.minimq.store.domain.consumequeue;
 
-import cn.coderule.minimq.domain.model.CommitLogEvent;
-import cn.coderule.minimq.domain.model.QueueUnit;
+import cn.coderule.minimq.domain.domain.model.CommitLogEvent;
+import cn.coderule.minimq.domain.domain.model.QueueUnit;
 import cn.coderule.minimq.domain.service.store.domain.ConsumeQueueGateway;
 import cn.coderule.minimq.domain.service.store.domain.ConsumeQueue;
 import cn.coderule.minimq.store.domain.consumequeue.queue.ConsumeQueueFactory;

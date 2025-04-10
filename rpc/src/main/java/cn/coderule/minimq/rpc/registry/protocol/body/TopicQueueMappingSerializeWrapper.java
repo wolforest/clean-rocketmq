@@ -17,7 +17,7 @@
 
 package cn.coderule.minimq.rpc.registry.protocol.body;
 
-import cn.coderule.minimq.domain.model.DataVersion;
+import cn.coderule.minimq.domain.domain.model.DataVersion;
 import cn.coderule.minimq.rpc.common.protocol.codec.RpcSerializable;
 import cn.coderule.minimq.rpc.registry.protocol.statictopic.TopicQueueMappingDetail;
 import java.util.Map;

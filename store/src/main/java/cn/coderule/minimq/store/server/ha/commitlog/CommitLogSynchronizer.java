@@ -1,7 +1,7 @@
 package cn.coderule.minimq.store.server.ha.commitlog;
 
-import cn.coderule.minimq.domain.dto.EnqueueResult;
-import cn.coderule.minimq.domain.dto.InsertFuture;
+import cn.coderule.minimq.domain.domain.dto.EnqueueResult;
+import cn.coderule.minimq.domain.domain.dto.InsertFuture;
 import java.util.concurrent.CompletableFuture;
 
 public class CommitLogSynchronizer {

@@ -16,8 +16,8 @@
  */
 package cn.coderule.minimq.domain.utils.topic;
 
-import cn.coderule.minimq.domain.constant.MQConstants;
-import cn.coderule.minimq.domain.constant.PopConstants;
+import cn.coderule.minimq.domain.domain.constant.MQConstants;
+import cn.coderule.minimq.domain.domain.constant.PopConstants;
 
 public class KeyBuilder {
     public static final int POP_ORDER_REVIVE_QUEUE = 999;

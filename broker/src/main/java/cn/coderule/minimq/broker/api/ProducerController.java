@@ -2,8 +2,8 @@ package cn.coderule.minimq.broker.api;
 
 import cn.coderule.minimq.broker.domain.producer.Producer;
 import cn.coderule.minimq.broker.server.bootstrap.RequestContext;
-import cn.coderule.minimq.domain.model.message.MessageBO;
-import cn.coderule.minimq.domain.dto.EnqueueResult;
+import cn.coderule.minimq.domain.domain.model.message.MessageBO;
+import cn.coderule.minimq.domain.domain.dto.EnqueueResult;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 

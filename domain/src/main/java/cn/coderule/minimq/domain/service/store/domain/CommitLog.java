@@ -1,9 +1,9 @@
 package cn.coderule.minimq.domain.service.store.domain;
 
-import cn.coderule.minimq.domain.model.message.MessageBO;
-import cn.coderule.minimq.domain.dto.InsertFuture;
-import cn.coderule.minimq.domain.dto.InsertResult;
-import cn.coderule.minimq.domain.dto.SelectedMappedBuffer;
+import cn.coderule.minimq.domain.domain.model.message.MessageBO;
+import cn.coderule.minimq.domain.domain.dto.InsertFuture;
+import cn.coderule.minimq.domain.domain.dto.InsertResult;
+import cn.coderule.minimq.domain.domain.dto.SelectedMappedBuffer;
 import cn.coderule.minimq.domain.service.store.infra.MappedFileQueue;
 
 public interface CommitLog {

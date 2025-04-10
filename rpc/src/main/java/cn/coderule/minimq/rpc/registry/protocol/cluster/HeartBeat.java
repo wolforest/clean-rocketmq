@@ -1,6 +1,6 @@
 package cn.coderule.minimq.rpc.registry.protocol.cluster;
 
-import cn.coderule.minimq.domain.model.DataVersion;
+import cn.coderule.minimq.domain.domain.model.DataVersion;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

@@ -4,7 +4,7 @@ import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.ds.Pair;
 import cn.coderule.common.util.lang.ExceptionUtil;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
-import cn.coderule.minimq.domain.exception.AbortProcessException;
+import cn.coderule.minimq.domain.domain.exception.AbortProcessException;
 import cn.coderule.minimq.rpc.common.RpcHook;
 import cn.coderule.minimq.rpc.common.core.invoke.RequestTask;
 import cn.coderule.minimq.rpc.common.core.invoke.ResponseFuture;
