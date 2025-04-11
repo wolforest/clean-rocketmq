@@ -1,6 +1,8 @@
 package cn.coderule.minimq.broker.domain.meta;
 
 import cn.coderule.common.lang.concurrent.thread.ThreadLocalSequence;
+import cn.coderule.common.util.lang.StringUtil;
+import cn.coderule.common.util.lang.collection.MapUtil;
 import cn.coderule.minimq.domain.domain.constant.MQConstants;
 import cn.coderule.minimq.domain.domain.constant.PermName;
 import cn.coderule.minimq.domain.domain.model.MessageQueue;
@@ -40,61 +42,17 @@ public class PublishInfo implements Serializable {
         this.sequence.reset();
     }
 
-    public static PublishInfo of(final String topic, final RouteInfo route) {
-        PublishInfo info = new PublishInfo();
+    public static PublishInfo of(String topic, RouteInfo route) {
         // TO DO should check the usage of raw route, it is better to remove such field
-        info.setRouteInfo(route);
-        if (route.getOrderTopicConf() != null && !route.getOrderTopicConf().isEmpty()) {
-            String[] brokers = route.getOrderTopicConf().split(";");
-            for (String broker : brokers) {
-                String[] item = broker.split(":");
-                int nums = Integer.parseInt(item[1]);
-                for (int i = 0; i < nums; i++) {
-                    MessageQueue mq = new MessageQueue(topic, item[0], i);
-                    info.getQueueList().add(mq);
-                }
-            }
-
-            info.setOrdered(true);
-        } else if (route.getOrderTopicConf() == null
-            && route.getTopicQueueMappingByBroker() != null
-            && !route.getTopicQueueMappingByBroker().isEmpty()) {
-            info.setOrdered(false);
-            ConcurrentMap<MessageQueue, String> mqEndPoints = getQueueMap(topic, route);
-            info.getQueueList().addAll(mqEndPoints.keySet());
-            info.getQueueList().sort(Comparator.comparingInt(MessageQueue::getQueueId));
-        } else {
-            List<QueueInfo> qds = route.getQueueDatas();
-            Collections.sort(qds);
-            for (QueueInfo qd : qds) {
-                if (PermName.isWriteable(qd.getPerm())) {
-                    GroupInfo groupInfo = null;
-                    for (GroupInfo bd : route.getBrokerDatas()) {
-                        if (bd.getBrokerName().equals(qd.getBrokerName())) {
-                            groupInfo = bd;
-                            break;
-                        }
-                    }
-
-                    if (null == groupInfo) {
-                        continue;
-                    }
-
-                    if (!groupInfo.getBrokerAddrs().containsKey(MQConstants.MASTER_ID)) {
-                        continue;
-                    }
-
-                    for (int i = 0; i < qd.getWriteQueueNums(); i++) {
-                        MessageQueue mq = new MessageQueue(topic, qd.getBrokerName(), i);
-                        info.getQueueList().add(mq);
-                    }
-                }
-            }
-
-            info.setOrdered(false);
+        if (StringUtil.notBlank(route.getOrderTopicConf())) {
+            return ofOrderedRoute(topic, route);
         }
 
-        return info;
+        if (isEmptyMapping(route)) {
+            return ofEmptyMapping(topic, route);
+        }
+
+        return ofNormalRoute(topic, route);
     }
 
     public static Set<MessageQueue> getQueueSet(final String topic, final RouteInfo route) {
@@ -122,12 +80,14 @@ public class PublishInfo implements Serializable {
         for (Map.Entry<String, TopicQueueMappingInfo> entry : route.getTopicQueueMappingByBroker().entrySet()) {
             TopicQueueMappingInfo info = entry.getValue();
             String scope = info.getScope();
-            if (scope != null) {
-                if (!scopeMap.containsKey(scope)) {
-                    scopeMap.put(scope, new HashMap<>());
-                }
-                scopeMap.get(scope).put(entry.getKey(), entry.getValue());
+            if (scope == null) {
+                continue;
             }
+
+            if (!scopeMap.containsKey(scope)) {
+                scopeMap.put(scope, new HashMap<>());
+            }
+            scopeMap.get(scope).put(entry.getKey(), entry.getValue());
         }
 
         return scopeMap;
@@ -192,7 +152,7 @@ public class PublishInfo implements Serializable {
         }
     }
 
-    public static String getMockBrokerName(String scope) {
+    private static String getMockBrokerName(String scope) {
         assert scope != null;
         if (scope.equals(MQConstants.METADATA_SCOPE_GLOBAL)) {
             return MQConstants.LOGICAL_QUEUE_MOCK_BROKER_PREFIX + scope.substring(2);
@@ -201,6 +161,90 @@ public class PublishInfo implements Serializable {
         }
     }
 
+    private static PublishInfo ofOrderedRoute(String topic, RouteInfo route) {
+        PublishInfo info = new PublishInfo();
+        info.setRouteInfo(route);
 
+        String[] brokers = route.getOrderTopicConf().split(";");
+        for (String broker : brokers) {
+            String[] item = broker.split(":");
+            int nums = Integer.parseInt(item[1]);
+            for (int i = 0; i < nums; i++) {
+                MessageQueue mq = new MessageQueue(topic, item[0], i);
+                info.getQueueList().add(mq);
+            }
+        }
+
+        info.setOrdered(true);
+        return info;
+    }
+
+    private static PublishInfo ofEmptyMapping(String topic, RouteInfo route) {
+        PublishInfo info = new PublishInfo();
+        info.setRouteInfo(route);
+
+        info.setOrdered(false);
+        ConcurrentMap<MessageQueue, String> mqEndPoints = getQueueMap(topic, route);
+        info.getQueueList().addAll(mqEndPoints.keySet());
+        info.getQueueList().sort(Comparator.comparingInt(MessageQueue::getQueueId));
+
+        return info;
+    }
+
+    private static PublishInfo ofNormalRoute(String topic, RouteInfo route) {
+        PublishInfo info = new PublishInfo();
+        info.setRouteInfo(route);
+        info.setOrdered(false);
+
+        for (QueueInfo queueInfo : getQueueList(route)) {
+            if (!PermName.isWriteable(queueInfo.getPerm())) {
+                continue;
+            }
+
+            GroupInfo groupInfo = getGroupInfo(route, queueInfo);
+            if (null == groupInfo) {
+                continue;
+            }
+
+            if (!groupInfo.getBrokerAddrs().containsKey(MQConstants.MASTER_ID)) {
+                continue;
+            }
+
+            addQueueList(topic, info, queueInfo);
+        }
+
+        return info;
+    }
+
+    private static List<QueueInfo> getQueueList(RouteInfo route) {
+        List<QueueInfo> queueList = route.getQueueDatas();
+        Collections.sort(queueList);
+
+        return queueList;
+    }
+
+    private static GroupInfo getGroupInfo(RouteInfo route, QueueInfo qd) {
+        GroupInfo groupInfo = null;
+        for (GroupInfo bd : route.getBrokerDatas()) {
+            if (bd.getBrokerName().equals(qd.getBrokerName())) {
+                groupInfo = bd;
+                break;
+            }
+        }
+
+        return groupInfo;
+    }
+
+    private static void addQueueList(String topic, PublishInfo info, QueueInfo queueInfo) {
+        for (int i = 0; i < queueInfo.getWriteQueueNums(); i++) {
+            MessageQueue mq = new MessageQueue(topic, queueInfo.getBrokerName(), i);
+            info.getQueueList().add(mq);
+        }
+    }
+
+    private static boolean isEmptyMapping(RouteInfo route) {
+        return route.getOrderTopicConf() == null
+            && MapUtil.notEmpty(route.getTopicQueueMappingByBroker());
+    }
 
 }
