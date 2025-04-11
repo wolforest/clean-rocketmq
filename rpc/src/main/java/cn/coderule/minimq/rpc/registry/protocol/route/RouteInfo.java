@@ -116,6 +116,10 @@ public class RouteInfo extends RpcSerializable {
         }
     }
 
+    public boolean isQueueMappingEmpty() {
+        return topicQueueMappingByBroker == null || topicQueueMappingByBroker.isEmpty();
+    }
+
     public byte[] encode() {
         return encode(false);
     }

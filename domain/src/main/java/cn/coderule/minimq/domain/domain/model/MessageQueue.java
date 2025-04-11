@@ -19,33 +19,34 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MessageQueue implements Comparable<MessageQueue>, Serializable {
-    private String cluster;
-    private String serverGroup;
-    private Address serverAddress;
-    private int serverId;
-
-    private String namespace;
-    private String topic;
-
+    private String clusterName;
+    private String groupName;
+    private String topicName;
     private int queueId;
+
+    //private int groupNo;
+    //private String address;
+    //private String namespace;
+
     private int permission;
     private MessageType messageType;
 
+    public MessageQueue(String topicName, String groupName, int queueId) {
+        this.topicName = topicName;
+        this.groupName = groupName;
+        this.queueId = queueId;
+    }
+
     @Override
     public int compareTo(MessageQueue o) {
-        int topicDiff = this.topic.compareTo(o.topic);
+        int topicDiff = this.topicName.compareTo(o.topicName);
         if (topicDiff != 0) {
             return topicDiff;
         }
 
-        int brokerDiff = this.serverGroup.compareTo(o.serverGroup);
+        int brokerDiff = this.groupName.compareTo(o.groupName);
         if (brokerDiff != 0) {
             return brokerDiff;
-        }
-
-        int brokerIdDiff = this.serverId - o.serverId;
-        if (brokerIdDiff != 0) {
-            return brokerIdDiff;
         }
 
         return this.queueId - o.queueId;
