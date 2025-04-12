@@ -2,7 +2,7 @@ package cn.coderule.minimq.rpc.registry.client;
 
 import cn.coderule.common.lang.concurrent.thread.DefaultThreadFactory;
 import cn.coderule.common.util.lang.ThreadUtil;
-import cn.coderule.minimq.domain.domain.exception.MQException;
+import cn.coderule.minimq.domain.domain.exception.RpcException;
 import cn.coderule.minimq.rpc.common.config.RpcClientConfig;
 import cn.coderule.minimq.rpc.common.core.invoke.RpcCommand;
 import cn.coderule.minimq.rpc.common.netty.NettyClient;
@@ -131,7 +131,7 @@ public class DefaultRegistryClient implements RegistryClient {
             return ClusterInfo.decode(response.getBody(), ClusterInfo.class);
         }
 
-        throw new MQException(
+        throw new RpcException(
             response.getCode(),
             "sync cluster info error, registry address: " + registryAddress
         );
@@ -157,7 +157,7 @@ public class DefaultRegistryClient implements RegistryClient {
         assert response != null;
 
         if (!response.isSuccess()) {
-            throw new MQException(response.getCode(), "query route info error, registry address: " + registryAddress);
+            throw new RpcException(response.getCode(), "query route info error, registry address: " + registryAddress);
         }
 
         byte[] body = response.getBody();
@@ -165,7 +165,7 @@ public class DefaultRegistryClient implements RegistryClient {
             return RouteInfo.decode(body, RouteInfo.class);
         }
 
-        throw new MQException(response.getCode(), "query route info error, registry address: " + registryAddress);
+        throw new RpcException(response.getCode(), "query route info error, registry address: " + registryAddress);
     }
 
     private ExecutorService initRegisterExecutor() {

@@ -2,7 +2,7 @@ package cn.coderule.minimq.rpc.registry.client;
 
 import cn.coderule.common.util.encrypt.HashUtil;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
-import cn.coderule.minimq.domain.domain.exception.MQException;
+import cn.coderule.minimq.domain.domain.exception.RpcException;
 import cn.coderule.minimq.domain.domain.model.DataVersion;
 import cn.coderule.minimq.rpc.common.core.exception.RemotingCommandException;
 import cn.coderule.minimq.rpc.common.core.invoke.RpcCommand;
@@ -268,7 +268,7 @@ public class StoreRegistryClient  {
 
         RegisterBrokerRequestHeader requestHeader = (RegisterBrokerRequestHeader) request.readCustomHeader();
         if (!response.isSuccess()) {
-            throw new MQException(response.getCode(), response.getRemark(), requestHeader.getBrokerAddr());
+            throw new RpcException(response.getCode(), response.getRemark(), requestHeader.getBrokerAddr());
         }
 
         return toRegisterStoreResult(response);
@@ -319,7 +319,7 @@ public class StoreRegistryClient  {
 
             assert response != null;
             if (!response.isSuccess()) {
-                throw new MQException(response.getCode(), "unregister store error, registry address: " + registryAddress);
+                throw new RpcException(response.getCode(), "unregister store error, registry address: " + registryAddress);
             }
 
         } catch (Exception e) {
