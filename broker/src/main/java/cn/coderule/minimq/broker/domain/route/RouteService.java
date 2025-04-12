@@ -27,13 +27,7 @@ public class RouteService {
         return routeMocker.getRoute(topic);
     }
 
-    public PublishInfo getPublishInfo(String topicName) {
-        return null;
-    }
 
-    public Set<MessageQueue> getSubscriptionInfo(String topicName) {
-        return null;
-    }
 
     public String getAddressInPublish(String groupName) {
         return routeCache.getAddress(groupName, MQConstants.MASTER_ID);

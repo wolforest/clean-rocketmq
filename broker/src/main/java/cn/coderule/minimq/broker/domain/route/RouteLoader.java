@@ -3,6 +3,7 @@ package cn.coderule.minimq.broker.domain.route;
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.lang.concurrent.thread.DefaultThreadFactory;
 import cn.coderule.common.util.lang.ThreadUtil;
+import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.minimq.broker.domain.route.model.PublishInfo;
 import cn.coderule.minimq.broker.domain.route.model.RouteCache;
 import cn.coderule.minimq.broker.infra.BrokerRegister;
@@ -76,6 +77,28 @@ public class RouteLoader implements Lifecycle {
         } finally {
             route.unlock();
         }
+    }
+
+    public PublishInfo getPublishInfo(String topicName) {
+        PublishInfo result = route.getPublishInfo(topicName);
+
+        if (null == result || !result.isOk()) {
+            updateRouteInfo(topicName, true, false);
+            result = route.getPublishInfo(topicName);
+        }
+
+        return result;
+    }
+
+    public Set<MessageQueue> getSubscriptionInfo(String topicName) {
+        Set<MessageQueue> result = route.getSubscription(topicName);
+
+        if (CollectionUtil.isEmpty(result)) {
+            updateRouteInfo(topicName, false, true);
+            result = route.getSubscription(topicName);
+        }
+
+        return result;
     }
 
     private void handleRouteUpdateException(Exception e, String topicName) {

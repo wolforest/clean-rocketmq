@@ -2,6 +2,7 @@ package cn.coderule.minimq.broker.domain.route.model;
 
 import cn.coderule.common.lang.concurrent.thread.local.ThreadLocalSequence;
 import cn.coderule.common.util.lang.StringUtil;
+import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.common.util.lang.collection.MapUtil;
 import cn.coderule.minimq.domain.domain.constant.MQConstants;
 import cn.coderule.minimq.domain.domain.constant.PermName;
@@ -40,6 +41,10 @@ public class PublishInfo implements Serializable {
 
     public void resetSequence() {
         this.sequence.reset();
+    }
+
+    public boolean isOk() {
+        return CollectionUtil.notEmpty(queueList);
     }
 
     public static PublishInfo of(String topic, RouteInfo route) {

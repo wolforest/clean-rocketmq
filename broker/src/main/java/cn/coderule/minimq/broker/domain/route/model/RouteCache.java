@@ -78,6 +78,14 @@ public class RouteCache implements Serializable {
 
     }
 
+    public PublishInfo getPublishInfo(String topicName) {
+        return this.publishMap.get(topicName);
+    }
+
+    public Set<MessageQueue> getSubscription(String topicName) {
+        return this.subscriptionMap.get(topicName);
+    }
+
     public String getAddress(String groupName, long groupNo) {
         Map<Long, String> noMap = this.addressMap.get(groupName);
         if (noMap == null) {
