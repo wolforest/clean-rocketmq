@@ -3,10 +3,12 @@ package cn.coderule.minimq.broker.domain.route;
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.lang.concurrent.thread.DefaultThreadFactory;
 import cn.coderule.common.util.lang.ThreadUtil;
+import cn.coderule.minimq.broker.domain.route.model.PublishInfo;
 import cn.coderule.minimq.broker.domain.route.model.RouteCache;
 import cn.coderule.minimq.broker.infra.BrokerRegister;
 import cn.coderule.minimq.domain.config.BrokerConfig;
 import cn.coderule.minimq.domain.domain.exception.RpcException;
+import cn.coderule.minimq.domain.domain.model.MessageQueue;
 import cn.coderule.minimq.domain.utils.NamespaceUtil;
 import cn.coderule.minimq.rpc.common.protocol.code.ResponseCode;
 import cn.coderule.minimq.rpc.registry.protocol.route.RouteInfo;
@@ -75,6 +77,23 @@ public class RouteLoader implements Lifecycle {
             route.unlock();
         }
     }
+
+    public PublishInfo getPublishInfo(String topicName) {
+        return null;
+    }
+
+    public Set<MessageQueue> getSubscriptionInfo(String topicName) {
+        return null;
+    }
+
+    public String getAddressInPublish(String groupName) {
+        return null;
+    }
+
+    public Set<String> getAddressInSubscription(String groupName, long groupNo, boolean inGroup) {
+        return null;
+    }
+
 
     private void handleRouteUpdateException(Exception e, String topicName) {
         log.error("Load route info Exception", e);
