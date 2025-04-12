@@ -10,7 +10,6 @@ import cn.coderule.minimq.domain.domain.exception.RpcException;
 import cn.coderule.minimq.domain.utils.NamespaceUtil;
 import cn.coderule.minimq.rpc.common.protocol.code.ResponseCode;
 import cn.coderule.minimq.rpc.registry.protocol.route.RouteInfo;
-import com.google.common.collect.Sets;
 import java.util.Set;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -70,22 +69,25 @@ public class RouteLoader implements Lifecycle {
             if (updateSubInfo) {
                 route.updateSubscription(topicName, routeInfo);
             }
-        } catch (RpcException e) {
-            handleRouteRpcException(e, topicName);
         } catch (Exception e) {
-            log.error("Load route info exception", e);
+            handleRouteUpdateException(e, topicName);
         } finally {
             route.unlock();
         }
     }
 
-    private void handleRouteRpcException(RpcException e, String topicName) {
-        log.error("Load route info RpcException", e);
+    private void handleRouteUpdateException(Exception e, String topicName) {
+        log.error("Load route info Exception", e);
+
+        if (!(e instanceof RpcException rpcException)) {
+            return;
+        }
+
         if (NamespaceUtil.isRetryTopic(topicName)) {
             return;
         }
 
-        if (ResponseCode.TOPIC_NOT_EXIST != e.getCode()) {
+        if (ResponseCode.TOPIC_NOT_EXIST != rpcException.getCode()) {
             return;
         }
 
