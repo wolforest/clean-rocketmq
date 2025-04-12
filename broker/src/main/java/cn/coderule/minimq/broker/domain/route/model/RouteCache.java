@@ -75,5 +75,27 @@ public class RouteCache implements Serializable {
     }
 
     public void updateSubscription(String topicName, RouteInfo routeInfo) {
+
+    }
+
+    public String getAddress(String groupName, long groupNo) {
+        Map<Long, String> noMap = this.addressMap.get(groupName);
+        if (noMap == null) {
+            return null;
+        }
+
+        return noMap.get(groupNo);
+    }
+
+    public String getFirstAddress(String groupName) {
+        Map<Long, String> noMap = this.addressMap.get(groupName);
+        if (noMap == null) {
+            return null;
+        }
+
+        return noMap.values()
+            .stream()
+            .findFirst()
+            .orElse(null);
     }
 }
