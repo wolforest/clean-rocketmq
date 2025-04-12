@@ -21,10 +21,10 @@ public class RouteCache implements Serializable {
 
     // topicName -> routeInfo
     private final ConcurrentMap<String, RouteInfo> routeMap;
+    // topicName -> Set<messageQueue>
+    private final ConcurrentMap<String, Set<MessageQueue>> subscribeMap;
     // groupName -> groupNo -> address
     private final ConcurrentMap<String, Map<Long, String>> addressMap;
-    // topicName -> Set<messageQueue>
-    private final ConcurrentMap<String, Set<MessageQueue>> queueMap;
     // topicName -> publishInfo
     private final ConcurrentMap<String, PublishInfo> publishMap;
 
@@ -32,7 +32,7 @@ public class RouteCache implements Serializable {
     public RouteCache() {
         this.routeMap = new ConcurrentHashMap<>();
         this.addressMap = new ConcurrentHashMap<>();
-        this.queueMap = new ConcurrentHashMap<>();
+        this.subscribeMap = new ConcurrentHashMap<>();
         this.publishMap = new ConcurrentHashMap<>();
 
         this.lock = new ReentrantLock();
