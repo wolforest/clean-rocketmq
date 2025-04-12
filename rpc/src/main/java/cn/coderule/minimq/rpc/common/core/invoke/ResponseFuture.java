@@ -16,7 +16,7 @@
  */
 package cn.coderule.minimq.rpc.common.core.invoke;
 
-import cn.coderule.common.lang.concurrent.SemaphoreGuard;
+import cn.coderule.common.lang.concurrent.sync.SemaphoreGuard;
 import cn.coderule.minimq.rpc.common.core.exception.RemotingException;
 import cn.coderule.minimq.rpc.common.core.exception.RemotingSendRequestException;
 import cn.coderule.minimq.rpc.common.core.exception.RemotingTimeoutException;

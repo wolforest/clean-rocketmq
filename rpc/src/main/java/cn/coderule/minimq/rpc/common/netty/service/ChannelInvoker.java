@@ -1,6 +1,6 @@
 package cn.coderule.minimq.rpc.common.netty.service;
 
-import cn.coderule.common.lang.concurrent.SemaphoreGuard;
+import cn.coderule.common.lang.concurrent.sync.SemaphoreGuard;
 import cn.coderule.minimq.rpc.common.core.exception.RemotingSendRequestException;
 import cn.coderule.minimq.rpc.common.core.exception.RemotingTimeoutException;
 import cn.coderule.minimq.rpc.common.core.exception.RemotingTooMuchRequestException;
