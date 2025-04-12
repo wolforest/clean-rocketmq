@@ -1,6 +1,6 @@
 package cn.coderule.minimq.broker.domain.meta;
 
-import cn.coderule.common.lang.concurrent.thread.ThreadLocalSequence;
+import cn.coderule.common.lang.concurrent.thread.local.ThreadLocalSequence;
 import cn.coderule.common.util.lang.StringUtil;
 import cn.coderule.common.util.lang.collection.MapUtil;
 import cn.coderule.minimq.domain.domain.constant.MQConstants;
