@@ -1,4 +1,4 @@
-package cn.coderule.minimq.broker.domain.route;
+package cn.coderule.minimq.broker.domain.route.model;
 
 import cn.coderule.common.lang.concurrent.thread.local.ThreadLocalSequence;
 import cn.coderule.common.util.lang.StringUtil;

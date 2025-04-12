@@ -1,4 +1,4 @@
-package cn.coderule.minimq.broker.domain.route;
+package cn.coderule.minimq.broker.domain.route.model;
 
 import cn.coderule.minimq.domain.domain.model.MessageQueue;
 import cn.coderule.minimq.rpc.registry.protocol.route.RouteInfo;
