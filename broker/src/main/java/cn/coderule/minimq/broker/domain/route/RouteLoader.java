@@ -7,6 +7,9 @@ import cn.coderule.minimq.broker.domain.route.model.RouteCache;
 import cn.coderule.minimq.broker.infra.BrokerRegister;
 import cn.coderule.minimq.domain.config.BrokerConfig;
 import cn.coderule.minimq.domain.domain.exception.RpcException;
+import cn.coderule.minimq.domain.utils.NamespaceUtil;
+import cn.coderule.minimq.rpc.common.protocol.code.ResponseCode;
+import cn.coderule.minimq.rpc.registry.protocol.route.RouteInfo;
 import com.google.common.collect.Sets;
 import java.util.Set;
 import java.util.concurrent.ScheduledExecutorService;
@@ -54,14 +57,39 @@ public class RouteLoader implements Lifecycle {
         }
 
         try {
+            RouteInfo routeInfo = brokerRegister.syncRouteInfo(topicName, brokerConfig.getSyncRouteTimeout());
+            if (routeInfo == null) {
+                log.warn("Load route info error, topic: {}", topicName);
+                return;
+            }
 
+            if (updatePubInfo) {
+                route.updateRoute(topicName, routeInfo);
+            }
+
+            if (updateSubInfo) {
+                route.updateSubscription(topicName, routeInfo);
+            }
         } catch (RpcException e) {
-
+            handleRouteRpcException(e, topicName);
         } catch (Exception e) {
-
+            log.error("Load route info exception", e);
         } finally {
             route.unlock();
         }
+    }
+
+    private void handleRouteRpcException(RpcException e, String topicName) {
+        log.error("Load route info RpcException", e);
+        if (NamespaceUtil.isRetryTopic(topicName)) {
+            return;
+        }
+
+        if (ResponseCode.TOPIC_NOT_EXIST != e.getCode()) {
+            return;
+        }
+
+        route.removeSubscription(topicName);
     }
 
     private void load() {

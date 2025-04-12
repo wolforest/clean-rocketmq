@@ -65,4 +65,15 @@ public class RouteCache implements Serializable {
     public boolean containsRoute(String topicName) {
         return this.routeMap.containsKey(topicName);
     }
+
+    public void removeSubscription(String topicName) {
+        this.subscriptionMap.remove(topicName);
+    }
+
+    public void updateRoute(String topicName, RouteInfo routeInfo) {
+
+    }
+
+    public void updateSubscription(String topicName, RouteInfo routeInfo) {
+    }
 }
