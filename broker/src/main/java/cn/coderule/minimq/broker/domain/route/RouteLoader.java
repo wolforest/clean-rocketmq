@@ -2,12 +2,14 @@ package cn.coderule.minimq.broker.domain.route;
 
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.lang.concurrent.thread.DefaultThreadFactory;
+import cn.coderule.common.util.lang.StringUtil;
 import cn.coderule.common.util.lang.ThreadUtil;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.minimq.broker.domain.route.model.PublishInfo;
 import cn.coderule.minimq.broker.domain.route.model.RouteCache;
 import cn.coderule.minimq.broker.infra.BrokerRegister;
 import cn.coderule.minimq.domain.config.BrokerConfig;
+import cn.coderule.minimq.domain.domain.constant.MQConstants;
 import cn.coderule.minimq.domain.domain.exception.RpcException;
 import cn.coderule.minimq.domain.domain.model.MessageQueue;
 import cn.coderule.minimq.domain.utils.NamespaceUtil;
@@ -99,6 +101,25 @@ public class RouteLoader implements Lifecycle {
         }
 
         return result;
+    }
+
+    public String getAddressInPublish(String groupName) {
+        return route.getAddress(groupName, MQConstants.MASTER_ID);
+    }
+
+    public String getAddressInSubscription(String groupName, long groupNo, boolean inGroup) {
+        String address = route.getAddress(groupName, groupNo);
+
+        boolean isSlave = groupNo != MQConstants.MASTER_ID;
+        if (StringUtil.isBlank(address) && isSlave) {
+            address = route.getAddress(groupName, groupNo + 1);
+        }
+
+        if (StringUtil.isBlank(address) && inGroup) {
+            address = route.getFirstAddress(groupName);
+        }
+
+        return address;
     }
 
     private void handleRouteUpdateException(Exception e, String topicName) {

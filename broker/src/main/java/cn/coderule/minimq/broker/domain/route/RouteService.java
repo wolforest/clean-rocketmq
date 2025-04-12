@@ -29,22 +29,5 @@ public class RouteService {
 
 
 
-    public String getAddressInPublish(String groupName) {
-        return routeCache.getAddress(groupName, MQConstants.MASTER_ID);
-    }
 
-    public String getAddressInSubscription(String groupName, long groupNo, boolean inGroup) {
-        String address = routeCache.getAddress(groupName, groupNo);
-
-        boolean isSlave = groupNo != MQConstants.MASTER_ID;
-        if (StringUtil.isBlank(address) && isSlave) {
-            address = routeCache.getAddress(groupName, groupNo + 1);
-        }
-
-        if (StringUtil.isBlank(address) && inGroup) {
-            address = routeCache.getFirstAddress(groupName);
-        }
-
-        return address;
-    }
 }
