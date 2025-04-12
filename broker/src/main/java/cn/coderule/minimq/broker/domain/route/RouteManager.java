@@ -1,8 +1,8 @@
-package cn.coderule.minimq.broker.domain.meta;
+package cn.coderule.minimq.broker.domain.route;
 
 import cn.coderule.common.convention.service.Lifecycle;
 
-public class MetaManager implements Lifecycle {
+public class RouteManager implements Lifecycle {
     @Override
     public void start() {
 

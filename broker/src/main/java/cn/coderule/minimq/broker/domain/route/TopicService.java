@@ -1,4 +1,4 @@
-package cn.coderule.minimq.broker.domain.meta;
+package cn.coderule.minimq.broker.domain.route;
 
 import cn.coderule.minimq.domain.domain.model.Topic;
 import cn.coderule.minimq.domain.service.store.api.TopicStore;

@@ -1,4 +1,4 @@
-package cn.coderule.minimq.broker.domain.meta;
+package cn.coderule.minimq.broker.domain.route;
 
 import cn.coderule.minimq.broker.server.bootstrap.RequestContext;
 import cn.coderule.minimq.domain.config.TopicConfig;
