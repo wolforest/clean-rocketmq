@@ -78,23 +78,6 @@ public class RouteLoader implements Lifecycle {
         }
     }
 
-    public PublishInfo getPublishInfo(String topicName) {
-        return null;
-    }
-
-    public Set<MessageQueue> getSubscriptionInfo(String topicName) {
-        return null;
-    }
-
-    public String getAddressInPublish(String groupName) {
-        return null;
-    }
-
-    public Set<String> getAddressInSubscription(String groupName, long groupNo, boolean inGroup) {
-        return null;
-    }
-
-
     private void handleRouteUpdateException(Exception e, String topicName) {
         log.error("Load route info Exception", e);
 
