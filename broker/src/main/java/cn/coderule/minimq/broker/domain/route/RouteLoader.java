@@ -27,7 +27,7 @@ public class RouteLoader implements Lifecycle {
     private final BrokerRegister brokerRegister;
     private final RouteCache route;
 
-    private ScheduledExecutorService scheduler;
+    private final ScheduledExecutorService scheduler;
 
     public RouteLoader(BrokerConfig brokerConfig, RouteCache route, BrokerRegister brokerRegister) {
         this.brokerConfig = brokerConfig;

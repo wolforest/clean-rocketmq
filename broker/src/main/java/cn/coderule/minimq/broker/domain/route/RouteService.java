@@ -1,11 +1,7 @@
 package cn.coderule.minimq.broker.domain.route;
 
-import cn.coderule.common.util.lang.StringUtil;
 import cn.coderule.minimq.broker.domain.route.model.PublishInfo;
-import cn.coderule.minimq.broker.domain.route.model.RouteCache;
 import cn.coderule.minimq.broker.server.bootstrap.RequestContext;
-import cn.coderule.minimq.domain.config.TopicConfig;
-import cn.coderule.minimq.domain.domain.constant.MQConstants;
 import cn.coderule.minimq.domain.domain.model.MessageQueue;
 import java.util.Set;
 
@@ -15,11 +11,10 @@ import java.util.Set;
  */
 public class RouteService {
     private final RouteMocker routeMocker;
-    private final RouteCache routeCache;
-    // private RegistryClient registryClient;
+    private final RouteLoader routeLoader;    // private RegistryClient registryClient;
 
-    public RouteService(RouteCache routeCache, RouteMocker routeMocker) {
-        this.routeCache = routeCache;
+    public RouteService(RouteLoader routeLoader, RouteMocker routeMocker) {
+        this.routeLoader = routeLoader;
         this.routeMocker = routeMocker;
     }
 
@@ -27,7 +22,21 @@ public class RouteService {
         return routeMocker.getRoute(topic);
     }
 
+    public PublishInfo getPublishInfo(String topicName) {
+        return routeLoader.getPublishInfo(topicName);
+    }
 
+    public Set<MessageQueue> getSubscriptionInfo(String topicName) {
+        return routeLoader.getSubscriptionInfo(topicName);
+    }
+
+    public String getAddressInPublish(String groupName) {
+        return routeLoader.getAddressInPublish(groupName);
+    }
+
+    public String getAddressInSubscription(String groupName, long groupNo, boolean inGroup) {
+        return routeLoader.getAddressInSubscription(groupName, groupNo, inGroup);
+    }
 
 
 }
