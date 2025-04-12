@@ -1,7 +1,7 @@
 package cn.coderule.minimq.broker.server.grpc;
 
 import cn.coderule.common.convention.service.Lifecycle;
-import cn.coderule.common.lang.concurrent.ThreadPoolFactory;
+import cn.coderule.common.lang.concurrent.thread.ThreadPoolFactory;
 import cn.coderule.common.lang.exception.SystemException;
 import cn.coderule.minimq.broker.server.grpc.message.MessageService;
 import cn.coderule.minimq.domain.config.GrpcConfig;

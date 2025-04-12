@@ -2,7 +2,7 @@ package cn.coderule.minimq.store.infra.file;
 
 import cn.coderule.minimq.store.infra.memory.TransientPool;
 import cn.coderule.common.convention.service.Lifecycle;
-import cn.coderule.common.lang.concurrent.ServiceThread;
+import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 import cn.coderule.common.util.lang.ThreadUtil;
 import cn.coderule.minimq.domain.config.StoreConfig;
 import cn.coderule.minimq.domain.service.store.infra.MappedFile;

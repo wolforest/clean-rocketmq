@@ -1,7 +1,7 @@
 package cn.coderule.minimq.store.domain.consumequeue.service;
 
 import cn.coderule.minimq.store.domain.consumequeue.queue.ConsumeQueueRegistry;
-import cn.coderule.common.lang.concurrent.ServiceThread;
+import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 import cn.coderule.minimq.domain.config.ConsumeQueueConfig;
 import cn.coderule.minimq.domain.service.store.domain.ConsumeQueue;
 import cn.coderule.minimq.domain.service.store.infra.MappedFileQueue;

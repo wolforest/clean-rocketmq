@@ -1,6 +1,6 @@
 package cn.coderule.minimq.rpc.common.netty;
 
-import cn.coderule.common.lang.concurrent.DefaultThreadFactory;
+import cn.coderule.common.lang.concurrent.thread.DefaultThreadFactory;
 import cn.coderule.minimq.rpc.common.RpcClient;
 import cn.coderule.minimq.rpc.common.core.invoke.RpcCallback;
 import cn.coderule.minimq.rpc.common.core.invoke.RpcCommand;

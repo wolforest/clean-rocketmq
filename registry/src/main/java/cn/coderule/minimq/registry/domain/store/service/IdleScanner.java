@@ -1,6 +1,6 @@
 package cn.coderule.minimq.registry.domain.store.service;
 
-import cn.coderule.common.lang.concurrent.DefaultThreadFactory;
+import cn.coderule.common.lang.concurrent.thread.DefaultThreadFactory;
 import cn.coderule.common.util.lang.ThreadUtil;
 import cn.coderule.minimq.domain.config.RegistryConfig;
 import cn.coderule.minimq.registry.domain.store.StoreRegistry;

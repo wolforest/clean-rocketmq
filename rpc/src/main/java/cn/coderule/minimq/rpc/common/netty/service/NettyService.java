@@ -1,6 +1,6 @@
 package cn.coderule.minimq.rpc.common.netty.service;
 
-import cn.coderule.common.lang.concurrent.DefaultThreadFactory;
+import cn.coderule.common.lang.concurrent.thread.DefaultThreadFactory;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.minimq.rpc.common.core.RpcService;
 import cn.coderule.minimq.rpc.common.RpcHook;

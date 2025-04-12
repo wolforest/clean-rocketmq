@@ -1,7 +1,7 @@
 package cn.coderule.minimq.registry.server.bootstrap;
 
 import cn.coderule.common.convention.service.Lifecycle;
-import cn.coderule.common.lang.concurrent.DefaultThreadFactory;
+import cn.coderule.common.lang.concurrent.thread.DefaultThreadFactory;
 import cn.coderule.common.util.lang.ThreadUtil;
 import cn.coderule.minimq.domain.config.RegistryConfig;
 import java.util.concurrent.BlockingQueue;

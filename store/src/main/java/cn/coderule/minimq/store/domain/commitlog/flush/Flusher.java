@@ -1,7 +1,7 @@
 package cn.coderule.minimq.store.domain.commitlog.flush;
 
 import cn.coderule.minimq.store.domain.commitlog.vo.GroupCommitRequest;
-import cn.coderule.common.lang.concurrent.ServiceThread;
+import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 
 public abstract class Flusher extends ServiceThread {
     protected static final int RETRY_TIMES = 10;

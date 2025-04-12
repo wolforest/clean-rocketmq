@@ -1,7 +1,7 @@
 package cn.coderule.minimq.rpc.registry.service;
 
 import cn.coderule.common.convention.service.Lifecycle;
-import cn.coderule.common.lang.concurrent.DefaultThreadFactory;
+import cn.coderule.common.lang.concurrent.thread.DefaultThreadFactory;
 import cn.coderule.common.util.lang.StringUtil;
 import cn.coderule.common.util.lang.ThreadUtil;
 import cn.coderule.common.util.lang.collection.CollectionUtil;

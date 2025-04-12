@@ -1,6 +1,6 @@
 package cn.coderule.minimq.registry.domain.store.service;
 
-import cn.coderule.common.lang.concurrent.ServiceThread;
+import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 import cn.coderule.minimq.domain.config.RegistryConfig;
 import cn.coderule.minimq.registry.domain.store.StoreRegistry;
 import cn.coderule.minimq.rpc.registry.protocol.header.UnRegisterBrokerRequestHeader;

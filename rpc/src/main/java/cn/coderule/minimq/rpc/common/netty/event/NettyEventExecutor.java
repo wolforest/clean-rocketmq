@@ -1,6 +1,6 @@
 package cn.coderule.minimq.rpc.common.netty.event;
 
-import cn.coderule.common.lang.concurrent.ServiceThread;
+import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 import cn.coderule.minimq.rpc.common.RpcListener;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;

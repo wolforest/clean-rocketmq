@@ -3,7 +3,7 @@ package cn.coderule.minimq.broker.server.grpc.message;
 import cn.coderule.minimq.broker.server.grpc.activity.RejectActivity;
 import cn.coderule.minimq.broker.server.grpc.activity.TransactionActivity;
 import cn.coderule.common.convention.service.Lifecycle;
-import cn.coderule.common.lang.concurrent.ThreadPoolFactory;
+import cn.coderule.common.lang.concurrent.thread.ThreadPoolFactory;
 import cn.coderule.common.lang.exception.server.StartupException;
 import cn.coderule.minimq.broker.api.ConsumerController;
 import cn.coderule.minimq.broker.api.ProducerController;

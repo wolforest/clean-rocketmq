@@ -1,7 +1,7 @@
 package cn.coderule.minimq.store.domain.commitlog.flush;
 
 import cn.coderule.minimq.store.domain.commitlog.vo.GroupCommitRequest;
-import cn.coderule.common.lang.concurrent.ServiceThread;
+import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 import cn.coderule.common.util.lang.ThreadUtil;
 import cn.coderule.minimq.domain.domain.enums.EnqueueStatus;
 import java.util.concurrent.LinkedBlockingQueue;
