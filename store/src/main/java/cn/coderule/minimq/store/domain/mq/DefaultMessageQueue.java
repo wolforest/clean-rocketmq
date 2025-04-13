@@ -129,7 +129,7 @@ public class DefaultMessageQueue implements MessageQueue {
 
         return CollectionUtil.isEmpty(messageList)
             ? null
-            : messageList.getFirst();
+            : messageList.get(0);
     }
 
     @Override

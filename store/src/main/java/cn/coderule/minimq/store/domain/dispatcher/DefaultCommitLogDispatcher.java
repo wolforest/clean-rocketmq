@@ -30,7 +30,7 @@ public class DefaultCommitLogDispatcher extends ServiceThread  implements Commit
 
     @Override
     public void registerHandler(CommitLogHandler handler) {
-        consumerList.addLast(handler);
+        consumerList.add(handler);
     }
 
     @Override

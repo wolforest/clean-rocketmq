@@ -1,6 +1,7 @@
 package cn.coderule.minimq.store.infra.file;
 
 import cn.coderule.common.util.io.FileUtil;
+import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.minimq.domain.service.store.infra.MappedFile;
 import cn.coderule.minimq.domain.service.store.infra.MappedFileQueue;
 import cn.coderule.minimq.domain.utils.StoreUtils;
@@ -120,7 +121,6 @@ public class DefaultMappedFileQueue implements MappedFileQueue {
 
     @Override
     public MappedFile getMappedFileByOffset(long offset) {
-        if (isEmpty()) return null;
         if (!isOffsetValid(offset)) return null;
 
         MappedFile targetFile = getByIndexOfOffset(offset);
@@ -144,7 +144,7 @@ public class DefaultMappedFileQueue implements MappedFileQueue {
         }
 
         try {
-            return this.mappedFiles.getFirst();
+            return this.mappedFiles.get(0);
         } catch (Exception e) {
             log.error("getFirstMappedFile has exception.", e);
         }
@@ -159,7 +159,8 @@ public class DefaultMappedFileQueue implements MappedFileQueue {
         }
 
         try {
-            return this.mappedFiles.getLast();
+            int last = this.mappedFiles.size() - 1;
+            return this.mappedFiles.get(last);
         } catch (Exception e) {
             log.error("getFirstMappedFile has exception.", e);
         }
@@ -379,7 +380,11 @@ public class DefaultMappedFileQueue implements MappedFileQueue {
     }
 
     private MappedFile getByIndexOfOffset(long offset) {
-        MappedFile first = this.mappedFiles.getFirst();
+        if (isEmpty()) {
+            return null;
+        }
+
+        MappedFile first = this.mappedFiles.get(0);
         MappedFile targetFile = null;
         int index = (int) ((offset / this.fileSize) - (first.getMinOffset() / this.fileSize));
         try {
@@ -408,8 +413,12 @@ public class DefaultMappedFileQueue implements MappedFileQueue {
     }
 
     private boolean isOffsetValid(long offset) {
-        MappedFile first = this.mappedFiles.getFirst();
-        MappedFile last = this.mappedFiles.getLast();
+        if (CollectionUtil.isEmpty(this.mappedFiles)) {
+            return false;
+        }
+
+        MappedFile first = this.mappedFiles.get(0);
+        MappedFile last = this.mappedFiles.get(this.mappedFiles.size() - 1);
 
         if (offset < first.getMinOffset()
             || offset > last.getMinOffset() + this.fileSize) {

@@ -22,6 +22,7 @@ import cn.coderule.minimq.rpc.registry.protocol.header.RegisterBrokerRequestHead
 import cn.coderule.minimq.rpc.registry.protocol.header.RegisterBrokerResponseHeader;
 import cn.coderule.minimq.rpc.registry.protocol.header.RegisterTopicRequestHeader;
 import cn.coderule.minimq.rpc.registry.protocol.header.UnRegisterBrokerRequestHeader;
+import cn.coderule.minimq.rpc.registry.protocol.route.QueueInfo;
 import cn.coderule.minimq.rpc.registry.protocol.route.RouteInfo;
 import io.netty.channel.ChannelHandlerContext;
 import java.util.List;
@@ -118,7 +119,12 @@ public class RegistryProcessor implements RpcProcessor {
     }
 
     private String getGroupName(RouteInfo routeInfo) {
-        return routeInfo.getQueueDatas().getFirst().getBrokerName();
+        QueueInfo first = routeInfo.getQueueDatas().get(0);
+        if (first == null) {
+            return null;
+        }
+
+        return first.getBrokerName();
     }
 
     private List<Topic> toTopicList(String topicName, RouteInfo routeInfo) {
