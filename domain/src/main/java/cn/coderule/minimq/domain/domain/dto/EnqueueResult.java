@@ -43,6 +43,12 @@ public class EnqueueResult implements Serializable {
         return new EnqueueResult(EnqueueStatus.UNKNOWN_ERROR);
     }
 
+
+    public static EnqueueResult notAvailable() {
+        return new EnqueueResult(EnqueueStatus.SERVICE_NOT_AVAILABLE);
+    }
+
+
     public static EnqueueResult failure(EnqueueStatus status) {
         return new EnqueueResult(status);
     }
