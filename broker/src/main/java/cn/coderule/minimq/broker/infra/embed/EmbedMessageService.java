@@ -1,4 +1,4 @@
-package cn.coderule.minimq.broker.domain.message;
+package cn.coderule.minimq.broker.infra.embed;
 
 import cn.coderule.minimq.domain.domain.model.message.MessageBO;
 import cn.coderule.minimq.domain.domain.dto.EnqueueResult;
@@ -8,7 +8,7 @@ import cn.coderule.minimq.domain.service.store.domain.MessageQueue;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-public class RemoteMessageService implements MessageQueue {
+public class EmbedMessageService implements MessageQueue {
     @Override
     public EnqueueResult enqueue(MessageBO messageBO) {
         return null;
