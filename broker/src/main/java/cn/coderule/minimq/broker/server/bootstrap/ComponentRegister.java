@@ -5,12 +5,10 @@ import cn.coderule.minimq.broker.domain.consumer.ConsumerManager;
 import cn.coderule.minimq.broker.domain.producer.ProducerManager;
 import cn.coderule.minimq.broker.domain.transaction.TransactionManager;
 import cn.coderule.minimq.broker.infra.BrokerRegister;
-import cn.coderule.minimq.broker.infra.StoreManager;
+import cn.coderule.minimq.broker.infra.embed.EmbedStoreManager;
 import cn.coderule.minimq.broker.server.BrokerContext;
 import cn.coderule.minimq.broker.server.grpc.GrpcManager;
 import cn.coderule.minimq.domain.config.BrokerConfig;
-import cn.coderule.minimq.domain.config.StoreConfig;
-import cn.coderule.minimq.store.infra.StoreRegister;
 import cn.coderule.minimq.store.server.StoreContext;
 
 public class ComponentRegister {
@@ -62,7 +60,7 @@ public class ComponentRegister {
     }
 
     private void registerStore() {
-        StoreManager component = new StoreManager();
+        EmbedStoreManager component = new EmbedStoreManager();
         manager.register(component);
     }
 
