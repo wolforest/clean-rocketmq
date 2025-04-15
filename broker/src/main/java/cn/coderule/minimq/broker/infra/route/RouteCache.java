@@ -1,6 +1,7 @@
 package cn.coderule.minimq.broker.infra.route;
 
 import cn.coderule.minimq.domain.domain.model.MessageQueue;
+import cn.coderule.minimq.rpc.registry.protocol.route.PublishInfo;
 import cn.coderule.minimq.rpc.registry.protocol.route.RouteInfo;
 import com.google.common.collect.Sets;
 import java.io.Serializable;

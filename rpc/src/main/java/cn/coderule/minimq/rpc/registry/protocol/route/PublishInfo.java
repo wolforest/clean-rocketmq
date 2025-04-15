@@ -1,4 +1,4 @@
-package cn.coderule.minimq.broker.infra.route;
+package cn.coderule.minimq.rpc.registry.protocol.route;
 
 import cn.coderule.common.lang.concurrent.thread.local.ThreadLocalSequence;
 import cn.coderule.common.util.lang.StringUtil;
@@ -8,8 +8,6 @@ import cn.coderule.minimq.domain.domain.constant.MQConstants;
 import cn.coderule.minimq.domain.domain.constant.PermName;
 import cn.coderule.minimq.domain.domain.model.MessageQueue;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.GroupInfo;
-import cn.coderule.minimq.rpc.registry.protocol.route.QueueInfo;
-import cn.coderule.minimq.rpc.registry.protocol.route.RouteInfo;
 import cn.coderule.minimq.rpc.registry.protocol.statictopic.TopicQueueMappingInfo;
 import java.io.Serializable;
 import java.util.ArrayList;

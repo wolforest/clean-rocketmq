@@ -12,6 +12,7 @@ import cn.coderule.minimq.domain.domain.exception.RpcException;
 import cn.coderule.minimq.domain.domain.model.MessageQueue;
 import cn.coderule.minimq.domain.utils.NamespaceUtil;
 import cn.coderule.minimq.rpc.common.protocol.code.ResponseCode;
+import cn.coderule.minimq.rpc.registry.protocol.route.PublishInfo;
 import cn.coderule.minimq.rpc.registry.protocol.route.RouteInfo;
 import java.util.Set;
 import java.util.concurrent.ScheduledExecutorService;
