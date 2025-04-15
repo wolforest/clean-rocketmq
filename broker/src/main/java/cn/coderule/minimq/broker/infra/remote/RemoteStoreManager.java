@@ -19,6 +19,7 @@ public class RemoteStoreManager implements Lifecycle {
         RouteLoader routeLoader = BrokerContext.getBean(RouteLoader.class);
         this.loadBalance = new RemoteLoadBalance(this.brokerConfig, routeLoader);
 
+
     }
 
     @Override

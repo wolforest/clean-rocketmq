@@ -10,11 +10,12 @@ import cn.coderule.minimq.rpc.store.client.MessageClient;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-public class RemoteMessageService implements MessageStore {
+public class RemoteMessageStore extends AbstractRemoteStore implements MessageStore {
     private final BrokerConfig brokerConfig;
     private final MessageClient messageClient;
 
-    public RemoteMessageService(BrokerConfig brokerConfig, MessageClient messageClient) {
+    public RemoteMessageStore(BrokerConfig brokerConfig, MessageClient messageClient, RemoteLoadBalance loadBalance) {
+        super(loadBalance);
         this.brokerConfig = brokerConfig;
         this.messageClient = messageClient;
     }

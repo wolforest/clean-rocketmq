@@ -1,7 +1,7 @@
 package cn.coderule.minimq.broker.infra.store;
 
 import cn.coderule.minimq.broker.infra.embed.EmbedMessageStore;
-import cn.coderule.minimq.broker.infra.remote.RemoteMessageService;
+import cn.coderule.minimq.broker.infra.remote.RemoteMessageStore;
 import cn.coderule.minimq.domain.config.BrokerConfig;
 import cn.coderule.minimq.domain.domain.dto.EnqueueResult;
 import cn.coderule.minimq.domain.domain.dto.GetRequest;
@@ -14,12 +14,12 @@ import java.util.concurrent.CompletableFuture;
 public class BrokerMessageStore implements MessageStore {
     private final BrokerConfig brokerConfig;
     private final EmbedMessageStore embedMessageStore;
-    private final RemoteMessageService remoteMessageService;
+    private final RemoteMessageStore remoteMessageStore;
 
-    public BrokerMessageStore(BrokerConfig brokerConfig, EmbedMessageStore embedMessageStore, RemoteMessageService remoteMessageService) {
+    public BrokerMessageStore(BrokerConfig brokerConfig, EmbedMessageStore embedMessageStore, RemoteMessageStore remoteMessageStore) {
         this.brokerConfig = brokerConfig;
         this.embedMessageStore = embedMessageStore;
-        this.remoteMessageService = remoteMessageService;
+        this.remoteMessageStore = remoteMessageStore;
     }
 
     @Override
@@ -35,7 +35,7 @@ public class BrokerMessageStore implements MessageStore {
             return EnqueueResult.notAvailable();
         }
 
-        return remoteMessageService.enqueue(messageBO);
+        return remoteMessageStore.enqueue(messageBO);
     }
 
     @Override
@@ -51,7 +51,7 @@ public class BrokerMessageStore implements MessageStore {
             return CompletableFuture.completedFuture(EnqueueResult.notAvailable());
         }
 
-        return remoteMessageService.enqueueAsync(messageBO);
+        return remoteMessageStore.enqueueAsync(messageBO);
     }
 
     @Override
@@ -63,7 +63,7 @@ public class BrokerMessageStore implements MessageStore {
             }
         }
 
-        return remoteMessageService.get(topic, queueId, offset);
+        return remoteMessageStore.get(topic, queueId, offset);
     }
 
     @Override
@@ -75,7 +75,7 @@ public class BrokerMessageStore implements MessageStore {
             }
         }
 
-        return remoteMessageService.get(topic, queueId, offset, num);
+        return remoteMessageStore.get(topic, queueId, offset, num);
     }
 
     @Override
@@ -87,7 +87,7 @@ public class BrokerMessageStore implements MessageStore {
             }
         }
 
-        return remoteMessageService.get(request);
+        return remoteMessageStore.get(request);
     }
 
     @Override
@@ -99,7 +99,7 @@ public class BrokerMessageStore implements MessageStore {
             }
         }
 
-        return remoteMessageService.getMessage(topic, queueId, offset);
+        return remoteMessageStore.getMessage(topic, queueId, offset);
     }
 
     @Override
@@ -111,6 +111,6 @@ public class BrokerMessageStore implements MessageStore {
             }
         }
 
-        return remoteMessageService.getMessage(topic, queueId, offset, num);
+        return remoteMessageStore.getMessage(topic, queueId, offset, num);
     }
 }
