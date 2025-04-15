@@ -1,17 +1,16 @@
-package cn.coderule.minimq.broker.infra.route;
+package cn.coderule.minimq.rpc.registry.client;
 
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.lang.concurrent.thread.DefaultThreadFactory;
 import cn.coderule.common.util.lang.StringUtil;
 import cn.coderule.common.util.lang.ThreadUtil;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
-import cn.coderule.minimq.broker.infra.BrokerRegister;
-import cn.coderule.minimq.domain.config.BrokerConfig;
 import cn.coderule.minimq.domain.domain.constant.MQConstants;
 import cn.coderule.minimq.domain.domain.exception.RpcException;
 import cn.coderule.minimq.domain.domain.model.MessageQueue;
 import cn.coderule.minimq.domain.utils.NamespaceUtil;
 import cn.coderule.minimq.rpc.common.protocol.code.ResponseCode;
+import cn.coderule.minimq.rpc.registry.RegistryClient;
 import cn.coderule.minimq.rpc.registry.protocol.route.PublishInfo;
 import cn.coderule.minimq.rpc.registry.protocol.route.RouteInfo;
 import java.util.Set;
@@ -21,19 +20,31 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class RouteLoader implements Lifecycle {
-    private final BrokerConfig brokerConfig;
+    private static final int DEFAULT_LOAD_INTERVAL = 30_000;
+    private static final int DEFAULT_LOAD_TIMEOUT = 3_000;
 
-    private final BrokerRegister brokerRegister;
+    private final int loadInterval;
+    private final int loadTimeout;
+
+    private final RegistryClient registryClient;
     private final RouteCache route;
 
     private final ScheduledExecutorService scheduler;
 
-    public RouteLoader(BrokerConfig brokerConfig, RouteCache route, BrokerRegister brokerRegister) {
-        this.brokerConfig = brokerConfig;
+    public RouteLoader(RegistryClient registryClient) {
+        this(registryClient, DEFAULT_LOAD_INTERVAL);
+    }
 
-        this.route = route;
-        this.brokerRegister = brokerRegister;
+    public RouteLoader(RegistryClient registryClient, int loadInterval) {
+        this(registryClient, loadInterval, DEFAULT_LOAD_TIMEOUT);
+    }
 
+    public RouteLoader(RegistryClient registryClient, int loadInterval, int loadTimeout) {
+        this.registryClient = registryClient;
+        this.loadInterval = loadInterval;
+        this.loadTimeout = loadTimeout;
+
+        this.route = new RouteCache();
         this.scheduler = ThreadUtil.newSingleScheduledThreadExecutor(
             new DefaultThreadFactory("BrokerRouteScheduler")
         );
@@ -44,7 +55,7 @@ public class RouteLoader implements Lifecycle {
         this.scheduler.scheduleAtFixedRate(
             RouteLoader.this::load,
             1000,
-            brokerConfig.getSyncRouteInterval(),
+            loadInterval,
             TimeUnit.MILLISECONDS
         );
     }
@@ -60,7 +71,7 @@ public class RouteLoader implements Lifecycle {
         }
 
         try {
-            RouteInfo routeInfo = brokerRegister.syncRouteInfo(topicName, brokerConfig.getSyncRouteTimeout());
+            RouteInfo routeInfo = registryClient.syncRouteInfo(topicName, loadTimeout);
             if (routeInfo == null) {
                 log.warn("Load route info error, topic: {}", topicName);
                 return;

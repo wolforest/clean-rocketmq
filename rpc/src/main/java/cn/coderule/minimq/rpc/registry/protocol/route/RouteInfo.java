@@ -20,6 +20,8 @@
  */
 package cn.coderule.minimq.rpc.registry.protocol.route;
 
+import cn.coderule.minimq.domain.domain.constant.PermName;
+import cn.coderule.minimq.domain.domain.model.MessageQueue;
 import cn.coderule.minimq.rpc.common.protocol.codec.RpcSerializable;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.GroupInfo;
 import cn.coderule.minimq.rpc.registry.protocol.statictopic.TopicQueueMappingInfo;
@@ -27,8 +29,10 @@ import com.alibaba.fastjson2.JSONWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import lombok.Getter;

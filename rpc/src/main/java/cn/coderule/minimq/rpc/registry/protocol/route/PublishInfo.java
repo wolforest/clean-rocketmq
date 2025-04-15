@@ -103,7 +103,7 @@ public class PublishInfo implements Serializable {
         return mappingList;
     }
 
-    public static ConcurrentMap<MessageQueue, String> getQueueMap(final String topic, final RouteInfo route) {
+    private static ConcurrentMap<MessageQueue, String> getQueueMap(final String topic, final RouteInfo route) {
         if (route.isQueueMappingEmpty()) {
             return new ConcurrentHashMap<>();
         }
