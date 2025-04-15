@@ -14,10 +14,14 @@ public class EmbedLoadBalance {
     }
 
     public boolean containsTopic(String topicName) {
-        return false;
+        if (!brokerConfig.isEnableEmbedStore()) {
+            return false;
+        }
+
+        return topicStore.exists(topicName);
     }
 
-    public boolean containsSubscription(String topicName) {
+    public boolean containsSubscription(String groupName) {
         return false;
     }
 }

@@ -6,4 +6,8 @@ public abstract class AbstractEmbedStore {
     public AbstractEmbedStore(EmbedLoadBalance loadBalance) {
         this.loadBalance = loadBalance;
     }
+
+    public boolean isEmbed(String topicName) {
+        return loadBalance.containsTopic(topicName);
+    }
 }
