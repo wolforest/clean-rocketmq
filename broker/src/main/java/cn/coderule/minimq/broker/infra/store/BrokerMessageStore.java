@@ -24,11 +24,8 @@ public class BrokerMessageStore implements MessageStore {
 
     @Override
     public EnqueueResult enqueue(MessageBO messageBO) {
-        if (brokerConfig.isEnableEmbedStore()) {
-            EnqueueResult result = embedMessageStore.enqueue(messageBO);
-            if (null != result) {
-                return result;
-            }
+        if (embedMessageStore.isEmbed(messageBO.getTopic())) {
+            return embedMessageStore.enqueue(messageBO);
         }
 
         if (!brokerConfig.isEnableRemoteStore()) {
@@ -40,11 +37,8 @@ public class BrokerMessageStore implements MessageStore {
 
     @Override
     public CompletableFuture<EnqueueResult> enqueueAsync(MessageBO messageBO) {
-        if (brokerConfig.isEnableEmbedStore()) {
-            CompletableFuture<EnqueueResult> result = embedMessageStore.enqueueAsync(messageBO);
-            if (null != result) {
-                return result;
-            }
+        if (embedMessageStore.isEmbed(messageBO.getTopic())) {
+            return embedMessageStore.enqueueAsync(messageBO);
         }
 
         if (!brokerConfig.isEnableRemoteStore()) {
@@ -56,11 +50,8 @@ public class BrokerMessageStore implements MessageStore {
 
     @Override
     public GetResult get(String topic, int queueId, long offset) {
-        if (brokerConfig.isEnableEmbedStore()) {
-            GetResult result = embedMessageStore.get(topic, queueId, offset);
-            if (null != result) {
-                return result;
-            }
+        if (embedMessageStore.isEmbed(topic)) {
+            return embedMessageStore.get(topic, queueId, offset);
         }
 
         return remoteMessageStore.get(topic, queueId, offset);
@@ -68,11 +59,8 @@ public class BrokerMessageStore implements MessageStore {
 
     @Override
     public GetResult get(String topic, int queueId, long offset, int num) {
-        if (brokerConfig.isEnableEmbedStore()) {
-            GetResult result = embedMessageStore.get(topic, queueId, offset, num);
-            if (null != result) {
-                return result;
-            }
+        if (embedMessageStore.isEmbed(topic)) {
+            return embedMessageStore.get(topic, queueId, offset, num);
         }
 
         return remoteMessageStore.get(topic, queueId, offset, num);
@@ -80,11 +68,8 @@ public class BrokerMessageStore implements MessageStore {
 
     @Override
     public GetResult get(GetRequest request) {
-        if (brokerConfig.isEnableEmbedStore()) {
-            GetResult result = embedMessageStore.get(request);
-            if (null != result) {
-                return result;
-            }
+        if (embedMessageStore.isEmbed(request.getTopic())) {
+            return embedMessageStore.get(request);
         }
 
         return remoteMessageStore.get(request);
@@ -92,11 +77,8 @@ public class BrokerMessageStore implements MessageStore {
 
     @Override
     public MessageBO getMessage(String topic, int queueId, long offset) {
-        if (brokerConfig.isEnableEmbedStore()) {
-            MessageBO result = embedMessageStore.getMessage(topic, queueId, offset);
-            if (null != result) {
-                return result;
-            }
+        if (embedMessageStore.isEmbed(topic)) {
+            return embedMessageStore.getMessage(topic, queueId, offset);
         }
 
         return remoteMessageStore.getMessage(topic, queueId, offset);
@@ -104,11 +86,8 @@ public class BrokerMessageStore implements MessageStore {
 
     @Override
     public List<MessageBO> getMessage(String topic, int queueId, long offset, int num) {
-        if (brokerConfig.isEnableEmbedStore()) {
-            List<MessageBO> result = embedMessageStore.getMessage(topic, queueId, offset, num);
-            if (null != result) {
-                return result;
-            }
+        if (embedMessageStore.isEmbed(topic)) {
+            return embedMessageStore.getMessage(topic, queueId, offset, num);
         }
 
         return remoteMessageStore.getMessage(topic, queueId, offset, num);
