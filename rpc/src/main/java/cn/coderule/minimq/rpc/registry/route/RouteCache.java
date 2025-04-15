@@ -1,6 +1,7 @@
 package cn.coderule.minimq.rpc.registry.route;
 
 import cn.coderule.minimq.domain.domain.model.MessageQueue;
+import cn.coderule.minimq.rpc.registry.protocol.cluster.GroupInfo;
 import cn.coderule.minimq.rpc.registry.protocol.route.PublishInfo;
 import cn.coderule.minimq.rpc.registry.protocol.route.RouteInfo;
 import com.google.common.collect.Sets;
@@ -30,7 +31,6 @@ public class RouteCache implements Serializable {
     private final ConcurrentMap<String, Map<Long, String>> addressMap;
     // topicName -> publishInfo
     private final ConcurrentMap<String, PublishInfo> publishMap;
-
 
     public RouteCache() {
         this.routeMap = new ConcurrentHashMap<>();
@@ -73,7 +73,16 @@ public class RouteCache implements Serializable {
     }
 
     public void updateRoute(String topicName, RouteInfo routeInfo) {
+        RouteInfo oldRoute = this.routeMap.get(topicName);
+        if (!oldRoute.isChanged(routeInfo) && isPublishInfoOk(topicName)) {
+            return;
+        }
 
+        log.info("update routeInfo, topic: {}, old: {}, new: {}", topicName, oldRoute, routeInfo);
+
+        updateAddressMap(routeInfo);
+        updatePublishInfo(topicName, routeInfo);
+        updateRouteMap(topicName, routeInfo);
     }
 
     public void updateSubscription(String topicName, RouteInfo routeInfo) {
@@ -118,4 +127,40 @@ public class RouteCache implements Serializable {
             .findFirst()
             .orElse(null);
     }
+
+    private void updateAddressMap(RouteInfo routeInfo) {
+        for (GroupInfo groupInfo : routeInfo.getBrokerDatas()) {
+            this.addressMap.put(groupInfo.getBrokerName(), groupInfo.getBrokerAddrs());
+        }
+    }
+
+    private boolean isPublishInfoOk(String topicName) {
+        PublishInfo publishInfo = this.publishMap.get(topicName);
+        return publishInfo != null && publishInfo.isOk();
+    }
+
+    private void updatePublishInfo(String topicName, RouteInfo routeInfo) {
+        PublishInfo publishInfo = RouteConverter.toPublishInfo(topicName, routeInfo);
+        publishInfo.setHasRoute(true);
+        updatePublishInfo(topicName, publishInfo);
+    }
+
+    private void updatePublishInfo(String topicName, PublishInfo publishInfo) {
+        if (null == topicName || null == publishInfo) {
+            return;
+        }
+
+        PublishInfo prev = this.publishMap.put(topicName, publishInfo);
+        if (prev == null) {
+            return;
+        }
+
+        log.info("update publishInfo, topic: {}, old: {}, new: {}", topicName, prev, publishInfo);
+    }
+
+    private void updateRouteMap(String topicName, RouteInfo routeInfo) {
+        RouteInfo newRoute = new RouteInfo(routeInfo);
+        this.routeMap.put(topicName, newRoute);
+    }
+
 }
