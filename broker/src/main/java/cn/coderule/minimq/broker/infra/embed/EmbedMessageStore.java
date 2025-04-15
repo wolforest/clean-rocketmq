@@ -8,7 +8,11 @@ import cn.coderule.minimq.domain.service.store.domain.MessageQueue;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-public class EmbedMessageService implements MessageQueue {
+public class EmbedMessageStore extends AbstractEmbedStore implements MessageQueue {
+    public EmbedMessageStore(EmbedLoadBalance loadBalance) {
+        super(loadBalance);
+    }
+
     @Override
     public EnqueueResult enqueue(MessageBO messageBO) {
         return null;

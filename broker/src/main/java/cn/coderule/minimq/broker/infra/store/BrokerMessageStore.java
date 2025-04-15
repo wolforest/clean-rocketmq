@@ -1,6 +1,6 @@
 package cn.coderule.minimq.broker.infra.store;
 
-import cn.coderule.minimq.broker.infra.embed.EmbedMessageService;
+import cn.coderule.minimq.broker.infra.embed.EmbedMessageStore;
 import cn.coderule.minimq.broker.infra.remote.RemoteMessageService;
 import cn.coderule.minimq.domain.config.BrokerConfig;
 import cn.coderule.minimq.domain.domain.dto.EnqueueResult;
@@ -13,19 +13,19 @@ import java.util.concurrent.CompletableFuture;
 
 public class BrokerMessageStore implements MessageStore {
     private final BrokerConfig brokerConfig;
-    private final EmbedMessageService embedMessageService;
+    private final EmbedMessageStore embedMessageStore;
     private final RemoteMessageService remoteMessageService;
 
-    public BrokerMessageStore(BrokerConfig brokerConfig, EmbedMessageService embedMessageService, RemoteMessageService remoteMessageService) {
+    public BrokerMessageStore(BrokerConfig brokerConfig, EmbedMessageStore embedMessageStore, RemoteMessageService remoteMessageService) {
         this.brokerConfig = brokerConfig;
-        this.embedMessageService = embedMessageService;
+        this.embedMessageStore = embedMessageStore;
         this.remoteMessageService = remoteMessageService;
     }
 
     @Override
     public EnqueueResult enqueue(MessageBO messageBO) {
         if (brokerConfig.isEnableEmbedStore()) {
-            EnqueueResult result = embedMessageService.enqueue(messageBO);
+            EnqueueResult result = embedMessageStore.enqueue(messageBO);
             if (null != result) {
                 return result;
             }
@@ -41,7 +41,7 @@ public class BrokerMessageStore implements MessageStore {
     @Override
     public CompletableFuture<EnqueueResult> enqueueAsync(MessageBO messageBO) {
         if (brokerConfig.isEnableEmbedStore()) {
-            CompletableFuture<EnqueueResult> result = embedMessageService.enqueueAsync(messageBO);
+            CompletableFuture<EnqueueResult> result = embedMessageStore.enqueueAsync(messageBO);
             if (null != result) {
                 return result;
             }
@@ -57,7 +57,7 @@ public class BrokerMessageStore implements MessageStore {
     @Override
     public GetResult get(String topic, int queueId, long offset) {
         if (brokerConfig.isEnableEmbedStore()) {
-            GetResult result = embedMessageService.get(topic, queueId, offset);
+            GetResult result = embedMessageStore.get(topic, queueId, offset);
             if (null != result) {
                 return result;
             }
@@ -69,7 +69,7 @@ public class BrokerMessageStore implements MessageStore {
     @Override
     public GetResult get(String topic, int queueId, long offset, int num) {
         if (brokerConfig.isEnableEmbedStore()) {
-            GetResult result = embedMessageService.get(topic, queueId, offset, num);
+            GetResult result = embedMessageStore.get(topic, queueId, offset, num);
             if (null != result) {
                 return result;
             }
@@ -81,7 +81,7 @@ public class BrokerMessageStore implements MessageStore {
     @Override
     public GetResult get(GetRequest request) {
         if (brokerConfig.isEnableEmbedStore()) {
-            GetResult result = embedMessageService.get(request);
+            GetResult result = embedMessageStore.get(request);
             if (null != result) {
                 return result;
             }
@@ -93,7 +93,7 @@ public class BrokerMessageStore implements MessageStore {
     @Override
     public MessageBO getMessage(String topic, int queueId, long offset) {
         if (brokerConfig.isEnableEmbedStore()) {
-            MessageBO result = embedMessageService.getMessage(topic, queueId, offset);
+            MessageBO result = embedMessageStore.getMessage(topic, queueId, offset);
             if (null != result) {
                 return result;
             }
@@ -105,7 +105,7 @@ public class BrokerMessageStore implements MessageStore {
     @Override
     public List<MessageBO> getMessage(String topic, int queueId, long offset, int num) {
         if (brokerConfig.isEnableEmbedStore()) {
-            List<MessageBO> result = embedMessageService.getMessage(topic, queueId, offset, num);
+            List<MessageBO> result = embedMessageStore.getMessage(topic, queueId, offset, num);
             if (null != result) {
                 return result;
             }
