@@ -6,6 +6,7 @@ import cn.coderule.minimq.rpc.registry.protocol.route.RouteInfo;
 import com.google.common.collect.Sets;
 import java.io.Serializable;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -80,8 +81,13 @@ public class RouteCache implements Serializable {
         tmp.setTopicQueueMappingByBroker(null);
 
         Set<MessageQueue> newQueueSet = RouteConverter.getQueueSet(topicName, tmp);
+        Set<MessageQueue> oldQueueSet = this.subscriptionMap.get(topicName);
 
+        if (Objects.equals(newQueueSet, oldQueueSet)) {
+            return;
+        }
 
+        this.subscriptionMap.put(topicName, newQueueSet);
     }
 
     public PublishInfo getPublishInfo(String topicName) {
