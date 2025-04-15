@@ -1,4 +1,4 @@
-package cn.coderule.minimq.broker.infra.store;
+package cn.coderule.minimq.broker.infra.remote;
 
 import cn.coderule.minimq.broker.infra.route.RouteLoader;
 import cn.coderule.minimq.domain.config.BrokerConfig;

@@ -1,7 +1,5 @@
-package cn.coderule.minimq.broker.infra.store;
+package cn.coderule.minimq.broker.infra.embed;
 
-import cn.coderule.minimq.broker.infra.embed.EmbedSubscriptionStore;
-import cn.coderule.minimq.broker.infra.embed.EmbedTopicStore;
 import cn.coderule.minimq.domain.config.BrokerConfig;
 
 public class EmbedLoadBalance {
