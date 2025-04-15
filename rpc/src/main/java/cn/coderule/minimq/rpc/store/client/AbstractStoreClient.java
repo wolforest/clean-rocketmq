@@ -3,15 +3,16 @@ package cn.coderule.minimq.rpc.store.client;
 import cn.coderule.minimq.rpc.common.RpcClient;
 import cn.coderule.minimq.rpc.registry.client.DefaultRegistryClient;
 import cn.coderule.minimq.rpc.store.StoreClient;
+import lombok.Getter;
 import lombok.Setter;
 
-@Setter
-public class AbstractStoreClient implements StoreClient {
-    protected RpcClient rpcClient;
-    protected DefaultRegistryClient registryClient;
+@Getter
+public abstract class AbstractStoreClient implements StoreClient {
+    protected final String address;
+    protected final RpcClient rpcClient;
 
-    @Override
-    public boolean isLocal(String topicName) {
-        return true;
+    public AbstractStoreClient(RpcClient rpcClient, String address) {
+        this.rpcClient = rpcClient;
+        this.address = address;
     }
 }

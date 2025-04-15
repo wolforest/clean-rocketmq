@@ -12,11 +12,11 @@ public class RemoteLoadBalance {
         this.routeLoader = routeLoader;
     }
 
-    public String getServerAddress(String topicName) {
+    public String findByTopic(String topicName) {
         return null;
     }
 
-    public String getServerAddress(String topicName, int queueId) {
+    public String findByGroup(String groupName, int groupNo) {
         return null;
     }
 
