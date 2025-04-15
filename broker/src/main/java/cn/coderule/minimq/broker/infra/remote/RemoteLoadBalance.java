@@ -1,6 +1,6 @@
 package cn.coderule.minimq.broker.infra.remote;
 
-import cn.coderule.minimq.rpc.registry.client.RouteLoader;
+import cn.coderule.minimq.rpc.registry.route.RouteLoader;
 import cn.coderule.minimq.domain.config.BrokerConfig;
 
 public class RemoteLoadBalance {

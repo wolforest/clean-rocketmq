@@ -1,4 +1,4 @@
-package cn.coderule.minimq.rpc.registry.client;
+package cn.coderule.minimq.rpc.registry.route;
 
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.lang.concurrent.thread.DefaultThreadFactory;

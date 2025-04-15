@@ -1,4 +1,4 @@
-package cn.coderule.minimq.rpc.registry.client;
+package cn.coderule.minimq.rpc.registry.route;
 
 import cn.coderule.minimq.domain.domain.model.MessageQueue;
 import cn.coderule.minimq.rpc.registry.protocol.route.PublishInfo;
@@ -79,7 +79,7 @@ public class RouteCache implements Serializable {
         RouteInfo tmp = new RouteInfo(routeInfo);
         tmp.setTopicQueueMappingByBroker(null);
 
-        Set<MessageQueue> newQueueSet = PublishInfo.getQueueSet(topicName, tmp);
+        Set<MessageQueue> newQueueSet = RouteConverter.getQueueSet(topicName, tmp);
 
 
     }

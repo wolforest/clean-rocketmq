@@ -1,7 +1,7 @@
 package cn.coderule.minimq.broker.domain.route;
 
 import cn.coderule.minimq.rpc.registry.protocol.route.PublishInfo;
-import cn.coderule.minimq.rpc.registry.client.RouteLoader;
+import cn.coderule.minimq.rpc.registry.route.RouteLoader;
 import cn.coderule.minimq.broker.server.bootstrap.RequestContext;
 import cn.coderule.minimq.domain.domain.model.MessageQueue;
 import java.util.Set;

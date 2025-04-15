@@ -1,7 +1,7 @@
 package cn.coderule.minimq.broker.infra.remote;
 
 import cn.coderule.common.convention.service.Lifecycle;
-import cn.coderule.minimq.rpc.registry.client.RouteLoader;
+import cn.coderule.minimq.rpc.registry.route.RouteLoader;
 import cn.coderule.minimq.broker.server.BrokerContext;
 import cn.coderule.minimq.domain.config.BrokerConfig;
 
