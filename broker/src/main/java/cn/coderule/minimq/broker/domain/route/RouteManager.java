@@ -4,7 +4,7 @@ import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.util.lang.StringUtil;
 import cn.coderule.minimq.broker.api.RouteController;
 import cn.coderule.minimq.broker.infra.embed.EmbedTopicStore;
-import cn.coderule.minimq.broker.server.BrokerContext;
+import cn.coderule.minimq.broker.server.bootstrap.BrokerContext;
 import cn.coderule.minimq.domain.config.BrokerConfig;
 import cn.coderule.minimq.domain.domain.exception.InvalidConfigException;
 import cn.coderule.minimq.rpc.registry.route.RouteLoader;

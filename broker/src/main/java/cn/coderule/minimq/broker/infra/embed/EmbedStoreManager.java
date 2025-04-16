@@ -2,9 +2,9 @@ package cn.coderule.minimq.broker.infra.embed;
 
 import cn.coderule.common.convention.container.ApplicationContext;
 import cn.coderule.common.convention.service.Lifecycle;
-import cn.coderule.minimq.broker.server.BrokerContext;
+import cn.coderule.minimq.broker.server.bootstrap.BrokerContext;
 import cn.coderule.minimq.store.Store;
-import cn.coderule.minimq.store.server.StoreContext;
+import cn.coderule.minimq.store.server.bootstrap.StoreContext;
 import cn.coderule.minimq.store.server.bootstrap.StoreArgument;
 
 public class EmbedStoreManager implements Lifecycle {

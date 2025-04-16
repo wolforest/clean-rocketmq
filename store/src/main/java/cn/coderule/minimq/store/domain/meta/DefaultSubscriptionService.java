@@ -7,7 +7,7 @@ import cn.coderule.minimq.domain.domain.model.meta.SubscriptionMap;
 import cn.coderule.minimq.domain.domain.model.subscription.SubscriptionGroup;
 import cn.coderule.minimq.domain.service.store.domain.meta.ConsumeOffsetService;
 import cn.coderule.minimq.domain.service.store.domain.meta.SubscriptionService;
-import cn.coderule.minimq.store.server.StoreContext;
+import cn.coderule.minimq.store.server.bootstrap.StoreContext;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 

@@ -2,7 +2,7 @@ package cn.coderule.minimq.store.domain.index;
 
 import cn.coderule.minimq.domain.service.store.domain.CommitLogDispatcher;
 import cn.coderule.minimq.domain.service.store.manager.IndexManager;
-import cn.coderule.minimq.store.server.StoreContext;
+import cn.coderule.minimq.store.server.bootstrap.StoreContext;
 
 public class DefaultIndexManager implements IndexManager {
     @Override

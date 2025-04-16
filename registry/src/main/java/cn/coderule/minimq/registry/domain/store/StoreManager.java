@@ -13,7 +13,7 @@ import cn.coderule.minimq.registry.processor.RegistryProcessor;
 import cn.coderule.minimq.registry.processor.RouteProcessor;
 import cn.coderule.minimq.registry.processor.TopicProcessor;
 import cn.coderule.minimq.registry.server.bootstrap.ExecutorFactory;
-import cn.coderule.minimq.registry.server.RegistryContext;
+import cn.coderule.minimq.registry.server.bootstrap.RegistryContext;
 import cn.coderule.minimq.registry.server.rpc.HaClient;
 
 public class StoreManager implements Lifecycle {

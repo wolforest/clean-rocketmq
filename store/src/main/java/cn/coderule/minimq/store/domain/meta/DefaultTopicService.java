@@ -10,7 +10,7 @@ import cn.coderule.minimq.domain.service.store.domain.meta.ConsumeOffsetService;
 import cn.coderule.minimq.domain.service.store.domain.meta.TopicService;
 import cn.coderule.minimq.domain.utils.topic.KeyBuilder;
 import cn.coderule.minimq.store.infra.StoreRegister;
-import cn.coderule.minimq.store.server.StoreContext;
+import cn.coderule.minimq.store.server.bootstrap.StoreContext;
 import java.util.Map;
 import java.util.Set;
 import lombok.Getter;

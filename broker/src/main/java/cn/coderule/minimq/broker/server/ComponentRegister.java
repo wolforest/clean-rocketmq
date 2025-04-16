@@ -1,4 +1,4 @@
-package cn.coderule.minimq.broker.server.bootstrap;
+package cn.coderule.minimq.broker.server;
 
 import cn.coderule.common.convention.service.LifecycleManager;
 import cn.coderule.common.util.lang.StringUtil;
@@ -11,11 +11,11 @@ import cn.coderule.minimq.broker.infra.BrokerRegister;
 import cn.coderule.minimq.broker.infra.embed.EmbedStoreManager;
 import cn.coderule.minimq.broker.infra.remote.RemoteStoreManager;
 import cn.coderule.minimq.broker.infra.store.StoreManager;
-import cn.coderule.minimq.broker.server.BrokerContext;
+import cn.coderule.minimq.broker.server.bootstrap.BrokerContext;
 import cn.coderule.minimq.broker.server.grpc.GrpcManager;
 import cn.coderule.minimq.domain.config.BrokerConfig;
 import cn.coderule.minimq.rpc.registry.route.RouteLoader;
-import cn.coderule.minimq.store.server.StoreContext;
+import cn.coderule.minimq.store.server.bootstrap.StoreContext;
 
 public class ComponentRegister {
     private final LifecycleManager manager = new LifecycleManager();

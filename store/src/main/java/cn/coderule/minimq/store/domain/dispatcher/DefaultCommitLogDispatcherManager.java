@@ -3,7 +3,7 @@ package cn.coderule.minimq.store.domain.dispatcher;
 import cn.coderule.minimq.domain.service.store.domain.CommitLog;
 import cn.coderule.minimq.domain.service.store.domain.CommitLogDispatcher;
 import cn.coderule.minimq.domain.service.store.manager.CommitLogDispatcherManager;
-import cn.coderule.minimq.store.server.StoreContext;
+import cn.coderule.minimq.store.server.bootstrap.StoreContext;
 
 public class DefaultCommitLogDispatcherManager implements CommitLogDispatcherManager {
     private DefaultCommitLogDispatcher dispatcher;

@@ -1,6 +1,5 @@
 package cn.coderule.minimq.broker.server.bootstrap;
 
-import cn.coderule.minimq.broker.server.BrokerContext;
 import cn.coderule.minimq.domain.config.BrokerConfig;
 import cn.coderule.minimq.domain.config.GrpcConfig;
 import cn.coderule.minimq.domain.config.MessageConfig;

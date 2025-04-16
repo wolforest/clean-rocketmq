@@ -2,7 +2,7 @@ package cn.coderule.minimq.broker.domain.transaction;
 
 import cn.coderule.minimq.broker.api.TransactionController;
 import cn.coderule.common.convention.service.Lifecycle;
-import cn.coderule.minimq.broker.server.BrokerContext;
+import cn.coderule.minimq.broker.server.bootstrap.BrokerContext;
 
 public class TransactionManager implements Lifecycle {
     private Transaction transaction;

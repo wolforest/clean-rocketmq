@@ -1,4 +1,4 @@
-package cn.coderule.minimq.registry.server.bootstrap;
+package cn.coderule.minimq.registry.server;
 
 import cn.coderule.common.convention.service.LifecycleManager;
 import cn.coderule.minimq.domain.config.RegistryConfig;
@@ -6,7 +6,8 @@ import cn.coderule.minimq.registry.domain.broker.BrokerManager;
 import cn.coderule.minimq.registry.domain.kv.KVManager;
 import cn.coderule.minimq.registry.domain.property.PropertyManager;
 import cn.coderule.minimq.registry.domain.store.StoreManager;
-import cn.coderule.minimq.registry.server.RegistryContext;
+import cn.coderule.minimq.registry.server.bootstrap.ExecutorFactory;
+import cn.coderule.minimq.registry.server.bootstrap.RegistryContext;
 import cn.coderule.minimq.registry.server.rpc.HaClient;
 import cn.coderule.minimq.registry.server.rpc.RpcManager;
 import cn.coderule.minimq.rpc.common.config.RpcClientConfig;
