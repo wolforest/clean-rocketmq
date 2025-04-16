@@ -7,6 +7,7 @@ import cn.coderule.minimq.broker.domain.transaction.TransactionManager;
 import cn.coderule.minimq.broker.infra.BrokerRegister;
 import cn.coderule.minimq.broker.infra.embed.EmbedStoreManager;
 import cn.coderule.minimq.broker.infra.remote.RemoteStoreManager;
+import cn.coderule.minimq.broker.infra.store.StoreManager;
 import cn.coderule.minimq.broker.server.BrokerContext;
 import cn.coderule.minimq.broker.server.grpc.GrpcManager;
 import cn.coderule.minimq.domain.config.BrokerConfig;
@@ -38,7 +39,11 @@ public class ComponentRegister {
 
     private void registerInfra() {
         registerBrokerRegister();
+        registerRouteLoader();
+
         registerEmbedStore();
+        registerRemoteStore();
+        registerStore();
     }
 
     private void registerDomain() {
@@ -80,6 +85,11 @@ public class ComponentRegister {
 
     private void registerRemoteStore() {
         RemoteStoreManager component = new RemoteStoreManager();
+        manager.register(component);
+    }
+
+    private void registerStore() {
+        StoreManager component = new StoreManager();
         manager.register(component);
     }
 
