@@ -99,6 +99,10 @@ public class RouteCache implements Serializable {
         this.subscriptionMap.put(topicName, newQueueSet);
     }
 
+    public RouteInfo getRoute(String topicName) {
+        return this.routeMap.get(topicName);
+    }
+
     public PublishInfo getPublishInfo(String topicName) {
         return this.publishMap.get(topicName);
     }

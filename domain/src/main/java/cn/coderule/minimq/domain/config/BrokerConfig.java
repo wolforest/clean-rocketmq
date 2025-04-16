@@ -4,9 +4,11 @@ import cn.coderule.common.util.lang.SystemUtil;
 import cn.coderule.common.util.net.NetworkUtil;
 import java.io.Serializable;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
-public class BrokerConfig implements Serializable {
+@EqualsAndHashCode(callSuper = true)
+public class BrokerConfig extends ServerIdentity implements Serializable {
     private String host = NetworkUtil.getLocalAddress();
     private Integer port = 8080;
 

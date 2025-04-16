@@ -42,7 +42,7 @@ public class RouteManager implements Lifecycle {
         RouteMocker routeMocker = null;
         if (brokerConfig.isEnableEmbedStore()) {
             EmbedTopicStore embedTopicStore = BrokerContext.getBean(EmbedTopicStore.class);
-            routeMocker = new RouteMocker(embedTopicStore);
+            routeMocker = new RouteMocker(brokerConfig, embedTopicStore);
         }
 
         if (null == routeLoader && null == routeMocker) {

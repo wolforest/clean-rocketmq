@@ -2,8 +2,7 @@ package cn.coderule.minimq.broker.api;
 
 import cn.coderule.minimq.broker.domain.route.RouteService;
 import cn.coderule.minimq.broker.server.bootstrap.RequestContext;
-import cn.coderule.minimq.domain.domain.model.MessageQueue;
-import java.util.Set;
+import cn.coderule.minimq.rpc.registry.protocol.route.RouteInfo;
 
 public class RouteController {
     private final RouteService routeService;
@@ -12,7 +11,7 @@ public class RouteController {
         this.routeService = routeService;
     }
 
-    public Set<MessageQueue> getRoute(RequestContext context, String topicName) {
+    public RouteInfo getRoute(RequestContext context, String topicName) {
         return routeService.get(context, topicName);
     }
 

@@ -91,6 +91,10 @@ public class RouteLoader implements Lifecycle {
         }
     }
 
+    public RouteInfo getRoute(String topicName) {
+        return route.getRoute(topicName);
+    }
+
     public PublishInfo getPublishInfo(String topicName) {
         PublishInfo result = route.getPublishInfo(topicName);
 
