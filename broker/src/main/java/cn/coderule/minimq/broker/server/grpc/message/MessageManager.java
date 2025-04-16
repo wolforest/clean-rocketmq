@@ -1,5 +1,6 @@
 package cn.coderule.minimq.broker.server.grpc.message;
 
+import cn.coderule.minimq.broker.api.RouteController;
 import cn.coderule.minimq.broker.server.grpc.activity.RejectActivity;
 import cn.coderule.minimq.broker.server.grpc.activity.TransactionActivity;
 import cn.coderule.common.convention.service.Lifecycle;
@@ -60,6 +61,7 @@ public class MessageManager implements Lifecycle {
 
     @Override
     public void start() {
+        injectRouteController();
         injectProducerController();
         injectConsumerController();
         injectTransactionController();
@@ -72,16 +74,6 @@ public class MessageManager implements Lifecycle {
         this.producerThreadPoolExecutor.shutdown();
         this.consumerThreadPoolExecutor.shutdown();
         this.transactionThreadPoolExecutor.shutdown();
-    }
-
-    @Override
-    public void cleanup() {
-
-    }
-
-    @Override
-    public State getState() {
-        return State.RUNNING;
     }
 
     private void initClientActivity() {
@@ -179,13 +171,20 @@ public class MessageManager implements Lifecycle {
         );
     }
 
+    private void injectRouteController() {
+        RouteController routeController = BrokerContext.getAPI(RouteController.class);
+        if (routeController == null) {
+            throw new StartupException("route controller is null");
+        }
+        this.routeActivity.setRouteController(routeController);
+    }
+
     private void injectProducerController() {
         ProducerController producerController = BrokerContext.getAPI(ProducerController.class);
         if (producerController == null) {
             throw new StartupException("producer controller is null");
         }
         this.producerActivity.setProducerController(producerController);
-        this.routeActivity.setProducerController(producerController);
     }
 
     private void injectConsumerController() {
@@ -194,7 +193,6 @@ public class MessageManager implements Lifecycle {
             throw new StartupException("consumer controller is null");
         }
         this.consumerActivity.setConsumerController(consumerController);
-        this.routeActivity.setConsumerController(consumerController);
     }
 
     private void injectTransactionController() {

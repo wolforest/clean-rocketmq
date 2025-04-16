@@ -6,6 +6,7 @@ import cn.coderule.minimq.broker.api.RouteController;
 import cn.coderule.minimq.broker.infra.embed.EmbedTopicStore;
 import cn.coderule.minimq.broker.server.bootstrap.BrokerContext;
 import cn.coderule.minimq.domain.config.BrokerConfig;
+import cn.coderule.minimq.domain.config.TopicConfig;
 import cn.coderule.minimq.domain.domain.exception.InvalidConfigException;
 import cn.coderule.minimq.rpc.registry.route.RouteLoader;
 
@@ -42,7 +43,8 @@ public class RouteManager implements Lifecycle {
         RouteMocker routeMocker = null;
         if (brokerConfig.isEnableEmbedStore()) {
             EmbedTopicStore embedTopicStore = BrokerContext.getBean(EmbedTopicStore.class);
-            routeMocker = new RouteMocker(brokerConfig, embedTopicStore);
+            TopicConfig topicConfig = BrokerContext.getBean(TopicConfig.class);
+            routeMocker = new RouteMocker(brokerConfig, topicConfig, embedTopicStore);
         }
 
         if (null == routeLoader && null == routeMocker) {
