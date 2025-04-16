@@ -26,6 +26,10 @@ public class BrokerContext {
         return APPLICATION.getBean(beanClass);
     }
 
+    public static <T> T getBean(Class<T> beanClass, boolean throwNotFoundException) {
+        return APPLICATION.getBean(beanClass, throwNotFoundException);
+    }
+
     public static void registerAPI(Object bean) {
         API.register(bean);
     }

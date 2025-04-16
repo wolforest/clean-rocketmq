@@ -1,6 +1,7 @@
 package cn.coderule.minimq.broker.server.bootstrap;
 
 import cn.coderule.common.convention.service.LifecycleManager;
+import cn.coderule.common.util.lang.StringUtil;
 import cn.coderule.minimq.broker.domain.consumer.ConsumerManager;
 import cn.coderule.minimq.broker.domain.producer.ProducerManager;
 import cn.coderule.minimq.broker.domain.route.RouteManager;
@@ -73,12 +74,20 @@ public class ComponentRegister {
     }
 
     private void registerBrokerRegister() {
+        if (StringUtil.isBlank(brokerConfig.getRegistryAddress())) {
+            return;
+        }
+
         BrokerRegister component = new BrokerRegister(brokerConfig);
         manager.register(component);
         BrokerContext.register(component);
     }
 
     private void registerRouteLoader() {
+        if (StringUtil.isBlank(brokerConfig.getRegistryAddress())) {
+            return;
+        }
+
         BrokerRegister register = BrokerContext.getBean(BrokerRegister.class);
         RouteLoader component = new RouteLoader(register.getRegistryClient());
         manager.register(component);

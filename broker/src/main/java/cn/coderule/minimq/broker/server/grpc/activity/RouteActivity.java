@@ -41,6 +41,8 @@ public class RouteActivity {
             .setStatus(Status.newBuilder().setCode(Code.OK))
             .build();
 
+
+
         responseObserver.onNext(response);
         responseObserver.onCompleted();
     }

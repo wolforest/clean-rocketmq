@@ -1,15 +1,16 @@
 package cn.coderule.minimq.broker.domain.route;
 
-import cn.coderule.minimq.rpc.registry.protocol.route.PublishInfo;
 import cn.coderule.minimq.rpc.registry.route.RouteLoader;
 import cn.coderule.minimq.broker.server.bootstrap.RequestContext;
 import cn.coderule.minimq.domain.domain.model.MessageQueue;
 import java.util.Set;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * load route info from name server
  *
  */
+@Slf4j
 public class RouteService {
     private final RouteMocker routeMocker;
     private final RouteLoader routeLoader;    // private RegistryClient registryClient;
@@ -21,22 +22,6 @@ public class RouteService {
 
     public Set<MessageQueue> get(RequestContext context, String topic) {
         return routeMocker.getRoute(topic);
-    }
-
-    public PublishInfo getPublishInfo(String topicName) {
-        return routeLoader.getPublishInfo(topicName);
-    }
-
-    public Set<MessageQueue> getSubscriptionInfo(String topicName) {
-        return routeLoader.getSubscriptionInfo(topicName);
-    }
-
-    public String getAddressInPublish(String groupName) {
-        return routeLoader.getAddressInPublish(groupName);
-    }
-
-    public String getAddressInSubscription(String groupName, long groupNo, boolean inGroup) {
-        return routeLoader.getAddressInSubscription(groupName, groupNo, inGroup);
     }
 
 
