@@ -1,6 +1,7 @@
 package cn.coderule.minimq.broker.infra.remote;
 
 import cn.coderule.minimq.domain.config.BrokerConfig;
+import cn.coderule.minimq.domain.domain.exception.InvalidConfigException;
 import cn.coderule.minimq.domain.domain.model.message.MessageBO;
 import cn.coderule.minimq.domain.domain.dto.EnqueueResult;
 import cn.coderule.minimq.domain.domain.dto.GetRequest;
@@ -21,6 +22,10 @@ public class RemoteMessageStore extends AbstractRemoteStore implements MessageSt
 
     public RemoteMessageStore(BrokerConfig brokerConfig, RemoteLoadBalance loadBalance) {
         super(loadBalance);
+
+        if (!brokerConfig.isEnableRemoteStore()) {
+            throw new InvalidConfigException("invalid config: enableRemoteStore is false");
+        }
 
         clientMap = new ConcurrentHashMap<>();
         this.rpcClient = new NettyClient(new RpcClientConfig());
