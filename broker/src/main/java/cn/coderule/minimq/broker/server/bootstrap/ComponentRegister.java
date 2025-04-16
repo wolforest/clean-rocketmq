@@ -3,6 +3,8 @@ package cn.coderule.minimq.broker.server.bootstrap;
 import cn.coderule.common.convention.service.LifecycleManager;
 import cn.coderule.minimq.broker.domain.consumer.ConsumerManager;
 import cn.coderule.minimq.broker.domain.producer.ProducerManager;
+import cn.coderule.minimq.broker.domain.route.RouteManager;
+import cn.coderule.minimq.broker.domain.timer.TimerManager;
 import cn.coderule.minimq.broker.domain.transaction.TransactionManager;
 import cn.coderule.minimq.broker.infra.BrokerRegister;
 import cn.coderule.minimq.broker.infra.embed.EmbedStoreManager;
@@ -47,8 +49,12 @@ public class ComponentRegister {
     }
 
     private void registerDomain() {
+        registerRoute();
+
         registerProducer();
         registerConsumer();
+
+        registerTimer();
         registerTransaction();
     }
 
@@ -93,6 +99,11 @@ public class ComponentRegister {
         manager.register(component);
     }
 
+    private void registerRoute() {
+        RouteManager component = new RouteManager();
+        manager.register(component);
+    }
+
     private void registerProducer() {
         ProducerManager component = new ProducerManager();
         manager.register(component);
@@ -109,7 +120,8 @@ public class ComponentRegister {
     }
 
     private void registerTimer() {
-
+        TimerManager component = new TimerManager();
+        manager.register(component);
     }
 
 }
