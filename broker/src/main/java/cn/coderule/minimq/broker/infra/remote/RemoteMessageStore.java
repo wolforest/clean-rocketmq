@@ -1,7 +1,7 @@
 package cn.coderule.minimq.broker.infra.remote;
 
+import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.minimq.domain.config.BrokerConfig;
-import cn.coderule.minimq.domain.domain.exception.InvalidConfigException;
 import cn.coderule.minimq.domain.domain.model.message.MessageBO;
 import cn.coderule.minimq.domain.domain.dto.EnqueueResult;
 import cn.coderule.minimq.domain.domain.dto.GetRequest;
@@ -16,19 +16,35 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-public class RemoteMessageStore extends AbstractRemoteStore implements MessageStore {
+public class RemoteMessageStore extends AbstractRemoteStore implements MessageStore, Lifecycle {
+    private final BrokerConfig brokerConfig;
     private final ConcurrentMap<String, MessageClient> clientMap;
     private final RpcClient rpcClient;
 
     public RemoteMessageStore(BrokerConfig brokerConfig, RemoteLoadBalance loadBalance) {
         super(loadBalance);
 
-        if (!brokerConfig.isEnableRemoteStore()) {
-            throw new InvalidConfigException("invalid config: enableRemoteStore is false");
-        }
-
+        this.brokerConfig = brokerConfig;
         clientMap = new ConcurrentHashMap<>();
         this.rpcClient = new NettyClient(new RpcClientConfig());
+    }
+
+    @Override
+    public void start() {
+        if (!brokerConfig.isEnableRemoteStore()) {
+            return;
+        }
+
+        rpcClient.start();
+    }
+
+    @Override
+    public void shutdown() {
+        if (!brokerConfig.isEnableRemoteStore()) {
+            return;
+        }
+
+        rpcClient.shutdown();
     }
 
     @Override
@@ -83,4 +99,6 @@ public class RemoteMessageStore extends AbstractRemoteStore implements MessageSt
 
         return prev == null ? client : prev;
     }
+
+
 }
