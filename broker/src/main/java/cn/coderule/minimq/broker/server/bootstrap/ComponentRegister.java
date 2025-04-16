@@ -6,9 +6,11 @@ import cn.coderule.minimq.broker.domain.producer.ProducerManager;
 import cn.coderule.minimq.broker.domain.transaction.TransactionManager;
 import cn.coderule.minimq.broker.infra.BrokerRegister;
 import cn.coderule.minimq.broker.infra.embed.EmbedStoreManager;
+import cn.coderule.minimq.broker.infra.remote.RemoteStoreManager;
 import cn.coderule.minimq.broker.server.BrokerContext;
 import cn.coderule.minimq.broker.server.grpc.GrpcManager;
 import cn.coderule.minimq.domain.config.BrokerConfig;
+import cn.coderule.minimq.rpc.registry.route.RouteLoader;
 import cn.coderule.minimq.store.server.StoreContext;
 
 public class ComponentRegister {
@@ -35,8 +37,8 @@ public class ComponentRegister {
     }
 
     private void registerInfra() {
-        registerStoreRegister();
-        registerStore();
+        registerBrokerRegister();
+        registerEmbedStore();
     }
 
     private void registerDomain() {
@@ -59,15 +61,26 @@ public class ComponentRegister {
 
     }
 
-    private void registerStore() {
+    private void registerBrokerRegister() {
+        BrokerRegister component = new BrokerRegister(brokerConfig);
+        manager.register(component);
+        BrokerContext.register(component);
+    }
+
+    private void registerRouteLoader() {
+        BrokerRegister register = BrokerContext.getBean(BrokerRegister.class);
+        RouteLoader component = new RouteLoader(register.getRegistryClient());
+        manager.register(component);
+    }
+
+    private void registerEmbedStore() {
         EmbedStoreManager component = new EmbedStoreManager();
         manager.register(component);
     }
 
-    private void registerStoreRegister() {
-        BrokerRegister component = new BrokerRegister(brokerConfig);
+    private void registerRemoteStore() {
+        RemoteStoreManager component = new RemoteStoreManager();
         manager.register(component);
-        BrokerContext.register(component);
     }
 
     private void registerProducer() {
