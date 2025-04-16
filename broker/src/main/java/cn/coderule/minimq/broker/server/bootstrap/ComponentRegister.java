@@ -47,9 +47,9 @@ public class ComponentRegister {
     }
 
     private void registerDomain() {
-        registerTransaction();
         registerProducer();
         registerConsumer();
+        registerTransaction();
     }
 
     private void registerServer() {
@@ -106,6 +106,10 @@ public class ComponentRegister {
     private void registerTransaction() {
         TransactionManager component = new TransactionManager();
         manager.register(component);
+    }
+
+    private void registerTimer() {
+
     }
 
 }
