@@ -1,4 +1,4 @@
-package cn.coderule.minimq.broker.server.grpc.activity;
+package cn.coderule.minimq.rpc.common.grpc.activity;
 
 import cn.coderule.minimq.rpc.common.grpc.core.GrpcTask;
 import java.util.concurrent.RejectedExecutionHandler;

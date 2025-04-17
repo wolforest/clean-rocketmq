@@ -1,7 +1,7 @@
 package cn.coderule.minimq.broker.server.grpc.message;
 
 import cn.coderule.minimq.broker.api.RouteController;
-import cn.coderule.minimq.broker.server.grpc.activity.RejectActivity;
+import cn.coderule.minimq.rpc.common.grpc.activity.RejectActivity;
 import cn.coderule.minimq.broker.server.grpc.activity.TransactionActivity;
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.lang.concurrent.thread.pool.ThreadPoolFactory;

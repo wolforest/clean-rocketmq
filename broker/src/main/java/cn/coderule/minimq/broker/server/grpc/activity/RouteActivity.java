@@ -11,6 +11,7 @@ import cn.coderule.minimq.rpc.common.core.RequestContext;
 import cn.coderule.minimq.rpc.registry.protocol.route.RouteInfo;
 import io.grpc.stub.StreamObserver;
 import java.util.ArrayList;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ThreadPoolExecutor;
 import lombok.Setter;
 
@@ -31,10 +32,13 @@ public class RouteActivity {
             .build();
 
         RequestContext context = new RequestContext();
-        RouteInfo routeInfo = routeController.getRoute(context, request.getTopic().getName());
 
         responseObserver.onNext(response);
         responseObserver.onCompleted();
+    }
+
+    public CompletableFuture<RouteInfo> getRouteAsync(RequestContext context, QueryRouteRequest request) {
+        return routeController.getRoute(context, request.getTopic().getName());
     }
 
     public void getAssignment(QueryAssignmentRequest request, StreamObserver<QueryAssignmentResponse> responseObserver) {
