@@ -17,11 +17,15 @@
 package cn.coderule.minimq.rpc.common.core.constant;
 
 import cn.coderule.minimq.rpc.common.core.enums.LanguageCode;
+import io.grpc.Attributes;
 import io.netty.util.AttributeKey;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class AttributeKeys {
+
+    public static final Attributes.Key<String> CHANNEL_ID =
+        Attributes.Key.create(HAProxyConstants.CHANNEL_ID);
 
     public static final AttributeKey<String> REMOTE_ADDR_KEY = AttributeKey.valueOf("RemoteAddr");
 
