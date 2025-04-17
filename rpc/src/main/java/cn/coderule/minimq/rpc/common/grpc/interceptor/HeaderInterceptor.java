@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package cn.coderule.minimq.broker.server.grpc.interceptor;
+package cn.coderule.minimq.rpc.common.grpc.interceptor;
 
 import cn.coderule.common.util.lang.StringUtil;
 import cn.coderule.minimq.rpc.common.grpc.constants.GrpcKeys;
@@ -65,11 +65,10 @@ public class HeaderInterceptor implements ServerInterceptor {
     }
 
     private String parseSocketAddress(SocketAddress socketAddress) {
-        if (!(socketAddress instanceof InetSocketAddress)) {
+        if (!(socketAddress instanceof InetSocketAddress inetSocketAddress)) {
             return "";
         }
 
-        InetSocketAddress inetSocketAddress = (InetSocketAddress) socketAddress;
         return HostAndPort.fromParts(
             inetSocketAddress.getAddress().getHostAddress(),
             inetSocketAddress.getPort()

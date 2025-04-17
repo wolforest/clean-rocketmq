@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package cn.coderule.minimq.broker.server.grpc.interceptor;
+package cn.coderule.minimq.rpc.common.grpc.interceptor;
 
 import cn.coderule.minimq.rpc.common.grpc.constants.GrpcConstants;
 import io.grpc.Context;

@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package cn.coderule.minimq.broker.server.grpc.common;
+package cn.coderule.minimq.rpc.common.grpc.core;
 
 import apache.rocketmq.v2.Code;
 import apache.rocketmq.v2.Status;

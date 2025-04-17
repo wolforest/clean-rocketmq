@@ -1,4 +1,4 @@
-package cn.coderule.minimq.broker.server.grpc.common;
+package cn.coderule.minimq.rpc.common.grpc.core;
 
 import cn.coderule.minimq.rpc.common.core.RequestContext;
 import io.grpc.stub.StreamObserver;

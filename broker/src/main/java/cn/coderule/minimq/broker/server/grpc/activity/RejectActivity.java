@@ -1,6 +1,6 @@
 package cn.coderule.minimq.broker.server.grpc.activity;
 
-import cn.coderule.minimq.broker.server.grpc.common.GrpcTask;
+import cn.coderule.minimq.rpc.common.grpc.core.GrpcTask;
 import java.util.concurrent.RejectedExecutionHandler;
 import java.util.concurrent.ThreadPoolExecutor;
 import lombok.extern.slf4j.Slf4j;
