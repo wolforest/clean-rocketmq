@@ -63,8 +63,6 @@ public class MessageService extends MessagingServiceGrpc.MessagingServiceImplBas
         routeActivity.getRoute(request, responseObserver);
     }
 
-
-
     @Override
     public void sendMessage(SendMessageRequest request, StreamObserver<SendMessageResponse> responseObserver) {
         producerActivity.produce(request, responseObserver);

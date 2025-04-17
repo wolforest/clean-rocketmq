@@ -9,7 +9,7 @@ testhttp/
 
 rpc/src/main/java/apache/
 
-wolf
+.wolf
 
 # Log file
 *.log
