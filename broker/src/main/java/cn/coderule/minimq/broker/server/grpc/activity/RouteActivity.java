@@ -7,7 +7,7 @@ import apache.rocketmq.v2.QueryRouteRequest;
 import apache.rocketmq.v2.QueryRouteResponse;
 import apache.rocketmq.v2.Status;
 import cn.coderule.minimq.broker.api.RouteController;
-import cn.coderule.minimq.broker.server.bootstrap.RequestContext;
+import cn.coderule.minimq.rpc.common.core.RequestContext;
 import cn.coderule.minimq.rpc.registry.protocol.route.RouteInfo;
 import io.grpc.stub.StreamObserver;
 import java.util.ArrayList;

@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package cn.coderule.minimq.rpc.common.rpc.core.constant;
+package cn.coderule.minimq.rpc.common.core;
 
 public class HAProxyConstants {
 

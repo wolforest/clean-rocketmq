@@ -1,7 +1,7 @@
 package cn.coderule.minimq.broker.api;
 
 import cn.coderule.minimq.broker.domain.route.RouteService;
-import cn.coderule.minimq.broker.server.bootstrap.RequestContext;
+import cn.coderule.minimq.rpc.common.core.RequestContext;
 import cn.coderule.minimq.rpc.registry.protocol.route.RouteInfo;
 
 public class RouteController {

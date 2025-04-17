@@ -3,7 +3,7 @@ package cn.coderule.minimq.broker.domain.route;
 import cn.coderule.minimq.domain.domain.exception.InvalidConfigException;
 import cn.coderule.minimq.rpc.registry.protocol.route.RouteInfo;
 import cn.coderule.minimq.rpc.registry.route.RouteLoader;
-import cn.coderule.minimq.broker.server.bootstrap.RequestContext;
+import cn.coderule.minimq.rpc.common.core.RequestContext;
 import lombok.extern.slf4j.Slf4j;
 
 /**

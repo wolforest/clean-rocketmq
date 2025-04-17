@@ -17,7 +17,7 @@
 
 package cn.coderule.minimq.broker.server.grpc.interceptor;
 
-import cn.coderule.minimq.broker.server.grpc.common.GrpcConstants;
+import cn.coderule.minimq.rpc.common.grpc.constants.GrpcConstants;
 import io.grpc.Context;
 import io.grpc.Contexts;
 import io.grpc.Metadata;

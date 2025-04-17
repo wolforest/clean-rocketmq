@@ -1,4 +1,4 @@
-package cn.coderule.minimq.broker.server.bootstrap;
+package cn.coderule.minimq.rpc.common.core;
 
 import io.netty.channel.Channel;
 import java.util.HashMap;

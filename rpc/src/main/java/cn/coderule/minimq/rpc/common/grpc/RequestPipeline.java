@@ -15,9 +15,9 @@
  *  limitations under the License.
  */
 
-package cn.coderule.minimq.broker.server.grpc.pipeline;
+package cn.coderule.minimq.rpc.common.grpc;
 
-import cn.coderule.minimq.broker.server.bootstrap.RequestContext;
+import cn.coderule.minimq.rpc.common.core.RequestContext;
 import com.google.protobuf.GeneratedMessageV3;
 import io.grpc.Metadata;
 

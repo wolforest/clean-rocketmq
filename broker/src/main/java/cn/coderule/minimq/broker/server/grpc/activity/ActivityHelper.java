@@ -1,7 +1,7 @@
 package cn.coderule.minimq.broker.server.grpc.activity;
 
 import apache.rocketmq.v2.Status;
-import cn.coderule.minimq.broker.server.bootstrap.RequestContext;
+import cn.coderule.minimq.rpc.common.core.RequestContext;
 import io.grpc.stub.StreamObserver;
 import java.util.concurrent.ExecutorService;
 import java.util.function.Function;

@@ -14,9 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.coderule.minimq.broker.server.grpc.common;
+package cn.coderule.minimq.rpc.common.grpc.constants;
 
-import cn.coderule.minimq.rpc.common.rpc.core.constant.HAProxyConstants;
+import cn.coderule.minimq.rpc.common.core.HAProxyConstants;
 import io.grpc.Attributes;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
