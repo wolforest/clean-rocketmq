@@ -2,10 +2,10 @@ package cn.coderule.minimq.store.server.rpc.server;
 
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.minimq.domain.config.StoreConfig;
-import cn.coderule.minimq.rpc.rpc.RpcProcessor;
-import cn.coderule.minimq.rpc.rpc.RpcServer;
-import cn.coderule.minimq.rpc.rpc.config.RpcServerConfig;
-import cn.coderule.minimq.rpc.rpc.netty.NettyServer;
+import cn.coderule.minimq.rpc.common.rpc.RpcProcessor;
+import cn.coderule.minimq.rpc.common.rpc.RpcServer;
+import cn.coderule.minimq.rpc.common.rpc.config.RpcServerConfig;
+import cn.coderule.minimq.rpc.common.rpc.netty.NettyServer;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

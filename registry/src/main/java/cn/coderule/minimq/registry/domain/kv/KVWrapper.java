@@ -16,7 +16,7 @@
  */
 package cn.coderule.minimq.registry.domain.kv;
 
-import cn.coderule.minimq.rpc.rpc.protocol.codec.RpcSerializable;
+import cn.coderule.minimq.rpc.common.rpc.protocol.codec.RpcSerializable;
 import java.util.HashMap;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

@@ -2,7 +2,7 @@ package cn.coderule.minimq.rpc.store.client;
 
 import cn.coderule.minimq.domain.domain.model.Topic;
 import cn.coderule.minimq.domain.service.store.api.TopicStore;
-import cn.coderule.minimq.rpc.rpc.RpcClient;
+import cn.coderule.minimq.rpc.common.rpc.RpcClient;
 import cn.coderule.minimq.rpc.store.StoreClient;
 import lombok.Setter;
 

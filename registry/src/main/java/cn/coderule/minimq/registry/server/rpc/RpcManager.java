@@ -4,7 +4,7 @@ import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.minimq.domain.config.RegistryConfig;
 import cn.coderule.minimq.registry.domain.store.service.ChannelCloser;
 import cn.coderule.minimq.registry.server.bootstrap.RegistryContext;
-import cn.coderule.minimq.rpc.rpc.config.RpcServerConfig;
+import cn.coderule.minimq.rpc.common.rpc.config.RpcServerConfig;
 
 public class RpcManager implements Lifecycle {
     private RegistryServer server;

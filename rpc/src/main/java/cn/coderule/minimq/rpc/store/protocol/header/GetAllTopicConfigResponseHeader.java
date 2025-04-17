@@ -20,12 +20,12 @@
  */
 package cn.coderule.minimq.rpc.store.protocol.header;
 
-import cn.coderule.minimq.rpc.rpc.core.annotation.RocketMQAction;
-import cn.coderule.minimq.rpc.rpc.core.enums.Action;
-import cn.coderule.minimq.rpc.rpc.core.enums.ResourceType;
-import cn.coderule.minimq.rpc.rpc.core.exception.RemotingCommandException;
-import cn.coderule.minimq.rpc.rpc.protocol.code.RequestCode;
-import cn.coderule.minimq.rpc.rpc.protocol.header.CommandHeader;
+import cn.coderule.minimq.rpc.common.rpc.core.annotation.RocketMQAction;
+import cn.coderule.minimq.rpc.common.rpc.core.enums.Action;
+import cn.coderule.minimq.rpc.common.rpc.core.enums.ResourceType;
+import cn.coderule.minimq.rpc.common.rpc.core.exception.RemotingCommandException;
+import cn.coderule.minimq.rpc.common.rpc.protocol.code.RequestCode;
+import cn.coderule.minimq.rpc.common.rpc.protocol.header.CommandHeader;
 
 
 @RocketMQAction(value = RequestCode.GET_ALL_TOPIC_CONFIG, resource = ResourceType.TOPIC, action = Action.LIST)

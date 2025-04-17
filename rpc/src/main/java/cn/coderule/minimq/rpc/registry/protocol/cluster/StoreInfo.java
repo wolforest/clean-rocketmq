@@ -1,6 +1,6 @@
 package cn.coderule.minimq.rpc.registry.protocol.cluster;
 
-import cn.coderule.minimq.rpc.rpc.core.enums.RequestType;
+import cn.coderule.minimq.rpc.common.rpc.core.enums.RequestType;
 import cn.coderule.minimq.rpc.registry.protocol.body.TopicConfigSerializeWrapper;
 import java.util.List;
 import lombok.AllArgsConstructor;

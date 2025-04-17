@@ -27,7 +27,7 @@ import apache.rocketmq.v2.QueryAssignmentRequest;
 import apache.rocketmq.v2.QueryRouteRequest;
 import apache.rocketmq.v2.ReceiveMessageRequest;
 import apache.rocketmq.v2.SendMessageRequest;
-import cn.coderule.minimq.rpc.rpc.protocol.code.RequestCode;
+import cn.coderule.minimq.rpc.common.rpc.protocol.code.RequestCode;
 import java.util.HashMap;
 import java.util.Map;
 

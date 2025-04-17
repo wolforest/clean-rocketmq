@@ -10,7 +10,7 @@ import cn.coderule.minimq.registry.server.bootstrap.ExecutorFactory;
 import cn.coderule.minimq.registry.server.bootstrap.RegistryContext;
 import cn.coderule.minimq.registry.server.rpc.HaClient;
 import cn.coderule.minimq.registry.server.rpc.RpcManager;
-import cn.coderule.minimq.rpc.rpc.config.RpcClientConfig;
+import cn.coderule.minimq.rpc.common.rpc.config.RpcClientConfig;
 
 /**
  * Component register, all components registered

@@ -1,6 +1,6 @@
 package cn.coderule.minimq.store.server.rpc.server;
 
-import cn.coderule.minimq.rpc.rpc.RpcListener;
+import cn.coderule.minimq.rpc.common.rpc.RpcListener;
 import io.netty.channel.Channel;
 
 public class ConnectionManager implements RpcListener {

@@ -17,7 +17,7 @@
 
 package cn.coderule.minimq.rpc.registry.protocol.body;
 
-import cn.coderule.minimq.rpc.rpc.protocol.codec.RpcSerializable;
+import cn.coderule.minimq.rpc.common.rpc.protocol.codec.RpcSerializable;
 import com.google.common.base.Objects;
 import java.util.Collections;
 import java.util.HashMap;

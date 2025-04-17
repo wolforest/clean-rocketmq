@@ -1,13 +1,13 @@
 package cn.coderule.minimq.registry.processor;
 
 import cn.coderule.minimq.registry.domain.kv.KVService;
-import cn.coderule.minimq.rpc.rpc.RpcProcessor;
-import cn.coderule.minimq.rpc.rpc.core.exception.RemotingCommandException;
-import cn.coderule.minimq.rpc.rpc.core.invoke.RpcCommand;
-import cn.coderule.minimq.rpc.rpc.core.invoke.RpcContext;
-import cn.coderule.minimq.rpc.rpc.protocol.code.RequestCode;
-import cn.coderule.minimq.rpc.rpc.protocol.code.ResponseCode;
-import cn.coderule.minimq.rpc.rpc.protocol.code.SystemResponseCode;
+import cn.coderule.minimq.rpc.common.rpc.RpcProcessor;
+import cn.coderule.minimq.rpc.common.rpc.core.exception.RemotingCommandException;
+import cn.coderule.minimq.rpc.common.rpc.core.invoke.RpcCommand;
+import cn.coderule.minimq.rpc.common.rpc.core.invoke.RpcContext;
+import cn.coderule.minimq.rpc.common.rpc.protocol.code.RequestCode;
+import cn.coderule.minimq.rpc.common.rpc.protocol.code.ResponseCode;
+import cn.coderule.minimq.rpc.common.rpc.protocol.code.SystemResponseCode;
 import cn.coderule.minimq.rpc.registry.protocol.header.DeleteKVConfigRequestHeader;
 import cn.coderule.minimq.rpc.registry.protocol.header.GetKVConfigRequestHeader;
 import cn.coderule.minimq.rpc.registry.protocol.header.GetKVConfigResponseHeader;

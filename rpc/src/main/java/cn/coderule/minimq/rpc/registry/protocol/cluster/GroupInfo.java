@@ -1,7 +1,7 @@
 package cn.coderule.minimq.rpc.registry.protocol.cluster;
 
 import cn.coderule.minimq.domain.domain.constant.MQConstants;
-import cn.coderule.minimq.rpc.rpc.protocol.codec.RpcSerializable;
+import cn.coderule.minimq.rpc.common.rpc.protocol.codec.RpcSerializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;

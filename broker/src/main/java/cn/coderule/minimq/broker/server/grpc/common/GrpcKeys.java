@@ -16,7 +16,7 @@
  */
 package cn.coderule.minimq.broker.server.grpc.common;
 
-import cn.coderule.minimq.rpc.rpc.core.constant.HAProxyConstants;
+import cn.coderule.minimq.rpc.common.rpc.core.constant.HAProxyConstants;
 import io.grpc.Attributes;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

@@ -1,7 +1,7 @@
 package cn.coderule.minimq.store.server.rpc.server;
 
 import cn.coderule.minimq.domain.config.StoreConfig;
-import cn.coderule.minimq.rpc.rpc.config.RpcServerConfig;
+import cn.coderule.minimq.rpc.common.rpc.config.RpcServerConfig;
 
 public class ConfigConverter {
     public static RpcServerConfig toServerConfig(StoreConfig storeConfig) {

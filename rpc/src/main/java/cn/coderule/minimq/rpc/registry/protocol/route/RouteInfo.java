@@ -20,7 +20,7 @@
  */
 package cn.coderule.minimq.rpc.registry.protocol.route;
 
-import cn.coderule.minimq.rpc.rpc.protocol.codec.RpcSerializable;
+import cn.coderule.minimq.rpc.common.rpc.protocol.codec.RpcSerializable;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.GroupInfo;
 import cn.coderule.minimq.rpc.registry.protocol.statictopic.TopicQueueMappingInfo;
 import com.alibaba.fastjson2.JSONWriter;

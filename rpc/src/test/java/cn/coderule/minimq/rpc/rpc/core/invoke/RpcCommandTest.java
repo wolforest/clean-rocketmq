@@ -1,5 +1,6 @@
 package cn.coderule.minimq.rpc.rpc.core.invoke;
 
+import cn.coderule.minimq.rpc.common.rpc.core.invoke.RpcCommand;
 import org.junit.Test;
 
 import static org.junit.Assert.assertNotSame;

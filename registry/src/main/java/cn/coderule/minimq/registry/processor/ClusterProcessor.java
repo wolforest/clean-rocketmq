@@ -1,14 +1,14 @@
 package cn.coderule.minimq.registry.processor;
 
 import cn.coderule.minimq.registry.domain.store.service.ClusterService;
-import cn.coderule.minimq.rpc.rpc.RpcProcessor;
-import cn.coderule.minimq.rpc.rpc.core.exception.RemotingCommandException;
-import cn.coderule.minimq.rpc.rpc.core.invoke.RpcCommand;
-import cn.coderule.minimq.rpc.rpc.core.invoke.RpcContext;
-import cn.coderule.minimq.rpc.rpc.netty.service.NettyHelper;
+import cn.coderule.minimq.rpc.common.rpc.RpcProcessor;
+import cn.coderule.minimq.rpc.common.rpc.core.exception.RemotingCommandException;
+import cn.coderule.minimq.rpc.common.rpc.core.invoke.RpcCommand;
+import cn.coderule.minimq.rpc.common.rpc.core.invoke.RpcContext;
+import cn.coderule.minimq.rpc.common.rpc.netty.service.NettyHelper;
 import cn.coderule.minimq.domain.domain.model.DataVersion;
-import cn.coderule.minimq.rpc.rpc.protocol.code.RequestCode;
-import cn.coderule.minimq.rpc.rpc.protocol.codec.RpcSerializable;
+import cn.coderule.minimq.rpc.common.rpc.protocol.code.RequestCode;
+import cn.coderule.minimq.rpc.common.rpc.protocol.codec.RpcSerializable;
 import cn.coderule.minimq.rpc.registry.protocol.body.BrokerMemberGroup;
 import cn.coderule.minimq.rpc.registry.protocol.body.GetBrokerMemberGroupResponseBody;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.StoreInfo;

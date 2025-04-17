@@ -5,7 +5,7 @@ import cn.coderule.minimq.domain.config.RegistryConfig;
 import cn.coderule.minimq.registry.processor.PropertyProcessor;
 import cn.coderule.minimq.registry.server.bootstrap.ExecutorFactory;
 import cn.coderule.minimq.registry.server.bootstrap.RegistryContext;
-import cn.coderule.minimq.rpc.rpc.config.RpcServerConfig;
+import cn.coderule.minimq.rpc.common.rpc.config.RpcServerConfig;
 
 public class PropertyManager implements Lifecycle {
     @Override

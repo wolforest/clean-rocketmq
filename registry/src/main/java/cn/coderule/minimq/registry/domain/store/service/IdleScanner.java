@@ -6,7 +6,7 @@ import cn.coderule.minimq.domain.config.RegistryConfig;
 import cn.coderule.minimq.registry.domain.store.StoreRegistry;
 import cn.coderule.minimq.registry.domain.store.model.Route;
 import cn.coderule.minimq.registry.domain.store.model.StoreHealthInfo;
-import cn.coderule.minimq.rpc.rpc.netty.service.NettyHelper;
+import cn.coderule.minimq.rpc.common.rpc.netty.service.NettyHelper;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.GroupInfo;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.StoreInfo;
 import cn.coderule.minimq.rpc.registry.protocol.header.UnRegisterBrokerRequestHeader;

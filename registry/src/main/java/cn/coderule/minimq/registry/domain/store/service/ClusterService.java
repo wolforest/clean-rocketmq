@@ -6,7 +6,7 @@ import cn.coderule.minimq.domain.domain.model.Topic;
 import cn.coderule.minimq.registry.domain.store.model.Route;
 import cn.coderule.minimq.registry.domain.store.model.StoreHealthInfo;
 import cn.coderule.minimq.domain.domain.model.DataVersion;
-import cn.coderule.minimq.rpc.rpc.protocol.code.RequestCode;
+import cn.coderule.minimq.rpc.common.rpc.protocol.code.RequestCode;
 import cn.coderule.minimq.rpc.registry.protocol.body.BrokerMemberGroup;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.ClusterInfo;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.GroupInfo;
