@@ -16,7 +16,7 @@
  */
 package cn.coderule.minimq.rpc.registry.protocol.body;
 
-import cn.coderule.minimq.rpc.common.protocol.codec.RpcSerializable;
+import cn.coderule.minimq.rpc.rpc.protocol.codec.RpcSerializable;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 

@@ -5,7 +5,7 @@ import cn.coderule.minimq.domain.domain.dto.EnqueueResult;
 import cn.coderule.minimq.domain.domain.dto.GetRequest;
 import cn.coderule.minimq.domain.domain.dto.GetResult;
 import cn.coderule.minimq.domain.service.store.api.MessageStore;
-import cn.coderule.minimq.rpc.common.RpcClient;
+import cn.coderule.minimq.rpc.rpc.RpcClient;
 import cn.coderule.minimq.rpc.store.StoreClient;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;

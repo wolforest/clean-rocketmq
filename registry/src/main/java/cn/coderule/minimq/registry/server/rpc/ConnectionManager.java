@@ -1,7 +1,7 @@
 package cn.coderule.minimq.registry.server.rpc;
 
 import cn.coderule.minimq.registry.domain.store.service.ChannelCloser;
-import cn.coderule.minimq.rpc.common.RpcListener;
+import cn.coderule.minimq.rpc.rpc.RpcListener;
 import io.netty.channel.Channel;
 
 public class ConnectionManager implements RpcListener {

@@ -20,14 +20,14 @@
  */
 package cn.coderule.minimq.rpc.store.protocol.header;
 
-import cn.coderule.minimq.rpc.common.core.annotation.CFNotNull;
-import cn.coderule.minimq.rpc.common.core.annotation.RocketMQAction;
-import cn.coderule.minimq.rpc.common.core.annotation.RocketMQResource;
-import cn.coderule.minimq.rpc.common.core.enums.Action;
-import cn.coderule.minimq.rpc.common.core.enums.ResourceType;
-import cn.coderule.minimq.rpc.common.core.exception.RemotingCommandException;
-import cn.coderule.minimq.rpc.common.protocol.code.RequestCode;
-import cn.coderule.minimq.rpc.common.protocol.header.RpcRequestHeader;
+import cn.coderule.minimq.rpc.rpc.core.annotation.CFNotNull;
+import cn.coderule.minimq.rpc.rpc.core.annotation.RocketMQAction;
+import cn.coderule.minimq.rpc.rpc.core.annotation.RocketMQResource;
+import cn.coderule.minimq.rpc.rpc.core.enums.Action;
+import cn.coderule.minimq.rpc.rpc.core.enums.ResourceType;
+import cn.coderule.minimq.rpc.rpc.core.exception.RemotingCommandException;
+import cn.coderule.minimq.rpc.rpc.protocol.code.RequestCode;
+import cn.coderule.minimq.rpc.rpc.protocol.header.RpcRequestHeader;
 import lombok.Getter;
 import lombok.Setter;
 

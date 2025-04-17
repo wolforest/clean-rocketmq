@@ -1,8 +1,8 @@
 package cn.coderule.minimq.rpc.registry.protocol.route;
 
 import cn.coderule.minimq.domain.domain.model.Topic;
-import cn.coderule.minimq.rpc.common.core.enums.RequestType;
-import cn.coderule.minimq.rpc.common.protocol.codec.RpcSerializable;
+import cn.coderule.minimq.rpc.rpc.core.enums.RequestType;
+import cn.coderule.minimq.rpc.rpc.protocol.codec.RpcSerializable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

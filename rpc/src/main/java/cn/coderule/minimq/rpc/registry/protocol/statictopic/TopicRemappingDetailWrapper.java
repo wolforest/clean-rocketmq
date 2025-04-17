@@ -16,7 +16,7 @@
  */
 package cn.coderule.minimq.rpc.registry.protocol.statictopic;
 
-import cn.coderule.minimq.rpc.common.protocol.codec.RpcSerializable;
+import cn.coderule.minimq.rpc.rpc.protocol.codec.RpcSerializable;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;

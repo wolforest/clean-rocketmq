@@ -17,9 +17,9 @@
 
 package cn.coderule.minimq.rpc.registry.protocol.header;
 
-import cn.coderule.minimq.rpc.common.core.annotation.CFNullable;
-import cn.coderule.minimq.rpc.common.core.exception.RemotingCommandException;
-import cn.coderule.minimq.rpc.common.protocol.header.CommandHeader;
+import cn.coderule.minimq.rpc.rpc.core.annotation.CFNullable;
+import cn.coderule.minimq.rpc.rpc.core.exception.RemotingCommandException;
+import cn.coderule.minimq.rpc.rpc.protocol.header.CommandHeader;
 import lombok.Data;
 
 @Data

@@ -16,13 +16,13 @@
  */
 package cn.coderule.minimq.rpc.registry.protocol.header;
 
-import cn.coderule.minimq.rpc.common.core.annotation.CFNotNull;
-import cn.coderule.minimq.rpc.common.core.annotation.RocketMQAction;
-import cn.coderule.minimq.rpc.common.core.enums.Action;
-import cn.coderule.minimq.rpc.common.core.enums.ResourceType;
-import cn.coderule.minimq.rpc.common.core.exception.RemotingCommandException;
-import cn.coderule.minimq.rpc.common.protocol.code.RequestCode;
-import cn.coderule.minimq.rpc.common.protocol.header.CommandHeader;
+import cn.coderule.minimq.rpc.rpc.core.annotation.CFNotNull;
+import cn.coderule.minimq.rpc.rpc.core.annotation.RocketMQAction;
+import cn.coderule.minimq.rpc.rpc.core.enums.Action;
+import cn.coderule.minimq.rpc.rpc.core.enums.ResourceType;
+import cn.coderule.minimq.rpc.rpc.core.exception.RemotingCommandException;
+import cn.coderule.minimq.rpc.rpc.protocol.code.RequestCode;
+import cn.coderule.minimq.rpc.rpc.protocol.header.CommandHeader;
 
 @RocketMQAction(value = RequestCode.ADD_WRITE_PERM_OF_BROKER, resource = ResourceType.CLUSTER, action = Action.UPDATE)
 public class AddWritePermOfBrokerRequestHeader implements CommandHeader {

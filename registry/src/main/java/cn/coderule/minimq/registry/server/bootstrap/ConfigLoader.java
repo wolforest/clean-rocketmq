@@ -1,8 +1,8 @@
 package cn.coderule.minimq.registry.server.bootstrap;
 
 import cn.coderule.minimq.domain.config.RegistryConfig;
-import cn.coderule.minimq.rpc.common.config.RpcClientConfig;
-import cn.coderule.minimq.rpc.common.config.RpcServerConfig;
+import cn.coderule.minimq.rpc.rpc.config.RpcClientConfig;
+import cn.coderule.minimq.rpc.rpc.config.RpcServerConfig;
 
 public class ConfigLoader {
     public static void load() {

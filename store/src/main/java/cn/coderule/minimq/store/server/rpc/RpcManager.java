@@ -5,7 +5,7 @@ import cn.coderule.minimq.domain.config.StoreConfig;
 import cn.coderule.minimq.domain.config.TopicConfig;
 import cn.coderule.minimq.domain.service.store.api.SubscriptionStore;
 import cn.coderule.minimq.domain.service.store.api.TopicStore;
-import cn.coderule.minimq.rpc.common.config.RpcServerConfig;
+import cn.coderule.minimq.rpc.rpc.config.RpcServerConfig;
 import cn.coderule.minimq.store.server.bootstrap.StoreContext;
 import cn.coderule.minimq.store.server.rpc.processor.SubscriptionProcessor;
 import cn.coderule.minimq.store.server.rpc.processor.TopicProcessor;

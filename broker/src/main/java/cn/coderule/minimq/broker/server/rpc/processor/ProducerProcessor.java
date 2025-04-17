@@ -1,9 +1,9 @@
 package cn.coderule.minimq.broker.server.rpc.processor;
 
-import cn.coderule.minimq.rpc.common.RpcProcessor;
-import cn.coderule.minimq.rpc.common.core.exception.RemotingCommandException;
-import cn.coderule.minimq.rpc.common.core.invoke.RpcCommand;
-import cn.coderule.minimq.rpc.common.core.invoke.RpcContext;
+import cn.coderule.minimq.rpc.rpc.RpcProcessor;
+import cn.coderule.minimq.rpc.rpc.core.exception.RemotingCommandException;
+import cn.coderule.minimq.rpc.rpc.core.invoke.RpcCommand;
+import cn.coderule.minimq.rpc.rpc.core.invoke.RpcContext;
 
 public class ProducerProcessor implements RpcProcessor {
     @Override
