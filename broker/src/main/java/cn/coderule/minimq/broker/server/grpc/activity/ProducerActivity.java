@@ -54,7 +54,47 @@ public class ProducerActivity {
      * @param responseObserver response
      */
     public void moveToDLQ(RequestContext context, ForwardMessageToDeadLetterQueueRequest request, StreamObserver<ForwardMessageToDeadLetterQueueResponse> responseObserver) {
+        ActivityHelper<ForwardMessageToDeadLetterQueueRequest, ForwardMessageToDeadLetterQueueResponse> helper = getMoveToDLQHelper(context, request, responseObserver);
 
+        try {
+            Runnable task = () -> moveToDLQAsync(context, request)
+                .whenComplete(helper::writeResponse);
+
+            this.executor.submit(helper.createTask(task));
+        } catch (Throwable t) {
+            helper.writeResponse(null, t);
+        }
+    }
+
+    private Function<Status, ForwardMessageToDeadLetterQueueResponse> moveToDLQStatusToResponse() {
+        return status -> ForwardMessageToDeadLetterQueueResponse.newBuilder()
+            .setStatus(status)
+            .build();
+    }
+
+    private ActivityHelper<ForwardMessageToDeadLetterQueueRequest, ForwardMessageToDeadLetterQueueResponse> getMoveToDLQHelper(
+        RequestContext context,
+        ForwardMessageToDeadLetterQueueRequest request,
+        StreamObserver<ForwardMessageToDeadLetterQueueResponse> responseObserver
+    ) {
+        Function<Status, ForwardMessageToDeadLetterQueueResponse> statusToResponse = moveToDLQStatusToResponse();
+        return new ActivityHelper<>(
+            context,
+            request,
+            responseObserver,
+            statusToResponse
+        );
+    }
+
+    private CompletableFuture<ForwardMessageToDeadLetterQueueResponse> moveToDLQAsync(RequestContext context, ForwardMessageToDeadLetterQueueRequest request) {
+        return CompletableFuture.completedFuture(null);
+    }
+
+
+    private Function<Status, SendMessageResponse> produceStatusToResponse() {
+        return status -> SendMessageResponse.newBuilder()
+            .setStatus(status)
+            .build();
     }
 
     private ActivityHelper<SendMessageRequest, SendMessageResponse> getProduceHelper(
@@ -75,9 +115,5 @@ public class ProducerActivity {
         return CompletableFuture.completedFuture(null);
     }
 
-    private Function<Status, SendMessageResponse> produceStatusToResponse() {
-        return status -> SendMessageResponse.newBuilder()
-            .setStatus(status)
-            .build();
-    }
+
 }
