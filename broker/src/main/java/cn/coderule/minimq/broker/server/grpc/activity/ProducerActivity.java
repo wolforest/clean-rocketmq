@@ -2,6 +2,10 @@ package cn.coderule.minimq.broker.server.grpc.activity;
 
 import apache.rocketmq.v2.ForwardMessageToDeadLetterQueueRequest;
 import apache.rocketmq.v2.ForwardMessageToDeadLetterQueueResponse;
+import apache.rocketmq.v2.QueryAssignmentRequest;
+import apache.rocketmq.v2.QueryAssignmentResponse;
+import apache.rocketmq.v2.QueryRouteRequest;
+import apache.rocketmq.v2.QueryRouteResponse;
 import apache.rocketmq.v2.SendMessageRequest;
 import apache.rocketmq.v2.SendMessageResponse;
 import apache.rocketmq.v2.Status;
@@ -10,6 +14,7 @@ import cn.coderule.minimq.rpc.common.core.RequestContext;
 import cn.coderule.minimq.domain.domain.model.message.MessageBO;
 import cn.coderule.minimq.rpc.common.grpc.activity.ActivityHelper;
 import io.grpc.stub.StreamObserver;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.function.Function;
 import lombok.Setter;
@@ -30,15 +35,16 @@ public class ProducerActivity {
         this.executor = executor;
     }
 
-    public void produce(SendMessageRequest request, StreamObserver<SendMessageResponse> responseObserver) {
-        RequestContext context = RequestContext.create();
-        Function<Status, SendMessageResponse> statusToResponse = statusToResponse();
-        Runnable task = getTask(context, request, responseObserver);
+    public void produce(RequestContext context, SendMessageRequest request, StreamObserver<SendMessageResponse> responseObserver) {
+        ActivityHelper<SendMessageRequest, SendMessageResponse> helper = getProduceHelper(context, request, responseObserver);
 
         try {
-            ActivityHelper.submit(context, request, responseObserver, executor, task, statusToResponse);
+            Runnable task = () -> produceAsync(context, request)
+                .whenComplete(helper::writeResponse);
+
+            this.executor.submit(helper.createTask(task));
         } catch (Throwable t) {
-            ActivityHelper.writeResponse(context, request, null, executor, t, responseObserver, statusToResponse);
+            helper.writeResponse(null, t);
         }
     }
 
@@ -47,21 +53,29 @@ public class ProducerActivity {
      * @param request request
      * @param responseObserver response
      */
-    public void moveToDLQ(ForwardMessageToDeadLetterQueueRequest request, StreamObserver<ForwardMessageToDeadLetterQueueResponse> responseObserver) {
+    public void moveToDLQ(RequestContext context, ForwardMessageToDeadLetterQueueRequest request, StreamObserver<ForwardMessageToDeadLetterQueueResponse> responseObserver) {
 
     }
 
-    private Runnable getTask(RequestContext context, SendMessageRequest request, StreamObserver<SendMessageResponse> responseObserver) {
-        return () -> {
-            MessageBO messageBO = new MessageBO();
-            producerController.produce(context, messageBO)
-                .whenComplete((response, throwable) -> {
-                    ActivityHelper.writeResponse(context, request, response, executor, throwable, responseObserver, statusToResponse());
-                });
-        };
+    private ActivityHelper<SendMessageRequest, SendMessageResponse> getProduceHelper(
+        RequestContext context,
+        SendMessageRequest request,
+        StreamObserver<SendMessageResponse> responseObserver
+    ) {
+        Function<Status, SendMessageResponse> statusToResponse = produceStatusToResponse();
+        return new ActivityHelper<>(
+            context,
+            request,
+            responseObserver,
+            statusToResponse
+        );
     }
 
-    private Function<Status, SendMessageResponse> statusToResponse() {
+    private CompletableFuture<SendMessageResponse> produceAsync(RequestContext context, SendMessageRequest request) {
+        return CompletableFuture.completedFuture(null);
+    }
+
+    private Function<Status, SendMessageResponse> produceStatusToResponse() {
         return status -> SendMessageResponse.newBuilder()
             .setStatus(status)
             .build();

@@ -8,11 +8,12 @@ import apache.rocketmq.v2.QueryRouteResponse;
 import apache.rocketmq.v2.Status;
 import cn.coderule.minimq.broker.api.RouteController;
 import cn.coderule.minimq.rpc.common.core.RequestContext;
+import cn.coderule.minimq.rpc.common.grpc.activity.ActivityHelper;
 import cn.coderule.minimq.rpc.registry.protocol.route.RouteInfo;
 import io.grpc.stub.StreamObserver;
-import java.util.ArrayList;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.function.Function;
 import lombok.Setter;
 
 public class RouteActivity {
@@ -25,30 +26,80 @@ public class RouteActivity {
         this.executor = executor;
     }
 
-    public void getRoute(QueryRouteRequest request, StreamObserver<QueryRouteResponse> responseObserver) {
-        QueryRouteResponse response = QueryRouteResponse.newBuilder()
-            .addAllMessageQueues(new ArrayList<>())
-            .setStatus(Status.newBuilder().setCode(Code.OK))
-            .build();
+    public void getRoute(RequestContext context, QueryRouteRequest request, StreamObserver<QueryRouteResponse> responseObserver) {
+        ActivityHelper<QueryRouteRequest, QueryRouteResponse> helper = getRouteHelper(context, request, responseObserver);
 
-        RequestContext context = new RequestContext();
+        try {
+            Runnable task = () -> getRouteAsync(context, request)
+                .whenComplete(helper::writeResponse);
 
-        responseObserver.onNext(response);
-        responseObserver.onCompleted();
+            this.executor.submit(helper.createTask(task));
+        } catch (Throwable t) {
+            helper.writeResponse(null, t);
+        }
     }
 
-    public CompletableFuture<RouteInfo> getRouteAsync(RequestContext context, QueryRouteRequest request) {
-        return routeController.getRoute(context, request.getTopic().getName());
+    public void getAssignment(RequestContext context, QueryAssignmentRequest request, StreamObserver<QueryAssignmentResponse> responseObserver) {
+        ActivityHelper<QueryAssignmentRequest, QueryAssignmentResponse> helper = getAssignmentHelper(context, request, responseObserver);
+
+        try {
+            Runnable task = () -> getAssignmentAsync(context, request)
+                .whenComplete(helper::writeResponse);
+
+            this.executor.submit(helper.createTask(task));
+        } catch (Throwable t) {
+            helper.writeResponse(null, t);
+        }
     }
 
-    public void getAssignment(QueryAssignmentRequest request, StreamObserver<QueryAssignmentResponse> responseObserver) {
-        QueryAssignmentResponse response = QueryAssignmentResponse.newBuilder()
-            .setStatus(Status.newBuilder().setCode(Code.OK))
+    private ActivityHelper<QueryAssignmentRequest, QueryAssignmentResponse> getAssignmentHelper(
+        RequestContext context,
+        QueryAssignmentRequest request,
+        StreamObserver<QueryAssignmentResponse> responseObserver
+    ) {
+        Function<Status, QueryAssignmentResponse> statusToResponse = assignmentStatueToResponse();
+        return new ActivityHelper<>(
+            context,
+            request,
+            responseObserver,
+            statusToResponse
+        );
+    }
+
+    private ActivityHelper<QueryRouteRequest, QueryRouteResponse> getRouteHelper(
+        RequestContext context,
+        QueryRouteRequest request,
+        StreamObserver<QueryRouteResponse> responseObserver
+    ) {
+        Function<Status, QueryRouteResponse> statusToResponse = routeStatueToResponse();
+        return new ActivityHelper<>(
+            context,
+            request,
+            responseObserver,
+            statusToResponse
+        );
+    }
+
+    private CompletableFuture<QueryRouteResponse> getAssignmentAsync(RequestContext context, QueryAssignmentRequest request) {
+        //routeController.getRoute(context, request.getTopic().getName());
+        return CompletableFuture.completedFuture(null);
+    }
+
+
+    private CompletableFuture<QueryRouteResponse> getRouteAsync(RequestContext context, QueryRouteRequest request) {
+        //routeController.getRoute(context, request.getTopic().getName());
+        return CompletableFuture.completedFuture(null);
+    }
+
+    private Function<Status, QueryRouteResponse> routeStatueToResponse() {
+        return status -> QueryRouteResponse.newBuilder()
+            .setStatus(status)
             .build();
+    }
 
-
-
-        responseObserver.onNext(response);
-        responseObserver.onCompleted();
+    private Function<Status, QueryAssignmentResponse> assignmentStatueToResponse() {
+        return status -> QueryAssignmentResponse.newBuilder()
+            .setStatus(status)
+            .build();
     }
 }

@@ -61,10 +61,10 @@ public class NettyDispatcher implements Lifecycle {
         }
 
         switch (command.getType()) {
-            case RemotingCommandType.REQUEST_COMMAND:
+            case REQUEST_COMMAND:
                 processRequest(ctx, command);
                 break;
-            case RemotingCommandType.RESPONSE_COMMAND:
+            case RESPONSE_COMMAND:
                 processResponse(ctx, command);
                 break;
             default:

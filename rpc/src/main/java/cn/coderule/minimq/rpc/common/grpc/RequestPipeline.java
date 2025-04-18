@@ -18,12 +18,12 @@
 package cn.coderule.minimq.rpc.common.grpc;
 
 import cn.coderule.minimq.rpc.common.core.RequestContext;
-import com.google.protobuf.GeneratedMessageV3;
+import com.google.protobuf.GeneratedMessage;
 import io.grpc.Metadata;
 
 public interface RequestPipeline {
 
-    void execute(RequestContext context, Metadata headers, GeneratedMessageV3 request);
+    void execute(RequestContext context, Metadata headers, GeneratedMessage request);
 
     default RequestPipeline pipe(RequestPipeline source) {
         return (ctx, headers, request) -> {

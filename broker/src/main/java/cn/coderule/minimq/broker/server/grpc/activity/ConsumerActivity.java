@@ -13,6 +13,7 @@ import apache.rocketmq.v2.ReceiveMessageResponse;
 import apache.rocketmq.v2.UpdateOffsetRequest;
 import apache.rocketmq.v2.UpdateOffsetResponse;
 import cn.coderule.minimq.broker.api.ConsumerController;
+import cn.coderule.minimq.rpc.common.core.RequestContext;
 import io.grpc.stub.StreamObserver;
 import java.util.concurrent.ThreadPoolExecutor;
 import lombok.Setter;
@@ -27,23 +28,23 @@ public class ConsumerActivity {
         this.executor = executor;
     }
 
-    public void receiveMessage(ReceiveMessageRequest request, StreamObserver<ReceiveMessageResponse> responseObserver) {
+    public void receiveMessage(RequestContext context, ReceiveMessageRequest request, StreamObserver<ReceiveMessageResponse> responseObserver) {
     }
 
-    public void ackMessage(AckMessageRequest request, StreamObserver<AckMessageResponse> responseObserver) {
+    public void ackMessage(RequestContext context, AckMessageRequest request, StreamObserver<AckMessageResponse> responseObserver) {
     }
 
-    public void changeInvisibleDuration(
+    public void changeInvisibleDuration(RequestContext context,
         ChangeInvisibleDurationRequest request, StreamObserver<ChangeInvisibleDurationResponse> responseObserver) {
     }
 
-    public void updateOffset(UpdateOffsetRequest request, StreamObserver<UpdateOffsetResponse> responseObserver) {
+    public void updateOffset(RequestContext context, UpdateOffsetRequest request, StreamObserver<UpdateOffsetResponse> responseObserver) {
     }
 
-    public void getOffset(GetOffsetRequest request, StreamObserver<GetOffsetResponse> responseObserver) {
+    public void getOffset(RequestContext context, GetOffsetRequest request, StreamObserver<GetOffsetResponse> responseObserver) {
     }
 
-    public void queryOffset(QueryOffsetRequest request, StreamObserver<QueryOffsetResponse> responseObserver) {
+    public void queryOffset(RequestContext context, QueryOffsetRequest request, StreamObserver<QueryOffsetResponse> responseObserver) {
     }
 
 

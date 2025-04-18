@@ -16,14 +16,14 @@ public class RejectActivity implements RejectedExecutionHandler {
         try {
             @SuppressWarnings({"rawtypes"})
             GrpcTask grpcTask = (GrpcTask) r;
-            ActivityHelper.writeResponse(
+            @SuppressWarnings({"rawtypes"})
+            ActivityHelper activity = new ActivityHelper(
                 grpcTask.getContext(),
                 grpcTask.getRequest(),
-                grpcTask.getExecuteRejectResponse(),
-                null,
-                null,
-                grpcTask.getStreamObserver(),
-                null);
+                grpcTask.getStreamObserver()
+            );
+
+            activity.writeResponse(grpcTask.getExecuteRejectResponse(), null);
         } catch (Throwable t) {
             log.warn("write rejected error response failed", t);
         }

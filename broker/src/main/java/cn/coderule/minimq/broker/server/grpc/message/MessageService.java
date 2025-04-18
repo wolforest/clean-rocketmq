@@ -33,6 +33,12 @@ import cn.coderule.minimq.broker.server.grpc.activity.ConsumerActivity;
 import cn.coderule.minimq.broker.server.grpc.activity.ProducerActivity;
 import cn.coderule.minimq.broker.server.grpc.activity.RouteActivity;
 import cn.coderule.minimq.broker.server.grpc.activity.TransactionActivity;
+import cn.coderule.minimq.rpc.common.core.RequestContext;
+import cn.coderule.minimq.rpc.common.grpc.RequestPipeline;
+import cn.coderule.minimq.rpc.common.grpc.constants.GrpcConstants;
+import com.google.protobuf.GeneratedMessage;
+import com.google.protobuf.GeneratedMessageV3;
+import io.grpc.Context;
 import io.grpc.stub.StreamObserver;
 import lombok.extern.slf4j.Slf4j;
 
@@ -44,81 +50,130 @@ public class MessageService extends MessagingServiceGrpc.MessagingServiceImplBas
     private final ConsumerActivity consumerActivity;
     private final TransactionActivity transactionActivity;
 
+    private final RequestPipeline pipeline;
+
     public MessageService(
         ClientActivity clientActivity,
         RouteActivity routeActivity,
         ProducerActivity producerActivity,
         ConsumerActivity consumerActivity,
-        TransactionActivity transactionActivity) {
+        TransactionActivity transactionActivity,
+        RequestPipeline pipeline
+    ) {
 
         this.clientActivity = clientActivity;
         this.routeActivity = routeActivity;
         this.producerActivity = producerActivity;
         this.consumerActivity = consumerActivity;
         this.transactionActivity = transactionActivity;
+        this.pipeline = pipeline;
     }
 
     @Override
     public void queryRoute(QueryRouteRequest request, StreamObserver<QueryRouteResponse> responseObserver) {
-        routeActivity.getRoute(request, responseObserver);
+        RequestContext context = RequestContext.create();
+        executePipeline(context, request);
+
+        routeActivity.getRoute(context, request, responseObserver);
     }
 
     @Override
     public void sendMessage(SendMessageRequest request, StreamObserver<SendMessageResponse> responseObserver) {
-        producerActivity.produce(request, responseObserver);
+        RequestContext context = RequestContext.create();
+        executePipeline(context, request);
+
+        producerActivity.produce(context, request, responseObserver);
     }
 
     @Override
     public void queryAssignment(QueryAssignmentRequest request, StreamObserver<QueryAssignmentResponse> responseObserver) {
-        routeActivity.getAssignment(request, responseObserver);
+        RequestContext context = RequestContext.create();
+        executePipeline(context, request);
+
+        routeActivity.getAssignment(context, request, responseObserver);
     }
 
     @Override
     public void receiveMessage(ReceiveMessageRequest request, StreamObserver<ReceiveMessageResponse> responseObserver) {
-        consumerActivity.receiveMessage(request, responseObserver);
+        RequestContext context = RequestContext.create();
+        executePipeline(context, request);
+
+        consumerActivity.receiveMessage(context, request, responseObserver);
     }
 
     @Override
     public void ackMessage(AckMessageRequest request, StreamObserver<AckMessageResponse> responseObserver) {
-        consumerActivity.ackMessage(request, responseObserver);
+        RequestContext context = RequestContext.create();
+        executePipeline(context, request);
+
+        consumerActivity.ackMessage(context, request, responseObserver);
     }
 
     @Override
-    public void changeInvisibleDuration(
-        ChangeInvisibleDurationRequest request, StreamObserver<ChangeInvisibleDurationResponse> responseObserver) {
-        consumerActivity.changeInvisibleDuration(request, responseObserver);
+    public void changeInvisibleDuration(ChangeInvisibleDurationRequest request, StreamObserver<ChangeInvisibleDurationResponse> responseObserver) {
+        RequestContext context = RequestContext.create();
+        executePipeline(context, request);
+
+        consumerActivity.changeInvisibleDuration(context, request, responseObserver);
     }
 
     @Override
     public void forwardMessageToDeadLetterQueue(
         ForwardMessageToDeadLetterQueueRequest request,
         StreamObserver<ForwardMessageToDeadLetterQueueResponse> responseObserver) {
-        this.producerActivity.moveToDLQ(request, responseObserver);
+        RequestContext context = RequestContext.create();
+        executePipeline(context, request);
+
+        this.producerActivity.moveToDLQ(context, request, responseObserver);
     }
 
     @Override
     public void updateOffset(UpdateOffsetRequest request, StreamObserver<UpdateOffsetResponse> responseObserver) {
-        consumerActivity.updateOffset(request, responseObserver);
+        RequestContext context = RequestContext.create();
+        executePipeline(context, request);
+
+        consumerActivity.updateOffset(context, request, responseObserver);
     }
 
     @Override
     public void getOffset(GetOffsetRequest request, StreamObserver<GetOffsetResponse> responseObserver) {
-        consumerActivity.getOffset(request, responseObserver);
+        RequestContext context = RequestContext.create();
+        executePipeline(context, request);
+
+        consumerActivity.getOffset(context, request, responseObserver);
     }
 
     @Override
     public void queryOffset(QueryOffsetRequest request, StreamObserver<QueryOffsetResponse> responseObserver) {
-        consumerActivity.queryOffset(request, responseObserver);
+        RequestContext context = RequestContext.create();
+        executePipeline(context, request);
+
+        consumerActivity.queryOffset(context, request, responseObserver);
     }
 
     @Override
     public void endTransaction(EndTransactionRequest request, StreamObserver<EndTransactionResponse> responseObserver) {
-        transactionActivity.commit(request, responseObserver);
+        RequestContext context = RequestContext.create();
+        executePipeline(context, request);
+
+        transactionActivity.commit(context, request, responseObserver);
     }
 
     @Override
     public void heartbeat(HeartbeatRequest request, StreamObserver<HeartbeatResponse> responseObserver) {
-        clientActivity.heartbeat(request, responseObserver);
+        RequestContext context = RequestContext.create();
+        executePipeline(context, request);
+
+        clientActivity.heartbeat(context, request, responseObserver);
+    }
+
+    @Override
+    public void notifyClientTermination(
+        NotifyClientTerminationRequest request, StreamObserver<NotifyClientTerminationResponse> responseObserver) {
+        RequestContext context = RequestContext.create();
+        executePipeline(context, request);
+
+        clientActivity.notifyClientTermination(context, request, responseObserver);
     }
 
     @Override
@@ -126,10 +181,13 @@ public class MessageService extends MessagingServiceGrpc.MessagingServiceImplBas
         return clientActivity.telemetry(responseObserver);
     }
 
-    @Override
-    public void notifyClientTermination(
-        NotifyClientTerminationRequest request, StreamObserver<NotifyClientTerminationResponse> responseObserver) {
-        clientActivity.notifyClientTermination(request, responseObserver);
+    private <T> void executePipeline(RequestContext context, T request) {
+        if (request instanceof GeneratedMessage) {
+            pipeline.execute(context, GrpcConstants.METADATA.get(Context.current()), (GeneratedMessage) request);
+            return;
+        }
+
+        log.error("[BUG] grpc request pipeline is not executed.");
     }
 
 }

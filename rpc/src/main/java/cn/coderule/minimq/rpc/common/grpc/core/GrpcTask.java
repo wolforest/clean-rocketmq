@@ -2,6 +2,7 @@ package cn.coderule.minimq.rpc.common.grpc.core;
 
 import cn.coderule.minimq.rpc.common.core.RequestContext;
 import io.grpc.stub.StreamObserver;
+import lombok.Builder;
 import lombok.Data;
 
 @Data

@@ -1,6 +1,8 @@
 package cn.coderule.minimq.broker.server.grpc.message;
 
 import cn.coderule.minimq.broker.api.RouteController;
+import cn.coderule.minimq.broker.server.grpc.pipeline.ContextInitPipeline;
+import cn.coderule.minimq.rpc.common.grpc.RequestPipeline;
 import cn.coderule.minimq.rpc.common.grpc.activity.RejectActivity;
 import cn.coderule.minimq.broker.server.grpc.activity.TransactionActivity;
 import cn.coderule.common.convention.service.Lifecycle;
@@ -162,12 +164,18 @@ public class MessageManager implements Lifecycle {
     }
 
     private void initMessageService() {
+        RequestPipeline pipeline = (context, headers, request) -> {
+        };
+
+        pipeline = pipeline.pipe(new ContextInitPipeline());
+
         this.messageService = new MessageService(
             this.clientActivity,
             this.routeActivity,
             this.producerActivity,
             this.consumerActivity,
-            this.transactionActivity
+            this.transactionActivity,
+            pipeline
         );
     }
 
