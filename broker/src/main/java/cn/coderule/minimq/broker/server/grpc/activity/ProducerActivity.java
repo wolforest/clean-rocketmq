@@ -66,6 +66,14 @@ public class ProducerActivity {
         }
     }
 
+    private CompletableFuture<ForwardMessageToDeadLetterQueueResponse> moveToDLQAsync(RequestContext context, ForwardMessageToDeadLetterQueueRequest request) {
+        return CompletableFuture.completedFuture(null);
+    }
+
+    private CompletableFuture<SendMessageResponse> produceAsync(RequestContext context, SendMessageRequest request) {
+        return CompletableFuture.completedFuture(null);
+    }
+
     private Function<Status, ForwardMessageToDeadLetterQueueResponse> moveToDLQStatusToResponse() {
         return status -> ForwardMessageToDeadLetterQueueResponse.newBuilder()
             .setStatus(status)
@@ -86,11 +94,6 @@ public class ProducerActivity {
         );
     }
 
-    private CompletableFuture<ForwardMessageToDeadLetterQueueResponse> moveToDLQAsync(RequestContext context, ForwardMessageToDeadLetterQueueRequest request) {
-        return CompletableFuture.completedFuture(null);
-    }
-
-
     private Function<Status, SendMessageResponse> produceStatusToResponse() {
         return status -> SendMessageResponse.newBuilder()
             .setStatus(status)
@@ -110,10 +113,4 @@ public class ProducerActivity {
             statusToResponse
         );
     }
-
-    private CompletableFuture<SendMessageResponse> produceAsync(RequestContext context, SendMessageRequest request) {
-        return CompletableFuture.completedFuture(null);
-    }
-
-
 }
