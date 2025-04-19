@@ -20,6 +20,7 @@ package cn.coderule.minimq.rpc.common.grpc.core;
 import apache.rocketmq.v2.Code;
 import apache.rocketmq.v2.Status;
 import cn.coderule.common.util.lang.ExceptionUtil;
+import cn.coderule.minimq.domain.domain.exception.InvalidParameterException;
 import cn.coderule.minimq.domain.domain.exception.RpcException;
 import cn.coderule.minimq.rpc.common.rpc.core.exception.RemotingTimeoutException;
 import cn.coderule.minimq.rpc.common.rpc.protocol.code.ResponseCode;
@@ -66,6 +67,12 @@ public class ResponseBuilder {
 
         if (t instanceof RemotingTimeoutException) {
             return buildStatus(Code.PROXY_TIMEOUT, t.getMessage());
+        }
+
+        if (t instanceof InvalidParameterException parameterException) {
+            int intCode = parameterException.getInvalidCode().getCode();
+            Code code = Code.forNumber(intCode);
+            return buildStatus(code, parameterException.getMessage());
         }
 
         if (t instanceof RpcException rpcException) {
