@@ -17,4 +17,8 @@ public class RouteController {
         return CompletableFuture.completedFuture(routeInfo);
     }
 
+    private void validateTopic(String topicName) {
+
+    }
+
 }
