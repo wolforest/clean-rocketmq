@@ -19,7 +19,8 @@ public class RouteManager implements Lifecycle {
         RouteService routeService = initRouteService();
         BrokerContext.register(routeService);
 
-        RouteController routeController = new RouteController(routeService);
+        TopicConfig topicConfig = BrokerContext.getBean(TopicConfig.class);
+        RouteController routeController = new RouteController(topicConfig, routeService);
         BrokerContext.register(routeController);
     }
 
