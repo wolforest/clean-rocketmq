@@ -20,6 +20,7 @@
  */
 package cn.coderule.minimq.rpc.registry.protocol.route;
 
+import cn.coderule.minimq.domain.domain.enums.MessageType;
 import cn.coderule.minimq.rpc.common.rpc.protocol.codec.RpcSerializable;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.GroupInfo;
 import cn.coderule.minimq.rpc.registry.protocol.statictopic.TopicQueueMappingInfo;
@@ -40,6 +41,9 @@ import lombok.Setter;
  */
 @Setter @Getter
 public class RouteInfo extends RpcSerializable {
+    private String topicName;
+    private MessageType messageType;
+
     private String orderTopicConf;
     /**
      * Queue data list

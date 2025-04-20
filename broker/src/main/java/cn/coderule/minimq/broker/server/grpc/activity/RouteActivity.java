@@ -7,10 +7,13 @@ import apache.rocketmq.v2.QueryRouteRequest;
 import apache.rocketmq.v2.QueryRouteResponse;
 import apache.rocketmq.v2.Status;
 import cn.coderule.minimq.broker.api.RouteController;
+import cn.coderule.minimq.domain.domain.model.MessageQueue;
 import cn.coderule.minimq.rpc.common.core.RequestContext;
 import cn.coderule.minimq.rpc.common.grpc.activity.ActivityHelper;
 import cn.coderule.minimq.rpc.registry.protocol.route.RouteInfo;
+import cn.coderule.minimq.rpc.registry.route.RouteConverter;
 import io.grpc.stub.StreamObserver;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.function.Function;
@@ -87,8 +90,16 @@ public class RouteActivity {
 
 
     private CompletableFuture<QueryRouteResponse> getRouteAsync(RequestContext context, QueryRouteRequest request) {
-        //routeController.getRoute(context, request.getTopic().getName());
-        return CompletableFuture.completedFuture(null);
+        String topicName = request.getTopic().getName();
+        return routeController.getRoute(context, topicName)
+            .thenApply(routeInfo -> {
+                if (null == routeInfo) {
+                    return null;
+                }
+
+                Set<MessageQueue> queueSet = RouteConverter.getQueueSet(topicName, routeInfo);
+                return null;
+            });
     }
 
     private Function<Status, QueryRouteResponse> routeStatueToResponse() {
