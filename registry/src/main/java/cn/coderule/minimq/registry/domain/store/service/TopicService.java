@@ -4,6 +4,7 @@ import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.common.util.lang.collection.MapUtil;
 import cn.coderule.minimq.domain.config.RegistryConfig;
 import cn.coderule.minimq.domain.domain.constant.flag.TopicSysFlag;
+import cn.coderule.minimq.domain.domain.enums.MessageType;
 import cn.coderule.minimq.domain.domain.model.Topic;
 import cn.coderule.minimq.registry.domain.store.model.Route;
 import cn.coderule.minimq.rpc.registry.protocol.body.TopicList;
@@ -265,17 +266,25 @@ public class TopicService {
     }
 
     private boolean getQueueList(RouteInfo routeInfo, String topicName) {
+        routeInfo.setTopicName(topicName);
+
         Map<String, Topic> topicMap = route.getTopicMap().get(topicName);
         if (MapUtil.isEmpty(topicMap)) {
             return false;
         }
 
+        MessageType messageType = null;
         List<QueueInfo> queueInfoList = new ArrayList<>();
         for (Map.Entry<String, Topic> entry: topicMap.entrySet()) {
             QueueInfo queueInfo = QueueInfo.from(entry.getKey(), entry.getValue());
             queueInfoList.add(queueInfo);
+
+            if (null == messageType) {
+                messageType = entry.getValue().getTopicType();
+            }
         }
 
+        routeInfo.setMessageType(messageType);
         routeInfo.setQueueDatas(queueInfoList);
         return true;
     }
