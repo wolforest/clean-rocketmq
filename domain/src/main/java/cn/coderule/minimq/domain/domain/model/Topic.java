@@ -16,6 +16,7 @@
  */
 package cn.coderule.minimq.domain.domain.model;
 
+import cn.coderule.common.util.lang.collection.MapUtil;
 import cn.coderule.minimq.domain.domain.enums.MessageType;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.TypeReference;
@@ -25,6 +26,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import javax.print.DocFlavor;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -85,18 +87,33 @@ public class Topic implements Serializable {
 
     @JSONField(serialize = false, deserialize = false)
     public MessageType getTopicType() {
+        if (null != messageType) {
+            return messageType;
+        }
+
+        this.messageType = MessageType.NORMAL;
         if (attributes == null) {
-            return MessageType.NORMAL;
+            return this.messageType;
         }
         String content = attributes.get(MESSAGE_TYPE_KEY);
         if (content == null) {
-            return MessageType.NORMAL;
+            return this.messageType;
         }
-        return MessageType.valueOf(content);
+        this.messageType = MessageType.valueOf(content);
+        return this.messageType;
+    }
+
+    public void setAttributes(Map<String, String> attributes) {
+        this.attributes = attributes;
+
+        if (MapUtil.notEmpty(attributes) && attributes.containsKey(MESSAGE_TYPE_KEY)) {
+            this.messageType = MessageType.valueOf(attributes.get(MESSAGE_TYPE_KEY));
+        }
     }
 
     @JSONField(serialize = false, deserialize = false)
     public void setTopicType(MessageType messageType) {
+        this.messageType = messageType;
         attributes.put(MESSAGE_TYPE_KEY, messageType.getValue());
     }
 
@@ -138,6 +155,7 @@ public class Topic implements Serializable {
         this.tagType = TagType.valueOf(strs[4]);
         decodeAttributes(strs);
 
+        this.messageType = getTopicType();
         return true;
     }
 
