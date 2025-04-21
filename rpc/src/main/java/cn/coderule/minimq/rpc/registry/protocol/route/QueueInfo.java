@@ -20,12 +20,16 @@
  */
 package cn.coderule.minimq.rpc.registry.protocol.route;
 
+import cn.coderule.minimq.domain.domain.enums.MessageType;
 import cn.coderule.minimq.domain.domain.model.Topic;
 import lombok.Getter;
 import lombok.Setter;
 
 @Setter @Getter
 public class QueueInfo implements Comparable<QueueInfo> {
+    // not compatible with rocketmq
+    private MessageType messageType = null;
+
     private String brokerName;
     private int readQueueNums;
     private int writeQueueNums;
@@ -44,6 +48,7 @@ public class QueueInfo implements Comparable<QueueInfo> {
         queueInfo.setWriteQueueNums(topic.getWriteQueueNums());
         queueInfo.setPerm(topic.getPerm());
         queueInfo.setTopicSysFlag(topic.getTopicSysFlag());
+        queueInfo.setMessageType(topic.getMessageType());
 
         return queueInfo;
     }
@@ -55,6 +60,7 @@ public class QueueInfo implements Comparable<QueueInfo> {
         topic.setWriteQueueNums(writeQueueNums);
         topic.setPerm(perm);
         topic.setTopicSysFlag(topicSysFlag);
+        topic.setMessageType(messageType);
         return topic;
     }
 
@@ -65,6 +71,7 @@ public class QueueInfo implements Comparable<QueueInfo> {
         this.writeQueueNums = queueInfo.writeQueueNums;
         this.perm = queueInfo.perm;
         this.topicSysFlag = queueInfo.topicSysFlag;
+        this.messageType = queueInfo.messageType;
     }
 
     @Override

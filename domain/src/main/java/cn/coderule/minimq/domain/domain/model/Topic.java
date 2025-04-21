@@ -43,6 +43,9 @@ public class Topic implements Serializable {
     public static final int DEFAULT_READ_QUEUE_NUMS = 16;
     public static final int DEFAULT_WRITE_QUEUE_NUMS = 16;
 
+    // not compatible with rocketmq
+    private MessageType messageType = null;
+
     private String topicName;
     @Builder.Default
     private int readQueueNums = DEFAULT_READ_QUEUE_NUMS;
@@ -77,6 +80,7 @@ public class Topic implements Serializable {
         this.topicSysFlag = other.topicSysFlag;
         this.order = other.order;
         this.attributes = other.attributes;
+        this.messageType = other.messageType;
     }
 
     @JSONField(serialize = false, deserialize = false)

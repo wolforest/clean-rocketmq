@@ -41,7 +41,9 @@ import lombok.Setter;
  */
 @Setter @Getter
 public class RouteInfo extends RpcSerializable {
+    // not compatible with rocketmq
     private String topicName;
+    // not compatible with rocketmq
     private MessageType messageType;
 
     private String orderTopicConf;
@@ -118,6 +120,9 @@ public class RouteInfo extends RpcSerializable {
         if (routeInfo.topicQueueMappingByBroker != null) {
             this.topicQueueMappingByBroker = new HashMap<>(routeInfo.topicQueueMappingByBroker);
         }
+
+        this.topicName = routeInfo.topicName;
+        this.messageType = routeInfo.messageType;
     }
 
     public boolean isQueueMappingEmpty() {
