@@ -7,6 +7,7 @@ import cn.coderule.minimq.rpc.common.rpc.RpcProcessor;
 import cn.coderule.minimq.rpc.common.rpc.core.exception.RemotingCommandException;
 import cn.coderule.minimq.rpc.common.rpc.core.invoke.RpcCommand;
 import cn.coderule.minimq.rpc.common.rpc.core.invoke.RpcContext;
+import cn.coderule.minimq.rpc.common.rpc.protocol.code.RequestCode;
 import cn.coderule.minimq.rpc.common.rpc.protocol.code.ResponseCode;
 import cn.coderule.minimq.rpc.common.rpc.protocol.code.SystemResponseCode;
 import cn.coderule.minimq.rpc.registry.protocol.header.GetRouteInfoRequestHeader;
@@ -32,9 +33,7 @@ public class RouteProcessor implements RpcProcessor {
     private final ExecutorService executor;
     @Getter
     private final Set<Integer> codeSet = Set.of(
-        ResponseCode.SUCCESS,
-        SystemResponseCode.SYSTEM_ERROR,
-        ResponseCode.TOPIC_NOT_EXIST
+        RequestCode.GET_ROUTEINFO_BY_TOPIC
     );
 
 
