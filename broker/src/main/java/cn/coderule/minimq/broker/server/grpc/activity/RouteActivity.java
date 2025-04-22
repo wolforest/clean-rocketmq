@@ -10,6 +10,7 @@ import apache.rocketmq.v2.QueryRouteResponse;
 import apache.rocketmq.v2.Status;
 import cn.coderule.common.util.net.Address;
 import cn.coderule.minimq.broker.api.RouteController;
+import cn.coderule.minimq.broker.server.grpc.converter.RouteConverter;
 import cn.coderule.minimq.domain.config.GrpcConfig;
 import cn.coderule.minimq.rpc.common.core.RequestContext;
 import cn.coderule.minimq.rpc.common.grpc.activity.ActivityHelper;
@@ -104,89 +105,12 @@ public class RouteActivity {
 
         return routeController.getRoute(context, topicName, addressList)
             .thenApply(routeInfo -> {
-                Map<String, Map<Long, Broker>> brokerMap = buildBrokerMap(routeInfo);
+                Map<String, Map<Long, Broker>> brokerMap = RouteConverter.buildBrokerMap(routeInfo);
                 return null;
             });
     }
 
 
-    // brokerName -> brokerId -> Broker
-    private Map<String, Map<Long, Broker>> buildBrokerMap(RouteInfo routeInfo) {
-        Map<String, Map<Long, Broker>> brokerMap = new HashMap<>();
-        if (routeInfo == null) {
-            return brokerMap;
-        }
-
-        for (GroupInfo groupInfo : routeInfo.getBrokerDatas()) {
-            Map<Long, Broker> brokerIdMap = getBrokerIdMap(brokerMap, groupInfo.getBrokerName());
-            putBrokerIdMap(brokerIdMap, groupInfo);
-        }
-
-        return brokerMap;
-    }
-
-    private Map<Long, Broker> getBrokerIdMap(Map<String, Map<Long, Broker>> brokerMap, String groupName) {
-        Map<Long, Broker> brokerIdMap;
-        if (!brokerMap.containsKey(groupName)) {
-            brokerIdMap = new HashMap<>();
-            brokerMap.put(groupName, brokerIdMap);
-        } else {
-            brokerIdMap = brokerMap.get(groupName);
-        }
-
-        return brokerIdMap;
-    }
-
-    private void putBrokerIdMap(Map<Long, Broker> brokerIdMap, GroupInfo groupInfo) {
-        for (Map.Entry<Long, String> entry : groupInfo.getBrokerAddrs().entrySet()) {
-            Broker broker = toBroker(entry, groupInfo.getBrokerName());
-            brokerIdMap.put(entry.getKey(), broker);
-        }
-    }
-
-    /**
-     * @TODO use address list from registry
-     *
-     * @param entry GroupInfo.brokerAddrs.entry
-     * @param groupName groupName
-     * @return Broker
-     */
-    private Broker toBroker(Map.Entry<Long, String> entry, String groupName) {
-        String addrStr = entry.getValue();
-        String[] addrArr = addrStr.split(";");
-        List<Address> addrList = new ArrayList<>();
-        for (String addr : addrArr) {
-            Address address = Address.of(addr);
-            addrList.add(address);
-        }
-
-        Endpoints endpoints = Endpoints.newBuilder()
-            .setScheme(AddressScheme.IPv4)
-            .addAllAddresses(toAddress(addrList))
-            .build();
-
-        return Broker.newBuilder()
-            .setId(Math.toIntExact(entry.getKey()))
-            .setName(groupName)
-            .setEndpoints(endpoints)
-            .build();
-    }
-
-    private List<apache.rocketmq.v2.Address> toAddress(List<Address> addressList) {
-        List<apache.rocketmq.v2.Address> result = new ArrayList<>();
-        for (Address address : addressList) {
-            result.add(toAddress(address));
-        }
-
-        return result;
-    }
-
-    private apache.rocketmq.v2.Address toAddress(Address address) {
-        return apache.rocketmq.v2.Address.newBuilder()
-            .setHost(address.getHost())
-            .setPort(address.getPort())
-            .build();
-    }
 
     private List<Address> toAddressList(Endpoints endpoints) {
         List<Address> addressList = new ArrayList<>();
