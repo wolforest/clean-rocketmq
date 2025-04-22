@@ -100,16 +100,18 @@ public class RouteActivity {
     private CompletableFuture<QueryRouteResponse> getRouteAsync(RequestContext context, QueryRouteRequest request) {
         String topicName = request.getTopic().getName();
         List<Address> addressList = toAddressList(request.getEndpoints());
-        return routeController.getRoute(context, topicName)
+        context.setServerPort(grpcConfig.getPort());
+
+        return routeController.getRoute(context, topicName, addressList)
             .thenApply(routeInfo -> {
-                Map<String, Map<Long, Broker>> brokerMap = buildBrokerMap(routeInfo, addressList);
+                Map<String, Map<Long, Broker>> brokerMap = buildBrokerMap(routeInfo);
                 return null;
             });
     }
 
 
     // brokerName -> brokerId -> Broker
-    private Map<String, Map<Long, Broker>> buildBrokerMap(RouteInfo routeInfo, List<Address> addressList) {
+    private Map<String, Map<Long, Broker>> buildBrokerMap(RouteInfo routeInfo) {
         Map<String, Map<Long, Broker>> brokerMap = new HashMap<>();
         if (routeInfo == null) {
             return brokerMap;
@@ -117,7 +119,7 @@ public class RouteActivity {
 
         for (GroupInfo groupInfo : routeInfo.getBrokerDatas()) {
             Map<Long, Broker> brokerIdMap = getBrokerIdMap(brokerMap, groupInfo.getBrokerName());
-            putBrokerIdMap(brokerIdMap, groupInfo, addressList);
+            putBrokerIdMap(brokerIdMap, groupInfo);
         }
 
         return brokerMap;
@@ -135,9 +137,9 @@ public class RouteActivity {
         return brokerIdMap;
     }
 
-    private void putBrokerIdMap(Map<Long, Broker> brokerIdMap, GroupInfo groupInfo, List<Address> addressList) {
+    private void putBrokerIdMap(Map<Long, Broker> brokerIdMap, GroupInfo groupInfo) {
         for (Map.Entry<Long, String> entry : groupInfo.getBrokerAddrs().entrySet()) {
-            Broker broker = toBroker(entry, groupInfo.getBrokerName(), addressList);
+            Broker broker = toBroker(entry, groupInfo.getBrokerName());
             brokerIdMap.put(entry.getKey(), broker);
         }
     }
@@ -147,13 +149,20 @@ public class RouteActivity {
      *
      * @param entry GroupInfo.brokerAddrs.entry
      * @param groupName groupName
-     * @param addressList addressList from client
      * @return Broker
      */
-    private Broker toBroker(Map.Entry<Long, String> entry, String groupName, List<Address> addressList) {
+    private Broker toBroker(Map.Entry<Long, String> entry, String groupName) {
+        String addrStr = entry.getValue();
+        String[] addrArr = addrStr.split(";");
+        List<Address> addrList = new ArrayList<>();
+        for (String addr : addrArr) {
+            Address address = Address.of(addr);
+            addrList.add(address);
+        }
+
         Endpoints endpoints = Endpoints.newBuilder()
             .setScheme(AddressScheme.IPv4)
-            .addAllAddresses(toAddress(addressList))
+            .addAllAddresses(toAddress(addrList))
             .build();
 
         return Broker.newBuilder()

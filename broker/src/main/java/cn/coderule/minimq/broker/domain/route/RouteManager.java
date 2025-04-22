@@ -52,7 +52,7 @@ public class RouteManager implements Lifecycle {
             throw new InvalidConfigException("invalid config: registryAddress and enableEmbedStore");
         }
 
-        return new RouteService(routeLoader, routeMocker);
+        return new RouteService(brokerConfig, routeLoader, routeMocker);
     }
 
 }
