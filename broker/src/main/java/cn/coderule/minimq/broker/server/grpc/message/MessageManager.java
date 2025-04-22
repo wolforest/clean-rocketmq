@@ -108,6 +108,7 @@ public class MessageManager implements Lifecycle {
         this.routeThreadPoolExecutor.setRejectedExecutionHandler(rejectActivity);
 
         this.routeActivity = new RouteActivity(
+            this.grpcConfig,
             this.routeThreadPoolExecutor
         );
     }

@@ -1,18 +1,21 @@
 package cn.coderule.minimq.broker.server.grpc.activity;
 
-import apache.rocketmq.v2.Code;
+import apache.rocketmq.v2.Endpoints;
 import apache.rocketmq.v2.QueryAssignmentRequest;
 import apache.rocketmq.v2.QueryAssignmentResponse;
 import apache.rocketmq.v2.QueryRouteRequest;
 import apache.rocketmq.v2.QueryRouteResponse;
 import apache.rocketmq.v2.Status;
+import cn.coderule.common.util.net.Address;
 import cn.coderule.minimq.broker.api.RouteController;
+import cn.coderule.minimq.domain.config.GrpcConfig;
 import cn.coderule.minimq.domain.domain.model.MessageQueue;
 import cn.coderule.minimq.rpc.common.core.RequestContext;
 import cn.coderule.minimq.rpc.common.grpc.activity.ActivityHelper;
-import cn.coderule.minimq.rpc.registry.protocol.route.RouteInfo;
 import cn.coderule.minimq.rpc.registry.route.RouteConverter;
 import io.grpc.stub.StreamObserver;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -20,12 +23,14 @@ import java.util.function.Function;
 import lombok.Setter;
 
 public class RouteActivity {
+    private final GrpcConfig grpcConfig;
     private final ThreadPoolExecutor executor;
 
     @Setter
     private RouteController routeController;
 
-    public RouteActivity(ThreadPoolExecutor executor) {
+    public RouteActivity(GrpcConfig grpcConfig, ThreadPoolExecutor executor) {
+        this.grpcConfig = grpcConfig;
         this.executor = executor;
     }
 
@@ -91,6 +96,7 @@ public class RouteActivity {
 
     private CompletableFuture<QueryRouteResponse> getRouteAsync(RequestContext context, QueryRouteRequest request) {
         String topicName = request.getTopic().getName();
+        List<Address> addressList = getAddressList(request.getEndpoints());
         return routeController.getRoute(context, topicName)
             .thenApply(routeInfo -> {
                 if (null == routeInfo) {
@@ -100,6 +106,15 @@ public class RouteActivity {
                 Set<MessageQueue> queueSet = RouteConverter.getQueueSet(topicName, routeInfo);
                 return null;
             });
+    }
+
+    private List<Address> getAddressList(Endpoints endpoints) {
+        List<Address> addressList = new ArrayList<>();
+        for (apache.rocketmq.v2.Address address : endpoints.getAddressesList()) {
+            addressList.add(Address.of(address.getHost(), grpcConfig.getPort()));
+        }
+
+        return addressList;
     }
 
     private Function<Status, QueryRouteResponse> routeStatueToResponse() {
