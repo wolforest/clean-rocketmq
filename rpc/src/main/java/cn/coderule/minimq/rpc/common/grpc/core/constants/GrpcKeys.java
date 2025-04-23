@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.coderule.minimq.rpc.common.grpc.constants;
+package cn.coderule.minimq.rpc.common.grpc.core.constants;
 
 import cn.coderule.minimq.rpc.common.core.HAProxyConstants;
 import io.grpc.Attributes;

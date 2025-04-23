@@ -20,7 +20,7 @@ import cn.coderule.common.util.lang.StringUtil;
 import cn.coderule.minimq.rpc.common.core.ChannelProtocolType;
 import cn.coderule.minimq.rpc.common.core.RequestContext;
 import cn.coderule.minimq.rpc.common.grpc.RequestPipeline;
-import cn.coderule.minimq.rpc.common.grpc.constants.GrpcConstants;
+import cn.coderule.minimq.rpc.common.grpc.core.constants.GrpcConstants;
 import com.google.protobuf.GeneratedMessage;
 import io.grpc.Context;
 import io.grpc.Metadata;

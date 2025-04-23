@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package cn.coderule.minimq.rpc.common.grpc.constants;
+package cn.coderule.minimq.rpc.common.grpc.core.constants;
 
 import io.grpc.Context;
 import io.grpc.Metadata;
