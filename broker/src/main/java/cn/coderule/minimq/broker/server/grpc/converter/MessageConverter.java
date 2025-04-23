@@ -86,8 +86,15 @@ public class MessageConverter {
     }
 
 
-    private static void setBornHost(Map<String, String> properties, Message message) {
+    private static void setBornHost(RequestContext context, Map<String, String> properties, Message message) {
+        String bornHost = message.getSystemProperties().getBornHost();
+        if (StringUtil.isBlank(bornHost)) {
+            bornHost = context.getRemoteAddress();
+        }
 
+        if (StringUtil.notBlank(bornHost)) {
+            properties.put(MessageConst.PROPERTY_BORN_HOST, bornHost);
+        }
     }
 
     private static void setBornTime(Map<String, String> properties, Message message) {
