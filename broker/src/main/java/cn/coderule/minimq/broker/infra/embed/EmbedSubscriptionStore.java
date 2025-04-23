@@ -1,6 +1,7 @@
 package cn.coderule.minimq.broker.infra.embed;
 
 import cn.coderule.minimq.domain.domain.model.subscription.SubscriptionGroup;
+import java.util.concurrent.CompletableFuture;
 
 public class EmbedSubscriptionStore   {
 
@@ -15,8 +16,8 @@ public class EmbedSubscriptionStore   {
         return null;
     }
 
-    public SubscriptionGroup getGroup(String topicName, String groupName) {
-        return getGroup(groupName);
+    public CompletableFuture<SubscriptionGroup> getGroup(String topicName, String groupName) {
+        return null;
     }
 
 

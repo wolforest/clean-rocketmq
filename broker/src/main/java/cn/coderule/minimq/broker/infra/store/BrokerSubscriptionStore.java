@@ -4,6 +4,7 @@ import cn.coderule.minimq.broker.infra.embed.EmbedSubscriptionStore;
 import cn.coderule.minimq.broker.infra.remote.RemoteSubscriptionStore;
 import cn.coderule.minimq.domain.config.BrokerConfig;
 import cn.coderule.minimq.domain.domain.model.subscription.SubscriptionGroup;
+import java.util.concurrent.CompletableFuture;
 
 public class BrokerSubscriptionStore {
     private final BrokerConfig brokerConfig;
@@ -17,9 +18,9 @@ public class BrokerSubscriptionStore {
         this.remoteSubscriptionStore = remoteSubscriptionStore;
     }
 
-    public SubscriptionGroup getGroup(String topicName, String groupName) {
+    public CompletableFuture<SubscriptionGroup> getGroup(String topicName, String groupName) {
         if (embedSubscriptionStore.existsGroup(groupName)) {
-            return embedSubscriptionStore.getGroup(groupName);
+            return embedSubscriptionStore.getGroup(topicName, groupName);
         }
 
         if (!brokerConfig.isEnableRemoteStore()) {

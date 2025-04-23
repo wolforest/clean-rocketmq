@@ -4,6 +4,7 @@ import cn.coderule.minimq.broker.infra.embed.EmbedTopicStore;
 import cn.coderule.minimq.broker.infra.remote.RemoteTopicStore;
 import cn.coderule.minimq.domain.config.BrokerConfig;
 import cn.coderule.minimq.domain.domain.model.Topic;
+import java.util.concurrent.CompletableFuture;
 
 public class BrokerTopicStore {
     private final BrokerConfig brokerConfig;
@@ -16,7 +17,7 @@ public class BrokerTopicStore {
         this.remoteTopicStore = remoteTopicStore;
     }
 
-    public Topic getTopic(String topicName) {
+    public CompletableFuture<Topic> getTopic(String topicName) {
         if (embedTopicStore.exists(topicName)) {
             return embedTopicStore.getTopic(topicName);
         }
