@@ -45,6 +45,8 @@ public class RouteInfo extends RpcSerializable {
     private String topicName;
     // not compatible with rocketmq
     private MessageType messageType;
+    // not compatible with rocketmq
+    private boolean consumeOrderly = false;
 
     private String orderTopicConf;
     /**

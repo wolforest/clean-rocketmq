@@ -57,6 +57,9 @@ public class RouteMocker {
             return result;
         }
 
+        result.setTopicName(topic.getTopicName());
+        result.setMessageType(topic.getTopicType());
+
         QueueInfo queueInfo = QueueInfo.from(brokerConfig.getGroup(), topic);
         result.getQueueDatas().add(queueInfo);
 

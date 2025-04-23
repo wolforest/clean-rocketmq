@@ -13,6 +13,7 @@ import cn.coderule.minimq.rpc.common.core.RequestContext;
 import cn.coderule.minimq.rpc.registry.protocol.route.RouteInfo;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 public class RouteController {
     private final RouteService routeService;
@@ -30,12 +31,14 @@ public class RouteController {
         return CompletableFuture.completedFuture(routeInfo);
     }
 
-    public CompletableFuture<Topic> getTopic(String topicName) {
-        return null;
-    }
+    public CompletableFuture<RouteInfo> getRoute(RequestContext context, String topicName, String groupName,
+        List<Address> addressList) throws ExecutionException, InterruptedException {
+        RouteInfo routeInfo = getRoute(context, topicName, addressList).get();
 
-    public CompletableFuture<SubscriptionGroup> getSubscription(String topicName, String groupName) {
-        return null;
+        boolean isConsumeOrderly = routeService.isConsumeOrderly(topicName, groupName);
+        routeInfo.setConsumeOrderly(isConsumeOrderly);
+
+        return CompletableFuture.completedFuture(routeInfo);
     }
 
     private void validateTopic(String topicName) {
