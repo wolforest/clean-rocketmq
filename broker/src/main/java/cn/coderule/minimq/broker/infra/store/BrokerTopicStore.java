@@ -3,6 +3,7 @@ package cn.coderule.minimq.broker.infra.store;
 import cn.coderule.minimq.broker.infra.embed.EmbedTopicStore;
 import cn.coderule.minimq.broker.infra.remote.RemoteTopicStore;
 import cn.coderule.minimq.domain.config.BrokerConfig;
+import cn.coderule.minimq.domain.domain.model.Topic;
 
 public class BrokerTopicStore {
     private final BrokerConfig brokerConfig;
@@ -13,5 +14,17 @@ public class BrokerTopicStore {
         this.brokerConfig = brokerConfig;
         this.embedTopicStore = embedTopicStore;
         this.remoteTopicStore = remoteTopicStore;
+    }
+
+    public Topic getTopic(String topicName) {
+        if (embedTopicStore.exists(topicName)) {
+            return embedTopicStore.getTopic(topicName);
+        }
+
+        if (!brokerConfig.isEnableRemoteStore()) {
+            return null;
+        }
+
+        return remoteTopicStore.getTopic(topicName);
     }
 }
