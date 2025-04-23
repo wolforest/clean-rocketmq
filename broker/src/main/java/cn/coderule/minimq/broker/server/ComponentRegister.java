@@ -4,7 +4,7 @@ import cn.coderule.common.convention.service.LifecycleManager;
 import cn.coderule.common.util.lang.StringUtil;
 import cn.coderule.minimq.broker.domain.consumer.ConsumerManager;
 import cn.coderule.minimq.broker.domain.producer.ProducerManager;
-import cn.coderule.minimq.broker.domain.route.RouteManager;
+import cn.coderule.minimq.broker.domain.meta.RouteManager;
 import cn.coderule.minimq.broker.domain.timer.TimerManager;
 import cn.coderule.minimq.broker.domain.transaction.TransactionManager;
 import cn.coderule.minimq.broker.infra.BrokerRegister;

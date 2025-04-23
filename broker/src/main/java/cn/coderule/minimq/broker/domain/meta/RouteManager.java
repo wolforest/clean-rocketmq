@@ -1,4 +1,4 @@
-package cn.coderule.minimq.broker.domain.route;
+package cn.coderule.minimq.broker.domain.meta;
 
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.util.lang.StringUtil;

@@ -1,8 +1,7 @@
-package cn.coderule.minimq.broker.domain.route;
+package cn.coderule.minimq.broker.domain.meta;
 
 import cn.coderule.minimq.domain.config.BrokerConfig;
 import cn.coderule.minimq.domain.config.TopicConfig;
-import cn.coderule.minimq.domain.domain.constant.MQConstants;
 import cn.coderule.minimq.domain.domain.model.Topic;
 import cn.coderule.minimq.domain.service.store.api.TopicStore;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.GroupInfo;

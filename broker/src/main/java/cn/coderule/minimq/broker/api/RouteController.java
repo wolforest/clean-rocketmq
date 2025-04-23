@@ -2,7 +2,7 @@ package cn.coderule.minimq.broker.api;
 
 import cn.coderule.common.util.lang.StringUtil;
 import cn.coderule.common.util.net.Address;
-import cn.coderule.minimq.broker.domain.route.RouteService;
+import cn.coderule.minimq.broker.domain.meta.RouteService;
 import cn.coderule.minimq.domain.config.TopicConfig;
 import cn.coderule.minimq.domain.domain.enums.InvalidCode;
 import cn.coderule.minimq.domain.domain.exception.InvalidParameterException;
