@@ -11,7 +11,9 @@ import cn.coderule.minimq.domain.domain.enums.InvalidCode;
 import cn.coderule.minimq.domain.domain.model.message.MessageBO;
 import cn.coderule.minimq.rpc.common.core.RequestContext;
 import cn.coderule.minimq.rpc.common.grpc.core.exception.GrpcException;
+import com.google.protobuf.Timestamp;
 import com.google.protobuf.util.Durations;
+import com.google.protobuf.util.Timestamps;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -85,6 +87,11 @@ public class MessageConverter {
 
     }
 
+    private static void setReconsumeTimes(Map<String, String> properties, Message message) {
+        int reconsumeTimes = message.getSystemProperties().getDeliveryAttempt();
+        properties.put(MessageConst.PROPERTY_RECONSUME_TIME, String.valueOf(reconsumeTimes));
+    }
+
 
     private static void setBornHost(RequestContext context, Map<String, String> properties, Message message) {
         String bornHost = message.getSystemProperties().getBornHost();
@@ -98,7 +105,12 @@ public class MessageConverter {
     }
 
     private static void setBornTime(Map<String, String> properties, Message message) {
+        Timestamp bornTime = message.getSystemProperties().getBornTimestamp();
+        if (!Timestamps.isValid(bornTime)) {
+            return;
+        }
 
+        properties.put(MessageConst.PROPERTY_BORN_TIMESTAMP, String.valueOf(Timestamps.toMillis(bornTime)));
     }
 
     private static void setTag(Map<String, String> properties, Message message) {
@@ -114,7 +126,12 @@ public class MessageConverter {
     }
 
     private static void setTraceContext(Map<String, String> properties, Message message) {
+        String traceContext = message.getSystemProperties().getTraceContext();
+        if (StringUtil.isBlank(traceContext)) {
+            return;
+        }
 
+        properties.put(MessageConst.PROPERTY_TRACE_CONTEXT, traceContext);
     }
 
 }
