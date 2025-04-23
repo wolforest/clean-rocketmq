@@ -14,6 +14,7 @@ import apache.rocketmq.v2.SendMessageResponse;
 import apache.rocketmq.v2.Status;
 import cn.coderule.common.util.lang.StringUtil;
 import cn.coderule.minimq.broker.api.ProducerController;
+import cn.coderule.minimq.broker.server.grpc.converter.MessageConverter;
 import cn.coderule.minimq.domain.domain.constant.MessageConst;
 import cn.coderule.minimq.domain.domain.constant.flag.MessageSysFlag;
 import cn.coderule.minimq.domain.domain.enums.InvalidCode;
@@ -85,63 +86,21 @@ public class ProducerActivity {
 
         try {
             int messageCount = request.getMessagesCount();
-            if (messageCount > 0) {
-
-            } else {
+            if (messageCount <= 0) {
                 throw new GrpcException(InvalidCode.MESSAGE_CORRUPTED, "no message to send");
             }
+
+            MessageBO messageBO = MessageConverter.toMessageBO(context, request);
+            producerController.produce(context, messageBO)
+                .thenApply(result -> {
+                    return null;
+                });
         } catch (Throwable t) {
             future.completeExceptionally(t);
         }
 
         return future;
     }
-
-    protected int buildSysFlag(Message message) {
-        // sysFlag (body encoding & message type)
-        int sysFlag = 0;
-        Encoding bodyEncoding = message.getSystemProperties().getBodyEncoding();
-        if (bodyEncoding.equals(Encoding.GZIP)) {
-            sysFlag |= MessageSysFlag.COMPRESSED_FLAG;
-        }
-        // transaction
-        MessageType messageType = message.getSystemProperties().getMessageType();
-        if (messageType.equals(MessageType.TRANSACTION)) {
-            sysFlag |= MessageSysFlag.TRANSACTION_PREPARED_TYPE;
-        }
-        return sysFlag;
-    }
-
-    private MessageBO toMessageBO(RequestContext context, SendMessageRequest request) {
-        Message message = request.getMessages(0);
-
-        return MessageBO.builder()
-            .topic(message.getTopic().getName())
-            .body(message.getBody().toByteArray())
-
-            .sysFlag(buildSysFlag(message))
-            .build();
-    }
-
-    private Map<String, String> buildProperties(RequestContext context, Message message, String producerGroup) {
-        Map<String, String> properties = new HashMap<>(
-            message.getUserPropertiesMap()
-        );
-
-        setMessageId(properties, message);
-
-
-        return properties;
-    }
-
-    private void setMessageId(Map<String, String> properties, Message message) {
-        String messageId = message.getSystemProperties().getMessageId();
-        if (StringUtil.isBlank(messageId)) {
-            throw new GrpcException(InvalidCode.ILLEGAL_MESSAGE_ID, "message id can not be blank");
-        }
-        properties.put(MessageConst.PROPERTY_UNIQ_CLIENT_MESSAGE_ID_KEYIDX, messageId);
-    }
-
 
 
     private Function<Status, ForwardMessageToDeadLetterQueueResponse> moveToDLQStatusToResponse() {
