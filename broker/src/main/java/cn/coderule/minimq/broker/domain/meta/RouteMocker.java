@@ -26,29 +26,33 @@ public class RouteMocker {
     public RouteInfo getRoute(String topicName) {
         Topic topic = topicStore.getTopic(topicName);
         if (topic == null) {
-            topic = createTopic(topicName);
+            topic = createAndSaveTopic(topicName);
         }
+
         return toRoute(topic);
     }
 
-    private Topic createTopic(String topicName) {
+    private Topic createAndSaveTopic(String topicName) {
         if (!topicConfig.isEnableAutoCreation()) {
             return null;
         }
 
-        Topic topic = Topic.builder()
-            .topicName(topicName)
-            .readQueueNums(topicConfig.getDefaultQueueNum())
-            .writeQueueNums(topicConfig.getDefaultQueueNum())
-            .build();
-
         try {
+            Topic topic = createTopic(topicName);
             topicStore.saveTopic(topic);
             return topic;
         } catch (Exception e) {
             log.error("create topic={} error", topicName, e);
             return null;
         }
+    }
+
+    private Topic createTopic(String topicName) {
+        return Topic.builder()
+            .topicName(topicName)
+            .readQueueNums(topicConfig.getDefaultQueueNum())
+            .writeQueueNums(topicConfig.getDefaultQueueNum())
+            .build();
     }
 
     private RouteInfo toRoute(Topic topic) {
