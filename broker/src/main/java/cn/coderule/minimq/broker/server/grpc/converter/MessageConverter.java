@@ -11,6 +11,7 @@ import cn.coderule.minimq.domain.domain.enums.InvalidCode;
 import cn.coderule.minimq.domain.domain.model.message.MessageBO;
 import cn.coderule.minimq.rpc.common.core.RequestContext;
 import cn.coderule.minimq.rpc.common.grpc.core.exception.GrpcException;
+import com.google.protobuf.util.Durations;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -48,6 +49,7 @@ public class MessageConverter {
         );
 
         setMessageId(properties, message);
+        setTransactionProperty(properties, message);
 
 
         return properties;
@@ -61,5 +63,51 @@ public class MessageConverter {
         properties.put(MessageConst.PROPERTY_UNIQ_CLIENT_MESSAGE_ID_KEYIDX, messageId);
     }
 
+    private static void setTransactionProperty(Map<String, String> properties, Message message) {
+        MessageType messageType = message.getSystemProperties().getMessageType();
+        if (!messageType.equals(MessageType.TRANSACTION)) {
+            return;
+        }
+
+        properties.put(MessageConst.PROPERTY_TRANSACTION_PREPARED, "true");
+        if (!message.getSystemProperties().hasOrphanedTransactionRecoveryDuration()) {
+            return;
+        }
+
+        long duration = Durations.toSeconds(
+            message.getSystemProperties().getOrphanedTransactionRecoveryDuration()
+        );
+
+        properties.put(MessageConst.PROPERTY_CHECK_IMMUNITY_TIME_IN_SECONDS, String.valueOf(duration));
+    }
+
+    private static void setDelayProperty(Map<String, String> properties, Message message) {
+
+    }
+
+
+    private static void setBornHost(Map<String, String> properties, Message message) {
+
+    }
+
+    private static void setBornTime(Map<String, String> properties, Message message) {
+
+    }
+
+    private static void setTag(Map<String, String> properties, Message message) {
+
+    }
+
+    private static void setKeys(Map<String, String> properties, Message message) {
+
+    }
+
+    private static void setGroup(Map<String, String> properties, Message message) {
+
+    }
+
+    private static void setTraceContext(Map<String, String> properties, Message message) {
+
+    }
 
 }
