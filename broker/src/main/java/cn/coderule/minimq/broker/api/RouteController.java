@@ -6,6 +6,8 @@ import cn.coderule.minimq.broker.domain.meta.RouteService;
 import cn.coderule.minimq.domain.config.TopicConfig;
 import cn.coderule.minimq.domain.domain.enums.InvalidCode;
 import cn.coderule.minimq.domain.domain.exception.InvalidParameterException;
+import cn.coderule.minimq.domain.domain.model.Topic;
+import cn.coderule.minimq.domain.domain.model.subscription.SubscriptionGroup;
 import cn.coderule.minimq.domain.utils.topic.TopicValidator;
 import cn.coderule.minimq.rpc.common.core.RequestContext;
 import cn.coderule.minimq.rpc.registry.protocol.route.RouteInfo;
@@ -26,6 +28,14 @@ public class RouteController {
 
         RouteInfo routeInfo = routeService.get(context, topicName, addressList);
         return CompletableFuture.completedFuture(routeInfo);
+    }
+
+    public CompletableFuture<Topic> getTopic(String topicName) {
+        return null;
+    }
+
+    public CompletableFuture<SubscriptionGroup> getSubscription(String topicName, String groupName) {
+        return null;
     }
 
     private void validateTopic(String topicName) {
