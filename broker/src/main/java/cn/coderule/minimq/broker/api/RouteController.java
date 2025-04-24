@@ -23,7 +23,7 @@ public class RouteController {
     }
 
     public CompletableFuture<RouteInfo> getRoute(RequestContext context, String topicName, List<Address> addressList) {
-        validateTopic(topicName);
+        TopicValidator.validateTopic(topicName);
 
         RouteInfo routeInfo = routeService.get(context, topicName, addressList);
         return CompletableFuture.completedFuture(routeInfo);
@@ -37,24 +37,6 @@ public class RouteController {
         routeInfo.setConsumeOrderly(isConsumeOrderly);
 
         return CompletableFuture.completedFuture(routeInfo);
-    }
-
-    private void validateTopic(String topicName) {
-        if (StringUtil.isBlank(topicName)) {
-            throw new InvalidParameterException(InvalidCode.ILLEGAL_TOPIC, "topicName is blank");
-        }
-
-        if (topicName.length() > topicConfig.getMaxTopicLength()) {
-            throw new InvalidParameterException(InvalidCode.ILLEGAL_TOPIC, "topicName is too long");
-        }
-
-        if (TopicValidator.isTopicOrGroupIllegal(topicName)) {
-            throw new InvalidParameterException(InvalidCode.ILLEGAL_TOPIC, "topicName is illegal");
-        }
-
-        if (TopicValidator.isSystemTopic(topicName)) {
-            throw new InvalidParameterException(InvalidCode.ILLEGAL_TOPIC, "topicName is system topic");
-        }
     }
 
 }

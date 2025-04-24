@@ -17,6 +17,8 @@
 package cn.coderule.minimq.domain.utils.topic;
 
 import cn.coderule.common.util.lang.StringUtil;
+import cn.coderule.minimq.domain.domain.enums.InvalidCode;
+import cn.coderule.minimq.domain.domain.exception.InvalidParameterException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -101,7 +103,25 @@ public class TopicValidator {
         return false;
     }
 
-    public static ValidateTopicResult validateTopic(String topic) {
+    public static void validateTopic(String topicName) {
+        if (StringUtil.isBlank(topicName)) {
+            throw new InvalidParameterException(InvalidCode.ILLEGAL_TOPIC, "topicName is blank");
+        }
+
+        if (topicName.length() > TOPIC_MAX_LENGTH) {
+            throw new InvalidParameterException(InvalidCode.ILLEGAL_TOPIC, "topicName is too long");
+        }
+
+        if (TopicValidator.isTopicOrGroupIllegal(topicName)) {
+            throw new InvalidParameterException(InvalidCode.ILLEGAL_TOPIC, "topicName is illegal");
+        }
+
+        if (TopicValidator.isSystemTopic(topicName)) {
+            throw new InvalidParameterException(InvalidCode.ILLEGAL_TOPIC, "topicName is system topic");
+        }
+    }
+
+    public static ValidateTopicResult validateAndReturn(String topic) {
 
         if (StringUtil.isBlank(topic)) {
             return new ValidateTopicResult(false, "The specified topic is blank.");

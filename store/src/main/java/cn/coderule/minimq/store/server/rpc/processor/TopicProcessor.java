@@ -146,7 +146,7 @@ public class TopicProcessor implements RpcProcessor {
             return true;
         }
 
-        TopicValidator.ValidateTopicResult validateResult = TopicValidator.validateTopic(topicName);
+        TopicValidator.ValidateTopicResult validateResult = TopicValidator.validateAndReturn(topicName);
         if (!validateResult.isValid()) {
             response.setCodeAndRemark(
                 ResponseCode.SYSTEM_ERROR,

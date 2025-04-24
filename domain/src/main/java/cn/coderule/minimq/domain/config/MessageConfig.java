@@ -11,6 +11,11 @@ public class MessageConfig implements Serializable {
     private int maxPropertySize = 16 * 1024;
     private int maxPropertyCount = 128;
 
+    /**
+     * max message group size, 0 or negative number means no limit for proxy
+     */
+    private int maxMessageGroupSize = 64;
+
     private long defaultInvisibleTimeMills = Duration.ofSeconds(60).toMillis();
     private long minInvisibleTimeMillsForRecv = Duration.ofSeconds(10).toMillis();
     private long maxInvisibleTimeMills = Duration.ofHours(12).toMillis();

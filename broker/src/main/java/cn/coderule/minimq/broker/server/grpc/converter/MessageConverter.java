@@ -60,7 +60,10 @@ public class MessageConverter {
         );
 
         setMessageId(properties, message);
+        setGroup(properties, message, producerGroup);
+
         setTransactionProperty(properties, message);
+
 
 
         return properties;
@@ -72,6 +75,16 @@ public class MessageConverter {
             throw new GrpcException(InvalidCode.ILLEGAL_MESSAGE_ID, "message id can not be blank");
         }
         properties.put(MessageConst.PROPERTY_UNIQ_CLIENT_MESSAGE_ID_KEYIDX, messageId);
+    }
+
+    private static void setGroup(Map<String, String> properties, Message message, String producerGroup) {
+        properties.put(MessageConst.PROPERTY_PRODUCER_GROUP, producerGroup);
+
+        String group = message.getSystemProperties().getMessageGroup();
+        if (StringUtil.isBlank(group)) {
+            return;
+        }
+        properties.put(MessageConst.PROPERTY_SHARDING_KEY, group);
     }
 
     private static void setTransactionProperty(Map<String, String> properties, Message message) {
@@ -130,9 +143,7 @@ public class MessageConverter {
 
     }
 
-    private static void setGroup(Map<String, String> properties, Message message) {
 
-    }
 
     private static void setTraceContext(Map<String, String> properties, Message message) {
         String traceContext = message.getSystemProperties().getTraceContext();
