@@ -1,5 +1,6 @@
 package cn.coderule.minimq.broker.server.grpc.activity;
 
+import apache.rocketmq.v2.Code;
 import apache.rocketmq.v2.Encoding;
 import apache.rocketmq.v2.ForwardMessageToDeadLetterQueueRequest;
 import apache.rocketmq.v2.ForwardMessageToDeadLetterQueueResponse;
@@ -11,24 +12,32 @@ import apache.rocketmq.v2.QueryRouteRequest;
 import apache.rocketmq.v2.QueryRouteResponse;
 import apache.rocketmq.v2.SendMessageRequest;
 import apache.rocketmq.v2.SendMessageResponse;
+import apache.rocketmq.v2.SendResultEntry;
 import apache.rocketmq.v2.Status;
 import cn.coderule.common.util.lang.StringUtil;
 import cn.coderule.minimq.broker.api.ProducerController;
 import cn.coderule.minimq.broker.server.grpc.converter.MessageConverter;
+import cn.coderule.minimq.broker.server.grpc.converter.ProducerConverter;
 import cn.coderule.minimq.domain.domain.constant.MessageConst;
 import cn.coderule.minimq.domain.domain.constant.flag.MessageSysFlag;
+import cn.coderule.minimq.domain.domain.dto.EnqueueResult;
 import cn.coderule.minimq.domain.domain.enums.InvalidCode;
 import cn.coderule.minimq.rpc.common.core.RequestContext;
 import cn.coderule.minimq.domain.domain.model.message.MessageBO;
 import cn.coderule.minimq.rpc.common.grpc.activity.ActivityHelper;
+import cn.coderule.minimq.rpc.common.grpc.core.ResponseBuilder;
 import cn.coderule.minimq.rpc.common.grpc.core.exception.GrpcException;
 import io.grpc.stub.StreamObserver;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.function.Function;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
 
 public class ProducerActivity {
     private final ThreadPoolExecutor executor;
@@ -90,18 +99,15 @@ public class ProducerActivity {
                 throw new GrpcException(InvalidCode.MESSAGE_CORRUPTED, "no message to send");
             }
 
-            MessageBO messageBO = MessageConverter.toMessageBO(context, request);
-            producerController.produce(context, messageBO)
-                .thenApply(result -> {
-                    return null;
-                });
+            List<MessageBO> messageBOList = MessageConverter.toMessageBO(context, request);
+            producerController.produce(context, messageBOList)
+                .thenApply(result -> ProducerConverter.toSendMessageResponse(context, request, result));
         } catch (Throwable t) {
             future.completeExceptionally(t);
         }
 
         return future;
     }
-
 
     private Function<Status, ForwardMessageToDeadLetterQueueResponse> moveToDLQStatusToResponse() {
         return status -> ForwardMessageToDeadLetterQueueResponse.newBuilder()

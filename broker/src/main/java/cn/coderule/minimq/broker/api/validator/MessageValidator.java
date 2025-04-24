@@ -1,6 +1,5 @@
 package cn.coderule.minimq.broker.api.validator;
 
-import apache.rocketmq.v2.Code;
 import cn.coderule.common.util.lang.StringUtil;
 import cn.coderule.minimq.domain.config.MessageConfig;
 import cn.coderule.minimq.domain.domain.enums.InvalidCode;
@@ -16,6 +15,26 @@ public class MessageValidator {
     }
 
     public void validate(MessageBO messageBO) {
+
+    }
+
+    private void validateProperty() {
+        // num, size
+    }
+
+    private void validateMessageGroup() {
+
+    }
+
+    private void validateMessageKey() {
+
+    }
+
+    private void validateDelayTime() {
+
+    }
+
+    private void validateTransactionRecoveryTime() {
 
     }
 
