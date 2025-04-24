@@ -1,4 +1,4 @@
-package cn.coderule.minimq.broker.server.grpc.message;
+package cn.coderule.minimq.broker.server.grpc.service;
 
 import cn.coderule.minimq.broker.api.RouteController;
 import cn.coderule.minimq.broker.server.grpc.pipeline.ContextInitPipeline;

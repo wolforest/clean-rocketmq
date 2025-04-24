@@ -39,7 +39,8 @@ public class ConsumerActivity {
         ActivityHelper<ReceiveMessageRequest, ReceiveMessageResponse> helper = getReceiveHelper(context, request, responseObserver);
 
         try {
-            Runnable task = () -> receiveMessageAsync(context, request)
+            Runnable task = ()
+                -> receiveMessageAsync(context, request)
                 .whenComplete(helper::writeResponse);
 
             this.executor.submit(helper.createTask(task));
@@ -52,7 +53,8 @@ public class ConsumerActivity {
         ActivityHelper<AckMessageRequest, AckMessageResponse> helper = getAckHelper(context, request, responseObserver);
 
         try {
-            Runnable task = () -> ackMessageAsync(context, request)
+            Runnable task = ()
+                -> ackMessageAsync(context, request)
                 .whenComplete(helper::writeResponse);
 
             this.executor.submit(helper.createTask(task));
@@ -66,7 +68,8 @@ public class ConsumerActivity {
         ActivityHelper<ChangeInvisibleDurationRequest, ChangeInvisibleDurationResponse> helper = getInvisibleHelper(context, request, responseObserver);
 
         try {
-            Runnable task = () -> changeInvisibleDurationAsync(context, request)
+            Runnable task = ()
+                -> changeInvisibleDurationAsync(context, request)
                 .whenComplete(helper::writeResponse);
 
             this.executor.submit(helper.createTask(task));
@@ -79,7 +82,8 @@ public class ConsumerActivity {
         ActivityHelper<UpdateOffsetRequest, UpdateOffsetResponse> helper = getUpdateOffsetHelper(context, request, responseObserver);
 
         try {
-            Runnable task = () -> updateOffsetAsync(context, request)
+            Runnable task = ()
+                -> updateOffsetAsync(context, request)
                 .whenComplete(helper::writeResponse);
             this.executor.submit(helper.createTask(task));
         } catch (Throwable t) {
@@ -91,7 +95,8 @@ public class ConsumerActivity {
         ActivityHelper<GetOffsetRequest, GetOffsetResponse> helper = getOffsetHelper(context, request, responseObserver);
 
         try {
-            Runnable task = () -> getOffsetAsync(context, request)
+            Runnable task = ()
+                -> getOffsetAsync(context, request)
                 .whenComplete(helper::writeResponse);
 
             this.executor.submit(helper.createTask(task));
@@ -104,7 +109,8 @@ public class ConsumerActivity {
         ActivityHelper<QueryOffsetRequest, QueryOffsetResponse> helper = queryOffsetHelper(context, request, responseObserver);
 
         try {
-            Runnable task = () -> queryOffsetAsync(context, request)
+            Runnable task = ()
+                -> queryOffsetAsync(context, request)
                 .whenComplete(helper::writeResponse);
 
             this.executor.submit(helper.createTask(task));

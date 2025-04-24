@@ -1,7 +1,7 @@
 package cn.coderule.minimq.broker.server.grpc;
 
-import cn.coderule.minimq.broker.server.grpc.message.MessageManager;
-import cn.coderule.minimq.broker.server.grpc.message.MessageService;
+import cn.coderule.minimq.broker.server.grpc.service.MessageManager;
+import cn.coderule.minimq.broker.server.grpc.service.MessageService;
 import cn.coderule.minimq.broker.server.bootstrap.BrokerContext;
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.minimq.domain.config.BrokerConfig;
