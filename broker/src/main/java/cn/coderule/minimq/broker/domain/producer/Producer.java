@@ -2,7 +2,6 @@ package cn.coderule.minimq.broker.domain.producer;
 
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
-import cn.coderule.minimq.domain.domain.exception.RpcException;
 import cn.coderule.minimq.rpc.common.core.RequestContext;
 import cn.coderule.minimq.domain.domain.model.message.MessageBO;
 import cn.coderule.minimq.domain.domain.dto.EnqueueResult;
@@ -17,6 +16,15 @@ public class Producer implements Lifecycle {
     private ThreadPoolExecutor executor;
 
     public CompletableFuture<EnqueueResult> produce(RequestContext context, MessageBO messageBO) {
+        // validate topic
+        // validate message
+        // select message queue
+        // init uuid
+
+        // send message
+        // execute send callback
+        // execute complete callback
+
         return null;
     }
 
@@ -41,7 +49,9 @@ public class Producer implements Lifecycle {
 
     @Override
     public void shutdown() {
-
+        if (executor != null) {
+            executor.shutdown();
+        }
     }
 
     private CompletableFuture<List<EnqueueResult>> combineEnqueueResult(List<CompletableFuture<EnqueueResult>> futureList) {
