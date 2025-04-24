@@ -22,6 +22,20 @@ public class Producer implements Lifecycle {
         // init uuid
 
         // send message
+            // static topic checking
+            // build sendMessageContext
+            // execute pre send hook
+            // clear reserved properties
+            // get topic
+            // select message queue
+            // handle retry or DLQ
+            // check cleanup policy
+            // add message info
+            // handle transaction info
+            // send message(sync or async)
+                // call store api
+                // execute post send hook
+                // format response
         // execute send callback
         // execute complete callback
 
