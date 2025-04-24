@@ -14,20 +14,29 @@ import cn.coderule.minimq.rpc.common.grpc.core.exception.GrpcException;
 import com.google.protobuf.Timestamp;
 import com.google.protobuf.util.Durations;
 import com.google.protobuf.util.Timestamps;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class MessageConverter {
 
-    public static MessageBO toMessageBO(RequestContext context, SendMessageRequest request) {
-        Message message = request.getMessages(0);
+    public static List<MessageBO> toMessageBO(RequestContext context, SendMessageRequest request) {
+        List<MessageBO> result = new ArrayList<>();
 
-        return MessageBO.builder()
-            .topic(message.getTopic().getName())
-            .body(message.getBody().toByteArray())
+        for (Message message : request.getMessagesList()) {
+            String topic = message.getTopic().getName();
+            MessageBO messageBO = MessageBO.builder()
+                .topic(topic)
+                .body(message.getBody().toByteArray())
+                .sysFlag(buildSysFlag(message))
+                .properties(buildProperties(context, message, topic))
+                .build();
 
-            .sysFlag(buildSysFlag(message))
-            .build();
+            result.add(messageBO);
+        }
+
+        return result;
     }
 
     private static int buildSysFlag(Message message) {
