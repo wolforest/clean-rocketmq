@@ -1,13 +1,18 @@
 package cn.coderule.minimq.broker.domain.producer;
 
 import cn.coderule.common.convention.service.Lifecycle;
+import cn.coderule.common.util.lang.collection.CollectionUtil;
+import cn.coderule.minimq.domain.domain.exception.RpcException;
 import cn.coderule.minimq.rpc.common.core.RequestContext;
 import cn.coderule.minimq.domain.domain.model.message.MessageBO;
 import cn.coderule.minimq.domain.domain.dto.EnqueueResult;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ThreadPoolExecutor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class Producer implements Lifecycle {
     private ThreadPoolExecutor executor;
 
@@ -16,7 +21,17 @@ public class Producer implements Lifecycle {
     }
 
     public CompletableFuture<List<EnqueueResult>> produce(RequestContext context, List<MessageBO> messageList) {
-        return null;
+        if (CollectionUtil.isEmpty(messageList)) {
+            return CompletableFuture.completedFuture(List.of());
+        }
+
+        List<CompletableFuture<EnqueueResult>> futureList = new ArrayList<>();
+        for (MessageBO messageBO : messageList) {
+            CompletableFuture<EnqueueResult> future = produce(context, messageBO);
+            futureList.add(future);
+        }
+
+        return combineEnqueueResult(futureList);
     }
 
     @Override
@@ -29,19 +44,25 @@ public class Producer implements Lifecycle {
 
     }
 
-    @Override
-    public void initialize() {
-
+    private CompletableFuture<List<EnqueueResult>> combineEnqueueResult(List<CompletableFuture<EnqueueResult>> futureList) {
+        CompletableFuture<Void> all = CompletableFuture.allOf(futureList.toArray(new CompletableFuture[0]));
+        return all.thenApply(v -> {
+            List<EnqueueResult> resultList = new ArrayList<>();
+            for (CompletableFuture<EnqueueResult> future : futureList) {
+                addEnqueueResult(resultList, future);
+            }
+            return resultList;
+        });
     }
 
-    @Override
-    public void cleanup() {
-
-    }
-
-    @Override
-    public State getState() {
-        return State.RUNNING;
+    private void addEnqueueResult(List<EnqueueResult> resultList, CompletableFuture<EnqueueResult> future) {
+        try {
+            EnqueueResult enqueueResult = future.get();
+            resultList.add(enqueueResult);
+        } catch (Throwable t) {
+            log.error("produce message error", t);
+            resultList.add(EnqueueResult.failure());
+        }
     }
 
 }
