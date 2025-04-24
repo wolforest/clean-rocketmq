@@ -78,12 +78,9 @@ public class ProducerActivity {
         CompletableFuture<SendMessageResponse> future = new CompletableFuture<>();
 
         try {
-            int messageCount = request.getMessagesCount();
-            if (messageCount <= 0) {
-                throw new GrpcException(InvalidCode.MESSAGE_CORRUPTED, "no message to send");
-            }
-
+            checkMessageSize(request);
             List<MessageBO> messageBOList = MessageConverter.toMessageBO(context, request);
+
             producerController.produce(context, messageBOList)
                 .thenApply(result -> ProducerConverter.toSendMessageResponse(context, request, result));
         } catch (Throwable t) {
@@ -91,6 +88,15 @@ public class ProducerActivity {
         }
 
         return future;
+    }
+
+    private void checkMessageSize(SendMessageRequest request) {
+        int messageCount = request.getMessagesCount();
+        if (messageCount > 0) {
+            return;
+        }
+
+        throw new GrpcException(InvalidCode.MESSAGE_CORRUPTED, "no message to send");
     }
 
     private Function<Status, ForwardMessageToDeadLetterQueueResponse> moveToDLQStatusToResponse() {
