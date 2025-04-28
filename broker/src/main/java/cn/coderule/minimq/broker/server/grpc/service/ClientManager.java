@@ -5,6 +5,7 @@ import apache.rocketmq.v2.Settings;
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 import cn.coderule.common.util.lang.collection.ArrayUtil;
+import cn.coderule.minimq.rpc.common.core.RequestContext;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -19,6 +20,45 @@ public class ClientManager extends ServiceThread implements Lifecycle {
     @Override
     public String getServiceName() {
         return ClientManager.class.getSimpleName();
+    }
+
+    public Settings getSettings(String clientId) {
+        return SETTING_MAP.get(clientId);
+    }
+
+    public Settings getSettings(RequestContext context) {
+        String clientId = context.getClientID();
+        Settings settings = getSettings(clientId);
+        if (settings == null) {
+            log.warn("clientId:{} not found settings.", clientId);
+            return null;
+        }
+
+        if (settings.hasPublishing()) {
+            settings = mergeProducerSettings(settings);
+        }
+
+        if (settings.hasSubscription()) {
+            settings = mergeSubscriptionSettings(settings, context);
+        }
+
+        return mergeMetric(settings);
+    }
+
+    private Settings mergeProducerSettings(Settings settings) {
+        return settings;
+    }
+
+    private Settings mergeSubscriptionSettings(Settings settings, RequestContext context) {
+        String group = settings.getSubscription().getGroup().getName();
+
+        settings.getSubscription().getSubscriptions(0).getTopic().getName();
+
+        return settings;
+    }
+
+    private Settings mergeMetric(Settings settings) {
+        return settings;
     }
 
     @Override
