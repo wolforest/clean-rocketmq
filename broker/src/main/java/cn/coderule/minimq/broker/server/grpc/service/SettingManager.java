@@ -12,14 +12,14 @@ import java.util.concurrent.ConcurrentMap;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class ClientManager extends ServiceThread implements Lifecycle {
+public class SettingManager extends ServiceThread implements Lifecycle {
     private static final int WAIT_INTERVAL = 5_000;
     // clientId -> settings
     private static final ConcurrentMap<String, Settings> SETTING_MAP = new ConcurrentHashMap<>();
 
     @Override
     public String getServiceName() {
-        return ClientManager.class.getSimpleName();
+        return SettingManager.class.getSimpleName();
     }
 
     public Settings getSettings(String clientId) {
