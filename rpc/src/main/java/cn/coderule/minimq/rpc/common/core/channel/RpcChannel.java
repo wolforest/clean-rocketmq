@@ -17,8 +17,8 @@
 
 package cn.coderule.minimq.rpc.common.core.channel;
 
+import cn.coderule.common.util.lang.StringUtil;
 import cn.coderule.minimq.rpc.common.core.channel.invocation.InvocationContextInterface;
-import com.google.common.base.Strings;
 import io.netty.channel.AbstractChannel;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelConfig;
@@ -42,7 +42,7 @@ import lombok.extern.slf4j.Slf4j;
  * @see Channel#writeAndFlush
  */
 @Slf4j
-public class SimpleChannel extends AbstractChannel {
+public class RpcChannel extends AbstractChannel {
 
     protected final String remoteAddress;
     protected final String localAddress;
@@ -57,19 +57,19 @@ public class SimpleChannel extends AbstractChannel {
      * @param remoteAddress Remote address
      * @param localAddress  Local address
      */
-    public SimpleChannel(Channel parent, String remoteAddress, String localAddress) {
+    public RpcChannel(Channel parent, String remoteAddress, String localAddress) {
         this(parent, null, remoteAddress, localAddress);
     }
 
-    public SimpleChannel(Channel parent, ChannelId id, String remoteAddress, String localAddress) {
+    public RpcChannel(Channel parent, ChannelId id, String remoteAddress, String localAddress) {
         super(parent, id);
         lastAccessTime = System.currentTimeMillis();
         this.remoteAddress = remoteAddress;
         this.localAddress = localAddress;
-        this.channelHandlerContext = new SimpleChannelHandlerContext(this);
+        this.channelHandlerContext = new RpcHandlerContext(this);
     }
 
-    public SimpleChannel(String remoteAddress, String localAddress) {
+    public RpcChannel(String remoteAddress, String localAddress) {
         this(null, remoteAddress, localAddress);
     }
 
@@ -84,7 +84,7 @@ public class SimpleChannel extends AbstractChannel {
     }
 
     private static SocketAddress parseSocketAddress(String address) {
-        if (Strings.isNullOrEmpty(address)) {
+        if (StringUtil.isBlank(address)) {
             return null;
         }
 
