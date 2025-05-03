@@ -42,7 +42,7 @@ import lombok.extern.slf4j.Slf4j;
  * @see Channel#writeAndFlush
  */
 @Slf4j
-public class RpcChannel extends AbstractChannel {
+public class CommonChannel extends AbstractChannel {
 
     protected final String remoteAddress;
     protected final String localAddress;
@@ -57,19 +57,19 @@ public class RpcChannel extends AbstractChannel {
      * @param remoteAddress Remote address
      * @param localAddress  Local address
      */
-    public RpcChannel(Channel parent, String remoteAddress, String localAddress) {
+    public CommonChannel(Channel parent, String remoteAddress, String localAddress) {
         this(parent, null, remoteAddress, localAddress);
     }
 
-    public RpcChannel(Channel parent, ChannelId id, String remoteAddress, String localAddress) {
+    public CommonChannel(Channel parent, ChannelId id, String remoteAddress, String localAddress) {
         super(parent, id);
         lastAccessTime = System.currentTimeMillis();
         this.remoteAddress = remoteAddress;
         this.localAddress = localAddress;
-        this.channelHandlerContext = new RpcHandlerContext(this);
+        this.channelHandlerContext = new HandlerContext(this);
     }
 
-    public RpcChannel(String remoteAddress, String localAddress) {
+    public CommonChannel(String remoteAddress, String localAddress) {
         this(null, remoteAddress, localAddress);
     }
 

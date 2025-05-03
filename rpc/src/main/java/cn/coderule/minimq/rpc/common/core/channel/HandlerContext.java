@@ -31,11 +31,11 @@ import io.netty.util.concurrent.EventExecutor;
 import java.net.SocketAddress;
 import org.apache.commons.lang3.NotImplementedException;
 
-public class RpcHandlerContext implements ChannelHandlerContext {
+public class HandlerContext implements ChannelHandlerContext {
 
     private final Channel channel;
 
-    public RpcHandlerContext(Channel channel) {
+    public HandlerContext(Channel channel) {
         this.channel = channel;
     }
 
