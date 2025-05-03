@@ -29,19 +29,19 @@ import java.util.concurrent.CompletableFuture;
 
 public interface RelayService {
 
-    CompletableFuture<RelayResult<ConsumerRunningInfo>> processGetConsumerRunningInfo(
+    CompletableFuture<RelayResult<ConsumerRunningInfo>> getConsumerInfo(
         RequestContext context,
         RpcCommand command,
         GetConsumerRunningInfoRequestHeader header
     );
 
-    CompletableFuture<RelayResult<ConsumeMessageDirectlyResult>> processConsumeMessageDirectly(
+    CompletableFuture<RelayResult<ConsumeMessageDirectlyResult>> consumeMessage(
         RequestContext context,
         RpcCommand command,
         ConsumeMessageDirectlyResultRequestHeader header
     );
 
-    RelayData<TransactionData, Void> processCheckTransactionState(
+    RelayData<TransactionData, Void> checkTransaction(
         RequestContext context,
         RpcCommand command,
         CheckTransactionStateRequestHeader header,
