@@ -16,7 +16,7 @@
  */
 package cn.coderule.minimq.rpc.common.rpc.core.constant;
 
-import cn.coderule.minimq.rpc.common.core.HAProxyConstants;
+import cn.coderule.minimq.rpc.common.core.constants.HAProxyConstants;
 import cn.coderule.minimq.rpc.common.rpc.core.enums.LanguageCode;
 import io.netty.util.AttributeKey;
 import java.util.Map;

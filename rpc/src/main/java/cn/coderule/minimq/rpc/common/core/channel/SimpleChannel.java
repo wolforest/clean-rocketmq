@@ -15,8 +15,9 @@
  * limitations under the License.
  */
 
-package cn.coderule.minimq.rpc.common.core;
+package cn.coderule.minimq.rpc.common.core.channel;
 
+import cn.coderule.minimq.rpc.common.core.channel.invocation.InvocationContextInterface;
 import com.google.common.base.Strings;
 import io.netty.channel.AbstractChannel;
 import io.netty.channel.Channel;

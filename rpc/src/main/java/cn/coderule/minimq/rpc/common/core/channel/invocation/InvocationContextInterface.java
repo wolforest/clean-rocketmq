@@ -15,21 +15,12 @@
  * limitations under the License.
  */
 
-package cn.coderule.minimq.rpc.common.core;
+package cn.coderule.minimq.rpc.common.core.channel.invocation;
 
-public enum ChannelProtocolType {
-    UNKNOWN("unknown"),
-    GRPC_V2("grpc_v2"),
-    GRPC_V1("grpc_v1"),
-    REMOTING("remoting");
+import cn.coderule.minimq.rpc.common.rpc.core.invoke.RpcCommand;
 
-    private final String name;
+public interface InvocationContextInterface {
+    void handle(RpcCommand remotingCommand);
 
-    ChannelProtocolType(String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
-    }
+    boolean expired(long expiredTimeSec);
 }

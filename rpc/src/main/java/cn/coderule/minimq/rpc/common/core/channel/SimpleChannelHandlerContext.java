@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package cn.coderule.minimq.rpc.common.core;
+package cn.coderule.minimq.rpc.common.core.channel;
 
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.channel.Channel;

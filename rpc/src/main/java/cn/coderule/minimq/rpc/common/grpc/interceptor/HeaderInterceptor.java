@@ -20,7 +20,7 @@ package cn.coderule.minimq.rpc.common.grpc.interceptor;
 import cn.coderule.common.util.lang.StringUtil;
 import cn.coderule.minimq.rpc.common.grpc.core.constants.GrpcKeys;
 import cn.coderule.minimq.rpc.common.grpc.core.constants.GrpcConstants;
-import cn.coderule.minimq.rpc.common.core.HAProxyConstants;
+import cn.coderule.minimq.rpc.common.core.constants.HAProxyConstants;
 import com.google.common.net.HostAndPort;
 import io.grpc.Attributes;
 import io.grpc.Grpc;

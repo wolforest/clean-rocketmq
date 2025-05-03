@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.coderule.minimq.rpc.common.core;
+package cn.coderule.minimq.rpc.common.core.channel;
 
 import cn.coderule.minimq.rpc.common.rpc.core.enums.LanguageCode;
 import io.netty.channel.Channel;

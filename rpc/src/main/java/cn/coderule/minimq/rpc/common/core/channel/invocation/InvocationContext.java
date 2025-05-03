@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package cn.coderule.minimq.rpc.common.core;
+package cn.coderule.minimq.rpc.common.core.channel.invocation;
 
 import cn.coderule.minimq.rpc.common.rpc.core.invoke.RpcCommand;
 import java.time.Duration;
