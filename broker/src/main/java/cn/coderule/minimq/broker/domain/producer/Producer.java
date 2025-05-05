@@ -2,6 +2,7 @@ package cn.coderule.minimq.broker.domain.producer;
 
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
+import cn.coderule.minimq.rpc.broker.protocol.producer.ProducerInfo;
 import cn.coderule.minimq.rpc.common.core.RequestContext;
 import cn.coderule.minimq.domain.domain.model.message.MessageBO;
 import cn.coderule.minimq.domain.domain.dto.EnqueueResult;
@@ -14,6 +15,14 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class Producer implements Lifecycle {
     private ThreadPoolExecutor executor;
+
+    public boolean register(ProducerInfo producerInfo) {
+        return true;
+    }
+
+    public boolean unregister(ProducerInfo producerInfo) {
+        return true;
+    }
 
     public CompletableFuture<EnqueueResult> produce(RequestContext context, MessageBO messageBO) {
         // validate topic

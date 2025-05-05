@@ -28,4 +28,6 @@ public class ConsumerInfo implements Serializable {
     private boolean enableChangeNotification;
     @Builder.Default
     private boolean enableSubscriptionModification = false;
+    @Builder.Default
+    private boolean enableSubscription = true;
 }
