@@ -1,6 +1,5 @@
 package cn.coderule.minimq.domain.domain.model.meta;
 
-import cn.coderule.minimq.domain.domain.model.DataVersion;
 import cn.coderule.minimq.domain.domain.model.Topic;
 import cn.coderule.minimq.domain.utils.attribute.AttributeUtil;
 import cn.coderule.minimq.domain.utils.topic.TopicAttributes;

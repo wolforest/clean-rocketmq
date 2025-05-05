@@ -1,4 +1,4 @@
-package cn.coderule.minimq.domain.domain.model;
+package cn.coderule.minimq.domain.domain.model.meta;
 
 import java.io.Serializable;
 import java.util.concurrent.atomic.AtomicLong;

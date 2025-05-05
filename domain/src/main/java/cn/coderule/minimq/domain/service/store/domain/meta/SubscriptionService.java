@@ -1,7 +1,7 @@
 package cn.coderule.minimq.domain.service.store.domain.meta;
 
 import cn.coderule.minimq.domain.domain.model.meta.SubscriptionMap;
-import cn.coderule.minimq.domain.domain.model.subscription.SubscriptionGroup;
+import cn.coderule.minimq.domain.domain.model.consumer.subscription.SubscriptionGroup;
 
 public interface SubscriptionService extends MetaService {
     boolean existsGroup(String groupName);

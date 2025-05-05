@@ -12,7 +12,7 @@ import cn.coderule.minimq.rpc.common.rpc.core.exception.RemotingCommandException
 import cn.coderule.minimq.rpc.common.rpc.core.invoke.RpcCommand;
 import cn.coderule.minimq.rpc.common.rpc.core.invoke.RpcContext;
 import cn.coderule.minimq.rpc.common.rpc.netty.service.NettyHelper;
-import cn.coderule.minimq.domain.domain.model.DataVersion;
+import cn.coderule.minimq.domain.domain.model.meta.DataVersion;
 import cn.coderule.minimq.rpc.common.rpc.protocol.code.RequestCode;
 import cn.coderule.minimq.rpc.common.rpc.protocol.code.SystemResponseCode;
 import cn.coderule.minimq.rpc.registry.protocol.body.RegisterBrokerBody;

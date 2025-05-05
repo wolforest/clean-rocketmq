@@ -14,33 +14,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.coderule.minimq.domain.domain.model;
+package cn.coderule.minimq.domain.domain.model.store;
 
+import cn.coderule.minimq.domain.domain.model.message.MessageBO;
 import java.io.Serializable;
-import java.nio.ByteBuffer;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Async CommitLog dispatching core object
+ *
+ * created By ReputMessageService
+ * dispatch to :
+ *     1. CommitLogDispatcherBuildConsumeQueue
+ *          -> ConsumeQueueStore.putMessagePositionInfoWrapper()
+ *     2. CommitLogDispatcherBuildIndex
+ *          -> IndexService.buildIndex()
+ *     3. CommitLogDispatcherCompaction
+ *          -> CompactionService.putRequest()
+ */
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class QueueUnit implements Serializable {
-    private long queueOffset;
+public class CommitLogEvent implements Serializable {
+    private MessageBO messageBO;
 
-    private long commitLogOffset;
-    private int messageSize;
-
-    private long tagsCode;
-    private ByteBuffer buffer;
-
-    private int unitSize;
-
-    public boolean isValid() {
-        return commitLogOffset != 0
-            && messageSize != Integer.MAX_VALUE
-            && tagsCode != 0;
-    }
+    // filter info
+    private byte[] bitMap;
 }

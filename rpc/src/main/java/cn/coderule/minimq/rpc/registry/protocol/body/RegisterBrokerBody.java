@@ -19,7 +19,7 @@ package cn.coderule.minimq.rpc.registry.protocol.body;
 
 import cn.coderule.minimq.domain.domain.constant.MQConstants;
 import cn.coderule.minimq.domain.domain.model.Topic;
-import cn.coderule.minimq.domain.domain.model.DataVersion;
+import cn.coderule.minimq.domain.domain.model.meta.DataVersion;
 import cn.coderule.minimq.rpc.common.rpc.protocol.codec.RpcSerializable;
 import cn.coderule.minimq.rpc.registry.protocol.statictopic.TopicQueueMappingInfo;
 import com.alibaba.fastjson2.JSON;

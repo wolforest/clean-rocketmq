@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package cn.coderule.minimq.domain.domain.model.subscription;
+package cn.coderule.minimq.domain.domain.model.consumer.subscription;
 
 import com.alibaba.fastjson2.annotation.JSONField;
 import com.google.common.base.MoreObjects;

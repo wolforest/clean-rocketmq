@@ -3,7 +3,7 @@ package cn.coderule.minimq.store.domain.mq;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.minimq.domain.config.MessageConfig;
 import cn.coderule.minimq.domain.config.StoreConfig;
-import cn.coderule.minimq.domain.domain.model.QueueUnit;
+import cn.coderule.minimq.domain.domain.model.store.QueueUnit;
 import cn.coderule.minimq.domain.domain.dto.InsertFuture;
 import cn.coderule.minimq.domain.domain.dto.GetRequest;
 import cn.coderule.minimq.domain.domain.dto.GetResult;

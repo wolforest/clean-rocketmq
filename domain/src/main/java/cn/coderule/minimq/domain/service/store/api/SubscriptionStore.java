@@ -1,6 +1,6 @@
 package cn.coderule.minimq.domain.service.store.api;
 
-import cn.coderule.minimq.domain.domain.model.subscription.SubscriptionGroup;
+import cn.coderule.minimq.domain.domain.model.consumer.subscription.SubscriptionGroup;
 
 public interface SubscriptionStore {
     boolean existsGroup(String groupName);

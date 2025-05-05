@@ -5,7 +5,7 @@ import cn.coderule.common.util.lang.StringUtil;
 import cn.coderule.common.util.lang.collection.MapUtil;
 import cn.coderule.minimq.domain.config.StoreConfig;
 import cn.coderule.minimq.domain.domain.constant.PermName;
-import cn.coderule.minimq.domain.domain.model.DataVersion;
+import cn.coderule.minimq.domain.domain.model.meta.DataVersion;
 import cn.coderule.minimq.domain.domain.model.Topic;
 import cn.coderule.minimq.domain.domain.model.meta.TopicMap;
 import cn.coderule.minimq.domain.service.store.domain.meta.TopicService;

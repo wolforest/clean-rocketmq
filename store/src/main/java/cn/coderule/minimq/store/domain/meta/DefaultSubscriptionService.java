@@ -4,7 +4,7 @@ import cn.coderule.common.util.io.FileUtil;
 import cn.coderule.common.util.lang.StringUtil;
 import cn.coderule.common.util.lang.string.JSONUtil;
 import cn.coderule.minimq.domain.domain.model.meta.SubscriptionMap;
-import cn.coderule.minimq.domain.domain.model.subscription.SubscriptionGroup;
+import cn.coderule.minimq.domain.domain.model.consumer.subscription.SubscriptionGroup;
 import cn.coderule.minimq.domain.service.store.domain.meta.ConsumeOffsetService;
 import cn.coderule.minimq.domain.service.store.domain.meta.SubscriptionService;
 import cn.coderule.minimq.store.server.bootstrap.StoreContext;

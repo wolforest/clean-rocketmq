@@ -14,15 +14,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package cn.coderule.minimq.domain.domain.model.consumer.subscription;
 
-package cn.coderule.minimq.domain.domain.model.subscription;
+import cn.coderule.minimq.domain.utils.attribute.Attribute;
+import java.util.HashMap;
+import java.util.Map;
 
-public interface RetryPolicy {
-    /**
-     * Compute message's next delay duration by specify reconsumeTimes
-     *
-     * @param reconsumeTimes Message reconsumeTimes
-     * @return Message's nextDelayDuration in milliseconds
-     */
-    long nextDelayDuration(int reconsumeTimes);
+public class SubscriptionGroupAttributes {
+    public static final Map<String, Attribute> ALL;
+
+    static {
+        ALL = new HashMap<>();
+    }
 }

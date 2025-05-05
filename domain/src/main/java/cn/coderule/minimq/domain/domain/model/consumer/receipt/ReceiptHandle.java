@@ -15,12 +15,13 @@
  * limitations under the License.
  */
 
-package cn.coderule.minimq.domain.domain.model.subscription;
+package cn.coderule.minimq.domain.domain.model.consumer.receipt;
 
 import cn.coderule.minimq.domain.domain.constant.MessageConst;
 import cn.coderule.minimq.domain.utils.topic.KeyBuilder;
 import java.util.Arrays;
 import java.util.List;
+
 
 public class ReceiptHandle {
     private static final String SEPARATOR = MessageConst.KEY_SEPARATOR;

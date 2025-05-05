@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package cn.coderule.minimq.domain.domain.model.subscription;
+package cn.coderule.minimq.domain.domain.model.consumer.subscription;
 
 import cn.coderule.minimq.domain.domain.constant.MQConstants;
 import com.google.common.base.MoreObjects;

@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package cn.coderule.minimq.domain.domain.model.subscription;
+package cn.coderule.minimq.domain.domain.model.consumer.subscription;
 
 import com.google.common.base.MoreObjects;
 import java.util.Objects;

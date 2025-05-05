@@ -11,7 +11,7 @@ import cn.coderule.minimq.registry.domain.store.model.StoreHealthInfo;
 import cn.coderule.minimq.registry.domain.store.model.StoreStatusInfo;
 import cn.coderule.minimq.registry.domain.store.service.UnregisterService;
 import cn.coderule.minimq.registry.server.rpc.HaClient;
-import cn.coderule.minimq.domain.domain.model.DataVersion;
+import cn.coderule.minimq.domain.domain.model.meta.DataVersion;
 import cn.coderule.minimq.rpc.registry.protocol.body.RegisterStoreResult;
 import cn.coderule.minimq.rpc.registry.protocol.body.TopicConfigAndMappingSerializeWrapper;
 import cn.coderule.minimq.rpc.registry.protocol.body.TopicConfigSerializeWrapper;

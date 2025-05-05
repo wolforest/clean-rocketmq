@@ -1,8 +1,7 @@
 package cn.coderule.minimq.domain.domain.model.meta;
 
-import cn.coderule.minimq.domain.domain.model.DataVersion;
-import cn.coderule.minimq.domain.domain.model.subscription.SubscriptionGroupAttributes;
-import cn.coderule.minimq.domain.domain.model.subscription.SubscriptionGroup;
+import cn.coderule.minimq.domain.domain.model.consumer.subscription.SubscriptionGroupAttributes;
+import cn.coderule.minimq.domain.domain.model.consumer.subscription.SubscriptionGroup;
 import cn.coderule.minimq.domain.utils.attribute.AttributeUtil;
 import com.google.common.collect.ImmutableMap;
 import java.io.Serializable;
