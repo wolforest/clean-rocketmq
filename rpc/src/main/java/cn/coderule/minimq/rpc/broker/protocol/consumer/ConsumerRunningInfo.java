@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package cn.coderule.minimq.rpc.broker.protocol.body;
+package cn.coderule.minimq.rpc.broker.protocol.consumer;
 
 import cn.coderule.minimq.domain.domain.model.MessageQueue;
 import cn.coderule.minimq.rpc.broker.protocol.enums.ConsumeType;

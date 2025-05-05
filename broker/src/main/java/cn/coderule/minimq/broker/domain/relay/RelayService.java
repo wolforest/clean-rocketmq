@@ -19,7 +19,7 @@ package cn.coderule.minimq.broker.domain.relay;
 import cn.coderule.minimq.broker.domain.transaction.TransactionData;
 import cn.coderule.minimq.domain.domain.model.message.MessageBO;
 import cn.coderule.minimq.rpc.broker.protocol.body.ConsumeMessageDirectlyResult;
-import cn.coderule.minimq.rpc.broker.protocol.body.ConsumerRunningInfo;
+import cn.coderule.minimq.rpc.broker.protocol.consumer.ConsumerRunningInfo;
 import cn.coderule.minimq.rpc.broker.protocol.header.CheckTransactionStateRequestHeader;
 import cn.coderule.minimq.rpc.broker.protocol.header.ConsumeMessageDirectlyResultRequestHeader;
 import cn.coderule.minimq.rpc.broker.protocol.header.GetConsumerRunningInfoRequestHeader;

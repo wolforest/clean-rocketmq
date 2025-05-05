@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package cn.coderule.minimq.rpc.broker.protocol.body;
+package cn.coderule.minimq.rpc.broker.protocol.consumer;
 
 import cn.coderule.common.util.lang.time.DateUtil;
 
