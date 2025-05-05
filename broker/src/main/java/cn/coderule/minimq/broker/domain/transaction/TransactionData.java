@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package cn.coderule.minimq.rpc.broker.transaction;
+package cn.coderule.minimq.broker.domain.transaction;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;

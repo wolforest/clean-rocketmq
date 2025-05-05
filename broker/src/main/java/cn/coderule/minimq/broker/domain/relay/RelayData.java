@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package cn.coderule.minimq.rpc.broker.relay;
+package cn.coderule.minimq.broker.domain.relay;
 
 import java.util.concurrent.CompletableFuture;
 

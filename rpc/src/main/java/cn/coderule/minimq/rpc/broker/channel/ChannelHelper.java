@@ -38,8 +38,7 @@ public class ChannelHelper {
             return ChannelProtocolType.GRPC_V2;
         } else if (channel instanceof RpcChannel) {
             return ChannelProtocolType.REMOTING;
-        } else if (channel instanceof RemoteChannel) {
-            RemoteChannel remoteChannel = (RemoteChannel) channel;
+        } else if (channel instanceof RemoteChannel remoteChannel) {
             return remoteChannel.getType();
         }
         return ChannelProtocolType.UNKNOWN;

@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package cn.coderule.minimq.rpc.broker.transaction;
+package cn.coderule.minimq.broker.domain.transaction;
 
 import cn.coderule.minimq.rpc.broker.protocol.header.EndTransactionRequestHeader;
 
