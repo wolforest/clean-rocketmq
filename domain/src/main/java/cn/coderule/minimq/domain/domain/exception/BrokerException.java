@@ -16,7 +16,7 @@
  */
 package cn.coderule.minimq.domain.domain.exception;
 
-import cn.coderule.minimq.domain.domain.enums.BrokerExceptionCode;
+import cn.coderule.minimq.domain.domain.enums.code.BrokerExceptionCode;
 
 public class BrokerException extends RuntimeException {
 

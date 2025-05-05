@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.coderule.minimq.domain.domain.enums;
+package cn.coderule.minimq.domain.domain.enums.code;
 
 public enum BrokerExceptionCode {
     INVALID_BROKER_NAME,

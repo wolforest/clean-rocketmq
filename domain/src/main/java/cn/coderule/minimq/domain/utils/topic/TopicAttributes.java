@@ -16,7 +16,7 @@
  */
 package cn.coderule.minimq.domain.utils.topic;
 
-import cn.coderule.minimq.domain.domain.enums.MessageType;
+import cn.coderule.minimq.domain.domain.enums.message.MessageType;
 import cn.coderule.minimq.domain.utils.attribute.Attribute;
 import cn.coderule.minimq.domain.utils.attribute.EnumAttribute;
 import java.util.HashMap;

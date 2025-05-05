@@ -14,24 +14,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.coderule.minimq.domain.domain.enums;
 
-public enum EnqueueStatus {
-    PUT_OK,
-    END_OF_FILE,
-    FLUSH_DISK_TIMEOUT,
-    FLUSH_SLAVE_TIMEOUT,
-    SLAVE_NOT_AVAILABLE,
-    SERVICE_NOT_AVAILABLE,
-    CREATE_MAPPED_FILE_FAILED,
-    MESSAGE_ILLEGAL,
-    PROPERTIES_SIZE_EXCEEDED,
-    OS_PAGE_CACHE_BUSY,
-    UNKNOWN_ERROR,
-    IN_SYNC_REPLICAS_NOT_ENOUGH,
-    PUT_TO_REMOTE_BROKER_FAIL,
-    LMQ_CONSUME_QUEUE_NUM_EXCEEDED,
-    WHEEL_TIMER_FLOW_CONTROL,
-    WHEEL_TIMER_MSG_ILLEGAL,
-    WHEEL_TIMER_NOT_ENABLE
+package cn.coderule.minimq.domain.domain.enums.message;
+
+import com.google.common.collect.Sets;
+import java.util.Set;
+import lombok.Getter;
+
+@Getter
+public enum MessageType {
+    UNSPECIFIED("UNSPECIFIED"),
+    NORMAL("NORMAL"),
+    FIFO("FIFO"),
+    DELAY("DELAY"),
+    TRANSACTION("TRANSACTION"),
+    MIXED("MIXED");
+
+    private final String value;
+
+    MessageType(String value) {
+        this.value = value;
+    }
+
+    public static Set<String> typeSet() {
+        return Sets.newHashSet(UNSPECIFIED.value, NORMAL.value, FIFO.value, DELAY.value, TRANSACTION.value, MIXED.value);
+    }
 }

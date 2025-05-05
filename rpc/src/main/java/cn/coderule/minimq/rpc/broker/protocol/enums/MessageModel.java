@@ -33,7 +33,7 @@ public enum MessageModel {
      */
     CLUSTERING("CLUSTERING");
 
-    private String modeCN;
+    private final String modeCN;
 
     MessageModel(String modeCN) {
         this.modeCN = modeCN;

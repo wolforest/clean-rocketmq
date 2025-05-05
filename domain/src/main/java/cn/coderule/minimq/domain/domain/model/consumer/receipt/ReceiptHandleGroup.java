@@ -18,7 +18,7 @@
 package cn.coderule.minimq.domain.domain.model.consumer.receipt;
 
 import cn.coderule.minimq.domain.config.MessageConfig;
-import cn.coderule.minimq.domain.domain.enums.BrokerExceptionCode;
+import cn.coderule.minimq.domain.domain.enums.code.BrokerExceptionCode;
 import cn.coderule.minimq.domain.domain.exception.BrokerException;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;

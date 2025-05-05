@@ -17,7 +17,7 @@
 package cn.coderule.minimq.rpc.common.rpc.core.constant;
 
 import cn.coderule.minimq.rpc.common.core.constants.HAProxyConstants;
-import cn.coderule.minimq.rpc.common.rpc.core.enums.LanguageCode;
+import cn.coderule.minimq.domain.domain.enums.code.LanguageCode;
 import io.netty.util.AttributeKey;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

@@ -1,7 +1,7 @@
 package cn.coderule.minimq.rpc.common.grpc.core.exception;
 
 import cn.coderule.common.lang.exception.BusinessException;
-import cn.coderule.minimq.domain.domain.enums.InvalidCode;
+import cn.coderule.minimq.domain.domain.enums.code.InvalidCode;
 import lombok.Getter;
 
 @Getter

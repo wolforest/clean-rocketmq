@@ -1,8 +1,8 @@
 package cn.coderule.minimq.domain.utils.message;
 
 import cn.coderule.minimq.domain.config.MessageConfig;
-import cn.coderule.minimq.domain.domain.enums.EnqueueStatus;
-import cn.coderule.minimq.domain.domain.enums.MessageVersion;
+import cn.coderule.minimq.domain.domain.enums.store.EnqueueStatus;
+import cn.coderule.minimq.domain.domain.enums.message.MessageVersion;
 import cn.coderule.minimq.domain.domain.exception.EnqueueException;
 import cn.coderule.minimq.domain.domain.model.message.MessageBO;
 import io.netty.buffer.ByteBuf;

@@ -46,7 +46,7 @@ public class ConsumerRunningInfo extends RpcSerializable {
 
     private TreeMap<String/* Topic */, ConsumeStatus> statusTable = new TreeMap<>();
 
-    private TreeMap<String, String> userConsumerInfo = new TreeMap<>();
+    private final TreeMap<String, String> userConsumerInfo = new TreeMap<>();
 
     private String jstack;
 
@@ -68,9 +68,7 @@ public class ConsumerRunningInfo extends RpcSerializable {
         if (push && startForAWhile) {
 
             {
-                Iterator<Entry<String, ConsumerRunningInfo>> it = criTable.entrySet().iterator();
-                while (it.hasNext()) {
-                    Entry<String, ConsumerRunningInfo> next = it.next();
+                for (Entry<String, ConsumerRunningInfo> next : criTable.entrySet()) {
                     ConsumerRunningInfo current = next.getValue();
                     boolean equals = current.getSubscriptionSet().equals(prev.getSubscriptionSet());
 
@@ -263,9 +261,7 @@ public class ConsumerRunningInfo extends RpcSerializable {
                 "#ProcessQueueInfo"
             ));
 
-            Iterator<Entry<MessageQueue, ProcessQueueInfo>> it = this.mqTable.entrySet().iterator();
-            while (it.hasNext()) {
-                Entry<MessageQueue, ProcessQueueInfo> next = it.next();
+            for (Entry<MessageQueue, ProcessQueueInfo> next : this.mqTable.entrySet()) {
                 String item = String.format("%-64s  %-32s  %-4d  %s%n",
                     next.getKey().getTopicName(),
                     next.getKey().getGroupName(),
@@ -285,9 +281,7 @@ public class ConsumerRunningInfo extends RpcSerializable {
                 "#ProcessQueueInfo"
             ));
 
-            Iterator<Entry<MessageQueue, PopProcessQueueInfo>> it = this.mqPopTable.entrySet().iterator();
-            while (it.hasNext()) {
-                Entry<MessageQueue, PopProcessQueueInfo> next = it.next();
+            for (Entry<MessageQueue, PopProcessQueueInfo> next : this.mqPopTable.entrySet()) {
                 String item = String.format("%-32s  %-32s  %-4d  %s%n",
                     next.getKey().getTopicName(),
                     next.getKey().getGroupName(),
@@ -310,9 +304,7 @@ public class ConsumerRunningInfo extends RpcSerializable {
                 "#ConsumeFailedMsgsInHour"
             ));
 
-            Iterator<Entry<String, ConsumeStatus>> it = this.statusTable.entrySet().iterator();
-            while (it.hasNext()) {
-                Entry<String, ConsumeStatus> next = it.next();
+            for (Entry<String, ConsumeStatus> next : this.statusTable.entrySet()) {
                 String item = String.format("%-32s  %14.2f %14.2f %14.2f %14.2f %18.2f %25d%n",
                     next.getKey(),
                     next.getValue().getPullRT(),
@@ -329,9 +321,7 @@ public class ConsumerRunningInfo extends RpcSerializable {
 
         if (this.userConsumerInfo != null) {
             sb.append("\n\n#User Consume Info#\n");
-            Iterator<Entry<String, String>> it = this.userConsumerInfo.entrySet().iterator();
-            while (it.hasNext()) {
-                Entry<String, String> next = it.next();
+            for (Entry<String, String> next : this.userConsumerInfo.entrySet()) {
                 String item = String.format("%-40s: %s%n", next.getKey(), next.getValue());
                 sb.append(item);
             }

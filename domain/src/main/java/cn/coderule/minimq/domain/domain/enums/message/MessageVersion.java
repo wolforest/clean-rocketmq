@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.coderule.minimq.domain.domain.enums;
+package cn.coderule.minimq.domain.domain.enums.message;
 
 import cn.coderule.minimq.domain.domain.constant.MessageConst;
 import java.nio.ByteBuffer;

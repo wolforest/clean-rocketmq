@@ -1,4 +1,4 @@
-package cn.coderule.minimq.domain.domain.enums;
+package cn.coderule.minimq.domain.domain.enums.store;
 
 public enum InsertStatus {
     PUT_OK,

@@ -1,6 +1,6 @@
 package cn.coderule.minimq.domain.domain.dto;
 
-import cn.coderule.minimq.domain.domain.enums.InsertStatus;
+import cn.coderule.minimq.domain.domain.enums.store.InsertStatus;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

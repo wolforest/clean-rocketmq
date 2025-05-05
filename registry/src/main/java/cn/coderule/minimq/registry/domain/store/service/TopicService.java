@@ -4,7 +4,7 @@ import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.common.util.lang.collection.MapUtil;
 import cn.coderule.minimq.domain.config.RegistryConfig;
 import cn.coderule.minimq.domain.domain.constant.flag.TopicSysFlag;
-import cn.coderule.minimq.domain.domain.enums.MessageType;
+import cn.coderule.minimq.domain.domain.enums.message.MessageType;
 import cn.coderule.minimq.domain.domain.model.Topic;
 import cn.coderule.minimq.registry.domain.store.model.Route;
 import cn.coderule.minimq.rpc.registry.protocol.body.TopicList;

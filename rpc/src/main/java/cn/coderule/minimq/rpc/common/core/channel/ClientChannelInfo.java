@@ -16,7 +16,7 @@
  */
 package cn.coderule.minimq.rpc.common.core.channel;
 
-import cn.coderule.minimq.rpc.common.rpc.core.enums.LanguageCode;
+import cn.coderule.minimq.domain.domain.enums.code.LanguageCode;
 import io.netty.channel.Channel;
 
 public class ClientChannelInfo {

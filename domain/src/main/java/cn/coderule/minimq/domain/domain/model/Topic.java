@@ -17,16 +17,15 @@
 package cn.coderule.minimq.domain.domain.model;
 
 import cn.coderule.common.util.lang.collection.MapUtil;
-import cn.coderule.minimq.domain.domain.enums.MessageType;
+import cn.coderule.minimq.domain.domain.enums.message.MessageType;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.TypeReference;
 import com.alibaba.fastjson2.annotation.JSONField;
-import cn.coderule.minimq.domain.domain.enums.TagType;
+import cn.coderule.minimq.domain.domain.enums.message.TagType;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import javax.print.DocFlavor;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

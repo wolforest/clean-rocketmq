@@ -14,29 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package cn.coderule.minimq.domain.domain.enums.message;
 
-package cn.coderule.minimq.domain.domain.enums;
+public enum TagType {
+    SINGLE_TAG,
+    MULTI_TAG
 
-import com.google.common.collect.Sets;
-import java.util.Set;
-import lombok.Getter;
-
-@Getter
-public enum MessageType {
-    UNSPECIFIED("UNSPECIFIED"),
-    NORMAL("NORMAL"),
-    FIFO("FIFO"),
-    DELAY("DELAY"),
-    TRANSACTION("TRANSACTION"),
-    MIXED("MIXED");
-
-    private final String value;
-
-    MessageType(String value) {
-        this.value = value;
-    }
-
-    public static Set<String> typeSet() {
-        return Sets.newHashSet(UNSPECIFIED.value, NORMAL.value, FIFO.value, DELAY.value, TRANSACTION.value, MIXED.value);
-    }
 }

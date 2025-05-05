@@ -5,7 +5,7 @@ import cn.coderule.minimq.rpc.common.rpc.core.exception.RemotingCommandException
 import cn.coderule.minimq.rpc.common.rpc.protocol.header.CommandHeader;
 import cn.coderule.minimq.rpc.common.rpc.core.annotation.CFNotNull;
 import cn.coderule.minimq.rpc.common.rpc.core.enums.BoundaryType;
-import cn.coderule.minimq.rpc.common.rpc.core.enums.LanguageCode;
+import cn.coderule.minimq.domain.domain.enums.code.LanguageCode;
 import cn.coderule.minimq.rpc.common.rpc.core.enums.RemotingCommandType;
 import cn.coderule.minimq.rpc.common.rpc.protocol.code.ResponseCode;
 import cn.coderule.minimq.rpc.common.rpc.protocol.header.FastCodesHeader;

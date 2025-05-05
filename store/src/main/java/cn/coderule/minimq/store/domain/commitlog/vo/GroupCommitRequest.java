@@ -16,7 +16,7 @@
  */
 package cn.coderule.minimq.store.domain.commitlog.vo;
 
-import cn.coderule.minimq.domain.domain.enums.EnqueueStatus;
+import cn.coderule.minimq.domain.domain.enums.store.EnqueueStatus;
 import java.io.Serializable;
 import java.util.concurrent.CompletableFuture;
 import lombok.AllArgsConstructor;

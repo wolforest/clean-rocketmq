@@ -1,4 +1,4 @@
-package cn.coderule.minimq.domain.domain.enums;
+package cn.coderule.minimq.domain.domain.enums.code;
 
 import lombok.Getter;
 
