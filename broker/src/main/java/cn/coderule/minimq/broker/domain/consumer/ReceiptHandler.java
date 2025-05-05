@@ -14,13 +14,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.coderule.minimq.domain.service.broker;
 
-import cn.coderule.minimq.domain.domain.enums.ConsumerGroupEvent;
+package cn.coderule.minimq.broker.domain.consumer;
 
-public interface ConsumerIdsChangeListener {
+import cn.coderule.minimq.domain.domain.model.consumer.receipt.MessageReceiptHandle;
+import cn.coderule.minimq.rpc.common.core.RequestContext;
+import io.netty.channel.Channel;
 
-    void handle(ConsumerGroupEvent event, String group, Object... args);
 
-    void shutdown();
+public interface ReceiptHandler {
+    void addReceiptHandle(RequestContext context, Channel channel, String group, String msgID, MessageReceiptHandle messageReceiptHandle);
+
+    MessageReceiptHandle removeReceiptHandle(RequestContext context, Channel channel, String group, String msgID, String receiptHandle);
 }

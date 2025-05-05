@@ -16,18 +16,4 @@ public class Consumer implements Lifecycle {
 
     }
 
-    @Override
-    public void initialize() {
-
-    }
-
-    @Override
-    public void cleanup() {
-
-    }
-
-    @Override
-    public State getState() {
-        return State.RUNNING;
-    }
 }
