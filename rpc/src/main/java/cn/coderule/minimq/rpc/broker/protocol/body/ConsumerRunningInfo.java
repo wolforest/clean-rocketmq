@@ -17,17 +17,18 @@
 
 package cn.coderule.minimq.rpc.broker.protocol.body;
 
+import cn.coderule.minimq.domain.domain.model.MessageQueue;
+import cn.coderule.minimq.rpc.broker.protocol.enums.ConsumeType;
+import cn.coderule.minimq.rpc.broker.protocol.heartbeat.SubscriptionData;
+import cn.coderule.minimq.rpc.common.rpc.protocol.codec.RpcSerializable;
 import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.TreeMap;
 import java.util.TreeSet;
-import org.apache.rocketmq.common.domain.message.MessageQueue;
-import org.apache.rocketmq.remoting.protocol.RemotingSerializable;
-import org.apache.rocketmq.remoting.protocol.heartbeat.ConsumeType;
-import org.apache.rocketmq.remoting.protocol.heartbeat.SubscriptionData;
 
-public class ConsumerRunningInfo extends RemotingSerializable {
+
+public class ConsumerRunningInfo extends RpcSerializable {
     public static final String PROP_NAMESERVER_ADDR = "PROP_NAMESERVER_ADDR";
     public static final String PROP_THREADPOOL_CORE_SIZE = "PROP_THREADPOOL_CORE_SIZE";
     public static final String PROP_CONSUME_ORDERLY = "PROP_CONSUMEORDERLY";
@@ -244,8 +245,8 @@ public class ConsumerRunningInfo extends RemotingSerializable {
             while (it.hasNext()) {
                 Entry<MessageQueue, ProcessQueueInfo> next = it.next();
                 String item = String.format("%-32s  %-32s  %-4d  %-20d%n",
-                    next.getKey().getTopic(),
-                    next.getKey().getBrokerName(),
+                    next.getKey().getTopicName(),
+                    next.getKey().getGroupName(),
                     next.getKey().getQueueId(),
                     next.getValue().getCommitOffset());
 
@@ -266,8 +267,8 @@ public class ConsumerRunningInfo extends RemotingSerializable {
             while (it.hasNext()) {
                 Entry<MessageQueue, ProcessQueueInfo> next = it.next();
                 String item = String.format("%-64s  %-32s  %-4d  %s%n",
-                    next.getKey().getTopic(),
-                    next.getKey().getBrokerName(),
+                    next.getKey().getTopicName(),
+                    next.getKey().getGroupName(),
                     next.getKey().getQueueId(),
                     next.getValue().toString());
 
@@ -288,8 +289,8 @@ public class ConsumerRunningInfo extends RemotingSerializable {
             while (it.hasNext()) {
                 Entry<MessageQueue, PopProcessQueueInfo> next = it.next();
                 String item = String.format("%-32s  %-32s  %-4d  %s%n",
-                    next.getKey().getTopic(),
-                    next.getKey().getBrokerName(),
+                    next.getKey().getTopicName(),
+                    next.getKey().getGroupName(),
                     next.getKey().getQueueId(),
                     next.getValue().toString());
 
