@@ -17,7 +17,7 @@
 
 package cn.coderule.minimq.domain.domain.model.consumer.renew;
 
-import cn.coderule.minimq.domain.domain.model.consumer.AckResult;
+import cn.coderule.minimq.domain.domain.model.consumer.consume.AckResult;
 import cn.coderule.minimq.domain.domain.model.consumer.receipt.MessageReceipt;
 import cn.coderule.minimq.domain.domain.model.consumer.receipt.ReceiptHandleGroupKey;
 import java.util.concurrent.CompletableFuture;

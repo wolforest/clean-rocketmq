@@ -14,41 +14,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.coderule.minimq.domain.domain.model.consumer;
 
-import cn.coderule.minimq.domain.domain.enums.AckStatus;
+package cn.coderule.minimq.domain.domain.model.consumer.receipt;
 
-public class AckResult {
-    private AckStatus status;
-    private String extraInfo;
-    private long popTime;
+import java.io.Serializable;
+import lombok.Getter;
 
-    public void setPopTime(long popTime) {
-        this.popTime = popTime;
-    }
+@Getter
+public class MessageIdReceipt implements Serializable {
 
-    public long getPopTime() {
-        return popTime;
-    }
+    private final ReceiptHandle receiptHandle;
+    private final String messageId;
 
-    public AckStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(AckStatus status) {
-        this.status = status;
-    }
-
-    public void setExtraInfo(String extraInfo) {
-        this.extraInfo = extraInfo;
-    }
-
-    public String getExtraInfo() {
-        return extraInfo;
-    }
-
-    @Override
-    public String toString() {
-        return "AckResult [AckStatus=" + status + ",extraInfo=" + extraInfo + "]";
+    public MessageIdReceipt(ReceiptHandle receiptHandle, String messageId) {
+        this.receiptHandle = receiptHandle;
+        this.messageId = messageId;
     }
 }

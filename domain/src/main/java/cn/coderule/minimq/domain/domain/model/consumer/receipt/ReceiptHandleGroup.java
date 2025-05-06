@@ -38,7 +38,6 @@ public class ReceiptHandleGroup {
         this.messageConfig = messageConfig;
     }
 
-
     public void put(String msgID, MessageReceipt value) {
         long timeout = this.messageConfig.getLockTimeoutMsInHandleGroup();
 
