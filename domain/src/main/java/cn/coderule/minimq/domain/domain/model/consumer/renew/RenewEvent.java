@@ -18,13 +18,13 @@
 package cn.coderule.minimq.domain.domain.model.consumer.renew;
 
 import cn.coderule.minimq.domain.domain.model.consumer.AckResult;
-import cn.coderule.minimq.domain.domain.model.consumer.receipt.MessageReceiptHandle;
+import cn.coderule.minimq.domain.domain.model.consumer.receipt.MessageReceipt;
 import cn.coderule.minimq.domain.domain.model.consumer.receipt.ReceiptHandleGroupKey;
 import java.util.concurrent.CompletableFuture;
 
 public class RenewEvent {
     protected ReceiptHandleGroupKey key;
-    protected MessageReceiptHandle messageReceiptHandle;
+    protected MessageReceipt messageReceipt;
     protected long renewTime;
     protected EventType eventType;
     protected CompletableFuture<AckResult> future;
@@ -35,10 +35,10 @@ public class RenewEvent {
         CLEAR_GROUP
     }
 
-    public RenewEvent(ReceiptHandleGroupKey key, MessageReceiptHandle messageReceiptHandle, long renewTime,
+    public RenewEvent(ReceiptHandleGroupKey key, MessageReceipt messageReceipt, long renewTime,
         EventType eventType, CompletableFuture<AckResult> future) {
         this.key = key;
-        this.messageReceiptHandle = messageReceiptHandle;
+        this.messageReceipt = messageReceipt;
         this.renewTime = renewTime;
         this.eventType = eventType;
         this.future = future;
@@ -48,8 +48,8 @@ public class RenewEvent {
         return key;
     }
 
-    public MessageReceiptHandle getMessageReceiptHandle() {
-        return messageReceiptHandle;
+    public MessageReceipt getMessageReceiptHandle() {
+        return messageReceipt;
     }
 
     public long getRenewTime() {

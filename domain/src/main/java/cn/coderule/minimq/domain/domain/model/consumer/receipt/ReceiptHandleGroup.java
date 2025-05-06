@@ -105,10 +105,10 @@ public class ReceiptHandleGroup {
     public static class HandleData {
         private final Semaphore semaphore = new Semaphore(1);
         private volatile boolean needRemove = false;
-        private volatile MessageReceiptHandle messageReceiptHandle;
+        private volatile MessageReceipt messageReceipt;
 
-        public HandleData(MessageReceiptHandle messageReceiptHandle) {
-            this.messageReceiptHandle = messageReceiptHandle;
+        public HandleData(MessageReceipt messageReceipt) {
+            this.messageReceipt = messageReceipt;
         }
 
         public boolean lock(long timeoutMs) {
@@ -123,8 +123,8 @@ public class ReceiptHandleGroup {
             this.semaphore.release();
         }
 
-        public MessageReceiptHandle getMessageReceiptHandle() {
-            return messageReceiptHandle;
+        public MessageReceipt getMessageReceiptHandle() {
+            return messageReceipt;
         }
 
         @Override
@@ -134,7 +134,7 @@ public class ReceiptHandleGroup {
 
         @Override
         public int hashCode() {
-            return Objects.hashCode(semaphore, needRemove, messageReceiptHandle);
+            return Objects.hashCode(semaphore, needRemove, messageReceipt);
         }
 
         @Override
@@ -142,12 +142,12 @@ public class ReceiptHandleGroup {
             return MoreObjects.toStringHelper(this)
                 .add("semaphore", semaphore)
                 .add("needRemove", needRemove)
-                .add("messageReceiptHandle", messageReceiptHandle)
+                .add("messageReceiptHandle", messageReceipt)
                 .toString();
         }
     }
 
-    public void put(String msgID, MessageReceiptHandle value) {
+    public void put(String msgID, MessageReceipt value) {
         long timeout = this.messageConfig.getLockTimeoutMsInHandleGroup();
 
         Map<HandleKey, HandleData> handleMap = this.receiptHandleMap.computeIfAbsent(msgID, msgIDKey -> new ConcurrentHashMap<>());
@@ -162,7 +162,7 @@ public class ReceiptHandleGroup {
                 if (handleData.needRemove) {
                     return new HandleData(value);
                 }
-                handleData.messageReceiptHandle = value;
+                handleData.messageReceipt = value;
             } finally {
                 handleData.unlock();
             }
@@ -174,13 +174,13 @@ public class ReceiptHandleGroup {
         return this.receiptHandleMap.isEmpty();
     }
 
-    public MessageReceiptHandle get(String msgID, String handle) {
+    public MessageReceipt get(String msgID, String handle) {
         Map<HandleKey, HandleData> handleMap = this.receiptHandleMap.get(msgID);
         if (handleMap == null) {
             return null;
         }
         long timeout = this.messageConfig.getLockTimeoutMsInHandleGroup();
-        AtomicReference<MessageReceiptHandle> res = new AtomicReference<>();
+        AtomicReference<MessageReceipt> res = new AtomicReference<>();
         handleMap.computeIfPresent(new HandleKey(handle), (handleKey, handleData) -> {
             if (!handleData.lock(timeout)) {
                 throw new BrokerException(BrokerExceptionCode.INTERNAL_SERVER_ERROR, "try to get handle failed");
@@ -189,7 +189,7 @@ public class ReceiptHandleGroup {
                 if (handleData.needRemove) {
                     return null;
                 }
-                res.set(handleData.messageReceiptHandle);
+                res.set(handleData.messageReceipt);
             } finally {
                 handleData.unlock();
             }
@@ -198,13 +198,13 @@ public class ReceiptHandleGroup {
         return res.get();
     }
 
-    public MessageReceiptHandle remove(String msgID, String handle) {
+    public MessageReceipt remove(String msgID, String handle) {
         Map<HandleKey, HandleData> handleMap = this.receiptHandleMap.get(msgID);
         if (handleMap == null) {
             return null;
         }
         long timeout = this.messageConfig.getLockTimeoutMsInHandleGroup();
-        AtomicReference<MessageReceiptHandle> res = new AtomicReference<>();
+        AtomicReference<MessageReceipt> res = new AtomicReference<>();
         handleMap.computeIfPresent(new HandleKey(handle), (handleKey, handleData) -> {
             if (!handleData.lock(timeout)) {
                 throw new BrokerException(BrokerExceptionCode.INTERNAL_SERVER_ERROR, "try to remove and get handle failed");
@@ -212,7 +212,7 @@ public class ReceiptHandleGroup {
             try {
                 if (!handleData.needRemove) {
                     handleData.needRemove = true;
-                    res.set(handleData.messageReceiptHandle);
+                    res.set(handleData.messageReceipt);
                 }
                 return null;
             } finally {
@@ -223,14 +223,14 @@ public class ReceiptHandleGroup {
         return res.get();
     }
 
-    public MessageReceiptHandle removeOne(String msgID) {
+    public MessageReceipt removeOne(String msgID) {
         Map<HandleKey, HandleData> handleMap = this.receiptHandleMap.get(msgID);
         if (handleMap == null) {
             return null;
         }
         Set<HandleKey> keys = handleMap.keySet();
         for (HandleKey key : keys) {
-            MessageReceiptHandle res = this.remove(msgID, key.originalHandle);
+            MessageReceipt res = this.remove(msgID, key.originalHandle);
             if (res != null) {
                 return res;
             }
@@ -239,7 +239,7 @@ public class ReceiptHandleGroup {
     }
 
     public void computeIfPresent(String msgID, String handle,
-        Function<MessageReceiptHandle, CompletableFuture<MessageReceiptHandle>> function) {
+        Function<MessageReceipt, CompletableFuture<MessageReceipt>> function) {
         Map<HandleKey, HandleData> handleMap = this.receiptHandleMap.get(msgID);
         if (handleMap == null) {
             return;
@@ -249,7 +249,7 @@ public class ReceiptHandleGroup {
             if (!handleData.lock(timeout)) {
                 throw new BrokerException(BrokerExceptionCode.INTERNAL_SERVER_ERROR, "try to compute failed");
             }
-            CompletableFuture<MessageReceiptHandle> future = function.apply(handleData.messageReceiptHandle);
+            CompletableFuture<MessageReceipt> future = function.apply(handleData.messageReceipt);
             future.whenComplete((messageReceiptHandle, throwable) -> {
                 try {
                     if (throwable != null) {
@@ -258,7 +258,7 @@ public class ReceiptHandleGroup {
                     if (messageReceiptHandle == null) {
                         handleData.needRemove = true;
                     } else {
-                        handleData.messageReceiptHandle = messageReceiptHandle;
+                        handleData.messageReceipt = messageReceiptHandle;
                     }
                 } finally {
                     handleData.unlock();
@@ -282,13 +282,13 @@ public class ReceiptHandleGroup {
     }
 
     public interface DataScanner {
-        void onData(String msgID, String handle, MessageReceiptHandle receiptHandle);
+        void onData(String msgID, String handle, MessageReceipt receiptHandle);
     }
 
     public void scan(DataScanner scanner) {
         this.receiptHandleMap.forEach((msgID, handleMap) -> {
             handleMap.forEach((handleKey, v) -> {
-                scanner.onData(msgID, handleKey.originalHandle, v.messageReceiptHandle);
+                scanner.onData(msgID, handleKey.originalHandle, v.messageReceipt);
             });
         });
     }

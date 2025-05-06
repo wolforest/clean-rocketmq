@@ -17,13 +17,13 @@
 
 package cn.coderule.minimq.broker.domain.consumer;
 
-import cn.coderule.minimq.domain.domain.model.consumer.receipt.MessageReceiptHandle;
+import cn.coderule.minimq.domain.domain.model.consumer.receipt.MessageReceipt;
 import cn.coderule.minimq.rpc.common.core.RequestContext;
 import io.netty.channel.Channel;
 
 
 public interface ReceiptHandler {
-    void addReceiptHandle(RequestContext context, Channel channel, String group, String msgID, MessageReceiptHandle messageReceiptHandle);
+    void addReceiptHandle(RequestContext context, Channel channel, String group, String msgID, MessageReceipt messageReceipt);
 
-    MessageReceiptHandle removeReceiptHandle(RequestContext context, Channel channel, String group, String msgID, String receiptHandle);
+    MessageReceipt removeReceiptHandle(RequestContext context, Channel channel, String group, String msgID, String receiptHandle);
 }

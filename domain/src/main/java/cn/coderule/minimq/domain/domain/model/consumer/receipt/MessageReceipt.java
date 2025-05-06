@@ -21,7 +21,7 @@ import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class MessageReceiptHandle {
+public class MessageReceipt {
     private final String group;
     private final String topic;
     private final int queueId;
@@ -37,7 +37,7 @@ public class MessageReceiptHandle {
     private final long consumeTimestamp;
     private volatile String receiptHandleStr;
 
-    public MessageReceiptHandle(String group, String topic, int queueId, String receiptHandleStr, String messageId,
+    public MessageReceipt(String group, String topic, int queueId, String receiptHandleStr, String messageId,
         long queueOffset, int reconsumeTimes) {
         this.originalReceiptHandle = ReceiptHandle.decode(receiptHandleStr);
         this.group = group;
@@ -59,7 +59,7 @@ public class MessageReceiptHandle {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        MessageReceiptHandle handle = (MessageReceiptHandle) o;
+        MessageReceipt handle = (MessageReceipt) o;
         return queueId == handle.queueId && queueOffset == handle.queueOffset && consumeTimestamp == handle.consumeTimestamp
             && reconsumeTimes == handle.reconsumeTimes
             && Objects.equal(group, handle.group) && Objects.equal(topic, handle.topic)
