@@ -14,28 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.coderule.minimq.domain.domain.enums;
 
-public enum ConsumerGroupEvent {
+package cn.coderule.minimq.domain.domain.enums.store;
 
-    /**
-     * Some consumers in the group are changed.
-     */
-    CHANGE,
-    /**
-     * The group of consumer is unregistered.
-     */
-    UNREGISTER,
-    /**
-     * The group of consumer is registered.
-     */
-    REGISTER,
-    /**
-     * The client of this consumer is new registered.
-     */
-    CLIENT_REGISTER,
-    /**
-     * The client of this consumer is unregistered.
-     */
-    CLIENT_UNREGISTER
+public enum QueueType {
+    DEFAULT,
+    BATCH,
+    ROCKSDB,
+    ERROR,
 }

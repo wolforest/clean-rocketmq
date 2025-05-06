@@ -1,6 +1,6 @@
 package cn.coderule.minimq.rpc.broker.protocol.consumer;
 
-import cn.coderule.minimq.domain.domain.enums.ConsumeStrategy;
+import cn.coderule.minimq.domain.domain.enums.consume.ConsumeStrategy;
 import cn.coderule.minimq.rpc.broker.protocol.enums.ConsumeType;
 import cn.coderule.minimq.rpc.broker.protocol.enums.MessageModel;
 import cn.coderule.minimq.rpc.broker.protocol.heartbeat.SubscriptionData;

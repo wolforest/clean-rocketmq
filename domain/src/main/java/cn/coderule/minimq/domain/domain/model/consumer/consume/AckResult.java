@@ -16,12 +16,17 @@
  */
 package cn.coderule.minimq.domain.domain.model.consumer.consume;
 
-import cn.coderule.minimq.domain.domain.enums.AckStatus;
+import cn.coderule.minimq.domain.domain.enums.consume.AckStatus;
+import cn.coderule.minimq.domain.domain.exception.BrokerException;
+import cn.coderule.minimq.domain.domain.model.consumer.receipt.MessageIdReceipt;
 
 public class AckResult {
     private AckStatus status;
     private String extraInfo;
     private long popTime;
+
+    private MessageIdReceipt idReceipt;
+    private BrokerException brokerException;
 
     public void setPopTime(long popTime) {
         this.popTime = popTime;

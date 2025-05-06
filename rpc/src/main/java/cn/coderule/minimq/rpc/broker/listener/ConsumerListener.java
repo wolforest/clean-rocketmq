@@ -16,7 +16,7 @@
  */
 package cn.coderule.minimq.rpc.broker.listener;
 
-import cn.coderule.minimq.domain.domain.enums.ConsumerGroupEvent;
+import cn.coderule.minimq.domain.domain.enums.consume.ConsumerGroupEvent;
 
 public interface ConsumerListener {
 

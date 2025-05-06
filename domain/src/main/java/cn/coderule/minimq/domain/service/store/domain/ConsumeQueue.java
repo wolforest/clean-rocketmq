@@ -1,6 +1,6 @@
 package cn.coderule.minimq.domain.service.store.domain;
 
-import cn.coderule.minimq.domain.domain.enums.QueueType;
+import cn.coderule.minimq.domain.domain.enums.store.QueueType;
 import cn.coderule.minimq.domain.domain.model.store.CommitLogEvent;
 import cn.coderule.minimq.domain.domain.model.store.QueueUnit;
 import cn.coderule.minimq.domain.service.store.infra.MappedFileQueue;

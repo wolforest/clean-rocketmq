@@ -1,4 +1,4 @@
-package cn.coderule.minimq.domain.domain.enums;
+package cn.coderule.minimq.domain.domain.enums.consume;
 
 public enum ConsumeStrategy {
     CONSUME_FROM_START,
