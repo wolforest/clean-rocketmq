@@ -21,17 +21,12 @@ import cn.coderule.minimq.domain.config.MessageConfig;
 import cn.coderule.minimq.domain.domain.enums.code.BrokerExceptionCode;
 import cn.coderule.minimq.domain.domain.exception.BrokerException;
 import com.google.common.base.MoreObjects;
-import com.google.common.base.Objects;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.Semaphore;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-
 
 public class ReceiptHandleGroup {
 
@@ -43,126 +38,23 @@ public class ReceiptHandleGroup {
         this.messageConfig = messageConfig;
     }
 
-    public static class HandleKey {
-        private final String originalHandle;
-        private final String broker;
-        private final int queueId;
-        private final long offset;
-
-        public HandleKey(String handle) {
-            this(ReceiptHandle.decode(handle));
-        }
-
-        public HandleKey(ReceiptHandle receiptHandle) {
-            this.originalHandle = receiptHandle.getReceiptHandle();
-            this.broker = receiptHandle.getBrokerName();
-            this.queueId = receiptHandle.getQueueId();
-            this.offset = receiptHandle.getOffset();
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o)
-                return true;
-            if (o == null || getClass() != o.getClass())
-                return false;
-            HandleKey key = (HandleKey) o;
-            return queueId == key.queueId && offset == key.offset && Objects.equal(broker, key.broker);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hashCode(broker, queueId, offset);
-        }
-
-        @Override
-        public String toString() {
-            return new ToStringBuilder(this)
-                .append("originalHandle", originalHandle)
-                .append("broker", broker)
-                .append("queueId", queueId)
-                .append("offset", offset)
-                .toString();
-        }
-
-        public String getOriginalHandle() {
-            return originalHandle;
-        }
-
-        public String getBroker() {
-            return broker;
-        }
-
-        public int getQueueId() {
-            return queueId;
-        }
-
-        public long getOffset() {
-            return offset;
-        }
-    }
-
-    public static class HandleData {
-        private final Semaphore semaphore = new Semaphore(1);
-        private volatile boolean needRemove = false;
-        private volatile MessageReceipt messageReceipt;
-
-        public HandleData(MessageReceipt messageReceipt) {
-            this.messageReceipt = messageReceipt;
-        }
-
-        public boolean lock(long timeoutMs) {
-            try {
-                return this.semaphore.tryAcquire(timeoutMs, TimeUnit.MILLISECONDS);
-            } catch (InterruptedException e) {
-                return false;
-            }
-        }
-
-        public void unlock() {
-            this.semaphore.release();
-        }
-
-        public MessageReceipt getMessageReceiptHandle() {
-            return messageReceipt;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            return this == o;
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hashCode(semaphore, needRemove, messageReceipt);
-        }
-
-        @Override
-        public String toString() {
-            return MoreObjects.toStringHelper(this)
-                .add("semaphore", semaphore)
-                .add("needRemove", needRemove)
-                .add("messageReceiptHandle", messageReceipt)
-                .toString();
-        }
-    }
 
     public void put(String msgID, MessageReceipt value) {
         long timeout = this.messageConfig.getLockTimeoutMsInHandleGroup();
 
         Map<HandleKey, HandleData> handleMap = this.receiptHandleMap.computeIfAbsent(msgID, msgIDKey -> new ConcurrentHashMap<>());
         handleMap.compute(new HandleKey(value.getOriginalReceiptHandle()), (handleKey, handleData) -> {
-            if (handleData == null || handleData.needRemove) {
+            if (handleData == null || handleData.isNeedRemove()) {
                 return new HandleData(value);
             }
             if (!handleData.lock(timeout)) {
                 throw new BrokerException(BrokerExceptionCode.INTERNAL_SERVER_ERROR, "try to put handle failed");
             }
             try {
-                if (handleData.needRemove) {
+                if (handleData.isNeedRemove()) {
                     return new HandleData(value);
                 }
-                handleData.messageReceipt = value;
+                handleData.setMessageReceipt(value);
             } finally {
                 handleData.unlock();
             }
@@ -186,10 +78,10 @@ public class ReceiptHandleGroup {
                 throw new BrokerException(BrokerExceptionCode.INTERNAL_SERVER_ERROR, "try to get handle failed");
             }
             try {
-                if (handleData.needRemove) {
+                if (handleData.isNeedRemove()) {
                     return null;
                 }
-                res.set(handleData.messageReceipt);
+                res.set(handleData.getMessageReceiptHandle());
             } finally {
                 handleData.unlock();
             }
@@ -210,9 +102,9 @@ public class ReceiptHandleGroup {
                 throw new BrokerException(BrokerExceptionCode.INTERNAL_SERVER_ERROR, "try to remove and get handle failed");
             }
             try {
-                if (!handleData.needRemove) {
-                    handleData.needRemove = true;
-                    res.set(handleData.messageReceipt);
+                if (!handleData.isNeedRemove()) {
+                    handleData.setNeedRemove(true);
+                    res.set(handleData.getMessageReceipt());
                 }
                 return null;
             } finally {
@@ -230,7 +122,7 @@ public class ReceiptHandleGroup {
         }
         Set<HandleKey> keys = handleMap.keySet();
         for (HandleKey key : keys) {
-            MessageReceipt res = this.remove(msgID, key.originalHandle);
+            MessageReceipt res = this.remove(msgID, key.getOriginalHandle());
             if (res != null) {
                 return res;
             }
@@ -249,21 +141,21 @@ public class ReceiptHandleGroup {
             if (!handleData.lock(timeout)) {
                 throw new BrokerException(BrokerExceptionCode.INTERNAL_SERVER_ERROR, "try to compute failed");
             }
-            CompletableFuture<MessageReceipt> future = function.apply(handleData.messageReceipt);
+            CompletableFuture<MessageReceipt> future = function.apply(handleData.getMessageReceipt());
             future.whenComplete((messageReceiptHandle, throwable) -> {
                 try {
                     if (throwable != null) {
                         return;
                     }
                     if (messageReceiptHandle == null) {
-                        handleData.needRemove = true;
+                        handleData.setNeedRemove(true);
                     } else {
-                        handleData.messageReceipt = messageReceiptHandle;
+                        handleData.setMessageReceipt(messageReceiptHandle);
                     }
                 } finally {
                     handleData.unlock();
                 }
-                if (handleData.needRemove) {
+                if (handleData.isNeedRemove()) {
                     handleMap.remove(handleKey, handleData);
                 }
                 removeHandleMapKeyIfNeed(msgID);
@@ -288,7 +180,7 @@ public class ReceiptHandleGroup {
     public void scan(DataScanner scanner) {
         this.receiptHandleMap.forEach((msgID, handleMap) -> {
             handleMap.forEach((handleKey, v) -> {
-                scanner.onData(msgID, handleKey.originalHandle, v.messageReceipt);
+                scanner.onData(msgID, handleKey.getOriginalHandle(), v.getMessageReceipt());
             });
         });
     }
