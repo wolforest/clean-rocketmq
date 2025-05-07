@@ -131,6 +131,13 @@ public class RouteInfo extends RpcSerializable {
         return topicQueueMappingByBroker == null || topicQueueMappingByBroker.isEmpty();
     }
 
+    public boolean isValid() {
+        return null != queueDatas
+            && !queueDatas.isEmpty()
+            && null != brokerDatas
+            && !brokerDatas.isEmpty();
+    }
+
     public byte[] encode() {
         return encode(false);
     }
