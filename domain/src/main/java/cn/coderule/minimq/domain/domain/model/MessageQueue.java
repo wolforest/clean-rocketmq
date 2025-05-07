@@ -20,13 +20,12 @@ import lombok.NoArgsConstructor;
 public class MessageQueue implements Comparable<MessageQueue>, Serializable {
     private String clusterName;
     private String groupName;
+    private int groupNo;
+    private String namespace;
     private String topicName;
     private int queueId;
 
-    //private int groupNo;
-    //private String address;
-    //private String namespace;
-
+    private String address;
     private int permission;
     private MessageType messageType;
 

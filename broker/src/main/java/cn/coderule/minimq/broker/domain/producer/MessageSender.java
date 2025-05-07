@@ -4,8 +4,11 @@ import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.lang.concurrent.thread.pool.ThreadPoolFactory;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.minimq.domain.config.BrokerConfig;
+import cn.coderule.minimq.domain.domain.constant.MessageConst;
 import cn.coderule.minimq.domain.domain.dto.EnqueueResult;
+import cn.coderule.minimq.domain.domain.model.MessageQueue;
 import cn.coderule.minimq.domain.domain.model.message.MessageBO;
+import cn.coderule.minimq.domain.utils.message.MessageIDSetter;
 import cn.coderule.minimq.rpc.common.core.RequestContext;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,16 +22,22 @@ public class MessageSender implements Lifecycle {
     private final BrokerConfig brokerConfig;
     private final ThreadPoolExecutor executor;
 
+    private QueueSelector queueSelector;
+
     public MessageSender(BrokerConfig brokerConfig) {
         this.brokerConfig = brokerConfig;
         this.executor = createExecutor();
     }
 
+    private void setMessageId(MessageBO messageBO) {
+        String messageId = MessageIDSetter.createUniqID();
+        messageBO.putProperty(MessageConst.PROPERTY_UNIQ_CLIENT_MESSAGE_ID_KEYIDX, messageId);
+    }
+
     public CompletableFuture<EnqueueResult> send(RequestContext context, MessageBO messageBO) {
-        // validate topic
-        // validate message
-        // select message queue
-        // init uuid
+        setMessageId(messageBO);
+        MessageQueue messageQueue = queueSelector.select(context, messageBO);
+
 
         // send message
         // static topic checking

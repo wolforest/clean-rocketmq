@@ -8,9 +8,16 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * this is the gateway of module producer
+ */
 @Slf4j
 public class Producer {
-    private MessageSender messageSender;
+    private final MessageSender messageSender;
+
+    public Producer(MessageSender messageSender) {
+        this.messageSender = messageSender;
+    }
 
     public boolean register(ProducerInfo producerInfo) {
         return true;
