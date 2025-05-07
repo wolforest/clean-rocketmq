@@ -19,14 +19,12 @@ public class DefaultReceiptHandler implements ReceiptHandler, Lifecycle {
     }
 
     @Override
-    public void addReceiptHandle(RequestContext context, Channel channel, String group, String msgID,
-        MessageReceipt messageReceipt) {
+    public void addReceiptHandle(RequestContext context, Channel channel, MessageReceipt messageReceipt) {
 
     }
 
     @Override
-    public MessageReceipt removeReceiptHandle(RequestContext context, Channel channel, String group, String msgID,
-        String receiptHandle) {
+    public MessageReceipt removeReceiptHandle(RequestContext context, Channel channel,MessageReceipt messageReceipt) {
         return null;
     }
 }

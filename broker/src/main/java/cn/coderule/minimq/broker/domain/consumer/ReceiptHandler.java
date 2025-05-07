@@ -23,7 +23,7 @@ import io.netty.channel.Channel;
 
 
 public interface ReceiptHandler {
-    void addReceiptHandle(RequestContext context, Channel channel, String group, String msgID, MessageReceipt messageReceipt);
+    void addReceiptHandle(RequestContext context, Channel channel, MessageReceipt messageReceipt);
 
-    MessageReceipt removeReceiptHandle(RequestContext context, Channel channel, String group, String msgID, String receiptHandle);
+    MessageReceipt removeReceiptHandle(RequestContext context, Channel channel, MessageReceipt messageReceipt);
 }
