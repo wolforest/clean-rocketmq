@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package cn.coderule.minimq.domain.domain.model.consumer.consume;
+package cn.coderule.minimq.rpc.broker.protocol.consumer.response;
 
 import cn.coderule.minimq.domain.domain.exception.BrokerException;
 import cn.coderule.minimq.domain.domain.model.consumer.receipt.MessageIdReceipt;

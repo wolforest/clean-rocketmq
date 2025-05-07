@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.coderule.minimq.rpc.broker.protocol.consumer;
+package cn.coderule.minimq.rpc.broker.protocol.consumer.running;
 
 import cn.coderule.minimq.domain.domain.enums.consume.ConsumeStrategy;
 import cn.coderule.minimq.rpc.broker.protocol.enums.ConsumeType;

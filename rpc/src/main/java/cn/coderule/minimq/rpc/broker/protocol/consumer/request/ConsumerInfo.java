@@ -1,4 +1,4 @@
-package cn.coderule.minimq.rpc.broker.protocol.consumer;
+package cn.coderule.minimq.rpc.broker.protocol.consumer.request;
 
 import cn.coderule.minimq.domain.domain.enums.consume.ConsumeStrategy;
 import cn.coderule.minimq.rpc.broker.protocol.enums.ConsumeType;

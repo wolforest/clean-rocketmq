@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package cn.coderule.minimq.rpc.broker.protocol.consumer;
+package cn.coderule.minimq.rpc.broker.protocol.consumer.running;
 
 public class ConsumeStatus {
     private double pullRT;

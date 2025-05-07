@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.coderule.minimq.domain.domain.model.consumer.consume;
+package cn.coderule.minimq.rpc.broker.protocol.consumer.response;
 
 import cn.coderule.minimq.domain.domain.enums.consume.AckStatus;
 import cn.coderule.minimq.domain.domain.exception.BrokerException;

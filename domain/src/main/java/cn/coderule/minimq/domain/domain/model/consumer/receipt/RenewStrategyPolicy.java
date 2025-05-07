@@ -15,9 +15,9 @@
  * limitations under the License.
  */
 
-package cn.coderule.minimq.domain.domain.model.consumer.renew;
+package cn.coderule.minimq.domain.domain.model.consumer.receipt;
 
-import cn.coderule.minimq.domain.domain.model.consumer.subscription.RetryPolicy;
+import cn.coderule.minimq.domain.domain.model.consumer.RetryPolicy;
 import com.google.common.base.MoreObjects;
 import java.util.concurrent.TimeUnit;
 

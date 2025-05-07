@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.coderule.minimq.rpc.broker.protocol.consumer.request;
+package cn.coderule.minimq.rpc.broker.protocol.consumer;
 
 import cn.coderule.minimq.domain.domain.model.message.MessageBO;
 import cn.coderule.minimq.rpc.broker.protocol.heartbeat.SubscriptionData;

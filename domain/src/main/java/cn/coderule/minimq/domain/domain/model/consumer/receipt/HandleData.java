@@ -1,8 +1,6 @@
 package cn.coderule.minimq.domain.domain.model.consumer.receipt;
 
 import cn.coderule.common.util.lang.BeanUtil;
-import com.google.common.base.MoreObjects;
-import com.google.common.base.Objects;
 import java.io.Serializable;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
@@ -32,11 +30,6 @@ public class HandleData implements Serializable {
 
     public MessageReceipt getMessageReceiptHandle() {
         return messageReceipt;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        return this == o;
     }
 
     @Override

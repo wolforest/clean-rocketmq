@@ -15,9 +15,9 @@
  * limitations under the License.
  */
 
-package cn.coderule.minimq.domain.domain.model.consumer.renew;
+package cn.coderule.minimq.rpc.broker.protocol.consumer.request;
 
-import cn.coderule.minimq.domain.domain.model.consumer.consume.AckResult;
+import cn.coderule.minimq.rpc.broker.protocol.consumer.response.AckResult;
 import cn.coderule.minimq.domain.domain.model.consumer.receipt.MessageReceipt;
 import cn.coderule.minimq.domain.domain.model.consumer.receipt.ReceiptHandleGroupKey;
 import java.util.concurrent.CompletableFuture;

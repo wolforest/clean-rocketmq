@@ -1,5 +1,6 @@
 package cn.coderule.minimq.rpc.broker.protocol.consumer.request;
 
+import cn.coderule.minimq.rpc.broker.protocol.consumer.PopFilter;
 import cn.coderule.minimq.rpc.broker.protocol.heartbeat.SubscriptionData;
 import cn.coderule.minimq.rpc.common.core.RequestContext;
 import java.io.Serializable;
