@@ -24,7 +24,6 @@ public class RouteManager implements Lifecycle {
         BrokerContext.register(routeController);
     }
 
-
     @Override
     public void start() {
 

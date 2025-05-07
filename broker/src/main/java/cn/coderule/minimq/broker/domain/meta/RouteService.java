@@ -5,6 +5,7 @@ import cn.coderule.common.util.net.Address;
 import cn.coderule.common.util.net.NetworkUtil;
 import cn.coderule.minimq.domain.config.BrokerConfig;
 import cn.coderule.minimq.domain.domain.exception.InvalidConfigException;
+import cn.coderule.minimq.rpc.broker.protocol.route.MessageQueueView;
 import cn.coderule.minimq.rpc.registry.protocol.cluster.GroupInfo;
 import cn.coderule.minimq.rpc.registry.protocol.route.RouteInfo;
 import cn.coderule.minimq.rpc.registry.route.RouteLoader;
@@ -32,6 +33,19 @@ public class RouteService {
         if (routeLoader == null && routeMocker == null) {
             throw new InvalidConfigException("invalid config: registryAddress and enableEmbedStore");
         }
+    }
+
+    public MessageQueueView getQueueView(RequestContext context, String topic) {
+        RouteInfo routeInfo = get(context, topic);
+        if (routeInfo == null) {
+            return null;
+        }
+
+        return new MessageQueueView(topic, routeInfo, null);
+    }
+
+    public RouteInfo get(RequestContext context, String topic) {
+        return get(context, topic, List.of());
     }
 
     public RouteInfo get(RequestContext context, String topic, List<Address> addressList) {

@@ -89,7 +89,7 @@ public class RemoteMessageStore extends AbstractRemoteStore implements MessageSt
         return getClient(address).getMessage(topic, queueId, offset, num);
     }
 
-    private MessageClient getClient(String address) {
+    public MessageClient getClient(String address) {
         if (clientMap.containsKey(address)) {
             return clientMap.get(address);
         }
