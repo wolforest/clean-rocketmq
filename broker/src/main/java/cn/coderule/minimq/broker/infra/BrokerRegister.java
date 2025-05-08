@@ -5,10 +5,10 @@ import cn.coderule.minimq.domain.config.BrokerConfig;
 import cn.coderule.minimq.rpc.common.rpc.config.RpcClientConfig;
 import cn.coderule.minimq.rpc.registry.RegistryClient;
 import cn.coderule.minimq.rpc.registry.client.DefaultRegistryClient;
-import cn.coderule.minimq.rpc.registry.protocol.cluster.BrokerInfo;
-import cn.coderule.minimq.rpc.registry.protocol.cluster.HeartBeat;
-import cn.coderule.minimq.rpc.registry.protocol.cluster.ServerInfo;
-import cn.coderule.minimq.rpc.registry.protocol.route.RouteInfo;
+import cn.coderule.minimq.domain.domain.model.cluster.cluster.BrokerInfo;
+import cn.coderule.minimq.domain.domain.model.cluster.cluster.HeartBeat;
+import cn.coderule.minimq.domain.domain.model.cluster.cluster.ServerInfo;
+import cn.coderule.minimq.domain.domain.model.cluster.route.RouteInfo;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 

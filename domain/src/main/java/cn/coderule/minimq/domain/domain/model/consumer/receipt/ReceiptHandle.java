@@ -18,7 +18,7 @@
 package cn.coderule.minimq.domain.domain.model.consumer.receipt;
 
 import cn.coderule.minimq.domain.domain.constant.MessageConst;
-import cn.coderule.minimq.domain.utils.topic.KeyBuilder;
+import cn.coderule.minimq.domain.domain.model.meta.topic.KeyBuilder;
 import java.util.Arrays;
 import java.util.List;
 

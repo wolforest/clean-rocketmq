@@ -21,8 +21,8 @@
 package cn.coderule.minimq.rpc.broker.protocol.heartbeat;
 
 import cn.coderule.minimq.domain.domain.enums.consume.ConsumeStrategy;
-import cn.coderule.minimq.rpc.broker.protocol.enums.ConsumeType;
-import cn.coderule.minimq.rpc.broker.protocol.enums.MessageModel;
+import cn.coderule.minimq.domain.domain.enums.consume.ConsumeType;
+import cn.coderule.minimq.domain.domain.enums.message.MessageModel;
 import java.util.HashSet;
 import java.util.Set;
 

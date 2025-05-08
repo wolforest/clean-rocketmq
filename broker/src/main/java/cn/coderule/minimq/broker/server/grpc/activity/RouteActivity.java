@@ -1,6 +1,5 @@
 package cn.coderule.minimq.broker.server.grpc.activity;
 
-import apache.rocketmq.v2.AddressScheme;
 import apache.rocketmq.v2.Broker;
 import apache.rocketmq.v2.Endpoints;
 import apache.rocketmq.v2.QueryAssignmentRequest;
@@ -14,11 +13,8 @@ import cn.coderule.minimq.broker.server.grpc.converter.RouteConverter;
 import cn.coderule.minimq.domain.config.GrpcConfig;
 import cn.coderule.minimq.rpc.common.core.RequestContext;
 import cn.coderule.minimq.rpc.common.grpc.activity.ActivityHelper;
-import cn.coderule.minimq.rpc.registry.protocol.cluster.GroupInfo;
-import cn.coderule.minimq.rpc.registry.protocol.route.RouteInfo;
 import io.grpc.stub.StreamObserver;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;

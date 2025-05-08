@@ -18,10 +18,10 @@
 package cn.coderule.minimq.rpc.registry.protocol.body;
 
 import cn.coderule.minimq.domain.domain.constant.MQConstants;
-import cn.coderule.minimq.domain.domain.model.Topic;
+import cn.coderule.minimq.domain.domain.model.meta.topic.Topic;
 import cn.coderule.minimq.domain.domain.model.meta.DataVersion;
 import cn.coderule.minimq.rpc.common.rpc.protocol.codec.RpcSerializable;
-import cn.coderule.minimq.rpc.registry.protocol.statictopic.TopicQueueMappingInfo;
+import cn.coderule.minimq.domain.domain.model.meta.statictopic.TopicQueueMappingInfo;
 import com.alibaba.fastjson2.JSON;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -157,7 +157,7 @@ public class RegisterBrokerBody extends RpcSerializable {
         for (int i = 0; i < topicQueueMappingNum; i++) {
             int mappingJsonLen = readInt(inflaterInputStream);
             byte[] buffer = readBytes(inflaterInputStream, mappingJsonLen);
-            TopicQueueMappingInfo info = TopicQueueMappingInfo.decode(buffer, TopicQueueMappingInfo.class);
+            TopicQueueMappingInfo info = RpcSerializable.decode(buffer, TopicQueueMappingInfo.class);
             topicQueueMappingInfoMap.put(info.getTopic(), info);
         }
         registerBrokerBody.getTopicConfigSerializeWrapper().setTopicQueueMappingInfoMap(topicQueueMappingInfoMap);

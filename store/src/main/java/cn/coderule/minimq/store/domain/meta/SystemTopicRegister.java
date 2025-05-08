@@ -1,9 +1,9 @@
 package cn.coderule.minimq.store.domain.meta;
 
-import cn.coderule.minimq.domain.domain.model.Topic;
+import cn.coderule.minimq.domain.domain.model.meta.topic.Topic;
 import cn.coderule.minimq.domain.service.store.domain.meta.TopicService;
-import cn.coderule.minimq.domain.utils.topic.KeyBuilder;
-import cn.coderule.minimq.domain.utils.topic.TopicValidator;
+import cn.coderule.minimq.domain.domain.model.meta.topic.KeyBuilder;
+import cn.coderule.minimq.domain.domain.model.meta.topic.TopicValidator;
 
 public class SystemTopicRegister {
     private static final int SCHEDULE_TOPIC_QUEUE_NUM = 18;

@@ -4,7 +4,7 @@ import cn.coderule.common.util.lang.StringUtil;
 import cn.coderule.minimq.domain.config.MessageConfig;
 import cn.coderule.minimq.domain.domain.enums.code.InvalidCode;
 import cn.coderule.minimq.domain.domain.model.message.MessageBO;
-import cn.coderule.minimq.domain.utils.topic.TopicValidator;
+import cn.coderule.minimq.domain.domain.model.meta.topic.TopicValidator;
 import cn.coderule.minimq.rpc.common.grpc.core.exception.GrpcException;
 import com.google.common.base.CharMatcher;
 

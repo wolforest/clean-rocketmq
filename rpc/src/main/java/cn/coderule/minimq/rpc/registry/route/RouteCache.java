@@ -1,9 +1,9 @@
 package cn.coderule.minimq.rpc.registry.route;
 
 import cn.coderule.minimq.domain.domain.model.MessageQueue;
-import cn.coderule.minimq.rpc.registry.protocol.cluster.GroupInfo;
-import cn.coderule.minimq.rpc.registry.protocol.route.PublishInfo;
-import cn.coderule.minimq.rpc.registry.protocol.route.RouteInfo;
+import cn.coderule.minimq.domain.domain.model.cluster.cluster.GroupInfo;
+import cn.coderule.minimq.domain.domain.model.cluster.route.PublishInfo;
+import cn.coderule.minimq.domain.domain.model.cluster.route.RouteInfo;
 import com.google.common.collect.Sets;
 import java.io.Serializable;
 import java.util.Map;

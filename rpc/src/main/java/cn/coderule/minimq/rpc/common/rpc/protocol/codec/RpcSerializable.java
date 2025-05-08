@@ -34,6 +34,15 @@ public abstract class RpcSerializable implements Serializable {
         return json.getBytes(CHARSET_UTF8);
     }
 
+    public static byte[] encode(final Object obj, JSONWriter.Feature... features) {
+        if (obj == null) {
+            return null;
+        }
+
+        String json = JSON.toJSONString(obj, features);
+        return json.getBytes(CHARSET_UTF8);
+    }
+
     public static String toJson(final Object obj) {
         return JSON.toJSONString(obj);
     }

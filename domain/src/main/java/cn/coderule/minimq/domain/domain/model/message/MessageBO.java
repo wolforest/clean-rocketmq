@@ -7,7 +7,6 @@ import cn.coderule.minimq.domain.domain.constant.MessageConst;
 import cn.coderule.minimq.domain.domain.enums.message.MessageStatus;
 import cn.coderule.minimq.domain.domain.enums.message.MessageVersion;
 import cn.coderule.minimq.domain.domain.enums.message.TagType;
-import cn.coderule.minimq.domain.domain.model.Message;
 import java.io.Serializable;
 import java.net.SocketAddress;
 import lombok.AllArgsConstructor;

@@ -5,7 +5,7 @@ import cn.coderule.minimq.domain.domain.enums.code.BrokerExceptionCode;
 import cn.coderule.minimq.domain.domain.exception.BrokerException;
 import cn.coderule.minimq.domain.domain.model.MessageQueue;
 import cn.coderule.minimq.domain.domain.model.message.MessageBO;
-import cn.coderule.minimq.rpc.broker.protocol.route.MessageQueueView;
+import cn.coderule.minimq.domain.domain.model.cluster.selector.MessageQueueView;
 import cn.coderule.minimq.rpc.common.core.RequestContext;
 
 public class QueueSelector {

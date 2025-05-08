@@ -8,7 +8,7 @@ import cn.coderule.minimq.domain.domain.constant.MessageConst;
 import cn.coderule.minimq.domain.domain.dto.EnqueueResult;
 import cn.coderule.minimq.domain.domain.model.MessageQueue;
 import cn.coderule.minimq.domain.domain.model.message.MessageBO;
-import cn.coderule.minimq.domain.utils.message.MessageIDSetter;
+import cn.coderule.minimq.domain.domain.model.message.MessageIDSetter;
 import cn.coderule.minimq.rpc.common.core.RequestContext;
 import java.util.ArrayList;
 import java.util.List;

@@ -20,7 +20,7 @@
  */
 package cn.coderule.minimq.rpc.broker.protocol.heartbeat;
 
-import cn.coderule.minimq.rpc.common.core.constants.ExpressionType;
+import cn.coderule.minimq.domain.domain.enums.consume.ExpressionType;
 import com.alibaba.fastjson2.annotation.JSONField;
 import java.util.HashSet;
 import java.util.Set;

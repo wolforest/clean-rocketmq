@@ -2,11 +2,11 @@ package cn.coderule.minimq.broker.domain.meta;
 
 import cn.coderule.minimq.domain.config.BrokerConfig;
 import cn.coderule.minimq.domain.config.TopicConfig;
-import cn.coderule.minimq.domain.domain.model.Topic;
+import cn.coderule.minimq.domain.domain.model.meta.topic.Topic;
 import cn.coderule.minimq.domain.service.store.api.TopicStore;
-import cn.coderule.minimq.rpc.registry.protocol.cluster.GroupInfo;
-import cn.coderule.minimq.rpc.registry.protocol.route.QueueInfo;
-import cn.coderule.minimq.rpc.registry.protocol.route.RouteInfo;
+import cn.coderule.minimq.domain.domain.model.cluster.cluster.GroupInfo;
+import cn.coderule.minimq.domain.domain.model.cluster.route.QueueInfo;
+import cn.coderule.minimq.domain.domain.model.cluster.route.RouteInfo;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
