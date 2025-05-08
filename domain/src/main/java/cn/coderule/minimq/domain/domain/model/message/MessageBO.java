@@ -78,6 +78,10 @@ public class MessageBO extends Message implements Serializable {
         return tags.hashCode();
     }
 
+    public String getShardingKey() {
+        return this.getProperty(MessageConst.PROPERTY_SHARDING_KEY);
+    }
+
     public TagType getTagType() {
         if ((this.sysFlag & MessageSysFlag.MULTI_TAGS_FLAG) == MessageSysFlag.MULTI_TAGS_FLAG) {
             return TagType.MULTI_TAG;
