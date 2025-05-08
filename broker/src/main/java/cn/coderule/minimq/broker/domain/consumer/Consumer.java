@@ -1,11 +1,11 @@
 package cn.coderule.minimq.broker.domain.consumer;
 
-import cn.coderule.minimq.domain.domain.model.consumer.response.AckResult;
-import cn.coderule.minimq.domain.domain.model.consumer.response.PopResult;
-import cn.coderule.minimq.domain.domain.model.consumer.request.ConsumerInfo;
-import cn.coderule.minimq.domain.domain.model.consumer.request.AckRequest;
-import cn.coderule.minimq.domain.domain.model.consumer.request.InvisibleRequest;
-import cn.coderule.minimq.domain.domain.model.consumer.request.PopRequest;
+import cn.coderule.minimq.domain.domain.dto.response.AckResult;
+import cn.coderule.minimq.domain.domain.dto.response.PopResult;
+import cn.coderule.minimq.domain.domain.dto.request.ConsumerInfo;
+import cn.coderule.minimq.domain.domain.dto.request.AckRequest;
+import cn.coderule.minimq.domain.domain.dto.request.InvisibleRequest;
+import cn.coderule.minimq.domain.domain.dto.request.PopRequest;
 import java.util.concurrent.CompletableFuture;
 
 public class Consumer  {

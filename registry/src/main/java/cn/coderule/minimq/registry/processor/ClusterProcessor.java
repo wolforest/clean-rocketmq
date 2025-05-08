@@ -1,5 +1,6 @@
 package cn.coderule.minimq.registry.processor;
 
+import cn.coderule.common.util.lang.string.JSONUtil;
 import cn.coderule.minimq.registry.domain.store.service.ClusterService;
 import cn.coderule.minimq.rpc.common.rpc.RpcProcessor;
 import cn.coderule.minimq.rpc.common.rpc.core.exception.RemotingCommandException;
@@ -89,7 +90,7 @@ public class ClusterProcessor implements RpcProcessor {
     private RpcCommand getClusterInfo(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
         RpcCommand response = RpcCommand.createResponseCommand(null);
 
-        byte[] content = clusterService.getClusterInfo().encode();
+        byte[] content = RpcSerializable.encode(clusterService.getClusterInfo());
         response.setBody(content);
 
         return response.success();

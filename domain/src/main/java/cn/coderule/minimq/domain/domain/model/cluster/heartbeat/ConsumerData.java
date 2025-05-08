@@ -18,7 +18,7 @@
 /**
  * $Id: ConsumerData.java 1835 2013-05-16 02:00:50Z vintagewang@apache.org $
  */
-package cn.coderule.minimq.rpc.broker.protocol.heartbeat;
+package cn.coderule.minimq.domain.domain.model.cluster.heartbeat;
 
 import cn.coderule.minimq.domain.domain.enums.consume.ConsumeStrategy;
 import cn.coderule.minimq.domain.domain.enums.consume.ConsumeType;

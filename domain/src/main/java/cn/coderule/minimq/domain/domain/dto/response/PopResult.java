@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.coderule.minimq.domain.domain.model.consumer.response;
+package cn.coderule.minimq.domain.domain.dto.response;
 
 import cn.coderule.minimq.domain.domain.enums.consume.PopStatus;
 import cn.coderule.minimq.domain.domain.model.message.MessageBO;

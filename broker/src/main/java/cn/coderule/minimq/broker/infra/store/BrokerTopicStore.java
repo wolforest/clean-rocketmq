@@ -19,15 +19,15 @@ public class BrokerTopicStore implements TopicStore {
     }
 
     @Override
-    public CompletableFuture<Topic> getTopic(String topicName) {
+    public CompletableFuture<Topic> getAsync(String topicName) {
         if (embedTopicStore.exists(topicName)) {
-            return embedTopicStore.getTopic(topicName);
+            return embedTopicStore.getAsync(topicName);
         }
 
         if (!brokerConfig.isEnableRemoteStore()) {
             return null;
         }
 
-        return remoteTopicStore.getTopic(topicName);
+        return remoteTopicStore.getAsync(topicName);
     }
 }

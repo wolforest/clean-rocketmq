@@ -14,39 +14,46 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package cn.coderule.minimq.domain.domain.dto.response;
 
-package cn.coderule.minimq.domain.domain.model.consumer.response;
-
+import cn.coderule.minimq.domain.domain.enums.consume.AckStatus;
 import cn.coderule.minimq.domain.domain.exception.BrokerException;
 import cn.coderule.minimq.domain.domain.model.consumer.receipt.MessageIdReceipt;
 
-public class BatchAckResult {
+public class AckResult {
+    private AckStatus status;
+    private String extraInfo;
+    private long popTime;
 
-    private final MessageIdReceipt messageIdReceipt;
-    private AckResult ackResult;
+    private MessageIdReceipt idReceipt;
     private BrokerException brokerException;
 
-    public BatchAckResult(MessageIdReceipt messageIdReceipt,
-        AckResult ackResult) {
-        this.messageIdReceipt = messageIdReceipt;
-        this.ackResult = ackResult;
+    public void setPopTime(long popTime) {
+        this.popTime = popTime;
     }
 
-    public BatchAckResult(MessageIdReceipt messageIdReceipt,
-        BrokerException brokerException) {
-        this.messageIdReceipt = messageIdReceipt;
-        this.brokerException = brokerException;
+    public long getPopTime() {
+        return popTime;
     }
 
-    public MessageIdReceipt getReceiptHandleMessage() {
-        return messageIdReceipt;
+    public AckStatus getStatus() {
+        return status;
     }
 
-    public AckResult getAckResult() {
-        return ackResult;
+    public void setStatus(AckStatus status) {
+        this.status = status;
     }
 
-    public BrokerException getBrokerException() {
-        return brokerException;
+    public void setExtraInfo(String extraInfo) {
+        this.extraInfo = extraInfo;
+    }
+
+    public String getExtraInfo() {
+        return extraInfo;
+    }
+
+    @Override
+    public String toString() {
+        return "AckResult [AckStatus=" + status + ",extraInfo=" + extraInfo + "]";
     }
 }

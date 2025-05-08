@@ -4,7 +4,7 @@ import cn.coderule.minimq.domain.domain.model.meta.topic.Topic;
 import cn.coderule.minimq.domain.service.broker.infra.TopicStore;
 import java.util.concurrent.CompletableFuture;
 
-public class EmbedTopicStore implements TopicStore {
+public class EmbedTopicStore implements TopicStore, cn.coderule.minimq.domain.service.store.api.TopicStore {
 
     public EmbedTopicStore(EmbedLoadBalance loadBalance) {
     }
@@ -14,8 +14,23 @@ public class EmbedTopicStore implements TopicStore {
     }
 
     @Override
-    public CompletableFuture<Topic> getTopic(String topicName) {
+    public Topic getTopic(String topicName) {
         return null;
+    }
+
+    @Override
+    public CompletableFuture<Topic> getAsync(String topicName) {
+        return null;
+    }
+
+    @Override
+    public void saveTopic(Topic topic) {
+
+    }
+
+    @Override
+    public void deleteTopic(String topicName) {
+
     }
 
 }

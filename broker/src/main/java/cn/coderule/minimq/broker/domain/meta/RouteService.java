@@ -9,7 +9,7 @@ import cn.coderule.minimq.domain.domain.model.cluster.selector.MessageQueueView;
 import cn.coderule.minimq.domain.domain.model.cluster.cluster.GroupInfo;
 import cn.coderule.minimq.domain.domain.model.cluster.route.RouteInfo;
 import cn.coderule.minimq.rpc.registry.route.RouteLoader;
-import cn.coderule.minimq.rpc.common.core.RequestContext;
+import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
 import java.util.List;
 import java.util.Map;
 import lombok.NonNull;

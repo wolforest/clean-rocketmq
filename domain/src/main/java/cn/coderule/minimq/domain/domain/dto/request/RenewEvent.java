@@ -15,9 +15,9 @@
  * limitations under the License.
  */
 
-package cn.coderule.minimq.domain.domain.model.consumer.request;
+package cn.coderule.minimq.domain.domain.dto.request;
 
-import cn.coderule.minimq.domain.domain.model.consumer.response.AckResult;
+import cn.coderule.minimq.domain.domain.dto.response.AckResult;
 import cn.coderule.minimq.domain.domain.model.consumer.receipt.MessageReceipt;
 import cn.coderule.minimq.domain.domain.model.consumer.receipt.ReceiptHandleGroupKey;
 import java.util.concurrent.CompletableFuture;

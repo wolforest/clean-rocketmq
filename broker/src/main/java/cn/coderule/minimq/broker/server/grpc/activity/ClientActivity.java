@@ -7,7 +7,7 @@ import apache.rocketmq.v2.NotifyClientTerminationRequest;
 import apache.rocketmq.v2.NotifyClientTerminationResponse;
 import apache.rocketmq.v2.Status;
 import apache.rocketmq.v2.TelemetryCommand;
-import cn.coderule.minimq.rpc.common.core.RequestContext;
+import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
 import io.grpc.stub.StreamObserver;
 import java.util.concurrent.ThreadPoolExecutor;
 

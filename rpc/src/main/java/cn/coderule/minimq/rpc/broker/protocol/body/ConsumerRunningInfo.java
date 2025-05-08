@@ -19,10 +19,10 @@ package cn.coderule.minimq.rpc.broker.protocol.body;
 
 import cn.coderule.minimq.domain.domain.model.MessageQueue;
 import cn.coderule.minimq.domain.domain.enums.consume.ConsumeType;
-import cn.coderule.minimq.domain.domain.model.consumer.running.ConsumeStatus;
-import cn.coderule.minimq.domain.domain.model.consumer.running.PopProcessQueueInfo;
-import cn.coderule.minimq.domain.domain.model.consumer.running.ProcessQueueInfo;
-import cn.coderule.minimq.rpc.broker.protocol.heartbeat.SubscriptionData;
+import cn.coderule.minimq.domain.domain.dto.running.ConsumeStatus;
+import cn.coderule.minimq.domain.domain.dto.running.PopProcessQueueInfo;
+import cn.coderule.minimq.domain.domain.dto.running.ProcessQueueInfo;
+import cn.coderule.minimq.domain.domain.model.cluster.heartbeat.SubscriptionData;
 import cn.coderule.minimq.rpc.common.rpc.protocol.codec.RpcSerializable;
 import java.util.Iterator;
 import java.util.Map.Entry;

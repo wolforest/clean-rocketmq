@@ -1,8 +1,8 @@
-package cn.coderule.minimq.domain.domain.model.consumer.request;
+package cn.coderule.minimq.domain.domain.dto.request;
 
+import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
+import cn.coderule.minimq.domain.domain.model.cluster.heartbeat.SubscriptionData;
 import cn.coderule.minimq.domain.domain.model.consumer.PopFilter;
-import cn.coderule.minimq.rpc.broker.protocol.heartbeat.SubscriptionData;
-import cn.coderule.minimq.rpc.common.core.RequestContext;
 import java.io.Serializable;
 import lombok.Data;
 

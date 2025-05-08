@@ -18,7 +18,7 @@
 package cn.coderule.minimq.rpc.broker.channel;
 
 import cn.coderule.common.util.net.NetworkUtil;
-import cn.coderule.minimq.rpc.broker.protocol.heartbeat.SubscriptionData;
+import cn.coderule.minimq.domain.domain.model.cluster.heartbeat.SubscriptionData;
 import cn.coderule.minimq.rpc.common.core.channel.ChannelExtendAttributeGetter;
 import cn.coderule.minimq.rpc.common.core.enums.ChannelProtocolType;
 import com.alibaba.fastjson2.JSON;

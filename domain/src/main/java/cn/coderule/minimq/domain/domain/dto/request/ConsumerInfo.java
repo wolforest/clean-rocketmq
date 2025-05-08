@@ -1,10 +1,10 @@
-package cn.coderule.minimq.domain.domain.model.consumer.request;
+package cn.coderule.minimq.domain.domain.dto.request;
 
 import cn.coderule.minimq.domain.domain.enums.consume.ConsumeStrategy;
 import cn.coderule.minimq.domain.domain.enums.consume.ConsumeType;
 import cn.coderule.minimq.domain.domain.enums.message.MessageModel;
-import cn.coderule.minimq.rpc.broker.protocol.heartbeat.SubscriptionData;
 import cn.coderule.minimq.domain.domain.model.cluster.ClientChannelInfo;
+import cn.coderule.minimq.domain.domain.model.cluster.heartbeat.SubscriptionData;
 import java.io.Serializable;
 import java.util.Set;
 import java.util.TreeSet;

@@ -6,7 +6,7 @@ import cn.coderule.minimq.broker.domain.producer.Producer;
 import cn.coderule.minimq.domain.config.MessageConfig;
 import cn.coderule.minimq.domain.domain.enums.code.InvalidCode;
 import cn.coderule.minimq.domain.domain.exception.InvalidParameterException;
-import cn.coderule.minimq.rpc.common.core.RequestContext;
+import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
 import cn.coderule.minimq.domain.domain.model.message.MessageBO;
 import cn.coderule.minimq.domain.domain.dto.EnqueueResult;
 import java.util.List;

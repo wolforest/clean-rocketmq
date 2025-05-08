@@ -9,7 +9,7 @@ import cn.coderule.minimq.broker.api.ProducerController;
 import cn.coderule.minimq.broker.server.grpc.converter.MessageConverter;
 import cn.coderule.minimq.broker.server.grpc.converter.ProducerConverter;
 import cn.coderule.minimq.domain.domain.enums.code.InvalidCode;
-import cn.coderule.minimq.rpc.common.core.RequestContext;
+import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
 import cn.coderule.minimq.domain.domain.model.message.MessageBO;
 import cn.coderule.minimq.rpc.common.grpc.activity.ActivityHelper;
 import cn.coderule.minimq.rpc.common.grpc.core.exception.GrpcException;

@@ -4,7 +4,7 @@ import cn.coderule.common.util.net.Address;
 import cn.coderule.minimq.broker.domain.meta.RouteService;
 import cn.coderule.minimq.domain.config.TopicConfig;
 import cn.coderule.minimq.domain.domain.model.meta.topic.TopicValidator;
-import cn.coderule.minimq.rpc.common.core.RequestContext;
+import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
 import cn.coderule.minimq.domain.domain.model.cluster.route.RouteInfo;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;

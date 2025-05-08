@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package cn.coderule.minimq.domain.domain.model.consumer.running;
+package cn.coderule.minimq.domain.domain.dto.running;
 
 import cn.coderule.common.util.lang.time.DateUtil;
 

@@ -18,7 +18,7 @@ package cn.coderule.minimq.rpc.broker.channel;
 
 import apache.rocketmq.v2.Settings;
 import apache.rocketmq.v2.TelemetryCommand;
-import cn.coderule.minimq.rpc.common.core.RequestContext;
+import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
 import cn.coderule.minimq.rpc.common.core.channel.ChannelExtendAttributeGetter;
 import cn.coderule.minimq.rpc.common.core.enums.ChannelProtocolType;
 import cn.coderule.minimq.rpc.common.grpc.core.GrpcChannelId;

@@ -1,7 +1,7 @@
-package cn.coderule.minimq.domain.domain.model.consumer.request;
+package cn.coderule.minimq.domain.domain.dto.request;
 
+import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
 import cn.coderule.minimq.domain.domain.model.consumer.receipt.MessageIdReceipt;
-import cn.coderule.minimq.rpc.common.core.RequestContext;
 import java.io.Serializable;
 import java.util.List;
 import lombok.Data;

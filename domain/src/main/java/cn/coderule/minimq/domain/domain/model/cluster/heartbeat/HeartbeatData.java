@@ -18,14 +18,14 @@
 /**
  * $Id: HeartbeatData.java 1835 2013-05-16 02:00:50Z vintagewang@apache.org $
  */
-package cn.coderule.minimq.rpc.broker.protocol.heartbeat;
+package cn.coderule.minimq.domain.domain.model.cluster.heartbeat;
 
-import cn.coderule.minimq.rpc.common.rpc.protocol.codec.RpcSerializable;
 import com.alibaba.fastjson2.JSON;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-public class HeartbeatData extends RpcSerializable {
+public class HeartbeatData implements Serializable {
     private String clientID;
     private Set<ProducerData> producerDataSet = new HashSet<>();
     private Set<ConsumerData> consumerDataSet = new HashSet<>();

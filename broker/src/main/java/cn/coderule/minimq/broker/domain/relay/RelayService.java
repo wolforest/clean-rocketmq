@@ -23,7 +23,7 @@ import cn.coderule.minimq.rpc.broker.protocol.body.ConsumerRunningInfo;
 import cn.coderule.minimq.rpc.broker.protocol.header.CheckTransactionStateRequestHeader;
 import cn.coderule.minimq.rpc.broker.protocol.header.ConsumeMessageDirectlyResultRequestHeader;
 import cn.coderule.minimq.rpc.broker.protocol.header.GetConsumerRunningInfoRequestHeader;
-import cn.coderule.minimq.rpc.common.core.RequestContext;
+import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
 import cn.coderule.minimq.rpc.common.rpc.core.invoke.RpcCommand;
 import java.util.concurrent.CompletableFuture;
 

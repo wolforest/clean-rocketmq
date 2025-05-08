@@ -14,13 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.coderule.minimq.domain.domain.model.consumer.running;
+package cn.coderule.minimq.domain.domain.dto.running;
 
 import cn.coderule.minimq.domain.domain.enums.consume.ConsumeStrategy;
 import cn.coderule.minimq.domain.domain.enums.consume.ConsumeType;
 import cn.coderule.minimq.domain.domain.enums.message.MessageModel;
-import cn.coderule.minimq.rpc.broker.protocol.heartbeat.SubscriptionData;
 import cn.coderule.minimq.domain.domain.model.cluster.ClientChannelInfo;
+import cn.coderule.minimq.domain.domain.model.cluster.heartbeat.SubscriptionData;
 import io.netty.channel.Channel;
 import java.util.ArrayList;
 import java.util.HashSet;

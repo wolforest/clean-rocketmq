@@ -14,46 +14,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.coderule.minimq.domain.domain.model.consumer.running;
 
-public class PopProcessQueueInfo {
-    private int waitAckCount;
-    private boolean droped;
-    private long lastPopTimestamp;
+/**
+ * $Id: ProducerData.java 1835 2013-05-16 02:00:50Z vintagewang@apache.org $
+ */
+package cn.coderule.minimq.domain.domain.model.cluster.heartbeat;
 
+public class ProducerData {
+    private String groupName;
 
-    public int getWaitAckCount() {
-        return waitAckCount;
+    public String getGroupName() {
+        return groupName;
     }
 
-
-    public void setWaitAckCount(int waitAckCount) {
-        this.waitAckCount = waitAckCount;
-    }
-
-
-    public boolean isDroped() {
-        return droped;
-    }
-
-
-    public void setDroped(boolean droped) {
-        this.droped = droped;
-    }
-
-
-    public long getLastPopTimestamp() {
-        return lastPopTimestamp;
-    }
-
-
-    public void setLastPopTimestamp(long lastPopTimestamp) {
-        this.lastPopTimestamp = lastPopTimestamp;
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
     }
 
     @Override
     public String toString() {
-        return "PopProcessQueueInfo [waitAckCount:" + waitAckCount +
-                ", droped:" + droped + ", lastPopTimestamp:" + lastPopTimestamp + "]";
+        return "ProducerData [groupName=" + groupName + "]";
     }
 }

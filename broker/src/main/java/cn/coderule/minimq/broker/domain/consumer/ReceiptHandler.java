@@ -18,7 +18,7 @@
 package cn.coderule.minimq.broker.domain.consumer;
 
 import cn.coderule.minimq.domain.domain.model.consumer.receipt.MessageReceipt;
-import cn.coderule.minimq.rpc.common.core.RequestContext;
+import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
 import io.netty.channel.Channel;
 
 

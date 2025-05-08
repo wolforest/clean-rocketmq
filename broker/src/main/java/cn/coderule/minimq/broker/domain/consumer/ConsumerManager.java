@@ -10,7 +10,6 @@ public class ConsumerManager implements Lifecycle {
     @Override
     public void initialize() {
         consumer = new Consumer();
-        consumer.initialize();
 
         ConsumerController controller = new ConsumerController(consumer);
         BrokerContext.registerAPI(controller);
@@ -18,21 +17,10 @@ public class ConsumerManager implements Lifecycle {
 
     @Override
     public void start() {
-        consumer.start();
     }
 
     @Override
     public void shutdown() {
-        consumer.shutdown();
     }
 
-    @Override
-    public void cleanup() {
-        consumer.cleanup();
-    }
-
-    @Override
-    public State getState() {
-        return State.RUNNING;
-    }
 }

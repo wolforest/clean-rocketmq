@@ -7,6 +7,7 @@ import cn.coderule.minimq.rpc.common.rpc.config.RpcClientConfig;
 import cn.coderule.minimq.rpc.common.rpc.core.invoke.RpcCommand;
 import cn.coderule.minimq.rpc.common.rpc.netty.NettyClient;
 import cn.coderule.minimq.rpc.common.rpc.protocol.code.RequestCode;
+import cn.coderule.minimq.rpc.common.rpc.protocol.codec.RpcSerializable;
 import cn.coderule.minimq.rpc.registry.RegistryClient;
 import cn.coderule.minimq.rpc.registry.protocol.body.GetBrokerMemberGroupResponseBody;
 import cn.coderule.minimq.rpc.registry.protocol.body.RegisterStoreResult;
@@ -128,7 +129,7 @@ public class DefaultRegistryClient implements RegistryClient {
         assert response != null;
 
         if (response.isSuccess()) {
-            return ClusterInfo.decode(response.getBody(), ClusterInfo.class);
+            return RpcSerializable.decode(response.getBody(), ClusterInfo.class);
         }
 
         throw new RpcException(
@@ -162,7 +163,7 @@ public class DefaultRegistryClient implements RegistryClient {
 
         byte[] body = response.getBody();
         if (body != null) {
-            return RouteInfo.decode(body, RouteInfo.class);
+            return RpcSerializable.decode(body, RouteInfo.class);
         }
 
         throw new RpcException(response.getCode(), "query route info error, registry address: " + registryAddress);

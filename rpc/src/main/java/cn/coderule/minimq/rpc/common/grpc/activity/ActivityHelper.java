@@ -2,7 +2,7 @@ package cn.coderule.minimq.rpc.common.grpc.activity;
 
 import apache.rocketmq.v2.Code;
 import apache.rocketmq.v2.Status;
-import cn.coderule.minimq.rpc.common.core.RequestContext;
+import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
 import cn.coderule.minimq.rpc.common.grpc.core.GrpcTask;
 import cn.coderule.minimq.rpc.common.grpc.core.ResponseBuilder;
 import io.grpc.stub.StreamObserver;

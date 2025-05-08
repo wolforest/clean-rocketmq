@@ -6,7 +6,7 @@ import apache.rocketmq.v2.SendMessageResponse;
 import apache.rocketmq.v2.SendResultEntry;
 import cn.coderule.common.util.lang.StringUtil;
 import cn.coderule.minimq.domain.domain.dto.EnqueueResult;
-import cn.coderule.minimq.rpc.common.core.RequestContext;
+import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
 import cn.coderule.minimq.rpc.common.grpc.core.ResponseBuilder;
 import java.util.HashSet;
 import java.util.List;

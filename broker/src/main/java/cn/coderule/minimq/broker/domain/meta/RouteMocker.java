@@ -1,9 +1,9 @@
 package cn.coderule.minimq.broker.domain.meta;
 
+import cn.coderule.minimq.broker.infra.embed.EmbedTopicStore;
 import cn.coderule.minimq.domain.config.BrokerConfig;
 import cn.coderule.minimq.domain.config.TopicConfig;
 import cn.coderule.minimq.domain.domain.model.meta.topic.Topic;
-import cn.coderule.minimq.domain.service.store.api.TopicStore;
 import cn.coderule.minimq.domain.domain.model.cluster.cluster.GroupInfo;
 import cn.coderule.minimq.domain.domain.model.cluster.route.QueueInfo;
 import cn.coderule.minimq.domain.domain.model.cluster.route.RouteInfo;
@@ -15,9 +15,9 @@ import lombok.extern.slf4j.Slf4j;
 public class RouteMocker {
     private final BrokerConfig brokerConfig;
     private final TopicConfig topicConfig;
-    private final TopicStore topicStore;
+    private final EmbedTopicStore topicStore;
 
-    public RouteMocker(BrokerConfig brokerConfig, TopicConfig topicConfig, TopicStore topicStore) {
+    public RouteMocker(BrokerConfig brokerConfig, TopicConfig topicConfig, EmbedTopicStore topicStore) {
         this.topicConfig = topicConfig;
         this.brokerConfig = brokerConfig;
         this.topicStore = topicStore;
