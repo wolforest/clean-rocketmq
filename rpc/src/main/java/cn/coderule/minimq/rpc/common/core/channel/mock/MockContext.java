@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package cn.coderule.minimq.rpc.common.core.channel.common;
+package cn.coderule.minimq.rpc.common.core.channel.mock;
 
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.channel.Channel;
@@ -31,11 +31,11 @@ import io.netty.util.concurrent.EventExecutor;
 import java.net.SocketAddress;
 import org.apache.commons.lang3.NotImplementedException;
 
-public class HandlerContext implements ChannelHandlerContext {
+public class MockContext implements ChannelHandlerContext {
 
     private final Channel channel;
 
-    public HandlerContext(Channel channel) {
+    public MockContext(Channel channel) {
         this.channel = channel;
     }
 

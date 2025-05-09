@@ -10,6 +10,7 @@ import cn.coderule.minimq.domain.domain.model.MessageQueue;
 import cn.coderule.minimq.domain.domain.model.message.MessageBO;
 import cn.coderule.minimq.domain.domain.model.message.MessageIDSetter;
 import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
+import cn.coderule.minimq.domain.service.store.api.MessageStore;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -20,12 +21,14 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class MessageSender implements Lifecycle {
     private final BrokerConfig brokerConfig;
+    private final MessageStore messageStore;
     private final ThreadPoolExecutor executor;
 
     private QueueSelector queueSelector;
 
-    public MessageSender(BrokerConfig brokerConfig) {
+    public MessageSender(BrokerConfig brokerConfig, MessageStore messageStore) {
         this.brokerConfig = brokerConfig;
+        this.messageStore = messageStore;
         this.executor = createExecutor();
     }
 

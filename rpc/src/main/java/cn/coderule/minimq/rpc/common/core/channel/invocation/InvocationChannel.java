@@ -17,7 +17,7 @@
 
 package cn.coderule.minimq.rpc.common.core.channel.invocation;
 
-import cn.coderule.minimq.rpc.common.core.channel.common.CommonChannel;
+import cn.coderule.minimq.rpc.common.core.channel.mock.MockChannel;
 import cn.coderule.minimq.rpc.common.rpc.core.invoke.RpcCommand;
 import io.netty.channel.ChannelFuture;
 import java.util.Iterator;
@@ -27,7 +27,7 @@ import java.util.concurrent.ConcurrentMap;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class InvocationChannel extends CommonChannel {
+public class InvocationChannel extends MockChannel {
     private static final int DEFAULT_CHANNEL_EXPIRED_IN_SECONDS = 60;
 
     protected final ConcurrentMap<Integer, InvocationContextInterface> inFlightRequestMap;

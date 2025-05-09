@@ -18,7 +18,7 @@
 package cn.coderule.minimq.rpc.broker.channel;
 
 import cn.coderule.common.util.net.NetworkUtil;
-import cn.coderule.minimq.rpc.common.core.channel.common.CommonChannel;
+import cn.coderule.minimq.rpc.common.core.channel.mock.MockChannel;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelConfig;
 import io.netty.channel.ChannelId;
@@ -29,7 +29,7 @@ import java.net.SocketAddress;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public abstract class AbstractChannel extends CommonChannel {
+public abstract class AbstractChannel extends MockChannel {
     protected final SocketAddress remoteSocketAddress;
     protected final SocketAddress localSocketAddress;
 

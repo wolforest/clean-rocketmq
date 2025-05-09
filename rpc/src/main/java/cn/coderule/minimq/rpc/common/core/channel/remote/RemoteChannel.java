@@ -18,13 +18,13 @@
 package cn.coderule.minimq.rpc.common.core.channel.remote;
 
 import cn.coderule.minimq.rpc.common.core.channel.ChannelExtendAttributeGetter;
-import cn.coderule.minimq.rpc.common.core.channel.common.CommonChannel;
+import cn.coderule.minimq.rpc.common.core.channel.mock.MockChannel;
 import cn.coderule.minimq.rpc.common.core.enums.ChannelProtocolType;
 import com.google.common.base.MoreObjects;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelId;
 
-public class RemoteChannel extends CommonChannel implements ChannelExtendAttributeGetter {
+public class RemoteChannel extends MockChannel implements ChannelExtendAttributeGetter {
     protected final ChannelProtocolType type;
     protected final String remoteProxyIp;
     protected volatile String extendAttribute;

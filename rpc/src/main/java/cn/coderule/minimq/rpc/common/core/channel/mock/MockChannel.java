@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package cn.coderule.minimq.rpc.common.core.channel.common;
+package cn.coderule.minimq.rpc.common.core.channel.mock;
 
 import cn.coderule.common.util.lang.StringUtil;
 import cn.coderule.minimq.rpc.common.core.channel.invocation.InvocationContextInterface;
@@ -42,7 +42,7 @@ import lombok.extern.slf4j.Slf4j;
  * @see Channel#writeAndFlush
  */
 @Slf4j
-public class CommonChannel extends AbstractChannel {
+public class MockChannel extends AbstractChannel {
 
     protected final String remoteAddress;
     protected final String localAddress;
@@ -57,19 +57,19 @@ public class CommonChannel extends AbstractChannel {
      * @param remoteAddress Remote address
      * @param localAddress  Local address
      */
-    public CommonChannel(Channel parent, String remoteAddress, String localAddress) {
+    public MockChannel(Channel parent, String remoteAddress, String localAddress) {
         this(parent, null, remoteAddress, localAddress);
     }
 
-    public CommonChannel(Channel parent, ChannelId id, String remoteAddress, String localAddress) {
+    public MockChannel(Channel parent, ChannelId id, String remoteAddress, String localAddress) {
         super(parent, id);
         lastAccessTime = System.currentTimeMillis();
         this.remoteAddress = remoteAddress;
         this.localAddress = localAddress;
-        this.channelHandlerContext = new HandlerContext(this);
+        this.channelHandlerContext = new MockContext(this);
     }
 
-    public CommonChannel(String remoteAddress, String localAddress) {
+    public MockChannel(String remoteAddress, String localAddress) {
         this(null, remoteAddress, localAddress);
     }
 
