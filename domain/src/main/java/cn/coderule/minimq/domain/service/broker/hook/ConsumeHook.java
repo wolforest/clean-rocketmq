@@ -14,39 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package cn.coderule.minimq.domain.service.broker.hook;
 
-package cn.coderule.minimq.domain.domain.enums.message;
+public interface ConsumeHook {
+    String hookName();
 
-import com.google.common.collect.Sets;
-import java.util.Set;
-import lombok.Getter;
+    void preConsume(final ConsumeContext context);
 
-@Getter
-public enum MessageType {
-    UNSPECIFIED("UNSPECIFIED"),
-    NORMAL("NORMAL"),
-    ORDER("ORDER"),
-    DELAY("DELAY"),
-    PREPARE("PREPARE"),
-    COMMIT("COMMIT"),
-    TRANSACTION("TRANSACTION"),
-    MIXED("MIXED");
-
-    private final String value;
-
-    MessageType(String value) {
-        this.value = value;
-    }
-
-    public static Set<String> typeSet() {
-        return Sets.newHashSet(
-            UNSPECIFIED.value,
-            NORMAL.value,
-            ORDER.value,
-            DELAY.value,
-            PREPARE.value,
-            COMMIT.value,
-            TRANSACTION.value,
-            MIXED.value);
-    }
+    void PostConsume(final ConsumeContext context);
 }
