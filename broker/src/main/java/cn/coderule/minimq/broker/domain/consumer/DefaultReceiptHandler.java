@@ -3,6 +3,7 @@ package cn.coderule.minimq.broker.domain.consumer;
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.minimq.domain.domain.model.consumer.receipt.MessageReceipt;
 import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
+import cn.coderule.minimq.domain.service.broker.consume.ReceiptHandler;
 import io.netty.channel.Channel;
 import lombok.extern.slf4j.Slf4j;
 

@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package cn.coderule.minimq.broker.domain.consumer;
+package cn.coderule.minimq.domain.service.broker.consume;
 
 import cn.coderule.minimq.domain.domain.model.consumer.receipt.MessageReceipt;
 import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
