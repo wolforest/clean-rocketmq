@@ -17,6 +17,9 @@
 package cn.coderule.minimq.domain.domain.model.producer;
 
 import cn.coderule.minimq.domain.domain.enums.message.MessageType;
+import cn.coderule.minimq.domain.domain.model.MessageQueue;
+import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
+import cn.coderule.minimq.domain.domain.model.message.MessageBO;
 import java.util.Properties;
 
 public class ProduceContext {
@@ -55,6 +58,10 @@ public class ProduceContext {
     private int sendMsgNum;
     private int sendMsgSize;
 
+
+    public static ProduceContext from(RequestContext requestContext, MessageBO messageBO, MessageQueue messageQueue) {
+        return new ProduceContext();
+    }
 
     public String getNamespace() {
         return namespace;

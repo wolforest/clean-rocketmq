@@ -10,6 +10,7 @@ import cn.coderule.minimq.domain.domain.model.MessageQueue;
 import cn.coderule.minimq.domain.domain.model.message.MessageBO;
 import cn.coderule.minimq.domain.domain.model.message.MessageIDSetter;
 import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
+import cn.coderule.minimq.domain.domain.model.producer.ProduceContext;
 import cn.coderule.minimq.domain.service.store.api.MessageStore;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +25,8 @@ public class MessageSender implements Lifecycle {
     private final MessageStore messageStore;
     private final ThreadPoolExecutor executor;
 
+
+    private ProduceHookManager hookManager;
     private QueueSelector queueSelector;
 
     public MessageSender(BrokerConfig brokerConfig, MessageStore messageStore) {
@@ -43,10 +46,13 @@ public class MessageSender implements Lifecycle {
 
         //@todo: static topic checking
 
+        // build sendMessageContext
+        ProduceContext produceContext = ProduceContext.from(context, messageBO, messageQueue);
+
+        // execute pre send hook
+        hookManager.preProduce(produceContext);
 
         // send message
-            // build sendMessageContext
-            // execute pre send hook
             // clear reserved properties
             // get topic
             // select message queue
@@ -57,6 +63,7 @@ public class MessageSender implements Lifecycle {
             // send message(sync or async)
                 // call store api
                 // execute post send hook
+                hookManager.postProduce(produceContext);
                 // format response
         // execute send callback
         // execute complete callback
