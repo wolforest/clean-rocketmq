@@ -1,6 +1,6 @@
 package cn.coderule.minimq.broker.domain.consumer;
 
-import cn.coderule.minimq.domain.service.broker.hook.ConsumeContext;
+import cn.coderule.minimq.domain.domain.model.consumer.ConsumeContext;
 import cn.coderule.minimq.domain.service.broker.hook.ConsumeHook;
 
 public class ConsumeHookManager implements ConsumeHook {

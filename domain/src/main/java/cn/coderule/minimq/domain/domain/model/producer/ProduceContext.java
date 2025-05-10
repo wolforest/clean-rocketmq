@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.coderule.minimq.domain.service.broker.hook;
+package cn.coderule.minimq.domain.domain.model.producer;
 
 import cn.coderule.minimq.domain.domain.enums.message.MessageType;
 import java.util.Properties;

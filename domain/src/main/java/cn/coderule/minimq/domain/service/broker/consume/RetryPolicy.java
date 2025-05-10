@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package cn.coderule.minimq.domain.domain.model.consumer;
+package cn.coderule.minimq.domain.service.broker.consume;
 
 public interface RetryPolicy {
     /**

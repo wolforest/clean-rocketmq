@@ -1,6 +1,6 @@
 package cn.coderule.minimq.broker.domain.producer;
 
-import cn.coderule.minimq.domain.service.broker.hook.ProduceContext;
+import cn.coderule.minimq.domain.domain.model.producer.ProduceContext;
 import cn.coderule.minimq.domain.service.broker.hook.ProduceHook;
 
 public class ProduceHookManager implements ProduceHook {

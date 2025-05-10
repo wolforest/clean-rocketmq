@@ -17,7 +17,7 @@
 
 package cn.coderule.minimq.domain.domain.model.consumer.subscription;
 
-import cn.coderule.minimq.domain.domain.model.consumer.RetryPolicy;
+import cn.coderule.minimq.domain.service.broker.consume.RetryPolicy;
 import com.google.common.base.MoreObjects;
 import java.util.concurrent.TimeUnit;
 
