@@ -1,15 +1,18 @@
 package cn.coderule.minimq.domain.domain.exception;
 
 import cn.coderule.common.lang.exception.BusinessException;
+import cn.coderule.minimq.domain.domain.enums.code.InvalidCode;
 
 public class AbortProcessException extends BusinessException {
     private static final String DEFAULT_MESSAGE = "Abort process";
+    private final InvalidCode invalidCode;
 
-    public AbortProcessException(int code) {
+    public AbortProcessException(InvalidCode code) {
         this(code, DEFAULT_MESSAGE);
     }
 
-    public AbortProcessException(int code, String message) {
-        super(code, message);
+    public AbortProcessException(InvalidCode code, String message) {
+        super(code.getCode(), message);
+        this.invalidCode = code;
     }
 }

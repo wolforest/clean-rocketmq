@@ -42,20 +42,18 @@ public class MessageSender implements Lifecycle {
 
     public CompletableFuture<EnqueueResult> send(RequestContext context, MessageBO messageBO) {
         setMessageId(messageBO);
-        MessageQueue messageQueue = queueSelector.select(context, messageBO);
-
         //@todo: static topic checking
 
         // build sendMessageContext
+        // select message queue
+        MessageQueue messageQueue = queueSelector.select(context, messageBO);
         ProduceContext produceContext = ProduceContext.from(context, messageBO, messageQueue);
 
         // execute pre send hook
         hookManager.preProduce(produceContext);
 
         // send message
-            // clear reserved properties
             // get topic
-            // select message queue
             // handle retry or DLQ
             // check cleanup policy
             // add message info

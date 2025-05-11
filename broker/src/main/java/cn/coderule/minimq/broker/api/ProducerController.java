@@ -31,6 +31,7 @@ public class ProducerController {
 
     public CompletableFuture<EnqueueResult> produce(RequestContext context, MessageBO messageBO) {
         messageValidator.validate(messageBO);
+        messageValidator.cleanReservedProperty(messageBO);
 
         return producer.produce(context, messageBO);
     }

@@ -34,4 +34,12 @@ public class Message implements Serializable {
 
         return this.properties.get(name);
     }
+
+    public void deleteProperty(final String name) {
+        if (null == this.properties) {
+            return;
+        }
+
+        this.properties.remove(name);
+    }
 }

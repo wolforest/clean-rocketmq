@@ -2,6 +2,7 @@ package cn.coderule.minimq.broker.api.validator;
 
 import cn.coderule.common.util.lang.StringUtil;
 import cn.coderule.minimq.domain.config.MessageConfig;
+import cn.coderule.minimq.domain.domain.constant.MessageConst;
 import cn.coderule.minimq.domain.domain.enums.code.InvalidCode;
 import cn.coderule.minimq.domain.domain.model.message.MessageBO;
 import cn.coderule.minimq.domain.domain.model.meta.topic.TopicValidator;
@@ -17,6 +18,10 @@ public class MessageValidator {
 
     public void validate(MessageBO messageBO) {
 
+    }
+
+    public void cleanReservedProperty(MessageBO messageBO) {
+        messageBO.deleteProperty(MessageConst.PROPERTY_POP_CK);
     }
 
     private void validateTopic(String topicName) {
