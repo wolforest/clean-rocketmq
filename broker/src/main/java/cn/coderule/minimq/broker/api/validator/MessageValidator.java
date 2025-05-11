@@ -20,10 +20,6 @@ public class MessageValidator {
 
     }
 
-    public void cleanReservedProperty(MessageBO messageBO) {
-        messageBO.deleteProperty(MessageConst.PROPERTY_POP_CK);
-    }
-
     private void validateTopic(String topicName) {
         TopicValidator.validateTopic(topicName);
     }

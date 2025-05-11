@@ -35,13 +35,7 @@ public class MessageSender implements Lifecycle {
         this.executor = createExecutor();
     }
 
-    private void setMessageId(MessageBO messageBO) {
-        String messageId = MessageIDSetter.createUniqID();
-        messageBO.putProperty(MessageConst.PROPERTY_UNIQ_CLIENT_MESSAGE_ID_KEYIDX, messageId);
-    }
-
     public CompletableFuture<EnqueueResult> send(RequestContext context, MessageBO messageBO) {
-        setMessageId(messageBO);
         //@todo: static topic checking
 
         // build sendMessageContext
