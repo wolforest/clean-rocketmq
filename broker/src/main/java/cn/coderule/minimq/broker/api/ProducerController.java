@@ -3,6 +3,7 @@ package cn.coderule.minimq.broker.api;
 import cn.coderule.common.util.lang.StringUtil;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.minimq.broker.api.validator.MessageValidator;
+import cn.coderule.minimq.broker.api.validator.ServerValidator;
 import cn.coderule.minimq.broker.domain.producer.Producer;
 import cn.coderule.minimq.domain.config.BrokerConfig;
 import cn.coderule.minimq.domain.config.MessageConfig;
@@ -25,15 +26,20 @@ import java.util.concurrent.CompletableFuture;
 public class ProducerController {
     private final Producer producer;
     private final BrokerConfig brokerConfig;
+
     private final MessageValidator messageValidator;
+    private final ServerValidator serverValidator;
 
     public ProducerController(BrokerConfig brokerConfig, MessageConfig messageConfig, Producer producer) {
         this.brokerConfig = brokerConfig;
-        this.messageValidator = new MessageValidator(messageConfig);
         this.producer = producer;
+
+        this.serverValidator = new ServerValidator(brokerConfig);
+        this.messageValidator = new MessageValidator(messageConfig);
     }
 
     public CompletableFuture<EnqueueResult> produce(RequestContext context, MessageBO messageBO) {
+        serverValidator.checkServerReady();
         messageValidator.validate(messageBO);
 
         this.cleanReservedProperty(messageBO);

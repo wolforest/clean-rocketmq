@@ -33,4 +33,6 @@ public class BrokerConfig extends ServerIdentity implements Serializable {
 
     private int syncRouteTimeout = 3_000;
     private int syncRouteInterval = 30_000;
+
+    private long serverReadyTime = 0L;
 }
