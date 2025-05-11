@@ -3,6 +3,7 @@ package cn.coderule.minimq.broker.domain.producer;
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.lang.concurrent.thread.pool.ThreadPoolFactory;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
+import cn.coderule.minimq.broker.infra.store.BrokerTopicStore;
 import cn.coderule.minimq.domain.config.BrokerConfig;
 import cn.coderule.minimq.domain.domain.constant.MessageConst;
 import cn.coderule.minimq.domain.domain.dto.EnqueueResult;
@@ -28,6 +29,7 @@ public class MessageSender implements Lifecycle {
 
     private ProduceHookManager hookManager;
     private QueueSelector queueSelector;
+    private BrokerTopicStore  brokerTopicStore;
 
     public MessageSender(BrokerConfig brokerConfig, MessageStore messageStore) {
         this.brokerConfig = brokerConfig;

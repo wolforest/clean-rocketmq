@@ -10,7 +10,12 @@ public class RemoteTopicStore extends AbstractRemoteStore implements TopicStore 
     }
 
     @Override
-    public CompletableFuture<Topic> getAsync(String topicName) {
+    public CompletableFuture<Topic> getTopicAsync(String topicName) {
+        return null;
+    }
+
+    @Override
+    public Topic getTopic(String topicName) {
         return null;
     }
 }

@@ -19,7 +19,7 @@ public class EmbedTopicStore implements TopicStore, cn.coderule.minimq.domain.se
     }
 
     @Override
-    public CompletableFuture<Topic> getAsync(String topicName) {
+    public CompletableFuture<Topic> getTopicAsync(String topicName) {
         return null;
     }
 
