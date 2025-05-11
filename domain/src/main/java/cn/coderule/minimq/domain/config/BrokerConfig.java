@@ -12,6 +12,7 @@ public class BrokerConfig extends ServerIdentity implements Serializable {
     private String host = NetworkUtil.getLocalAddress();
     private Integer port = 8080;
 
+    private boolean enableTrace = false;
     private boolean enableEmbedStore = true;
     private boolean enableRemoteStore = true;
 

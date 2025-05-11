@@ -4,6 +4,7 @@ import cn.coderule.common.util.lang.StringUtil;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.minimq.broker.api.validator.MessageValidator;
 import cn.coderule.minimq.broker.domain.producer.Producer;
+import cn.coderule.minimq.domain.config.BrokerConfig;
 import cn.coderule.minimq.domain.config.MessageConfig;
 import cn.coderule.minimq.domain.domain.constant.MessageConst;
 import cn.coderule.minimq.domain.domain.enums.code.InvalidCode;
@@ -23,9 +24,11 @@ import java.util.concurrent.CompletableFuture;
  */
 public class ProducerController {
     private final Producer producer;
+    private final BrokerConfig brokerConfig;
     private final MessageValidator messageValidator;
 
-    public ProducerController(MessageConfig messageConfig, Producer producer) {
+    public ProducerController(BrokerConfig brokerConfig, MessageConfig messageConfig, Producer producer) {
+        this.brokerConfig = brokerConfig;
         this.messageValidator = new MessageValidator(messageConfig);
         this.producer = producer;
     }
@@ -36,7 +39,10 @@ public class ProducerController {
         this.cleanReservedProperty(messageBO);
         this.setMessageId(messageBO);
 
-        return producer.produce(context, messageBO);
+        return producer.produce(context, messageBO)
+            .whenComplete(
+                (result, throwable) -> formatEnqueueResult(result)
+            );
     }
 
     public CompletableFuture<List<EnqueueResult>> produce(RequestContext context, List<MessageBO> messageList) {
@@ -45,6 +51,15 @@ public class ProducerController {
         }
 
         return producer.produce(context, messageList);
+    }
+
+    private void formatEnqueueResult(EnqueueResult result) {
+        if (result == null) {
+            return ;
+        }
+
+        result.setRegion(brokerConfig.getRegion());
+        result.setEnableTrace(brokerConfig.isEnableTrace());
     }
 
     private void setMessageId(MessageBO messageBO) {

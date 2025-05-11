@@ -17,10 +17,10 @@ public class EnqueueResult implements Serializable {
 
     private String messageId;
     private String transactionId;
-    private String regionId;
+    private String region;
 
     private long queueOffset;
-    private boolean enableTrace = true;
+    private boolean enableTrace = false;
 
     public EnqueueResult(EnqueueStatus status) {
         this.status = status;

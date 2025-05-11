@@ -11,6 +11,8 @@ public class ServerIdentity implements Serializable {
     private static final String DEFAULT_GROUP_NAME = "DefaultGroup";
     private static final String DEFAULT_CONTAINER_NAME = "DefaultContainer";
 
+
+    private String region = MQConstants.DEFAULT_TRACE_REGION_ID;
     /**
      * store cluster name
      */
