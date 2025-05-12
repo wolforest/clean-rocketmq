@@ -38,12 +38,21 @@ public class MessageSender implements Lifecycle {
         this.executor = createExecutor();
     }
 
+    /**
+     * send message
+     *
+     * @todo static topic checking
+     * @todo handle retry or DLQ
+     * @param context request context
+     * @param messageBO message
+     * @return future
+     */
     public CompletableFuture<EnqueueResult> send(RequestContext context, MessageBO messageBO) {
-        //@todo: static topic checking
-
-        // build sendMessageContext
         // select message queue
         MessageQueue messageQueue = queueSelector.select(context, messageBO);
+        messageBO.setQueueId(messageQueue.getQueueId());
+
+        // build sendMessageContext
         ProduceContext produceContext = ProduceContext.from(context, messageBO, messageQueue);
 
         // execute pre send hook
