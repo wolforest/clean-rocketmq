@@ -2,7 +2,7 @@ package cn.coderule.minimq.domain.domain.model.meta;
 
 import cn.coderule.minimq.domain.domain.model.consumer.subscription.SubscriptionGroupAttributes;
 import cn.coderule.minimq.domain.domain.model.consumer.subscription.SubscriptionGroup;
-import cn.coderule.minimq.domain.utils.attribute.AttributeUtil;
+import cn.coderule.minimq.domain.utils.attribute.AttributeUtils;
 import com.google.common.collect.ImmutableMap;
 import java.io.Serializable;
 import java.util.HashMap;
@@ -62,7 +62,7 @@ public class SubscriptionMap implements Serializable {
     private void setAttributes(SubscriptionGroup group) {
         Map<String, String> newAttributes = getNewAttributes(group);
         Map<String, String> oldAttributes = getOldAttributes(group.getGroupName());
-        Map<String, String> attributes = AttributeUtil.alterCurrentAttributes(
+        Map<String, String> attributes = AttributeUtils.alterCurrentAttributes(
             existsGroup(group.getGroupName()),
             SubscriptionGroupAttributes.ALL,
             ImmutableMap.copyOf(oldAttributes),

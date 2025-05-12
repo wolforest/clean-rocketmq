@@ -20,7 +20,7 @@ import cn.coderule.common.util.lang.StringUtil;
 import cn.coderule.minimq.domain.domain.constant.MQConstants;
 import cn.coderule.minimq.domain.domain.model.meta.topic.TopicValidator;
 
-public class NamespaceUtil {
+public class NamespaceUtils {
     public static final char NAMESPACE_SEPARATOR = '%';
     public static final String STRING_BLANK = "";
     public static final int RETRY_PREFIX_LENGTH = MQConstants.RETRY_GROUP_TOPIC_PREFIX.length();

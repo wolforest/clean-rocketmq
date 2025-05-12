@@ -1,7 +1,7 @@
 package cn.coderule.minimq.domain.domain.model.meta.topic;
 
 import cn.coderule.minimq.domain.domain.model.meta.DataVersion;
-import cn.coderule.minimq.domain.utils.attribute.AttributeUtil;
+import cn.coderule.minimq.domain.utils.attribute.AttributeUtils;
 import com.google.common.collect.ImmutableMap;
 import java.io.Serializable;
 import java.util.HashMap;
@@ -45,7 +45,7 @@ public class TopicMap implements Serializable {
         Map<String, String> newAttributes = getNewAttributes(topic);
         Map<String, String> oldAttributes = getOldAttributes(topic.getTopicName());
 
-        Map<String, String> attributes = AttributeUtil.alterCurrentAttributes(
+        Map<String, String> attributes = AttributeUtils.alterCurrentAttributes(
             exists(topic.getTopicName()),
             TopicAttributes.ALL,
             ImmutableMap.copyOf(oldAttributes),

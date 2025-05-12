@@ -26,7 +26,7 @@ import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class AttributeUtil {
+public class AttributeUtils {
     public static Map<String, String> alterCurrentAttributes(boolean create, Map<String, Attribute> all,
         ImmutableMap<String, String> currentAttributes, ImmutableMap<String, String> newAttributes) {
 

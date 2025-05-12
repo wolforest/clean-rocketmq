@@ -8,7 +8,7 @@ import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.minimq.domain.domain.constant.MQConstants;
 import cn.coderule.minimq.domain.domain.exception.RpcException;
 import cn.coderule.minimq.domain.domain.model.MessageQueue;
-import cn.coderule.minimq.domain.utils.NamespaceUtil;
+import cn.coderule.minimq.domain.utils.NamespaceUtils;
 import cn.coderule.minimq.rpc.common.rpc.protocol.code.ResponseCode;
 import cn.coderule.minimq.rpc.registry.RegistryClient;
 import cn.coderule.minimq.domain.domain.model.cluster.route.PublishInfo;
@@ -143,7 +143,7 @@ public class RouteLoader implements Lifecycle {
             return;
         }
 
-        if (NamespaceUtil.isRetryTopic(topicName)) {
+        if (NamespaceUtils.isRetryTopic(topicName)) {
             return;
         }
 
