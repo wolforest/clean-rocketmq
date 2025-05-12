@@ -23,14 +23,18 @@ public class QueueSelector {
     public MessageQueue select(RequestContext context, MessageBO messageBO) {
         MessageQueueView queueView = routeService.getQueueView(context, messageBO.getTopic());
         if (queueView == null) {
-            throw new BrokerException(BrokerExceptionCode.FORBIDDEN, "can not find route of topic");
+            throw new BrokerException(
+                BrokerExceptionCode.FORBIDDEN, "can not find route of topic"
+            );
         }
 
         try {
             return selectByShardingKey(messageBO, queueView);
         } catch (Exception e) {
             log.error("select queue error", e);
-            return null;
+            throw new BrokerException(
+                BrokerExceptionCode.INTERNAL_SERVER_ERROR, "select queue error"
+            );
         }
     }
 

@@ -3,15 +3,16 @@ package cn.coderule.minimq.broker.domain.producer;
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.lang.concurrent.thread.pool.ThreadPoolFactory;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
-import cn.coderule.minimq.broker.infra.store.BrokerTopicStore;
 import cn.coderule.minimq.domain.config.BrokerConfig;
-import cn.coderule.minimq.domain.domain.constant.MessageConst;
 import cn.coderule.minimq.domain.domain.dto.EnqueueResult;
+import cn.coderule.minimq.domain.domain.enums.code.InvalidCode;
+import cn.coderule.minimq.domain.domain.exception.InvalidParameterException;
 import cn.coderule.minimq.domain.domain.model.MessageQueue;
 import cn.coderule.minimq.domain.domain.model.message.MessageBO;
-import cn.coderule.minimq.domain.domain.model.message.MessageIDSetter;
 import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
+import cn.coderule.minimq.domain.domain.model.meta.topic.Topic;
 import cn.coderule.minimq.domain.domain.model.producer.ProduceContext;
+import cn.coderule.minimq.domain.service.broker.infra.TopicStore;
 import cn.coderule.minimq.domain.service.store.api.MessageStore;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +30,7 @@ public class MessageSender implements Lifecycle {
 
     private ProduceHookManager hookManager;
     private QueueSelector queueSelector;
-    private BrokerTopicStore  brokerTopicStore;
+    private TopicStore topicStore;
 
     public MessageSender(BrokerConfig brokerConfig, MessageStore messageStore) {
         this.brokerConfig = brokerConfig;
@@ -47,6 +48,12 @@ public class MessageSender implements Lifecycle {
 
         // execute pre send hook
         hookManager.preProduce(produceContext);
+        Topic topic = topicStore.getTopic(messageBO.getTopic());
+        if (topic == null) {
+            throw new InvalidParameterException(InvalidCode.ILLEGAL_TOPIC, "Topic not exists");
+        }
+
+
 
         // send message
             // get topic
