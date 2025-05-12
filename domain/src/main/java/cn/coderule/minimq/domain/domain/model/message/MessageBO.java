@@ -9,6 +9,7 @@ import cn.coderule.minimq.domain.domain.enums.message.MessageVersion;
 import cn.coderule.minimq.domain.domain.enums.message.TagType;
 import java.io.Serializable;
 import java.net.SocketAddress;
+import java.util.Collection;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -77,6 +78,21 @@ public class MessageBO extends Message implements Serializable {
 
         return tags.hashCode();
     }
+
+    public String getKeys() {
+        return this.getProperty(MessageConst.PROPERTY_KEYS);
+    }
+
+    public void setKeys(Collection<String> keyCollection) {
+        String keys = String.join(MessageConst.KEY_SEPARATOR, keyCollection);
+
+        this.setKeys(keys);
+    }
+
+    public void setKeys(String keys) {
+        this.putProperty(MessageConst.PROPERTY_KEYS, keys);
+    }
+
 
     public String getShardingKey() {
         return this.getProperty(MessageConst.PROPERTY_SHARDING_KEY);

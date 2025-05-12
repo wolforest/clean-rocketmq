@@ -20,15 +20,30 @@ import cn.coderule.minimq.domain.domain.enums.message.MessageType;
 import cn.coderule.minimq.domain.domain.model.MessageQueue;
 import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
 import cn.coderule.minimq.domain.domain.model.message.MessageBO;
+import cn.coderule.minimq.domain.domain.model.meta.topic.Topic;
+import java.io.Serializable;
 import java.util.Properties;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-public class ProduceContext {
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class ProduceContext implements Serializable {
+    private RequestContext requestContext;
+    private MessageBO messageBO;
+    private MessageQueue messageQueue;
+    private Topic topic;
+
     /** namespace */
     private String namespace;
     /** producer group without namespace. */
     private String producerGroup;
     /** topic without namespace. */
-    private String topic;
+    private String topicName;
     private String msgId;
     private String originMsgId;
     private Integer queueId;
@@ -45,9 +60,11 @@ public class ProduceContext {
     private String msgUniqueKey;
     private long bornTimeStamp;
     private long requestTimeStamp;
+    @Builder.Default
     private MessageType msgType = MessageType.COMMIT;
 
-    private boolean isSuccess = false;
+    @Builder.Default
+    private boolean success = false;
 
     /**
      * Account Statistics
@@ -60,215 +77,11 @@ public class ProduceContext {
 
 
     public static ProduceContext from(RequestContext requestContext, MessageBO messageBO, MessageQueue messageQueue) {
-        return new ProduceContext();
-    }
-
-    public String getNamespace() {
-        return namespace;
-    }
-
-    public void setNamespace(String namespace) {
-        this.namespace = namespace;
-    }
-
-    public boolean isSuccess() {
-        return isSuccess;
-    }
-
-    public void setSuccess(final boolean success) {
-        isSuccess = success;
-    }
-
-    public MessageType getMsgType() {
-        return msgType;
-    }
-
-    public void setMsgType(final MessageType msgType) {
-        this.msgType = msgType;
-    }
-
-    public String getMsgUniqueKey() {
-        return msgUniqueKey;
-    }
-
-    public void setMsgUniqueKey(final String msgUniqueKey) {
-        this.msgUniqueKey = msgUniqueKey;
-    }
-
-    public long getBornTimeStamp() {
-        return bornTimeStamp;
-    }
-
-    public void setBornTimeStamp(final long bornTimeStamp) {
-        this.bornTimeStamp = bornTimeStamp;
-    }
-
-    public long getRequestTimeStamp() {
-        return requestTimeStamp;
-    }
-
-    public void setRequestTimeStamp(long requestTimeStamp) {
-        this.requestTimeStamp = requestTimeStamp;
-    }
-
-    public String getBrokerRegionId() {
-        return brokerRegionId;
-    }
-
-    public void setBrokerRegionId(final String brokerRegionId) {
-        this.brokerRegionId = brokerRegionId;
-    }
-
-    public String getProducerGroup() {
-        return producerGroup;
-    }
-
-    public void setProducerGroup(String producerGroup) {
-        this.producerGroup = producerGroup;
-    }
-
-    public String getTopic() {
-        return topic;
-    }
-
-    public void setTopic(String topic) {
-        this.topic = topic;
-    }
-
-    public String getMsgId() {
-        return msgId;
-    }
-
-    public void setMsgId(String msgId) {
-        this.msgId = msgId;
-    }
-
-    public String getOriginMsgId() {
-        return originMsgId;
-    }
-
-    public void setOriginMsgId(String originMsgId) {
-        this.originMsgId = originMsgId;
-    }
-
-    public Integer getQueueId() {
-        return queueId;
-    }
-
-    public void setQueueId(Integer queueId) {
-        this.queueId = queueId;
-    }
-
-    public Long getQueueOffset() {
-        return queueOffset;
-    }
-
-    public void setQueueOffset(Long queueOffset) {
-        this.queueOffset = queueOffset;
-    }
-
-    public String getBrokerAddr() {
-        return brokerAddr;
-    }
-
-    public void setBrokerAddr(String brokerAddr) {
-        this.brokerAddr = brokerAddr;
-    }
-
-    public String getBornHost() {
-        return bornHost;
-    }
-
-    public void setBornHost(String bornHost) {
-        this.bornHost = bornHost;
-    }
-
-    public int getBodyLength() {
-        return bodyLength;
-    }
-
-    public void setBodyLength(int bodyLength) {
-        this.bodyLength = bodyLength;
-    }
-
-    public int getCode() {
-        return code;
-    }
-
-    public void setCode(int code) {
-        this.code = code;
-    }
-
-    public String getErrorMsg() {
-        return errorMsg;
-    }
-
-    public void setErrorMsg(String errorMsg) {
-        this.errorMsg = errorMsg;
-    }
-
-    public String getMsgProps() {
-        return msgProps;
-    }
-
-    public void setMsgProps(String msgProps) {
-        this.msgProps = msgProps;
-    }
-
-    public Object getMqTraceContext() {
-        return mqTraceContext;
-    }
-
-    public void setMqTraceContext(Object mqTraceContext) {
-        this.mqTraceContext = mqTraceContext;
-    }
-
-    public Properties getExtProps() {
-        return extProps;
-    }
-
-    public void setExtProps(Properties extProps) {
-        this.extProps = extProps;
-    }
-
-    public String getAccountAuthType() {
-        return accountAuthType;
-    }
-
-    public void setAccountAuthType(String accountAuthType) {
-        this.accountAuthType = accountAuthType;
-    }
-
-    public String getAccountOwnerParent() {
-        return accountOwnerParent;
-    }
-
-    public void setAccountOwnerParent(String accountOwnerParent) {
-        this.accountOwnerParent = accountOwnerParent;
-    }
-
-    public String getAccountOwnerSelf() {
-        return accountOwnerSelf;
-    }
-
-    public void setAccountOwnerSelf(String accountOwnerSelf) {
-        this.accountOwnerSelf = accountOwnerSelf;
-    }
-
-    public int getSendMsgNum() {
-        return sendMsgNum;
-    }
-
-    public void setSendMsgNum(int sendMsgNum) {
-        this.sendMsgNum = sendMsgNum;
-    }
-
-    public int getSendMsgSize() {
-        return sendMsgSize;
-    }
-
-    public void setSendMsgSize(int sendMsgSize) {
-        this.sendMsgSize = sendMsgSize;
+        return ProduceContext.builder()
+            .requestContext(requestContext)
+            .messageBO(messageBO)
+            .messageQueue(messageQueue)
+            .build();
     }
 
 }
