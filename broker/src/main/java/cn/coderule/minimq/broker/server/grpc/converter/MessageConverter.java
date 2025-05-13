@@ -129,7 +129,7 @@ public class MessageConverter {
     private static void setBornTime(Map<String, String> properties, Message message) {
         Timestamp bornTime = message.getSystemProperties().getBornTimestamp();
         if (!Timestamps.isValid(bornTime)) {
-            return;
+            bornTime = Timestamps.now();
         }
 
         properties.put(MessageConst.PROPERTY_BORN_TIMESTAMP, String.valueOf(Timestamps.toMillis(bornTime)));
@@ -142,8 +142,6 @@ public class MessageConverter {
     private static void setKeys(Map<String, String> properties, Message message) {
 
     }
-
-
 
     private static void setTraceContext(Map<String, String> properties, Message message) {
         String traceContext = message.getSystemProperties().getTraceContext();

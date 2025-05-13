@@ -12,6 +12,8 @@ public class RequestContext {
     public static final String LANGUAGE = "language";
     public static final String CLIENT_VERSION = "client-version";
     public static final String SERVER_PORT = "server-port";
+    public static final String REQUEST_TIME = "request-time";
+
     /**
      * polling timeout related parameter
      * set by (grpc)bootstrap.getDeadline().timeRemaining()
@@ -102,6 +104,23 @@ public class RequestContext {
 
     public String getLanguage() {
         return this.get(LANGUAGE);
+    }
+
+    public RequestContext setRequestTime(long requestTime) {
+        this.set(REQUEST_TIME, requestTime);
+        return this;
+    }
+
+    public Long getRequestTime() {
+        Long requestTime = this.get(REQUEST_TIME);
+        if (requestTime != null) {
+            return requestTime;
+        }
+
+        requestTime = System.currentTimeMillis();
+        setRequestTime(requestTime);
+
+        return requestTime;
     }
 
     public RequestContext setClientVersion(String clientVersion) {

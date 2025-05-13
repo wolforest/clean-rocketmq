@@ -1,12 +1,25 @@
 package cn.coderule.minimq.domain.utils;
 
 import cn.coderule.common.util.lang.StringUtil;
+import cn.coderule.minimq.domain.domain.enums.message.TagType;
 import java.util.HashMap;
 import java.util.Map;
 
 public class MessageUtils {
     public static final char NAME_VALUE_SEPARATOR = 1;
     public static final char PROPERTY_SEPARATOR = 2;
+
+    public static long getTagsCode(String tags) {
+        if (StringUtil.isBlank(tags)) {
+            return 0;
+        }
+
+        return tags.hashCode();
+    }
+
+    public static long getTagsCode(TagType tagType, String tags) {
+        return getTagsCode(tags);
+    }
 
     public static String propertiesToString(Map<String, String> properties) {
         if (properties == null) {

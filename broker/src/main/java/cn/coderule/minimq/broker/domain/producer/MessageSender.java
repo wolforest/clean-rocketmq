@@ -4,6 +4,7 @@ import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.lang.concurrent.thread.pool.ThreadPoolFactory;
 import cn.coderule.common.util.lang.StringUtil;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
+import cn.coderule.common.util.net.NetworkUtil;
 import cn.coderule.minimq.domain.config.BrokerConfig;
 import cn.coderule.minimq.domain.domain.dto.EnqueueResult;
 import cn.coderule.minimq.domain.domain.enums.code.InvalidCode;
@@ -17,6 +18,8 @@ import cn.coderule.minimq.domain.domain.model.producer.ProduceContext;
 import cn.coderule.minimq.domain.service.broker.infra.TopicStore;
 import cn.coderule.minimq.domain.service.store.api.MessageStore;
 import cn.coderule.minimq.domain.utils.CleanupUtils;
+import cn.coderule.minimq.domain.utils.MessageUtils;
+import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -40,6 +43,16 @@ public class MessageSender implements Lifecycle {
         this.brokerConfig = brokerConfig;
         this.messageStore = messageStore;
         this.executor = createExecutor();
+    }
+
+    private void selectQueue(ProduceContext produceContext) {
+        RequestContext context = produceContext.getRequestContext();
+        MessageBO message = produceContext.getMessageBO();
+
+        MessageQueue messageQueue = queueSelector.select(context, message);
+        message.setQueueId(messageQueue.getQueueId());
+
+        produceContext.setMessageQueue(messageQueue);
     }
 
     private void getTopic(ProduceContext produceContext) {
@@ -69,8 +82,20 @@ public class MessageSender implements Lifecycle {
         }
     }
 
-    private void addMessageInfo(ProduceContext produceContext) {
+    private void setTagsCode(ProduceContext produceContext) {
+        MessageBO message = produceContext.getMessageBO();
+        Topic topic = produceContext.getTopic();
 
+        long tagCode = MessageUtils.getTagsCode(topic.getTagType(), message.getTags());
+        message.setTagsCode(tagCode);
+    }
+
+    private void addMessageInfo(ProduceContext produceContext) {
+        MessageBO message = produceContext.getMessageBO();
+
+        setTagsCode(produceContext);
+        message.setStoreHost(new InetSocketAddress(brokerConfig.getHost(), brokerConfig.getPort()));
+        message.setClusterName(brokerConfig.getCluster());
     }
 
     /**
@@ -83,12 +108,10 @@ public class MessageSender implements Lifecycle {
      * @return future
      */
     public CompletableFuture<EnqueueResult> send(RequestContext context, MessageBO messageBO) {
-        // select message queue
-        MessageQueue messageQueue = queueSelector.select(context, messageBO);
-        messageBO.setQueueId(messageQueue.getQueueId());
-
         // build sendMessageContext
-        ProduceContext produceContext = ProduceContext.from(context, messageBO, messageQueue);
+        ProduceContext produceContext = ProduceContext.from(context, messageBO);
+
+        selectQueue(produceContext);
         getTopic(produceContext);
         checkCleanupPolicy(produceContext);
         addMessageInfo(produceContext);
@@ -99,10 +122,6 @@ public class MessageSender implements Lifecycle {
 
 
         // send message
-            // get topic
-            // handle retry or DLQ
-            // check cleanup policy
-            // add message info
             // handle transaction info
             // send message(sync or async)
                 // call store api

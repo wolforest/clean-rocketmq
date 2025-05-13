@@ -30,7 +30,8 @@ public class ContextInitPipeline implements RequestPipeline {
     @Override
     public void execute(RequestContext context, Metadata headers, GeneratedMessage request) {
         Context ctx = Context.current();
-        context.setLocalAddress(getDefaultStringMetadataInfo(headers, GrpcConstants.LOCAL_ADDRESS))
+        context.setRequestTime(System.currentTimeMillis())
+            .setLocalAddress(getDefaultStringMetadataInfo(headers, GrpcConstants.LOCAL_ADDRESS))
             .setRemoteAddress(getDefaultStringMetadataInfo(headers, GrpcConstants.REMOTE_ADDRESS))
             .setClientID(getDefaultStringMetadataInfo(headers, GrpcConstants.CLIENT_ID))
             .setProtocolType(ChannelProtocolType.GRPC_V2.getName())
@@ -38,6 +39,7 @@ public class ContextInitPipeline implements RequestPipeline {
             .setClientVersion(getDefaultStringMetadataInfo(headers, GrpcConstants.CLIENT_VERSION))
             .setAction(getDefaultStringMetadataInfo(headers, GrpcConstants.SIMPLE_RPC_NAME))
             .setNamespace(getDefaultStringMetadataInfo(headers, GrpcConstants.NAMESPACE_ID));
+
         if (ctx.getDeadline() != null) {
             context.setRemainingMs(ctx.getDeadline().timeRemaining(TimeUnit.MILLISECONDS));
         }

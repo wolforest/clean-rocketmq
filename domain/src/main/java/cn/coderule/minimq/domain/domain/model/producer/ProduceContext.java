@@ -76,11 +76,10 @@ public class ProduceContext implements Serializable {
     private int sendMsgSize;
 
 
-    public static ProduceContext from(RequestContext requestContext, MessageBO messageBO, MessageQueue messageQueue) {
+    public static ProduceContext from(RequestContext requestContext, MessageBO messageBO) {
         return ProduceContext.builder()
             .requestContext(requestContext)
             .messageBO(messageBO)
-            .messageQueue(messageQueue)
             .build();
     }
 
