@@ -114,7 +114,6 @@ public class MessageConverter {
         properties.put(MessageConst.PROPERTY_RECONSUME_TIME, String.valueOf(reconsumeTimes));
     }
 
-
     private static void setBornHost(RequestContext context, Map<String, String> properties, Message message) {
         String bornHost = message.getSystemProperties().getBornHost();
         if (StringUtil.isBlank(bornHost)) {

@@ -61,7 +61,7 @@ public class ProduceContext implements Serializable {
     private long bornTimeStamp;
     private long requestTimeStamp;
     @Builder.Default
-    private MessageType msgType = MessageType.COMMIT;
+    private MessageType msgType = MessageType.NORMAL;
 
     @Builder.Default
     private boolean success = false;
@@ -80,6 +80,7 @@ public class ProduceContext implements Serializable {
         return ProduceContext.builder()
             .requestContext(requestContext)
             .messageBO(messageBO)
+            .requestTimeStamp(requestContext.getRequestTime())
             .build();
     }
 

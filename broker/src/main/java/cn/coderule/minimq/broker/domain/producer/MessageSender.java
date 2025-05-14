@@ -6,9 +6,11 @@ import cn.coderule.common.util.lang.StringUtil;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.common.util.net.NetworkUtil;
 import cn.coderule.minimq.domain.config.BrokerConfig;
+import cn.coderule.minimq.domain.domain.constant.MessageConst;
 import cn.coderule.minimq.domain.domain.dto.EnqueueResult;
 import cn.coderule.minimq.domain.domain.enums.code.InvalidCode;
 import cn.coderule.minimq.domain.domain.enums.message.CleanupPolicy;
+import cn.coderule.minimq.domain.domain.enums.message.MessageType;
 import cn.coderule.minimq.domain.domain.exception.InvalidParameterException;
 import cn.coderule.minimq.domain.domain.model.MessageQueue;
 import cn.coderule.minimq.domain.domain.model.message.MessageBO;
@@ -19,6 +21,7 @@ import cn.coderule.minimq.domain.service.broker.infra.TopicStore;
 import cn.coderule.minimq.domain.service.store.api.MessageStore;
 import cn.coderule.minimq.domain.utils.CleanupUtils;
 import cn.coderule.minimq.domain.utils.MessageUtils;
+import com.sun.jna.platform.mac.SystemB;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.List;
@@ -98,6 +101,16 @@ public class MessageSender implements Lifecycle {
         message.setClusterName(brokerConfig.getCluster());
     }
 
+    private void initTransactionInfo(ProduceContext produceContext) {
+        MessageBO message = produceContext.getMessageBO();
+        String flag = message.getProperty(MessageConst.PROPERTY_TRANSACTION_PREPARED);
+        boolean isPrepared = StringUtil.isBlank(flag) || Boolean.parseBoolean(flag);
+
+        if (isPrepared) {
+            produceContext.setMsgType(MessageType.PREPARE);
+        }
+    }
+
     /**
      * send message
      *
@@ -115,6 +128,7 @@ public class MessageSender implements Lifecycle {
         getTopic(produceContext);
         checkCleanupPolicy(produceContext);
         addMessageInfo(produceContext);
+        initTransactionInfo(produceContext);
 
         // execute pre send hook
         hookManager.preProduce(produceContext);
