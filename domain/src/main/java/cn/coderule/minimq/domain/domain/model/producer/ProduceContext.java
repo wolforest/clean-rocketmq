@@ -84,4 +84,8 @@ public class ProduceContext implements Serializable {
             .build();
     }
 
+    public boolean isPrepareMessage() {
+        return MessageType.PREPARE.equals(msgType);
+    }
+
 }

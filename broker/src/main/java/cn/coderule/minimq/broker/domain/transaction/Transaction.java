@@ -1,30 +1,13 @@
 package cn.coderule.minimq.broker.domain.transaction;
 
-import cn.coderule.common.convention.service.Lifecycle;
+import cn.coderule.minimq.domain.domain.dto.EnqueueResult;
+import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
+import cn.coderule.minimq.domain.domain.model.message.MessageBO;
+import java.util.concurrent.CompletableFuture;
 
-public class Transaction implements Lifecycle {
-    @Override
-    public void initialize() {
+public class Transaction {
 
-    }
-
-    @Override
-    public void start() {
-
-    }
-
-    @Override
-    public void shutdown() {
-
-    }
-
-    @Override
-    public void cleanup() {
-
-    }
-
-    @Override
-    public State getState() {
-        return State.RUNNING;
+    public CompletableFuture<EnqueueResult> prepare(RequestContext context, MessageBO messageBO) {
+        return null;
     }
 }

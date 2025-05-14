@@ -4,7 +4,7 @@ import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.lang.concurrent.thread.pool.ThreadPoolFactory;
 import cn.coderule.common.util.lang.StringUtil;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
-import cn.coderule.common.util.net.NetworkUtil;
+import cn.coderule.minimq.broker.domain.transaction.Transaction;
 import cn.coderule.minimq.domain.config.BrokerConfig;
 import cn.coderule.minimq.domain.domain.constant.MessageConst;
 import cn.coderule.minimq.domain.domain.dto.EnqueueResult;
@@ -21,7 +21,6 @@ import cn.coderule.minimq.domain.service.broker.infra.TopicStore;
 import cn.coderule.minimq.domain.service.store.api.MessageStore;
 import cn.coderule.minimq.domain.utils.CleanupUtils;
 import cn.coderule.minimq.domain.utils.MessageUtils;
-import com.sun.jna.platform.mac.SystemB;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,11 +40,116 @@ public class MessageSender implements Lifecycle {
     private ProduceHookManager hookManager;
     private QueueSelector queueSelector;
     private TopicStore topicStore;
+    private Transaction transaction;
 
     public MessageSender(BrokerConfig brokerConfig, MessageStore messageStore) {
         this.brokerConfig = brokerConfig;
         this.messageStore = messageStore;
         this.executor = createExecutor();
+    }
+
+    private CompletableFuture<EnqueueResult> storeMessage(ProduceContext context) {
+        CompletableFuture<EnqueueResult> future;
+        if (context.isPrepareMessage()) {
+            future = transaction.prepare(context.getRequestContext(), context.getMessageBO());
+        } else {
+            future = messageStore.enqueueAsync(context.getMessageBO());
+        }
+
+        return future;
+    }
+
+    /**
+     * send message
+     *
+     * @todo static topic checking
+     * @todo handle retry or DLQ
+     * @param requestContext request context
+     * @param messageBO message
+     * @return future
+     */
+    public CompletableFuture<EnqueueResult> send(RequestContext requestContext, MessageBO messageBO) {
+        ProduceContext context = ProduceContext.from(requestContext, messageBO);
+        preSend(context);
+
+        hookManager.preProduce(context);
+        CompletableFuture future = storeMessage(context);
+
+
+        // send message
+            // handle transaction info
+            // send message(sync or async)
+                // call store api
+                // execute post send hook
+                hookManager.postProduce(context);
+                // format response
+        // execute send callback
+        // execute complete callback
+        return future;
+    }
+
+    public CompletableFuture<List<EnqueueResult>> send(RequestContext context, List<MessageBO> messageList) {
+        if (CollectionUtil.isEmpty(messageList)) {
+            return CompletableFuture.completedFuture(List.of());
+        }
+
+        List<CompletableFuture<EnqueueResult>> futureList = new ArrayList<>();
+        for (MessageBO messageBO : messageList) {
+            CompletableFuture<EnqueueResult> future = send(context, messageBO);
+            futureList.add(future);
+        }
+
+        return combineEnqueueResult(futureList);
+    }
+
+    @Override
+    public void start() {
+
+    }
+
+    @Override
+    public void shutdown() {
+        this.executor.shutdown();
+    }
+
+    private ThreadPoolExecutor createExecutor() {
+        return ThreadPoolFactory.create(
+            brokerConfig.getProducerThreadNum(),
+            brokerConfig.getProducerThreadNum(),
+            1,
+            TimeUnit.MINUTES,
+            "producer-thread-pool",
+            brokerConfig.getProducerQueueCapacity()
+        );
+    }
+
+    private CompletableFuture<List<EnqueueResult>> combineEnqueueResult(List<CompletableFuture<EnqueueResult>> futureList) {
+        CompletableFuture<Void> all = CompletableFuture.allOf(futureList.toArray(new CompletableFuture[0]));
+        return all.thenApply(v -> {
+            List<EnqueueResult> resultList = new ArrayList<>();
+            for (CompletableFuture<EnqueueResult> future : futureList) {
+                addEnqueueResult(resultList, future);
+            }
+            return resultList;
+        });
+    }
+
+    private void addEnqueueResult(List<EnqueueResult> resultList, CompletableFuture<EnqueueResult> future) {
+        try {
+            EnqueueResult enqueueResult = future.get();
+            resultList.add(enqueueResult);
+        } catch (Throwable t) {
+            log.error("produce message error", t);
+            resultList.add(EnqueueResult.failure());
+        }
+    }
+
+    private void preSend(ProduceContext produceContext) {
+        selectQueue(produceContext);
+        getTopic(produceContext);
+        checkCleanupPolicy(produceContext);
+        addMessageInfo(produceContext);
+        initTransactionInfo(produceContext);
     }
 
     private void selectQueue(ProduceContext produceContext) {
@@ -111,96 +215,5 @@ public class MessageSender implements Lifecycle {
         }
     }
 
-    /**
-     * send message
-     *
-     * @todo static topic checking
-     * @todo handle retry or DLQ
-     * @param context request context
-     * @param messageBO message
-     * @return future
-     */
-    public CompletableFuture<EnqueueResult> send(RequestContext context, MessageBO messageBO) {
-        // build sendMessageContext
-        ProduceContext produceContext = ProduceContext.from(context, messageBO);
-
-        selectQueue(produceContext);
-        getTopic(produceContext);
-        checkCleanupPolicy(produceContext);
-        addMessageInfo(produceContext);
-        initTransactionInfo(produceContext);
-
-        // execute pre send hook
-        hookManager.preProduce(produceContext);
-
-
-
-        // send message
-            // handle transaction info
-            // send message(sync or async)
-                // call store api
-                // execute post send hook
-                hookManager.postProduce(produceContext);
-                // format response
-        // execute send callback
-        // execute complete callback
-        return null;
-    }
-
-    public CompletableFuture<List<EnqueueResult>> send(RequestContext context, List<MessageBO> messageList) {
-        if (CollectionUtil.isEmpty(messageList)) {
-            return CompletableFuture.completedFuture(List.of());
-        }
-
-        List<CompletableFuture<EnqueueResult>> futureList = new ArrayList<>();
-        for (MessageBO messageBO : messageList) {
-            CompletableFuture<EnqueueResult> future = send(context, messageBO);
-            futureList.add(future);
-        }
-
-        return combineEnqueueResult(futureList);
-    }
-
-    @Override
-    public void start() {
-
-    }
-
-    @Override
-    public void shutdown() {
-        this.executor.shutdown();
-    }
-
-    private ThreadPoolExecutor createExecutor() {
-        return ThreadPoolFactory.create(
-            brokerConfig.getProducerThreadNum(),
-            brokerConfig.getProducerThreadNum(),
-            1,
-            TimeUnit.MINUTES,
-            "producer-thread-pool",
-            brokerConfig.getProducerQueueCapacity()
-        );
-    }
-
-    private CompletableFuture<List<EnqueueResult>> combineEnqueueResult(List<CompletableFuture<EnqueueResult>> futureList) {
-        CompletableFuture<Void> all = CompletableFuture.allOf(futureList.toArray(new CompletableFuture[0]));
-        return all.thenApply(v -> {
-            List<EnqueueResult> resultList = new ArrayList<>();
-            for (CompletableFuture<EnqueueResult> future : futureList) {
-                addEnqueueResult(resultList, future);
-            }
-            return resultList;
-        });
-    }
-
-    private void addEnqueueResult(List<EnqueueResult> resultList, CompletableFuture<EnqueueResult> future) {
-        try {
-            EnqueueResult enqueueResult = future.get();
-            resultList.add(enqueueResult);
-        } catch (Throwable t) {
-            log.error("produce message error", t);
-            resultList.add(EnqueueResult.failure());
-        }
-    }
 
 }
