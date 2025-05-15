@@ -49,35 +49,6 @@ public class MessageSender implements Lifecycle {
         this.executor = createExecutor();
     }
 
-    private ProduceContext createContext(RequestContext requestContext, MessageBO messageBO) {
-        ProduceContext produceContext = ProduceContext.from(requestContext, messageBO);
-
-        selectQueue(produceContext);
-        getTopic(produceContext);
-        checkCleanupPolicy(produceContext);
-        addMessageInfo(produceContext);
-        initTransactionInfo(produceContext);
-
-        return produceContext;
-    }
-
-    private CompletableFuture<EnqueueResult> storeMessage(ProduceContext context) {
-        CompletableFuture<EnqueueResult> future;
-        if (context.isPrepareMessage()) {
-            future = transaction.prepare(context.getRequestContext(), context.getMessageBO());
-        } else {
-            future = messageStore.enqueueAsync(context.getMessageBO());
-        }
-
-        return future;
-    }
-
-    private Consumer<EnqueueResult> sendCallback(ProduceContext context) {
-        return result -> {
-
-            hookManager.postProduce(context);
-        };
-    }
 
     /**
      * send message
@@ -154,7 +125,35 @@ public class MessageSender implements Lifecycle {
         }
     }
 
+    private ProduceContext createContext(RequestContext requestContext, MessageBO messageBO) {
+        ProduceContext produceContext = ProduceContext.from(requestContext, messageBO);
 
+        selectQueue(produceContext);
+        getTopic(produceContext);
+        checkCleanupPolicy(produceContext);
+        addMessageInfo(produceContext);
+        initTransactionInfo(produceContext);
+
+        return produceContext;
+    }
+
+    private CompletableFuture<EnqueueResult> storeMessage(ProduceContext context) {
+        CompletableFuture<EnqueueResult> future;
+        if (context.isPrepareMessage()) {
+            future = transaction.prepare(context.getRequestContext(), context.getMessageBO());
+        } else {
+            future = messageStore.enqueueAsync(context.getMessageBO());
+        }
+
+        return future;
+    }
+
+    private Consumer<EnqueueResult> sendCallback(ProduceContext context) {
+        return result -> {
+
+            hookManager.postProduce(context);
+        };
+    }
 
     private void selectQueue(ProduceContext produceContext) {
         RequestContext context = produceContext.getRequestContext();
@@ -218,6 +217,5 @@ public class MessageSender implements Lifecycle {
             produceContext.setMsgType(MessageType.PREPARE);
         }
     }
-
 
 }
