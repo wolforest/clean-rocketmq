@@ -28,6 +28,7 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -48,6 +49,18 @@ public class MessageSender implements Lifecycle {
         this.executor = createExecutor();
     }
 
+    private ProduceContext createContext(RequestContext requestContext, MessageBO messageBO) {
+        ProduceContext produceContext = ProduceContext.from(requestContext, messageBO);
+
+        selectQueue(produceContext);
+        getTopic(produceContext);
+        checkCleanupPolicy(produceContext);
+        addMessageInfo(produceContext);
+        initTransactionInfo(produceContext);
+
+        return produceContext;
+    }
+
     private CompletableFuture<EnqueueResult> storeMessage(ProduceContext context) {
         CompletableFuture<EnqueueResult> future;
         if (context.isPrepareMessage()) {
@@ -57,6 +70,13 @@ public class MessageSender implements Lifecycle {
         }
 
         return future;
+    }
+
+    private Consumer<EnqueueResult> sendCallback(ProduceContext context) {
+        return result -> {
+
+            hookManager.postProduce(context);
+        };
     }
 
     /**
@@ -69,22 +89,12 @@ public class MessageSender implements Lifecycle {
      * @return future
      */
     public CompletableFuture<EnqueueResult> send(RequestContext requestContext, MessageBO messageBO) {
-        ProduceContext context = ProduceContext.from(requestContext, messageBO);
-        preSend(context);
+        ProduceContext context = createContext(requestContext, messageBO);
 
         hookManager.preProduce(context);
-        CompletableFuture future = storeMessage(context);
+        CompletableFuture<EnqueueResult> future = storeMessage(context);
+        future.thenAcceptAsync(sendCallback(context), executor);
 
-
-        // send message
-            // handle transaction info
-            // send message(sync or async)
-                // call store api
-                // execute post send hook
-                hookManager.postProduce(context);
-                // format response
-        // execute send callback
-        // execute complete callback
         return future;
     }
 
@@ -144,13 +154,7 @@ public class MessageSender implements Lifecycle {
         }
     }
 
-    private void preSend(ProduceContext produceContext) {
-        selectQueue(produceContext);
-        getTopic(produceContext);
-        checkCleanupPolicy(produceContext);
-        addMessageInfo(produceContext);
-        initTransactionInfo(produceContext);
-    }
+
 
     private void selectQueue(ProduceContext produceContext) {
         RequestContext context = produceContext.getRequestContext();
