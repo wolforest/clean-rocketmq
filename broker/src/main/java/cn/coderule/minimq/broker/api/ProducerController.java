@@ -40,10 +40,7 @@ public class ProducerController {
 
     public CompletableFuture<EnqueueResult> produce(RequestContext context, MessageBO messageBO) {
         serverValidator.checkServerReady();
-        messageValidator.validate(messageBO);
-
-        this.cleanReservedProperty(messageBO);
-        this.setMessageId(messageBO);
+        prepareMessage(messageBO);
 
         return producer.produce(context, messageBO)
             .whenComplete(
@@ -56,7 +53,22 @@ public class ProducerController {
             throw new InvalidParameterException(InvalidCode.BAD_REQUEST, "messageList is empty");
         }
 
+        serverValidator.checkServerReady();
+        prepareMessage(messageList);
+
         return producer.produce(context, messageList);
+    }
+
+    private void prepareMessage(List<MessageBO> messageList) {
+        for (MessageBO messageBO : messageList) {
+            prepareMessage(messageBO);
+        }
+    }
+
+    private void prepareMessage(MessageBO messageBO) {
+        messageValidator.validate(messageBO);
+        this.cleanReservedProperty(messageBO);
+        this.setMessageId(messageBO);
     }
 
     private void formatEnqueueResult(EnqueueResult result) {
