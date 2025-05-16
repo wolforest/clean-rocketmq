@@ -10,10 +10,12 @@ import apache.rocketmq.v2.QueryOffsetRequest;
 import apache.rocketmq.v2.QueryOffsetResponse;
 import apache.rocketmq.v2.ReceiveMessageRequest;
 import apache.rocketmq.v2.ReceiveMessageResponse;
+import apache.rocketmq.v2.Settings;
 import apache.rocketmq.v2.Status;
 import apache.rocketmq.v2.UpdateOffsetRequest;
 import apache.rocketmq.v2.UpdateOffsetResponse;
 import cn.coderule.minimq.broker.api.ConsumerController;
+import cn.coderule.minimq.broker.server.grpc.service.SettingManager;
 import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
 import cn.coderule.minimq.rpc.common.grpc.activity.ActivityHelper;
 import io.grpc.stub.StreamObserver;
@@ -27,6 +29,8 @@ public class ConsumerActivity {
 
     @Setter
     private ConsumerController consumerController;
+    private SettingManager settingManager;
+
 
     public ConsumerActivity(ThreadPoolExecutor executor) {
         this.executor = executor;
@@ -142,6 +146,7 @@ public class ConsumerActivity {
     }
 
     public CompletableFuture<AckMessageResponse> ackMessageAsync(RequestContext context, AckMessageRequest request) {
+        Settings settings = settingManager.getSettings(context);
         return null;
     }
 
