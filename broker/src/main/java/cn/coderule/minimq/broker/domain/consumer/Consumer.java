@@ -6,6 +6,7 @@ import cn.coderule.minimq.domain.domain.dto.request.ConsumerInfo;
 import cn.coderule.minimq.domain.domain.dto.request.AckRequest;
 import cn.coderule.minimq.domain.domain.dto.request.InvisibleRequest;
 import cn.coderule.minimq.domain.domain.dto.request.PopRequest;
+import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
 import java.util.concurrent.CompletableFuture;
 
 public class Consumer  {
@@ -17,15 +18,15 @@ public class Consumer  {
         return true;
     }
 
-    public CompletableFuture<PopResult> popMessage(PopRequest request) {
+    public CompletableFuture<PopResult> popMessage(RequestContext context, PopRequest request) {
         return null;
     }
 
-    public CompletableFuture<AckResult> ack(AckRequest request) {
+    public CompletableFuture<AckResult> ack(RequestContext context, AckRequest request) {
         return null;
     }
 
-    public CompletableFuture<AckResult> changeInvisible(InvisibleRequest request) {
+    public CompletableFuture<AckResult> changeInvisible(RequestContext context, InvisibleRequest request) {
         return null;
     }
 
