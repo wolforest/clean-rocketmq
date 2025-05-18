@@ -6,6 +6,7 @@ import apache.rocketmq.v2.ReceiveMessageResponse;
 import cn.coderule.minimq.broker.api.ConsumerController;
 import cn.coderule.minimq.domain.domain.dto.request.PopRequest;
 import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
+import cn.coderule.minimq.rpc.common.grpc.core.ResponseWriter;
 import io.grpc.stub.StreamObserver;
 import lombok.extern.slf4j.Slf4j;
 
@@ -29,5 +30,13 @@ public class ConsumeService {
 
     public void writeResponse(RequestContext context, ReceiveMessageRequest request, Throwable t) {
 
+    }
+
+    private void writeResponse(ReceiveMessageResponse response) {
+        try {
+            ResponseWriter.getInstance().writeResponse(streamObserver, response);
+        } catch (Exception e) {
+            log.error("write ReceiveMessageResponse error", e);
+        }
     }
 }
