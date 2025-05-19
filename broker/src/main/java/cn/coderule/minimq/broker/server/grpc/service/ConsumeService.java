@@ -1,16 +1,23 @@
 package cn.coderule.minimq.broker.server.grpc.service;
 
 import apache.rocketmq.v2.Code;
+import apache.rocketmq.v2.Message;
 import apache.rocketmq.v2.ReceiveMessageRequest;
 import apache.rocketmq.v2.ReceiveMessageResponse;
 import apache.rocketmq.v2.Status;
 import cn.coderule.minimq.broker.api.ConsumerController;
+import cn.coderule.minimq.broker.server.grpc.converter.GrpcConverter;
+import cn.coderule.minimq.domain.domain.constant.MessageConst;
+import cn.coderule.minimq.domain.domain.dto.request.InvisibleRequest;
 import cn.coderule.minimq.domain.domain.dto.response.PopResult;
 import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
+import cn.coderule.minimq.domain.domain.model.consumer.receipt.ReceiptHandle;
+import cn.coderule.minimq.domain.domain.model.message.MessageBO;
 import cn.coderule.minimq.rpc.common.grpc.core.ResponseBuilder;
 import cn.coderule.minimq.rpc.common.grpc.core.ResponseWriter;
 import com.google.protobuf.util.Timestamps;
 import io.grpc.stub.StreamObserver;
+import java.util.Iterator;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -95,6 +102,50 @@ public class ConsumeService {
 
         writeOkResult();
 
+        Iterator<MessageBO> iterator = popResult.getMsgFoundList().iterator();
+        while (iterator.hasNext()) {
+            if (writeMessageResult(context, request, iterator.next())) {
+                continue;
+            }
+
+            iterator.forEachRemaining(messageBO -> {
+
+            });
+            break;
+        }
+
+    }
+
+    private boolean writeMessageResult(RequestContext context, ReceiveMessageRequest request, MessageBO messageBO) {
+        Message message = GrpcConverter.getInstance().buildMessage(messageBO);
+        ReceiveMessageResponse response = ReceiveMessageResponse.newBuilder()
+            .setMessage(message)
+            .build();
+
+        try {
+            streamObserver.onNext(response);
+        } catch (Throwable t) {
+            writeMessageError(context, messageBO, t);
+            return false;
+        }
+
+        return true;
+    }
+
+
+    private void writeMessageError(RequestContext context, MessageBO messageBO, Throwable t) {
+        String handle = messageBO.getProperty(MessageConst.PROPERTY_POP_CK);
+        if (handle == null) {
+            return;
+        }
+
+        InvisibleRequest invisibleRequest = InvisibleRequest.builder()
+            .requestContext(context)
+            .receiptHandle(ReceiptHandle.decode(handle))
+            .messageId(messageBO.getMsgId())
+            .topicName(messageBO.getTopic())
+            .build();
+        consumerController.changeInvisible(context, invisibleRequest);
     }
 
     private void writeOkResult() {
