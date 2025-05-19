@@ -10,6 +10,7 @@ import cn.coderule.minimq.domain.domain.dto.response.PopResult;
 import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
 import cn.coderule.minimq.rpc.common.grpc.core.ResponseBuilder;
 import cn.coderule.minimq.rpc.common.grpc.core.ResponseWriter;
+import com.google.protobuf.util.Timestamps;
 import io.grpc.stub.StreamObserver;
 import lombok.extern.slf4j.Slf4j;
 
@@ -24,7 +25,13 @@ public class ConsumeService {
     }
 
     public void writeResponse(RequestContext context, ReceiveMessageRequest request, PopResult popResult) {
-
+        try {
+            writeByStatus(context, request, popResult);
+        } catch (Throwable t) {
+            writeResponse(context, t);
+        } finally {
+            onComplete();
+        }
     }
 
     public void writeResponse(RequestContext context, Code code, String message) {
@@ -35,7 +42,11 @@ public class ConsumeService {
         writeResponse(response);
     }
 
-    public void writeResponse(RequestContext context, ReceiveMessageRequest request, Throwable t) {
+    public void writeResponse(RequestContext context, Throwable t) {
+        writeResponse(context, t, null);
+    }
+
+    public void writeResponse(RequestContext context, Throwable t, ReceiveMessageRequest request) {
         Status status = ResponseBuilder.getInstance().buildStatus(t);
         ReceiveMessageResponse response = ReceiveMessageResponse.newBuilder()
             .setStatus(status)
@@ -50,5 +61,22 @@ public class ConsumeService {
         } catch (Exception e) {
             log.error("write ReceiveMessageResponse error", e);
         }
+    }
+
+    protected void onComplete() {
+        ReceiveMessageResponse response = ReceiveMessageResponse.newBuilder()
+            .setDeliveryTimestamp(Timestamps.fromMillis(System.currentTimeMillis()))
+            .build();
+        writeResponse(response);
+
+        try {
+            streamObserver.onCompleted();
+        } catch (Exception e) {
+            log.error("err when complete receive message response", e);
+        }
+    }
+
+    public void writeByStatus(RequestContext context, ReceiveMessageRequest request, PopResult popResult) {
+
     }
 }
