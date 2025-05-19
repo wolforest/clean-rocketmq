@@ -18,9 +18,12 @@ package cn.coderule.minimq.domain.domain.dto.response;
 
 import cn.coderule.minimq.domain.domain.enums.consume.PopStatus;
 import cn.coderule.minimq.domain.domain.model.message.MessageBO;
+import java.io.Serializable;
 import java.util.List;
+import lombok.Data;
 
-public class PopResult {
+@Data
+public class PopResult implements Serializable {
     private List<MessageBO> msgFoundList;
     private PopStatus popStatus;
     private long popTime;
@@ -32,52 +35,8 @@ public class PopResult {
         this.msgFoundList = msgFoundList;
     }
 
-    public long getPopTime() {
-        return popTime;
-    }
 
-
-    public void setPopTime(long popTime) {
-        this.popTime = popTime;
-    }
-
-    public long getRestNum() {
-        return restNum;
-    }
-
-    public void setRestNum(long restNum) {
-        this.restNum = restNum;
-    }
-
-    public long getInvisibleTime() {
-        return invisibleTime;
-    }
-
-
-    public void setInvisibleTime(long invisibleTime) {
-        this.invisibleTime = invisibleTime;
-    }
-
-
-    public void setPopStatus(PopStatus popStatus) {
-        this.popStatus = popStatus;
-    }
-
-    public PopStatus getPopStatus() {
-        return popStatus;
-    }
-
-    public List<MessageBO> getMsgFoundList() {
-        return msgFoundList;
-    }
-
-    public void setMsgFoundList(List<MessageBO> msgFoundList) {
-        this.msgFoundList = msgFoundList;
-    }
-
-    @Override
-    public String toString() {
-        return "PopResult [popStatus=" + popStatus + ",msgFoundList="
-            + (msgFoundList == null ? 0 : msgFoundList.size()) + ",restNum=" + restNum + "]";
+    public boolean isEmpty() {
+        return msgFoundList == null || msgFoundList.isEmpty();
     }
 }

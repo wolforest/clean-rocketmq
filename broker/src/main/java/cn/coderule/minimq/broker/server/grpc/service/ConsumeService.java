@@ -5,7 +5,6 @@ import apache.rocketmq.v2.ReceiveMessageRequest;
 import apache.rocketmq.v2.ReceiveMessageResponse;
 import apache.rocketmq.v2.Status;
 import cn.coderule.minimq.broker.api.ConsumerController;
-import cn.coderule.minimq.domain.domain.dto.request.PopRequest;
 import cn.coderule.minimq.domain.domain.dto.response.PopResult;
 import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
 import cn.coderule.minimq.rpc.common.grpc.core.ResponseBuilder;
@@ -39,7 +38,9 @@ public class ConsumeService {
         ReceiveMessageResponse response = ReceiveMessageResponse.newBuilder()
             .setStatus(status)
             .build();
+
         writeResponse(response);
+        onComplete();
     }
 
     public void writeResponse(RequestContext context, Throwable t) {
@@ -53,6 +54,7 @@ public class ConsumeService {
             .build();
 
         writeResponse(response);
+        onComplete();
     }
 
     private void writeResponse(ReceiveMessageResponse response) {
@@ -63,7 +65,7 @@ public class ConsumeService {
         }
     }
 
-    protected void onComplete() {
+    private void onComplete() {
         ReceiveMessageResponse response = ReceiveMessageResponse.newBuilder()
             .setDeliveryTimestamp(Timestamps.fromMillis(System.currentTimeMillis()))
             .build();
@@ -76,7 +78,46 @@ public class ConsumeService {
         }
     }
 
-    public void writeByStatus(RequestContext context, ReceiveMessageRequest request, PopResult popResult) {
+    private void writeByStatus(RequestContext context, ReceiveMessageRequest request, PopResult popResult) {
+        switch (popResult.getPopStatus()) {
+            case FOUND -> writeFoundResult(context, request, popResult);
+            case POLLING_FULL -> writeFullResult();
+            default -> writeEmptyResult();
+        }
+    }
 
+
+    private void writeFoundResult(RequestContext context, ReceiveMessageRequest request, PopResult popResult) {
+        if (popResult.isEmpty()) {
+            writeEmptyResult();
+            return;
+        }
+
+        writeOkResult();
+
+    }
+
+    private void writeOkResult() {
+        Status status = ResponseBuilder.getInstance().buildStatus(Code.OK, Code.OK.name());
+        ReceiveMessageResponse response = ReceiveMessageResponse.newBuilder()
+            .setStatus(status)
+            .build();
+        streamObserver.onNext(response);
+    }
+
+    private void writeFullResult() {
+        Status status = ResponseBuilder.getInstance().buildStatus(Code.TOO_MANY_REQUESTS, "polling full");
+        ReceiveMessageResponse response = ReceiveMessageResponse.newBuilder()
+            .setStatus(status)
+            .build();
+        streamObserver.onNext(response);
+    }
+
+    private void writeEmptyResult() {
+        Status status = ResponseBuilder.getInstance().buildStatus(Code.MESSAGE_NOT_FOUND, "no new message");
+        ReceiveMessageResponse response = ReceiveMessageResponse.newBuilder()
+            .setStatus(status)
+            .build();
+        streamObserver.onNext(response);
     }
 }
