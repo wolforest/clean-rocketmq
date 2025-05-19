@@ -15,6 +15,7 @@ import cn.coderule.minimq.domain.domain.model.consumer.receipt.ReceiptHandle;
 import cn.coderule.minimq.domain.domain.model.message.MessageBO;
 import cn.coderule.minimq.rpc.common.grpc.core.ResponseBuilder;
 import cn.coderule.minimq.rpc.common.grpc.core.ResponseWriter;
+import com.google.protobuf.Timestamp;
 import com.google.protobuf.util.Timestamps;
 import io.grpc.stub.StreamObserver;
 import java.util.Iterator;
@@ -73,8 +74,9 @@ public class ConsumeService {
     }
 
     private void onComplete() {
+        Timestamp timestamp = Timestamps.fromMillis(System.currentTimeMillis());
         ReceiveMessageResponse response = ReceiveMessageResponse.newBuilder()
-            .setDeliveryTimestamp(Timestamps.fromMillis(System.currentTimeMillis()))
+            .setDeliveryTimestamp(timestamp)
             .build();
         writeResponse(response);
 
@@ -88,35 +90,37 @@ public class ConsumeService {
     private void writeByStatus(RequestContext context, ReceiveMessageRequest request, PopResult popResult) {
         switch (popResult.getPopStatus()) {
             case FOUND -> writeFoundResult(context, request, popResult);
-            case POLLING_FULL -> writeFullResult();
-            default -> writeEmptyResult();
+            case POLLING_FULL -> writeFullStatus();
+            default -> writeEmptyStatus();
         }
     }
 
-
     private void writeFoundResult(RequestContext context, ReceiveMessageRequest request, PopResult popResult) {
         if (popResult.isEmpty()) {
-            writeEmptyResult();
+            writeEmptyStatus();
             return;
         }
 
-        writeOkResult();
+        writeOkStatus();
+        writeMessageList(context, request, popResult);
+    }
 
+    private void writeMessageList(RequestContext context, ReceiveMessageRequest request, PopResult popResult) {
         Iterator<MessageBO> iterator = popResult.getMsgFoundList().iterator();
         while (iterator.hasNext()) {
-            if (writeMessageResult(context, request, iterator.next())) {
+            Throwable t = writeMessage(context, request, iterator.next());
+            if (t == null) {
                 continue;
             }
 
             iterator.forEachRemaining(messageBO -> {
-
+                changeInvisible(context, messageBO, t);
             });
             break;
         }
-
     }
 
-    private boolean writeMessageResult(RequestContext context, ReceiveMessageRequest request, MessageBO messageBO) {
+    private Throwable writeMessage(RequestContext context, ReceiveMessageRequest request, MessageBO messageBO) {
         Message message = GrpcConverter.getInstance().buildMessage(messageBO);
         ReceiveMessageResponse response = ReceiveMessageResponse.newBuilder()
             .setMessage(message)
@@ -125,15 +129,14 @@ public class ConsumeService {
         try {
             streamObserver.onNext(response);
         } catch (Throwable t) {
-            writeMessageError(context, messageBO, t);
-            return false;
+            changeInvisible(context, messageBO, t);
+            return t;
         }
 
-        return true;
+        return null;
     }
 
-
-    private void writeMessageError(RequestContext context, MessageBO messageBO, Throwable t) {
+    private void changeInvisible(RequestContext context, MessageBO messageBO, Throwable t) {
         String handle = messageBO.getProperty(MessageConst.PROPERTY_POP_CK);
         if (handle == null) {
             return;
@@ -148,7 +151,7 @@ public class ConsumeService {
         consumerController.changeInvisible(context, invisibleRequest);
     }
 
-    private void writeOkResult() {
+    private void writeOkStatus() {
         Status status = ResponseBuilder.getInstance().buildStatus(Code.OK, Code.OK.name());
         ReceiveMessageResponse response = ReceiveMessageResponse.newBuilder()
             .setStatus(status)
@@ -156,7 +159,7 @@ public class ConsumeService {
         streamObserver.onNext(response);
     }
 
-    private void writeFullResult() {
+    private void writeFullStatus() {
         Status status = ResponseBuilder.getInstance().buildStatus(Code.TOO_MANY_REQUESTS, "polling full");
         ReceiveMessageResponse response = ReceiveMessageResponse.newBuilder()
             .setStatus(status)
@@ -164,7 +167,7 @@ public class ConsumeService {
         streamObserver.onNext(response);
     }
 
-    private void writeEmptyResult() {
+    private void writeEmptyStatus() {
         Status status = ResponseBuilder.getInstance().buildStatus(Code.MESSAGE_NOT_FOUND, "no new message");
         ReceiveMessageResponse response = ReceiveMessageResponse.newBuilder()
             .setStatus(status)
