@@ -15,6 +15,7 @@ import apache.rocketmq.v2.Status;
 import apache.rocketmq.v2.UpdateOffsetRequest;
 import apache.rocketmq.v2.UpdateOffsetResponse;
 import cn.coderule.minimq.broker.api.ConsumerController;
+import cn.coderule.minimq.broker.server.grpc.service.ConsumeService;
 import cn.coderule.minimq.broker.server.grpc.service.SettingManager;
 import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
 import cn.coderule.minimq.rpc.common.grpc.activity.ActivityHelper;
@@ -37,6 +38,9 @@ public class ConsumerActivity {
     }
 
     public void receiveMessage(RequestContext context, ReceiveMessageRequest request, StreamObserver<ReceiveMessageResponse> responseObserver) {
+        ConsumeService consumeService = new ConsumeService(consumerController, responseObserver);
+        Settings settings = settingManager.getSettings(context);
+
         ActivityHelper<ReceiveMessageRequest, ReceiveMessageResponse> helper = getReceiveHelper(context, request, responseObserver);
 
         try {
