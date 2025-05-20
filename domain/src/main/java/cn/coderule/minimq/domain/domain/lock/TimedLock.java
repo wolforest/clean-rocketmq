@@ -14,15 +14,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.coderule.minimq.domain.utils.lock;
+package cn.coderule.minimq.domain.domain.lock;
 
-/**
- * @renamed from PutMessageLock to CommitLogLock
- * Used when trying to put message
- * used by CommitLog
- */
-public interface CommitLogLock {
-    void lock();
+import java.util.concurrent.atomic.AtomicBoolean;
+import lombok.Getter;
 
-    void unlock();
+public class TimedLock {
+    private final AtomicBoolean lock;
+    @Getter
+    private volatile long lockTime;
+
+    public TimedLock() {
+        this.lock = new AtomicBoolean(true);
+        this.lockTime = System.currentTimeMillis();
+    }
+
+    public boolean tryLock() {
+        boolean ret = lock.compareAndSet(true, false);
+        if (!ret) {
+            return false;
+        }
+
+        this.lockTime = System.currentTimeMillis();
+        return true;
+    }
+
+    public void unLock() {
+        lock.set(true);
+    }
+
+    public boolean isLocked() {
+        return !lock.get();
+    }
+
 }

@@ -7,7 +7,7 @@ import cn.coderule.minimq.domain.domain.model.cluster.store.QueueUnit;
 import cn.coderule.minimq.domain.domain.dto.InsertFuture;
 import cn.coderule.minimq.domain.domain.dto.GetRequest;
 import cn.coderule.minimq.domain.domain.dto.GetResult;
-import cn.coderule.minimq.domain.utils.lock.TopicQueueLock;
+import cn.coderule.minimq.domain.domain.lock.queue.TopicQueueLock;
 import cn.coderule.minimq.domain.service.store.domain.CommitLog;
 import cn.coderule.minimq.domain.service.store.domain.ConsumeQueueGateway;
 import cn.coderule.minimq.domain.service.store.domain.MessageQueue;

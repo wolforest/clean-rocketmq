@@ -14,37 +14,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.coderule.minimq.domain.utils.lock;
+package cn.coderule.minimq.domain.domain.lock.commitlog;
 
 import java.util.concurrent.atomic.AtomicBoolean;
-import lombok.Getter;
 
-public class TimedLock {
-    private final AtomicBoolean lock;
-    @Getter
-    private volatile long lockTime;
+/**
+ * Spin lock Implementation to put message, suggest using this with low race conditions
+ */
+public class CommitLogSpinLock implements CommitLogLock {
+    //true: Can lock, false : in lock.
+    private final AtomicBoolean putMessageSpinLock = new AtomicBoolean(true);
 
-    public TimedLock() {
-        this.lock = new AtomicBoolean(true);
-        this.lockTime = System.currentTimeMillis();
-    }
-
-    public boolean tryLock() {
-        boolean ret = lock.compareAndSet(true, false);
-        if (!ret) {
-            return false;
+    @Override
+    public void lock() {
+        boolean flag;
+        do {
+            flag = this.putMessageSpinLock.compareAndSet(true, false);
         }
-
-        this.lockTime = System.currentTimeMillis();
-        return true;
+        while (!flag);
     }
 
-    public void unLock() {
-        lock.set(true);
+    @Override
+    public void unlock() {
+        this.putMessageSpinLock.compareAndSet(false, true);
     }
-
-    public boolean isLocked() {
-        return !lock.get();
-    }
-
 }

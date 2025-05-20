@@ -5,8 +5,8 @@ import cn.coderule.minimq.store.domain.commitlog.vo.GroupCommitRequest;
 import cn.coderule.common.util.lang.ThreadUtil;
 import cn.coderule.minimq.domain.domain.enums.store.EnqueueStatus;
 import cn.coderule.minimq.domain.service.store.infra.MappedFileQueue;
-import cn.coderule.minimq.domain.utils.lock.CommitLogLock;
-import cn.coderule.minimq.domain.utils.lock.CommitLogSpinLock;
+import cn.coderule.minimq.domain.domain.lock.commitlog.CommitLogLock;
+import cn.coderule.minimq.domain.domain.lock.commitlog.CommitLogSpinLock;
 import java.util.LinkedList;
 import lombok.extern.slf4j.Slf4j;
 

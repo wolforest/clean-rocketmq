@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.coderule.minimq.domain.utils.lock;
+package cn.coderule.minimq.domain.domain.lock.queue;
 
 import cn.coderule.minimq.domain.domain.model.MessageQueue;
 import java.util.concurrent.ConcurrentHashMap;

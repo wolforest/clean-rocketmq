@@ -1,4 +1,4 @@
-package cn.coderule.minimq.domain.utils.lock;
+package cn.coderule.minimq.domain.domain.lock.server;
 
 import cn.coderule.common.util.io.FileUtil;
 import cn.coderule.common.util.lang.SystemUtil;

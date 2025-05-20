@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-package cn.coderule.minimq.domain.utils.lock;
+package cn.coderule.minimq.domain.domain.lock.queue;
 
 import java.util.ArrayList;
 import java.util.List;

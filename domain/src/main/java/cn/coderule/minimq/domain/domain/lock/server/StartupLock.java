@@ -1,4 +1,4 @@
-package cn.coderule.minimq.domain.utils.lock;
+package cn.coderule.minimq.domain.domain.lock.server;
 
 import java.io.File;
 import java.io.IOException;
