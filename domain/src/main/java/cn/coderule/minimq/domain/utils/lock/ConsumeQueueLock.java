@@ -1,69 +1,97 @@
-/*
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- */
-
 package cn.coderule.minimq.domain.utils.lock;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
+import cn.coderule.common.lang.concurrent.thread.ServiceThread;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import lombok.extern.slf4j.Slf4j;
 
-/**
- * lock topic@queueId for assignOffset/increaseOffset
- */
-public class ConsumeQueueLock {
-    private final int size;
-    private final List<Lock> lockList;
+@Slf4j
+public class ConsumeQueueLock extends ServiceThread {
+    private static final int CLEAN_INTERVAL = 1000 * 60;
+    private static final int CLEAN_TIMEOUT = 1000 * 60;
 
-    public ConsumeQueueLock() {
-        this(32);
+    private final ConcurrentMap<String, TimedLock> lockMap = new ConcurrentHashMap<>(100_000);
+
+    @Override
+    public String getServiceName() {
+        return ConsumeQueueLock.class.getSimpleName();
     }
 
-    public ConsumeQueueLock(int size) {
-        this.size = size;
-        this.lockList = new ArrayList<>(size);
-
-        for (int i = 0; i < this.size; i++) {
-            this.lockList.add(new ReentrantLock());
+    @Override
+    public void run() {
+        while (!this.isStopped()) {
+            try {
+                this.await(CLEAN_INTERVAL);
+                cleanUnusedLock();
+            } catch (Exception e) {
+                log.error("{} service has exception. ", this.getServiceName(), e);
+            }
         }
     }
 
-    /**
-     * lock(topic&queueId) to append commitLog
-     *  - mainly for assign and increase consumeQueue offset
-     *
-     * @param topic topic
-     * @param queueId queueId
-     */
-    public void lock(String topic, int queueId) {
-        String topicQueueKey = getTopicKey(topic, queueId);
-        int index = (topicQueueKey.hashCode() & 0x7fffffff) % this.size;
-        Lock lock = this.lockList.get(index);
-        lock.lock();
+    public void lock(String group, String topic, int queueId) {
+        while (true) {
+            if (tryLock(group, topic, queueId)) {
+                break;
+            }
+        }
     }
 
-    public void unlock(String topic, int queueId) {
-        String topicQueueKey = getTopicKey(topic, queueId);
-        int index = (topicQueueKey.hashCode() & 0x7fffffff) % this.size;
-        Lock lock = this.lockList.get(index);
-        lock.unlock();
+    public boolean tryLock(String group, String topic, int queueId) {
+        String key = createKey(group, topic, queueId);
+        TimedLock lock = getLock(key);
+        if (lock == null) {
+            return false;
+        }
+
+        return lock.tryLock();
     }
 
-    private String getTopicKey(String topic, int queueId) {
-        return topic + "@" + queueId;
+    public void unlock(String group, String topic, int queueId) {
+        String key = createKey(group, topic, queueId);
+        TimedLock lock = getLock(key);
+        if (lock == null) {
+            return;
+        }
+
+        lock.unLock();
     }
+
+    private String createKey(String group, String topic, int queueId) {
+        return group + "@" + topic + "@" + queueId;
+    }
+
+    private TimedLock getLock(String key) {
+        TimedLock lock = lockMap.get(key);
+
+        if (lock == null) {
+            lock = new TimedLock();
+            TimedLock old = lockMap.putIfAbsent(key, lock);
+            if (old != null) {
+                return null;
+            }
+        }
+
+        return lock;
+    }
+
+    private void cleanUnusedLock() {
+        Iterator<Map.Entry<String, TimedLock>> iterator = lockMap.entrySet().iterator();
+
+        while (iterator.hasNext()) {
+            Map.Entry<String, TimedLock> entry = iterator.next();
+
+            long lockedTime = System.currentTimeMillis() - entry.getValue().getLockTime();
+            if (lockedTime <= ConsumeQueueLock.CLEAN_TIMEOUT) {
+                continue;
+            }
+
+            iterator.remove();
+            log.info("Remove unused queue lock: {}, {}, {}",
+                entry.getKey(), entry.getValue().getLockTime(), entry.getValue().isLocked());
+        }
+    }
+
 }

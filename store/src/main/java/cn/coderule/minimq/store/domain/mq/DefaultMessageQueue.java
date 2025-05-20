@@ -7,7 +7,7 @@ import cn.coderule.minimq.domain.domain.model.cluster.store.QueueUnit;
 import cn.coderule.minimq.domain.domain.dto.InsertFuture;
 import cn.coderule.minimq.domain.domain.dto.GetRequest;
 import cn.coderule.minimq.domain.domain.dto.GetResult;
-import cn.coderule.minimq.domain.utils.lock.ConsumeQueueLock;
+import cn.coderule.minimq.domain.utils.lock.TopicQueueLock;
 import cn.coderule.minimq.domain.service.store.domain.CommitLog;
 import cn.coderule.minimq.domain.service.store.domain.ConsumeQueueGateway;
 import cn.coderule.minimq.domain.service.store.domain.MessageQueue;
@@ -23,7 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class DefaultMessageQueue implements MessageQueue {
-    private final ConsumeQueueLock consumeQueueLock;
+    private final TopicQueueLock topicQueueLock;
     private final MessageConfig messageConfig;
     private final ConsumeQueueGateway consumeQueueGateway;
     private final CommitLogSynchronizer commitLogSynchronizer;
@@ -40,7 +40,7 @@ public class DefaultMessageQueue implements MessageQueue {
         this.consumeQueueGateway = consumeQueueGateway;
         this.commitLogSynchronizer = commitLogSynchronizer;
 
-        this.consumeQueueLock = new ConsumeQueueLock();
+        this.topicQueueLock = new TopicQueueLock();
     }
 
     /**
@@ -59,7 +59,7 @@ public class DefaultMessageQueue implements MessageQueue {
 
     @Override
     public CompletableFuture<EnqueueResult> enqueueAsync(MessageBO messageBO) {
-        consumeQueueLock.lock(messageBO.getTopic(), messageBO.getQueueId());
+        topicQueueLock.lock(messageBO.getTopic(), messageBO.getQueueId());
         try {
             long queueOffset = consumeQueueGateway.assignOffset(messageBO.getTopic(), messageBO.getQueueId());
             messageBO.setQueueOffset(queueOffset);
@@ -74,7 +74,7 @@ public class DefaultMessageQueue implements MessageQueue {
         } catch (Exception e) {
             return CompletableFuture.completedFuture(EnqueueResult.failure());
         } finally {
-            consumeQueueLock.unlock(messageBO.getTopic(), messageBO.getQueueId());
+            topicQueueLock.unlock(messageBO.getTopic(), messageBO.getQueueId());
         }
     }
 
