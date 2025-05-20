@@ -1,4 +1,4 @@
-package cn.coderule.minimq.broker.server.grpc.service;
+package cn.coderule.minimq.broker.server.grpc.service.consume;
 
 import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
 import cn.coderule.minimq.domain.domain.model.cluster.heartbeat.SubscriptionData;

@@ -15,8 +15,10 @@ import apache.rocketmq.v2.Status;
 import apache.rocketmq.v2.UpdateOffsetRequest;
 import apache.rocketmq.v2.UpdateOffsetResponse;
 import cn.coderule.minimq.broker.api.ConsumerController;
-import cn.coderule.minimq.broker.server.grpc.service.ConsumeService;
+import cn.coderule.minimq.broker.server.grpc.service.ChannelManager;
+import cn.coderule.minimq.broker.server.grpc.service.consume.ConsumeService;
 import cn.coderule.minimq.broker.server.grpc.service.SettingManager;
+import cn.coderule.minimq.broker.server.grpc.service.consume.PopService;
 import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
 import cn.coderule.minimq.rpc.common.grpc.activity.ActivityHelper;
 import io.grpc.stub.StreamObserver;
@@ -31,6 +33,7 @@ public class ConsumerActivity {
     @Setter
     private ConsumerController consumerController;
     private SettingManager settingManager;
+    private ChannelManager channelManager;
 
 
     public ConsumerActivity(ThreadPoolExecutor executor) {
@@ -38,14 +41,11 @@ public class ConsumerActivity {
     }
 
     public void receiveMessage(RequestContext context, ReceiveMessageRequest request, StreamObserver<ReceiveMessageResponse> responseObserver) {
-        ConsumeService consumeService = new ConsumeService(consumerController, responseObserver);
-        Settings settings = settingManager.getSettings(context);
-
         ActivityHelper<ReceiveMessageRequest, ReceiveMessageResponse> helper = getReceiveHelper(context, request, responseObserver);
 
         try {
             Runnable task = ()
-                -> receiveMessageAsync(context, request)
+                -> receiveMessageAsync(context, request, responseObserver)
                 .whenComplete(helper::writeResponse);
 
             this.executor.submit(helper.createTask(task));
@@ -125,8 +125,9 @@ public class ConsumerActivity {
 
     }
 
-    public CompletableFuture<ReceiveMessageResponse> receiveMessageAsync(RequestContext context, ReceiveMessageRequest request) {
-        return null;
+    public CompletableFuture<ReceiveMessageResponse> receiveMessageAsync(RequestContext context, ReceiveMessageRequest request, StreamObserver<ReceiveMessageResponse> responseObserver) {
+        PopService popService = new PopService(consumerController, settingManager, channelManager);
+        return popService.receive(context, request, responseObserver);
     }
 
     private ActivityHelper<ReceiveMessageRequest, ReceiveMessageResponse> getReceiveHelper(

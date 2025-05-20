@@ -1,4 +1,4 @@
-package cn.coderule.minimq.broker.server.grpc.service;
+package cn.coderule.minimq.broker.server.grpc.service.consume;
 
 import apache.rocketmq.v2.Code;
 import apache.rocketmq.v2.Message;
