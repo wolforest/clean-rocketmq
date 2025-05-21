@@ -10,24 +10,20 @@ public class TransactionManager implements Lifecycle {
     @Override
     public void initialize() {
         transaction = new Transaction();
-        transaction.initialize();
 
         TransactionController controller = new TransactionController(transaction);
         BrokerContext.registerAPI(controller);
     }
     @Override
     public void start() {
-        transaction.start();
     }
 
     @Override
     public void shutdown() {
-        transaction.shutdown();
     }
 
     @Override
     public void cleanup() {
-        transaction.cleanup();
     }
 
     @Override
