@@ -17,7 +17,7 @@
 
 package cn.coderule.minimq.rpc.common.core.channel.mock;
 
-import cn.coderule.common.util.lang.StringUtil;
+import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.minimq.rpc.common.core.channel.invocation.InvocationContextInterface;
 import io.netty.channel.AbstractChannel;
 import io.netty.channel.Channel;

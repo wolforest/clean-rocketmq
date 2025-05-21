@@ -16,7 +16,7 @@
  */
 package cn.coderule.minimq.rpc.common.rpc.core.enums;
 
-import cn.coderule.common.util.lang.StringUtil;
+import cn.coderule.common.util.lang.string.StringUtil;
 import com.alibaba.fastjson2.annotation.JSONField;
 
 public enum ResourceType {

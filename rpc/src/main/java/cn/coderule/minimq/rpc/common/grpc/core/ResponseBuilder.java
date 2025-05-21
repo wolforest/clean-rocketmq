@@ -19,7 +19,7 @@ package cn.coderule.minimq.rpc.common.grpc.core;
 
 import apache.rocketmq.v2.Code;
 import apache.rocketmq.v2.Status;
-import cn.coderule.common.util.lang.ExceptionUtil;
+import cn.coderule.common.util.lang.bean.ExceptionUtil;
 import cn.coderule.minimq.domain.domain.exception.InvalidParameterException;
 import cn.coderule.minimq.domain.domain.exception.RpcException;
 import cn.coderule.minimq.rpc.common.grpc.core.exception.GrpcException;

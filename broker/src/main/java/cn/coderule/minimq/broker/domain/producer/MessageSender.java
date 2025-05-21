@@ -2,7 +2,7 @@ package cn.coderule.minimq.broker.domain.producer;
 
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.lang.concurrent.thread.pool.ThreadPoolFactory;
-import cn.coderule.common.util.lang.StringUtil;
+import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.minimq.broker.domain.transaction.Transaction;
 import cn.coderule.minimq.domain.config.BrokerConfig;

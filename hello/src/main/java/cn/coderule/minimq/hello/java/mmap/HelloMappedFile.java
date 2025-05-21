@@ -1,6 +1,6 @@
 package cn.coderule.minimq.hello.java.mmap;
 
-import cn.coderule.common.util.lang.RandomUtil;
+import cn.coderule.common.util.lang.number.RandomUtil;
 import cn.coderule.common.util.test.Timer;
 import java.io.File;
 import java.io.IOException;

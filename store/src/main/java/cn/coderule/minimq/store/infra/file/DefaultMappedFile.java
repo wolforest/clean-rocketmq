@@ -3,7 +3,7 @@ package cn.coderule.minimq.store.infra.file;
 import cn.coderule.minimq.store.infra.memory.TransientPool;
 import com.sun.jna.NativeLong;
 import com.sun.jna.Pointer;
-import cn.coderule.common.util.io.BufferUtil;
+import cn.coderule.common.util.lang.ByteUtil;
 import cn.coderule.common.util.io.DirUtil;
 import cn.coderule.minimq.domain.domain.enums.store.FlushType;
 import cn.coderule.minimq.domain.service.store.infra.MappedFile;
@@ -94,7 +94,7 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
     @Override
     public void setFileMode(int mode) {
         // add not windows check
-        long address = BufferUtil.directBufferAddress(mappedByteBuffer);
+        long address = ByteUtil.directBufferAddress(mappedByteBuffer);
         int madvise = CLibrary.INSTANCE.madvise(
             new Pointer(address), new NativeLong(fileSize), mode
         );
@@ -326,8 +326,8 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
             return true;
         }
 
-        BufferUtil.cleanBuffer(this.mappedByteBuffer);
-        BufferUtil.cleanBuffer(this.mappedByteBufferWaitToClean);
+        ByteUtil.cleanBuffer(this.mappedByteBuffer);
+        ByteUtil.cleanBuffer(this.mappedByteBufferWaitToClean);
         this.mappedByteBufferWaitToClean = null;
 
         return true;

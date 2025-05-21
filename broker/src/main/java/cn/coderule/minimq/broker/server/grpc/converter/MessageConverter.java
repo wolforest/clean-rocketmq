@@ -4,7 +4,7 @@ import apache.rocketmq.v2.Encoding;
 import apache.rocketmq.v2.Message;
 import apache.rocketmq.v2.MessageType;
 import apache.rocketmq.v2.SendMessageRequest;
-import cn.coderule.common.util.lang.StringUtil;
+import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.minimq.domain.domain.constant.MessageConst;
 import cn.coderule.minimq.domain.domain.constant.flag.MessageSysFlag;
 import cn.coderule.minimq.domain.domain.enums.code.InvalidCode;

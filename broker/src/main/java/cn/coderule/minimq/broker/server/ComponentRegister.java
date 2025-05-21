@@ -1,7 +1,7 @@
 package cn.coderule.minimq.broker.server;
 
 import cn.coderule.common.convention.service.LifecycleManager;
-import cn.coderule.common.util.lang.StringUtil;
+import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.minimq.broker.domain.consumer.ConsumerManager;
 import cn.coderule.minimq.broker.domain.producer.ProducerManager;
 import cn.coderule.minimq.broker.domain.meta.RouteManager;

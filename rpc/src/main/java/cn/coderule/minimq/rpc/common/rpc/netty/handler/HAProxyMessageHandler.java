@@ -16,7 +16,7 @@
  */
 package cn.coderule.minimq.rpc.common.rpc.netty.handler;
 
-import cn.coderule.common.util.lang.StringUtil;
+import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.minimq.rpc.common.core.constants.HAProxyConstants;
 import cn.coderule.minimq.rpc.common.rpc.core.constant.AttributeKeys;

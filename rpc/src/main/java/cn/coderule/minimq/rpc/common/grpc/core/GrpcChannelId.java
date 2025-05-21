@@ -1,6 +1,6 @@
 package cn.coderule.minimq.rpc.common.grpc.core;
 
-import cn.coderule.common.util.lang.BeanUtil;
+import cn.coderule.common.util.lang.bean.BeanUtil;
 import io.netty.channel.ChannelId;
 
 public class GrpcChannelId implements ChannelId {

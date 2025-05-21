@@ -1,6 +1,6 @@
 package cn.coderule.minimq.domain.domain.model.consumer.receipt;
 
-import cn.coderule.common.util.lang.BeanUtil;
+import cn.coderule.common.util.lang.bean.BeanUtil;
 import java.io.Serializable;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;

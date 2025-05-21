@@ -1,6 +1,6 @@
 package cn.coderule.minimq.broker.api;
 
-import cn.coderule.common.util.lang.StringUtil;
+import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.minimq.broker.api.validator.MessageValidator;
 import cn.coderule.minimq.broker.api.validator.ServerValidator;

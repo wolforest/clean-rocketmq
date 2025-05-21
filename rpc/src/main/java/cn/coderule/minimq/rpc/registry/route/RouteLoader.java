@@ -2,7 +2,7 @@ package cn.coderule.minimq.rpc.registry.route;
 
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.lang.concurrent.thread.DefaultThreadFactory;
-import cn.coderule.common.util.lang.StringUtil;
+import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.common.util.lang.ThreadUtil;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.minimq.domain.domain.constant.MQConstants;

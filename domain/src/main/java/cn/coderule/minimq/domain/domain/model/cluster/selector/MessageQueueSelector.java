@@ -16,7 +16,7 @@
  */
 package cn.coderule.minimq.domain.domain.model.cluster.selector;
 
-import cn.coderule.common.util.lang.StringUtil;
+import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.minimq.domain.domain.constant.PermName;
 import cn.coderule.minimq.domain.domain.model.MessageQueue;
 import cn.coderule.minimq.domain.domain.model.meta.topic.TopicRouteWrapper;

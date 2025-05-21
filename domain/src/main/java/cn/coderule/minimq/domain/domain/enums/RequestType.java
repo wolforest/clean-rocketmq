@@ -17,7 +17,7 @@
 
 package cn.coderule.minimq.domain.domain.enums;
 
-import cn.coderule.common.util.lang.StringUtil;
+import cn.coderule.common.util.lang.string.StringUtil;
 import lombok.Getter;
 
 @Getter

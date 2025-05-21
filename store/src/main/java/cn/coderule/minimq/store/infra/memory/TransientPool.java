@@ -19,7 +19,7 @@ package cn.coderule.minimq.store.infra.memory;
 import com.sun.jna.NativeLong;
 import com.sun.jna.Pointer;
 import cn.coderule.common.convention.service.Lifecycle;
-import cn.coderule.common.util.io.BufferUtil;
+import cn.coderule.common.util.lang.ByteUtil;
 import java.nio.ByteBuffer;
 import java.util.Deque;
 import java.util.concurrent.ConcurrentLinkedDeque;
@@ -52,7 +52,7 @@ public class TransientPool implements Lifecycle {
         for (int i = 0; i < poolSize; i++) {
             ByteBuffer byteBuffer = ByteBuffer.allocateDirect(fileSize);
 
-            long address = BufferUtil.directBufferAddress(byteBuffer);
+            long address = ByteUtil.directBufferAddress(byteBuffer);
             Pointer pointer = new Pointer(address);
             CLibrary.INSTANCE.mlock(pointer, new NativeLong(fileSize));
 
@@ -63,7 +63,7 @@ public class TransientPool implements Lifecycle {
     @Override
     public void shutdown() {
         for (ByteBuffer byteBuffer : availableBuffers) {
-            long address = BufferUtil.directBufferAddress(byteBuffer);
+            long address = ByteUtil.directBufferAddress(byteBuffer);
             Pointer pointer = new Pointer(address);
             CLibrary.INSTANCE.munlock(pointer, new NativeLong(fileSize));
         }

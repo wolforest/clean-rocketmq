@@ -1,7 +1,7 @@
 package cn.coderule.minimq.store.infra;
 
 import cn.coderule.common.convention.service.Lifecycle;
-import cn.coderule.common.util.lang.StringUtil;
+import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.common.util.lang.collection.MapUtil;
 import cn.coderule.minimq.domain.config.StoreConfig;
 import cn.coderule.minimq.domain.domain.constant.PermName;

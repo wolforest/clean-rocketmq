@@ -1,6 +1,6 @@
 package cn.coderule.minimq.registry.domain.store;
 
-import cn.coderule.common.util.lang.StringUtil;
+import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.minimq.domain.config.RegistryConfig;
 import cn.coderule.minimq.domain.domain.constant.MQConstants;

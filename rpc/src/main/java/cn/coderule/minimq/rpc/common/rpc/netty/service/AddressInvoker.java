@@ -1,6 +1,6 @@
 package cn.coderule.minimq.rpc.common.rpc.netty.service;
 
-import cn.coderule.common.util.lang.StringUtil;
+import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.common.util.net.NetworkUtil;
 import cn.coderule.minimq.rpc.common.rpc.config.RpcClientConfig;

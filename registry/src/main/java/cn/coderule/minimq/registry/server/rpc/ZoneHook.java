@@ -1,6 +1,6 @@
 package cn.coderule.minimq.registry.server.rpc;
 
-import cn.coderule.common.util.lang.StringUtil;
+import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.common.util.lang.collection.MapUtil;
 import cn.coderule.minimq.domain.domain.constant.MQConstants;
 import cn.coderule.minimq.rpc.common.rpc.RpcHook;

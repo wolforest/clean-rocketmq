@@ -16,7 +16,7 @@
  */
 package cn.coderule.minimq.domain.domain.model.meta.topic;
 
-import cn.coderule.common.util.lang.BeanUtil;
+import cn.coderule.common.util.lang.bean.BeanUtil;
 
 public class TopicQueueId {
     private final String topic;

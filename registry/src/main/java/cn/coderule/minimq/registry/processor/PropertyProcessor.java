@@ -1,7 +1,7 @@
 package cn.coderule.minimq.registry.processor;
 
-import cn.coderule.common.util.lang.BeanUtil;
-import cn.coderule.common.util.lang.StringUtil;
+import cn.coderule.common.util.lang.bean.BeanUtil;
+import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.minimq.registry.domain.property.PropertyService;
 import cn.coderule.minimq.rpc.common.rpc.RpcProcessor;
 import cn.coderule.minimq.rpc.common.rpc.core.invoke.RpcCommand;

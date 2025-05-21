@@ -1,6 +1,6 @@
 package cn.coderule.minimq.domain.domain.model.meta;
 
-import cn.coderule.common.util.lang.StringUtil;
+import cn.coderule.common.util.lang.string.StringUtil;
 import com.alibaba.fastjson2.annotation.JSONField;
 import java.io.Serializable;
 import java.util.Map;

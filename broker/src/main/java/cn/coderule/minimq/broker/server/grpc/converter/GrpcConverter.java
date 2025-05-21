@@ -29,7 +29,7 @@ import apache.rocketmq.v2.MessageType;
 import apache.rocketmq.v2.Resource;
 import apache.rocketmq.v2.SystemProperties;
 import cn.coderule.common.util.encrypt.HashUtil;
-import cn.coderule.common.util.lang.StringUtil;
+import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.common.util.net.NetworkUtil;
 import cn.coderule.minimq.domain.domain.constant.MessageConst;
 import cn.coderule.minimq.domain.domain.constant.flag.MessageSysFlag;

@@ -1,6 +1,6 @@
 package cn.coderule.minimq.store.infra.memory;
 
-import cn.coderule.common.util.io.BufferUtil;
+import cn.coderule.common.util.lang.ByteUtil;
 import java.lang.reflect.Method;
 import java.nio.MappedByteBuffer;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +32,7 @@ public class MappedByteBufferUtils {
             return true;
         }
         try {
-            long addr = BufferUtil.directBufferAddress(mappedByteBuffer) + offset;
+            long addr = ByteUtil.directBufferAddress(mappedByteBuffer) + offset;
             return (boolean) IS_LOADED_METHOD.invoke(mappedByteBuffer, mappingAddr(addr), size, pageCount(size));
         } catch (Exception e) {
             log.info("invoke isLoaded0 of file error:",  e);

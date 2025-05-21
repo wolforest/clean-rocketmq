@@ -16,7 +16,7 @@
  */
 package cn.coderule.minimq.domain.domain.model.meta.topic;
 
-import cn.coderule.common.util.lang.StringUtil;
+import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.minimq.domain.domain.enums.code.InvalidCode;
 import cn.coderule.minimq.domain.domain.exception.InvalidParameterException;
 import java.util.HashSet;

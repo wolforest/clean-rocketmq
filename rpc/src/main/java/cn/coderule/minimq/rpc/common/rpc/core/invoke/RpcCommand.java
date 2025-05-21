@@ -1,6 +1,6 @@
 package cn.coderule.minimq.rpc.common.rpc.core.invoke;
 
-import cn.coderule.common.util.lang.StringUtil;
+import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.minimq.rpc.common.rpc.core.exception.RemotingCommandException;
 import cn.coderule.minimq.rpc.common.rpc.protocol.header.CommandHeader;
 import cn.coderule.minimq.rpc.common.rpc.core.annotation.CFNotNull;

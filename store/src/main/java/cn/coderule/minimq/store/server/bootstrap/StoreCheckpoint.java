@@ -17,7 +17,7 @@
 package cn.coderule.minimq.store.server.bootstrap;
 
 import cn.coderule.common.util.io.FileUtil;
-import cn.coderule.common.util.lang.StringUtil;
+import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.common.util.lang.string.JSONUtil;
 import cn.coderule.minimq.domain.service.store.server.CheckPoint;
 import cn.coderule.minimq.domain.service.store.server.Offset;

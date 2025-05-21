@@ -16,7 +16,7 @@
  */
 package cn.coderule.minimq.domain.domain.model.message;
 
-import cn.coderule.common.util.lang.StringUtil;
+import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.common.util.lang.SystemUtil;
 import cn.coderule.common.util.net.NetworkUtil;
 import cn.coderule.minimq.domain.domain.constant.MessageConst;
