@@ -35,9 +35,9 @@ public class AckService extends ServiceThread {
 
     private final AckBuffer ackBuffer;
 
-    public AckService(BrokerConfig brokerConfig) {
+    public AckService(BrokerConfig brokerConfig, String reviveTopic) {
         this.brokerConfig = brokerConfig;
-        this.reviveTopic = KeyBuilder.buildClusterReviveTopic(brokerConfig.getCluster());
+        this.reviveTopic = reviveTopic;
 
         this.counter = new AtomicInteger(0);
         this.buffer = new ConcurrentHashMap<>(16 * 1024);

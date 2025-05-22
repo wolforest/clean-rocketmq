@@ -57,6 +57,15 @@ public class AckBuffer implements Serializable {
         queue.setTime(pointWrapper.getCk().getPopTime());
         queue.getQueue().offer(pointWrapper);
         this.buffer.put(pointWrapper.getMergeKey(), pointWrapper);
+        this.counter.incrementAndGet();
+    }
+
+    public int getCount() {
+        return this.counter.get();
+    }
+
+    public boolean containsKey(String lockKey) {
+        return this.buffer.containsKey(lockKey);
     }
 
 }
