@@ -16,23 +16,19 @@
  */
 package cn.coderule.minimq.domain.domain.model.consumer.pop;
 
+import java.io.Serializable;
 import java.util.concurrent.LinkedBlockingDeque;
+import lombok.Getter;
+import lombok.Setter;
 
-public class QueueWithTime<T> {
+public class QueueWithTime<T> implements Serializable {
     private final LinkedBlockingDeque<T> queue;
+    @Getter @Setter
     private long time;
 
     public QueueWithTime() {
         this.queue = new LinkedBlockingDeque<>();
         this.time = System.currentTimeMillis();
-    }
-
-    public void setTime(long popTime) {
-        this.time = popTime;
-    }
-
-    public long getTime() {
-        return time;
     }
 
     public LinkedBlockingDeque<T> get() {

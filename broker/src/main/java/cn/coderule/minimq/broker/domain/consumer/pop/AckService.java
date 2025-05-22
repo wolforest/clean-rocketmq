@@ -21,11 +21,11 @@ public class AckService extends ServiceThread {
      * mergeKey -> checkPointWrapper
      * mergeKey: topic + group + queueId + startOffset + popTime + brokerName
      */
-    private final ConcurrentMap<String, PopCheckPointWrapper> checkPointMap;
+    private final ConcurrentMap<String, PopCheckPointWrapper> buffer;
     /**
      * topic@group@queueId -> queueWithTime
      */
-    private final ConcurrentMap<String, QueueWithTime<PopCheckPointWrapper>> queueMap;
+    private final ConcurrentMap<String, QueueWithTime<PopCheckPointWrapper>> commitOffsets;
 
     private final List<Byte> ackIndexList;
 
@@ -38,8 +38,8 @@ public class AckService extends ServiceThread {
         this.reviveTopic = KeyBuilder.buildClusterReviveTopic(brokerConfig.getCluster());
 
         this.counter = new AtomicInteger(0);
-        this.checkPointMap = new ConcurrentHashMap<>(16 * 1024);
-        this.queueMap = new ConcurrentHashMap<>();
+        this.buffer = new ConcurrentHashMap<>(16 * 1024);
+        this.commitOffsets = new ConcurrentHashMap<>();
         this.ackIndexList = new ArrayList<>(32);
     }
 
@@ -54,7 +54,7 @@ public class AckService extends ServiceThread {
     }
 
     public long getLatestOffset(String lockKey) {
-        QueueWithTime<PopCheckPointWrapper> queue = this.queueMap.get(lockKey);
+        QueueWithTime<PopCheckPointWrapper> queue = this.commitOffsets.get(lockKey);
         if (queue == null) {
             return -1;
         }
