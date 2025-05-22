@@ -36,5 +36,9 @@ public class BrokerConfig extends ServerIdentity implements Serializable {
 
     private long serverReadyTime = 0L;
 
-
+    private MessageConfig messageConfig;
+    private TopicConfig topicConfig;
+    private GrpcConfig grpcConfig;
+    private TimerConfig timerConfig;
+    private TransactionConfig transactionConfig;
 }

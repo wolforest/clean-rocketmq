@@ -10,6 +10,8 @@ public class PopManager implements Lifecycle {
     public void initialize() {
         BrokerConfig brokerConfig = BrokerContext.getBean(BrokerConfig.class);
         String reviveTopic = KeyBuilder.buildClusterReviveTopic(brokerConfig.getCluster());
+
+
     }
 
     @Override
