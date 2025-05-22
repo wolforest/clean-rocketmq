@@ -32,7 +32,7 @@ public class AckBuffer implements Serializable {
         if (queue == null) {
             return -1;
         }
-        PopCheckPointWrapper pointWrapper = queue.get().peekLast();
+        PopCheckPointWrapper pointWrapper = queue.getQueue().peekLast();
         if (pointWrapper != null) {
             return pointWrapper.getNextBeginOffset();
         }
@@ -45,7 +45,18 @@ public class AckBuffer implements Serializable {
             return 0;
         }
 
-        return queue.get().size();
+        return queue.getQueue().size();
+    }
+
+    public void enqueue(PopCheckPointWrapper pointWrapper) {
+        QueueWithTime<PopCheckPointWrapper> queue = this.commitOffsets.computeIfAbsent(
+            pointWrapper.getLockKey(),
+            k -> new QueueWithTime<>()
+        );
+
+        queue.setTime(pointWrapper.getCk().getPopTime());
+        queue.getQueue().offer(pointWrapper);
+        this.buffer.put(pointWrapper.getMergeKey(), pointWrapper);
     }
 
 }

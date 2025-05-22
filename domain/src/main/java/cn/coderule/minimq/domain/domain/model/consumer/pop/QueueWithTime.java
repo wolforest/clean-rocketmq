@@ -21,9 +21,10 @@ import java.util.concurrent.LinkedBlockingDeque;
 import lombok.Getter;
 import lombok.Setter;
 
+@Getter
 public class QueueWithTime<T> implements Serializable {
     private final LinkedBlockingDeque<T> queue;
-    @Getter @Setter
+    @Setter
     private long time;
 
     public QueueWithTime() {
@@ -31,7 +32,4 @@ public class QueueWithTime<T> implements Serializable {
         this.time = System.currentTimeMillis();
     }
 
-    public LinkedBlockingDeque<T> get() {
-        return queue;
-    }
 }
