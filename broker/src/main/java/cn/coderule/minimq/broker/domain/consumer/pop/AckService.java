@@ -33,6 +33,8 @@ public class AckService extends ServiceThread {
     private volatile boolean master = true;
     private int scanTimes = 0;
 
+    private final AckBuffer ackBuffer;
+
     public AckService(BrokerConfig brokerConfig) {
         this.brokerConfig = brokerConfig;
         this.reviveTopic = KeyBuilder.buildClusterReviveTopic(brokerConfig.getCluster());
@@ -41,6 +43,8 @@ public class AckService extends ServiceThread {
         this.buffer = new ConcurrentHashMap<>(16 * 1024);
         this.commitOffsets = new ConcurrentHashMap<>();
         this.ackIndexList = new ArrayList<>(32);
+
+        this.ackBuffer = new AckBuffer();
     }
 
     @Override
@@ -53,19 +57,7 @@ public class AckService extends ServiceThread {
 
     }
 
-    public long getLatestOffset(String lockKey) {
-        QueueWithTime<PopCheckPointWrapper> queue = this.commitOffsets.get(lockKey);
-        if (queue == null) {
-            return -1;
-        }
-        PopCheckPointWrapper pointWrapper = queue.get().peekLast();
-        if (pointWrapper != null) {
-            return pointWrapper.getNextBeginOffset();
-        }
-        return -1;
-    }
-
     public long getLatestOffset(String topic, String group, int queueId) {
-        return getLatestOffset(KeyBuilder.buildConsumeKey(topic, group, queueId));
+        return ackBuffer.getLatestOffset(KeyBuilder.buildConsumeKey(topic, group, queueId));
     }
 }
