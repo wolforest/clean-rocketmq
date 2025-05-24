@@ -2,6 +2,8 @@ package cn.coderule.minimq.broker.domain.consumer.pop;
 
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 import cn.coderule.minimq.domain.config.BrokerConfig;
+import cn.coderule.minimq.domain.domain.model.consumer.pop.AckMsg;
+import cn.coderule.minimq.domain.domain.model.consumer.pop.PopCheckPoint;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.PopCheckPointWrapper;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.QueueWithTime;
 import cn.coderule.minimq.domain.domain.model.meta.topic.KeyBuilder;
@@ -57,7 +59,24 @@ public class AckService extends ServiceThread {
 
     }
 
+    public void addCheckPoint(PopCheckPoint point, int reviveQueueId, long reviveQueueOffset, long nextBeginOffset) {
+
+    }
+
+    public void ack(AckMsg ackMsg, int reviveQueueId) {
+
+    }
+
     public long getLatestOffset(String topic, String group, int queueId) {
         return ackBuffer.getLatestOffset(KeyBuilder.buildConsumeKey(topic, group, queueId));
     }
+
+    public int getTotalSize() {
+        return ackBuffer.getTotalSize();
+    }
+
+    public int getCount() {
+        return ackBuffer.getCount();
+    }
+
 }

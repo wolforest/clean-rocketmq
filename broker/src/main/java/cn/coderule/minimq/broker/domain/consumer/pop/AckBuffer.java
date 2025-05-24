@@ -5,8 +5,10 @@ import cn.coderule.minimq.domain.domain.model.consumer.pop.QueueWithTime;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.atomic.AtomicInteger;
 import lombok.Data;
 
@@ -39,6 +41,10 @@ public class AckBuffer implements Serializable {
         return -1;
     }
 
+    public void clearOffset(String lockKey) {
+        this.commitOffsets.remove(lockKey);
+    }
+
     public int getQueueSize(String lockKey) {
         QueueWithTime<PopCheckPointWrapper> queue = this.commitOffsets.get(lockKey);
         if (queue == null) {
@@ -46,6 +52,16 @@ public class AckBuffer implements Serializable {
         }
 
         return queue.getQueue().size();
+    }
+
+    public int getTotalSize() {
+        int total = 0;
+        for (Map.Entry<String, QueueWithTime<PopCheckPointWrapper>> entry : this.commitOffsets.entrySet()) {
+            LinkedBlockingDeque<PopCheckPointWrapper> queue = entry.getValue().getQueue();
+            total += queue.size();
+        }
+
+        return total;
     }
 
     public void enqueue(PopCheckPointWrapper pointWrapper) {
