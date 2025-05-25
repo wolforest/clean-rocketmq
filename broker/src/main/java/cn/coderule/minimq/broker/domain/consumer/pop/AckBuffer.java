@@ -41,6 +41,11 @@ public class AckBuffer implements Serializable {
         return -1;
     }
 
+    public void clear() {
+        this.buffer.clear();
+        this.commitOffsets.clear();
+    }
+
     public void clearOffset(String lockKey) {
         this.commitOffsets.remove(lockKey);
     }
