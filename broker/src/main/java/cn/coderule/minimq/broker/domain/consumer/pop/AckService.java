@@ -75,7 +75,7 @@ public class AckService extends ServiceThread {
         return ackBuffer.getTotalSize();
     }
 
-    public int getCount() {
+    public int getBufferedSize() {
         return ackBuffer.getCount();
     }
 
