@@ -1,4 +1,4 @@
-package cn.coderule.minimq.broker.domain.consumer.pop;
+package cn.coderule.minimq.store.domain.mq;
 
 import cn.coderule.minimq.domain.domain.model.consumer.pop.PopCheckPointWrapper;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.QueueWithTime;
