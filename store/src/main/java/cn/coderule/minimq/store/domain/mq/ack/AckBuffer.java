@@ -1,5 +1,6 @@
 package cn.coderule.minimq.store.domain.mq.ack;
 
+import cn.coderule.minimq.domain.config.MessageConfig;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.PopCheckPointWrapper;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.QueueWithTime;
 import java.io.Serializable;
@@ -14,7 +15,7 @@ import lombok.Data;
 
 @Data
 public class AckBuffer implements Serializable {
-    private String reviveTopic;
+    private final MessageConfig messageConfig;
 
     private final AtomicInteger counter;
     private final List<Byte> ackIndexList;
@@ -22,7 +23,9 @@ public class AckBuffer implements Serializable {
     private final ConcurrentMap<String, QueueWithTime<PopCheckPointWrapper>> commitOffsets;
 
 
-    public AckBuffer() {
+    public AckBuffer(MessageConfig messageConfig) {
+        this.messageConfig = messageConfig;
+
         this.counter = new AtomicInteger(0);
         this.buffer = new ConcurrentHashMap<>(16 * 1024);
         this.commitOffsets = new ConcurrentHashMap<>();
@@ -48,6 +51,15 @@ public class AckBuffer implements Serializable {
 
     public void clearOffset(String lockKey) {
         this.commitOffsets.remove(lockKey);
+    }
+
+    public boolean isFull(String lockKey) {
+        int size = this.getQueueSize(lockKey);
+        if (size <= 0) {
+            return false;
+        }
+
+        return size >= messageConfig.getPopCkOffsetMaxQueueSize();
     }
 
     public int getQueueSize(String lockKey) {

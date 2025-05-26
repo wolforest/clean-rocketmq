@@ -4,6 +4,7 @@ import cn.coderule.minimq.domain.config.MessageConfig;
 import cn.coderule.minimq.domain.config.StoreConfig;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.AckMsg;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.PopCheckPoint;
+import cn.coderule.minimq.domain.domain.model.consumer.pop.PopCheckPointWrapper;
 import cn.coderule.minimq.domain.domain.model.meta.topic.KeyBuilder;
 import lombok.extern.slf4j.Slf4j;
 
@@ -25,8 +26,23 @@ public class AckService {
     }
 
     public void addCheckPoint(PopCheckPoint point, int reviveQueueId, long reviveOffset, long nextOffset) {
+        PopCheckPointWrapper pointWrapper = new PopCheckPointWrapper(
+            reviveQueueId,
+            reviveOffset,
+            point,
+            nextOffset
+        );
 
+        if (ackBuffer.containsKey(pointWrapper.getMergeKey())) {
+            log.warn("Duplicate checkpoint, key:{}, checkpoint: {}", pointWrapper.getMergeKey(), pointWrapper);
+            return;
+        }
 
+        if (!messageConfig.isEnablePopBufferMerge()) {
+            enqueueReviveQueue(pointWrapper);
+        }
+
+        ackBuffer.enqueue(pointWrapper);
     }
 
     public void ack(AckMsg ackMsg, int reviveQueueId) {
@@ -44,6 +60,10 @@ public class AckService {
 
     public int getBufferedSize() {
         return ackBuffer.getCount();
+    }
+
+    private void enqueueReviveQueue(PopCheckPointWrapper pointWrapper) {
+        // TODO
     }
 
 }
