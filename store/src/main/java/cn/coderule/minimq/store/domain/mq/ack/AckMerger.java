@@ -1,4 +1,4 @@
-package cn.coderule.minimq.store.domain.mq;
+package cn.coderule.minimq.store.domain.mq.ack;
 
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 import cn.coderule.minimq.domain.config.MessageConfig;

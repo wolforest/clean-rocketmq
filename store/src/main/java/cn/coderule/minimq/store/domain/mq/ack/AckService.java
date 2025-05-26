@@ -1,4 +1,4 @@
-package cn.coderule.minimq.store.domain.mq;
+package cn.coderule.minimq.store.domain.mq.ack;
 
 import cn.coderule.minimq.domain.config.StoreConfig;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.AckMsg;
