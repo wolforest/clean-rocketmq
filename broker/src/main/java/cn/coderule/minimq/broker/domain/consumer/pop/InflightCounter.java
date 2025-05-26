@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.coderule.minimq.store.domain.mq.ack;
+package cn.coderule.minimq.broker.domain.consumer.pop;
 
 import cn.coderule.common.lang.type.Pair;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.PopCheckPoint;

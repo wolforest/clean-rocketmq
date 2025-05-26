@@ -1,5 +1,6 @@
 package cn.coderule.minimq.store.domain.mq.ack;
 
+import cn.coderule.minimq.domain.config.MessageConfig;
 import cn.coderule.minimq.domain.config.StoreConfig;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.AckMsg;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.PopCheckPoint;
@@ -9,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class AckService {
     private final StoreConfig storeConfig;
+    private final MessageConfig messageConfig;
     private final String reviveTopic;
     private final long interval = 5_000;
 
@@ -16,12 +18,14 @@ public class AckService {
 
     public AckService(StoreConfig storeConfig, String reviveTopic, AckBuffer ackBuffer) {
         this.storeConfig  = storeConfig;
+        this.messageConfig  = storeConfig.getMessageConfig();
         this.reviveTopic = reviveTopic;
 
         this.ackBuffer = ackBuffer;
     }
 
-    public void addCheckPoint(PopCheckPoint point, int reviveQueueId, long reviveQueueOffset, long nextBeginOffset) {
+    public void addCheckPoint(PopCheckPoint point, int reviveQueueId, long reviveOffset, long nextOffset) {
+
 
     }
 
