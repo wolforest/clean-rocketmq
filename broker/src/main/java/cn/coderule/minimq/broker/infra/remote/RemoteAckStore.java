@@ -18,4 +18,9 @@ public class RemoteAckStore extends AbstractRemoteStore implements AckStore {
     public void ack(AckMsg ackMsg, int reviveQueueId) {
 
     }
+
+    @Override
+    public long getLatestOffset(String topic, String group, int queueId) {
+        return -1;
+    }
 }

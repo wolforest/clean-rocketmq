@@ -45,4 +45,17 @@ public class BrokerAckStore implements AckStore {
 
         remoteAckStore.ack(ackMsg, reviveQueueId);
     }
+
+    @Override
+    public long getLatestOffset(String topic, String group, int queueId) {
+        if (embedAckStore.isEmbed(topic)) {
+            return embedAckStore.getLatestOffset(topic, group, queueId);
+        }
+
+        if (!brokerConfig.isEnableRemoteStore()) {
+            return -1;
+        }
+
+        return remoteAckStore.getLatestOffset(topic, group, queueId);
+    }
 }

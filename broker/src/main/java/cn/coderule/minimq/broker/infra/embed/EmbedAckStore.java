@@ -21,4 +21,9 @@ public class EmbedAckStore extends AbstractEmbedStore implements AckStore {
     public void ack(AckMsg ackMsg, int reviveQueueId) {
         ackStore.ack(ackMsg, reviveQueueId);
     }
+
+    @Override
+    public long getLatestOffset(String topic, String group, int queueId) {
+        return ackStore.getLatestOffset(topic, group, queueId);
+    }
 }

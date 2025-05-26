@@ -30,7 +30,8 @@ public class AckService {
     }
 
     public long getLatestOffset(String topic, String group, int queueId) {
-        return ackBuffer.getLatestOffset(KeyBuilder.buildConsumeKey(topic, group, queueId));
+        String lockKey = KeyBuilder.buildConsumeKey(topic, group, queueId);
+        return ackBuffer.getLatestOffset(lockKey);
     }
 
     public int getTotalSize() {
