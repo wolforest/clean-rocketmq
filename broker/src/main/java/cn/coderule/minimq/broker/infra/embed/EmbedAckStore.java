@@ -1,0 +1,24 @@
+package cn.coderule.minimq.broker.infra.embed;
+
+import cn.coderule.minimq.domain.domain.model.consumer.pop.AckMsg;
+import cn.coderule.minimq.domain.domain.model.consumer.pop.PopCheckPoint;
+import cn.coderule.minimq.domain.service.store.api.AckStore;
+
+public class EmbedAckStore extends AbstractEmbedStore implements AckStore {
+    private final AckStore ackStore;
+
+    public EmbedAckStore(AckStore ackStore, EmbedLoadBalance loadBalance) {
+        super(loadBalance);
+        this.ackStore = ackStore;
+    }
+
+    @Override
+    public void addCheckPoint(PopCheckPoint point, int reviveQueueId, long reviveQueueOffset, long nextBeginOffset) {
+        ackStore.addCheckPoint(point, reviveQueueId, reviveQueueOffset, nextBeginOffset);
+    }
+
+    @Override
+    public void ack(AckMsg ackMsg, int reviveQueueId) {
+        ackStore.ack(ackMsg, reviveQueueId);
+    }
+}
