@@ -63,7 +63,11 @@ public class AckService {
     }
 
     private void enqueueReviveQueue(PopCheckPointWrapper pointWrapper) {
-        // TODO
+        if (pointWrapper.getReviveQueueOffset() >= 0) {
+            return;
+        }
+
+
     }
 
 }

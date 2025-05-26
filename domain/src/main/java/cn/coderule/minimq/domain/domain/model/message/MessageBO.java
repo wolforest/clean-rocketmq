@@ -164,4 +164,8 @@ public class MessageBO extends Message implements Serializable {
     public void setWaitStore(boolean waitStoreMsgOK) {
         this.putProperty(MessageConst.PROPERTY_WAIT_STORE_MSG_OK, Boolean.toString(waitStoreMsgOK));
     }
+
+    public void setDeliverTime(long timeMs) {
+        this.putProperty(MessageConst.PROPERTY_TIMER_DELIVER_MS, String.valueOf(timeMs));
+    }
 }
