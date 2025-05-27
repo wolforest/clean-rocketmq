@@ -7,6 +7,7 @@ import cn.coderule.minimq.domain.domain.model.consumer.pop.AckMsg;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.PopCheckPoint;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.PopCheckPointWrapper;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.PopConverter;
+import cn.coderule.minimq.domain.domain.model.consumer.pop.PopKeyBuilder;
 import cn.coderule.minimq.domain.domain.model.message.MessageBO;
 import cn.coderule.minimq.domain.domain.model.meta.topic.KeyBuilder;
 import cn.coderule.minimq.domain.service.store.domain.MessageQueue;
@@ -61,7 +62,7 @@ public class AckService {
         try {
             mergeAckMsg(ackMsg, reviveQueueId, invisibleTime);
         } catch (Throwable t) {
-            log.error("ack error. ", t);
+            log.error("[PopBuffer]ack error, reviveQueueId: {}. ", reviveQueueId, t);
         }
     }
 
@@ -78,7 +79,60 @@ public class AckService {
         return ackBuffer.getCount();
     }
 
-    public void mergeAckMsg(AckMsg ackMsg, int reviveQueueId, long invisibleTime) {
+    private PopCheckPointWrapper getCheckPoint(AckMsg ackMsg) {
+        String key = PopKeyBuilder.buildKey(ackMsg);
+        PopCheckPointWrapper pointWrapper = ackBuffer.getCheckPoint(key);
+        if (pointWrapper != null) {
+            return pointWrapper;
+        }
+
+        if (messageConfig.isEnablePopLog()) {
+            log.info("[PopBuffer]can't find ackMsg related PopCheckPointWrapper: {}", ackMsg);
+        }
+
+        return null;
+    }
+
+    private boolean validateCheckPoint(PopCheckPointWrapper pointWrapper, AckMsg ackMsg, int reviveQueueId) {
+        if (pointWrapper == null) {
+            return false;
+        }
+
+        if (pointWrapper.isJustOffset()) {
+            return false;
+        }
+
+
+        PopCheckPoint point = pointWrapper.getCk();
+        long now = System.currentTimeMillis();
+
+        if (point.getReviveTime() - now < messageConfig.getPopCkStayBufferTimeOut() + 1500) {
+            if (messageConfig.isEnablePopLog()) {
+                log.warn("[PopBuffer]add ack fail, rqId={}, almost timeout for revive, {}, {}, {}", reviveQueueId, pointWrapper, ackMsg, now);
+            }
+            return false;
+        }
+
+        if (now - point.getPopTime() > messageConfig.getPopCkStayBufferTime() - 1500) {
+            if (messageConfig.isEnablePopLog()) {
+                log.warn("[PopBuffer]add ack fail, rqId={}, stay too long, {}, {}, {}", reviveQueueId, pointWrapper, ackMsg, now);
+            }
+            return false;
+        }
+
+
+        return true;
+    }
+
+    private void mergeAckMsg(AckMsg ackMsg, int reviveQueueId, long invisibleTime) {
+        PopCheckPointWrapper pointWrapper = getCheckPoint(ackMsg);
+        if (pointWrapper == null) {
+            return;
+        }
+
+        if (!validateCheckPoint(pointWrapper, ackMsg, reviveQueueId)) {
+            return;
+        }
 
     }
 

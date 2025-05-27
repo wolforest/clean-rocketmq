@@ -62,6 +62,10 @@ public class AckBuffer implements Serializable {
         return size >= messageConfig.getPopCkOffsetMaxQueueSize();
     }
 
+    public PopCheckPointWrapper getCheckPoint(String lockKey) {
+        return this.buffer.get(lockKey);
+    }
+
     public int getQueueSize(String lockKey) {
         QueueWithTime<PopCheckPointWrapper> queue = this.commitOffsets.get(lockKey);
         if (queue == null) {
