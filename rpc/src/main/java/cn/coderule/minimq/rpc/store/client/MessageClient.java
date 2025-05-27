@@ -3,7 +3,7 @@ package cn.coderule.minimq.rpc.store.client;
 import cn.coderule.minimq.domain.domain.model.message.MessageBO;
 import cn.coderule.minimq.domain.domain.dto.EnqueueResult;
 import cn.coderule.minimq.domain.domain.dto.GetRequest;
-import cn.coderule.minimq.domain.domain.dto.GetResult;
+import cn.coderule.minimq.domain.domain.dto.DequeueResult;
 import cn.coderule.minimq.domain.service.store.api.MessageStore;
 import cn.coderule.minimq.rpc.common.rpc.RpcClient;
 import cn.coderule.minimq.rpc.store.StoreClient;
@@ -33,19 +33,19 @@ public class MessageClient extends AbstractStoreClient implements StoreClient, M
     }
 
     @Override
-    public GetResult get(String topic, int queueId, long offset) {
+    public DequeueResult get(String topic, int queueId, long offset) {
 
         return null;
     }
 
     @Override
-    public GetResult get(String topic, int queueId, long offset, int num) {
+    public DequeueResult get(String topic, int queueId, long offset, int num) {
 
         return null;
     }
 
     @Override
-    public GetResult get(GetRequest request) {
+    public DequeueResult get(GetRequest request) {
 
         return null;
     }

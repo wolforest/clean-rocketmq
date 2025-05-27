@@ -6,7 +6,7 @@ import cn.coderule.minimq.domain.config.StoreConfig;
 import cn.coderule.minimq.domain.domain.model.cluster.store.QueueUnit;
 import cn.coderule.minimq.domain.domain.dto.InsertFuture;
 import cn.coderule.minimq.domain.domain.dto.GetRequest;
-import cn.coderule.minimq.domain.domain.dto.GetResult;
+import cn.coderule.minimq.domain.domain.dto.DequeueResult;
 import cn.coderule.minimq.domain.domain.lock.queue.TopicQueueLock;
 import cn.coderule.minimq.domain.service.store.domain.commitlog.CommitLog;
 import cn.coderule.minimq.domain.service.store.domain.consumequeue.ConsumeQueueGateway;
@@ -79,12 +79,12 @@ public class DefaultMessageService implements MessageService {
     }
 
     @Override
-    public GetResult get(String topic, int queueId, long offset) {
+    public DequeueResult get(String topic, int queueId, long offset) {
         return get(topic, queueId, offset, 1);
     }
 
     @Override
-    public GetResult get(String topic, int queueId, long offset, int num) {
+    public DequeueResult get(String topic, int queueId, long offset, int num) {
         GetRequest request = GetRequest.builder()
             .topic(topic)
             .queueId(queueId)
@@ -96,20 +96,20 @@ public class DefaultMessageService implements MessageService {
     }
 
     @Override
-    public GetResult get(GetRequest request) {
+    public DequeueResult get(GetRequest request) {
         List<QueueUnit> unitList = consumeQueueGateway.get(
             request.getTopic(), request.getQueueId(), request.getOffset(), request.getNum()
         );
 
         if (CollectionUtil.isEmpty(unitList)) {
-            return GetResult.notFound();
+            return DequeueResult.notFound();
         }
 
         return getByUnitList(unitList);
     }
 
-    private GetResult getByUnitList(@NonNull List<QueueUnit> unitList) {
-        GetResult result = new GetResult();
+    private DequeueResult getByUnitList(@NonNull List<QueueUnit> unitList) {
+        DequeueResult result = new DequeueResult();
         MessageBO messageBO;
         for (QueueUnit unit : unitList) {
             messageBO = commitLog.select(unit.getCommitLogOffset(), unit.getUnitSize());
@@ -134,7 +134,7 @@ public class DefaultMessageService implements MessageService {
 
     @Override
     public List<MessageBO> getMessage(String topic, int queueId, long offset, int num) {
-        GetResult result = get(topic, queueId, offset, num);
+        DequeueResult result = get(topic, queueId, offset, num);
         return result.getMessageList();
     }
 

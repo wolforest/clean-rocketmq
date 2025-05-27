@@ -5,7 +5,7 @@ import cn.coderule.minimq.domain.config.BrokerConfig;
 import cn.coderule.minimq.domain.domain.model.message.MessageBO;
 import cn.coderule.minimq.domain.domain.dto.EnqueueResult;
 import cn.coderule.minimq.domain.domain.dto.GetRequest;
-import cn.coderule.minimq.domain.domain.dto.GetResult;
+import cn.coderule.minimq.domain.domain.dto.DequeueResult;
 import cn.coderule.minimq.domain.service.store.api.MessageStore;
 import cn.coderule.minimq.rpc.common.rpc.RpcClient;
 import cn.coderule.minimq.rpc.common.rpc.config.RpcClientConfig;
@@ -60,19 +60,19 @@ public class RemoteMessageStore extends AbstractRemoteStore implements MessageSt
     }
 
     @Override
-    public GetResult get(String topic, int queueId, long offset) {
+    public DequeueResult get(String topic, int queueId, long offset) {
         String address = loadBalance.findByTopic(topic);
         return getClient(address).get(topic, queueId, offset);
     }
 
     @Override
-    public GetResult get(String topic, int queueId, long offset, int num) {
+    public DequeueResult get(String topic, int queueId, long offset, int num) {
         String address = loadBalance.findByTopic(topic);
         return getClient(address).get(topic, queueId, offset, num);
     }
 
     @Override
-    public GetResult get(GetRequest request) {
+    public DequeueResult get(GetRequest request) {
         String address = loadBalance.findByTopic(request.getTopic());
         return getClient(address).get(request);
     }

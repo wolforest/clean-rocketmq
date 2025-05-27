@@ -2,7 +2,7 @@ package cn.coderule.minimq.store.api;
 
 import cn.coderule.minimq.domain.config.MessageConfig;
 import cn.coderule.minimq.domain.domain.dto.GetRequest;
-import cn.coderule.minimq.domain.domain.dto.GetResult;
+import cn.coderule.minimq.domain.domain.dto.DequeueResult;
 import cn.coderule.minimq.domain.service.store.api.MessageStore;
 import cn.coderule.minimq.domain.domain.dto.EnqueueResult;
 import cn.coderule.minimq.domain.domain.model.message.MessageBO;
@@ -30,17 +30,17 @@ public class MessageStoreImpl implements MessageStore {
     }
 
     @Override
-    public GetResult get(String topic, int queueId, long offset) {
+    public DequeueResult get(String topic, int queueId, long offset) {
         return messageService.get(topic, queueId, offset);
     }
 
     @Override
-    public GetResult get(String topic, int queueId, long offset, int num) {
+    public DequeueResult get(String topic, int queueId, long offset, int num) {
         return messageService.get(topic, queueId, offset, num);
     }
 
     @Override
-    public GetResult get(GetRequest request) {
+    public DequeueResult get(GetRequest request) {
         return messageService.get(request);
     }
 

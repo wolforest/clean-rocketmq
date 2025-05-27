@@ -3,7 +3,7 @@ package cn.coderule.minimq.broker.infra.embed;
 import cn.coderule.minimq.domain.domain.model.message.MessageBO;
 import cn.coderule.minimq.domain.domain.dto.EnqueueResult;
 import cn.coderule.minimq.domain.domain.dto.GetRequest;
-import cn.coderule.minimq.domain.domain.dto.GetResult;
+import cn.coderule.minimq.domain.domain.dto.DequeueResult;
 import cn.coderule.minimq.domain.service.store.api.MessageStore;
 import cn.coderule.minimq.domain.service.store.domain.mq.MessageService;
 import java.util.List;
@@ -27,17 +27,17 @@ public class EmbedMessageStore extends AbstractEmbedStore implements MessageServ
     }
 
     @Override
-    public GetResult get(String topic, int queueId, long offset) {
+    public DequeueResult get(String topic, int queueId, long offset) {
         return messageStore.get(topic, queueId, offset);
     }
 
     @Override
-    public GetResult get(String topic, int queueId, long offset, int num) {
+    public DequeueResult get(String topic, int queueId, long offset, int num) {
         return messageStore.get(topic, queueId, offset, num);
     }
 
     @Override
-    public GetResult get(GetRequest request) {
+    public DequeueResult get(GetRequest request) {
         return messageStore.get(request);
     }
 
