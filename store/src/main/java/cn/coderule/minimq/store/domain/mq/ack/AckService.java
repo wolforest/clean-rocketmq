@@ -1,5 +1,6 @@
 package cn.coderule.minimq.store.domain.mq.ack;
 
+import cn.coderule.common.util.lang.ByteUtil;
 import cn.coderule.minimq.domain.config.MessageConfig;
 import cn.coderule.minimq.domain.config.StoreConfig;
 import cn.coderule.minimq.domain.domain.dto.EnqueueResult;
@@ -13,6 +14,7 @@ import cn.coderule.minimq.domain.domain.model.meta.topic.KeyBuilder;
 import cn.coderule.minimq.domain.service.store.domain.MessageQueue;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
+import java.util.concurrent.atomic.AtomicInteger;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -60,7 +62,7 @@ public class AckService {
         }
 
         try {
-            mergeAckMsg(ackMsg, reviveQueueId, invisibleTime);
+            mergeAckMsg(ackMsg, reviveQueueId);
         } catch (Throwable t) {
             log.error("[PopBuffer]ack error, reviveQueueId: {}. ", reviveQueueId, t);
         }
@@ -120,11 +122,10 @@ public class AckService {
             return false;
         }
 
-
         return true;
     }
 
-    private void mergeAckMsg(AckMsg ackMsg, int reviveQueueId, long invisibleTime) {
+    private void mergeAckMsg(AckMsg ackMsg, int reviveQueueId) {
         PopCheckPointWrapper pointWrapper = getCheckPoint(ackMsg);
         if (pointWrapper == null) {
             return;
@@ -134,6 +135,20 @@ public class AckService {
             return;
         }
 
+    }
+
+    private void markBitCAS(AtomicInteger setBits, int index) {
+        while (true) {
+            int bits = setBits.get();
+            if (ByteUtil.getBit(bits, index)) {
+                break;
+            }
+
+            int newBits = ByteUtil.setBit(bits, index, true);
+            if (setBits.compareAndSet(bits, newBits)) {
+                break;
+            }
+        }
     }
 
     private MessageBO buildAckMsg(AckMsg ackMsg, int reviveQueueId, long invisibleTime) {
