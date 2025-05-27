@@ -111,14 +111,16 @@ public class AckService {
 
         if (point.getReviveTime() - now < messageConfig.getPopCkStayBufferTimeOut() + 1500) {
             if (messageConfig.isEnablePopLog()) {
-                log.warn("[PopBuffer]add ack fail, rqId={}, almost timeout for revive, {}, {}, {}", reviveQueueId, pointWrapper, ackMsg, now);
+                log.warn("[PopBuffer]add ack fail, rqId={}, almost timeout for revive, {}, {}, {}",
+                    reviveQueueId, pointWrapper, ackMsg, now);
             }
             return false;
         }
 
         if (now - point.getPopTime() > messageConfig.getPopCkStayBufferTime() - 1500) {
             if (messageConfig.isEnablePopLog()) {
-                log.warn("[PopBuffer]add ack fail, rqId={}, stay too long, {}, {}, {}", reviveQueueId, pointWrapper, ackMsg, now);
+                log.warn("[PopBuffer]add ack fail, rqId={}, stay too long, {}, {}, {}",
+                    reviveQueueId, pointWrapper, ackMsg, now);
             }
             return false;
         }
@@ -145,27 +147,24 @@ public class AckService {
     }
 
     private void mergeAckMsg(AckMsg ackMsg, PopCheckPointWrapper pointWrapper) {
-        int index = pointWrapper.getCk().indexOfAck(ackMsg.getAckOffset());
+        mergeByOffset(ackMsg, pointWrapper, ackMsg.getAckOffset());
+    }
+
+    private void mergeBatchAckMsg(BatchAckMsg ackMsg, PopCheckPointWrapper pointWrapper) {
+        for (Long offset : ackMsg.getAckOffsetList()) {
+            mergeByOffset(ackMsg, pointWrapper, offset);
+        }
+    }
+
+    private void mergeByOffset(AckMsg ackMsg, PopCheckPointWrapper pointWrapper, long offset) {
+        int index = pointWrapper.getCk().indexOfAck(offset);
         if (index > -1) {
             markBitCAS(pointWrapper.getBits(), index);
             return;
         }
 
-        log.error("[PopBuffer]invalid index of ack, ackMsg: {}, index: {}, checkPoint: {}",
+        log.error("[PopBuffer]invalid index of BatchAckMsg, ackMsg: {}, index: {}, checkPoint: {}",
             ackMsg, index, pointWrapper);
-    }
-
-    private void mergeBatchAckMsg(BatchAckMsg ackMsg, PopCheckPointWrapper pointWrapper) {
-        for (Long offset : ackMsg.getAckOffsetList()) {
-            int index = pointWrapper.getCk().indexOfAck(offset);
-            if (index > -1) {
-                markBitCAS(pointWrapper.getBits(), index);
-                continue;
-            }
-
-            log.error("[PopBuffer]invalid index of BatchAckMsg, ackMsg: {}, index: {}, checkPoint: {}",
-                ackMsg, index, pointWrapper);
-        }
     }
 
     private void markBitCAS(AtomicInteger setBits, int index) {
