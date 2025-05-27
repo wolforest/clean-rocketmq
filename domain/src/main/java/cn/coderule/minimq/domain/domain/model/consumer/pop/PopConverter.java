@@ -32,14 +32,20 @@ public class PopConverter {
         msgInner.setTopic(reviveTopic);
         msgInner.setBody(JSON.toJSONString(ackMsg).getBytes(StandardCharsets.UTF_8));
         msgInner.setQueueId(reviveQid);
-        msgInner.setTags(PopConstants.ACK_TAG);
+
+        if (ackMsg instanceof BatchAckMsg) {
+            msgInner.setTags(PopConstants.BATCH_ACK_TAG);
+            msgInner.setMessageId(PopKeyBuilder.genBatchAckUniqueId((BatchAckMsg) ackMsg));
+        } else {
+            msgInner.setTags(PopConstants.ACK_TAG);
+            msgInner.setMessageId(PopKeyBuilder.genAckUniqueId(ackMsg));
+        }
 
         msgInner.setBornTimestamp(System.currentTimeMillis());
         msgInner.setBornHost(storeHost);
         msgInner.setStoreHost(storeHost);
         msgInner.setDeliverTime(ackMsg.getPopTime() + invisibleTime);
 
-        msgInner.getProperties().put(MessageConst.PROPERTY_UNIQ_CLIENT_MESSAGE_ID_KEYIDX, PopKeyBuilder.genAckUniqueId(ackMsg));
         msgInner.setPropertiesString(MessageUtils.propertiesToString(msgInner.getProperties()));
         return msgInner;
     }

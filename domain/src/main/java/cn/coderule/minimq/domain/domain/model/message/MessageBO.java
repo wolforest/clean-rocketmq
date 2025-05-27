@@ -120,6 +120,14 @@ public class MessageBO extends Message implements Serializable {
         this.putProperty(MessageConst.PROPERTY_TAGS, tags);
     }
 
+    public String getMessageId() {
+        return this.getProperty(MessageConst.PROPERTY_UNIQ_CLIENT_MESSAGE_ID_KEYIDX);
+    }
+
+    public void setMessageId(String tags) {
+        this.putProperty(MessageConst.PROPERTY_UNIQ_CLIENT_MESSAGE_ID_KEYIDX, tags);
+    }
+
     public TagType getTagType() {
         if ((this.sysFlag & MessageSysFlag.MULTI_TAGS_FLAG) == MessageSysFlag.MULTI_TAGS_FLAG) {
             return TagType.MULTI_TAG;
