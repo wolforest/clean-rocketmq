@@ -15,7 +15,7 @@ public class RemoteAckStore extends AbstractRemoteStore implements AckStore {
     }
 
     @Override
-    public void ack(AckMsg ackMsg, int reviveQueueId) {
+    public void ack(AckMsg ackMsg, int reviveQueueId, long invisibleTime) {
 
     }
 

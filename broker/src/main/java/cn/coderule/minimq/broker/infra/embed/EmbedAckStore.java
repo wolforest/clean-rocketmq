@@ -18,8 +18,8 @@ public class EmbedAckStore extends AbstractEmbedStore implements AckStore {
     }
 
     @Override
-    public void ack(AckMsg ackMsg, int reviveQueueId) {
-        ackStore.ack(ackMsg, reviveQueueId);
+    public void ack(AckMsg ackMsg, int reviveQueueId, long invisibleTime) {
+        ackStore.ack(ackMsg, reviveQueueId, invisibleTime);
     }
 
     @Override

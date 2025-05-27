@@ -33,9 +33,9 @@ public class BrokerAckStore implements AckStore {
     }
 
     @Override
-    public void ack(AckMsg ackMsg, int reviveQueueId) {
+    public void ack(AckMsg ackMsg, int reviveQueueId, long invisibleTime) {
         if (embedAckStore.isEmbed(ackMsg.getTopic())) {
-            embedAckStore.ack(ackMsg, reviveQueueId);
+            embedAckStore.ack(ackMsg, reviveQueueId, invisibleTime);
             return;
         }
 
@@ -43,7 +43,7 @@ public class BrokerAckStore implements AckStore {
             return;
         }
 
-        remoteAckStore.ack(ackMsg, reviveQueueId);
+        remoteAckStore.ack(ackMsg, reviveQueueId, invisibleTime);
     }
 
     @Override

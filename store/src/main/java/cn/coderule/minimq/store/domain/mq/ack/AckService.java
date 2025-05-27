@@ -19,7 +19,6 @@ public class AckService {
     private final StoreConfig storeConfig;
     private final MessageConfig messageConfig;
     private final String reviveTopic;
-    private final long interval = 5_000;
 
     private final AckBuffer ackBuffer;
     private final MessageQueue messageQueue;
@@ -53,8 +52,17 @@ public class AckService {
         ackBuffer.enqueue(pointWrapper);
     }
 
-    public void ack(AckMsg ackMsg, int reviveQueueId) {
+    public void ack(AckMsg ackMsg, int reviveQueueId, long invisibleTime) {
+        if (!messageConfig.isEnablePopBufferMerge()) {
+            enqueueReviveQueue(ackMsg, reviveQueueId, invisibleTime);
+            return;
+        }
 
+        try {
+            mergeAckMsg(ackMsg, reviveQueueId, invisibleTime);
+        } catch (Throwable t) {
+            log.error("ack error. ", t);
+        }
     }
 
     public long getLatestOffset(String topic, String group, int queueId) {
@@ -70,19 +78,50 @@ public class AckService {
         return ackBuffer.getCount();
     }
 
-    private void enqueueReviveQueue(PopCheckPointWrapper pointWrapper) {
-        if (pointWrapper.getReviveQueueOffset() >= 0) {
-            return;
+    public void mergeAckMsg(AckMsg ackMsg, int reviveQueueId, long invisibleTime) {
+
+    }
+
+    private MessageBO buildAckMsg(AckMsg ackMsg, int reviveQueueId, long invisibleTime) {
+        SocketAddress storeHost = new InetSocketAddress(storeConfig.getHost(), storeConfig.getPort());
+        return PopConverter.toMessageBO(
+            ackMsg,
+            reviveQueueId,
+            reviveTopic,
+            storeHost,
+            invisibleTime
+        );
+    }
+
+    private void enqueueReviveQueue(AckMsg ackMsg, int reviveQueueId, long invisibleTime) {
+        MessageBO messageBO = buildAckMsg(ackMsg, reviveQueueId, invisibleTime);
+        EnqueueResult result = messageQueue.enqueue(messageBO);
+        if (result.isFailure()) {
+            log.error("Enqueue ackMsg failed, ackMsg: {}; reviveQueueId:{}; invisibleTime: {};",
+                ackMsg, reviveQueueId, invisibleTime);
         }
 
+        if (messageConfig.isEnablePopLog()) {
+            log.info("Enqueue ackMsg success, ackMsg: {}, result: {}", ackMsg, result);
+        }
+    }
+
+    private MessageBO buildReviveMsg(PopCheckPointWrapper pointWrapper) {
         SocketAddress storeHost = new InetSocketAddress(storeConfig.getHost(), storeConfig.getPort());
-        MessageBO messageBO = PopConverter.buildCkMsg(
+        return PopConverter.buildCkMsg(
             pointWrapper.getCk(),
             pointWrapper.getReviveQueueId(),
             reviveTopic,
             storeHost
         );
+    }
 
+    private void enqueueReviveQueue(PopCheckPointWrapper pointWrapper) {
+        if (pointWrapper.getReviveQueueOffset() >= 0) {
+            return;
+        }
+
+        MessageBO messageBO = buildReviveMsg(pointWrapper);
         EnqueueResult result = messageQueue.enqueue(messageBO);
         if (result.isFailure()) {
             log.error("Enqueue checkpoint failed, checkpoint: {}", pointWrapper);

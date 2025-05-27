@@ -5,6 +5,6 @@ import cn.coderule.minimq.domain.domain.model.consumer.pop.PopCheckPoint;
 
 public interface AckStore {
     void addCheckPoint(PopCheckPoint point, int reviveQueueId, long reviveQueueOffset, long nextBeginOffset);
-    void ack(AckMsg ackMsg, int reviveQueueId);
+    void ack(AckMsg ackMsg, int reviveQueueId, long invisibleTime);
     long getLatestOffset(String topic, String group, int queueId);
 }

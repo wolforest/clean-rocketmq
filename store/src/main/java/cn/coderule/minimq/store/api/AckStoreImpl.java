@@ -18,8 +18,8 @@ public class AckStoreImpl implements AckStore {
     }
 
     @Override
-    public void ack(AckMsg ackMsg, int reviveQueueId) {
-        ackService.ack(ackMsg, reviveQueueId);
+    public void ack(AckMsg ackMsg, int reviveQueueId, long invisibleTime) {
+        ackService.ack(ackMsg, reviveQueueId, invisibleTime);
     }
 
     @Override
