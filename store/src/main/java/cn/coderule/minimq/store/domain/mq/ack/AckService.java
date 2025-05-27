@@ -137,7 +137,7 @@ public class AckService {
         }
 
         if (ackMsg instanceof BatchAckMsg) {
-            mergeBatchAckMsg(ackMsg, pointWrapper);
+            mergeBatchAckMsg((BatchAckMsg) ackMsg, pointWrapper);
             return;
         }
 
@@ -145,11 +145,27 @@ public class AckService {
     }
 
     private void mergeAckMsg(AckMsg ackMsg, PopCheckPointWrapper pointWrapper) {
+        int index = pointWrapper.getCk().indexOfAck(ackMsg.getAckOffset());
+        if (index > -1) {
+            markBitCAS(pointWrapper.getBits(), index);
+            return;
+        }
 
+        log.error("[PopBuffer]invalid index of ack, ackMsg: {}, index: {}, checkPoint: {}",
+            ackMsg, index, pointWrapper);
     }
 
-    private void mergeBatchAckMsg(AckMsg ackMsg, PopCheckPointWrapper pointWrapper) {
+    private void mergeBatchAckMsg(BatchAckMsg ackMsg, PopCheckPointWrapper pointWrapper) {
+        for (Long offset : ackMsg.getAckOffsetList()) {
+            int index = pointWrapper.getCk().indexOfAck(offset);
+            if (index > -1) {
+                markBitCAS(pointWrapper.getBits(), index);
+                continue;
+            }
 
+            log.error("[PopBuffer]invalid index of BatchAckMsg, ackMsg: {}, index: {}, checkPoint: {}",
+                ackMsg, index, pointWrapper);
+        }
     }
 
     private void markBitCAS(AtomicInteger setBits, int index) {
