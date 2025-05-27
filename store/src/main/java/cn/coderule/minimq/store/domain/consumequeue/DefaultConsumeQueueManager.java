@@ -1,8 +1,8 @@
 package cn.coderule.minimq.store.domain.consumequeue;
 
 import cn.coderule.minimq.domain.config.ConsumeQueueConfig;
-import cn.coderule.minimq.domain.service.store.domain.CommitLogDispatcher;
-import cn.coderule.minimq.domain.service.store.domain.ConsumeQueueGateway;
+import cn.coderule.minimq.domain.service.store.domain.commitlog.CommitLogDispatcher;
+import cn.coderule.minimq.domain.service.store.domain.consumequeue.ConsumeQueueGateway;
 import cn.coderule.minimq.domain.service.store.domain.meta.TopicService;
 import cn.coderule.minimq.domain.service.store.manager.ConsumeQueueManager;
 import cn.coderule.minimq.store.domain.consumequeue.queue.ConsumeQueueFactory;

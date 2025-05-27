@@ -14,7 +14,7 @@ import cn.coderule.minimq.domain.service.store.infra.MappedFile;
 import cn.coderule.minimq.domain.domain.model.message.MessageDecoder;
 import cn.coderule.minimq.domain.domain.lock.commitlog.CommitLogLock;
 import cn.coderule.minimq.domain.domain.lock.commitlog.CommitLogReentrantLock;
-import cn.coderule.minimq.domain.service.store.domain.CommitLog;
+import cn.coderule.minimq.domain.service.store.domain.commitlog.CommitLog;
 import cn.coderule.minimq.domain.service.store.infra.MappedFileQueue;
 import cn.coderule.minimq.domain.domain.model.message.MessageBO;
 import cn.coderule.minimq.store.domain.commitlog.flush.FlushManager;

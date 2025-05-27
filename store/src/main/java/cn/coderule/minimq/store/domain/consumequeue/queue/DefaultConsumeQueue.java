@@ -7,7 +7,7 @@ import cn.coderule.minimq.domain.domain.model.cluster.store.CommitLogEvent;
 import cn.coderule.minimq.domain.domain.model.message.MessageBO;
 import cn.coderule.minimq.domain.domain.model.cluster.store.QueueUnit;
 import cn.coderule.minimq.domain.domain.dto.SelectedMappedBuffer;
-import cn.coderule.minimq.domain.service.store.domain.ConsumeQueue;
+import cn.coderule.minimq.domain.service.store.domain.consumequeue.ConsumeQueue;
 import cn.coderule.minimq.domain.service.store.infra.MappedFile;
 import cn.coderule.minimq.domain.service.store.infra.MappedFileQueue;
 import cn.coderule.minimq.store.infra.file.DefaultMappedFileQueue;

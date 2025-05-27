@@ -1,6 +1,6 @@
 package cn.coderule.minimq.store.domain.index;
 
-import cn.coderule.minimq.domain.service.store.domain.CommitLogDispatcher;
+import cn.coderule.minimq.domain.service.store.domain.commitlog.CommitLogDispatcher;
 import cn.coderule.minimq.domain.service.store.manager.IndexManager;
 import cn.coderule.minimq.store.server.bootstrap.StoreContext;
 

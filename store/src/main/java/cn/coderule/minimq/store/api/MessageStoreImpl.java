@@ -6,7 +6,7 @@ import cn.coderule.minimq.domain.domain.dto.GetResult;
 import cn.coderule.minimq.domain.service.store.api.MessageStore;
 import cn.coderule.minimq.domain.domain.dto.EnqueueResult;
 import cn.coderule.minimq.domain.domain.model.message.MessageBO;
-import cn.coderule.minimq.domain.service.store.domain.MessageService;
+import cn.coderule.minimq.domain.service.store.domain.mq.MessageService;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 

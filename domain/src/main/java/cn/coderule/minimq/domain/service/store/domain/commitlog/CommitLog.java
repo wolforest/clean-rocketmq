@@ -1,4 +1,4 @@
-package cn.coderule.minimq.domain.service.store.domain;
+package cn.coderule.minimq.domain.service.store.domain.commitlog;
 
 import cn.coderule.minimq.domain.domain.model.message.MessageBO;
 import cn.coderule.minimq.domain.domain.dto.InsertFuture;

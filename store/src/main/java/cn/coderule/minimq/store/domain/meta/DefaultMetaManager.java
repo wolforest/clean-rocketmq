@@ -3,7 +3,7 @@ package cn.coderule.minimq.store.domain.meta;
 import cn.coderule.minimq.domain.service.store.api.ConsumeOffsetStore;
 import cn.coderule.minimq.domain.service.store.api.SubscriptionStore;
 import cn.coderule.minimq.domain.service.store.api.TopicStore;
-import cn.coderule.minimq.domain.service.store.domain.ConsumeQueueGateway;
+import cn.coderule.minimq.domain.service.store.domain.consumequeue.ConsumeQueueGateway;
 import cn.coderule.minimq.domain.service.store.domain.meta.ConsumeOffsetService;
 import cn.coderule.minimq.domain.service.store.domain.meta.SubscriptionService;
 import cn.coderule.minimq.domain.service.store.domain.meta.TopicService;
