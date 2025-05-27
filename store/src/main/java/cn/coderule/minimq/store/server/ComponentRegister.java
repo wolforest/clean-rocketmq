@@ -6,14 +6,14 @@ import cn.coderule.minimq.domain.service.store.manager.CommitLogManager;
 import cn.coderule.minimq.domain.service.store.manager.CommitLogDispatcherManager;
 import cn.coderule.minimq.domain.service.store.manager.ConsumeQueueManager;
 import cn.coderule.minimq.domain.service.store.manager.IndexManager;
-import cn.coderule.minimq.domain.service.store.manager.MessageQueueManager;
+import cn.coderule.minimq.domain.service.store.manager.MQManager;
 import cn.coderule.minimq.domain.service.store.manager.MetaManager;
 import cn.coderule.minimq.domain.service.store.manager.TimerManager;
 import cn.coderule.minimq.store.domain.commitlog.DefaultCommitLogManager;
 import cn.coderule.minimq.store.domain.consumequeue.DefaultConsumeQueueManager;
 import cn.coderule.minimq.store.domain.dispatcher.DefaultCommitLogDispatcherManager;
 import cn.coderule.minimq.store.domain.index.DefaultIndexManager;
-import cn.coderule.minimq.store.domain.mq.DefaultMessageQueueManager;
+import cn.coderule.minimq.store.domain.mq.DefaultMQManager;
 import cn.coderule.minimq.store.domain.meta.DefaultMetaManager;
 import cn.coderule.minimq.store.domain.timer.DefaultTimerManager;
 import cn.coderule.minimq.store.infra.StoreRegister;
@@ -94,7 +94,7 @@ public class ComponentRegister {
     }
 
     private void registerMessageQueue() {
-        MessageQueueManager component = new DefaultMessageQueueManager();
+        MQManager component = new DefaultMQManager();
         manager.register(component);
     }
 

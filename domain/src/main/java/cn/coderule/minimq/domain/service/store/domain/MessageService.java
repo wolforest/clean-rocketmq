@@ -7,7 +7,7 @@ import cn.coderule.minimq.domain.domain.dto.GetResult;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-public interface MessageQueue {
+public interface MessageService {
     EnqueueResult enqueue(MessageBO messageBO);
     CompletableFuture<EnqueueResult> enqueueAsync(MessageBO messageBO);
 

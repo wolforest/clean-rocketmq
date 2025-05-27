@@ -5,11 +5,11 @@ import cn.coderule.minimq.domain.domain.dto.EnqueueResult;
 import cn.coderule.minimq.domain.domain.dto.GetRequest;
 import cn.coderule.minimq.domain.domain.dto.GetResult;
 import cn.coderule.minimq.domain.service.store.api.MessageStore;
-import cn.coderule.minimq.domain.service.store.domain.MessageQueue;
+import cn.coderule.minimq.domain.service.store.domain.MessageService;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-public class EmbedMessageStore extends AbstractEmbedStore implements MessageQueue {
+public class EmbedMessageStore extends AbstractEmbedStore implements MessageService {
     private final MessageStore messageStore;
     public EmbedMessageStore(MessageStore messageStore, EmbedLoadBalance loadBalance) {
         super(loadBalance);

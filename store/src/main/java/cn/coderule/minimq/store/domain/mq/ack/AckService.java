@@ -12,7 +12,7 @@ import cn.coderule.minimq.domain.domain.model.consumer.pop.PopConverter;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.PopKeyBuilder;
 import cn.coderule.minimq.domain.domain.model.message.MessageBO;
 import cn.coderule.minimq.domain.domain.model.meta.topic.KeyBuilder;
-import cn.coderule.minimq.domain.service.store.domain.MessageQueue;
+import cn.coderule.minimq.domain.service.store.domain.MessageService;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -25,12 +25,12 @@ public class AckService {
     private final String reviveTopic;
 
     private final AckBuffer ackBuffer;
-    private final MessageQueue messageQueue;
+    private final MessageService messageService;
 
-    public AckService(StoreConfig storeConfig, MessageQueue messageQueue, String reviveTopic, AckBuffer ackBuffer) {
+    public AckService(StoreConfig storeConfig, MessageService messageService, String reviveTopic, AckBuffer ackBuffer) {
         this.storeConfig  = storeConfig;
         this.messageConfig  = storeConfig.getMessageConfig();
-        this.messageQueue = messageQueue;
+        this.messageService = messageService;
 
         this.reviveTopic = reviveTopic;
         this.ackBuffer = ackBuffer;
@@ -194,7 +194,7 @@ public class AckService {
 
     private void enqueueReviveQueue(AckMsg ackMsg, int reviveQueueId, long invisibleTime) {
         MessageBO messageBO = buildAckMsg(ackMsg, reviveQueueId, invisibleTime);
-        EnqueueResult result = messageQueue.enqueue(messageBO);
+        EnqueueResult result = messageService.enqueue(messageBO);
         if (result.isFailure()) {
             log.error("Enqueue ackMsg failed, ackMsg: {}; reviveQueueId:{}; invisibleTime: {};",
                 ackMsg, reviveQueueId, invisibleTime);
@@ -221,7 +221,7 @@ public class AckService {
         }
 
         MessageBO messageBO = buildReviveMsg(pointWrapper);
-        EnqueueResult result = messageQueue.enqueue(messageBO);
+        EnqueueResult result = messageService.enqueue(messageBO);
         if (result.isFailure()) {
             log.error("Enqueue checkpoint failed, checkpoint: {}", pointWrapper);
         }

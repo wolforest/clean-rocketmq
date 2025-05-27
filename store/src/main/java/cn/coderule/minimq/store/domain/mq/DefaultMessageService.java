@@ -10,7 +10,7 @@ import cn.coderule.minimq.domain.domain.dto.GetResult;
 import cn.coderule.minimq.domain.domain.lock.queue.TopicQueueLock;
 import cn.coderule.minimq.domain.service.store.domain.CommitLog;
 import cn.coderule.minimq.domain.service.store.domain.ConsumeQueueGateway;
-import cn.coderule.minimq.domain.service.store.domain.MessageQueue;
+import cn.coderule.minimq.domain.service.store.domain.MessageService;
 import cn.coderule.minimq.domain.domain.dto.EnqueueResult;
 import cn.coderule.minimq.domain.domain.model.message.MessageBO;
 import cn.coderule.minimq.store.server.bootstrap.StoreContext;
@@ -22,14 +22,14 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class DefaultMessageQueue implements MessageQueue {
+public class DefaultMessageService implements MessageService {
     private final TopicQueueLock topicQueueLock;
     private final MessageConfig messageConfig;
     private final ConsumeQueueGateway consumeQueueGateway;
     private final CommitLogSynchronizer commitLogSynchronizer;
     private final CommitLog commitLog;
 
-    public DefaultMessageQueue(
+    public DefaultMessageService(
         MessageConfig messageConfig,
         CommitLog commitLog,
         ConsumeQueueGateway consumeQueueGateway,
