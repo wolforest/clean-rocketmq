@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.coderule.minimq.domain.domain.model.consumer.pop;
+package cn.coderule.minimq.domain.domain.model.consumer.pop.helper;
 
 import java.io.Serializable;
 import java.util.concurrent.LinkedBlockingDeque;

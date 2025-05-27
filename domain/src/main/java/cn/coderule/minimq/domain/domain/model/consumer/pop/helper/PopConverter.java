@@ -1,7 +1,10 @@
-package cn.coderule.minimq.domain.domain.model.consumer.pop;
+package cn.coderule.minimq.domain.domain.model.consumer.pop.helper;
 
 import cn.coderule.minimq.domain.domain.constant.MessageConst;
 import cn.coderule.minimq.domain.domain.constant.PopConstants;
+import cn.coderule.minimq.domain.domain.model.consumer.pop.ack.AckMsg;
+import cn.coderule.minimq.domain.domain.model.consumer.pop.ack.BatchAckMsg;
+import cn.coderule.minimq.domain.domain.model.consumer.pop.checkpoint.PopCheckPoint;
 import cn.coderule.minimq.domain.domain.model.message.MessageBO;
 import cn.coderule.minimq.domain.utils.MessageUtils;
 import com.alibaba.fastjson2.JSON;

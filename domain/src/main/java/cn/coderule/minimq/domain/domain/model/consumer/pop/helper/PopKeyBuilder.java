@@ -14,9 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.coderule.minimq.domain.domain.model.consumer.pop;
+package cn.coderule.minimq.domain.domain.model.consumer.pop.helper;
 
 import cn.coderule.minimq.domain.domain.constant.PopConstants;
+import cn.coderule.minimq.domain.domain.model.consumer.pop.ack.AckMsg;
+import cn.coderule.minimq.domain.domain.model.consumer.pop.ack.BatchAckMsg;
+import cn.coderule.minimq.domain.domain.model.consumer.pop.checkpoint.PopCheckPoint;
 import cn.coderule.minimq.domain.domain.model.meta.topic.KeyBuilder;
 
 public class PopKeyBuilder {

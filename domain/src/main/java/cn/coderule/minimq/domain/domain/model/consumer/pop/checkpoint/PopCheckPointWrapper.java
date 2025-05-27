@@ -14,9 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.coderule.minimq.domain.domain.model.consumer.pop;
+package cn.coderule.minimq.domain.domain.model.consumer.pop.checkpoint;
 
 import cn.coderule.minimq.domain.domain.constant.PopConstants;
+import cn.coderule.minimq.domain.domain.model.consumer.pop.helper.PopKeyBuilder;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class PopCheckPointWrapper {

@@ -17,7 +17,7 @@
 package cn.coderule.minimq.broker.domain.consumer.pop;
 
 import cn.coderule.common.lang.type.Pair;
-import cn.coderule.minimq.domain.domain.model.consumer.pop.PopCheckPoint;
+import cn.coderule.minimq.domain.domain.model.consumer.pop.checkpoint.PopCheckPoint;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
