@@ -5,6 +5,7 @@ import cn.coderule.minimq.domain.config.MessageConfig;
 import cn.coderule.minimq.domain.config.StoreConfig;
 import cn.coderule.minimq.domain.domain.dto.EnqueueResult;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.AckMsg;
+import cn.coderule.minimq.domain.domain.model.consumer.pop.BatchAckMsg;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.PopCheckPoint;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.PopCheckPointWrapper;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.PopConverter;
@@ -134,6 +135,20 @@ public class AckService {
         if (!validateCheckPoint(pointWrapper, ackMsg, reviveQueueId)) {
             return;
         }
+
+        if (ackMsg instanceof BatchAckMsg) {
+            mergeBatchAckMsg(ackMsg, pointWrapper);
+            return;
+        }
+
+        mergeAckMsg(ackMsg, pointWrapper);
+    }
+
+    private void mergeAckMsg(AckMsg ackMsg, PopCheckPointWrapper pointWrapper) {
+
+    }
+
+    private void mergeBatchAckMsg(AckMsg ackMsg, PopCheckPointWrapper pointWrapper) {
 
     }
 
