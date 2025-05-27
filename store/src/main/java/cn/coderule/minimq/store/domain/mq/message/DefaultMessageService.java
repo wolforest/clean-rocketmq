@@ -1,4 +1,4 @@
-package cn.coderule.minimq.store.domain.mq;
+package cn.coderule.minimq.store.domain.mq.message;
 
 import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.minimq.domain.config.MessageConfig;

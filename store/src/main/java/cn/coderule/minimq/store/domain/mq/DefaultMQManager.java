@@ -7,6 +7,7 @@ import cn.coderule.minimq.domain.service.store.domain.consumequeue.ConsumeQueueG
 import cn.coderule.minimq.domain.service.store.manager.MQManager;
 import cn.coderule.minimq.domain.service.store.domain.mq.MessageService;
 import cn.coderule.minimq.store.api.MessageStoreImpl;
+import cn.coderule.minimq.store.domain.mq.message.DefaultMessageService;
 import cn.coderule.minimq.store.server.bootstrap.StoreContext;
 import cn.coderule.minimq.store.server.ha.commitlog.CommitLogSynchronizer;
 import lombok.extern.slf4j.Slf4j;
