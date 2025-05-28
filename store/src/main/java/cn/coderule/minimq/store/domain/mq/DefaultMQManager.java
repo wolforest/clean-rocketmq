@@ -6,6 +6,7 @@ import cn.coderule.minimq.domain.domain.lock.queue.DequeueLock;
 import cn.coderule.minimq.domain.service.store.api.MQStore;
 import cn.coderule.minimq.domain.service.store.domain.commitlog.CommitLog;
 import cn.coderule.minimq.domain.service.store.domain.consumequeue.ConsumeQueueGateway;
+import cn.coderule.minimq.domain.service.store.domain.meta.ConsumeOffsetService;
 import cn.coderule.minimq.domain.service.store.manager.MQManager;
 import cn.coderule.minimq.domain.service.store.domain.MQService;
 import cn.coderule.minimq.store.api.MQStoreImpl;
@@ -28,10 +29,11 @@ public class DefaultMQManager implements MQManager {
         CommitLog commitLog = StoreContext.getBean(CommitLog.class);
         ConsumeQueueGateway consumeQueueGateway = StoreContext.getBean(ConsumeQueueGateway.class);
         CommitLogSynchronizer commitLogSynchronizer = StoreContext.getBean(CommitLogSynchronizer.class);
+        ConsumeOffsetService consumeOffsetService = StoreContext.getBean(ConsumeOffsetService.class);
         dequeueLock = new DequeueLock();
 
         EnqueueService enqueueService = new EnqueueService(commitLog, consumeQueueGateway, commitLogSynchronizer);
-        DequeueService dequeueService = new DequeueService(storeConfig, commitLog, dequeueLock, consumeQueueGateway);
+        DequeueService dequeueService = new DequeueService(storeConfig, commitLog, dequeueLock, consumeQueueGateway, consumeOffsetService);
         MessageService messageService = new MessageService(storeConfig, commitLog, consumeQueueGateway);
 
 

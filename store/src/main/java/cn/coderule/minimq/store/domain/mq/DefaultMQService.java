@@ -41,6 +41,11 @@ public class DefaultMQService implements MQService {
     }
 
     @Override
+    public CompletableFuture<DequeueResult> dequeueAsync(String group, String topic, int queueId, int num) {
+        return dequeueService.dequeueAsync(group, topic, queueId, num);
+    }
+
+    @Override
     public DequeueResult dequeue(String group, String topic, int queueId, int num) {
         return dequeueService.dequeue(group, topic, queueId, num);
     }
