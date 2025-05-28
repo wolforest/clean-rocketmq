@@ -5,7 +5,6 @@ import cn.coderule.minimq.domain.config.MessageConfig;
 import cn.coderule.minimq.domain.config.StoreConfig;
 import cn.coderule.minimq.domain.domain.lock.queue.DequeueLock;
 import cn.coderule.minimq.domain.domain.model.cluster.store.QueueUnit;
-import cn.coderule.minimq.domain.domain.dto.InsertFuture;
 import cn.coderule.minimq.domain.domain.dto.GetRequest;
 import cn.coderule.minimq.domain.domain.dto.DequeueResult;
 import cn.coderule.minimq.domain.domain.lock.queue.EnqueueLock;
@@ -14,8 +13,8 @@ import cn.coderule.minimq.domain.service.store.domain.consumequeue.ConsumeQueueG
 import cn.coderule.minimq.domain.service.store.domain.MQService;
 import cn.coderule.minimq.domain.domain.dto.EnqueueResult;
 import cn.coderule.minimq.domain.domain.model.message.MessageBO;
+import cn.coderule.minimq.store.domain.mq.queue.EnqueueService;
 import cn.coderule.minimq.store.server.bootstrap.StoreContext;
-import cn.coderule.minimq.store.server.ha.commitlog.CommitLogSynchronizer;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
@@ -26,25 +25,25 @@ import lombok.extern.slf4j.Slf4j;
 public class DefaultMQService implements MQService {
     private final MessageConfig messageConfig;
     private final ConsumeQueueGateway consumeQueueGateway;
-    private final CommitLogSynchronizer commitLogSynchronizer;
     private final CommitLog commitLog;
 
-    private final EnqueueLock enqueueLock;
+    private final EnqueueService enqueueService;
+
     private final DequeueLock dequeueLock;
 
     public DefaultMQService(
+        EnqueueService enqueueService,
         MessageConfig messageConfig,
         CommitLog commitLog,
         ConsumeQueueGateway consumeQueueGateway,
-        CommitLogSynchronizer commitLogSynchronizer,
         DequeueLock dequeueLock) {
+
+        this.enqueueService = enqueueService;
 
         this.messageConfig = messageConfig;
         this.commitLog = commitLog;
         this.consumeQueueGateway = consumeQueueGateway;
-        this.commitLogSynchronizer = commitLogSynchronizer;
 
-        this.enqueueLock = new EnqueueLock();
         this.dequeueLock = dequeueLock;
     }
 
@@ -59,28 +58,12 @@ public class DefaultMQService implements MQService {
      */
     @Override
     public EnqueueResult enqueue(MessageBO messageBO) {
-        return waitForResult(enqueueAsync(messageBO));
+        return enqueueService.enqueue(messageBO);
     }
 
     @Override
     public CompletableFuture<EnqueueResult> enqueueAsync(MessageBO messageBO) {
-        enqueueLock.lock(messageBO.getTopic(), messageBO.getQueueId());
-        try {
-            long queueOffset = consumeQueueGateway.assignOffset(messageBO.getTopic(), messageBO.getQueueId());
-            messageBO.setQueueOffset(queueOffset);
-
-            InsertFuture result = commitLog.insert(messageBO);
-
-            if (result.isInsertSuccess()) {
-                consumeQueueGateway.increaseOffset(messageBO.getTopic(), messageBO.getQueueId());
-            }
-
-            return commitLogSynchronizer.sync(result);
-        } catch (Exception e) {
-            return CompletableFuture.completedFuture(EnqueueResult.failure());
-        } finally {
-            enqueueLock.unlock(messageBO.getTopic(), messageBO.getQueueId());
-        }
+        return enqueueService.enqueueAsync(messageBO);
     }
 
     @Override
