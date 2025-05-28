@@ -28,7 +28,11 @@ public class MQClient extends AbstractStoreClient implements StoreClient, MQStor
     @Override
     public CompletableFuture<EnqueueResult> enqueueAsync(MessageBO messageBO) {
 
+        return null;
+    }
 
+    @Override
+    public CompletableFuture<DequeueResult> dequeueAsync(String group, String topic, int queueId, int num) {
         return null;
     }
 

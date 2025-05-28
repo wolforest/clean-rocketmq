@@ -14,6 +14,12 @@ public interface MQStore {
     EnqueueResult enqueue(MessageBO messageBO);
     CompletableFuture<EnqueueResult> enqueueAsync(MessageBO messageBO);
 
+    CompletableFuture<DequeueResult> dequeueAsync(String group, String topic, int queueId, int num);
+
+    default CompletableFuture<DequeueResult> dequeueAsync(String group, String topic, int queueId) {
+        return dequeueAsync(group, topic, queueId, 1);
+    }
+
     DequeueResult dequeue(String group, String topic, int queueId, int num);
     default DequeueResult dequeue(String group, String topic, int queueId) {
         return dequeue(group, topic, queueId, 1);

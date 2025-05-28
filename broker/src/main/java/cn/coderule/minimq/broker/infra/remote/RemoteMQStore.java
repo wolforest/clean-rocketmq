@@ -60,6 +60,12 @@ public class RemoteMQStore extends AbstractRemoteStore implements MQStore, Lifec
     }
 
     @Override
+    public CompletableFuture<DequeueResult> dequeueAsync(String group, String topic, int queueId, int num) {
+        String address = loadBalance.findByTopic(topic);
+        return getClient(address).dequeueAsync(group, topic, queueId, num);
+    }
+
+    @Override
     public DequeueResult dequeue(String group, String topic, int queueId, int num) {
         String address = loadBalance.findByTopic(topic);
         return getClient(address).dequeue(group, topic, queueId, num);

@@ -30,6 +30,11 @@ public class MQStoreImpl implements MQStore {
     }
 
     @Override
+    public CompletableFuture<DequeueResult> dequeueAsync(String group, String topic, int queueId, int num) {
+        return mqService.dequeueAsync(group, topic, queueId, num);
+    }
+
+    @Override
     public DequeueResult dequeue(String group, String topic, int queueId, int num) {
         return mqService.dequeue(group, topic, queueId, num);
     }
