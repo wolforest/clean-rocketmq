@@ -1,6 +1,6 @@
 package cn.coderule.minimq.store.server.bootstrap;
 
-import cn.coderule.minimq.domain.config.CommitLogConfig;
+import cn.coderule.minimq.domain.config.CommitConfig;
 import cn.coderule.minimq.domain.config.ConsumeQueueConfig;
 import cn.coderule.minimq.domain.config.MessageConfig;
 import cn.coderule.minimq.domain.config.StoreConfig;
@@ -34,7 +34,7 @@ public class ContextInitializer {
         StoreContext.register(storeConfig);
         StoreContext.register(new MessageConfig());
         StoreContext.register(new TopicConfig());
-        StoreContext.register(new CommitLogConfig());
+        StoreContext.register(new CommitConfig());
         StoreContext.register(new ConsumeQueueConfig());
         StoreContext.register(new TimerConfig());
     }

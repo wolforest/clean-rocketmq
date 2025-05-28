@@ -1,14 +1,14 @@
 package cn.coderule.minimq.store.domain.index;
 
-import cn.coderule.minimq.domain.service.store.domain.commitlog.CommitLogDispatcher;
+import cn.coderule.minimq.domain.service.store.domain.commitlog.CommitEventDispatcher;
 import cn.coderule.minimq.domain.service.store.manager.IndexManager;
 import cn.coderule.minimq.store.server.bootstrap.StoreContext;
 
 public class DefaultIndexManager implements IndexManager {
     @Override
     public void initialize() {
-        CommitLogDispatcher dispatcher = StoreContext.getBean(CommitLogDispatcher.class);
-        IndexCommitLogHandler handler = new IndexCommitLogHandler();
+        CommitEventDispatcher dispatcher = StoreContext.getBean(CommitEventDispatcher.class);
+        IndexCommitEventHandler handler = new IndexCommitEventHandler();
         dispatcher.registerHandler(handler);
 
 

@@ -39,7 +39,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CommitLogEvent implements Serializable {
+public class CommitEvent implements Serializable {
     private MessageBO messageBO;
 
     // filter info

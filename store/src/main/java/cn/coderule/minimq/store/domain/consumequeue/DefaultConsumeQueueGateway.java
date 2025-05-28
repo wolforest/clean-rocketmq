@@ -1,6 +1,6 @@
 package cn.coderule.minimq.store.domain.consumequeue;
 
-import cn.coderule.minimq.domain.domain.model.cluster.store.CommitLogEvent;
+import cn.coderule.minimq.domain.domain.model.cluster.store.CommitEvent;
 import cn.coderule.minimq.domain.domain.model.cluster.store.QueueUnit;
 import cn.coderule.minimq.domain.service.store.domain.consumequeue.ConsumeQueueGateway;
 import cn.coderule.minimq.domain.service.store.domain.consumequeue.ConsumeQueue;
@@ -15,7 +15,7 @@ public class DefaultConsumeQueueGateway implements ConsumeQueueGateway {
     }
 
     @Override
-    public void enqueue(CommitLogEvent event) {
+    public void enqueue(CommitEvent event) {
         String topic = event.getMessageBO().getTopic();
         int queueId = event.getMessageBO().getQueueId();
 

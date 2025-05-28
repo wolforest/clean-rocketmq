@@ -3,7 +3,7 @@ package cn.coderule.minimq.store.domain.consumequeue.queue;
 import cn.coderule.common.util.lang.ThreadUtil;
 import cn.coderule.minimq.domain.config.ConsumeQueueConfig;
 import cn.coderule.minimq.domain.domain.enums.store.QueueType;
-import cn.coderule.minimq.domain.domain.model.cluster.store.CommitLogEvent;
+import cn.coderule.minimq.domain.domain.model.cluster.store.CommitEvent;
 import cn.coderule.minimq.domain.domain.model.message.MessageBO;
 import cn.coderule.minimq.domain.domain.model.cluster.store.QueueUnit;
 import cn.coderule.minimq.domain.domain.dto.SelectedMappedBuffer;
@@ -64,7 +64,7 @@ public class DefaultConsumeQueue implements ConsumeQueue {
     }
 
     @Override
-    public void enqueue(CommitLogEvent event) {
+    public void enqueue(CommitEvent event) {
         for (int i = 0; i < config.getMaxEnqueueRetry(); i++) {
             boolean success = insert(event);
             if (success) {
@@ -177,7 +177,7 @@ public class DefaultConsumeQueue implements ConsumeQueue {
         return mappedFile.select(position);
     }
 
-    private boolean insert(CommitLogEvent event) {
+    private boolean insert(CommitEvent event) {
         MessageBO messageBO = event.getMessageBO();
 
         long offset = messageBO.getQueueOffset() * config.getUnitSize();
@@ -281,7 +281,7 @@ public class DefaultConsumeQueue implements ConsumeQueue {
         }
     }
 
-    private void setWriteBuffer(CommitLogEvent event) {
+    private void setWriteBuffer(CommitEvent event) {
         MessageBO messageBO = event.getMessageBO();
         this.writeBuffer.flip();
         this.writeBuffer.limit(config.getUnitSize());
@@ -294,7 +294,7 @@ public class DefaultConsumeQueue implements ConsumeQueue {
      * set maxCommitLogOffset and checkpoint info
      * @param event commitLogEvent
      */
-    private void postEnqueue(CommitLogEvent event) {
+    private void postEnqueue(CommitEvent event) {
         long offset = event.getMessageBO().getCommitLogOffset() + event.getMessageBO().getStoreSize();
         if (offset > maxCommitLogOffset) {
             maxCommitLogOffset = offset;

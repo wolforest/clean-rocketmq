@@ -3,7 +3,7 @@ package cn.coderule.minimq.store.domain.commitlog.flush;
 import cn.coderule.minimq.domain.service.store.server.CheckPoint;
 import cn.coderule.minimq.store.domain.commitlog.vo.GroupCommitRequest;
 import cn.coderule.common.convention.service.Lifecycle;
-import cn.coderule.minimq.domain.config.CommitLogConfig;
+import cn.coderule.minimq.domain.config.CommitConfig;
 import cn.coderule.minimq.domain.domain.enums.store.FlushType;
 import cn.coderule.minimq.domain.domain.dto.EnqueueResult;
 import cn.coderule.minimq.domain.domain.dto.InsertFuture;
@@ -21,31 +21,31 @@ import java.util.concurrent.CompletableFuture;
 public class FlushManager implements Lifecycle {
     private State state = State.RUNNING;
 
-    private final CommitLogConfig commitLogConfig;
+    private final CommitConfig commitConfig;
 
     private final Flusher commitService;
     private final Flusher flusher;
     private final FlushWatcher flushWatcher;
 
     public FlushManager(
-        CommitLogConfig commitLogConfig,
+        CommitConfig commitConfig,
         MappedFileQueue mappedFileQueue,
         CheckPoint checkPoint) {
-        this.commitLogConfig = commitLogConfig;
+        this.commitConfig = commitConfig;
 
         this.flushWatcher = new FlushWatcher();
 
-        if (FlushType.SYNC.equals(commitLogConfig.getFlushType())) {
+        if (FlushType.SYNC.equals(commitConfig.getFlushType())) {
             this.flusher = new GroupFlusher(mappedFileQueue, checkPoint);
         } else {
-            this.flusher = new IntervalFlusher(commitLogConfig, mappedFileQueue, checkPoint);
+            this.flusher = new IntervalFlusher(commitConfig, mappedFileQueue, checkPoint);
         }
 
-        this.commitService = new IntervalCommitter(commitLogConfig, mappedFileQueue, flusher);
+        this.commitService = new IntervalCommitter(commitConfig, mappedFileQueue, flusher);
     }
 
     public InsertFuture flush(InsertResult insertResult, MessageBO messageBO) {
-        if (FlushType.SYNC.equals(commitLogConfig.getFlushType())) {
+        if (FlushType.SYNC.equals(commitConfig.getFlushType())) {
             return syncFlush(insertResult, messageBO);
         }
 
@@ -70,7 +70,7 @@ public class FlushManager implements Lifecycle {
     private InsertFuture asyncFlush(InsertResult insertResult) {
         flusher.setMaxOffset(insertResult.getWroteOffset());
 
-        if (commitLogConfig.isEnableWriteCache()) {
+        if (commitConfig.isEnableWriteCache()) {
             commitService.wakeup();
         } else {
             flusher.wakeup();
@@ -96,7 +96,7 @@ public class FlushManager implements Lifecycle {
 
     private GroupCommitRequest createGroupCommitRequest(InsertResult insertResult) {
         long nextOffset = insertResult.getWroteOffset() + insertResult.getWroteBytes();
-        long deadLine = System.nanoTime() + commitLogConfig.getFlushTimeout();
+        long deadLine = System.nanoTime() + commitConfig.getFlushTimeout();
 
         return GroupCommitRequest.builder()
             .offset(insertResult.getWroteOffset())
@@ -118,7 +118,7 @@ public class FlushManager implements Lifecycle {
         this.flushWatcher.setDaemon(true);
         this.flushWatcher.start();
 
-        if (commitLogConfig.isEnableWriteCache()) {
+        if (commitConfig.isEnableWriteCache()) {
             this.commitService.start();
         }
 
@@ -132,7 +132,7 @@ public class FlushManager implements Lifecycle {
         this.flusher.shutdown();
         this.flushWatcher.shutdown();
 
-        if (commitLogConfig.isEnableWriteCache()) {
+        if (commitConfig.isEnableWriteCache()) {
             this.commitService.shutdown();
         }
 

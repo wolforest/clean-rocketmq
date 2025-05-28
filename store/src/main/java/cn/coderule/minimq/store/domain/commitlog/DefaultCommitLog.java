@@ -2,7 +2,7 @@ package cn.coderule.minimq.store.domain.commitlog;
 
 import cn.coderule.minimq.store.domain.commitlog.vo.InsertContext;
 import cn.coderule.common.util.encrypt.HashUtil;
-import cn.coderule.minimq.domain.config.CommitLogConfig;
+import cn.coderule.minimq.domain.config.CommitConfig;
 import cn.coderule.minimq.domain.config.MessageConfig;
 import cn.coderule.minimq.domain.domain.enums.store.EnqueueStatus;
 import cn.coderule.minimq.domain.domain.enums.message.MessageVersion;
@@ -32,7 +32,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class DefaultCommitLog implements CommitLog {
-    private final CommitLogConfig commitLogConfig;
+    private final CommitConfig commitConfig;
     private final MessageConfig messageConfig;
     private final FlushManager flushManager;
 
@@ -42,12 +42,12 @@ public class DefaultCommitLog implements CommitLog {
     private ThreadLocal<EnqueueThreadLocal> localEncoder;
 
     public DefaultCommitLog(
-        CommitLogConfig commitLogConfig,
+        CommitConfig commitConfig,
         MessageConfig messageConfig,
         MappedFileQueue mappedFileQueue,
         FlushManager flushManager
     ) {
-        this.commitLogConfig = commitLogConfig;
+        this.commitConfig = commitConfig;
         this.messageConfig = messageConfig;
 
         this.mappedFileQueue = mappedFileQueue;
@@ -103,7 +103,7 @@ public class DefaultCommitLog implements CommitLog {
             return null;
         }
 
-        int position = (int) (offset % commitLogConfig.getFileSize());
+        int position = (int) (offset % commitConfig.getFileSize());
         SelectedMappedBuffer buffer = mappedFile.select(position, size);
         if (buffer == null) {
             return null;
@@ -138,7 +138,7 @@ public class DefaultCommitLog implements CommitLog {
             return null;
         }
 
-        int position = (int) (offset % commitLogConfig.getFileSize());
+        int position = (int) (offset % commitConfig.getFileSize());
         return mappedFile.select(position);
     }
 

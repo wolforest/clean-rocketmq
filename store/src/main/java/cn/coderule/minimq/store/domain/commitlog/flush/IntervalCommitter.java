@@ -1,19 +1,19 @@
 package cn.coderule.minimq.store.domain.commitlog.flush;
 
-import cn.coderule.minimq.domain.config.CommitLogConfig;
+import cn.coderule.minimq.domain.config.CommitConfig;
 import cn.coderule.minimq.domain.service.store.infra.MappedFileQueue;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class IntervalCommitter extends Flusher {
-    private final CommitLogConfig config;
+    private final CommitConfig config;
     private final MappedFileQueue mappedFileQueue;
     private final Flusher flusher;
 
     private long lastCommitTime = 0;
 
     public IntervalCommitter(
-        CommitLogConfig config,
+        CommitConfig config,
         MappedFileQueue mappedFileQueue,
         Flusher flusher) {
 

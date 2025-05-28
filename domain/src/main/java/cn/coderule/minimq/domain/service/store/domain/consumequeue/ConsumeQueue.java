@@ -1,7 +1,7 @@
 package cn.coderule.minimq.domain.service.store.domain.consumequeue;
 
 import cn.coderule.minimq.domain.domain.enums.store.QueueType;
-import cn.coderule.minimq.domain.domain.model.cluster.store.CommitLogEvent;
+import cn.coderule.minimq.domain.domain.model.cluster.store.CommitEvent;
 import cn.coderule.minimq.domain.domain.model.cluster.store.QueueUnit;
 import cn.coderule.minimq.domain.service.store.infra.MappedFileQueue;
 import java.util.List;
@@ -12,7 +12,7 @@ public interface ConsumeQueue {
     int getQueueId();
     int getUnitSize();
 
-    void enqueue(CommitLogEvent event);
+    void enqueue(CommitEvent event);
     QueueUnit get(long index);
     List<QueueUnit> get(long index, int num);
 

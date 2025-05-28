@@ -1,7 +1,7 @@
 package cn.coderule.minimq.store.domain.consumequeue;
 
 import cn.coderule.minimq.domain.config.ConsumeQueueConfig;
-import cn.coderule.minimq.domain.service.store.domain.commitlog.CommitLogDispatcher;
+import cn.coderule.minimq.domain.service.store.domain.commitlog.CommitEventDispatcher;
 import cn.coderule.minimq.domain.service.store.domain.consumequeue.ConsumeQueueGateway;
 import cn.coderule.minimq.domain.service.store.domain.meta.TopicService;
 import cn.coderule.minimq.domain.service.store.manager.ConsumeQueueManager;
@@ -80,8 +80,8 @@ public class DefaultConsumeQueueManager implements ConsumeQueueManager {
     }
 
     private void registerDispatchHandler() {
-        CommitLogDispatcher dispatcher = StoreContext.getBean(CommitLogDispatcher.class);
-        QueueCommitLogHandler handler = new QueueCommitLogHandler(consumeQueueGateway);
+        CommitEventDispatcher dispatcher = StoreContext.getBean(CommitEventDispatcher.class);
+        QueueCommitEventHandler handler = new QueueCommitEventHandler(consumeQueueGateway);
         dispatcher.registerHandler(handler);
     }
 }

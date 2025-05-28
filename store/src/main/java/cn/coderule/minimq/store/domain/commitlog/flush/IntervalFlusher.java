@@ -1,6 +1,6 @@
 package cn.coderule.minimq.store.domain.commitlog.flush;
 
-import cn.coderule.minimq.domain.config.CommitLogConfig;
+import cn.coderule.minimq.domain.config.CommitConfig;
 import cn.coderule.minimq.domain.service.store.infra.MappedFileQueue;
 import cn.coderule.minimq.domain.service.store.server.CheckPoint;
 import lombok.extern.slf4j.Slf4j;
@@ -9,18 +9,18 @@ import lombok.extern.slf4j.Slf4j;
 public class IntervalFlusher extends Flusher {
     private static final long FLUSH_JOIN_TIME = 5 * 60 * 1000;
 
-    private final CommitLogConfig commitLogConfig;
+    private final CommitConfig commitConfig;
     private final MappedFileQueue mappedFileQueue;
     private final CheckPoint checkPoint;
 
     private long lastFlushTime = 0;
 
     public IntervalFlusher(
-        CommitLogConfig commitLogConfig,
+        CommitConfig commitConfig,
         MappedFileQueue mappedFileQueue,
         CheckPoint checkPoint) {
 
-        this.commitLogConfig = commitLogConfig;
+        this.commitConfig = commitConfig;
         this.mappedFileQueue = mappedFileQueue;
         this.checkPoint = checkPoint;
     }
@@ -61,8 +61,8 @@ public class IntervalFlusher extends Flusher {
     }
 
     private void sleepOrWait() throws InterruptedException {
-        int interval = commitLogConfig.getFlushInterval();
-        if (commitLogConfig.isEnableFlushSleep()) {
+        int interval = commitConfig.getFlushInterval();
+        if (commitConfig.isEnableFlushSleep()) {
             Thread.sleep(interval);
         } else {
             await(interval);
@@ -70,10 +70,10 @@ public class IntervalFlusher extends Flusher {
     }
 
     private int getMinFlushPages() {
-        int minFlushPages = commitLogConfig.getMinFlushPages();
+        int minFlushPages = commitConfig.getMinFlushPages();
 
         long now = System.currentTimeMillis();
-        if (now - lastFlushTime >= commitLogConfig.getThroughFlushInterval()) {
+        if (now - lastFlushTime >= commitConfig.getThroughFlushInterval()) {
             lastFlushTime = now;
             minFlushPages = 0;
         }

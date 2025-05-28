@@ -1,6 +1,6 @@
 package cn.coderule.minimq.store.domain.commitlog;
 
-import cn.coderule.minimq.domain.config.CommitLogConfig;
+import cn.coderule.minimq.domain.config.CommitConfig;
 import cn.coderule.minimq.domain.config.MessageConfig;
 import cn.coderule.minimq.domain.config.StoreConfig;
 import cn.coderule.minimq.domain.service.store.api.CommitLogStore;
@@ -23,7 +23,7 @@ import java.io.File;
  */
 public class DefaultCommitLogManager implements CommitLogManager {
     private StoreConfig storeConfig;
-    private CommitLogConfig commitLogConfig;
+    private CommitConfig commitConfig;
     private MessageConfig messageConfig;
 
     private MappedFileQueue mappedFileQueue;
@@ -64,25 +64,25 @@ public class DefaultCommitLogManager implements CommitLogManager {
 
     private void initConfig() {
         storeConfig = StoreContext.getBean(StoreConfig.class);
-        commitLogConfig = StoreContext.getBean(CommitLogConfig.class);
+        commitConfig = StoreContext.getBean(CommitConfig.class);
         messageConfig = StoreContext.getBean(MessageConfig.class);
     }
 
     private void initMappedFileQueue() {
         String dir = storeConfig.getRootDir()
             + File.separator
-            + commitLogConfig.getDirName()
+            + commitConfig.getDirName()
             + File.separator;
 
         AllocateMappedFileService allocateService = StoreContext.getBean(AllocateMappedFileService.class);
-        this.mappedFileQueue = new DefaultMappedFileQueue(dir, commitLogConfig.getFileSize(), allocateService);
+        this.mappedFileQueue = new DefaultMappedFileQueue(dir, commitConfig.getFileSize(), allocateService);
     }
 
     private void initCommitLog() {
         checkpoint = StoreContext.getCheckPoint();
-        flushManager = new FlushManager(commitLogConfig, mappedFileQueue, checkpoint);
+        flushManager = new FlushManager(commitConfig, mappedFileQueue, checkpoint);
 
-        commitLog = new DefaultCommitLog(commitLogConfig, messageConfig, mappedFileQueue, flushManager);
+        commitLog = new DefaultCommitLog(commitConfig, messageConfig, mappedFileQueue, flushManager);
         StoreContext.register(commitLog, CommitLog.class);
     }
 

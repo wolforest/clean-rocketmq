@@ -1,11 +1,11 @@
 package cn.coderule.minimq.domain.service.store.domain.consumequeue;
 
-import cn.coderule.minimq.domain.domain.model.cluster.store.CommitLogEvent;
+import cn.coderule.minimq.domain.domain.model.cluster.store.CommitEvent;
 import cn.coderule.minimq.domain.domain.model.cluster.store.QueueUnit;
 import java.util.List;
 
 public interface ConsumeQueueGateway {
-    void enqueue(CommitLogEvent event);
+    void enqueue(CommitEvent event);
     QueueUnit get(String topic, int queueId, long offset);
     List<QueueUnit> get(String topic, int queueId, long offset, int num);
 

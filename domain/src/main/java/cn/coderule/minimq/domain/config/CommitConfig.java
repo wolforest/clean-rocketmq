@@ -5,7 +5,7 @@ import java.io.Serializable;
 import lombok.Data;
 
 @Data
-public class CommitLogConfig implements Serializable {
+public class CommitConfig implements Serializable {
     private boolean enableMultiPath = false;
     private boolean enableWriteCache = false;
 
