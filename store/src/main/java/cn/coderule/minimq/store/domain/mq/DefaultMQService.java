@@ -3,16 +3,15 @@ package cn.coderule.minimq.store.domain.mq;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.minimq.domain.config.MessageConfig;
 import cn.coderule.minimq.domain.config.StoreConfig;
-import cn.coderule.minimq.domain.domain.lock.queue.DequeueLock;
 import cn.coderule.minimq.domain.domain.model.cluster.store.QueueUnit;
 import cn.coderule.minimq.domain.domain.dto.GetRequest;
 import cn.coderule.minimq.domain.domain.dto.DequeueResult;
-import cn.coderule.minimq.domain.domain.lock.queue.EnqueueLock;
 import cn.coderule.minimq.domain.service.store.domain.commitlog.CommitLog;
 import cn.coderule.minimq.domain.service.store.domain.consumequeue.ConsumeQueueGateway;
 import cn.coderule.minimq.domain.service.store.domain.MQService;
 import cn.coderule.minimq.domain.domain.dto.EnqueueResult;
 import cn.coderule.minimq.domain.domain.model.message.MessageBO;
+import cn.coderule.minimq.store.domain.mq.queue.DequeueService;
 import cn.coderule.minimq.store.domain.mq.queue.EnqueueService;
 import cn.coderule.minimq.store.server.bootstrap.StoreContext;
 import java.util.List;
@@ -28,23 +27,23 @@ public class DefaultMQService implements MQService {
     private final CommitLog commitLog;
 
     private final EnqueueService enqueueService;
-
-    private final DequeueLock dequeueLock;
+    private final DequeueService dequeueService;
 
     public DefaultMQService(
         EnqueueService enqueueService,
+        DequeueService dequeueService,
+
         MessageConfig messageConfig,
         CommitLog commitLog,
-        ConsumeQueueGateway consumeQueueGateway,
-        DequeueLock dequeueLock) {
+        ConsumeQueueGateway consumeQueueGateway) {
 
         this.enqueueService = enqueueService;
+        this.dequeueService = dequeueService;
 
         this.messageConfig = messageConfig;
         this.commitLog = commitLog;
         this.consumeQueueGateway = consumeQueueGateway;
 
-        this.dequeueLock = dequeueLock;
     }
 
     /**
@@ -68,11 +67,7 @@ public class DefaultMQService implements MQService {
 
     @Override
     public DequeueResult dequeue(String group, String topic, int queueId, int num) {
-        if (!dequeueLock.tryLock(group, topic, queueId)) {
-            return DequeueResult.lockFailed();
-        }
-
-        return null;
+        return dequeueService.dequeue(group, topic, queueId, num);
     }
 
     @Override
@@ -135,14 +130,4 @@ public class DefaultMQService implements MQService {
         return result.getMessageList();
     }
 
-    private EnqueueResult waitForResult(CompletableFuture<EnqueueResult> future) {
-        try {
-            StoreConfig config = StoreContext.getBean(StoreConfig.class);
-            int timeout = config.getSyncFlushTimeout() + 5 * 1000;
-            return future.get(timeout, TimeUnit.MILLISECONDS);
-        } catch (Exception e) {
-            log.error("enqueue error:", e);
-            return EnqueueResult.failure();
-        }
-    }
 }
