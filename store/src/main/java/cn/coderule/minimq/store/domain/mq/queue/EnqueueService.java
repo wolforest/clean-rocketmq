@@ -33,6 +33,15 @@ public class EnqueueService {
         this.enqueueLock = new EnqueueLock();
     }
 
+    /**
+     * enqueue single/multi message
+     *  - assign consumeQueue offset
+     *  - append commitLog
+     *  - increase consumeQueue offset
+     *
+     * @param messageBO messageContext
+     * @return EnqueueResult
+     */
     public EnqueueResult enqueue(MessageBO messageBO) {
         return waitForResult(enqueueAsync(messageBO));
     }

@@ -1,4 +1,71 @@
 package cn.coderule.minimq.store.domain.mq.queue;
 
+import cn.coderule.common.util.lang.collection.CollectionUtil;
+import cn.coderule.minimq.domain.config.MessageConfig;
+import cn.coderule.minimq.domain.config.StoreConfig;
+import cn.coderule.minimq.domain.domain.dto.DequeueResult;
+import cn.coderule.minimq.domain.domain.dto.GetRequest;
+import cn.coderule.minimq.domain.domain.model.cluster.store.QueueUnit;
+import cn.coderule.minimq.domain.domain.model.message.MessageBO;
+import cn.coderule.minimq.domain.service.store.domain.commitlog.CommitLog;
+import cn.coderule.minimq.domain.service.store.domain.consumequeue.ConsumeQueueGateway;
+import java.util.List;
+import lombok.NonNull;
+
 public class MessageService {
+    private final StoreConfig storeConfig;
+    private final MessageConfig messageConfig;
+    private final CommitLog commitLog;
+    private final ConsumeQueueGateway consumeQueueGateway;
+
+    public MessageService(
+        StoreConfig storeConfig,
+        CommitLog commitLog,
+        ConsumeQueueGateway consumeQueueGateway) {
+        this.storeConfig = storeConfig;
+        this.messageConfig = storeConfig.getMessageConfig();
+
+        this.commitLog = commitLog;
+        this.consumeQueueGateway = consumeQueueGateway;
+    }
+
+    public DequeueResult get(String topic, int queueId, long offset, int num) {
+        GetRequest request = GetRequest.builder()
+            .topic(topic)
+            .queueId(queueId)
+            .offset(offset)
+            .num(num)
+            .maxSize(messageConfig.getMaxSize())
+            .build();
+        return get(request);
+    }
+
+    public DequeueResult get(GetRequest request) {
+        List<QueueUnit> unitList = consumeQueueGateway.get(
+            request.getTopic(), request.getQueueId(), request.getOffset(), request.getNum()
+        );
+
+        if (CollectionUtil.isEmpty(unitList)) {
+            return DequeueResult.notFound();
+        }
+
+        return getByUnitList(unitList);
+    }
+
+    private DequeueResult getByUnitList(@NonNull List<QueueUnit> unitList) {
+        DequeueResult result = new DequeueResult();
+        MessageBO messageBO;
+        for (QueueUnit unit : unitList) {
+            messageBO = commitLog.select(unit.getCommitLogOffset(), unit.getUnitSize());
+            if (messageBO == null) {
+                continue;
+            }
+
+            result.addMessage(messageBO);
+        }
+
+        return result;
+    }
+
+
 }
