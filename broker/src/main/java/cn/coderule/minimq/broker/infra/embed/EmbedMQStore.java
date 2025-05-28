@@ -9,7 +9,7 @@ import cn.coderule.minimq.domain.service.store.domain.MQService;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-public class EmbedMQStore extends AbstractEmbedStore implements MQService {
+public class EmbedMQStore extends AbstractEmbedStore implements MQStore {
     private final MQStore mqStore;
     public EmbedMQStore(MQStore mqStore, EmbedLoadBalance loadBalance) {
         super(loadBalance);

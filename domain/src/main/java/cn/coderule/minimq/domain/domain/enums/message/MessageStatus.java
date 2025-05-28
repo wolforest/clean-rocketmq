@@ -36,5 +36,7 @@ public enum MessageStatus {
 
     NO_MESSAGE_IN_QUEUE,
 
-    OFFSET_RESET
+    OFFSET_RESET,
+
+    LOCK_FAILED,
 }

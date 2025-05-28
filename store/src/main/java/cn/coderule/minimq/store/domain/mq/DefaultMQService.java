@@ -3,6 +3,7 @@ package cn.coderule.minimq.store.domain.mq;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.minimq.domain.config.MessageConfig;
 import cn.coderule.minimq.domain.config.StoreConfig;
+import cn.coderule.minimq.domain.domain.lock.queue.ConsumeQueueLock;
 import cn.coderule.minimq.domain.domain.model.cluster.store.QueueUnit;
 import cn.coderule.minimq.domain.domain.dto.InsertFuture;
 import cn.coderule.minimq.domain.domain.dto.GetRequest;
@@ -23,17 +24,20 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class DefaultMQService implements MQService {
-    private final TopicQueueLock topicQueueLock;
     private final MessageConfig messageConfig;
     private final ConsumeQueueGateway consumeQueueGateway;
     private final CommitLogSynchronizer commitLogSynchronizer;
     private final CommitLog commitLog;
 
+    private final TopicQueueLock topicQueueLock;
+    private final ConsumeQueueLock consumeQueueLock;
+
     public DefaultMQService(
         MessageConfig messageConfig,
         CommitLog commitLog,
         ConsumeQueueGateway consumeQueueGateway,
-        CommitLogSynchronizer commitLogSynchronizer) {
+        CommitLogSynchronizer commitLogSynchronizer,
+        ConsumeQueueLock consumeQueueLock) {
 
         this.messageConfig = messageConfig;
         this.commitLog = commitLog;
@@ -41,6 +45,7 @@ public class DefaultMQService implements MQService {
         this.commitLogSynchronizer = commitLogSynchronizer;
 
         this.topicQueueLock = new TopicQueueLock();
+        this.consumeQueueLock = consumeQueueLock;
     }
 
     /**
@@ -80,6 +85,10 @@ public class DefaultMQService implements MQService {
 
     @Override
     public DequeueResult dequeue(String group, String topic, int queueId, int num) {
+        if (!consumeQueueLock.tryLock(group, topic, queueId)) {
+            return DequeueResult.lockFailed();
+        }
+
         return null;
     }
 

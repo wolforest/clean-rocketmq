@@ -40,5 +40,12 @@ public class DequeueResult implements Serializable {
             .messageList(List.of())
             .build();
     }
+
+    public static DequeueResult lockFailed() {
+        return DequeueResult.builder()
+            .status(MessageStatus.LOCK_FAILED)
+            .messageList(List.of())
+            .build();
+    }
 }
 
