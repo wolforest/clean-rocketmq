@@ -6,22 +6,22 @@ import cn.coderule.minimq.domain.domain.model.message.MessageBO;
 import cn.coderule.minimq.domain.domain.dto.EnqueueResult;
 import cn.coderule.minimq.domain.domain.dto.GetRequest;
 import cn.coderule.minimq.domain.domain.dto.DequeueResult;
-import cn.coderule.minimq.domain.service.store.api.MessageStore;
+import cn.coderule.minimq.domain.service.store.api.MQStore;
 import cn.coderule.minimq.rpc.common.rpc.RpcClient;
 import cn.coderule.minimq.rpc.common.rpc.config.RpcClientConfig;
 import cn.coderule.minimq.rpc.common.rpc.netty.NettyClient;
-import cn.coderule.minimq.rpc.store.client.MessageClient;
+import cn.coderule.minimq.rpc.store.client.MQClient;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-public class RemoteMessageStore extends AbstractRemoteStore implements MessageStore, Lifecycle {
+public class RemoteMQStore extends AbstractRemoteStore implements MQStore, Lifecycle {
     private final BrokerConfig brokerConfig;
-    private final ConcurrentMap<String, MessageClient> clientMap;
+    private final ConcurrentMap<String, MQClient> clientMap;
     private final RpcClient rpcClient;
 
-    public RemoteMessageStore(BrokerConfig brokerConfig, RemoteLoadBalance loadBalance) {
+    public RemoteMQStore(BrokerConfig brokerConfig, RemoteLoadBalance loadBalance) {
         super(loadBalance);
 
         this.brokerConfig = brokerConfig;
@@ -60,6 +60,12 @@ public class RemoteMessageStore extends AbstractRemoteStore implements MessageSt
     }
 
     @Override
+    public DequeueResult dequeue(String topic, int queueId, int num) {
+        String address = loadBalance.findByTopic(topic);
+        return getClient(address).dequeue(topic, queueId, num);
+    }
+
+    @Override
     public DequeueResult get(String topic, int queueId, long offset) {
         String address = loadBalance.findByTopic(topic);
         return getClient(address).get(topic, queueId, offset);
@@ -89,13 +95,13 @@ public class RemoteMessageStore extends AbstractRemoteStore implements MessageSt
         return getClient(address).getMessage(topic, queueId, offset, num);
     }
 
-    public MessageClient getClient(String address) {
+    public MQClient getClient(String address) {
         if (clientMap.containsKey(address)) {
             return clientMap.get(address);
         }
 
-        MessageClient client = new MessageClient(this.rpcClient, address);
-        MessageClient prev = clientMap.putIfAbsent(address, client);
+        MQClient client = new MQClient(this.rpcClient, address);
+        MQClient prev = clientMap.putIfAbsent(address, client);
 
         return prev == null ? client : prev;
     }

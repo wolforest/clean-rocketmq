@@ -1,22 +1,22 @@
 package cn.coderule.minimq.broker.infra.store;
 
 import cn.coderule.minimq.broker.infra.embed.EmbedMQStore;
-import cn.coderule.minimq.broker.infra.remote.RemoteMessageStore;
+import cn.coderule.minimq.broker.infra.remote.RemoteMQStore;
 import cn.coderule.minimq.domain.config.BrokerConfig;
 import cn.coderule.minimq.domain.domain.dto.EnqueueResult;
 import cn.coderule.minimq.domain.domain.dto.GetRequest;
 import cn.coderule.minimq.domain.domain.dto.DequeueResult;
 import cn.coderule.minimq.domain.domain.model.message.MessageBO;
-import cn.coderule.minimq.domain.service.store.api.MessageStore;
+import cn.coderule.minimq.domain.service.store.api.MQStore;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-public class BrokerMessageStore implements MessageStore {
+public class BrokerMQStore implements MQStore {
     private final BrokerConfig brokerConfig;
     private final EmbedMQStore embedMessageStore;
-    private final RemoteMessageStore remoteMessageStore;
+    private final RemoteMQStore remoteMessageStore;
 
-    public BrokerMessageStore(BrokerConfig brokerConfig, EmbedMQStore embedMessageStore, RemoteMessageStore remoteMessageStore) {
+    public BrokerMQStore(BrokerConfig brokerConfig, EmbedMQStore embedMessageStore, RemoteMQStore remoteMessageStore) {
         this.brokerConfig = brokerConfig;
         this.embedMessageStore = embedMessageStore;
         this.remoteMessageStore = remoteMessageStore;
@@ -46,6 +46,19 @@ public class BrokerMessageStore implements MessageStore {
         }
 
         return remoteMessageStore.enqueueAsync(messageBO);
+    }
+
+    @Override
+    public DequeueResult dequeue(String topic, int queueId, int num) {
+        if (embedMessageStore.isEmbed(topic)) {
+            return embedMessageStore.dequeue(topic, queueId, num);
+        }
+
+        if (!brokerConfig.isEnableRemoteStore()) {
+            return DequeueResult.notFound();
+        }
+
+        return remoteMessageStore.dequeue(topic, queueId, num);
     }
 
     @Override

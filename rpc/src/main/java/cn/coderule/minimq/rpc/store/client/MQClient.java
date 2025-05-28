@@ -4,7 +4,7 @@ import cn.coderule.minimq.domain.domain.model.message.MessageBO;
 import cn.coderule.minimq.domain.domain.dto.EnqueueResult;
 import cn.coderule.minimq.domain.domain.dto.GetRequest;
 import cn.coderule.minimq.domain.domain.dto.DequeueResult;
-import cn.coderule.minimq.domain.service.store.api.MessageStore;
+import cn.coderule.minimq.domain.service.store.api.MQStore;
 import cn.coderule.minimq.rpc.common.rpc.RpcClient;
 import cn.coderule.minimq.rpc.store.StoreClient;
 import java.util.List;
@@ -12,9 +12,9 @@ import java.util.concurrent.CompletableFuture;
 import lombok.Setter;
 
 @Setter
-public class MessageClient extends AbstractStoreClient implements StoreClient, MessageStore {
+public class MQClient extends AbstractStoreClient implements StoreClient, MQStore {
 
-    public MessageClient(RpcClient rpcClient, String address) {
+    public MQClient(RpcClient rpcClient, String address) {
         super(rpcClient, address);
     }
 
@@ -29,6 +29,11 @@ public class MessageClient extends AbstractStoreClient implements StoreClient, M
     public CompletableFuture<EnqueueResult> enqueueAsync(MessageBO messageBO) {
 
 
+        return null;
+    }
+
+    @Override
+    public DequeueResult dequeue(String topic, int queueId, int num) {
         return null;
     }
 

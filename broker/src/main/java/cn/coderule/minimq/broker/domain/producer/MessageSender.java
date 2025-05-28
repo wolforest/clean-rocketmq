@@ -18,7 +18,7 @@ import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
 import cn.coderule.minimq.domain.domain.model.meta.topic.Topic;
 import cn.coderule.minimq.domain.domain.model.producer.ProduceContext;
 import cn.coderule.minimq.domain.service.broker.infra.TopicStore;
-import cn.coderule.minimq.domain.service.store.api.MessageStore;
+import cn.coderule.minimq.domain.service.store.api.MQStore;
 import cn.coderule.minimq.domain.utils.CleanupUtils;
 import cn.coderule.minimq.domain.utils.MessageUtils;
 import java.net.InetSocketAddress;
@@ -34,7 +34,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class MessageSender implements Lifecycle {
     private final BrokerConfig brokerConfig;
-    private final MessageStore messageStore;
+    private final MQStore MQStore;
     private final ThreadPoolExecutor executor;
 
 
@@ -43,9 +43,9 @@ public class MessageSender implements Lifecycle {
     private TopicStore topicStore;
     private Transaction transaction;
 
-    public MessageSender(BrokerConfig brokerConfig, MessageStore messageStore) {
+    public MessageSender(BrokerConfig brokerConfig, MQStore MQStore) {
         this.brokerConfig = brokerConfig;
-        this.messageStore = messageStore;
+        this.MQStore = MQStore;
         this.executor = createExecutor();
     }
 
@@ -142,7 +142,7 @@ public class MessageSender implements Lifecycle {
         if (context.isPrepareMessage()) {
             future = transaction.prepare(context.getRequestContext(), context.getMessageBO());
         } else {
-            future = messageStore.enqueueAsync(context.getMessageBO());
+            future = MQStore.enqueueAsync(context.getMessageBO());
         }
 
         return future;
