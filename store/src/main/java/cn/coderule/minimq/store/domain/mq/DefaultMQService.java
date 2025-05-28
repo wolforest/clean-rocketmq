@@ -1,4 +1,4 @@
-package cn.coderule.minimq.store.domain.mq.message;
+package cn.coderule.minimq.store.domain.mq;
 
 import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.minimq.domain.config.MessageConfig;
@@ -10,7 +10,7 @@ import cn.coderule.minimq.domain.domain.dto.DequeueResult;
 import cn.coderule.minimq.domain.domain.lock.queue.TopicQueueLock;
 import cn.coderule.minimq.domain.service.store.domain.commitlog.CommitLog;
 import cn.coderule.minimq.domain.service.store.domain.consumequeue.ConsumeQueueGateway;
-import cn.coderule.minimq.domain.service.store.domain.mq.MessageService;
+import cn.coderule.minimq.domain.service.store.domain.MQService;
 import cn.coderule.minimq.domain.domain.dto.EnqueueResult;
 import cn.coderule.minimq.domain.domain.model.message.MessageBO;
 import cn.coderule.minimq.store.server.bootstrap.StoreContext;
@@ -22,14 +22,14 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class DefaultMessageService implements MessageService {
+public class DefaultMQService implements MQService {
     private final TopicQueueLock topicQueueLock;
     private final MessageConfig messageConfig;
     private final ConsumeQueueGateway consumeQueueGateway;
     private final CommitLogSynchronizer commitLogSynchronizer;
     private final CommitLog commitLog;
 
-    public DefaultMessageService(
+    public DefaultMQService(
         MessageConfig messageConfig,
         CommitLog commitLog,
         ConsumeQueueGateway consumeQueueGateway,
@@ -76,6 +76,11 @@ public class DefaultMessageService implements MessageService {
         } finally {
             topicQueueLock.unlock(messageBO.getTopic(), messageBO.getQueueId());
         }
+    }
+
+    @Override
+    public DequeueResult dequeue(String topic, int queueId, int num) {
+        return null;
     }
 
     @Override

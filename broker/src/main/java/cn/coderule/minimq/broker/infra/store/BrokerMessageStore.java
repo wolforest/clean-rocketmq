@@ -1,6 +1,6 @@
 package cn.coderule.minimq.broker.infra.store;
 
-import cn.coderule.minimq.broker.infra.embed.EmbedMessageStore;
+import cn.coderule.minimq.broker.infra.embed.EmbedMQStore;
 import cn.coderule.minimq.broker.infra.remote.RemoteMessageStore;
 import cn.coderule.minimq.domain.config.BrokerConfig;
 import cn.coderule.minimq.domain.domain.dto.EnqueueResult;
@@ -13,10 +13,10 @@ import java.util.concurrent.CompletableFuture;
 
 public class BrokerMessageStore implements MessageStore {
     private final BrokerConfig brokerConfig;
-    private final EmbedMessageStore embedMessageStore;
+    private final EmbedMQStore embedMessageStore;
     private final RemoteMessageStore remoteMessageStore;
 
-    public BrokerMessageStore(BrokerConfig brokerConfig, EmbedMessageStore embedMessageStore, RemoteMessageStore remoteMessageStore) {
+    public BrokerMessageStore(BrokerConfig brokerConfig, EmbedMQStore embedMessageStore, RemoteMessageStore remoteMessageStore) {
         this.brokerConfig = brokerConfig;
         this.embedMessageStore = embedMessageStore;
         this.remoteMessageStore = remoteMessageStore;

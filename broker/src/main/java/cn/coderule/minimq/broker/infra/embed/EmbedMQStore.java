@@ -5,13 +5,13 @@ import cn.coderule.minimq.domain.domain.dto.EnqueueResult;
 import cn.coderule.minimq.domain.domain.dto.GetRequest;
 import cn.coderule.minimq.domain.domain.dto.DequeueResult;
 import cn.coderule.minimq.domain.service.store.api.MessageStore;
-import cn.coderule.minimq.domain.service.store.domain.mq.MessageService;
+import cn.coderule.minimq.domain.service.store.domain.MQService;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-public class EmbedMessageStore extends AbstractEmbedStore implements MessageService {
+public class EmbedMQStore extends AbstractEmbedStore implements MQService {
     private final MessageStore messageStore;
-    public EmbedMessageStore(MessageStore messageStore, EmbedLoadBalance loadBalance) {
+    public EmbedMQStore(MessageStore messageStore, EmbedLoadBalance loadBalance) {
         super(loadBalance);
         this.messageStore = messageStore;
     }

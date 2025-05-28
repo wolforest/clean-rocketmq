@@ -5,9 +5,8 @@ import cn.coderule.minimq.domain.service.store.api.MessageStore;
 import cn.coderule.minimq.domain.service.store.domain.commitlog.CommitLog;
 import cn.coderule.minimq.domain.service.store.domain.consumequeue.ConsumeQueueGateway;
 import cn.coderule.minimq.domain.service.store.manager.MQManager;
-import cn.coderule.minimq.domain.service.store.domain.mq.MessageService;
+import cn.coderule.minimq.domain.service.store.domain.MQService;
 import cn.coderule.minimq.store.api.MessageStoreImpl;
-import cn.coderule.minimq.store.domain.mq.message.DefaultMessageService;
 import cn.coderule.minimq.store.server.bootstrap.StoreContext;
 import cn.coderule.minimq.store.server.ha.commitlog.CommitLogSynchronizer;
 import lombok.extern.slf4j.Slf4j;
@@ -21,10 +20,10 @@ public class DefaultMQManager implements MQManager {
         ConsumeQueueGateway consumeQueueGateway = StoreContext.getBean(ConsumeQueueGateway.class);
         CommitLogSynchronizer commitLogSynchronizer = StoreContext.getBean(CommitLogSynchronizer.class);
 
-        MessageService messageService = new DefaultMessageService(messageConfig, commitLog, consumeQueueGateway, commitLogSynchronizer);
-        StoreContext.register(messageService, MessageService.class);
+        MQService MQService = new DefaultMQService(messageConfig, commitLog, consumeQueueGateway, commitLogSynchronizer);
+        StoreContext.register(MQService, MQService.class);
 
-        MessageStore messageStore = new MessageStoreImpl(messageConfig, messageService);
+        MessageStore messageStore = new MessageStoreImpl(messageConfig, MQService);
         StoreContext.registerAPI(messageStore, MessageStore.class);
     }
 
