@@ -11,9 +11,9 @@ public interface MQService {
     EnqueueResult enqueue(MessageBO messageBO);
     CompletableFuture<EnqueueResult> enqueueAsync(MessageBO messageBO);
 
-    DequeueResult dequeue(String topic, int queueId, int num);
-    default DequeueResult dequeue(String topic, int queueId) {
-        return dequeue(topic, queueId, 1);
+    DequeueResult dequeue(String group, String topic, int queueId, int num);
+    default DequeueResult dequeue(String group, String topic, int queueId) {
+        return dequeue(group, topic, queueId, 1);
     }
 
     DequeueResult get(String topic, int queueId, long offset);

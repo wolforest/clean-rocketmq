@@ -30,8 +30,8 @@ public class MQStoreImpl implements MQStore {
     }
 
     @Override
-    public DequeueResult dequeue(String topic, int queueId, int num) {
-        return mqService.dequeue(topic, queueId, num);
+    public DequeueResult dequeue(String group, String topic, int queueId, int num) {
+        return mqService.dequeue(group, topic, queueId, num);
     }
 
     @Override

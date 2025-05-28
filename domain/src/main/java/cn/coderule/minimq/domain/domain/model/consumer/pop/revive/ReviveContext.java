@@ -17,26 +17,21 @@
 package cn.coderule.minimq.domain.domain.model.consumer.pop.revive;
 
 import cn.coderule.minimq.domain.domain.model.consumer.pop.checkpoint.PopCheckPoint;
+import java.io.Serializable;
 import java.util.HashMap;
+import lombok.Data;
 
-public class ReviveContext {
+@Data
+public class ReviveContext implements Serializable {
     private final ReviveObj reviveObj;
     private final HashMap<String, PopCheckPoint> mockPointMap;
-
-    /**
-     * @renamed from startScanTime to startTime
-     */
     private final long startTime;
+
     private long endTime;
     private long firstRt;
-
     private int noMsgCount;
 
-    private final long consumeOffset;
-    private final long oldOffset;
-    private long offset;
-
-    public ReviveContext(long consumeOffset, long reviveOffset) {
+    public ReviveContext() {
         this.reviveObj = new ReviveObj();
         this.mockPointMap = new HashMap<>();
 
@@ -44,72 +39,14 @@ public class ReviveContext {
         this.endTime = 0;
         this.firstRt = 0;
         this.noMsgCount = 0;
-
-        this.consumeOffset = consumeOffset;
-        this.oldOffset = Math.max(reviveOffset, consumeOffset);
-        this.reviveObj.setOldOffset(oldOffset);
-
-        this.offset = oldOffset + 1;
     }
 
     public void increaseNoMsgCount() {
         this.noMsgCount++;
     }
 
-    public void setEndTime(long endTime) {
-        this.endTime = endTime;
-    }
-
-    public void setFirstRt(long firstRt) {
-        this.firstRt = firstRt;
-    }
-
-    public void setNoMsgCount(int noMsgCount) {
-        this.noMsgCount = noMsgCount;
-    }
-
-    public void setOffset(long offset) {
-        this.offset = offset;
-    }
-
-    public ReviveObj getConsumeReviveObj() {
-        return reviveObj;
-    }
-
     public HashMap<String, PopCheckPoint> getMap() {
         return reviveObj.getMap();
-    }
-
-    public HashMap<String, PopCheckPoint> getMockPointMap() {
-        return mockPointMap;
-    }
-
-    public long getStartTime() {
-        return startTime;
-    }
-
-    public long getEndTime() {
-        return endTime;
-    }
-
-    public long getFirstRt() {
-        return firstRt;
-    }
-
-    public int getNoMsgCount() {
-        return noMsgCount;
-    }
-
-    public long getConsumeOffset() {
-        return consumeOffset;
-    }
-
-    public long getOldOffset() {
-        return oldOffset;
-    }
-
-    public long getOffset() {
-        return offset;
     }
 
 }

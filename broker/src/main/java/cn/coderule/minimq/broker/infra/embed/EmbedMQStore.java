@@ -27,8 +27,8 @@ public class EmbedMQStore extends AbstractEmbedStore implements MQService {
     }
 
     @Override
-    public DequeueResult dequeue(String topic, int queueId, int num) {
-        return mqStore.dequeue(topic, queueId, num);
+    public DequeueResult dequeue(String group, String topic, int queueId, int num) {
+        return mqStore.dequeue(group, topic, queueId, num);
     }
 
     @Override

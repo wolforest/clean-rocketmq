@@ -79,7 +79,7 @@ public class DefaultMQService implements MQService {
     }
 
     @Override
-    public DequeueResult dequeue(String topic, int queueId, int num) {
+    public DequeueResult dequeue(String group, String topic, int queueId, int num) {
         return null;
     }
 

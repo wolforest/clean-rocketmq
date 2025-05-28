@@ -33,7 +33,7 @@ public class MQClient extends AbstractStoreClient implements StoreClient, MQStor
     }
 
     @Override
-    public DequeueResult dequeue(String topic, int queueId, int num) {
+    public DequeueResult dequeue(String group, String topic, int queueId, int num) {
         return null;
     }
 

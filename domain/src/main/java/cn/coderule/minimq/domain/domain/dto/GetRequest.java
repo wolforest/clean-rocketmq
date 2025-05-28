@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GetRequest implements Serializable {
+    private String group;
     private String topic;
     private int queueId;
     private long offset;

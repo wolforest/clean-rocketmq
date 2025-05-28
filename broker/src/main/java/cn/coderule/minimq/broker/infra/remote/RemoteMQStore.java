@@ -60,9 +60,9 @@ public class RemoteMQStore extends AbstractRemoteStore implements MQStore, Lifec
     }
 
     @Override
-    public DequeueResult dequeue(String topic, int queueId, int num) {
+    public DequeueResult dequeue(String group, String topic, int queueId, int num) {
         String address = loadBalance.findByTopic(topic);
-        return getClient(address).dequeue(topic, queueId, num);
+        return getClient(address).dequeue(group, topic, queueId, num);
     }
 
     @Override

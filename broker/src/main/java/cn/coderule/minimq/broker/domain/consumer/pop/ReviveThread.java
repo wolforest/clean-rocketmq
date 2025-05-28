@@ -3,6 +3,7 @@ package cn.coderule.minimq.broker.domain.consumer.pop;
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 import cn.coderule.minimq.domain.config.BrokerConfig;
 import cn.coderule.minimq.domain.config.MessageConfig;
+import cn.coderule.minimq.domain.domain.model.consumer.pop.revive.ReviveContext;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.revive.ReviveObj;
 import cn.coderule.minimq.domain.service.broker.infra.MQStore;
 import lombok.extern.slf4j.Slf4j;
@@ -49,6 +50,7 @@ public class ReviveThread extends ServiceThread {
     }
 
     private ReviveObj consumeReviveObj() {
+        ReviveContext context = new ReviveContext();
         return null;
     }
 

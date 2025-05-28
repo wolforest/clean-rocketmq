@@ -49,16 +49,16 @@ public class BrokerMQStore implements MQStore {
     }
 
     @Override
-    public DequeueResult dequeue(String topic, int queueId, int num) {
+    public DequeueResult dequeue(String group, String topic, int queueId, int num) {
         if (embedMessageStore.isEmbed(topic)) {
-            return embedMessageStore.dequeue(topic, queueId, num);
+            return embedMessageStore.dequeue(group, topic, queueId, num);
         }
 
         if (!brokerConfig.isEnableRemoteStore()) {
             return DequeueResult.notFound();
         }
 
-        return remoteMessageStore.dequeue(topic, queueId, num);
+        return remoteMessageStore.dequeue(group, topic, queueId, num);
     }
 
     @Override
