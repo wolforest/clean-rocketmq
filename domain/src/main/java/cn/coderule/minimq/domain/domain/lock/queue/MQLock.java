@@ -27,7 +27,7 @@ import java.util.concurrent.ConcurrentMap;
  *  - at the same time
  *  - used in client
  */
-public class MessageQueueLock {
+public class MQLock {
     private final ConcurrentMap<MessageQueue, ConcurrentMap<Integer, Object>> lockMap =
         new ConcurrentHashMap<>(32);
 

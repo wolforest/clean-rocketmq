@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentMap;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class ConsumeQueueLock extends ServiceThread {
+public class DequeueLock extends ServiceThread {
     private static final int CLEAN_INTERVAL = 1000 * 60;
     private static final int CLEAN_TIMEOUT = 1000 * 60;
 
@@ -17,7 +17,7 @@ public class ConsumeQueueLock extends ServiceThread {
 
     @Override
     public String getServiceName() {
-        return ConsumeQueueLock.class.getSimpleName();
+        return DequeueLock.class.getSimpleName();
     }
 
     @Override
@@ -85,7 +85,7 @@ public class ConsumeQueueLock extends ServiceThread {
             Map.Entry<String, TimedLock> entry = iterator.next();
 
             long lockedTime = System.currentTimeMillis() - entry.getValue().getLockTime();
-            if (lockedTime <= ConsumeQueueLock.CLEAN_TIMEOUT) {
+            if (lockedTime <= DequeueLock.CLEAN_TIMEOUT) {
                 continue;
             }
 
