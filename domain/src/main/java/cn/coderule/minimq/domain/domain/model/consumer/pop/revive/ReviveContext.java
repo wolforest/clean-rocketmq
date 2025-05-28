@@ -20,7 +20,7 @@ import cn.coderule.minimq.domain.domain.model.consumer.pop.checkpoint.PopCheckPo
 import java.util.HashMap;
 
 public class ReviveContext {
-    private final ConsumeReviveObj consumeReviveObj;
+    private final ReviveObj reviveObj;
     private final HashMap<String, PopCheckPoint> mockPointMap;
 
     /**
@@ -37,7 +37,7 @@ public class ReviveContext {
     private long offset;
 
     public ReviveContext(long consumeOffset, long reviveOffset) {
-        this.consumeReviveObj = new ConsumeReviveObj();
+        this.reviveObj = new ReviveObj();
         this.mockPointMap = new HashMap<>();
 
         this.startTime = System.currentTimeMillis();
@@ -47,7 +47,7 @@ public class ReviveContext {
 
         this.consumeOffset = consumeOffset;
         this.oldOffset = Math.max(reviveOffset, consumeOffset);
-        this.consumeReviveObj.setOldOffset(oldOffset);
+        this.reviveObj.setOldOffset(oldOffset);
 
         this.offset = oldOffset + 1;
     }
@@ -72,12 +72,12 @@ public class ReviveContext {
         this.offset = offset;
     }
 
-    public ConsumeReviveObj getConsumeReviveObj() {
-        return consumeReviveObj;
+    public ReviveObj getConsumeReviveObj() {
+        return reviveObj;
     }
 
     public HashMap<String, PopCheckPoint> getMap() {
-        return consumeReviveObj.getMap();
+        return reviveObj.getMap();
     }
 
     public HashMap<String, PopCheckPoint> getMockPointMap() {

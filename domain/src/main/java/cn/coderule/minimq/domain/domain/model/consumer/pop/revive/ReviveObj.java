@@ -20,7 +20,7 @@ import cn.coderule.minimq.domain.domain.model.consumer.pop.checkpoint.PopCheckPo
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class ConsumeReviveObj {
+public class ReviveObj {
     /**
      * data model
      * key: PopKeyBuilder.buildReviveKey
