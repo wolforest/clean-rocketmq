@@ -34,7 +34,7 @@ public class DefaultMQManager implements MQManager {
 
         EnqueueService enqueueService = new EnqueueService(commitLog, consumeQueueGateway, commitLogSynchronizer);
         MessageService messageService = new MessageService(storeConfig, commitLog, consumeQueueGateway);
-        DequeueService dequeueService = new DequeueService(storeConfig, dequeueLock, messageService, consumeOffsetService);
+        DequeueService dequeueService = new DequeueService(dequeueLock, messageService, consumeOffsetService);
 
 
         MQService MQService = new DefaultMQService(enqueueService, dequeueService, messageService);
