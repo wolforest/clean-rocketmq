@@ -3,9 +3,11 @@ package cn.coderule.minimq.broker.domain.consumer.pop;
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 import cn.coderule.minimq.domain.config.BrokerConfig;
 import cn.coderule.minimq.domain.config.MessageConfig;
+import cn.coderule.minimq.domain.domain.model.consumer.pop.checkpoint.PopCheckPoint;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.revive.ReviveContext;
-import cn.coderule.minimq.domain.domain.model.consumer.pop.revive.ReviveObj;
+import cn.coderule.minimq.domain.domain.model.consumer.pop.revive.ReviveMap;
 import cn.coderule.minimq.domain.service.broker.infra.MQStore;
+import java.util.ArrayList;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -39,23 +41,23 @@ public class ReviveThread extends ServiceThread {
 
             log.info("start revive topic={}; reviveQueueId={}", reviveTopic, queueId);
 
-            ReviveObj reviveObj = consumeReviveObj();
+            ReviveMap reviveMap = consumeReviveObj();
             if (skipRevive) {
                 log.info("skip revive topic={}; reviveQueueId={}", reviveTopic, queueId);
                 continue;
             }
 
-            revive(reviveObj);
+            revive(reviveMap);
         }
     }
 
-    private ReviveObj consumeReviveObj() {
+    private ReviveMap consumeReviveObj() {
         ReviveContext context = new ReviveContext();
         return null;
     }
 
-    private void revive(ReviveObj reviveObj) {
-
+    private void revive(ReviveMap reviveMap) {
+        ArrayList<PopCheckPoint> checkPointList = reviveMap.getSortedList();
     }
 
     private boolean shouldSkip() {
