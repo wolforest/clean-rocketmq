@@ -51,6 +51,7 @@ public class AckService {
 
         if (!messageConfig.isEnablePopBufferMerge()) {
             enqueueReviveQueue(pointWrapper);
+            return;
         }
 
         ackBuffer.enqueue(pointWrapper);
