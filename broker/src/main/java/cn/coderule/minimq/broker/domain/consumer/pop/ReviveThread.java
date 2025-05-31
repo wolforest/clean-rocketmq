@@ -4,6 +4,9 @@ import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.minimq.domain.config.BrokerConfig;
 import cn.coderule.minimq.domain.config.MessageConfig;
+import cn.coderule.minimq.domain.domain.constant.PopConstants;
+import cn.coderule.minimq.domain.domain.dto.DequeueResult;
+import cn.coderule.minimq.domain.domain.enums.message.MessageStatus;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.checkpoint.PopCheckPoint;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.revive.ReviveContext;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.revive.ReviveMap;
@@ -91,7 +94,24 @@ public class ReviveThread extends ServiceThread {
     }
 
     private List<MessageBO> pullMessage() {
-        return null;
+        DequeueResult result = mqStore.dequeue(
+            PopConstants.REVIVE_GROUP,
+            reviveTopic,
+            queueId,
+            32
+        );
+
+        MessageStatus status = result.getStatus();
+        if (status == MessageStatus.OFFSET_TOO_SMALL
+            || status == MessageStatus.NO_MATCHED_MESSAGE) {
+            if (skipRevive) {
+                return List.of();
+            }
+
+            // commit offset
+        }
+
+        return result.getMessageList();
     }
 
     private void revive(ReviveMap reviveMap) {
