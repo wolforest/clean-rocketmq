@@ -1,13 +1,16 @@
 package cn.coderule.minimq.broker.domain.consumer.pop;
 
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
+import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.minimq.domain.config.BrokerConfig;
 import cn.coderule.minimq.domain.config.MessageConfig;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.checkpoint.PopCheckPoint;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.revive.ReviveContext;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.revive.ReviveMap;
+import cn.coderule.minimq.domain.domain.model.message.MessageBO;
 import cn.coderule.minimq.domain.service.broker.infra.MQStore;
 import java.util.ArrayList;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -40,7 +43,6 @@ public class ReviveThread extends ServiceThread {
             if (shouldSkip()) continue;
 
             log.info("start revive topic={}; reviveQueueId={}", reviveTopic, queueId);
-
             ReviveMap reviveMap = consumeReviveObj();
             if (skipRevive) {
                 log.info("skip revive topic={}; reviveQueueId={}", reviveTopic, queueId);
@@ -53,6 +55,42 @@ public class ReviveThread extends ServiceThread {
 
     private ReviveMap consumeReviveObj() {
         ReviveContext context = new ReviveContext();
+
+        while (true) {
+            if (skipRevive) {
+                break;
+            }
+
+            List<MessageBO> messageList = pullMessage();
+            if (CollectionUtil.isEmpty(messageList)) {
+                if (!handleEmptyMessage(context)) {
+                    break;
+                }
+                continue;
+            }
+
+            context.setNoMsgCount(0);
+            long elapsedTime = System.currentTimeMillis() - context.getStartTime();
+            if (elapsedTime > messageConfig.getReviveScanTime()) {
+                log.info("revive scan time out, topic={}; reviveQueueId={}", reviveTopic, queueId);
+                break;
+            }
+
+            parseMessage(context, messageList);
+        }
+
+        return context.getReviveMap();
+    }
+
+    private void parseMessage(ReviveContext context, List<MessageBO> messageList) {
+
+    }
+
+    private boolean handleEmptyMessage(ReviveContext context) {
+        return true;
+    }
+
+    private List<MessageBO> pullMessage() {
         return null;
     }
 
