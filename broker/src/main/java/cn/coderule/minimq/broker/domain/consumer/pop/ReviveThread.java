@@ -65,15 +65,16 @@ public class ReviveThread extends ServiceThread {
             }
 
             List<MessageBO> messageList = pullMessage();
+            long now = System.currentTimeMillis();
             if (CollectionUtil.isEmpty(messageList)) {
-                if (!handleEmptyMessage(context)) {
+                if (!handleEmptyMessage(context, now)) {
                     break;
                 }
                 continue;
             }
 
             context.setNoMsgCount(0);
-            long elapsedTime = System.currentTimeMillis() - context.getStartTime();
+            long elapsedTime = now - context.getStartTime();
             if (elapsedTime > messageConfig.getReviveScanTime()) {
                 log.info("revive scan time out, topic={}; reviveQueueId={}", reviveTopic, queueId);
                 break;
@@ -89,8 +90,14 @@ public class ReviveThread extends ServiceThread {
 
     }
 
-    private boolean handleEmptyMessage(ReviveContext context) {
-        return true;
+    private boolean handleEmptyMessage(ReviveContext context, long now) {
+        context.setEndTime(now);
+
+        if (context.getEndTime() - context.getFirstRt() > PopConstants.ackTimeInterval + 1000) {
+            return false;
+        }
+        context.increaseNoMsgCount();
+        return context.getNoMsgCount() * 100 <= 4000;
     }
 
     private List<MessageBO> pullMessage() {
@@ -100,16 +107,6 @@ public class ReviveThread extends ServiceThread {
             queueId,
             32
         );
-
-        MessageStatus status = result.getStatus();
-        if (status == MessageStatus.OFFSET_TOO_SMALL
-            || status == MessageStatus.NO_MATCHED_MESSAGE) {
-            if (skipRevive) {
-                return List.of();
-            }
-
-            // commit offset
-        }
 
         return result.getMessageList();
     }
