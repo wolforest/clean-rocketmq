@@ -1,6 +1,7 @@
 package cn.coderule.minimq.store.domain.mq.ack;
 
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
+import cn.coderule.common.lang.type.Pair;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.minimq.domain.config.MessageConfig;
 import cn.coderule.minimq.domain.domain.constant.PopConstants;
@@ -11,7 +12,10 @@ import cn.coderule.minimq.domain.domain.model.consumer.pop.revive.ReviveMap;
 import cn.coderule.minimq.domain.domain.model.message.MessageBO;
 import cn.coderule.minimq.domain.service.broker.infra.MQStore;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.NavigableMap;
+import java.util.TreeMap;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -23,12 +27,17 @@ public class ReviveThread extends ServiceThread {
     private final MQStore mqStore;
 
     private volatile boolean skipRevive = false;
+    /**
+     * checkpoint -> (msgOffset, retryResult)
+     */
+    private final NavigableMap<PopCheckPoint, Pair<Long, Boolean>> inflightMap;
 
     public ReviveThread(MessageConfig messageConfig, String reviveTopic, int queueId, MQStore mqStore) {
         this.messageConfig = messageConfig;
         this.reviveTopic = reviveTopic;
         this.queueId = queueId;
         this.mqStore = mqStore;
+        this.inflightMap = Collections.synchronizedNavigableMap(new TreeMap<>());
     }
 
     @Override
