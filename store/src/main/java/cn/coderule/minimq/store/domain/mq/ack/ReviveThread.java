@@ -1,12 +1,10 @@
-package cn.coderule.minimq.broker.domain.consumer.pop;
+package cn.coderule.minimq.store.domain.mq.ack;
 
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
-import cn.coderule.minimq.domain.config.BrokerConfig;
 import cn.coderule.minimq.domain.config.MessageConfig;
 import cn.coderule.minimq.domain.domain.constant.PopConstants;
 import cn.coderule.minimq.domain.domain.dto.DequeueResult;
-import cn.coderule.minimq.domain.domain.enums.message.MessageStatus;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.checkpoint.PopCheckPoint;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.revive.ReviveContext;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.revive.ReviveMap;
@@ -18,7 +16,6 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class ReviveThread extends ServiceThread {
-    private final BrokerConfig brokerConfig;
     private final MessageConfig messageConfig;
     private final String reviveTopic;
     private final int queueId;
@@ -27,9 +24,8 @@ public class ReviveThread extends ServiceThread {
 
     private volatile boolean skipRevive = false;
 
-    public ReviveThread(BrokerConfig brokerConfig, String reviveTopic, int queueId, MQStore mqStore) {
-        this.brokerConfig = brokerConfig;
-        this.messageConfig = brokerConfig.getMessageConfig();
+    public ReviveThread(MessageConfig messageConfig, String reviveTopic, int queueId, MQStore mqStore) {
+        this.messageConfig = messageConfig;
         this.reviveTopic = reviveTopic;
         this.queueId = queueId;
         this.mqStore = mqStore;
