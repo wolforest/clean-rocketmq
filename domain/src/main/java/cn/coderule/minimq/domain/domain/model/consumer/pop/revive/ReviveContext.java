@@ -30,7 +30,7 @@ public class ReviveContext implements Serializable {
     }
 
     public HashMap<String, PopCheckPoint> getMap() {
-        return reviveBuffer.getMap();
+        return reviveBuffer.getCheckPointMap();
     }
 
 }

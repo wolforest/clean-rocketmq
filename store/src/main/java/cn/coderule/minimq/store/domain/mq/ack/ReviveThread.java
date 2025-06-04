@@ -24,6 +24,7 @@ public class ReviveThread extends ServiceThread {
     private final MessageConfig messageConfig;
     private final String reviveTopic;
     private final int queueId;
+    private long reviveOffset;
 
     private final ConsumeOffsetService consumeOffsetService;
     private final MQService mqService;
