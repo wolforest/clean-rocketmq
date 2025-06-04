@@ -8,7 +8,7 @@ import cn.coderule.minimq.domain.domain.constant.PopConstants;
 import cn.coderule.minimq.domain.domain.dto.DequeueResult;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.checkpoint.PopCheckPoint;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.revive.ReviveContext;
-import cn.coderule.minimq.domain.domain.model.consumer.pop.revive.ReviveMap;
+import cn.coderule.minimq.domain.domain.model.consumer.pop.revive.ReviveBuffer;
 import cn.coderule.minimq.domain.domain.model.message.MessageBO;
 import cn.coderule.minimq.domain.service.store.domain.MQService;
 import cn.coderule.minimq.domain.service.store.domain.meta.ConsumeOffsetService;
@@ -62,17 +62,17 @@ public class ReviveThread extends ServiceThread {
             if (shouldSkip()) continue;
 
             log.info("start revive topic={}; reviveQueueId={}", reviveTopic, queueId);
-            ReviveMap reviveMap = consumeReviveObj();
+            ReviveBuffer reviveBuffer = consumeReviveObj();
             if (skipRevive) {
                 log.info("skip revive topic={}; reviveQueueId={}", reviveTopic, queueId);
                 continue;
             }
 
-            revive(reviveMap);
+            revive(reviveBuffer);
         }
     }
 
-    private ReviveMap consumeReviveObj() {
+    private ReviveBuffer consumeReviveObj() {
         ReviveContext context = new ReviveContext();
 
         while (true) {
@@ -99,7 +99,7 @@ public class ReviveThread extends ServiceThread {
             parseMessage(context, messageList);
         }
 
-        return context.getReviveMap();
+        return context.getReviveBuffer();
     }
 
     private void parseMessage(ReviveContext context, List<MessageBO> messageList) {
@@ -127,8 +127,8 @@ public class ReviveThread extends ServiceThread {
         return result.getMessageList();
     }
 
-    private void revive(ReviveMap reviveMap) {
-        ArrayList<PopCheckPoint> checkPointList = reviveMap.getSortedList();
+    private void revive(ReviveBuffer reviveBuffer) {
+        ArrayList<PopCheckPoint> checkPointList = reviveBuffer.getSortedList();
     }
 
     private boolean shouldSkip() {

@@ -7,7 +7,7 @@ import lombok.Data;
 
 @Data
 public class ReviveContext implements Serializable {
-    private final ReviveMap reviveMap;
+    private final ReviveBuffer reviveBuffer;
     private final HashMap<String, PopCheckPoint> mockPointMap;
     private final long startTime;
 
@@ -16,7 +16,7 @@ public class ReviveContext implements Serializable {
     private int noMsgCount;
 
     public ReviveContext() {
-        this.reviveMap = new ReviveMap();
+        this.reviveBuffer = new ReviveBuffer();
         this.mockPointMap = new HashMap<>();
 
         this.startTime = System.currentTimeMillis();
@@ -30,7 +30,7 @@ public class ReviveContext implements Serializable {
     }
 
     public HashMap<String, PopCheckPoint> getMap() {
-        return reviveMap.getMap();
+        return reviveBuffer.getMap();
     }
 
 }

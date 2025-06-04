@@ -7,7 +7,7 @@ import java.util.HashMap;
 import lombok.Data;
 
 @Data
-public class ReviveMap implements Serializable {
+public class ReviveBuffer implements Serializable {
     /**
      * data model
      *  key: PopKeyBuilder.buildReviveKey
