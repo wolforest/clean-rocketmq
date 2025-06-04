@@ -7,7 +7,6 @@ import cn.coderule.minimq.domain.config.MessageConfig;
 import cn.coderule.minimq.domain.domain.constant.PopConstants;
 import cn.coderule.minimq.domain.domain.dto.DequeueResult;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.checkpoint.PopCheckPoint;
-import cn.coderule.minimq.domain.domain.model.consumer.pop.revive.ReviveContext;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.revive.ReviveBuffer;
 import cn.coderule.minimq.domain.domain.model.message.MessageBO;
 import cn.coderule.minimq.domain.service.store.domain.MQService;
@@ -74,7 +73,7 @@ public class ReviveThread extends ServiceThread {
     }
 
     private ReviveBuffer consumeReviveObj() {
-        ReviveContext context = new ReviveContext();
+        ReviveBuffer reviveBuffer = new ReviveBuffer();
 
         while (true) {
             if (skipRevive) {
@@ -84,37 +83,37 @@ public class ReviveThread extends ServiceThread {
             List<MessageBO> messageList = pullMessage();
             long now = System.currentTimeMillis();
             if (CollectionUtil.isEmpty(messageList)) {
-                if (!handleEmptyMessage(context, now)) {
+                if (!handleEmptyMessage(reviveBuffer, now)) {
                     break;
                 }
                 continue;
             }
 
-            context.setNoMsgCount(0);
-            long elapsedTime = now - context.getStartTime();
+            reviveBuffer.setNoMsgCount(0);
+            long elapsedTime = now - reviveBuffer.getStartTime();
             if (elapsedTime > messageConfig.getReviveScanTime()) {
                 log.info("revive scan time out, topic={}; reviveQueueId={}", reviveTopic, queueId);
                 break;
             }
 
-            parseMessage(context, messageList);
+            parseMessage(reviveBuffer, messageList);
         }
 
-        return context.getReviveBuffer();
+        return reviveBuffer;
     }
 
-    private void parseMessage(ReviveContext context, List<MessageBO> messageList) {
+    private void parseMessage(ReviveBuffer buffer, List<MessageBO> messageList) {
 
     }
 
-    private boolean handleEmptyMessage(ReviveContext context, long now) {
-        context.setEndTime(now);
+    private boolean handleEmptyMessage(ReviveBuffer buffer, long now) {
+        buffer.setMaxDeliverTime(now);
 
-        if (context.getEndTime() - context.getFirstRt() > PopConstants.ackTimeInterval + 1000) {
+        if (buffer.getMaxDeliverTime() - buffer.getFirstReviveTime() > PopConstants.ackTimeInterval + 1000) {
             return false;
         }
-        context.increaseNoMsgCount();
-        return context.getNoMsgCount() * 100 <= 4000;
+        buffer.increaseNoMsgCount();
+        return buffer.getNoMsgCount() * 100 <= 4000;
     }
 
     private List<MessageBO> pullMessage() {
