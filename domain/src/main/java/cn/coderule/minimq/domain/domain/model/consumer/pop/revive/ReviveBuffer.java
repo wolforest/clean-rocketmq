@@ -19,7 +19,13 @@ public class ReviveBuffer implements Serializable {
      *  - PopReviveThread.parseCheckPointMessage
      */
     private final HashMap<String, PopCheckPoint> checkPointMap;
+    /**
+     * ack related checkpoint map
+     */
     private final HashMap<String, PopCheckPoint> ackMap;
+    /**
+     * the sorted list of PopCheckPoint, sorted by reviveOffset
+     */
     private ArrayList<PopCheckPoint> sortedList;
 
     /**
@@ -32,10 +38,21 @@ public class ReviveBuffer implements Serializable {
      */
     private long offset;
 
+    /**
+     * the count of request which no message found
+     */
     private int noMsgCount;
 
+    /**
+     * the first reviveTime of PopCheckPoint,
+     * which bulk pulled from revive queue
+     */
     private long firstReviveTime;
 
+    /**
+     * the first reviveTime of PopCheckPoint,
+     * which bulk pulled from revive queue
+     */
     private long startTime;
     /**
      * the max deliverTime of messageExt,
@@ -70,4 +87,19 @@ public class ReviveBuffer implements Serializable {
         this.noMsgCount++;
     }
 
+    public void addCheckPoint(PopCheckPoint point) {
+        checkPointMap.put(point.getCId(), point);
+    }
+
+    public void addAck(PopCheckPoint point) {
+        ackMap.put(point.getCId(), point);
+    }
+
+    public PopCheckPoint getCheckPoint(String mergeKey) {
+        return checkPointMap.get(mergeKey);
+    }
+
+    public PopCheckPoint getAck(String mergeKey) {
+        return ackMap.get(mergeKey);
+    }
 }
