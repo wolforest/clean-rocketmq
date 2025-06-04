@@ -4,6 +4,7 @@ import cn.coderule.common.util.lang.ByteUtil;
 import cn.coderule.minimq.domain.config.MessageConfig;
 import cn.coderule.minimq.domain.config.StoreConfig;
 import cn.coderule.minimq.domain.domain.dto.EnqueueResult;
+import cn.coderule.minimq.domain.domain.model.consumer.pop.ack.AckBuffer;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.ack.AckMsg;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.ack.BatchAckMsg;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.checkpoint.PopCheckPoint;

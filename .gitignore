@@ -10,6 +10,7 @@ testhttp/
 rpc/src/main/java/apache/
 
 .wolf
+.lingma
 
 # Log file
 *.log

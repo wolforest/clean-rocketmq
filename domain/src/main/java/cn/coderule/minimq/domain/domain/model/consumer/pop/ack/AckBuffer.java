@@ -1,4 +1,4 @@
-package cn.coderule.minimq.store.domain.mq.ack;
+package cn.coderule.minimq.domain.domain.model.consumer.pop.ack;
 
 import cn.coderule.minimq.domain.config.MessageConfig;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.checkpoint.PopCheckPointWrapper;

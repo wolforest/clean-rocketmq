@@ -10,7 +10,8 @@ import cn.coderule.minimq.domain.domain.model.consumer.pop.checkpoint.PopCheckPo
 import cn.coderule.minimq.domain.domain.model.consumer.pop.revive.ReviveContext;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.revive.ReviveMap;
 import cn.coderule.minimq.domain.domain.model.message.MessageBO;
-import cn.coderule.minimq.domain.service.broker.infra.MQStore;
+import cn.coderule.minimq.domain.service.store.domain.MQService;
+import cn.coderule.minimq.domain.service.store.domain.meta.ConsumeOffsetService;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -24,7 +25,8 @@ public class ReviveThread extends ServiceThread {
     private final String reviveTopic;
     private final int queueId;
 
-    private final MQStore mqStore;
+    private final ConsumeOffsetService consumeOffsetService;
+    private final MQService mqService;
 
     private volatile boolean skipRevive = false;
     /**
@@ -32,11 +34,20 @@ public class ReviveThread extends ServiceThread {
      */
     private final NavigableMap<PopCheckPoint, Pair<Long, Boolean>> inflightMap;
 
-    public ReviveThread(MessageConfig messageConfig, String reviveTopic, int queueId, MQStore mqStore) {
+    public ReviveThread(
+        MessageConfig messageConfig,
+        String reviveTopic,
+        int queueId,
+        MQService mqService,
+        ConsumeOffsetService consumeOffsetService
+    ) {
         this.messageConfig = messageConfig;
         this.reviveTopic = reviveTopic;
         this.queueId = queueId;
-        this.mqStore = mqStore;
+
+        this.mqService = mqService;
+        this.consumeOffsetService = consumeOffsetService;
+
         this.inflightMap = Collections.synchronizedNavigableMap(new TreeMap<>());
     }
 
@@ -106,7 +117,7 @@ public class ReviveThread extends ServiceThread {
     }
 
     private List<MessageBO> pullMessage() {
-        DequeueResult result = mqStore.dequeue(
+        DequeueResult result = mqService.dequeue(
             PopConstants.REVIVE_GROUP,
             reviveTopic,
             queueId,

@@ -21,7 +21,7 @@ public class ReviveMap implements Serializable {
     private final HashMap<String, PopCheckPoint> map = new HashMap<>();
     private ArrayList<PopCheckPoint> sortedList;
 
-    private long oldOffset;
+    private long initialOffset;
     private long endTime;
     private long newOffset;
 
