@@ -62,18 +62,29 @@ public class ReviveThread extends ServiceThread {
             if (shouldSkip()) continue;
 
             log.info("start revive topic={}; reviveQueueId={}", reviveTopic, queueId);
-            ReviveBuffer reviveBuffer = consumeReviveObj();
+            initOffset();
+            ReviveBuffer reviveBuffer = consume();
             if (skipRevive) {
                 log.info("skip revive topic={}; reviveQueueId={}", reviveTopic, queueId);
                 continue;
             }
 
             revive(reviveBuffer);
+            resetOffset(reviveBuffer);
         }
     }
 
-    private ReviveBuffer consumeReviveObj() {
+    private void resetOffset(ReviveBuffer buffer) {
+
+    }
+
+    private void initOffset() {
+        reviveOffset = consumeOffsetService.getOffset(PopConstants.REVIVE_GROUP, reviveTopic, queueId);
+    }
+
+    private ReviveBuffer consume() {
         ReviveBuffer reviveBuffer = new ReviveBuffer();
+        reviveBuffer.setInitialOffset(reviveOffset);
 
         while (true) {
             if (skipRevive) {
@@ -102,6 +113,10 @@ public class ReviveThread extends ServiceThread {
         return reviveBuffer;
     }
 
+    private void revive(ReviveBuffer reviveBuffer) {
+        ArrayList<PopCheckPoint> checkPointList = reviveBuffer.getSortedList();
+    }
+
     private void parseMessage(ReviveBuffer buffer, List<MessageBO> messageList) {
 
     }
@@ -127,9 +142,7 @@ public class ReviveThread extends ServiceThread {
         return result.getMessageList();
     }
 
-    private void revive(ReviveBuffer reviveBuffer) {
-        ArrayList<PopCheckPoint> checkPointList = reviveBuffer.getSortedList();
-    }
+
 
     private boolean shouldSkip() {
         return false;
