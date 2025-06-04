@@ -75,7 +75,17 @@ public class ReviveThread extends ServiceThread {
     }
 
     private void resetOffset(ReviveBuffer buffer) {
+        if (skipRevive) {
+            return;
+        }
 
+        reviveOffset = buffer.getOffset();
+
+        if (buffer.getOffset() <= buffer.getInitialOffset()) {
+            return;
+        }
+
+        consumeOffsetService.putOffset(PopConstants.REVIVE_GROUP, reviveTopic, queueId, reviveOffset);
     }
 
     private void initOffset() {
