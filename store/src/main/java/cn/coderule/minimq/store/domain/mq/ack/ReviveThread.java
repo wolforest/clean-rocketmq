@@ -61,17 +61,21 @@ public class ReviveThread extends ServiceThread {
         while (!this.isStopped()) {
             if (shouldSkip()) continue;
 
-            log.info("start revive topic={}; reviveQueueId={}", reviveTopic, queueId);
             initOffset();
-            ReviveBuffer reviveBuffer = consume();
+            ReviveBuffer buffer = consume();
             if (skipRevive) {
                 log.info("skip revive topic={}; reviveQueueId={}", reviveTopic, queueId);
                 continue;
             }
 
-            revive(reviveBuffer);
-            resetOffset(reviveBuffer);
+            revive(buffer);
+            resetOffset(buffer);
         }
+    }
+
+    private void initOffset() {
+        log.info("start revive topic={}; reviveQueueId={}", reviveTopic, queueId);
+        reviveOffset = consumeOffsetService.getOffset(PopConstants.REVIVE_GROUP, reviveTopic, queueId);
     }
 
     private void resetOffset(ReviveBuffer buffer) {
@@ -86,10 +90,6 @@ public class ReviveThread extends ServiceThread {
         }
 
         consumeOffsetService.putOffset(PopConstants.REVIVE_GROUP, reviveTopic, queueId, reviveOffset);
-    }
-
-    private void initOffset() {
-        reviveOffset = consumeOffsetService.getOffset(PopConstants.REVIVE_GROUP, reviveTopic, queueId);
     }
 
     private ReviveBuffer consume() {
@@ -152,9 +152,7 @@ public class ReviveThread extends ServiceThread {
         return result.getMessageList();
     }
 
-
-
     private boolean shouldSkip() {
-        return false;
+        return skipRevive;
     }
 }
