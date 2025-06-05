@@ -6,6 +6,7 @@ import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.minimq.domain.config.MessageConfig;
 import cn.coderule.minimq.domain.domain.constant.PopConstants;
 import cn.coderule.minimq.domain.domain.dto.DequeueResult;
+import cn.coderule.minimq.domain.domain.dto.GetRequest;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.checkpoint.PopCheckPoint;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.revive.ReviveBuffer;
 import cn.coderule.minimq.domain.domain.model.message.MessageBO;
@@ -93,33 +94,34 @@ public class ReviveThread extends ServiceThread {
     }
 
     private ReviveBuffer consume() {
-        ReviveBuffer reviveBuffer = new ReviveBuffer(reviveOffset);
+        ReviveBuffer buffer = new ReviveBuffer(reviveOffset);
 
         while (true) {
             if (skipRevive) {
                 break;
             }
 
-            List<MessageBO> messageList = pullMessage();
+            List<MessageBO> messageList = pullMessage(buffer.getOffset());
+
             long now = System.currentTimeMillis();
             if (CollectionUtil.isEmpty(messageList)) {
-                if (!handleEmptyMessage(reviveBuffer, now)) {
+                if (!handleEmptyMessage(buffer, now)) {
                     break;
                 }
                 continue;
             }
 
-            reviveBuffer.setNoMsgCount(0);
-            long elapsedTime = now - reviveBuffer.getStartTime();
+            buffer.setNoMsgCount(0);
+            long elapsedTime = now - buffer.getStartTime();
             if (elapsedTime > messageConfig.getReviveScanTime()) {
-                log.info("revive scan time out, topic={}; reviveQueueId={}", reviveTopic, queueId);
+                log.info("revive scan timeout, topic={}; reviveQueueId={}", reviveTopic, queueId);
                 break;
             }
 
-            parseMessage(reviveBuffer, messageList);
+            parseMessage(buffer, messageList);
         }
 
-        return reviveBuffer;
+        return buffer;
     }
 
     private void revive(ReviveBuffer reviveBuffer) {
@@ -140,13 +142,16 @@ public class ReviveThread extends ServiceThread {
         return buffer.getNoMsgCount() * 100 <= 4000;
     }
 
-    private List<MessageBO> pullMessage() {
-        DequeueResult result = mqService.dequeue(
-            PopConstants.REVIVE_GROUP,
-            reviveTopic,
-            queueId,
-            32
-        );
+    private List<MessageBO> pullMessage(long reviveOffset) {
+        GetRequest request = GetRequest.builder()
+            .group(PopConstants.REVIVE_GROUP)
+            .topic(reviveTopic)
+            .queueId(queueId)
+            .offset(reviveOffset)
+            .num(32)
+            .build();
+
+        DequeueResult result = mqService.get(request);
 
         return result.getMessageList();
     }

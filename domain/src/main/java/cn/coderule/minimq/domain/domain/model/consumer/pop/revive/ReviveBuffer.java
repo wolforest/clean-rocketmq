@@ -62,6 +62,7 @@ public class ReviveBuffer implements Serializable {
 
     public ReviveBuffer(long initialOffset) {
         this.initialOffset = initialOffset;
+        this.offset = initialOffset + 1;
 
         this.startTime = System.currentTimeMillis();
         this.noMsgCount = 0;
