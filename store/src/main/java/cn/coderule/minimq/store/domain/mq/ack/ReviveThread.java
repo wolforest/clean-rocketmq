@@ -93,8 +93,7 @@ public class ReviveThread extends ServiceThread {
     }
 
     private ReviveBuffer consume() {
-        ReviveBuffer reviveBuffer = new ReviveBuffer();
-        reviveBuffer.setInitialOffset(reviveOffset);
+        ReviveBuffer reviveBuffer = new ReviveBuffer(reviveOffset);
 
         while (true) {
             if (skipRevive) {

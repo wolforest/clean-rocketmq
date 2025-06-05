@@ -31,7 +31,7 @@ public class ReviveBuffer implements Serializable {
     /**
      * the initial offset of revive topic queue
      */
-    private long initialOffset;
+    private final long initialOffset;
 
     /**
      * the working offset
@@ -60,7 +60,9 @@ public class ReviveBuffer implements Serializable {
      */
     private long maxDeliverTime;
 
-    public ReviveBuffer() {
+    public ReviveBuffer(long initialOffset) {
+        this.initialOffset = initialOffset;
+
         this.startTime = System.currentTimeMillis();
         this.noMsgCount = 0;
         this.firstReviveTime = 0;
