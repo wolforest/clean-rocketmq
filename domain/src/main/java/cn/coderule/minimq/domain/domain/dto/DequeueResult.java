@@ -17,6 +17,10 @@ public class DequeueResult implements Serializable {
     private MessageStatus status;
     private List<MessageBO> messageList;
 
+    private long minOffset;
+    private long maxOffset;
+    private long nextOffset;
+
     public DequeueResult() {
         this.status = MessageStatus.NO_MATCHED_MESSAGE;
         this.messageList = new ArrayList<>();
