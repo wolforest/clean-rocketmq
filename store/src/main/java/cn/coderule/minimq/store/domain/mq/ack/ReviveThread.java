@@ -90,7 +90,11 @@ public class ReviveThread extends ServiceThread {
             return;
         }
 
-        consumeOffsetService.putOffset(PopConstants.REVIVE_GROUP, reviveTopic, queueId, reviveOffset);
+        commitOffset(reviveOffset);
+    }
+
+    private void commitOffset(long offset) {
+        consumeOffsetService.putOffset(PopConstants.REVIVE_GROUP, reviveTopic, queueId, offset);
     }
 
     private ReviveBuffer consume() {
