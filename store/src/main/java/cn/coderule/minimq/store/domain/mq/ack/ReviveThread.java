@@ -121,7 +121,7 @@ public class ReviveThread extends ServiceThread {
 
             parseMessage(buffer, messageList);
 
-            if (isExpired(buffer, now)) break;
+            if (isTimeout(buffer, now)) break;
         }
 
         return buffer;
@@ -131,7 +131,7 @@ public class ReviveThread extends ServiceThread {
         ArrayList<PopCheckPoint> checkPointList = reviveBuffer.getSortedList();
     }
 
-    private boolean isExpired(ReviveBuffer buffer, long now) {
+    private boolean isTimeout(ReviveBuffer buffer, long now) {
         long elapsedTime = now - buffer.getStartTime();
         if (elapsedTime > messageConfig.getReviveScanTime()) {
             log.info("revive scan timeout, topic={}; reviveQueueId={}", reviveTopic, queueId);
