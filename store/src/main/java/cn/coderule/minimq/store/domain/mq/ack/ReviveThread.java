@@ -3,6 +3,7 @@ package cn.coderule.minimq.store.domain.mq.ack;
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 import cn.coderule.common.lang.type.Pair;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
+import cn.coderule.common.util.lang.string.JSONUtil;
 import cn.coderule.minimq.domain.config.MessageConfig;
 import cn.coderule.minimq.domain.domain.constant.PopConstants;
 import cn.coderule.minimq.domain.domain.dto.DequeueResult;
@@ -121,6 +122,10 @@ public class ReviveThread extends ServiceThread {
         return buffer;
     }
 
+    private void revive(ReviveBuffer reviveBuffer) {
+        ArrayList<PopCheckPoint> checkPointList = reviveBuffer.getSortedList();
+    }
+
     private boolean isExpired(ReviveBuffer buffer, long now) {
         long elapsedTime = now - buffer.getStartTime();
         if (elapsedTime > messageConfig.getReviveScanTime()) {
@@ -129,10 +134,6 @@ public class ReviveThread extends ServiceThread {
         }
 
         return false;
-    }
-
-    private void revive(ReviveBuffer reviveBuffer) {
-        ArrayList<PopCheckPoint> checkPointList = reviveBuffer.getSortedList();
     }
 
     private void parseMessage(ReviveBuffer buffer, List<MessageBO> messageList) {
@@ -165,8 +166,24 @@ public class ReviveThread extends ServiceThread {
         return false;
     }
 
-
     private boolean parseCheckPoint(ReviveBuffer buffer, MessageBO message) {
+        PopCheckPoint point = JSONUtil.parse(message.getStringBody(), PopCheckPoint.class);
+        if (messageConfig.isEnablePopLog()) {
+            log.info("find checkpoint, reviveQueueId={}, offset={}, checkpoint={}",
+                message.getQueueId(), message.getQueueOffset(), point);
+        }
+
+        if (null == point.getTopic() || null == point.getCId()) {
+            return false;
+        }
+
+        buffer.addCheckPoint(point);
+        point.setReviveOffset(message.getQueueOffset());
+
+        if (0 == buffer.getFirstReviveTime()) {
+            buffer.setFirstReviveTime(point.getReviveTime());
+        }
+
         return true;
     }
 

@@ -1,6 +1,7 @@
 package cn.coderule.minimq.domain.domain.model.message;
 
 import java.io.Serializable;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.AllArgsConstructor;
@@ -18,6 +19,11 @@ public class Message implements Serializable {
     private Map<String, String> properties;
     private byte[] body;
     private String transactionId;
+
+
+    public String getStringBody() {
+        return new String(this.body, StandardCharsets.UTF_8);
+    }
 
     public void putProperty(final String name, final String value) {
         if (null == this.properties) {

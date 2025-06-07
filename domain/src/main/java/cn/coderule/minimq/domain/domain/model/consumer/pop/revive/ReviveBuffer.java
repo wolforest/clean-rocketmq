@@ -1,6 +1,7 @@
 package cn.coderule.minimq.domain.domain.model.consumer.pop.revive;
 
 import cn.coderule.minimq.domain.domain.model.consumer.pop.checkpoint.PopCheckPoint;
+import cn.coderule.minimq.domain.domain.model.consumer.pop.helper.PopKeyBuilder;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -91,11 +92,17 @@ public class ReviveBuffer implements Serializable {
     }
 
     public void addCheckPoint(PopCheckPoint point) {
-        checkPointMap.put(point.getCId(), point);
+        checkPointMap.put(
+            PopKeyBuilder.buildKey(point),
+            point
+        );
     }
 
     public void addAck(PopCheckPoint point) {
-        ackMap.put(point.getCId(), point);
+        ackMap.put(
+            PopKeyBuilder.buildKey(point),
+            point
+        );
     }
 
     public PopCheckPoint getCheckPoint(String mergeKey) {
