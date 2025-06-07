@@ -1,5 +1,6 @@
 package cn.coderule.minimq.domain.domain.dto;
 
+import cn.coderule.minimq.domain.service.store.domain.mq.MessageFilter;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class GetRequest implements Serializable {
+public class DequeueRequest implements Serializable {
     private String group;
     private String topic;
     private int queueId;
@@ -20,6 +21,7 @@ public class GetRequest implements Serializable {
     private int num = 1;
     private int maxSize;
 
-    private Object filter;
+    @Builder.Default
+    private MessageFilter filter = null;
 }
 

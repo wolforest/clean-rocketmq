@@ -2,7 +2,7 @@ package cn.coderule.minimq.domain.service.store.api;
 
 import cn.coderule.minimq.domain.domain.dto.EnqueueResult;
 import cn.coderule.minimq.domain.domain.model.message.MessageBO;
-import cn.coderule.minimq.domain.domain.dto.GetRequest;
+import cn.coderule.minimq.domain.domain.dto.DequeueRequest;
 import cn.coderule.minimq.domain.domain.dto.DequeueResult;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -27,7 +27,7 @@ public interface MQStore {
 
     DequeueResult get(String topic, int queueId, long offset);
     DequeueResult get(String topic, int queueId, long offset, int num);
-    DequeueResult get(GetRequest request);
+    DequeueResult get(DequeueRequest request);
 
     MessageBO getMessage(String topic, int queueId, long offset);
     List<MessageBO> getMessage(String topic, int queueId, long offset, int num);

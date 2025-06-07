@@ -1,7 +1,7 @@
 package cn.coderule.minimq.store.domain.mq;
 
 import cn.coderule.common.util.lang.collection.CollectionUtil;
-import cn.coderule.minimq.domain.domain.dto.GetRequest;
+import cn.coderule.minimq.domain.domain.dto.DequeueRequest;
 import cn.coderule.minimq.domain.domain.dto.DequeueResult;
 import cn.coderule.minimq.domain.service.store.domain.mq.MQService;
 import cn.coderule.minimq.domain.domain.dto.EnqueueResult;
@@ -61,7 +61,7 @@ public class DefaultMQService implements MQService {
     }
 
     @Override
-    public DequeueResult get(GetRequest request) {
+    public DequeueResult get(DequeueRequest request) {
         return messageService.get(request);
     }
 

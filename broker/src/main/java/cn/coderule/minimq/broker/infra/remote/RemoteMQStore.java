@@ -4,7 +4,7 @@ import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.minimq.domain.config.BrokerConfig;
 import cn.coderule.minimq.domain.domain.model.message.MessageBO;
 import cn.coderule.minimq.domain.domain.dto.EnqueueResult;
-import cn.coderule.minimq.domain.domain.dto.GetRequest;
+import cn.coderule.minimq.domain.domain.dto.DequeueRequest;
 import cn.coderule.minimq.domain.domain.dto.DequeueResult;
 import cn.coderule.minimq.domain.service.store.api.MQStore;
 import cn.coderule.minimq.rpc.common.rpc.RpcClient;
@@ -84,7 +84,7 @@ public class RemoteMQStore extends AbstractRemoteStore implements MQStore, Lifec
     }
 
     @Override
-    public DequeueResult get(GetRequest request) {
+    public DequeueResult get(DequeueRequest request) {
         String address = loadBalance.findByTopic(request.getTopic());
         return getClient(address).get(request);
     }

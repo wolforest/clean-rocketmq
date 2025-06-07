@@ -4,7 +4,7 @@ import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.minimq.domain.config.MessageConfig;
 import cn.coderule.minimq.domain.config.StoreConfig;
 import cn.coderule.minimq.domain.domain.dto.DequeueResult;
-import cn.coderule.minimq.domain.domain.dto.GetRequest;
+import cn.coderule.minimq.domain.domain.dto.DequeueRequest;
 import cn.coderule.minimq.domain.domain.model.cluster.store.QueueUnit;
 import cn.coderule.minimq.domain.domain.model.message.MessageBO;
 import cn.coderule.minimq.domain.service.store.domain.commitlog.CommitLog;
@@ -30,7 +30,7 @@ public class MessageService {
     }
 
     public DequeueResult get(String topic, int queueId, long offset, int num) {
-        GetRequest request = GetRequest.builder()
+        DequeueRequest request = DequeueRequest.builder()
             .topic(topic)
             .queueId(queueId)
             .offset(offset)
@@ -40,7 +40,7 @@ public class MessageService {
         return get(request);
     }
 
-    public DequeueResult get(GetRequest request) {
+    public DequeueResult get(DequeueRequest request) {
         List<QueueUnit> unitList = consumeQueueGateway.get(
             request.getTopic(), request.getQueueId(), request.getOffset(), request.getNum()
         );

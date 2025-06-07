@@ -6,7 +6,7 @@ import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.minimq.domain.config.MessageConfig;
 import cn.coderule.minimq.domain.domain.constant.PopConstants;
 import cn.coderule.minimq.domain.domain.dto.DequeueResult;
-import cn.coderule.minimq.domain.domain.dto.GetRequest;
+import cn.coderule.minimq.domain.domain.dto.DequeueRequest;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.checkpoint.PopCheckPoint;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.revive.ReviveBuffer;
 import cn.coderule.minimq.domain.domain.model.message.MessageBO;
@@ -147,7 +147,7 @@ public class ReviveThread extends ServiceThread {
     }
 
     private List<MessageBO> pullMessage(long reviveOffset) {
-        GetRequest request = GetRequest.builder()
+        DequeueRequest request = DequeueRequest.builder()
             .group(PopConstants.REVIVE_GROUP)
             .topic(reviveTopic)
             .queueId(queueId)

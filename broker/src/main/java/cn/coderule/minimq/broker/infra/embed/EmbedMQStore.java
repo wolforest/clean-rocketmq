@@ -2,7 +2,7 @@ package cn.coderule.minimq.broker.infra.embed;
 
 import cn.coderule.minimq.domain.domain.model.message.MessageBO;
 import cn.coderule.minimq.domain.domain.dto.EnqueueResult;
-import cn.coderule.minimq.domain.domain.dto.GetRequest;
+import cn.coderule.minimq.domain.domain.dto.DequeueRequest;
 import cn.coderule.minimq.domain.domain.dto.DequeueResult;
 import cn.coderule.minimq.domain.service.store.api.MQStore;
 import java.util.List;
@@ -46,7 +46,7 @@ public class EmbedMQStore extends AbstractEmbedStore implements MQStore {
     }
 
     @Override
-    public DequeueResult get(GetRequest request) {
+    public DequeueResult get(DequeueRequest request) {
         return mqStore.get(request);
     }
 

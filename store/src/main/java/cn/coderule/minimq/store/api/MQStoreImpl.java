@@ -1,7 +1,7 @@
 package cn.coderule.minimq.store.api;
 
 import cn.coderule.minimq.domain.config.MessageConfig;
-import cn.coderule.minimq.domain.domain.dto.GetRequest;
+import cn.coderule.minimq.domain.domain.dto.DequeueRequest;
 import cn.coderule.minimq.domain.domain.dto.DequeueResult;
 import cn.coderule.minimq.domain.service.store.api.MQStore;
 import cn.coderule.minimq.domain.domain.dto.EnqueueResult;
@@ -50,7 +50,7 @@ public class MQStoreImpl implements MQStore {
     }
 
     @Override
-    public DequeueResult get(GetRequest request) {
+    public DequeueResult get(DequeueRequest request) {
         return mqService.get(request);
     }
 
