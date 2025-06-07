@@ -4,7 +4,7 @@ import cn.coderule.minimq.domain.config.ConsumeQueueConfig;
 import cn.coderule.minimq.domain.service.store.domain.commitlog.CommitEventDispatcher;
 import cn.coderule.minimq.domain.service.store.domain.consumequeue.ConsumeQueueGateway;
 import cn.coderule.minimq.domain.service.store.domain.meta.TopicService;
-import cn.coderule.minimq.domain.service.store.manager.ConsumeQueueManager;
+import cn.coderule.minimq.domain.service.store.domain.consumequeue.ConsumeQueueManager;
 import cn.coderule.minimq.store.domain.consumequeue.queue.ConsumeQueueFactory;
 import cn.coderule.minimq.store.domain.consumequeue.service.ConsumeQueueFlusher;
 import cn.coderule.minimq.store.domain.consumequeue.service.ConsumeQueueLoader;

@@ -13,7 +13,7 @@ import cn.coderule.minimq.domain.domain.model.consumer.pop.helper.PopConverter;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.helper.PopKeyBuilder;
 import cn.coderule.minimq.domain.domain.model.message.MessageBO;
 import cn.coderule.minimq.domain.domain.model.meta.topic.KeyBuilder;
-import cn.coderule.minimq.domain.service.store.domain.MQService;
+import cn.coderule.minimq.domain.service.store.domain.mq.MQService;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.util.concurrent.atomic.AtomicInteger;

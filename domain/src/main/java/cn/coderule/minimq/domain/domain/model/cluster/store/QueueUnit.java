@@ -16,6 +16,8 @@ public class QueueUnit implements Serializable {
 
     private long commitLogOffset;
     private int messageSize;
+    @Builder.Default
+    private short batchNum = 1;
 
     private long tagsCode;
     private ByteBuffer buffer;

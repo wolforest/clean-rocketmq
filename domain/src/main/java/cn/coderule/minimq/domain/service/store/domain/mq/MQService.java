@@ -1,4 +1,4 @@
-package cn.coderule.minimq.domain.service.store.domain;
+package cn.coderule.minimq.domain.service.store.domain.mq;
 
 import cn.coderule.minimq.domain.domain.dto.EnqueueResult;
 import cn.coderule.minimq.domain.domain.model.message.MessageBO;

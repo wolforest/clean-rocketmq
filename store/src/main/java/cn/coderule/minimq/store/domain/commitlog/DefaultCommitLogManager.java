@@ -6,7 +6,7 @@ import cn.coderule.minimq.domain.config.StoreConfig;
 import cn.coderule.minimq.domain.service.store.api.CommitLogStore;
 import cn.coderule.minimq.domain.service.store.domain.commitlog.CommitLog;
 import cn.coderule.minimq.domain.service.store.infra.MappedFileQueue;
-import cn.coderule.minimq.domain.service.store.manager.CommitLogManager;
+import cn.coderule.minimq.domain.service.store.domain.commitlog.CommitLogManager;
 import cn.coderule.minimq.domain.service.store.server.CheckPoint;
 import cn.coderule.minimq.store.api.CommitLogStoreImpl;
 import cn.coderule.minimq.store.domain.commitlog.flush.FlushManager;

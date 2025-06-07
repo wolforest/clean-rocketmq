@@ -10,7 +10,7 @@ import cn.coderule.minimq.domain.domain.dto.GetRequest;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.checkpoint.PopCheckPoint;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.revive.ReviveBuffer;
 import cn.coderule.minimq.domain.domain.model.message.MessageBO;
-import cn.coderule.minimq.domain.service.store.domain.MQService;
+import cn.coderule.minimq.domain.service.store.domain.mq.MQService;
 import cn.coderule.minimq.domain.service.store.domain.meta.ConsumeOffsetService;
 import java.util.ArrayList;
 import java.util.Collections;
