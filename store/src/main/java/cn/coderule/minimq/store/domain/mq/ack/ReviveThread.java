@@ -8,7 +8,9 @@ import cn.coderule.minimq.domain.config.MessageConfig;
 import cn.coderule.minimq.domain.domain.constant.PopConstants;
 import cn.coderule.minimq.domain.domain.dto.DequeueResult;
 import cn.coderule.minimq.domain.domain.dto.DequeueRequest;
+import cn.coderule.minimq.domain.domain.model.consumer.pop.ack.AckMsg;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.checkpoint.PopCheckPoint;
+import cn.coderule.minimq.domain.domain.model.consumer.pop.helper.PopKeyBuilder;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.revive.ReviveBuffer;
 import cn.coderule.minimq.domain.domain.model.message.MessageBO;
 import cn.coderule.minimq.domain.service.store.domain.mq.MQService;
@@ -188,12 +190,33 @@ public class ReviveThread extends ServiceThread {
     }
 
     private boolean parseAck(ReviveBuffer buffer, MessageBO message) {
-        return true;
+        AckMsg ackMsg = JSONUtil.parse(message.getStringBody(), AckMsg.class);
+        if (messageConfig.isEnablePopLog()) {
+            log.info("find ack, reviveQueueId={}, offset={}, ackMsg={}",
+                message.getQueueId(), message.getQueueOffset(), ackMsg);
+        }
+
+        String mergeKey = PopKeyBuilder.buildReviveKey(ackMsg);
+        PopCheckPoint point = buffer.getCheckPoint(mergeKey);
+        if (point == null) {
+            return addAckMsg(buffer, ackMsg, message);
+        }
+
+        return mergeAckMsg(buffer, ackMsg, point, message);
     }
 
     private boolean parseBatchAck(ReviveBuffer buffer, MessageBO message) {
         return true;
     }
+
+    private boolean addAckMsg(ReviveBuffer buffer, AckMsg ackMsg, MessageBO message) {
+        return true;
+    }
+
+    private boolean mergeAckMsg(ReviveBuffer buffer, AckMsg ackMsg, PopCheckPoint point, MessageBO message) {
+        return true;
+    }
+
 
     private boolean handleEmptyMessage(ReviveBuffer buffer, long now) {
         buffer.setMaxDeliverTime(now);
