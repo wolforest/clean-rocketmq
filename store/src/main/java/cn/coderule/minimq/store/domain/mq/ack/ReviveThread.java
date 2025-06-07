@@ -101,9 +101,7 @@ public class ReviveThread extends ServiceThread {
         ReviveBuffer buffer = new ReviveBuffer(reviveOffset);
 
         while (true) {
-            if (skipRevive) {
-                break;
-            }
+            if (skipRevive) break;
 
             List<MessageBO> messageList = pullMessage(buffer.getOffset());
 
@@ -115,18 +113,22 @@ public class ReviveThread extends ServiceThread {
                 continue;
             }
 
-            buffer.setNoMsgCount(0);
             parseMessage(buffer, messageList);
-            buffer.setOffset(buffer.getOffset() + messageList.size());
 
-            long elapsedTime = now - buffer.getStartTime();
-            if (elapsedTime > messageConfig.getReviveScanTime()) {
-                log.info("revive scan timeout, topic={}; reviveQueueId={}", reviveTopic, queueId);
-                break;
-            }
+            if (isExpired(buffer, now)) break;
         }
 
         return buffer;
+    }
+
+    private boolean isExpired(ReviveBuffer buffer, long now) {
+        long elapsedTime = now - buffer.getStartTime();
+        if (elapsedTime > messageConfig.getReviveScanTime()) {
+            log.info("revive scan timeout, topic={}; reviveQueueId={}", reviveTopic, queueId);
+            return true;
+        }
+
+        return false;
     }
 
     private void revive(ReviveBuffer reviveBuffer) {
@@ -134,7 +136,34 @@ public class ReviveThread extends ServiceThread {
     }
 
     private void parseMessage(ReviveBuffer buffer, List<MessageBO> messageList) {
+        buffer.setNoMsgCount(0);
+        buffer.setOffset(buffer.getOffset() + messageList.size());
 
+        for (MessageBO message : messageList) {
+            if (!parseByTag(buffer, message)) continue;
+
+            long deliverTime = message.getDeliverTime();
+            if (deliverTime > buffer.getMaxDeliverTime()) {
+                buffer.setMaxDeliverTime(deliverTime);
+            }
+        }
+    }
+
+    private boolean parseByTag(ReviveBuffer buffer, MessageBO message) {
+        return true;
+    }
+
+
+    private boolean parseCheckPoint(ReviveBuffer buffer, MessageBO message) {
+        return true;
+    }
+
+    private boolean parseAck(ReviveBuffer buffer, MessageBO message) {
+        return true;
+    }
+
+    private boolean parseBatchAck(ReviveBuffer buffer, MessageBO message) {
+        return true;
     }
 
     private boolean handleEmptyMessage(ReviveBuffer buffer, long now) {

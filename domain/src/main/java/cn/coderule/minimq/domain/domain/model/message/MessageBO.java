@@ -176,4 +176,12 @@ public class MessageBO extends Message implements Serializable {
     public void setDeliverTime(long timeMs) {
         this.putProperty(MessageConst.PROPERTY_TIMER_DELIVER_MS, String.valueOf(timeMs));
     }
+
+    public long getDeliverTime() {
+        String t = this.getProperty(MessageConst.PROPERTY_TIMER_DELIVER_MS);
+        if (t != null) {
+            return Long.parseLong(t);
+        }
+        return 0;
+    }
 }
