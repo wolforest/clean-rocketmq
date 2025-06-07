@@ -211,6 +211,16 @@ public class ReviveThread extends ServiceThread {
     }
 
     private void reviveFromCheckpoint(PopCheckPoint point) {
+        if (skipRevive) {
+            log.info("skip revive from reviveFromCheckpoint topic={}, reviveQueueId={}",
+                reviveTopic, queueId);
+            return;
+        }
+
+        inflightMap.put(
+            point,
+            Pair.of(System.currentTimeMillis(), false)
+        );
     }
 
 
