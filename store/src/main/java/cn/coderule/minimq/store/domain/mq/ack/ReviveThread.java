@@ -10,6 +10,7 @@ import cn.coderule.minimq.domain.domain.constant.PopConstants;
 import cn.coderule.minimq.domain.domain.dto.DequeueResult;
 import cn.coderule.minimq.domain.domain.dto.DequeueRequest;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.ack.AckMsg;
+import cn.coderule.minimq.domain.domain.model.consumer.pop.ack.BatchAckMsg;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.checkpoint.PopCheckPoint;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.helper.PopConverter;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.helper.PopKeyBuilder;
@@ -209,6 +210,20 @@ public class ReviveThread extends ServiceThread {
     }
 
     private boolean parseBatchAck(ReviveBuffer buffer, MessageBO message) {
+        BatchAckMsg batchAckMsg = JSONUtil.parse(message.getStringBody(), BatchAckMsg.class);
+        if (messageConfig.isEnablePopLog()) {
+            log.info("find batch ack, reviveQueueId={}, offset={}, batchAckMsg={}",
+                message.getQueueId(), message.getQueueOffset(), batchAckMsg);
+        }
+
+        String mergeKey = PopKeyBuilder.buildReviveKey(batchAckMsg);
+        PopCheckPoint point = buffer.getCheckPoint(mergeKey);
+
+        if (point == null) {
+            return addAckMsg(buffer, batchAckMsg, message, mergeKey);
+        }
+
+        mergeBatchAckMsg(batchAckMsg, point);
         return true;
     }
 
@@ -232,6 +247,22 @@ public class ReviveThread extends ServiceThread {
         }
 
         return true;
+    }
+
+    private void mergeBatchAckMsg(BatchAckMsg batchAckMsg, PopCheckPoint point) {
+        List<Long> offsetList = batchAckMsg.getAckOffsetList();
+        for (Long offset : offsetList) {
+            int index = point.indexOfAck(offset);
+
+            if (index < 0) {
+                log.error("invalid index of BatchAckMsg, ackMsg: {}, index: {}, checkPoint: {}",
+                    batchAckMsg, index, point);
+                continue;
+            }
+
+            int bitMap = ByteUtil.setBit(point.getBitMap(), index, true);
+            point.setBitMap(bitMap);
+        }
     }
 
     private void mergeAckMsg(AckMsg ackMsg, PopCheckPoint point) {
