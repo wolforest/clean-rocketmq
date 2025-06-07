@@ -16,6 +16,9 @@ import cn.coderule.minimq.domain.domain.model.consumer.pop.helper.PopConverter;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.helper.PopKeyBuilder;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.revive.ReviveBuffer;
 import cn.coderule.minimq.domain.domain.model.message.MessageBO;
+import cn.coderule.minimq.domain.domain.model.meta.topic.KeyBuilder;
+import cn.coderule.minimq.domain.service.store.domain.meta.SubscriptionService;
+import cn.coderule.minimq.domain.service.store.domain.meta.TopicService;
 import cn.coderule.minimq.domain.service.store.domain.mq.MQService;
 import cn.coderule.minimq.domain.service.store.domain.meta.ConsumeOffsetService;
 import java.util.ArrayList;
@@ -34,6 +37,8 @@ public class ReviveThread extends ServiceThread {
 
     private final ConsumeOffsetService consumeOffsetService;
     private final MQService mqService;
+    private TopicService topicService;
+    private SubscriptionService subscriptionService;
 
     private volatile boolean skipRevive = false;
     /**
@@ -65,6 +70,7 @@ public class ReviveThread extends ServiceThread {
 
     @Override
     public void run() {
+        int counter = 1;
         while (!this.isStopped()) {
             if (shouldSkip()) continue;
 
@@ -78,6 +84,7 @@ public class ReviveThread extends ServiceThread {
 
             revive(buffer);
             resetOffset(buffer);
+            counter = calculateAndWait(buffer, counter);
         }
     }
 
@@ -142,8 +149,61 @@ public class ReviveThread extends ServiceThread {
         return buffer;
     }
 
+    private boolean shouldSkip(ReviveBuffer buffer, PopCheckPoint point) {
+        if (skipRevive) {
+            log.info("skip revive topic={}, reviveQueueId={}", reviveTopic, queueId);
+            return true;
+        }
+
+        long timeSpan = buffer.getMaxDeliverTime() - point.getReviveTime();
+        return timeSpan <= PopConstants.ackTimeInterval + 1_000;
+    }
+
+    private boolean existsTopicAndSubscription(PopCheckPoint popCheckPoint) {
+        // check normal topic, skip ck , if normal topic is not exist
+        String topic = KeyBuilder.removeRetryPrefix(popCheckPoint.getTopic(), popCheckPoint.getCId());
+        if (!topicService.exists(topic)) {
+            log.warn("reviveQueueId={}, can not get normal topic {}, then continue", queueId, popCheckPoint.getTopic());
+            return false;
+        }
+
+        if (!subscriptionService.existsGroup(popCheckPoint.getCId())) {
+            log.warn("reviveQueueId={}, can not get cid {}, then continue", queueId, popCheckPoint.getCId());
+            return false;
+        }
+
+        return true;
+    }
+
+    private void reputExpiredCheckpoint() {
+
+    }
+
+    private void reviveFromCheckpoint(PopCheckPoint point) {
+    }
+
+
     private void revive(ReviveBuffer reviveBuffer) {
-        ArrayList<PopCheckPoint> checkPointList = reviveBuffer.getSortedList();
+        long tmpOffset = reviveBuffer.getOffset();
+        ArrayList<PopCheckPoint> pointList = reviveBuffer.getSortedList();
+
+        for (PopCheckPoint point : pointList) {
+            if (shouldSkip(reviveBuffer, point)) break;
+
+            if (!existsTopicAndSubscription(point)) {
+                tmpOffset  = point.getReviveOffset();
+                continue;
+            }
+
+            reputExpiredCheckpoint();
+            reviveFromCheckpoint(point);
+        }
+
+        reviveBuffer.setOffset(tmpOffset);
+    }
+
+    private int calculateAndWait(ReviveBuffer buffer, int counter) {
+        return counter;
     }
 
     private boolean isTimeout(ReviveBuffer buffer, long now) {
