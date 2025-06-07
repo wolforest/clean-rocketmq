@@ -71,7 +71,8 @@ public class ReviveThread extends ServiceThread {
             initOffset();
             ReviveBuffer buffer = consume();
             if (skipRevive) {
-                log.info("skip revive topic={}; reviveQueueId={}", reviveTopic, queueId);
+                log.info("skip revive topic={}; reviveQueueId={}",
+                    reviveTopic, queueId);
                 continue;
             }
 
@@ -81,8 +82,14 @@ public class ReviveThread extends ServiceThread {
     }
 
     private void initOffset() {
-        log.info("start revive topic={}; reviveQueueId={}", reviveTopic, queueId);
-        reviveOffset = consumeOffsetService.getOffset(PopConstants.REVIVE_GROUP, reviveTopic, queueId);
+        log.info("start revive topic={}; reviveQueueId={}",
+            reviveTopic, queueId);
+
+        reviveOffset = consumeOffsetService.getOffset(
+            PopConstants.REVIVE_GROUP,
+            reviveTopic,
+            queueId
+        );
     }
 
     private void resetOffset(ReviveBuffer buffer) {
@@ -100,7 +107,12 @@ public class ReviveThread extends ServiceThread {
     }
 
     private void commitOffset(long offset) {
-        consumeOffsetService.putOffset(PopConstants.REVIVE_GROUP, reviveTopic, queueId, offset);
+        consumeOffsetService.putOffset(
+            PopConstants.REVIVE_GROUP,
+            reviveTopic,
+            queueId,
+            offset
+        );
     }
 
     private ReviveBuffer consume() {
@@ -120,10 +132,13 @@ public class ReviveThread extends ServiceThread {
             }
 
             parseMessage(buffer, messageList);
+            buffer.setNoMsgCount(0);
+            buffer.setOffset(buffer.getOffset() + messageList.size());
 
             if (isTimeout(buffer, now)) break;
         }
 
+        buffer.mergeAckMap();
         return buffer;
     }
 
@@ -142,9 +157,6 @@ public class ReviveThread extends ServiceThread {
     }
 
     private void parseMessage(ReviveBuffer buffer, List<MessageBO> messageList) {
-        buffer.setNoMsgCount(0);
-        buffer.setOffset(buffer.getOffset() + messageList.size());
-
         for (MessageBO message : messageList) {
             if (!parseByTag(buffer, message)) continue;
 

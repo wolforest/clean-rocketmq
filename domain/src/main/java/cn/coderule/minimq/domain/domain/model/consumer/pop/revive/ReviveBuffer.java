@@ -106,6 +106,10 @@ public class ReviveBuffer implements Serializable {
         return checkPointMap.get(mergeKey);
     }
 
+    public void mergeAckMap() {
+        checkPointMap.putAll(ackMap);
+    }
+
     public PopCheckPoint getAck(String mergeKey) {
         return ackMap.get(mergeKey);
     }
