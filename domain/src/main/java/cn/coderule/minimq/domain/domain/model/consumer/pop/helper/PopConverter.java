@@ -12,7 +12,7 @@ import java.net.SocketAddress;
 import java.nio.charset.StandardCharsets;
 
 public class PopConverter {
-    public static MessageBO buildCkMsg(PopCheckPoint ck, int reviveQid, String reviveTopic, SocketAddress storeHost) {
+    public static MessageBO toMessage(PopCheckPoint ck, int reviveQid, String reviveTopic, SocketAddress storeHost) {
         MessageBO msgInner = new MessageBO();
 
         msgInner.setTopic(reviveTopic);
@@ -27,6 +27,22 @@ public class PopConverter {
         msgInner.setPropertiesString(MessageUtils.propertiesToString(msgInner.getProperties()));
 
         return msgInner;
+    }
+
+    public static PopCheckPoint toCheckPoint(PopCheckPoint oldCK, long offset) {
+        PopCheckPoint newCk = new PopCheckPoint();
+        newCk.setBitMap(0);
+        newCk.setNum((byte) 1);
+        newCk.setPopTime(oldCK.getPopTime());
+        newCk.setInvisibleTime(oldCK.getInvisibleTime());
+        newCk.setStartOffset(offset);
+        newCk.setCId(oldCK.getCId());
+        newCk.setTopic(oldCK.getTopic());
+        newCk.setQueueId(oldCK.getQueueId());
+        newCk.setBrokerName(oldCK.getBrokerName());
+        newCk.addDiff(0);
+
+        return newCk;
     }
 
     public static PopCheckPoint toCheckPoint(AckMsg ackMsg, long offset) {

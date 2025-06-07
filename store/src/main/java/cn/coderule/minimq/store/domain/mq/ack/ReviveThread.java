@@ -6,6 +6,7 @@ import cn.coderule.common.util.lang.ByteUtil;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.common.util.lang.string.JSONUtil;
 import cn.coderule.minimq.domain.config.MessageConfig;
+import cn.coderule.minimq.domain.config.StoreConfig;
 import cn.coderule.minimq.domain.domain.constant.PopConstants;
 import cn.coderule.minimq.domain.domain.dto.DequeueResult;
 import cn.coderule.minimq.domain.domain.dto.DequeueRequest;
@@ -21,6 +22,8 @@ import cn.coderule.minimq.domain.service.store.domain.meta.SubscriptionService;
 import cn.coderule.minimq.domain.service.store.domain.meta.TopicService;
 import cn.coderule.minimq.domain.service.store.domain.mq.MQService;
 import cn.coderule.minimq.domain.service.store.domain.meta.ConsumeOffsetService;
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -30,6 +33,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class ReviveThread extends ServiceThread {
+    private final StoreConfig storeConfig;
     private final MessageConfig messageConfig;
     private final String reviveTopic;
     private final int queueId;
@@ -47,13 +51,14 @@ public class ReviveThread extends ServiceThread {
     private final NavigableMap<PopCheckPoint, Pair<Long, Boolean>> inflightMap;
 
     public ReviveThread(
-        MessageConfig messageConfig,
+        StoreConfig  storeConfig,
         String reviveTopic,
         int queueId,
         MQService mqService,
         ConsumeOffsetService consumeOffsetService
     ) {
-        this.messageConfig = messageConfig;
+        this.storeConfig = storeConfig;
+        this.messageConfig = storeConfig.getMessageConfig();
         this.reviveTopic = reviveTopic;
         this.queueId = queueId;
 
@@ -176,7 +181,33 @@ public class ReviveThread extends ServiceThread {
     }
 
     private void reputExpiredCheckpoint() {
+        while (inflightMap.size() > 3) {
+            await(100);
 
+            Pair<Long, Boolean> pair = inflightMap.firstEntry().getValue();
+            // if checkpoint result is true, continue
+            if (pair.getRight()) {
+                continue;
+            }
+
+            long now = System.currentTimeMillis();
+            if (now - pair.getLeft() <= 30_000) {
+                continue;
+            }
+
+            PopCheckPoint firstPoint = inflightMap.firstKey();
+            reputCheckpoint(firstPoint, pair.getLeft());
+            inflightMap.remove(firstPoint);
+        }
+    }
+
+    private void reputCheckpoint(PopCheckPoint point, long startOffset) {
+        PopCheckPoint newCheckPoint = PopConverter.toCheckPoint(point, startOffset);
+
+        SocketAddress storeHost = new InetSocketAddress(storeConfig.getHost(), storeConfig.getPort());
+        MessageBO message = PopConverter.toMessage(newCheckPoint, queueId, reviveTopic, storeHost);
+
+        mqService.enqueue(message);
     }
 
     private void reviveFromCheckpoint(PopCheckPoint point) {

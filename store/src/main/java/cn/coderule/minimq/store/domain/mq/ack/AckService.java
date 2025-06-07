@@ -209,7 +209,7 @@ public class AckService {
 
     private MessageBO buildReviveMsg(PopCheckPointWrapper pointWrapper) {
         SocketAddress storeHost = new InetSocketAddress(storeConfig.getHost(), storeConfig.getPort());
-        return PopConverter.buildCkMsg(
+        return PopConverter.toMessage(
             pointWrapper.getCk(),
             pointWrapper.getReviveQueueId(),
             reviveTopic,
