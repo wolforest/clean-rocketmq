@@ -116,13 +116,14 @@ public class ReviveThread extends ServiceThread {
             }
 
             buffer.setNoMsgCount(0);
+            parseMessage(buffer, messageList);
+            buffer.setOffset(buffer.getOffset() + messageList.size());
+
             long elapsedTime = now - buffer.getStartTime();
             if (elapsedTime > messageConfig.getReviveScanTime()) {
                 log.info("revive scan timeout, topic={}; reviveQueueId={}", reviveTopic, queueId);
                 break;
             }
-
-            parseMessage(buffer, messageList);
         }
 
         return buffer;
@@ -139,9 +140,11 @@ public class ReviveThread extends ServiceThread {
     private boolean handleEmptyMessage(ReviveBuffer buffer, long now) {
         buffer.setMaxDeliverTime(now);
 
-        if (buffer.getMaxDeliverTime() - buffer.getFirstReviveTime() > PopConstants.ackTimeInterval + 1000) {
+        long time = buffer.getMaxDeliverTime() - buffer.getFirstReviveTime();
+        if (time > PopConstants.ackTimeInterval + 1000) {
             return false;
         }
+
         buffer.increaseNoMsgCount();
         return buffer.getNoMsgCount() * 100 <= 4000;
     }
