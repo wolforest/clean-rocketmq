@@ -2,6 +2,7 @@ package cn.coderule.minimq.store.domain.mq.ack;
 
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 import cn.coderule.common.lang.type.Pair;
+import cn.coderule.common.util.lang.ByteUtil;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.common.util.lang.string.JSONUtil;
 import cn.coderule.minimq.domain.config.MessageConfig;
@@ -202,7 +203,8 @@ public class ReviveThread extends ServiceThread {
             return addAckMsg(buffer, ackMsg, message);
         }
 
-        return mergeAckMsg(buffer, ackMsg, point, message);
+        mergeAckMsg(ackMsg, point);
+        return true;
     }
 
     private boolean parseBatchAck(ReviveBuffer buffer, MessageBO message) {
@@ -213,10 +215,16 @@ public class ReviveThread extends ServiceThread {
         return true;
     }
 
-    private boolean mergeAckMsg(ReviveBuffer buffer, AckMsg ackMsg, PopCheckPoint point, MessageBO message) {
-        return true;
-    }
+    private void mergeAckMsg(AckMsg ackMsg, PopCheckPoint point) {
+        int index = point.indexOfAck(ackMsg.getAckOffset());
+        if (index < 0) {
+            log.error("invalid ack index, ackMsg={}, point={}", ackMsg, point);
+            return;
+        }
 
+        int newBitMap = ByteUtil.setBit(point.getBitMap(), index, true);
+        point.setBitMap(newBitMap);
+    }
 
     private boolean handleEmptyMessage(ReviveBuffer buffer, long now) {
         buffer.setMaxDeliverTime(now);
