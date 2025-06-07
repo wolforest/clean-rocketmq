@@ -98,11 +98,8 @@ public class ReviveBuffer implements Serializable {
         );
     }
 
-    public void addAck(PopCheckPoint point) {
-        ackMap.put(
-            PopKeyBuilder.buildKey(point),
-            point
-        );
+    public void addAck(String key, PopCheckPoint point) {
+        ackMap.put(key, point);
     }
 
     public PopCheckPoint getCheckPoint(String mergeKey) {

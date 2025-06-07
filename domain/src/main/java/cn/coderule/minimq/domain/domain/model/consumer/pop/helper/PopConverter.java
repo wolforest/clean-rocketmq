@@ -29,6 +29,20 @@ public class PopConverter {
         return msgInner;
     }
 
+    public static PopCheckPoint toCheckPoint(AckMsg ackMsg, long offset) {
+        PopCheckPoint point = new PopCheckPoint();
+        point.setStartOffset(ackMsg.getStartOffset());
+        point.setPopTime(ackMsg.getPopTime());
+        point.setQueueId(ackMsg.getQueueId());
+        point.setCId(ackMsg.getConsumerGroup());
+        point.setTopic(ackMsg.getTopic());
+        point.setNum((byte) 0);
+        point.setBitMap(0);
+        point.setReviveOffset(offset);
+        point.setBrokerName(ackMsg.getBrokerName());
+        return point;
+    }
+
     public static MessageBO toMessageBO(AckMsg ackMsg, int reviveQid, String reviveTopic, SocketAddress storeHost, long invisibleTime) {
         MessageBO msgInner = new MessageBO();
 

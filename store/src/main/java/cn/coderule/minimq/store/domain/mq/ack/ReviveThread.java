@@ -11,6 +11,7 @@ import cn.coderule.minimq.domain.domain.dto.DequeueResult;
 import cn.coderule.minimq.domain.domain.dto.DequeueRequest;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.ack.AckMsg;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.checkpoint.PopCheckPoint;
+import cn.coderule.minimq.domain.domain.model.consumer.pop.helper.PopConverter;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.helper.PopKeyBuilder;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.revive.ReviveBuffer;
 import cn.coderule.minimq.domain.domain.model.message.MessageBO;
@@ -200,7 +201,7 @@ public class ReviveThread extends ServiceThread {
         String mergeKey = PopKeyBuilder.buildReviveKey(ackMsg);
         PopCheckPoint point = buffer.getCheckPoint(mergeKey);
         if (point == null) {
-            return addAckMsg(buffer, ackMsg, message);
+            return addAckMsg(buffer, ackMsg, message, mergeKey);
         }
 
         mergeAckMsg(ackMsg, point);
@@ -211,7 +212,25 @@ public class ReviveThread extends ServiceThread {
         return true;
     }
 
-    private boolean addAckMsg(ReviveBuffer buffer, AckMsg ackMsg, MessageBO message) {
+    private boolean addAckMsg(ReviveBuffer buffer, AckMsg ackMsg, MessageBO message, String mergeKey) {
+        if (!messageConfig.isEnableSkipLongAwaitingAck()) {
+            return false;
+        }
+
+        long ackWaitTime = System.currentTimeMillis() - message.getDeliverTime();
+        if (ackWaitTime <= messageConfig.getReviveAckWaitMs()) {
+            return true;
+        }
+
+        PopCheckPoint point = PopConverter.toCheckPoint(ackMsg, message.getQueueOffset());
+        buffer.addAck(mergeKey, point);
+        log.warn("can't find checkpoint for ack, waitTime={}ms, mergeKey={}, ack={}, mockCheckPoint={}",
+            ackWaitTime, mergeKey, ackMsg, point);
+
+        if (0 == buffer.getFirstReviveTime()) {
+            buffer.setFirstReviveTime(point.getReviveTime());
+        }
+
         return true;
     }
 
