@@ -150,7 +150,19 @@ public class ReviveThread extends ServiceThread {
     }
 
     private boolean parseByTag(ReviveBuffer buffer, MessageBO message) {
-        return true;
+        if (PopConstants.CK_TAG.equals(message.getTags())) {
+            return parseCheckPoint(buffer, message);
+        }
+
+        if (PopConstants.ACK_TAG.equals(message.getTags())) {
+            return parseAck(buffer, message);
+        }
+
+        if (PopConstants.BATCH_ACK_TAG.equals(message.getTags())) {
+            return parseBatchAck(buffer, message);
+        }
+
+        return false;
     }
 
 
