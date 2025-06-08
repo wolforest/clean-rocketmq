@@ -144,8 +144,6 @@ public class ReviveThread extends ServiceThread {
             }
 
             parseMessage(buffer, messageList);
-            buffer.setNoMsgCount(0);
-            buffer.setOffset(buffer.getOffset() + messageList.size());
 
             if (isTimeout(buffer, now)) break;
         }
@@ -221,8 +219,21 @@ public class ReviveThread extends ServiceThread {
             point,
             Pair.of(System.currentTimeMillis(), false)
         );
+
+        reviveMessage(point);
     }
 
+    private void reviveMessage(PopCheckPoint point) {
+        for (int i = 0; i < point.getNum(); i++) {
+            // skip, if the message has been acked
+            if (ByteUtil.getBit(point.getBitMap(), i)) continue;
+
+            long offset = point.ackOffsetByIndex((byte) i);
+            DequeueResult result = mqService.get(point.getTopic(), point.getQueueId(), offset);
+
+        }
+
+    }
 
     private void revive(ReviveBuffer reviveBuffer) {
         long tmpOffset = reviveBuffer.getOffset();
@@ -258,6 +269,9 @@ public class ReviveThread extends ServiceThread {
     }
 
     private void parseMessage(ReviveBuffer buffer, List<MessageBO> messageList) {
+        buffer.setNoMsgCount(0);
+        buffer.setOffset(buffer.getOffset() + messageList.size());
+
         for (MessageBO message : messageList) {
             if (!parseByTag(buffer, message)) continue;
 
