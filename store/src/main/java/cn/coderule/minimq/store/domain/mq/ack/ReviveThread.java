@@ -251,12 +251,16 @@ public class ReviveThread extends ServiceThread {
         };
     }
 
-    private boolean processDequeueResult(PopCheckPoint popCheckPoint, DequeueResult result) {
+    private boolean retryRevive(PopCheckPoint point, DequeueResult result) {
+        return false;
+    }
+
+    private boolean processDequeueResult(PopCheckPoint point, DequeueResult result) {
         if (result.isEmpty()) {
             return parseDequeueStatus(result.getStatus());
         }
 
-        return false;
+        return retryRevive(point, result);
     }
 
     private void reviveMessage(PopCheckPoint point) {
