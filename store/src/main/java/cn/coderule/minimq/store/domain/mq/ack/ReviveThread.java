@@ -222,6 +222,8 @@ public class ReviveThread extends ServiceThread {
         );
 
         reviveMessage(point);
+
+        inflightMap.get(point).setRight(true);
         clearInflightMap();
     }
 
@@ -238,6 +240,10 @@ public class ReviveThread extends ServiceThread {
         }
     }
 
+    private boolean processDequeueResult(PopCheckPoint popCheckPoint, DequeueResult result) {
+        return false;
+    }
+
     private void reviveMessage(PopCheckPoint point) {
         for (int i = 0; i < point.getNum(); i++) {
             // skip, if the message has been acked
@@ -246,8 +252,13 @@ public class ReviveThread extends ServiceThread {
             long offset = point.ackOffsetByIndex((byte) i);
             DequeueResult result = mqService.get(point.getTopic(), point.getQueueId(), offset);
 
-        }
+            boolean isSuccess = processDequeueResult(point, result);
+            if (isSuccess) {
+                continue;
+            }
 
+            reputCheckpoint(point, offset);
+        }
     }
 
     private void revive(ReviveBuffer reviveBuffer) {
