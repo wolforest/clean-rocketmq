@@ -10,6 +10,7 @@ import cn.coderule.minimq.domain.config.StoreConfig;
 import cn.coderule.minimq.domain.domain.constant.PopConstants;
 import cn.coderule.minimq.domain.domain.dto.DequeueResult;
 import cn.coderule.minimq.domain.domain.dto.DequeueRequest;
+import cn.coderule.minimq.domain.domain.enums.message.MessageStatus;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.ack.AckMsg;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.ack.BatchAckMsg;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.checkpoint.PopCheckPoint;
@@ -240,7 +241,21 @@ public class ReviveThread extends ServiceThread {
         }
     }
 
+    private boolean parseDequeueStatus(MessageStatus status) {
+        return switch (status) {
+            case MESSAGE_WAS_REMOVING,
+                 OFFSET_TOO_SMALL,
+                 NO_MATCHED_LOGIC_QUEUE,
+                 NO_MESSAGE_IN_QUEUE -> true;
+            default -> false;
+        };
+    }
+
     private boolean processDequeueResult(PopCheckPoint popCheckPoint, DequeueResult result) {
+        if (result.isEmpty()) {
+            return parseDequeueStatus(result.getStatus());
+        }
+
         return false;
     }
 
