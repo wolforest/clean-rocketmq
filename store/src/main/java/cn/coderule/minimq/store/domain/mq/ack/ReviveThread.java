@@ -252,6 +252,8 @@ public class ReviveThread extends ServiceThread {
     }
 
     private boolean retryRevive(PopCheckPoint point, DequeueResult result) {
+        SocketAddress storeHost = new InetSocketAddress(storeConfig.getHost(), storeConfig.getPort());
+        MessageBO message = PopConverter.toMessageBO(point, result.getMessage(), storeHost);
         return false;
     }
 
