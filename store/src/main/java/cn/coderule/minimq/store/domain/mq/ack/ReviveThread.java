@@ -27,6 +27,7 @@ import java.net.SocketAddress;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.NavigableMap;
 import java.util.TreeMap;
 import lombok.extern.slf4j.Slf4j;
@@ -221,6 +222,20 @@ public class ReviveThread extends ServiceThread {
         );
 
         reviveMessage(point);
+        clearInflightMap();
+    }
+
+    private void clearInflightMap() {
+        for (Map.Entry<PopCheckPoint, Pair<Long, Boolean>> entry : inflightMap.entrySet()) {
+            Pair<Long, Boolean> pair = entry.getValue();
+            if (!pair.getRight()) {
+                break;
+            }
+
+            PopCheckPoint point = entry.getKey();
+            commitOffset(point.getReviveOffset());
+            inflightMap.remove(point);
+        }
     }
 
     private void reviveMessage(PopCheckPoint point) {
