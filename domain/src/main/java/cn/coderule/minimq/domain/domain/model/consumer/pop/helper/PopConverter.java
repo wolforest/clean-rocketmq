@@ -1,17 +1,41 @@
 package cn.coderule.minimq.domain.domain.model.consumer.pop.helper;
 
+import cn.coderule.minimq.domain.domain.constant.MQConstants;
 import cn.coderule.minimq.domain.domain.constant.MessageConst;
 import cn.coderule.minimq.domain.domain.constant.PopConstants;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.ack.AckMsg;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.ack.BatchAckMsg;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.checkpoint.PopCheckPoint;
 import cn.coderule.minimq.domain.domain.model.message.MessageBO;
+import cn.coderule.minimq.domain.domain.model.meta.topic.KeyBuilder;
 import cn.coderule.minimq.domain.utils.MessageUtils;
 import com.alibaba.fastjson2.JSON;
 import java.net.SocketAddress;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 
 public class PopConverter {
+
+    public  static MessageBO toMessageBO(PopCheckPoint popCheckPoint, MessageBO messageExt, SocketAddress storeHost) {
+        MessageBO msgInner = new MessageBO();
+        initMsgTopic(popCheckPoint, msgInner);
+        initMsgTag(messageExt, msgInner);
+
+        msgInner.setBody(messageExt.getBody());
+        msgInner.setQueueId(0);
+        msgInner.setBornTimestamp(messageExt.getBornTimestamp());
+        msgInner.setFlag(messageExt.getFlag());
+        msgInner.setSysFlag(messageExt.getSysFlag());
+        msgInner.setBornHost(storeHost);
+        msgInner.setStoreHost(storeHost);
+        msgInner.setReconsumeTimes(messageExt.getReconsumeTimes() + 1);
+        msgInner.getProperties().putAll(messageExt.getProperties());
+
+        initMsgProperties(popCheckPoint, messageExt, msgInner);
+
+        return msgInner;
+    }
+
     public static MessageBO toMessage(PopCheckPoint ck, int reviveQid, String reviveTopic, SocketAddress storeHost) {
         MessageBO msgInner = new MessageBO();
 
@@ -82,4 +106,28 @@ public class PopConverter {
         msgInner.setPropertiesString(MessageUtils.propertiesToString(msgInner.getProperties()));
         return msgInner;
     }
+
+    private static void initMsgTopic(PopCheckPoint popCheckPoint, MessageBO msgInner) {
+        if (!popCheckPoint.getTopic().startsWith(MQConstants.RETRY_GROUP_TOPIC_PREFIX)) {
+            msgInner.setTopic(KeyBuilder.buildPopRetryTopic(popCheckPoint.getTopic(), popCheckPoint.getCId(), false));
+        } else {
+            msgInner.setTopic(popCheckPoint.getTopic());
+        }
+    }
+
+    private static void initMsgTag(MessageBO messageExt, MessageBO msgInner) {
+        if (messageExt.getTags() != null) {
+            msgInner.setTags(messageExt.getTags());
+        } else {
+            msgInner.setProperties(new HashMap<>());
+        }
+    }
+
+    private static void initMsgProperties(PopCheckPoint popCheckPoint, MessageBO messageExt, MessageBO msgInner) {
+        if (messageExt.getReconsumeTimes() == 0 || msgInner.getProperties().get(MessageConst.PROPERTY_FIRST_POP_TIME) == null) {
+            msgInner.getProperties().put(MessageConst.PROPERTY_FIRST_POP_TIME, String.valueOf(popCheckPoint.getPopTime()));
+        }
+        msgInner.setPropertiesString(MessageUtils.propertiesToString(msgInner.getProperties()));
+    }
+
 }
