@@ -69,6 +69,21 @@ public class RetryService {
     }
 
     private void initConsumeOffset(String topicName, String groupName) {
+        long offset = consumeOffsetService.getOffset(
+            groupName,
+            topicName,
+            0
+        );
 
+        if (offset >= 0) {
+            return;
+        }
+
+        consumeOffsetService.putOffset(
+            groupName,
+            topicName,
+            0,
+            0
+        );
     }
 }
