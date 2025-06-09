@@ -1,10 +1,13 @@
 package cn.coderule.minimq.store.domain.mq.revive;
 
 import cn.coderule.minimq.domain.config.StoreConfig;
+import cn.coderule.minimq.domain.domain.constant.PopConstants;
 import cn.coderule.minimq.domain.domain.dto.EnqueueResult;
+import cn.coderule.minimq.domain.domain.enums.message.TagType;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.checkpoint.PopCheckPoint;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.helper.PopConverter;
 import cn.coderule.minimq.domain.domain.model.message.MessageBO;
+import cn.coderule.minimq.domain.domain.model.meta.topic.Topic;
 import cn.coderule.minimq.domain.service.store.domain.meta.ConsumeOffsetService;
 import cn.coderule.minimq.domain.service.store.domain.meta.TopicService;
 import cn.coderule.minimq.domain.service.store.domain.mq.MQService;
@@ -49,11 +52,23 @@ public class RetryService {
         return PopConverter.toMessageBO(point, message, storeHost);
     }
 
-    private void initRetryTopic(String topic) {
+    private void initRetryTopic(String topicName) {
+        if (topicService.exists(topicName)) {
+            return;
+        }
 
+        Topic retryTopic = Topic.builder()
+            .topicName(topicName)
+            .readQueueNums(PopConstants.retryQueueNum)
+            .writeQueueNums(PopConstants.retryQueueNum)
+            .tagType(TagType.SINGLE_TAG)
+            .perm(6)
+            .topicSysFlag(0)
+            .build();
+        topicService.putTopic(retryTopic);
     }
 
-    private void initConsumeOffset(String topic, String consumeGroup) {
+    private void initConsumeOffset(String topicName, String groupName) {
 
     }
 }
