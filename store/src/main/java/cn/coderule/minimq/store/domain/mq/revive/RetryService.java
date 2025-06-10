@@ -25,16 +25,11 @@ public class RetryService {
     private final TopicService topicService;
     private final ConsumeOffsetService consumeOffsetService;
 
-    public RetryService(
-        StoreConfig storeConfig,
-        MQService mqService,
-        TopicService topicService,
-        ConsumeOffsetService consumeOffsetService
-    ) {
-        this.storeConfig = storeConfig;
-        this.mqService = mqService;
-        this.topicService = topicService;
-        this.consumeOffsetService = consumeOffsetService;
+    public RetryService(ReviveContext context) {
+        this.storeConfig = context.getStoreConfig();
+        this.mqService = context.getMqService();
+        this.topicService = context.getTopicService();
+        this.consumeOffsetService = context.getConsumeOffsetService();
     }
 
     public boolean retry(PopCheckPoint point, MessageBO message) {

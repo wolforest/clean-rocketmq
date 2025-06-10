@@ -48,13 +48,13 @@ public class Reviver {
      */
     private final NavigableMap<PopCheckPoint, Pair<Long, Boolean>> inflightMap;
 
-    public Reviver(ReviveContext context, int queueId) {
+    public Reviver(ReviveContext context, int queueId, RetryService retryService) {
         this.storeConfig = context.getStoreConfig();
         this.reviveTopic = context.getReviveTopic();
         this.queueId = queueId;
 
         this.mqService = context.getMqService();
-        this.retryService = context.getRetryService();
+        this.retryService = retryService;
 
         this.topicService = context.getTopicService();
         this.subscriptionService = context.getSubscriptionService();
