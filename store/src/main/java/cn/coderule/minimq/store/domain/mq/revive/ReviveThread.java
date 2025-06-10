@@ -45,6 +45,7 @@ public class ReviveThread extends ServiceThread {
     private final MQService mqService;
     private TopicService topicService;
     private SubscriptionService subscriptionService;
+    private RetryService retryService;
 
     private volatile boolean skipRevive = false;
     /**
@@ -251,18 +252,12 @@ public class ReviveThread extends ServiceThread {
         };
     }
 
-    private boolean retryRevive(PopCheckPoint point, DequeueResult result) {
-        SocketAddress storeHost = new InetSocketAddress(storeConfig.getHost(), storeConfig.getPort());
-        MessageBO message = PopConverter.toMessageBO(point, result.getMessage(), storeHost);
-        return false;
-    }
-
-    private boolean processDequeueResult(PopCheckPoint point, DequeueResult result) {
+    private boolean retryOriginalMessage(PopCheckPoint point, DequeueResult result) {
         if (result.isEmpty()) {
             return parseDequeueStatus(result.getStatus());
         }
 
-        return retryRevive(point, result);
+        return retryService.retry(point, result.getMessage());
     }
 
     private void reviveMessage(PopCheckPoint point) {
@@ -273,7 +268,7 @@ public class ReviveThread extends ServiceThread {
             long offset = point.ackOffsetByIndex((byte) i);
             DequeueResult result = mqService.get(point.getTopic(), point.getQueueId(), offset);
 
-            boolean isSuccess = processDequeueResult(point, result);
+            boolean isSuccess = retryOriginalMessage(point, result);
             if (isSuccess) {
                 continue;
             }
