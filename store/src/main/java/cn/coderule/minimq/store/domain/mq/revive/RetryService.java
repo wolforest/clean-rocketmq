@@ -15,6 +15,9 @@ import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * stateless retry service
+ */
 @Slf4j
 public class RetryService {
     private final StoreConfig storeConfig;

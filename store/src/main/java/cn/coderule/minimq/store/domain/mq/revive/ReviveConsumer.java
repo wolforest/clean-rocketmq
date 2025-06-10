@@ -35,13 +35,11 @@ public class ReviveConsumer {
         MessageConfig messageConfig,
         String reviveTopic,
         int queueId,
-        boolean skipRevive,
         MQService mqService
     ) {
         this.messageConfig = messageConfig;
         this.reviveTopic = reviveTopic;
         this.queueId = queueId;
-        this.skipRevive = skipRevive;
 
         this.mqService = mqService;
     }
