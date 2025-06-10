@@ -7,6 +7,7 @@ import cn.coderule.minimq.domain.domain.model.meta.topic.KeyBuilder;
 import cn.coderule.minimq.domain.service.common.ServerEvent;
 import cn.coderule.minimq.domain.service.common.ServerEventBus;
 import cn.coderule.minimq.domain.service.store.domain.meta.ConsumeOffsetService;
+import cn.coderule.minimq.domain.service.store.domain.meta.SubscriptionService;
 import cn.coderule.minimq.domain.service.store.domain.meta.TopicService;
 import cn.coderule.minimq.domain.service.store.domain.mq.MQService;
 import cn.coderule.minimq.store.server.bootstrap.StoreContext;
@@ -15,6 +16,23 @@ import java.util.List;
 
 public class ReviveManager implements Lifecycle {
     private final List<ReviveThread> reviveThreadList = new ArrayList<>();
+
+    private ReviveContext initContext() {
+        StoreConfig storeConfig = StoreContext.getBean(StoreConfig.class);
+        String reviveTopic = KeyBuilder.buildClusterReviveTopic(storeConfig.getCluster());
+
+        return ReviveContext.builder()
+            .storeConfig(storeConfig)
+            .messageConfig(storeConfig.getMessageConfig())
+            .reviveTopic(reviveTopic)
+
+            .mqService(StoreContext.getBean(MQService.class))
+            .topicService(StoreContext.getBean(TopicService.class))
+            .subscriptionService(StoreContext.getBean(SubscriptionService.class))
+            .consumeOffsetService(StoreContext.getBean(ConsumeOffsetService.class))
+
+            .build();
+    }
 
     @Override
     public void initialize() {
