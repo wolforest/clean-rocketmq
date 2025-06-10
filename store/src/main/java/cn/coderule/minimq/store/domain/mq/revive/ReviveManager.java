@@ -17,6 +17,34 @@ import java.util.List;
 public class ReviveManager implements Lifecycle {
     private final List<ReviveThread> reviveThreadList = new ArrayList<>();
 
+
+
+    @Override
+    public void initialize() {
+        ReviveContext context = initContext();
+        int reviveQueueNum = context.getMessageConfig().getReviveQueueNum();
+
+        for (int i = 0; i < reviveQueueNum; i++) {
+            ReviveThread task = createReviveThread(context, i);
+            reviveThreadList.add(task);
+        }
+
+    }
+
+    @Override
+    public void start() {
+        for (ReviveThread reviveThread : reviveThreadList) {
+            reviveThread.start();
+        }
+    }
+
+    @Override
+    public void shutdown() {
+        for (ReviveThread reviveThread : reviveThreadList) {
+            reviveThread.shutdown();
+        }
+    }
+
     private ReviveContext initContext() {
         StoreConfig storeConfig = StoreContext.getBean(StoreConfig.class);
         String reviveTopic = KeyBuilder.buildClusterReviveTopic(storeConfig.getCluster());
@@ -46,44 +74,19 @@ public class ReviveManager implements Lifecycle {
             .build();
     }
 
-    @Override
-    public void initialize() {
-        ReviveContext context = initContext();
-        MessageConfig messageConfig = context.getMessageConfig();
+    private ReviveThread createReviveThread(ReviveContext context, int queueId) {
+        ReviveThread reviveThread = new ReviveThread(
+            context,
+            queueId,
+            new Reviver(context, queueId),
+            new ReviveConsumer(context, queueId)
+        );
+
         ServerEventBus eventBus = StoreContext.getBean(ServerEventBus.class);
+        eventBus.on(ServerEvent.BECOME_MASTER, (arg) -> reviveThread.setSkipRevive(false));
+        eventBus.on(ServerEvent.BECOME_SLAVE, (arg) -> reviveThread.setSkipRevive(true));
 
-        for (int i = 0; i < messageConfig.getReviveThreadNum(); i++) {
-            ReviveConsumer consumer = new ReviveConsumer(context, i);
-            Reviver reviver = new Reviver(context, i);
-
-            ReviveThread reviveThread = new ReviveThread(
-                context,
-                i,
-                reviver,
-                consumer
-            );
-
-
-            eventBus.on(ServerEvent.BECOME_MASTER, (arg) -> reviveThread.setSkipRevive(false));
-            eventBus.on(ServerEvent.BECOME_SLAVE, (arg) -> reviveThread.setSkipRevive(true));
-
-            reviveThreadList.add(reviveThread);
-        }
-
-    }
-
-    @Override
-    public void start() {
-        for (ReviveThread reviveThread : reviveThreadList) {
-            reviveThread.start();
-        }
-    }
-
-    @Override
-    public void shutdown() {
-        for (ReviveThread reviveThread : reviveThreadList) {
-            reviveThread.shutdown();
-        }
+        return reviveThread;
     }
 
 
