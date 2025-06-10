@@ -69,7 +69,7 @@ public class ReviveThread extends ServiceThread {
         }
     }
 
-    public long getReviveDelay() {
+    public long getReviveDelayTime() {
         if (reviveTimestamp <= 0) {
             return 0;
         }
@@ -81,6 +81,16 @@ public class ReviveThread extends ServiceThread {
         }
 
         return 0;
+    }
+
+    public long getReviveDelayNumber() {
+        if (reviveTimestamp <= 0) {
+            return 0;
+        }
+
+        long maxOffset = consumeQueueGateway.getMaxOffset(reviveTopic, queueId);
+        long diff = maxOffset - reviveOffset;
+        return Math.max(diff, 0);
     }
 
     private void initOffset() {
