@@ -1,6 +1,6 @@
-package cn.coderule.minimq.domain.domain.enums;
+package cn.coderule.minimq.domain.domain.enums.produce;
 
-public enum ProducerGroupEvent {
+public enum ProducerEvent {
     /**
      * The group of producer is unregistered.
      */

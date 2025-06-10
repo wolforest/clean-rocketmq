@@ -1,14 +1,14 @@
 package cn.coderule.minimq.domain.service.broker.listener;
 
-import cn.coderule.minimq.domain.domain.enums.ProducerGroupEvent;
+import cn.coderule.minimq.domain.domain.enums.produce.ProducerEvent;
 import cn.coderule.minimq.domain.domain.model.cluster.ClientChannelInfo;
 
 /**
  * producer manager will call this listener when something happen
  * <p>
- * event type: {@link ProducerGroupEvent}
+ * event type: {@link ProducerEvent}
  */
 public interface ProducerListener {
 
-    void handle(ProducerGroupEvent event, String group, ClientChannelInfo clientChannelInfo);
+    void handle(ProducerEvent event, String group, ClientChannelInfo clientChannelInfo);
 }

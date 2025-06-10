@@ -1,6 +1,6 @@
 package cn.coderule.minimq.domain.domain.enums.consume;
 
-public enum ConsumerGroupEvent {
+public enum ConsumerEvent {
 
     /**
      * Some consumers in the group are changed.
