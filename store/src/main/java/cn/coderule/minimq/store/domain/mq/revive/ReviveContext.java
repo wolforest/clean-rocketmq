@@ -2,6 +2,7 @@ package cn.coderule.minimq.store.domain.mq.revive;
 
 import cn.coderule.minimq.domain.config.MessageConfig;
 import cn.coderule.minimq.domain.config.StoreConfig;
+import cn.coderule.minimq.domain.service.store.domain.consumequeue.ConsumeQueueGateway;
 import cn.coderule.minimq.domain.service.store.domain.meta.ConsumeOffsetService;
 import cn.coderule.minimq.domain.service.store.domain.meta.SubscriptionService;
 import cn.coderule.minimq.domain.service.store.domain.meta.TopicService;
@@ -24,6 +25,7 @@ public class ReviveContext implements Serializable {
     private RetryService retryService;
 
     private MQService mqService;
+    private ConsumeQueueGateway consumeQueueGateway;;
     private TopicService topicService;
     private SubscriptionService subscriptionService;
     private ConsumeOffsetService consumeOffsetService;

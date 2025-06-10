@@ -6,6 +6,7 @@ import cn.coderule.minimq.domain.config.MessageConfig;
 import cn.coderule.minimq.domain.domain.constant.PopConstants;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.checkpoint.PopCheckPoint;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.revive.ReviveBuffer;
+import cn.coderule.minimq.domain.service.store.domain.consumequeue.ConsumeQueueGateway;
 import cn.coderule.minimq.domain.service.store.domain.meta.ConsumeOffsetService;
 import java.util.ArrayList;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +21,7 @@ public class ReviveThread extends ServiceThread {
     private final Reviver reviver;
     private final ReviveConsumer consumer;
     private final ConsumeOffsetService consumeOffsetService;
+    private final ConsumeQueueGateway consumeQueueGateway;
 
     private long reviveTimestamp = -1;
     private volatile boolean skipRevive = false;
@@ -33,6 +35,7 @@ public class ReviveThread extends ServiceThread {
         this.consumer = consumer;
 
         this.consumeOffsetService = context.getConsumeOffsetService();
+        this.consumeQueueGateway = context.getConsumeQueueGateway();
     }
 
     public void setSkipRevive(boolean skip) {
@@ -64,6 +67,20 @@ public class ReviveThread extends ServiceThread {
             resetOffset(buffer);
             counter = calculateAndWait(buffer, counter);
         }
+    }
+
+    public long getReviveDelay() {
+        if (reviveTimestamp <= 0) {
+            return 0;
+        }
+
+        long maxOffset = consumeQueueGateway.getMaxOffset(reviveTopic, queueId);
+        if (maxOffset > reviveOffset + 1) {
+            long now = System.currentTimeMillis();
+            return Math.max(now, reviveTimestamp);
+        }
+
+        return 0;
     }
 
     private void initOffset() {

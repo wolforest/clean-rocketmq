@@ -5,6 +5,7 @@ import cn.coderule.minimq.domain.config.StoreConfig;
 import cn.coderule.minimq.domain.domain.model.meta.topic.KeyBuilder;
 import cn.coderule.minimq.domain.service.common.ServerEvent;
 import cn.coderule.minimq.domain.service.common.ServerEventBus;
+import cn.coderule.minimq.domain.service.store.domain.consumequeue.ConsumeQueueGateway;
 import cn.coderule.minimq.domain.service.store.domain.meta.ConsumeOffsetService;
 import cn.coderule.minimq.domain.service.store.domain.meta.SubscriptionService;
 import cn.coderule.minimq.domain.service.store.domain.meta.TopicService;
@@ -50,7 +51,10 @@ public class ReviveManager implements Lifecycle {
             .reviveTopic(reviveTopic)
             .storeConfig(storeConfig)
             .messageConfig(storeConfig.getMessageConfig())
+
             .mqService(StoreContext.getBean(MQService.class))
+            .consumeQueueGateway(StoreContext.getBean(ConsumeQueueGateway.class))
+
             .topicService(StoreContext.getBean(TopicService.class))
             .subscriptionService(StoreContext.getBean(SubscriptionService.class))
             .consumeOffsetService(StoreContext.getBean(ConsumeOffsetService.class))
