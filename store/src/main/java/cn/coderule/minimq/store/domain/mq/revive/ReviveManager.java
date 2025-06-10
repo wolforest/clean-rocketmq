@@ -65,6 +65,9 @@ public class ReviveManager implements Lifecycle {
             new ReviveConsumer(context, queueId)
         );
 
+        boolean isMaster = context.getStoreConfig().isMaster();
+        reviveThread.setSkipRevive(!isMaster);
+
         ServerEventBus eventBus = StoreContext.getBean(ServerEventBus.class);
         eventBus.on(ServerEvent.BECOME_MASTER, (arg) -> reviveThread.setSkipRevive(false));
         eventBus.on(ServerEvent.BECOME_SLAVE, (arg) -> reviveThread.setSkipRevive(true));
