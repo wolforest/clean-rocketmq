@@ -3,7 +3,7 @@ package cn.coderule.minimq.domain.service.common;
 import cn.coderule.common.convention.container.EventBus;
 import java.util.function.Consumer;
 
-public class ServerEventManager {
+public class ServerEventBus {
     private final EventBus instance = new EventBus();
 
     public void on(ServerEvent event, Consumer<Object> listener) {

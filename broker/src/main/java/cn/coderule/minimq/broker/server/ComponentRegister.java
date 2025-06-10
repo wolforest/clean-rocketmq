@@ -14,7 +14,7 @@ import cn.coderule.minimq.broker.infra.store.StoreManager;
 import cn.coderule.minimq.broker.server.bootstrap.BrokerContext;
 import cn.coderule.minimq.broker.server.grpc.GrpcManager;
 import cn.coderule.minimq.domain.config.BrokerConfig;
-import cn.coderule.minimq.domain.service.common.ServerEventManager;
+import cn.coderule.minimq.domain.service.common.ServerEventBus;
 import cn.coderule.minimq.rpc.registry.route.RouteLoader;
 import cn.coderule.minimq.store.server.bootstrap.StoreContext;
 
@@ -43,7 +43,7 @@ public class ComponentRegister {
     }
 
     private void registerLib() {
-        ServerEventManager manager = new ServerEventManager();
+        ServerEventBus manager = new ServerEventBus();
         BrokerContext.register(manager);
     }
 
