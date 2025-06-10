@@ -48,34 +48,19 @@ public class ReviveManager implements Lifecycle {
 
     @Override
     public void initialize() {
-        StoreConfig storeConfig = StoreContext.getBean(StoreConfig.class);
-        MessageConfig messageConfig = StoreContext.getBean(MessageConfig.class);
-
-        MQService mqService = StoreContext.getBean(MQService.class);
-        ConsumeOffsetService consumeOffsetService = StoreContext.getBean(ConsumeOffsetService.class);
-        TopicService topicService = StoreContext.getBean(TopicService.class);
-        ServerEventBus eventBus = StoreContext.getBean(ServerEventBus.class);
-
-        String reviveTopic = KeyBuilder.buildClusterReviveTopic(storeConfig.getCluster());
-        RetryService retryService = new RetryService(
-            storeConfig,
-            mqService,
-            topicService,
-            consumeOffsetService
-        );
-
         ReviveContext context = initContext();
+        MessageConfig messageConfig = context.getMessageConfig();
+        ServerEventBus eventBus = StoreContext.getBean(ServerEventBus.class);
 
         for (int i = 0; i < messageConfig.getReviveThreadNum(); i++) {
             ReviveConsumer consumer = new ReviveConsumer(context, i);
             Reviver reviver = new Reviver(context, i);
 
             ReviveThread reviveThread = new ReviveThread(
-                storeConfig,
-                reviveTopic,
+                context,
                 i,
-                mqService,
-                consumeOffsetService
+                reviver,
+                consumer
             );
 
 

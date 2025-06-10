@@ -1,69 +1,36 @@
 package cn.coderule.minimq.store.domain.mq.revive;
 
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
-import cn.coderule.common.lang.type.Pair;
-import cn.coderule.common.util.lang.ByteUtil;
-import cn.coderule.minimq.domain.config.MessageConfig;
-import cn.coderule.minimq.domain.config.StoreConfig;
 import cn.coderule.minimq.domain.domain.constant.PopConstants;
-import cn.coderule.minimq.domain.domain.dto.DequeueResult;
-import cn.coderule.minimq.domain.domain.enums.message.MessageStatus;
-import cn.coderule.minimq.domain.domain.model.consumer.pop.checkpoint.PopCheckPoint;
-import cn.coderule.minimq.domain.domain.model.consumer.pop.helper.PopConverter;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.revive.ReviveBuffer;
-import cn.coderule.minimq.domain.domain.model.message.MessageBO;
-import cn.coderule.minimq.domain.domain.model.meta.topic.KeyBuilder;
-import cn.coderule.minimq.domain.service.store.domain.meta.SubscriptionService;
-import cn.coderule.minimq.domain.service.store.domain.meta.TopicService;
-import cn.coderule.minimq.domain.service.store.domain.mq.MQService;
 import cn.coderule.minimq.domain.service.store.domain.meta.ConsumeOffsetService;
-import java.net.InetSocketAddress;
-import java.net.SocketAddress;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Map;
-import java.util.NavigableMap;
-import java.util.TreeMap;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class ReviveThread extends ServiceThread {
-    private final StoreConfig storeConfig;
-    private final MessageConfig messageConfig;
     private final String reviveTopic;
     private final int queueId;
     private long reviveOffset;
 
+    private final Reviver reviver;
+    private final ReviveConsumer consumer;
     private final ConsumeOffsetService consumeOffsetService;
-    private final MQService mqService;
-    private TopicService topicService;
-    private SubscriptionService subscriptionService;
-
-    private ReviveConsumer reviveConsumer;
-    private RetryService retryService;
-    private Reviver reviver;
 
     private volatile boolean skipRevive = false;
 
-    public ReviveThread(
-        StoreConfig  storeConfig,
-        String reviveTopic,
-        int queueId,
-        MQService mqService,
-        ConsumeOffsetService consumeOffsetService
-    ) {
-        this.storeConfig = storeConfig;
-        this.messageConfig = storeConfig.getMessageConfig();
-        this.reviveTopic = reviveTopic;
+    public ReviveThread(ReviveContext context, int queueId, Reviver reviver, ReviveConsumer consumer) {
+        this.reviveTopic = context.getReviveTopic();
         this.queueId = queueId;
 
-        this.mqService = mqService;
-        this.consumeOffsetService = consumeOffsetService;
+        this.reviver = reviver;
+        this.consumer = consumer;
+
+        this.consumeOffsetService = context.getConsumeOffsetService();
     }
 
     public void setSkipRevive(boolean skip) {
         this.skipRevive = skip;
-        reviveConsumer.setSkipRevive(skip);
+        consumer.setSkipRevive(skip);
         reviver.setSkipRevive(skip);
     }
 
@@ -79,7 +46,7 @@ public class ReviveThread extends ServiceThread {
             if (shouldSkip()) continue;
 
             initOffset();
-            ReviveBuffer buffer = reviveConsumer.consume(reviveOffset);
+            ReviveBuffer buffer = consumer.consume(reviveOffset);
             if (skipRevive) {
                 log.info("skip revive topic={}; reviveQueueId={}",
                     reviveTopic, queueId);
