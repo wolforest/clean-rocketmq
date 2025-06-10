@@ -31,17 +31,12 @@ public class ReviveConsumer {
 
     private final MQService mqService;
 
-    public ReviveConsumer(
-        MessageConfig messageConfig,
-        String reviveTopic,
-        int queueId,
-        MQService mqService
-    ) {
-        this.messageConfig = messageConfig;
-        this.reviveTopic = reviveTopic;
+    public ReviveConsumer(ReviveContext context, int queueId) {
+        this.messageConfig = context.getMessageConfig();
+        this.reviveTopic = context.getReviveTopic();
         this.queueId = queueId;
 
-        this.mqService = mqService;
+        this.mqService = context.getMqService();
     }
 
     public ReviveBuffer consume(long offset) {

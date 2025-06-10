@@ -48,26 +48,17 @@ public class Reviver {
      */
     private final NavigableMap<PopCheckPoint, Pair<Long, Boolean>> inflightMap;
 
-    public Reviver(
-        StoreConfig storeConfig,
-        String reviveTopic,
-        int queueId,
-        MQService mqService,
-        TopicService topicService,
-        RetryService retryService,
-        ConsumeOffsetService consumeOffsetService,
-        SubscriptionService subscriptionService
-    ) {
-        this.storeConfig = storeConfig;
-        this.reviveTopic = reviveTopic;
+    public Reviver(ReviveContext context, int queueId) {
+        this.storeConfig = context.getStoreConfig();
+        this.reviveTopic = context.getReviveTopic();
         this.queueId = queueId;
 
-        this.mqService = mqService;
-        this.retryService = retryService;
-        this.consumeOffsetService = consumeOffsetService;
+        this.mqService = context.getMqService();
+        this.retryService = context.getRetryService();
 
-        this.topicService = topicService;
-        this.subscriptionService = subscriptionService;
+        this.topicService = context.getTopicService();
+        this.subscriptionService = context.getSubscriptionService();
+        this.consumeOffsetService = context.getConsumeOffsetService();
 
         this.inflightMap = Collections.synchronizedNavigableMap(new TreeMap<>());
     }

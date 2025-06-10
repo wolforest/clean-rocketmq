@@ -21,10 +21,10 @@ public class ReviveContext implements Serializable {
     private MessageConfig messageConfig;
 
     private String reviveTopic;
+    private RetryService retryService;
 
     private MQService mqService;
     private TopicService topicService;
     private SubscriptionService subscriptionService;
     private ConsumeOffsetService consumeOffsetService;
-
 }

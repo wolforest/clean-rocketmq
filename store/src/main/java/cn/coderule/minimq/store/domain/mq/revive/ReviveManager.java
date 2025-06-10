@@ -21,11 +21,23 @@ public class ReviveManager implements Lifecycle {
         StoreConfig storeConfig = StoreContext.getBean(StoreConfig.class);
         String reviveTopic = KeyBuilder.buildClusterReviveTopic(storeConfig.getCluster());
 
+        MQService mqService = StoreContext.getBean(MQService.class);
+        ConsumeOffsetService consumeOffsetService = StoreContext.getBean(ConsumeOffsetService.class);
+        TopicService topicService = StoreContext.getBean(TopicService.class);
+
+        RetryService retryService = new RetryService(
+            storeConfig,
+            mqService,
+            topicService,
+            consumeOffsetService
+        );
+
         return ReviveContext.builder()
             .storeConfig(storeConfig)
             .messageConfig(storeConfig.getMessageConfig())
             .reviveTopic(reviveTopic)
 
+            .retryService(retryService)
             .mqService(StoreContext.getBean(MQService.class))
             .topicService(StoreContext.getBean(TopicService.class))
             .subscriptionService(StoreContext.getBean(SubscriptionService.class))
@@ -52,13 +64,11 @@ public class ReviveManager implements Lifecycle {
             consumeOffsetService
         );
 
+        ReviveContext context = initContext();
+
         for (int i = 0; i < messageConfig.getReviveThreadNum(); i++) {
-            ReviveConsumer consumer = new ReviveConsumer(
-                messageConfig,
-                reviveTopic,
-                i,
-                mqService
-            );
+            ReviveConsumer consumer = new ReviveConsumer(context, i);
+            Reviver reviver = new Reviver(context, i);
 
             ReviveThread reviveThread = new ReviveThread(
                 storeConfig,
@@ -67,6 +77,7 @@ public class ReviveManager implements Lifecycle {
                 mqService,
                 consumeOffsetService
             );
+
 
             eventBus.on(ServerEvent.BECOME_MASTER, (arg) -> reviveThread.setSkipRevive(false));
             eventBus.on(ServerEvent.BECOME_SLAVE, (arg) -> reviveThread.setSkipRevive(true));
