@@ -66,7 +66,8 @@ public class ReviveManager implements Lifecycle {
             context,
             queueId,
             new Reviver(context, queueId, retryService),
-            new ReviveConsumer(context, queueId)
+            new ReviveConsumer(context, queueId),
+            new OffsetService(context, queueId)
         );
 
         boolean isMaster = context.getStoreConfig().isMaster();

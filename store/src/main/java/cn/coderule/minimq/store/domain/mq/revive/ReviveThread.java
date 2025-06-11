@@ -3,11 +3,8 @@ package cn.coderule.minimq.store.domain.mq.revive;
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.minimq.domain.config.MessageConfig;
-import cn.coderule.minimq.domain.domain.constant.PopConstants;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.checkpoint.PopCheckPoint;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.revive.ReviveBuffer;
-import cn.coderule.minimq.domain.service.store.domain.consumequeue.ConsumeQueueGateway;
-import cn.coderule.minimq.domain.service.store.domain.meta.ConsumeOffsetService;
 import java.util.ArrayList;
 import lombok.extern.slf4j.Slf4j;
 
@@ -16,32 +13,34 @@ public class ReviveThread extends ServiceThread {
     private final MessageConfig messageConfig;
     private final String reviveTopic;
     private final int queueId;
-    private long reviveOffset;
 
     private final Reviver reviver;
     private final ReviveConsumer consumer;
-    private final ConsumeOffsetService consumeOffsetService;
-    private final ConsumeQueueGateway consumeQueueGateway;
+    private final OffsetService offsetService;
 
-    private long reviveTimestamp = -1;
     private volatile boolean skipRevive = false;
 
-    public ReviveThread(ReviveContext context, int queueId, Reviver reviver, ReviveConsumer consumer) {
+    public ReviveThread(
+        ReviveContext context,
+        int queueId,
+        Reviver reviver,
+        ReviveConsumer consumer,
+        OffsetService offsetService
+    ) {
         this.messageConfig = context.getMessageConfig();
         this.reviveTopic = context.getReviveTopic();
         this.queueId = queueId;
 
         this.reviver = reviver;
         this.consumer = consumer;
-
-        this.consumeOffsetService = context.getConsumeOffsetService();
-        this.consumeQueueGateway = context.getConsumeQueueGateway();
+        this.offsetService = offsetService;
     }
 
     public void setSkipRevive(boolean skip) {
         this.skipRevive = skip;
         consumer.setSkipRevive(skip);
         reviver.setSkipRevive(skip);
+        offsetService.setSkipRevive(skip);
     }
 
     @Override
@@ -55,8 +54,8 @@ public class ReviveThread extends ServiceThread {
         while (!this.isStopped()) {
             if (shouldSkip()) continue;
 
-            initOffset();
-            ReviveBuffer buffer = consumer.consume(reviveOffset);
+            offsetService.initOffset();
+            ReviveBuffer buffer = consumer.consume(offsetService.getReviveOffset());
             if (skipRevive) {
                 log.info("skip revive topic={}; reviveQueueId={}",
                     reviveTopic, queueId);
@@ -64,67 +63,9 @@ public class ReviveThread extends ServiceThread {
             }
 
             reviver.revive(buffer);
-            resetOffset(buffer);
+            offsetService.resetOffset(buffer);
             counter = calculateAndWait(buffer, counter);
         }
-    }
-
-    public long getReviveDelayTime() {
-        if (reviveTimestamp <= 0) {
-            return 0;
-        }
-
-        long maxOffset = consumeQueueGateway.getMaxOffset(reviveTopic, queueId);
-        if (maxOffset > reviveOffset + 1) {
-            long now = System.currentTimeMillis();
-            return Math.max(now, reviveTimestamp);
-        }
-
-        return 0;
-    }
-
-    public long getReviveDelayNumber() {
-        if (reviveTimestamp <= 0) {
-            return 0;
-        }
-
-        long maxOffset = consumeQueueGateway.getMaxOffset(reviveTopic, queueId);
-        long diff = maxOffset - reviveOffset;
-        return Math.max(diff, 0);
-    }
-
-    private void initOffset() {
-        log.info("start revive topic={}; reviveQueueId={}",
-            reviveTopic, queueId);
-
-        reviveOffset = consumeOffsetService.getOffset(
-            PopConstants.REVIVE_GROUP,
-            reviveTopic,
-            queueId
-        );
-    }
-
-    private void resetOffset(ReviveBuffer buffer) {
-        if (skipRevive) {
-            return;
-        }
-
-        reviveOffset = buffer.getOffset();
-
-        if (buffer.getOffset() <= buffer.getInitialOffset()) {
-            return;
-        }
-
-        commitOffset(reviveOffset);
-    }
-
-    private void commitOffset(long offset) {
-        consumeOffsetService.putOffset(
-            PopConstants.REVIVE_GROUP,
-            reviveTopic,
-            queueId,
-            offset
-        );
     }
 
     private int initCounter(ReviveBuffer buffer, int counter) {
@@ -133,10 +74,10 @@ public class ReviveThread extends ServiceThread {
         long now = System.currentTimeMillis();
 
         if (CollectionUtil.isEmpty(pointList)) {
-            reviveTimestamp = now;
+            offsetService.setReviveTimestamp(now);
         } else {
             long firstReviveTime = pointList.get(0).getReviveTime();
-            reviveTimestamp = firstReviveTime;
+            offsetService.setReviveTimestamp(firstReviveTime);
             delay = (now - firstReviveTime) / 1000;
             counter = 1;
         }
