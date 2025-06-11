@@ -62,13 +62,7 @@ public class ReviveManager implements Lifecycle {
     }
 
     private ReviveThread createReviveThread(ReviveContext context, int queueId, RetryService retryService) {
-        ReviveThread reviveThread = new ReviveThread(
-            context,
-            queueId,
-            new Reviver(context, queueId, retryService),
-            new ReviveConsumer(context, queueId),
-            new OffsetService(context, queueId)
-        );
+        ReviveThread reviveThread = new ReviveThread(context, queueId, retryService);
 
         boolean isMaster = context.getStoreConfig().isMaster();
         reviveThread.setSkipRevive(!isMaster);

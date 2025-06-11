@@ -20,20 +20,14 @@ public class ReviveThread extends ServiceThread {
 
     private volatile boolean skipRevive = false;
 
-    public ReviveThread(
-        ReviveContext context,
-        int queueId,
-        Reviver reviver,
-        ReviveConsumer consumer,
-        OffsetService offsetService
-    ) {
+    public ReviveThread(ReviveContext context, int queueId, RetryService retryService) {
         this.messageConfig = context.getMessageConfig();
         this.reviveTopic = context.getReviveTopic();
         this.queueId = queueId;
 
-        this.reviver = reviver;
-        this.consumer = consumer;
-        this.offsetService = offsetService;
+        this.reviver = new Reviver(context, queueId, retryService);
+        this.consumer = new ReviveConsumer(context, queueId);
+        this.offsetService = new OffsetService(context, queueId);
     }
 
     public void setSkipRevive(boolean skip) {
