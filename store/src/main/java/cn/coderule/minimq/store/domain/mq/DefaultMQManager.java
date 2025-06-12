@@ -9,6 +9,7 @@ import cn.coderule.minimq.domain.service.store.domain.meta.ConsumeOffsetService;
 import cn.coderule.minimq.domain.service.store.domain.mq.MQManager;
 import cn.coderule.minimq.domain.service.store.domain.mq.MQService;
 import cn.coderule.minimq.store.api.MQStoreImpl;
+import cn.coderule.minimq.store.domain.mq.ack.AckManager;
 import cn.coderule.minimq.store.domain.mq.queue.DequeueService;
 import cn.coderule.minimq.store.domain.mq.queue.EnqueueService;
 import cn.coderule.minimq.store.domain.mq.queue.MessageService;
@@ -21,14 +22,29 @@ import lombok.extern.slf4j.Slf4j;
 public class DefaultMQManager implements MQManager {
     private DequeueLock dequeueLock;
     private ReviveManager reviveManager;
+    private AckManager ackManager;
 
     @Override
     public void initialize() {
         dequeueLock = new DequeueLock();
 
         initMQManager();
+        initAckManager();
         initReviveManager();
+    }
 
+    @Override
+    public void start() {
+        dequeueLock.start();
+        ackManager.start();
+        reviveManager.start();
+    }
+
+    @Override
+    public void shutdown() {
+        dequeueLock.shutdown();
+        reviveManager.shutdown();
+        ackManager.shutdown();
     }
 
     private void initMQManager() {
@@ -40,6 +56,11 @@ public class DefaultMQManager implements MQManager {
     private void initReviveManager() {
         reviveManager = new ReviveManager();
         reviveManager.initialize();
+    }
+
+    private void initAckManager() {
+        ackManager = new AckManager();
+        ackManager.initialize();
     }
 
     private MQService initMQService() {
@@ -57,18 +78,6 @@ public class DefaultMQManager implements MQManager {
         StoreContext.register(MQService, MQService.class);
 
         return MQService;
-    }
-
-    @Override
-    public void start() {
-        dequeueLock.start();
-        reviveManager.start();
-    }
-
-    @Override
-    public void shutdown() {
-        dequeueLock.shutdown();
-        reviveManager.shutdown();
     }
 
 }
