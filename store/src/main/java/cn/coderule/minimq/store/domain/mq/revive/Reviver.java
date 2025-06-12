@@ -170,8 +170,8 @@ public class Reviver {
 
         // enqueue original message or enqueue checkpoint related message
         reviveMessage(point);
-
         inflightMap.get(point).setRight(true);
+
         clearInflightMap();
     }
 
@@ -188,6 +188,12 @@ public class Reviver {
         }
     }
 
+    /**
+     * revive message
+     *  - enqueue original message
+     *  - or enqueue checkpoint message
+     * @param point check point
+     */
     private void reviveMessage(PopCheckPoint point) {
         for (int i = 0; i < point.getNum(); i++) {
             // skip, if the message has been acked
