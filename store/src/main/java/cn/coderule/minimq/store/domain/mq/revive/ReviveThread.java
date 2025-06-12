@@ -8,6 +8,13 @@ import cn.coderule.minimq.domain.domain.model.consumer.pop.revive.ReviveBuffer;
 import java.util.ArrayList;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * ReviveThread, each revive message queue will have a ReviveThread.
+ * working flow:
+ *  - consume revive message from revive queue,
+ *  - revive message
+ *
+ */
 @Slf4j
 public class ReviveThread extends ServiceThread {
     private final MessageConfig messageConfig;
