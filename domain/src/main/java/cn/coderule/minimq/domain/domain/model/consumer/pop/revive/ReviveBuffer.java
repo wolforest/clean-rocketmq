@@ -51,8 +51,8 @@ public class ReviveBuffer implements Serializable {
     private long firstReviveTime;
 
     /**
-     * the first reviveTime of PopCheckPoint,
-     * which bulk pulled from revive queue
+     * the start time of revive,
+     * also the time of ReviveBuffer was created
      */
     private long startTime;
     /**

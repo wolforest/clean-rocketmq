@@ -67,7 +67,7 @@ public class Reviver {
         ArrayList<PopCheckPoint> pointList = reviveBuffer.getSortedList();
 
         for (PopCheckPoint point : pointList) {
-            if (shouldSkip(reviveBuffer, point)) break;
+            if (shouldStop(reviveBuffer, point)) break;
 
             if (!existsTopicAndSubscription(point)) {
                 tmpOffset  = point.getReviveOffset();
@@ -81,7 +81,13 @@ public class Reviver {
         reviveBuffer.setOffset(tmpOffset);
     }
 
-    private boolean shouldSkip(ReviveBuffer buffer, PopCheckPoint point) {
+    /**
+     *
+     * @param buffer buffer
+     * @param point check point
+     * @return boolean
+     */
+    private boolean shouldStop(ReviveBuffer buffer, PopCheckPoint point) {
         if (skipRevive) {
             log.info("skip revive topic={}, reviveQueueId={}", reviveTopic, queueId);
             return true;
