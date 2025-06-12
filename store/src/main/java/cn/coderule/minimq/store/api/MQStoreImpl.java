@@ -1,6 +1,5 @@
 package cn.coderule.minimq.store.api;
 
-import cn.coderule.minimq.domain.config.MessageConfig;
 import cn.coderule.minimq.domain.domain.dto.DequeueRequest;
 import cn.coderule.minimq.domain.domain.dto.DequeueResult;
 import cn.coderule.minimq.domain.service.store.api.MQStore;
@@ -11,11 +10,9 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public class MQStoreImpl implements MQStore {
-    private final MessageConfig messageConfig;
     private final MQService mqService;
 
-    public MQStoreImpl(MessageConfig messageConfig, MQService mqService) {
-        this.messageConfig = messageConfig;
+    public MQStoreImpl(MQService mqService) {
         this.mqService = mqService;
     }
 

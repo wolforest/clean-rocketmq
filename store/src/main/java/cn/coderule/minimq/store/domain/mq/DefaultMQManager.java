@@ -13,6 +13,7 @@ import cn.coderule.minimq.store.api.MQStoreImpl;
 import cn.coderule.minimq.store.domain.mq.queue.DequeueService;
 import cn.coderule.minimq.store.domain.mq.queue.EnqueueService;
 import cn.coderule.minimq.store.domain.mq.queue.MessageService;
+import cn.coderule.minimq.store.domain.mq.revive.ReviveManager;
 import cn.coderule.minimq.store.server.bootstrap.StoreContext;
 import cn.coderule.minimq.store.server.ha.commitlog.CommitLogSynchronizer;
 import lombok.extern.slf4j.Slf4j;
@@ -20,38 +21,47 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class DefaultMQManager implements MQManager {
     private DequeueLock dequeueLock;
+    private ReviveManager reviveManager;
 
     @Override
     public void initialize() {
-        StoreConfig storeConfig  = StoreContext.getBean(StoreConfig.class);
-        MessageConfig messageConfig = StoreContext.getBean(MessageConfig.class);
+        dequeueLock = new DequeueLock();
 
+        MQService MQService = initializeMQService();
+        MQStore MQStore = new MQStoreImpl(MQService);
+        StoreContext.registerAPI(MQStore, MQStore.class);
+
+        reviveManager = new ReviveManager();
+        reviveManager.initialize();
+    }
+
+    private MQService initializeMQService() {
+        StoreConfig storeConfig  = StoreContext.getBean(StoreConfig.class);
         CommitLog commitLog = StoreContext.getBean(CommitLog.class);
         ConsumeQueueGateway consumeQueueGateway = StoreContext.getBean(ConsumeQueueGateway.class);
         CommitLogSynchronizer commitLogSynchronizer = StoreContext.getBean(CommitLogSynchronizer.class);
         ConsumeOffsetService consumeOffsetService = StoreContext.getBean(ConsumeOffsetService.class);
-        dequeueLock = new DequeueLock();
 
         EnqueueService enqueueService = new EnqueueService(commitLog, consumeQueueGateway, commitLogSynchronizer);
         MessageService messageService = new MessageService(storeConfig, commitLog, consumeQueueGateway);
         DequeueService dequeueService = new DequeueService(dequeueLock, messageService, consumeOffsetService);
 
-
         MQService MQService = new DefaultMQService(enqueueService, dequeueService, messageService);
         StoreContext.register(MQService, MQService.class);
 
-        MQStore MQStore = new MQStoreImpl(messageConfig, MQService);
-        StoreContext.registerAPI(MQStore, MQStore.class);
+        return MQService;
     }
 
     @Override
     public void start() {
         dequeueLock.start();
+        reviveManager.start();
     }
 
     @Override
     public void shutdown() {
         dequeueLock.shutdown();
+        reviveManager.shutdown();
     }
 
 }

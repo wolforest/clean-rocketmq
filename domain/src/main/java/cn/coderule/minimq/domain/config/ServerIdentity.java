@@ -46,7 +46,6 @@ public class ServerIdentity implements Serializable {
         return groupNo == MQConstants.MASTER_ID;
     }
 
-
     @Override
     public boolean equals(final Object o) {
         if (this == o) {
