@@ -27,15 +27,19 @@ public class DefaultMQManager implements MQManager {
         dequeueLock = new DequeueLock();
 
         initMQManager();
+        initReviveManager();
 
-        reviveManager = new ReviveManager();
-        reviveManager.initialize();
     }
 
     private void initMQManager() {
         MQService MQService = initMQService();
         MQStore MQStore = new MQStoreImpl(MQService);
         StoreContext.registerAPI(MQStore, MQStore.class);
+    }
+
+    private void initReviveManager() {
+        reviveManager = new ReviveManager();
+        reviveManager.initialize();
     }
 
     private MQService initMQService() {
