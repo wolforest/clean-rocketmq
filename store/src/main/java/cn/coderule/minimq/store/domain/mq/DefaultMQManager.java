@@ -1,6 +1,5 @@
 package cn.coderule.minimq.store.domain.mq;
 
-import cn.coderule.minimq.domain.config.MessageConfig;
 import cn.coderule.minimq.domain.config.StoreConfig;
 import cn.coderule.minimq.domain.domain.lock.queue.DequeueLock;
 import cn.coderule.minimq.domain.service.store.api.MQStore;
@@ -27,15 +26,19 @@ public class DefaultMQManager implements MQManager {
     public void initialize() {
         dequeueLock = new DequeueLock();
 
-        MQService MQService = initializeMQService();
-        MQStore MQStore = new MQStoreImpl(MQService);
-        StoreContext.registerAPI(MQStore, MQStore.class);
+        initMQManager();
 
         reviveManager = new ReviveManager();
         reviveManager.initialize();
     }
 
-    private MQService initializeMQService() {
+    private void initMQManager() {
+        MQService MQService = initMQService();
+        MQStore MQStore = new MQStoreImpl(MQService);
+        StoreContext.registerAPI(MQStore, MQStore.class);
+    }
+
+    private MQService initMQService() {
         StoreConfig storeConfig  = StoreContext.getBean(StoreConfig.class);
         CommitLog commitLog = StoreContext.getBean(CommitLog.class);
         ConsumeQueueGateway consumeQueueGateway = StoreContext.getBean(ConsumeQueueGateway.class);
