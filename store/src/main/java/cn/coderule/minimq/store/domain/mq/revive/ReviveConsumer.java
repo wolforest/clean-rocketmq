@@ -21,6 +21,9 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * Revive message consumer, it's stateless
+ *  - pull message from revive topic
+ *  - convert message to checkpoint/ack/batchAck
+ *  - merge ack/batchAck with checkpoint
  */
 @Slf4j
 public class ReviveConsumer {
