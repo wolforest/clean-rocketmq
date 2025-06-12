@@ -10,15 +10,23 @@ import java.util.List;
 public class PopCheckPoint implements Comparable<PopCheckPoint> {
     @JSONField(name = "so")
     private long startOffset;
+
+    /**
+     * the time when the message is popped
+     * It was set by PopMessageProcessor while popping
+     */
     @JSONField(name = "pt")
     private long popTime;
+
+    /**
+     * the invisible time of messages
+     * default is 60s, it can be changed by MQ client
+     */
     @JSONField(name = "it")
     private long invisibleTime;
     /**
      * store ack states of messages
      * one byte for each message
-     *
-     * @renamed from bitMap to stateMap
      */
     @JSONField(name = "bm")
     private int bitMap;
@@ -38,6 +46,9 @@ public class PopCheckPoint implements Comparable<PopCheckPoint> {
      */
     @JSONField(name = "c")
     private String cid;
+    /**
+     * the consume queue offset of the revive message
+     */
     @JSONField(name = "ro")
     private long reviveOffset;
     /**
