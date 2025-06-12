@@ -173,6 +173,15 @@ public class MessageBO extends Message implements Serializable {
         this.putProperty(MessageConst.PROPERTY_WAIT_STORE_MSG_OK, Boolean.toString(waitStoreMsgOK));
     }
 
+    /**
+     * set message deliver time
+     * deliverTime =
+     *  * popTime + invisibleTime
+     *  * reviveTime - PopConstants.ackTimeInterval
+     *  * reviveTime
+     * reviveTime = popTime + invisibleTime
+     * @param timeMs  deliver time
+     */
     public void setDeliverTime(long timeMs) {
         this.putProperty(MessageConst.PROPERTY_TIMER_DELIVER_MS, String.valueOf(timeMs));
     }

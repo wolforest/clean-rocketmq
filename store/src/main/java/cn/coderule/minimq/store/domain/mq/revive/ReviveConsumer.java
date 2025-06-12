@@ -19,6 +19,9 @@ import java.util.List;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Revive message consumer, it's stateless
+ */
 @Slf4j
 public class ReviveConsumer {
     private final MessageConfig messageConfig;

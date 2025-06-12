@@ -30,17 +30,15 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class Reviver {
     private final StoreConfig storeConfig;
-
-    private final String reviveTopic;
-    private final int queueId;
-
     private final MQService mqService;
+    private final RetryService retryService;
+
     private final TopicService topicService;
     private final SubscriptionService subscriptionService;
     private final ConsumeOffsetService consumeOffsetService;
 
-    private final RetryService retryService;
-
+    private final String reviveTopic;
+    private final int queueId;
     @Setter
     private volatile boolean skipRevive = false;
 
