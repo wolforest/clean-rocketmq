@@ -43,7 +43,11 @@ public class Reviver {
     private volatile boolean skipRevive = false;
 
     /**
-     * checkpoint -> (msgOffset, retryResult)
+     * checkpoint -> (timestamp, result)
+     * timestamp: when check point was revived
+     * result:
+     *   - default value is false
+     *   - true: checkpoint was revived
      */
     private final NavigableMap<PopCheckPoint, Pair<Long, Boolean>> inflightMap;
 
@@ -64,9 +68,11 @@ public class Reviver {
 
     public void revive(ReviveBuffer reviveBuffer) {
         long tmpOffset = reviveBuffer.getInitialOffset();
+        // sort by reviveOffset
         ArrayList<PopCheckPoint> pointList = reviveBuffer.getSortedList();
 
         for (PopCheckPoint point : pointList) {
+            // break if checkpoint.reviveTime <= maxReviveTime - 2s
             if (shouldStop(reviveBuffer, point)) break;
 
             if (!existsTopicAndSubscription(point)) {
@@ -189,7 +195,7 @@ public class Reviver {
             DequeueResult result = mqService.get(point.getTopic(), point.getQueueId(), offset);
 
             boolean isSuccess = retryOriginalMessage(point, result);
-            if (isSuccess) {
+            if (!isSuccess) {
                 continue;
             }
 

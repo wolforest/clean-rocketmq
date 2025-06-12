@@ -17,6 +17,10 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * stateless retry service
+ *  - create retry message from checkpoint and checkpoint related message
+ *  - create retry topic if not exists
+ *  - init consume offset if not exists
+ *  - enqueue retry message
  */
 @Slf4j
 public class RetryService {
