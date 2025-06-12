@@ -47,7 +47,8 @@ public class Reviver {
      * timestamp: when check point was revived
      * result:
      *   - default value is false
-     *   - true: checkpoint was revived
+     *   - true: original message
+     *           or checkpoint message was resend
      */
     private final NavigableMap<PopCheckPoint, Pair<Long, Boolean>> inflightMap;
 
@@ -167,6 +168,7 @@ public class Reviver {
             Pair.of(System.currentTimeMillis(), false)
         );
 
+        // enqueue original message or enqueue checkpoint related message
         reviveMessage(point);
 
         inflightMap.get(point).setRight(true);
@@ -195,7 +197,7 @@ public class Reviver {
             DequeueResult result = mqService.get(point.getTopic(), point.getQueueId(), offset);
 
             boolean isSuccess = retryOriginalMessage(point, result);
-            if (!isSuccess) {
+            if (isSuccess) {
                 continue;
             }
 
