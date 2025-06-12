@@ -63,7 +63,7 @@ public class Reviver {
     }
 
     public void revive(ReviveBuffer reviveBuffer) {
-        long tmpOffset = reviveBuffer.getOffset();
+        long tmpOffset = reviveBuffer.getInitialOffset();
         ArrayList<PopCheckPoint> pointList = reviveBuffer.getSortedList();
 
         for (PopCheckPoint point : pointList) {
@@ -83,6 +83,12 @@ public class Reviver {
 
     /**
      *
+     * ReviveBuffer.maxDeliverTime = max(MessageBO.deliverTime)
+     * MessageBO.deliverTime =
+     *  - checkpoint.popTime + checkpoint.invisibleTime
+     *  - reviveTime - PopConstants.ackTimeInterval
+     *  - reviveTime
+     * CheckPoint.reviveTime = popTime + invisibleTime
      * @param buffer buffer
      * @param point check point
      * @return boolean
