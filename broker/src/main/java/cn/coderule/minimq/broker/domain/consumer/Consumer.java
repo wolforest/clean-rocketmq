@@ -14,16 +14,18 @@ import java.util.concurrent.CompletableFuture;
 
 public class Consumer  {
 
+    private ConsumerRegister register;
+
     private PopService popService;
     private AckService ackService;
     private InvisibleService invisibleService;
 
     public boolean register(ConsumerInfo consumerInfo) {
-        return true;
+        return register.register(consumerInfo);
     }
 
     public boolean unregister(ConsumerInfo consumerInfo) {
-        return true;
+        return register.unregister(consumerInfo);
     }
 
     public CompletableFuture<PopResult> popMessage(RequestContext context, PopRequest request) {
