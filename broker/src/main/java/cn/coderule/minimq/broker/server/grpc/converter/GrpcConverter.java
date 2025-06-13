@@ -66,10 +66,11 @@ public class GrpcConverter {
     }
 
     public String buildExpressionType(FilterType filterType) {
-        return switch (filterType) {
-            case SQL -> ExpressionType.SQL92;
-            default -> ExpressionType.TAG;
-        };
+        if (FilterType.SQL == filterType) {
+            return ExpressionType.SQL92;
+        }
+
+        return ExpressionType.TAG;
     }
 
     public Message buildMessage(MessageBO messageExt) {
