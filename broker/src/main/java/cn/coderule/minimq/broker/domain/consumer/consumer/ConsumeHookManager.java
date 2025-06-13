@@ -1,4 +1,4 @@
-package cn.coderule.minimq.broker.domain.consumer.consume;
+package cn.coderule.minimq.broker.domain.consumer.consumer;
 
 import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.minimq.domain.domain.model.consumer.ConsumeContext;
@@ -6,7 +6,7 @@ import cn.coderule.minimq.domain.service.broker.hook.ConsumeHook;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HookManager implements ConsumeHook {
+public class ConsumeHookManager implements ConsumeHook {
     private final List<ConsumeHook> hooks = new ArrayList<>();
 
     public void registerHook(ConsumeHook hook) {
@@ -15,7 +15,7 @@ public class HookManager implements ConsumeHook {
 
     @Override
     public String hookName() {
-        return HookManager.class.getSimpleName();
+        return ConsumeHookManager.class.getSimpleName();
     }
 
     @Override

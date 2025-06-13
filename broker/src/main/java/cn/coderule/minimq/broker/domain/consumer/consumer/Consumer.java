@@ -1,7 +1,7 @@
-package cn.coderule.minimq.broker.domain.consumer;
+package cn.coderule.minimq.broker.domain.consumer.consumer;
 
-import cn.coderule.minimq.broker.domain.consumer.consume.AckService;
-import cn.coderule.minimq.broker.domain.consumer.consume.InvisibleService;
+import cn.coderule.minimq.broker.domain.consumer.ack.AckService;
+import cn.coderule.minimq.broker.domain.consumer.ack.InvisibleService;
 import cn.coderule.minimq.broker.domain.consumer.pop.PopService;
 import cn.coderule.minimq.domain.domain.dto.response.AckResult;
 import cn.coderule.minimq.domain.domain.dto.response.PopResult;

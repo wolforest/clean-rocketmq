@@ -1,6 +1,6 @@
 package cn.coderule.minimq.broker.api;
 
-import cn.coderule.minimq.broker.domain.consumer.Consumer;
+import cn.coderule.minimq.broker.domain.consumer.consumer.Consumer;
 import cn.coderule.minimq.domain.domain.dto.request.AckRequest;
 import cn.coderule.minimq.domain.domain.dto.request.InvisibleRequest;
 import cn.coderule.minimq.domain.domain.dto.request.PopRequest;

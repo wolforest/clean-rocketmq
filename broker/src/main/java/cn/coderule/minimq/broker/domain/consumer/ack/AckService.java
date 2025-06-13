@@ -1,4 +1,4 @@
-package cn.coderule.minimq.broker.domain.consumer.consume;
+package cn.coderule.minimq.broker.domain.consumer.ack;
 
 import cn.coderule.minimq.domain.domain.dto.request.AckRequest;
 import cn.coderule.minimq.domain.domain.dto.response.AckResult;
