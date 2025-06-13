@@ -1,5 +1,6 @@
 package cn.coderule.minimq.broker.domain.consumer;
 
+import cn.coderule.minimq.broker.domain.consumer.pop.PopService;
 import cn.coderule.minimq.domain.domain.dto.response.AckResult;
 import cn.coderule.minimq.domain.domain.dto.response.PopResult;
 import cn.coderule.minimq.domain.domain.dto.request.ConsumerInfo;
@@ -10,6 +11,9 @@ import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
 import java.util.concurrent.CompletableFuture;
 
 public class Consumer  {
+
+    private PopService popService;
+
     public boolean register(ConsumerInfo consumerInfo) {
         return true;
     }
@@ -19,7 +23,7 @@ public class Consumer  {
     }
 
     public CompletableFuture<PopResult> popMessage(RequestContext context, PopRequest request) {
-        return null;
+        return popService.pop(context, request);
     }
 
     public CompletableFuture<AckResult> ack(RequestContext context, AckRequest request) {

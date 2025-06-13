@@ -1,4 +1,4 @@
-package cn.coderule.minimq.broker.domain.consumer;
+package cn.coderule.minimq.broker.domain.consumer.pop;
 
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.minimq.domain.domain.model.consumer.receipt.MessageReceipt;
