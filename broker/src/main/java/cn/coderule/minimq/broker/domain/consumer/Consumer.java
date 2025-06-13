@@ -1,5 +1,7 @@
 package cn.coderule.minimq.broker.domain.consumer;
 
+import cn.coderule.minimq.broker.domain.consumer.consume.AckService;
+import cn.coderule.minimq.broker.domain.consumer.consume.InvisibleService;
 import cn.coderule.minimq.broker.domain.consumer.pop.PopService;
 import cn.coderule.minimq.domain.domain.dto.response.AckResult;
 import cn.coderule.minimq.domain.domain.dto.response.PopResult;
@@ -13,6 +15,8 @@ import java.util.concurrent.CompletableFuture;
 public class Consumer  {
 
     private PopService popService;
+    private AckService ackService;
+    private InvisibleService invisibleService;
 
     public boolean register(ConsumerInfo consumerInfo) {
         return true;
@@ -27,11 +31,11 @@ public class Consumer  {
     }
 
     public CompletableFuture<AckResult> ack(RequestContext context, AckRequest request) {
-        return null;
+        return ackService.ack(context, request);
     }
 
     public CompletableFuture<AckResult> changeInvisible(RequestContext context, InvisibleRequest request) {
-        return null;
+        return invisibleService.changeInvisible(context, request);
     }
 
 }
