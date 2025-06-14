@@ -1,4 +1,4 @@
-package cn.coderule.minimq.broker.server.grpc.service;
+package cn.coderule.minimq.broker.server.grpc.service.message;
 
 import apache.rocketmq.v2.AckMessageRequest;
 import apache.rocketmq.v2.AckMessageResponse;

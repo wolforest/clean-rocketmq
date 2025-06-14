@@ -1,4 +1,4 @@
-package cn.coderule.minimq.broker.server.grpc.pipeline;
+package cn.coderule.minimq.broker.server.grpc.service.message;
 
 import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.minimq.rpc.common.core.enums.ChannelProtocolType;
