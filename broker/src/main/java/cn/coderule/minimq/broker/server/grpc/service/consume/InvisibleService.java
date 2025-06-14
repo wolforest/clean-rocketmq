@@ -1,8 +1,8 @@
 package cn.coderule.minimq.broker.server.grpc.service.consume;
 
 import cn.coderule.minimq.broker.api.ConsumerController;
-import cn.coderule.minimq.broker.server.grpc.service.ChannelManager;
-import cn.coderule.minimq.broker.server.grpc.service.SettingManager;
+import cn.coderule.minimq.broker.server.grpc.service.channel.ChannelManager;
+import cn.coderule.minimq.broker.server.grpc.service.channel.SettingManager;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

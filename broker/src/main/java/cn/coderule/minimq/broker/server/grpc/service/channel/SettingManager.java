@@ -1,4 +1,4 @@
-package cn.coderule.minimq.broker.server.grpc.service;
+package cn.coderule.minimq.broker.server.grpc.service.channel;
 
 import apache.rocketmq.v2.ClientType;
 import apache.rocketmq.v2.Settings;
