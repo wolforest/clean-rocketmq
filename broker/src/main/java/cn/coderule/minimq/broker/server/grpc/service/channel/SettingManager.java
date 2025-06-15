@@ -5,6 +5,7 @@ import apache.rocketmq.v2.Settings;
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 import cn.coderule.common.util.lang.collection.ArrayUtil;
+import cn.coderule.minimq.domain.config.GrpcConfig;
 import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -16,6 +17,12 @@ public class SettingManager extends ServiceThread implements Lifecycle {
     private static final int WAIT_INTERVAL = 5_000;
     // clientId -> settings
     private static final ConcurrentMap<String, Settings> SETTING_MAP = new ConcurrentHashMap<>();
+
+    private final GrpcConfig config;
+
+    public SettingManager(GrpcConfig config) {
+        this.config = config;
+    }
 
     @Override
     public String getServiceName() {
