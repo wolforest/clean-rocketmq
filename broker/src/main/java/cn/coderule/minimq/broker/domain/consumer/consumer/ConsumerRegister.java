@@ -18,7 +18,7 @@ public class ConsumerRegister {
     private final long subscriptionExpireTime;
 
     private final ConcurrentMap<String, ConsumerGroupInfo> groupMap;
-    private final ConcurrentMap<String, Consumer> compensationMap;
+    private final ConcurrentMap<String, ConsumerGroupInfo> compensationMap;
     private final List<ConsumerListener> listeners;
 
     public ConsumerRegister(BrokerConfig brokerConfig) {

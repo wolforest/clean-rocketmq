@@ -18,6 +18,8 @@ public class BrokerConfig extends ServerIdentity implements Serializable {
 
     private long channelExpireTime = 120_000;
     private long subscriptionExpireTime = 600_000;
+    private int maxChannelFetchTimes = 3;
+    private int maxChannelRetryTimes = 3;
 
     private int producerThreadNum = SystemUtil.getProcessorNumber();
     private int producerQueueCapacity = 10000;
