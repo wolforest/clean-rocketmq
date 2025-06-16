@@ -1,5 +1,5 @@
 
-package cn.coderule.minimq.rpc.broker.channel;
+package cn.coderule.minimq.rpc.broker.core;
 
 import cn.coderule.common.util.net.NetworkUtil;
 import cn.coderule.minimq.rpc.common.core.channel.mock.MockChannel;

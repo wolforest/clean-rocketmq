@@ -1,10 +1,9 @@
 
+package cn.coderule.minimq.rpc.broker.rpc.protocol.header;
 
-/**
- * $Id: EndTransactionRequestHeader.java 1835 2013-05-16 02:00:50Z vintagewang@apache.org $
- */package cn.coderule.minimq.rpc.broker.protocol.header;
-
+import cn.coderule.minimq.domain.domain.constant.flag.MessageSysFlag;
 import cn.coderule.minimq.rpc.common.rpc.core.annotation.CFNotNull;
+import cn.coderule.minimq.rpc.common.rpc.core.annotation.CFNullable;
 import cn.coderule.minimq.rpc.common.rpc.core.annotation.RocketMQAction;
 import cn.coderule.minimq.rpc.common.rpc.core.annotation.RocketMQResource;
 import cn.coderule.minimq.rpc.common.rpc.core.enums.Action;
@@ -15,20 +14,44 @@ import cn.coderule.minimq.rpc.common.rpc.protocol.header.RpcRequestHeader;
 import com.google.common.base.MoreObjects;
 
 
-@RocketMQAction(value = RequestCode.CHECK_TRANSACTION_STATE, action = Action.PUB)
-public class CheckTransactionStateRequestHeader extends RpcRequestHeader {
+@RocketMQAction(value = RequestCode.END_TRANSACTION, action = Action.PUB)
+public class EndTransactionRequestHeader extends RpcRequestHeader {
     @RocketMQResource(ResourceType.TOPIC)
     private String topic;
+    @CFNotNull
+    private String producerGroup;
     @CFNotNull
     private Long tranStateTableOffset;
     @CFNotNull
     private Long commitLogOffset;
+    @CFNotNull
+    private Integer commitOrRollback; // TRANSACTION_COMMIT_TYPE
+    // TRANSACTION_ROLLBACK_TYPE
+    // TRANSACTION_NOT_TYPE
+
+    @CFNullable
+    private Boolean fromTransactionCheck = false;
+
+    @CFNotNull
     private String msgId;
+
     private String transactionId;
-    private String offsetMsgId;
 
     @Override
     public void checkFields() throws RemotingCommandException {
+        if (MessageSysFlag.TRANSACTION_NOT_TYPE == this.commitOrRollback) {
+            return;
+        }
+
+        if (MessageSysFlag.TRANSACTION_COMMIT_TYPE == this.commitOrRollback) {
+            return;
+        }
+
+        if (MessageSysFlag.TRANSACTION_ROLLBACK_TYPE == this.commitOrRollback) {
+            return;
+        }
+
+        throw new RemotingCommandException("commitOrRollback field wrong");
     }
 
     public String getTopic() {
@@ -37,6 +60,14 @@ public class CheckTransactionStateRequestHeader extends RpcRequestHeader {
 
     public void setTopic(String topic) {
         this.topic = topic;
+    }
+
+    public String getProducerGroup() {
+        return producerGroup;
+    }
+
+    public void setProducerGroup(String producerGroup) {
+        this.producerGroup = producerGroup;
     }
 
     public Long getTranStateTableOffset() {
@@ -55,6 +86,22 @@ public class CheckTransactionStateRequestHeader extends RpcRequestHeader {
         this.commitLogOffset = commitLogOffset;
     }
 
+    public Integer getCommitOrRollback() {
+        return commitOrRollback;
+    }
+
+    public void setCommitOrRollback(Integer commitOrRollback) {
+        this.commitOrRollback = commitOrRollback;
+    }
+
+    public Boolean getFromTransactionCheck() {
+        return fromTransactionCheck;
+    }
+
+    public void setFromTransactionCheck(Boolean fromTransactionCheck) {
+        this.fromTransactionCheck = fromTransactionCheck;
+    }
+
     public String getMsgId() {
         return msgId;
     }
@@ -71,22 +118,16 @@ public class CheckTransactionStateRequestHeader extends RpcRequestHeader {
         this.transactionId = transactionId;
     }
 
-    public String getOffsetMsgId() {
-        return offsetMsgId;
-    }
-
-    public void setOffsetMsgId(String offsetMsgId) {
-        this.offsetMsgId = offsetMsgId;
-    }
-
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(this)
+            .add("producerGroup", producerGroup)
             .add("tranStateTableOffset", tranStateTableOffset)
             .add("commitLogOffset", commitLogOffset)
+            .add("commitOrRollback", commitOrRollback)
+            .add("fromTransactionCheck", fromTransactionCheck)
             .add("msgId", msgId)
             .add("transactionId", transactionId)
-            .add("offsetMsgId", offsetMsgId)
             .toString();
     }
 }

@@ -16,7 +16,7 @@
  */
 package cn.coderule.minimq.broker.domain.transaction;
 
-import cn.coderule.minimq.rpc.broker.protocol.header.EndTransactionRequestHeader;
+import cn.coderule.minimq.rpc.broker.rpc.protocol.header.EndTransactionRequestHeader;
 
 public class EndTransactionRequestData {
     private String brokerName;

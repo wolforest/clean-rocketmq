@@ -1,5 +1,5 @@
 
-package cn.coderule.minimq.rpc.broker.protocol.header;
+package cn.coderule.minimq.rpc.broker.rpc.protocol.header;
 
 import cn.coderule.minimq.rpc.common.rpc.core.annotation.CFNotNull;
 import cn.coderule.minimq.rpc.common.rpc.core.annotation.CFNullable;

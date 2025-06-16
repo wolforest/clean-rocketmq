@@ -1,8 +1,9 @@
 
-package cn.coderule.minimq.rpc.broker.channel;
+package cn.coderule.minimq.rpc.broker.rpc;
 
 import cn.coderule.common.util.net.NetworkUtil;
 import cn.coderule.minimq.domain.domain.model.cluster.heartbeat.SubscriptionData;
+import cn.coderule.minimq.rpc.broker.core.AbstractChannel;
 import cn.coderule.minimq.rpc.common.core.channel.ChannelExtendAttributeGetter;
 import cn.coderule.minimq.rpc.common.core.channel.ChannelHelper;
 import cn.coderule.minimq.rpc.common.core.enums.ChannelProtocolType;

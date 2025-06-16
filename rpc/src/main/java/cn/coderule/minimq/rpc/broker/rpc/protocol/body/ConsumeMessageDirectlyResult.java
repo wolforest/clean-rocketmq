@@ -1,5 +1,5 @@
 
-package cn.coderule.minimq.rpc.broker.protocol.body;
+package cn.coderule.minimq.rpc.broker.rpc.protocol.body;
 
 import cn.coderule.minimq.domain.domain.enums.consume.CMResult;
 import cn.coderule.minimq.rpc.common.rpc.protocol.codec.RpcSerializable;

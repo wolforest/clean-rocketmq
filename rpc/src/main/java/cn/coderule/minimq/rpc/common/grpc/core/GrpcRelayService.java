@@ -1,8 +1,8 @@
 package cn.coderule.minimq.rpc.common.grpc.core;
 
 import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
-import cn.coderule.minimq.rpc.broker.protocol.body.ConsumeMessageDirectlyResult;
-import cn.coderule.minimq.rpc.broker.protocol.body.ConsumerRunningInfo;
+import cn.coderule.minimq.rpc.broker.rpc.protocol.body.ConsumeMessageDirectlyResult;
+import cn.coderule.minimq.rpc.broker.rpc.protocol.body.ConsumerRunningInfo;
 import cn.coderule.minimq.rpc.common.core.relay.RelayService;
 import cn.coderule.minimq.rpc.common.core.relay.request.ConsumerRequest;
 import cn.coderule.minimq.rpc.common.core.relay.request.TransactionRequest;

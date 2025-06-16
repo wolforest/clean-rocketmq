@@ -1,4 +1,4 @@
-package cn.coderule.minimq.broker.server.grpc.service.channel;
+package cn.coderule.minimq.rpc.broker.grpc;
 
 import cn.coderule.minimq.rpc.common.core.relay.response.Result;
 import java.io.Serializable;

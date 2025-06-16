@@ -1,5 +1,5 @@
 
-package cn.coderule.minimq.rpc.broker.protocol.body;
+package cn.coderule.minimq.rpc.broker.rpc.protocol.body;
 
 import cn.coderule.minimq.domain.domain.model.MessageQueue;
 import cn.coderule.minimq.domain.domain.enums.consume.ConsumeType;
