@@ -20,7 +20,7 @@ import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.collect.ComparisonChain;
 
-public class TransactionData implements Comparable<TransactionData> {
+public class TransactionResult implements Comparable<TransactionResult> {
     private final String brokerName;
     private final String topic;
     private final long tranStateTableOffset;
@@ -29,7 +29,7 @@ public class TransactionData implements Comparable<TransactionData> {
     private final long checkTimestamp;
     private final long expireMs;
 
-    public TransactionData(String brokerName, String topic, long tranStateTableOffset, long commitLogOffset, String transactionId,
+    public TransactionResult(String brokerName, String topic, long tranStateTableOffset, long commitLogOffset, String transactionId,
         long checkTimestamp, long expireMs) {
         this.brokerName = brokerName;
         this.topic = topic;
@@ -80,7 +80,7 @@ public class TransactionData implements Comparable<TransactionData> {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        TransactionData data = (TransactionData) o;
+        TransactionResult data = (TransactionResult) o;
         return tranStateTableOffset == data.tranStateTableOffset && commitLogOffset == data.commitLogOffset &&
             getExpireTime() == data.getExpireTime() && Objects.equal(brokerName, data.brokerName) &&
             Objects.equal(transactionId, data.transactionId);
@@ -92,7 +92,7 @@ public class TransactionData implements Comparable<TransactionData> {
     }
 
     @Override
-    public int compareTo(TransactionData o) {
+    public int compareTo(TransactionResult o) {
         return ComparisonChain.start()
             .compare(getExpireTime(), o.getExpireTime())
             .compare(brokerName, o.brokerName)

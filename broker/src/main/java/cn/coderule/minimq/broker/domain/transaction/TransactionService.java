@@ -1,6 +1,6 @@
 package cn.coderule.minimq.broker.domain.transaction;
 
-import cn.coderule.minimq.rpc.common.core.relay.TransactionData;
+import cn.coderule.minimq.rpc.common.core.relay.TransactionResult;
 import cn.coderule.minimq.domain.domain.model.message.MessageBO;
 import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
 import java.util.List;
@@ -16,14 +16,14 @@ public interface TransactionService {
 
     void unSubscribeAllTransactionTopic(RequestContext ctx, String group);
 
-    TransactionData addTransactionDataByBrokerAddr(RequestContext ctx, String brokerAddr, String topic, String producerGroup, long tranStateTableOffset, long commitLogOffset, String transactionId,
+    TransactionResult addTransactionDataByBrokerAddr(RequestContext ctx, String brokerAddr, String topic, String producerGroup, long tranStateTableOffset, long commitLogOffset, String transactionId,
         MessageBO message);
 
-    TransactionData addTransactionDataByBrokerName(RequestContext ctx, String brokerName, String topic, String producerGroup, long tranStateTableOffset, long commitLogOffset, String transactionId,
+    TransactionResult addTransactionDataByBrokerName(RequestContext ctx, String brokerName, String topic, String producerGroup, long tranStateTableOffset, long commitLogOffset, String transactionId,
         MessageBO message);
 
     EndTransactionRequestData genEndTransactionRequestHeader(RequestContext ctx, String topic, String producerGroup, Integer commitOrRollback,
         boolean fromTransactionCheck, String msgId, String transactionId);
 
-    void onSendCheckTransactionStateFailed(RequestContext context, String producerGroup, TransactionData transactionData);
+    void onSendCheckTransactionStateFailed(RequestContext context, String producerGroup, TransactionResult transactionResult);
 }

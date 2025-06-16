@@ -1,5 +1,5 @@
 
-package cn.coderule.minimq.rpc.common.grpc.core;
+package cn.coderule.minimq.rpc.common.grpc.response;
 
 import apache.rocketmq.v2.Code;
 import apache.rocketmq.v2.Status;

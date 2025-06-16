@@ -1,5 +1,5 @@
 
-package cn.coderule.minimq.rpc.common.grpc.core;
+package cn.coderule.minimq.rpc.common.grpc.response;
 
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
