@@ -11,6 +11,7 @@ import io.netty.channel.Channel;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -52,7 +53,7 @@ public class ConsumerRegister {
             Map.Entry<String, ConsumerGroupInfo> entry = iterator.next();
 
             ConcurrentMap<Channel, ClientChannelInfo> channelInfoTable = entry.getValue().getChannelInfoTable();
-            scanIdleInChannelMap(channelInfoTable, entry.getKey());
+            scanIdleInChannelMap(channelInfoTable, entry.getKey(), entry.getValue().getSubscribeTopics());
 
             if (channelInfoTable.isEmpty()) {
                 log.warn("SCAN: remove expired channel from ConsumerRegister: group={}", entry.getKey());
@@ -63,7 +64,7 @@ public class ConsumerRegister {
         this.removeIdleChannels();
     }
 
-    private void scanIdleInChannelMap(ConcurrentMap<Channel, ClientChannelInfo> channelInfoTable, String consumerGroup) {
+    private void scanIdleInChannelMap(ConcurrentMap<Channel, ClientChannelInfo> channelInfoTable, String consumerGroup, Set<String> topics) {
         Iterator<Map.Entry<Channel, ClientChannelInfo>> iterator = channelInfoTable.entrySet().iterator();
 
         while (iterator.hasNext()) {
@@ -75,16 +76,19 @@ public class ConsumerRegister {
                 continue;
             }
 
-            closeChannel(channelInfo, consumerGroup);
+            closeChannel(channelInfo, consumerGroup, topics);
             iterator.remove();
         }
     }
 
-    private void closeChannel(ClientChannelInfo channelInfo, String consumerGroup) {
+    private void closeChannel(ClientChannelInfo channelInfo, String consumerGroup, Set<String> topics) {
         log.warn("SCAN: close idle channel from ConsumerRegister, channel={}, consumerGroup={}",
             NettyHelper.getRemoteAddr(channelInfo.getChannel()),
             consumerGroup
         );
+
+        invokeListeners(ConsumerEvent.CLIENT_UNREGISTER, consumerGroup, channelInfo, topics);
+        NettyHelper.close(channelInfo.getChannel());
     }
 
     private void invokeListeners(ConsumerEvent event, String group, Object... args) {
