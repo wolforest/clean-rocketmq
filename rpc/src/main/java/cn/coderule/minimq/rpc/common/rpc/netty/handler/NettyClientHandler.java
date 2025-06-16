@@ -2,7 +2,7 @@ package cn.coderule.minimq.rpc.common.rpc.netty.handler;
 
 import cn.coderule.minimq.rpc.common.rpc.core.invoke.RpcCommand;
 import cn.coderule.minimq.rpc.common.rpc.core.invoke.RpcContext;
-import cn.coderule.minimq.rpc.common.rpc.netty.service.NettyDispatcher;
+import cn.coderule.minimq.rpc.common.rpc.netty.service.helper.NettyDispatcher;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 

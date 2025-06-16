@@ -5,7 +5,7 @@ import cn.coderule.minimq.rpc.common.rpc.netty.NettyClient;
 import cn.coderule.minimq.rpc.common.rpc.netty.event.NettyEvent;
 import cn.coderule.minimq.rpc.common.rpc.netty.event.NettyEventExecutor;
 import cn.coderule.minimq.rpc.common.rpc.netty.event.NettyEventType;
-import cn.coderule.minimq.rpc.common.rpc.netty.service.NettyHelper;
+import cn.coderule.minimq.rpc.common.rpc.netty.service.helper.NettyHelper;
 import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPromise;

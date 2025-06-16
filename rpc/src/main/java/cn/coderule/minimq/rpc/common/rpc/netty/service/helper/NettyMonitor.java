@@ -1,4 +1,4 @@
-package cn.coderule.minimq.rpc.common.rpc.netty.service;
+package cn.coderule.minimq.rpc.common.rpc.netty.service.helper;
 
 import cn.coderule.common.lang.concurrent.thread.DefaultThreadFactory;
 import cn.coderule.common.util.lang.ThreadUtil;

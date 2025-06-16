@@ -12,7 +12,7 @@ import cn.coderule.minimq.rpc.common.rpc.netty.event.NettyEventExecutor;
 import cn.coderule.minimq.rpc.common.rpc.RpcListener;
 import cn.coderule.minimq.rpc.common.rpc.netty.handler.ClientConnectionHandler;
 import cn.coderule.minimq.rpc.common.rpc.netty.handler.NettyClientHandler;
-import cn.coderule.minimq.rpc.common.rpc.netty.service.AddressInvoker;
+import cn.coderule.minimq.rpc.common.rpc.netty.service.invoker.AddressInvoker;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.Channel;
