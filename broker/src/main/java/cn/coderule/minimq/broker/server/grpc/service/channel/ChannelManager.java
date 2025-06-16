@@ -4,7 +4,7 @@ import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.lang.concurrent.thread.DefaultThreadFactory;
 import cn.coderule.common.util.lang.ThreadUtil;
 import cn.coderule.minimq.domain.config.GrpcConfig;
-import cn.coderule.minimq.rpc.broker.channel.GrpcChannel;
+import cn.coderule.minimq.rpc.broker.grpc.GrpcChannel;
 import cn.coderule.minimq.rpc.common.core.relay.RelayService;
 import cn.coderule.minimq.rpc.common.core.relay.response.Result;
 import cn.coderule.minimq.rpc.common.rpc.protocol.code.ResponseCode;

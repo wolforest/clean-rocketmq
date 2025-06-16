@@ -1,6 +1,8 @@
 
-package cn.coderule.minimq.rpc.broker.channel;
+package cn.coderule.minimq.rpc.common.core.channel;
 
+import cn.coderule.minimq.rpc.broker.channel.RpcChannel;
+import cn.coderule.minimq.rpc.broker.grpc.GrpcChannel;
 import cn.coderule.minimq.rpc.common.core.channel.remote.RemoteChannel;
 import cn.coderule.minimq.rpc.common.core.enums.ChannelProtocolType;
 import io.netty.channel.Channel;

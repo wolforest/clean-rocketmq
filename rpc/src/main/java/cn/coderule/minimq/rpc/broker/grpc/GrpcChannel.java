@@ -1,8 +1,10 @@
-package cn.coderule.minimq.rpc.broker.channel;
+package cn.coderule.minimq.rpc.broker.grpc;
 
 import apache.rocketmq.v2.Settings;
 import apache.rocketmq.v2.TelemetryCommand;
 import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
+import cn.coderule.minimq.rpc.broker.channel.AbstractChannel;
+import cn.coderule.minimq.rpc.common.core.channel.ChannelHelper;
 import cn.coderule.minimq.rpc.common.core.channel.ChannelExtendAttributeGetter;
 import cn.coderule.minimq.rpc.common.core.enums.ChannelProtocolType;
 import cn.coderule.minimq.rpc.common.grpc.core.GrpcChannelId;
@@ -18,9 +20,9 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class GrpcChannel extends AbstractChannel {
-    private final AtomicReference<StreamObserver<TelemetryCommand>> commandRef = new AtomicReference<>();
-    private final Object telemetryWriteLock = new Object();
+    private final Object lock;
     private final String clientId;
+    private final AtomicReference<StreamObserver<TelemetryCommand>> commandRef;
 
     public GrpcChannel(RequestContext ctx, String clientId) {
         super(
@@ -31,6 +33,9 @@ public class GrpcChannel extends AbstractChannel {
         );
 
         this.clientId = clientId;
+
+        this.lock = new Object();
+        this.commandRef = new AtomicReference<>();
     }
 
     public static Settings parseChannelExtendAttribute(Channel channel) {
@@ -91,7 +96,7 @@ public class GrpcChannel extends AbstractChannel {
             log.warn("telemetry command observer is null when try to write data. command:{}, channel:{}", TextFormat.shortDebugString(command), this);
             return;
         }
-        synchronized (this.telemetryWriteLock) {
+        synchronized (this.lock) {
             observer = this.commandRef.get();
             if (observer == null) {
                 log.warn("telemetry command observer is null when try to write data. command:{}, channel:{}", TextFormat.shortDebugString(command), this);
