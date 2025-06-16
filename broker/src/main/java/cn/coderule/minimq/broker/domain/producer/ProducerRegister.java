@@ -1,6 +1,7 @@
 package cn.coderule.minimq.broker.domain.producer;
 
 import cn.coderule.common.lang.concurrent.atomic.PositiveAtomicCounter;
+import cn.coderule.common.util.lang.collection.MapUtil;
 import cn.coderule.minimq.domain.config.BrokerConfig;
 import cn.coderule.minimq.domain.domain.model.cluster.ClientChannelInfo;
 import cn.coderule.minimq.domain.service.broker.listener.ProducerListener;
@@ -34,5 +35,18 @@ public class ProducerRegister {
         this.channelTree = new ConcurrentHashMap<>();
         this.channelMap = new ConcurrentHashMap<>();
         this.listenerList = new CopyOnWriteArrayList<>();
+    }
+
+    public int getGroupCount() {
+        return channelTree.size();
+    }
+
+    public boolean isGroupExist(String groupName) {
+        return MapUtil.notEmpty(
+            channelTree.get(groupName)
+        );
+    }
+
+    public void scanIdleChannels() {
     }
 }
