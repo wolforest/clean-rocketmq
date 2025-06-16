@@ -16,9 +16,10 @@
  */
 package cn.coderule.minimq.rpc.common.core.relay.response;
 
+import java.io.Serializable;
 import java.util.concurrent.CompletableFuture;
 
-public class RelayResult<T, R> {
+public class RelayResult<T, R> implements Serializable {
     private T processResult;
     private CompletableFuture<Result<R>> relayFuture;
 

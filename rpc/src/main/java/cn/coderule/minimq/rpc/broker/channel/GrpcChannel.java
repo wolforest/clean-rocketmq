@@ -15,16 +15,14 @@ import io.grpc.stub.StreamObserver;
 import io.netty.channel.Channel;
 import java.util.concurrent.atomic.AtomicReference;
 import lombok.extern.slf4j.Slf4j;
+
 @Slf4j
 public class GrpcChannel extends AbstractChannel {
-    private final AtomicReference<StreamObserver<TelemetryCommand>> telemetryCommandRef = new AtomicReference<>();
+    private final AtomicReference<StreamObserver<TelemetryCommand>> commandRef = new AtomicReference<>();
     private final Object telemetryWriteLock = new Object();
     private final String clientId;
 
-    public GrpcChannel(
-        RequestContext ctx,
-        String clientId
-    ) {
+    public GrpcChannel(RequestContext ctx, String clientId) {
         super(
             null,
             new GrpcChannelId(clientId),
@@ -61,26 +59,26 @@ public class GrpcChannel extends AbstractChannel {
     }
 
     public void setClientObserver(StreamObserver<TelemetryCommand> future) {
-        this.telemetryCommandRef.set(future);
+        this.commandRef.set(future);
     }
 
     protected void clearClientObserver(StreamObserver<TelemetryCommand> future) {
-        this.telemetryCommandRef.compareAndSet(future, null);
+        this.commandRef.compareAndSet(future, null);
     }
 
     @Override
     public boolean isOpen() {
-        return this.telemetryCommandRef.get() != null;
+        return this.commandRef.get() != null;
     }
 
     @Override
     public boolean isActive() {
-        return this.telemetryCommandRef.get() != null;
+        return this.commandRef.get() != null;
     }
 
     @Override
     public boolean isWritable() {
-        return this.telemetryCommandRef.get() != null;
+        return this.commandRef.get() != null;
     }
 
     public String getClientId() {
@@ -88,13 +86,13 @@ public class GrpcChannel extends AbstractChannel {
     }
 
     public void writeTelemetryCommand(TelemetryCommand command) {
-        StreamObserver<TelemetryCommand> observer = this.telemetryCommandRef.get();
+        StreamObserver<TelemetryCommand> observer = this.commandRef.get();
         if (observer == null) {
             log.warn("telemetry command observer is null when try to write data. command:{}, channel:{}", TextFormat.shortDebugString(command), this);
             return;
         }
         synchronized (this.telemetryWriteLock) {
-            observer = this.telemetryCommandRef.get();
+            observer = this.commandRef.get();
             if (observer == null) {
                 log.warn("telemetry command observer is null when try to write data. command:{}, channel:{}", TextFormat.shortDebugString(command), this);
                 return;

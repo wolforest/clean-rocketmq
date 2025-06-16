@@ -29,6 +29,29 @@ public class SettingManager extends ServiceThread implements Lifecycle {
         return SettingManager.class.getSimpleName();
     }
 
+    @Override
+    public void run() {
+        while (!this.isStopped()) {
+            try {
+                this.await(WAIT_INTERVAL);
+            } catch (Exception e) {
+                log.error("{} service has exception. ", this.getServiceName(), e);
+            }
+        }
+    }
+
+    @Override
+    protected void postAwait() {
+        Set<String> clientIdSet = SETTING_MAP.keySet();
+        for (String clientId : clientIdSet) {
+            try {
+                removeExpiredClient(clientId);
+            } catch (Throwable e) {
+                log.error("remove expired grpc client settings failed. clientId:{}", clientId, e);
+            }
+        }
+    }
+
     public Settings getSettings(String clientId) {
         return SETTING_MAP.get(clientId);
     }
@@ -68,28 +91,7 @@ public class SettingManager extends ServiceThread implements Lifecycle {
         return settings;
     }
 
-    @Override
-    public void run() {
-        while (!this.isStopped()) {
-            try {
-                this.await(WAIT_INTERVAL);
-            } catch (Exception e) {
-                log.error("{} service has exception. ", this.getServiceName(), e);
-            }
-        }
-    }
 
-    @Override
-    protected void postAwait() {
-        Set<String> clientIdSet = SETTING_MAP.keySet();
-        for (String clientId : clientIdSet) {
-            try {
-                removeExpiredClient(clientId);
-            } catch (Throwable e) {
-                log.error("remove expired grpc client settings failed. clientId:{}", clientId, e);
-            }
-        }
-    }
 
     private void removeExpiredClient(String clientId) {
         SETTING_MAP.computeIfPresent(clientId, (clientKey, settings) -> {
