@@ -17,8 +17,10 @@ public class GrpcConfig implements Serializable {
     private boolean enableEpoll = false;
 
     // 5 seconds
-    private int requestTimeout = 5000;
+    private int requestTimeout = 5_000;
     private int maxConnectionIdle = 120 * 1000;
+
+    private int relayTimeout = 5_000;
 
     private int maxMessageSize = 4 * 1024 * 1024;
     private int maxInboundMessageSize = 130 * 1024 * 1024;

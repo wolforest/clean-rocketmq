@@ -3,10 +3,12 @@ package cn.coderule.minimq.broker.server.grpc.service.channel;
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.lang.concurrent.thread.DefaultThreadFactory;
 import cn.coderule.common.util.lang.ThreadUtil;
+import cn.coderule.minimq.domain.config.GrpcConfig;
 import cn.coderule.minimq.rpc.broker.channel.GrpcChannel;
 import cn.coderule.minimq.rpc.common.core.relay.RelayService;
-import cn.coderule.minimq.rpc.common.core.relay.response.RelayResult;
 import cn.coderule.minimq.rpc.common.core.relay.response.Result;
+import cn.coderule.minimq.rpc.common.rpc.protocol.code.ResponseCode;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -17,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class ChannelManager implements Lifecycle {
+    private final GrpcConfig grpcConfig;
     private final RelayService relayService;
     private final SettingManager settingManager;
 
@@ -26,7 +29,8 @@ public class ChannelManager implements Lifecycle {
 
     private final ScheduledExecutorService scheduler;
 
-    public ChannelManager(RelayService relayService, SettingManager settingManager) {
+    public ChannelManager(GrpcConfig grpcConfig, RelayService relayService, SettingManager settingManager) {
+        this.grpcConfig = grpcConfig;
         this.relayService = relayService;
         this.settingManager = settingManager;
 
@@ -87,7 +91,26 @@ public class ChannelManager implements Lifecycle {
     }
 
     private void scanExpiredResult() {
+        Set<String> idSet = this.resultMap.keySet();
+        for (String id : idSet) {
+            ResultFuture<?> resultFuture = this.resultMap.get(id);
+            if (resultFuture == null) {
+                continue;
+            }
 
+            long now = System.currentTimeMillis();
+            if (now - resultFuture.getCreateTime() <= grpcConfig.getRelayTimeout()) {
+                continue;
+            }
+
+            resultFuture.getFuture().complete(
+                new Result<>(
+                    ResponseCode.SYSTEM_BUSY,
+                    "grpc relay request timeout",
+                    null
+                )
+            );
+        }
     }
 
 
