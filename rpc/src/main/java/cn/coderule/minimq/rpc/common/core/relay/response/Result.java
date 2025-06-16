@@ -1,12 +1,12 @@
 
-package cn.coderule.minimq.rpc.common.core.relay;
+package cn.coderule.minimq.rpc.common.core.relay.response;
 
-public class RelayResult<T> {
+public class Result<T> {
     private int code;
     private String remark;
     private T result;
 
-    public RelayResult(int code, String remark, T result) {
+    public Result(int code, String remark, T result) {
         this.code = code;
         this.remark = remark;
         this.result = result;

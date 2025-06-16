@@ -1,4 +1,4 @@
-package cn.coderule.minimq.rpc.common.core.relay;
+package cn.coderule.minimq.rpc.common.core.relay.request;
 
 import java.io.Serializable;
 

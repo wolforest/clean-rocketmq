@@ -14,25 +14,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.coderule.minimq.rpc.common.core.relay;
+package cn.coderule.minimq.rpc.common.core.relay.response;
 
 import java.util.concurrent.CompletableFuture;
 
-public class RelayData<T, R> {
+public class RelayResult<T, R> {
     private T processResult;
-    private CompletableFuture<RelayResult<R>> relayFuture;
+    private CompletableFuture<Result<R>> relayFuture;
 
-    public RelayData(T processResult, CompletableFuture<RelayResult<R>> relayFuture) {
+    public RelayResult(T processResult, CompletableFuture<Result<R>> relayFuture) {
         this.processResult = processResult;
         this.relayFuture = relayFuture;
     }
 
-    public CompletableFuture<RelayResult<R>> getRelayFuture() {
+    public CompletableFuture<Result<R>> getRelayFuture() {
         return relayFuture;
     }
 
     public void setRelayFuture(
-        CompletableFuture<RelayResult<R>> relayFuture) {
+        CompletableFuture<Result<R>> relayFuture) {
         this.relayFuture = relayFuture;
     }
 

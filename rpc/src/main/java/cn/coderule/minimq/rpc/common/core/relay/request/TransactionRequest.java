@@ -1,4 +1,4 @@
-package cn.coderule.minimq.rpc.common.core.relay;
+package cn.coderule.minimq.rpc.common.core.relay.request;
 
 import cn.coderule.minimq.domain.domain.model.message.MessageBO;
 import java.io.Serializable;
