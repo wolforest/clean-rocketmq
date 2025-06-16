@@ -33,6 +33,7 @@ public class SettingManager extends ServiceThread implements Lifecycle {
     public void run() {
         while (!this.isStopped()) {
             try {
+                this.removeExpiredClient();
                 this.await(WAIT_INTERVAL);
             } catch (Exception e) {
                 log.error("{} service has exception. ", this.getServiceName(), e);
@@ -40,8 +41,7 @@ public class SettingManager extends ServiceThread implements Lifecycle {
         }
     }
 
-    @Override
-    protected void postAwait() {
+    private void removeExpiredClient() {
         Set<String> clientIdSet = SETTING_MAP.keySet();
         for (String clientId : clientIdSet) {
             try {
@@ -100,6 +100,7 @@ public class SettingManager extends ServiceThread implements Lifecycle {
                 return settings;
             }
 
+            String topic = settings.getSubscription().getSubscriptions(0).getTopic().getName();
             String consumerGroup = settings.getSubscription().getGroup().getName();
 
             return settings;
