@@ -73,9 +73,13 @@ public class ConsumerRegister {
                 continue;
             }
 
-
+            closeChannel(channelInfo);
             iterator.remove();
         }
+    }
+
+    private void closeChannel(ClientChannelInfo channelInfo) {
+
     }
 
     private void removeIdleChannels() {
