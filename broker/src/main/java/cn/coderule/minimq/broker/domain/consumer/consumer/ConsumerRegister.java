@@ -3,8 +3,10 @@ package cn.coderule.minimq.broker.domain.consumer.consumer;
 import cn.coderule.minimq.domain.config.BrokerConfig;
 import cn.coderule.minimq.domain.domain.dto.request.ConsumerInfo;
 import cn.coderule.minimq.domain.domain.dto.running.ConsumerGroupInfo;
+import cn.coderule.minimq.domain.domain.enums.consume.ConsumerEvent;
 import cn.coderule.minimq.domain.domain.model.cluster.ClientChannelInfo;
 import cn.coderule.minimq.domain.service.broker.listener.ConsumerListener;
+import cn.coderule.minimq.rpc.common.rpc.netty.service.helper.NettyHelper;
 import io.netty.channel.Channel;
 import java.util.Iterator;
 import java.util.List;
@@ -50,7 +52,7 @@ public class ConsumerRegister {
             Map.Entry<String, ConsumerGroupInfo> entry = iterator.next();
 
             ConcurrentMap<Channel, ClientChannelInfo> channelInfoTable = entry.getValue().getChannelInfoTable();
-            scanIdleInChannelMap(channelInfoTable);
+            scanIdleInChannelMap(channelInfoTable, entry.getKey());
 
             if (channelInfoTable.isEmpty()) {
                 log.warn("SCAN: remove expired channel from ConsumerRegister: group={}", entry.getKey());
@@ -61,7 +63,7 @@ public class ConsumerRegister {
         this.removeIdleChannels();
     }
 
-    private void scanIdleInChannelMap(ConcurrentMap<Channel, ClientChannelInfo> channelInfoTable) {
+    private void scanIdleInChannelMap(ConcurrentMap<Channel, ClientChannelInfo> channelInfoTable, String consumerGroup) {
         Iterator<Map.Entry<Channel, ClientChannelInfo>> iterator = channelInfoTable.entrySet().iterator();
 
         while (iterator.hasNext()) {
@@ -73,13 +75,26 @@ public class ConsumerRegister {
                 continue;
             }
 
-            closeChannel(channelInfo);
+            closeChannel(channelInfo, consumerGroup);
             iterator.remove();
         }
     }
 
-    private void closeChannel(ClientChannelInfo channelInfo) {
+    private void closeChannel(ClientChannelInfo channelInfo, String consumerGroup) {
+        log.warn("SCAN: close idle channel from ConsumerRegister, channel={}, consumerGroup={}",
+            NettyHelper.getRemoteAddr(channelInfo.getChannel()),
+            consumerGroup
+        );
+    }
 
+    private void invokeListeners(ConsumerEvent event, String group, Object... args) {
+        for (ConsumerListener listener : listeners) {
+            try {
+                listener.handle(event, group, args);
+            } catch (Throwable t) {
+                log.error("invoke listener error", t);
+            }
+        }
     }
 
     private void removeIdleChannels() {
