@@ -1,5 +1,5 @@
 
-package cn.coderule.minimq.broker.domain.relay;
+package cn.coderule.minimq.rpc.common.core.relay;
 
 public class RelayResult<T> {
     private int code;
