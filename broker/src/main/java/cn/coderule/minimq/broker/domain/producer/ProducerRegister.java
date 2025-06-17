@@ -1,7 +1,6 @@
 package cn.coderule.minimq.broker.domain.producer;
 
 import cn.coderule.common.lang.concurrent.atomic.PositiveAtomicCounter;
-import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.common.util.lang.collection.MapUtil;
 import cn.coderule.minimq.domain.config.BrokerConfig;
 import cn.coderule.minimq.domain.domain.enums.produce.ProducerEvent;
@@ -9,10 +8,12 @@ import cn.coderule.minimq.domain.domain.model.cluster.ClientChannelInfo;
 import cn.coderule.minimq.domain.service.broker.listener.ProducerListener;
 import cn.coderule.minimq.rpc.broker.rpc.protocol.body.ProducerInfo;
 import cn.coderule.minimq.rpc.broker.rpc.protocol.body.ProducerTableInfo;
+import cn.coderule.minimq.rpc.common.rpc.netty.service.helper.NettyHelper;
 import io.netty.channel.Channel;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -101,6 +102,48 @@ public class ProducerRegister {
     }
 
     public void scanIdleChannels() {
+        Iterator<Map.Entry<String, ConcurrentMap<Channel, ClientChannelInfo>>> iterator = this.channelTree.entrySet().iterator();
+
+        while (iterator.hasNext()) {
+            Map.Entry<String, ConcurrentMap<Channel, ClientChannelInfo>> entry = iterator.next();
+
+            final String group = entry.getKey();
+            final ConcurrentMap<Channel, ClientChannelInfo> chlMap = entry.getValue();
+
+            scanIdleChannels(chlMap, group);
+
+            if (!chlMap.isEmpty()) {
+                continue;
+            }
+
+            log.warn("SCAN: remove expired channel from ProducerManager groupChannelTable, all clear, group={}", group);
+            iterator.remove();
+            invokeListeners(ProducerEvent.GROUP_UNREGISTER, group, null);
+        }
+    }
+
+    private void scanIdleChannels(ConcurrentMap<Channel, ClientChannelInfo> chlMap, String group) {
+        Iterator<Map.Entry<Channel, ClientChannelInfo>> it = chlMap.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry<Channel, ClientChannelInfo> item = it.next();
+            // final Integer id = item.getKey();
+            final ClientChannelInfo info = item.getValue();
+
+            long diff = System.currentTimeMillis() - info.getLastUpdateTime();
+            if (diff <= channelExpireTime) {
+                continue;
+            }
+
+            it.remove();
+            Channel channelInClientTable = channelMap.get(info.getClientId());
+            if (channelInClientTable != null && channelInClientTable.equals(info.getChannel())) {
+                channelMap.remove(info.getClientId());
+            }
+            log.warn("ProducerManager#scanIdleChannels: remove expired channel[{}] groupName: {}",
+                NettyHelper.getRemoteAddr(info.getChannel()), group);
+            invokeListeners(ProducerEvent.CLIENT_UNREGISTER, group, info);
+            NettyHelper.close(info.getChannel());
+        }
     }
 
     private void invokeListeners(ProducerEvent event, String group, ClientChannelInfo channelInfo) {
