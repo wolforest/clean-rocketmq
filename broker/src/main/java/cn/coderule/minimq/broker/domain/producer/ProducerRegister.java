@@ -87,52 +87,13 @@ public class ProducerRegister {
         this.listenerList.add(listener);
     }
 
-    private List<Channel> getChannelList(String groupName) {
-        if (groupName == null) {
-            return List.of();
-        }
-
-        ConcurrentMap<Channel, ClientChannelInfo> map = channelTree.get(groupName);
-        if (MapUtil.isEmpty(map)) {
-            log.warn("getAvailableChannel failed, channel table is empty. groupId={}", groupName);
-            return List.of();
-        }
-
-        return new ArrayList<>(map.keySet());
-    }
-
     public Channel getAvailableChannel(String groupName) {
         List<Channel> channelList = getChannelList(groupName);
         if (channelList.isEmpty()) {
             return null;
         }
 
-        int index = counter.incrementAndGet() % channelList.size();
-        Channel channel = channelList.get(index);
-        if (channel.isActive() && channel.isWritable()) {
-            return channel;
-        }
-
-
-        int count = 0;
-        boolean isOk = false;
-        Channel lastActiveChannel = null;
-
-        while (count++ < maxChannelFetchTimes) {
-            if (isOk) {
-                return channel;
-            }
-
-            if (channel.isActive()) {
-                lastActiveChannel = channel;
-            }
-
-            index = (++index) % channelList.size();
-            channel = channelList.get(index);
-            isOk = channel.isActive() && channel.isWritable();
-        }
-
-        return lastActiveChannel;
+        return filterAvailableChannel(channelList);
     }
 
     public int getGroupCount() {
@@ -231,4 +192,41 @@ public class ProducerRegister {
             map.put(group, new ArrayList<>(Collections.singleton(createProducerInfo(channelInfo))));
         }
     }
+
+    private List<Channel> getChannelList(String groupName) {
+        if (groupName == null) {
+            return List.of();
+        }
+
+        ConcurrentMap<Channel, ClientChannelInfo> map = channelTree.get(groupName);
+        if (MapUtil.isEmpty(map)) {
+            log.warn("getAvailableChannel failed, channel table is empty. groupId={}", groupName);
+            return List.of();
+        }
+
+        return new ArrayList<>(map.keySet());
+    }
+
+    private Channel filterAvailableChannel(List<Channel> channelList) {
+        int count = 0;
+        Channel lastActiveChannel = null;
+        int index = counter.incrementAndGet() % channelList.size();
+
+        while (count++ < maxChannelFetchTimes) {
+            index = (++index) % channelList.size();
+            Channel channel = channelList.get(index);
+            boolean isOk = channel.isActive() && channel.isWritable();
+
+            if (isOk) {
+                return channel;
+            }
+
+            if (channel.isActive()) {
+                lastActiveChannel = channel;
+            }
+        }
+
+        return lastActiveChannel;
+    }
+
 }
