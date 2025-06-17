@@ -37,6 +37,16 @@ public class ProducerRegister {
         this.listenerList = new CopyOnWriteArrayList<>();
     }
 
+    public boolean register(String groupName, ClientChannelInfo channelInfo) {
+
+        return false;
+    }
+
+    public boolean unregister(String groupName, ClientChannelInfo channelInfo) {
+
+        return false;
+    }
+
     public int getGroupCount() {
         return channelTree.size();
     }
