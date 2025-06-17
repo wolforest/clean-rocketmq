@@ -62,6 +62,19 @@ public class ConsumerRegister {
         return prev != null ? prev : groupInfo;
     }
 
+    private boolean updateChannel(ConsumerInfo consumerInfo, ConsumerGroupInfo groupInfo) {
+        return groupInfo.updateChannel(
+            consumerInfo.getChannelInfo(),
+            consumerInfo.getConsumeType(),
+            consumerInfo.getMessageModel(),
+            consumerInfo.getConsumeStrategy()
+        );
+    }
+
+    private boolean updateSubscription(ConsumerInfo consumerInfo, ConsumerGroupInfo groupInfo) {
+        return false;
+    }
+
     public boolean register(ConsumerInfo consumerInfo) {
         long startTime = System.currentTimeMillis();
         ConsumerGroupInfo groupInfo = initGroupInfo(consumerInfo);
