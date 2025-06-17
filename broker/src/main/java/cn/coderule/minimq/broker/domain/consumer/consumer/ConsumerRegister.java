@@ -40,7 +40,32 @@ public class ConsumerRegister {
         this.listeners = new CopyOnWriteArrayList<>();
     }
 
+    private ConsumerGroupInfo initGroupInfo(ConsumerInfo consumerInfo) {
+        ConsumerGroupInfo groupInfo = groupMap.get(consumerInfo.getGroupName());
+        if (groupInfo != null) {
+            return groupInfo;
+        }
+
+        invokeListeners(
+            ConsumerEvent.REGISTER,
+            consumerInfo.getGroupName(),
+            consumerInfo.getChannelInfo(),
+            consumerInfo.getTopicSet()
+        );
+
+        groupInfo = consumerInfo.toGroupInfo();
+        ConsumerGroupInfo prev = groupMap.putIfAbsent(
+            consumerInfo.getGroupName(),
+            groupInfo
+        );
+
+        return prev != null ? prev : groupInfo;
+    }
+
     public boolean register(ConsumerInfo consumerInfo) {
+        long startTime = System.currentTimeMillis();
+        ConsumerGroupInfo groupInfo = initGroupInfo(consumerInfo);
+
         return true;
     }
 

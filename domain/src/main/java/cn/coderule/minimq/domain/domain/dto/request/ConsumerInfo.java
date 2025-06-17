@@ -1,5 +1,6 @@
 package cn.coderule.minimq.domain.domain.dto.request;
 
+import cn.coderule.minimq.domain.domain.dto.running.ConsumerGroupInfo;
 import cn.coderule.minimq.domain.domain.enums.consume.ConsumeStrategy;
 import cn.coderule.minimq.domain.domain.enums.consume.ConsumeType;
 import cn.coderule.minimq.domain.domain.enums.message.MessageModel;
@@ -8,6 +9,7 @@ import cn.coderule.minimq.domain.domain.model.cluster.heartbeat.SubscriptionData
 import java.io.Serializable;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,9 +27,24 @@ public class ConsumerInfo implements Serializable {
     @Builder.Default
     private Set<SubscriptionData> subscriptionSet = new TreeSet<>();
     private ClientChannelInfo channelInfo;
-    private boolean enableChangeNotification;
+    private boolean enableNotification;
     @Builder.Default
     private boolean enableSubscriptionModification = false;
     @Builder.Default
     private boolean enableSubscription = true;
+
+    public Set<String> getTopicSet() {
+        return subscriptionSet.stream()
+            .map(SubscriptionData::getTopic)
+            .collect(Collectors.toSet());
+    }
+
+    public ConsumerGroupInfo toGroupInfo() {
+        return new ConsumerGroupInfo(
+            this.groupName,
+            this.consumeType,
+            this.messageModel,
+            this.consumeStrategy
+        );
+    }
 }
