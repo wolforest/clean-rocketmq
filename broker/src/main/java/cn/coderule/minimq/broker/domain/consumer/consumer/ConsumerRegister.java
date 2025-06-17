@@ -117,7 +117,12 @@ public class ConsumerRegister {
     }
 
     public SubscriptionData findSubscription(String group, String topic, boolean fromCompensation) {
-        return null;
+        ConsumerGroupInfo groupInfo = getGroupInfo(group, fromCompensation);
+        if (groupInfo == null) {
+            return null;
+        }
+
+        return groupInfo.findSubscriptionData(topic);
     }
 
     public void scanIdleChannels() {
