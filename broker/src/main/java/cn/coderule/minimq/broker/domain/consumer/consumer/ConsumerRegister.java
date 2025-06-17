@@ -40,45 +40,6 @@ public class ConsumerRegister {
         this.listeners = new CopyOnWriteArrayList<>();
     }
 
-    private ConsumerGroupInfo initGroupInfo(ConsumerInfo consumerInfo) {
-        ConsumerGroupInfo groupInfo = groupMap.get(consumerInfo.getGroupName());
-        if (groupInfo != null) {
-            return groupInfo;
-        }
-
-        invokeListeners(
-            ConsumerEvent.CLIENT_REGISTER,
-            consumerInfo.getGroupName(),
-            consumerInfo.getChannelInfo(),
-            consumerInfo.getTopicSet()
-        );
-
-        groupInfo = consumerInfo.toGroupInfo();
-        ConsumerGroupInfo prev = groupMap.putIfAbsent(
-            consumerInfo.getGroupName(),
-            groupInfo
-        );
-
-        return prev != null ? prev : groupInfo;
-    }
-
-    private boolean updateChannel(ConsumerInfo consumerInfo, ConsumerGroupInfo groupInfo) {
-        return groupInfo.updateChannel(
-            consumerInfo.getChannelInfo(),
-            consumerInfo.getConsumeType(),
-            consumerInfo.getMessageModel(),
-            consumerInfo.getConsumeStrategy()
-        );
-    }
-
-    private boolean updateSubscription(ConsumerInfo consumerInfo, ConsumerGroupInfo groupInfo) {
-        if (!consumerInfo.isEnableSubscriptionModification()) {
-            return false;
-        }
-
-        return groupInfo.updateSubscription(consumerInfo.getSubscriptionSet());
-    }
-
     public boolean register(ConsumerInfo consumerInfo) {
         ConsumerGroupInfo groupInfo = initGroupInfo(consumerInfo);
 
@@ -109,36 +70,18 @@ public class ConsumerRegister {
             return;
         }
 
-        boolean removed = groupInfo.unregisterChannel(consumerInfo.getChannelInfo());
-        if (removed) {
-            invokeListeners(
-                ConsumerEvent.CLIENT_UNREGISTER,
-                consumerInfo.getGroupName(),
-                consumerInfo.getChannelInfo(),
-                groupInfo.getSubscribeTopics()
-            );
+        unregisterChannel(consumerInfo, groupInfo);
+        removeGroupInfo(consumerInfo, groupInfo);
+
+        if (!consumerInfo.isEnableNotification()) {
+            return;
         }
 
-        if (groupInfo.getChannelInfoTable().isEmpty()) {
-            ConsumerGroupInfo old = groupMap.remove(consumerInfo.getGroupName());
-            if (old != null) {
-                log.info("unregister consumer and remove consumer group: {}",
-                    consumerInfo.getGroupName());
-
-                invokeListeners(
-                    ConsumerEvent.UNREGISTER,
-                    consumerInfo.getGroupName()
-                );
-            }
-        }
-
-        if (consumerInfo.isEnableNotification()) {
-            invokeListeners(
-                ConsumerEvent.CHANGE,
-                consumerInfo.getGroupName(),
-                groupInfo.getAllChannel()
-            );
-        }
+        invokeListeners(
+            ConsumerEvent.CHANGE,
+            consumerInfo.getGroupName(),
+            groupInfo.getAllChannel()
+        );
     }
 
     public void scanIdleChannels() {
@@ -236,4 +179,77 @@ public class ConsumerRegister {
             compensationMap.remove(group);
         }
     }
+
+    private void unregisterChannel(ConsumerInfo consumerInfo, ConsumerGroupInfo groupInfo) {
+        boolean removed = groupInfo.unregisterChannel(consumerInfo.getChannelInfo());
+        if (!removed) {
+            return;
+        }
+
+        invokeListeners(
+            ConsumerEvent.CLIENT_UNREGISTER,
+            consumerInfo.getGroupName(),
+            consumerInfo.getChannelInfo(),
+            groupInfo.getSubscribeTopics()
+        );
+    }
+
+    private void removeGroupInfo(ConsumerInfo consumerInfo, ConsumerGroupInfo groupInfo) {
+        if (!groupInfo.getChannelInfoTable().isEmpty()) {
+            return;
+        }
+
+        ConsumerGroupInfo old = groupMap.remove(consumerInfo.getGroupName());
+        if (old == null) {
+            return;
+        }
+
+        log.info("unregister consumer and remove consumer group: {}",
+            consumerInfo.getGroupName());
+
+        invokeListeners(
+            ConsumerEvent.UNREGISTER,
+            consumerInfo.getGroupName()
+        );
+    }
+
+    private ConsumerGroupInfo initGroupInfo(ConsumerInfo consumerInfo) {
+        ConsumerGroupInfo groupInfo = groupMap.get(consumerInfo.getGroupName());
+        if (groupInfo != null) {
+            return groupInfo;
+        }
+
+        invokeListeners(
+            ConsumerEvent.CLIENT_REGISTER,
+            consumerInfo.getGroupName(),
+            consumerInfo.getChannelInfo(),
+            consumerInfo.getTopicSet()
+        );
+
+        groupInfo = consumerInfo.toGroupInfo();
+        ConsumerGroupInfo prev = groupMap.putIfAbsent(
+            consumerInfo.getGroupName(),
+            groupInfo
+        );
+
+        return prev != null ? prev : groupInfo;
+    }
+
+    private boolean updateChannel(ConsumerInfo consumerInfo, ConsumerGroupInfo groupInfo) {
+        return groupInfo.updateChannel(
+            consumerInfo.getChannelInfo(),
+            consumerInfo.getConsumeType(),
+            consumerInfo.getMessageModel(),
+            consumerInfo.getConsumeStrategy()
+        );
+    }
+
+    private boolean updateSubscription(ConsumerInfo consumerInfo, ConsumerGroupInfo groupInfo) {
+        if (!consumerInfo.isEnableSubscriptionModification()) {
+            return false;
+        }
+
+        return groupInfo.updateSubscription(consumerInfo.getSubscriptionSet());
+    }
+
 }
