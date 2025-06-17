@@ -94,6 +94,14 @@ public class ConsumerRegister {
         return groupInfo.findChannel(clientId);
     }
 
+    public ClientChannelInfo findChannel(String group, Channel channel) {
+        ConsumerGroupInfo groupInfo = groupMap.get(group);
+        if (groupInfo == null) {
+            return null;
+        }
+        return groupInfo.findChannel(channel);
+    }
+
     public void scanIdleChannels() {
         Iterator<Map.Entry<String, ConsumerGroupInfo>> iterator = groupMap.entrySet().iterator();
 
