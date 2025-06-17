@@ -83,6 +83,58 @@ public class ProducerRegister {
         }
     }
 
+    public void addListener(ProducerListener listener) {
+        this.listenerList.add(listener);
+    }
+
+    private List<Channel> getChannelList(String groupName) {
+        if (groupName == null) {
+            return List.of();
+        }
+
+        ConcurrentMap<Channel, ClientChannelInfo> map = channelTree.get(groupName);
+        if (MapUtil.isEmpty(map)) {
+            log.warn("getAvailableChannel failed, channel table is empty. groupId={}", groupName);
+            return List.of();
+        }
+
+        return new ArrayList<>(map.keySet());
+    }
+
+    public Channel getAvailableChannel(String groupName) {
+        List<Channel> channelList = getChannelList(groupName);
+        if (channelList.isEmpty()) {
+            return null;
+        }
+
+        int index = counter.incrementAndGet() % channelList.size();
+        Channel channel = channelList.get(index);
+        if (channel.isActive() && channel.isWritable()) {
+            return channel;
+        }
+
+
+        int count = 0;
+        boolean isOk = false;
+        Channel lastActiveChannel = null;
+
+        while (count++ < maxChannelFetchTimes) {
+            if (isOk) {
+                return channel;
+            }
+
+            if (channel.isActive()) {
+                lastActiveChannel = channel;
+            }
+
+            index = (++index) % channelList.size();
+            channel = channelList.get(index);
+            isOk = channel.isActive() && channel.isWritable();
+        }
+
+        return lastActiveChannel;
+    }
+
     public int getGroupCount() {
         return channelTree.size();
     }
@@ -102,7 +154,8 @@ public class ProducerRegister {
     }
 
     public void scanIdleChannels() {
-        Iterator<Map.Entry<String, ConcurrentMap<Channel, ClientChannelInfo>>> iterator = this.channelTree.entrySet().iterator();
+        Iterator<Map.Entry<String, ConcurrentMap<Channel, ClientChannelInfo>>> iterator
+            = this.channelTree.entrySet().iterator();
 
         while (iterator.hasNext()) {
             Map.Entry<String, ConcurrentMap<Channel, ClientChannelInfo>> entry = iterator.next();
@@ -141,6 +194,7 @@ public class ProducerRegister {
             }
             log.warn("ProducerManager#scanIdleChannels: remove expired channel[{}] groupName: {}",
                 NettyHelper.getRemoteAddr(info.getChannel()), group);
+
             invokeListeners(ProducerEvent.CLIENT_UNREGISTER, group, info);
             NettyHelper.close(info.getChannel());
         }
