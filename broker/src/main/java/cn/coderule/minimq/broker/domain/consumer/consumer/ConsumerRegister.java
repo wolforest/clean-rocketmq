@@ -102,6 +102,24 @@ public class ConsumerRegister {
         return groupInfo.findChannel(channel);
     }
 
+    private ConsumerGroupInfo getGroupInfo(String group, boolean fromCompensation) {
+        ConsumerGroupInfo groupInfo = groupMap.get(group);
+
+        if (groupInfo == null && fromCompensation) {
+            groupInfo = compensationMap.get(group);
+        }
+
+        return groupInfo;
+    }
+
+    public SubscriptionData findSubscription(String group, String topic) {
+        return findSubscription(group, topic, true);
+    }
+
+    public SubscriptionData findSubscription(String group, String topic, boolean fromCompensation) {
+        return null;
+    }
+
     public void scanIdleChannels() {
         Iterator<Map.Entry<String, ConsumerGroupInfo>> iterator = groupMap.entrySet().iterator();
 
