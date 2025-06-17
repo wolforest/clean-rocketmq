@@ -103,8 +103,42 @@ public class ConsumerRegister {
         return updated;
     }
 
-    public boolean unregister(ConsumerInfo consumerInfo) {
-        return true;
+    public void unregister(ConsumerInfo consumerInfo) {
+        ConsumerGroupInfo groupInfo = groupMap.get(consumerInfo.getGroupName());
+        if (groupInfo == null) {
+            return;
+        }
+
+        boolean removed = groupInfo.unregisterChannel(consumerInfo.getChannelInfo());
+        if (removed) {
+            invokeListeners(
+                ConsumerEvent.CLIENT_UNREGISTER,
+                consumerInfo.getGroupName(),
+                consumerInfo.getChannelInfo(),
+                groupInfo.getSubscribeTopics()
+            );
+        }
+
+        if (groupInfo.getChannelInfoTable().isEmpty()) {
+            ConsumerGroupInfo old = groupMap.remove(consumerInfo.getGroupName());
+            if (old != null) {
+                log.info("unregister consumer and remove consumer group: {}",
+                    consumerInfo.getGroupName());
+
+                invokeListeners(
+                    ConsumerEvent.UNREGISTER,
+                    consumerInfo.getGroupName()
+                );
+            }
+        }
+
+        if (consumerInfo.isEnableNotification()) {
+            invokeListeners(
+                ConsumerEvent.CHANGE,
+                consumerInfo.getGroupName(),
+                groupInfo.getAllChannel()
+            );
+        }
     }
 
     public void scanIdleChannels() {

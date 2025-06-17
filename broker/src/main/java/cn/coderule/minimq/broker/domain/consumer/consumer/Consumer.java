@@ -24,8 +24,8 @@ public class Consumer  {
         return register.register(consumerInfo);
     }
 
-    public boolean unregister(ConsumerInfo consumerInfo) {
-        return register.unregister(consumerInfo);
+    public void unregister(ConsumerInfo consumerInfo) {
+        register.unregister(consumerInfo);
     }
 
     public CompletableFuture<PopResult> popMessage(RequestContext context, PopRequest request) {
