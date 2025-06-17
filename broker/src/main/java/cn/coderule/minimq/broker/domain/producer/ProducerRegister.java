@@ -21,7 +21,7 @@ public class ProducerRegister {
 
     private final PositiveAtomicCounter counter;
     private final List<ProducerListener> listenerList;
-    // groupName -> channel
+    // clientId -> channel
     private final ConcurrentMap<String, Channel> channelMap;
     // groupName -> channel -> channelInfo
     private final ConcurrentMap<String, ConcurrentMap<Channel, ClientChannelInfo>> channelTree;
@@ -37,9 +37,20 @@ public class ProducerRegister {
         this.listenerList = new CopyOnWriteArrayList<>();
     }
 
-    public boolean register(String groupName, ClientChannelInfo channelInfo) {
+    public void register(String groupName, ClientChannelInfo channelInfo) {
+        ConcurrentMap<Channel, ClientChannelInfo> map = channelTree.computeIfAbsent(
+            groupName, k -> new ConcurrentHashMap<>()
+        );
 
-        return false;
+        ClientChannelInfo oldInfo = map.get(channelInfo.getChannel());
+        if (oldInfo != null) {
+            oldInfo.setLastUpdateTime(System.currentTimeMillis());
+            return;
+        }
+
+        map.put(channelInfo.getChannel(), channelInfo);
+        channelMap.put(channelInfo.getClientId(), channelInfo.getChannel());
+        log.info("register producer, group: {}; channel: {};", groupName, channelInfo);
     }
 
     public boolean unregister(String groupName, ClientChannelInfo channelInfo) {

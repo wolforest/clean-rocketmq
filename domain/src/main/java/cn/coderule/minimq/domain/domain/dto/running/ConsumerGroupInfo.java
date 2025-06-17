@@ -133,7 +133,7 @@ public class ConsumerGroupInfo {
         }
 
         this.lastUpdateTimestamp = System.currentTimeMillis();
-        infoOld.setLastUpdateTimestamp(this.lastUpdateTimestamp);
+        infoOld.setLastUpdateTime(this.lastUpdateTimestamp);
 
         return updated;
     }

@@ -151,7 +151,7 @@ public class ConsumerRegister {
             ClientChannelInfo channelInfo = entry.getValue();
 
             long now = System.currentTimeMillis();
-            if (now - channelInfo.getLastUpdateTimestamp() <= channelExpireTime) {
+            if (now - channelInfo.getLastUpdateTime() <= channelExpireTime) {
                 continue;
             }
 

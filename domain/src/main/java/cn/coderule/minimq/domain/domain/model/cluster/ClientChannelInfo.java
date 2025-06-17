@@ -8,7 +8,7 @@ public class ClientChannelInfo {
     private final String clientId;
     private final LanguageCode language;
     private final int version;
-    private volatile long lastUpdateTimestamp = System.currentTimeMillis();
+    private volatile long lastUpdateTime = System.currentTimeMillis();
 
     public ClientChannelInfo(Channel channel) {
         this(channel, null, null, 0);
@@ -37,12 +37,12 @@ public class ClientChannelInfo {
         return version;
     }
 
-    public long getLastUpdateTimestamp() {
-        return lastUpdateTimestamp;
+    public long getLastUpdateTime() {
+        return lastUpdateTime;
     }
 
-    public void setLastUpdateTimestamp(long lastUpdateTimestamp) {
-        this.lastUpdateTimestamp = lastUpdateTimestamp;
+    public void setLastUpdateTime(long lastUpdateTime) {
+        this.lastUpdateTime = lastUpdateTime;
     }
 
     @Override
@@ -52,7 +52,7 @@ public class ClientChannelInfo {
         result = prime * result + ((channel == null) ? 0 : channel.hashCode());
         result = prime * result + ((clientId == null) ? 0 : clientId.hashCode());
         result = prime * result + ((language == null) ? 0 : language.hashCode());
-        result = prime * result + Long.hashCode(lastUpdateTimestamp);
+        result = prime * result + Long.hashCode(lastUpdateTime);
         result = prime * result + version;
         return result;
     }
@@ -75,6 +75,6 @@ public class ClientChannelInfo {
     @Override
     public String toString() {
         return "ClientChannelInfo [channel=" + channel + ", clientId=" + clientId + ", language=" + language
-            + ", version=" + version + ", lastUpdateTimestamp=" + lastUpdateTimestamp + "]";
+            + ", version=" + version + ", lastUpdateTimestamp=" + lastUpdateTime + "]";
     }
 }
