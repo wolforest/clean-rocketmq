@@ -1,8 +1,10 @@
 package cn.coderule.minimq.broker.domain.producer;
 
 import cn.coderule.common.lang.concurrent.atomic.PositiveAtomicCounter;
+import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.common.util.lang.collection.MapUtil;
 import cn.coderule.minimq.domain.config.BrokerConfig;
+import cn.coderule.minimq.domain.domain.enums.produce.ProducerEvent;
 import cn.coderule.minimq.domain.domain.model.cluster.ClientChannelInfo;
 import cn.coderule.minimq.domain.service.broker.listener.ProducerListener;
 import io.netty.channel.Channel;
@@ -53,9 +55,25 @@ public class ProducerRegister {
         log.info("register producer, group: {}; channel: {};", groupName, channelInfo);
     }
 
-    public boolean unregister(String groupName, ClientChannelInfo channelInfo) {
+    public void unregister(String groupName, ClientChannelInfo channelInfo) {
+        ConcurrentMap<Channel, ClientChannelInfo> map = channelTree.get(groupName);
+        if (MapUtil.isEmpty(map)) {
+            return;
+        }
 
-        return false;
+        channelMap.remove(channelInfo.getClientId());
+        ClientChannelInfo old = map.remove(channelInfo.getChannel());
+
+        if (old != null) {
+            log.info("unregister producer, group: {}; channel: {};", groupName, channelInfo);
+            invokeListeners(ProducerEvent.CLIENT_UNREGISTER, groupName, channelInfo);
+        }
+
+        if (map.isEmpty()) {
+            channelTree.remove(groupName);
+            invokeListeners(ProducerEvent.GROUP_UNREGISTER, groupName, null);
+            log.info("unregister group, group: {}", groupName);
+        }
     }
 
     public int getGroupCount() {
@@ -69,5 +87,15 @@ public class ProducerRegister {
     }
 
     public void scanIdleChannels() {
+    }
+
+    private void invokeListeners(ProducerEvent event, String group, ClientChannelInfo channelInfo) {
+        for (ProducerListener listener : listenerList) {
+            try {
+                listener.handle(event, group, channelInfo);
+            } catch (Throwable t) {
+                log.error("invoke producer listener error", t);
+            }
+        }
     }
 }
