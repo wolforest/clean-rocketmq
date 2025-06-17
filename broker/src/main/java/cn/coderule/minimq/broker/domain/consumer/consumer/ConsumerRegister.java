@@ -72,7 +72,11 @@ public class ConsumerRegister {
     }
 
     private boolean updateSubscription(ConsumerInfo consumerInfo, ConsumerGroupInfo groupInfo) {
-        return false;
+        if (!consumerInfo.isEnableSubscriptionModification()) {
+            return false;
+        }
+
+        return groupInfo.updateSubscription(consumerInfo.getSubscriptionSet());
     }
 
     public boolean register(ConsumerInfo consumerInfo) {

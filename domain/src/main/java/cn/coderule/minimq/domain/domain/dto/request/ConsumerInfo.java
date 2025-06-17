@@ -30,8 +30,6 @@ public class ConsumerInfo implements Serializable {
     private boolean enableNotification;
     @Builder.Default
     private boolean enableSubscriptionModification = false;
-    @Builder.Default
-    private boolean enableSubscription = true;
 
     public Set<String> getTopicSet() {
         return subscriptionSet.stream()
