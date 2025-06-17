@@ -47,7 +47,7 @@ public class ConsumerRegister {
         }
 
         invokeListeners(
-            ConsumerEvent.REGISTER,
+            ConsumerEvent.CLIENT_REGISTER,
             consumerInfo.getGroupName(),
             consumerInfo.getChannelInfo(),
             consumerInfo.getTopicSet()
@@ -80,10 +80,27 @@ public class ConsumerRegister {
     }
 
     public boolean register(ConsumerInfo consumerInfo) {
-        long startTime = System.currentTimeMillis();
         ConsumerGroupInfo groupInfo = initGroupInfo(consumerInfo);
 
-        return true;
+        boolean updated = updateChannel(consumerInfo, groupInfo)
+            || updateSubscription(consumerInfo, groupInfo);
+
+        if (updated && consumerInfo.isEnableNotification()) {
+            invokeListeners(
+                ConsumerEvent.CHANGE,
+                consumerInfo.getGroupName(),
+                groupInfo.getAllChannel()
+            );
+        }
+
+        invokeListeners(
+            ConsumerEvent.REGISTER,
+            consumerInfo.getGroupName(),
+            consumerInfo.getSubscriptionSet(),
+            consumerInfo.getChannelInfo()
+        );
+
+        return updated;
     }
 
     public boolean unregister(ConsumerInfo consumerInfo) {
