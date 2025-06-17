@@ -7,8 +7,14 @@ import cn.coderule.minimq.domain.config.BrokerConfig;
 import cn.coderule.minimq.domain.domain.enums.produce.ProducerEvent;
 import cn.coderule.minimq.domain.domain.model.cluster.ClientChannelInfo;
 import cn.coderule.minimq.domain.service.broker.listener.ProducerListener;
+import cn.coderule.minimq.rpc.broker.rpc.protocol.body.ProducerInfo;
+import cn.coderule.minimq.rpc.broker.rpc.protocol.body.ProducerTableInfo;
 import io.netty.channel.Channel;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -86,6 +92,14 @@ public class ProducerRegister {
         );
     }
 
+    public ProducerTableInfo getProducerTable() {
+        Map<String, List<ProducerInfo>> map = new HashMap<>();
+        for (String group : this.channelTree.keySet()) {
+            getProducerTable(map, group);
+        }
+        return new ProducerTableInfo(map);
+    }
+
     public void scanIdleChannels() {
     }
 
@@ -96,6 +110,28 @@ public class ProducerRegister {
             } catch (Throwable t) {
                 log.error("invoke producer listener error", t);
             }
+        }
+    }
+
+    private ProducerInfo createProducerInfo(ClientChannelInfo clientChannelInfo) {
+        return new ProducerInfo(
+            clientChannelInfo.getClientId(),
+            clientChannelInfo.getChannel().remoteAddress().toString(),
+            clientChannelInfo.getLanguage(),
+            clientChannelInfo.getVersion(),
+            clientChannelInfo.getLastUpdateTime()
+        );
+    }
+
+    private void getProducerTable(Map<String, List<ProducerInfo>> map, String group) {
+        for (Map.Entry<Channel, ClientChannelInfo> entry: this.channelTree.get(group).entrySet()) {
+            ClientChannelInfo channelInfo = entry.getValue();
+            if (map.containsKey(group)) {
+                map.get(group).add(createProducerInfo(channelInfo));
+                continue;
+            }
+
+            map.put(group, new ArrayList<>(Collections.singleton(createProducerInfo(channelInfo))));
         }
     }
 }
