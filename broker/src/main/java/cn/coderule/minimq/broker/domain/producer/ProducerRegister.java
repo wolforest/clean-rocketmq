@@ -23,8 +23,6 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class ProducerRegister {
-    private final BrokerConfig brokerConfig;
-
     private final long channelExpireTime;
     private final int maxChannelFetchTimes;
 
@@ -36,7 +34,6 @@ public class ProducerRegister {
     private final ConcurrentMap<String, ConcurrentMap<Channel, ClientChannelInfo>> channelTree;
 
     public ProducerRegister(BrokerConfig brokerConfig) {
-        this.brokerConfig = brokerConfig;
         this.channelExpireTime = brokerConfig.getChannelExpireTime();
         this.maxChannelFetchTimes = brokerConfig.getMaxChannelFetchTimes();
 
@@ -81,6 +78,42 @@ public class ProducerRegister {
             invokeListeners(ProducerEvent.GROUP_UNREGISTER, groupName, null);
             log.info("unregister group, group: {}", groupName);
         }
+    }
+
+    public synchronized boolean invokeCloseEvent(final String remoteAddr, final Channel channel) {
+        boolean removed = false;
+        if (channel == null) {
+            return false;
+        }
+
+        for (final Map.Entry<String, ConcurrentMap<Channel, ClientChannelInfo>> entry : this.channelTree.entrySet()) {
+            final String group = entry.getKey();
+            final ConcurrentMap<Channel, ClientChannelInfo> infoMap = entry.getValue();
+            final ClientChannelInfo channelInfo = infoMap.remove(channel);
+            if (channelInfo == null) {
+                continue;
+            }
+
+            channelMap.remove(channelInfo.getClientId());
+            removed = true;
+            log.info("NETTY EVENT: remove channel[{}][{}] from ProducerManager groupChannelTable, producer group: {}",
+                channelInfo, remoteAddr, group);
+            invokeListeners(ProducerEvent.CLIENT_UNREGISTER, group, channelInfo);
+
+            if (!infoMap.isEmpty()) {
+                continue;
+            }
+
+            ConcurrentMap<Channel, ClientChannelInfo> old = this.channelTree.remove(group);
+            if (old == null) {
+                continue;
+            }
+
+            log.info("unregister a producer group[{}] from groupChannelTable", group);
+            invokeListeners(ProducerEvent.GROUP_UNREGISTER, group, null);
+        }
+
+        return removed;
     }
 
     public void addListener(ProducerListener listener) {
