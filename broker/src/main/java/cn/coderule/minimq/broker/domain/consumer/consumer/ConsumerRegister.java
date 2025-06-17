@@ -21,8 +21,6 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class ConsumerRegister {
-    private final BrokerConfig brokerConfig;
-
     private final long channelExpireTime;
     private final long subscriptionExpireTime;
 
@@ -31,7 +29,6 @@ public class ConsumerRegister {
     private final List<ConsumerListener> listeners;
 
     public ConsumerRegister(BrokerConfig brokerConfig) {
-        this.brokerConfig = brokerConfig;
         this.channelExpireTime = brokerConfig.getChannelExpireTime();
         this.subscriptionExpireTime = brokerConfig.getSubscriptionExpireTime();
 
@@ -82,6 +79,19 @@ public class ConsumerRegister {
             consumerInfo.getGroupName(),
             groupInfo.getAllChannel()
         );
+    }
+
+    public void addListener(ConsumerListener listener) {
+        this.listeners.add(listener);
+    }
+
+    public ClientChannelInfo findChannel(String group, String clientId) {
+        ConsumerGroupInfo groupInfo = groupMap.get(group);
+        if (groupInfo == null) {
+            return null;
+        }
+
+        return groupInfo.findChannel(clientId);
     }
 
     public void scanIdleChannels() {
