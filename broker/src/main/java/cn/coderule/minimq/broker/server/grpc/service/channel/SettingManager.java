@@ -6,8 +6,10 @@ import apache.rocketmq.v2.Settings;
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 import cn.coderule.common.util.lang.collection.ArrayUtil;
+import cn.coderule.minimq.broker.api.ConsumerController;
 import cn.coderule.minimq.domain.config.GrpcConfig;
 import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
+import cn.coderule.minimq.domain.domain.model.consumer.subscription.SubscriptionGroup;
 import com.google.protobuf.util.Durations;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -21,9 +23,14 @@ public class SettingManager extends ServiceThread implements Lifecycle {
     private static final ConcurrentMap<String, Settings> SETTING_MAP = new ConcurrentHashMap<>();
 
     private final GrpcConfig config;
+    private ConsumerController consumerController;
 
     public SettingManager(GrpcConfig config) {
         this.config = config;
+    }
+
+    public void inject(ConsumerController consumerController) {
+        this.consumerController = consumerController;
     }
 
     @Override
@@ -97,10 +104,22 @@ public class SettingManager extends ServiceThread implements Lifecycle {
         return builder.build();
     }
 
-    private Settings mergeSubscriptionSettings(Settings settings, RequestContext context) {
+    private SubscriptionGroup getSubscription(Settings settings, RequestContext context) {
         String group = settings.getSubscription().getGroup().getName();
+        String topic = settings.getSubscription().getSubscriptions(0).getTopic().getName();
 
-        settings.getSubscription().getSubscriptions(0).getTopic().getName();
+        try {
+            return consumerController.getSubscription(context, topic, group).get();
+        } catch (Throwable e) {
+            log.error("get subscription failed. clientId:{}, topic:{}, group:{}.",
+                context.getClientID(), topic, group, e);
+        }
+
+        return null;
+    }
+
+    private Settings mergeSubscriptionSettings(Settings settings, RequestContext context) {
+        SubscriptionGroup subscription = getSubscription(settings, context);
 
         return settings;
     }
