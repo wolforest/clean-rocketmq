@@ -93,6 +93,16 @@ public class SettingManager extends ServiceThread implements Lifecycle {
         return mergeMetric(settings);
     }
 
+    public void updateSettings(String clientId, Settings settings) {
+        if (settings.hasSubscription()) {
+            settings = createSettingsBuilder()
+                .mergeFrom(settings)
+                .build();
+        }
+
+        SETTING_MAP.put(clientId, settings);
+    }
+
     private Settings mergeProducerSettings(Settings settings) {
         Settings.Builder builder = Settings.newBuilder();
 
@@ -199,5 +209,14 @@ public class SettingManager extends ServiceThread implements Lifecycle {
         return CustomizedBackoff.newBuilder()
             .addAllNext(durationList)
             .build();
+    }
+
+    private Settings.Builder createSettingsBuilder() {
+        Settings settings = Settings.newBuilder()
+            .getDefaultInstanceForType();
+
+        settings = mergeSubscription(settings, new SubscriptionGroup());
+
+        return settings.toBuilder();
     }
 }
