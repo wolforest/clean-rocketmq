@@ -10,6 +10,8 @@ import cn.coderule.minimq.domain.domain.dto.request.AckRequest;
 import cn.coderule.minimq.domain.domain.dto.request.InvisibleRequest;
 import cn.coderule.minimq.domain.domain.dto.request.PopRequest;
 import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
+import cn.coderule.minimq.domain.domain.model.consumer.subscription.SubscriptionGroup;
+import cn.coderule.minimq.domain.service.broker.infra.SubscriptionStore;
 import java.util.concurrent.CompletableFuture;
 
 public class Consumer  {
@@ -19,6 +21,7 @@ public class Consumer  {
     private PopService popService;
     private AckService ackService;
     private InvisibleService invisibleService;
+    private SubscriptionStore subscriptionStore;
 
     public boolean register(ConsumerInfo consumerInfo) {
         return register.register(consumerInfo);
@@ -26,6 +29,10 @@ public class Consumer  {
 
     public void unregister(ConsumerInfo consumerInfo) {
         register.unregister(consumerInfo);
+    }
+
+    public CompletableFuture<SubscriptionGroup> getSubscription(RequestContext context, String topicName, String groupName) {
+        return subscriptionStore.getGroup(topicName, groupName);
     }
 
     public CompletableFuture<PopResult> popMessage(RequestContext context, PopRequest request) {
