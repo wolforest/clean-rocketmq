@@ -113,7 +113,7 @@ public class SettingManager extends ServiceThread implements Lifecycle {
     }
 
     private Settings mergeProducerSettings(Settings settings) {
-        Settings.Builder builder = Settings.newBuilder();
+        Settings.Builder builder = settings.toBuilder();
 
         ExponentialBackoff backoff = ExponentialBackoff.newBuilder()
             .setInitial(Durations.fromMillis(config.getProducerBackoffMillis()))
