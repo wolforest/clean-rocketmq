@@ -103,6 +103,25 @@ public class SettingManager extends ServiceThread implements Lifecycle {
         SETTING_MAP.put(clientId, settings);
     }
 
+    public Settings removeSettings(String clientId) {
+        return SETTING_MAP.remove(clientId);
+    }
+
+    public Settings removeSettings(RequestContext context) {
+        String clientId = context.getClientID();
+        Settings settings = removeSettings(clientId);
+
+        if (settings == null) {
+            return null;
+        }
+
+        if (settings.hasSubscription()) {
+            settings = mergeSubscriptionSettings(settings, context);
+        }
+
+        return mergeMetric(settings);
+    }
+
     private Settings mergeProducerSettings(Settings settings) {
         Settings.Builder builder = Settings.newBuilder();
 
