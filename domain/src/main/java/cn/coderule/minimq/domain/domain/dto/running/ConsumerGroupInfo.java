@@ -39,7 +39,11 @@ public class ConsumerGroupInfo {
         this.groupName = groupName;
     }
 
-    public ClientChannelInfo findChannel(final String clientId) {
+    public boolean existsChannel(String clientId) {
+        return null != findChannel(clientId);
+    }
+
+    public ClientChannelInfo findChannel(String clientId) {
         for (Entry<Channel, ClientChannelInfo> next : this.channelInfoTable.entrySet()) {
             if (next.getValue().getClientId().equals(clientId)) {
                 return next.getValue();

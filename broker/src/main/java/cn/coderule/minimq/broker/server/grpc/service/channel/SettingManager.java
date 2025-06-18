@@ -9,6 +9,7 @@ import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 import cn.coderule.common.util.lang.collection.ArrayUtil;
 import cn.coderule.minimq.broker.api.ConsumerController;
 import cn.coderule.minimq.domain.config.GrpcConfig;
+import cn.coderule.minimq.domain.domain.dto.running.ConsumerGroupInfo;
 import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
 import cn.coderule.minimq.domain.domain.model.consumer.subscription.CustomizedRetryPolicy;
 import cn.coderule.minimq.domain.domain.model.consumer.subscription.ExponentialRetryPolicy;
@@ -55,17 +56,6 @@ public class SettingManager extends ServiceThread implements Lifecycle {
                 this.await(WAIT_INTERVAL);
             } catch (Exception e) {
                 log.error("{} service has exception. ", this.getServiceName(), e);
-            }
-        }
-    }
-
-    private void removeExpiredClient() {
-        Set<String> clientIdSet = SETTING_MAP.keySet();
-        for (String clientId : clientIdSet) {
-            try {
-                removeExpiredClient(clientId);
-            } catch (Throwable e) {
-                log.error("remove expired grpc client settings failed. clientId:{}", clientId, e);
             }
         }
     }
@@ -155,6 +145,17 @@ public class SettingManager extends ServiceThread implements Lifecycle {
         return settings;
     }
 
+    private void removeExpiredClient() {
+        Set<String> clientIdSet = SETTING_MAP.keySet();
+        for (String clientId : clientIdSet) {
+            try {
+                removeExpiredClient(clientId);
+            } catch (Throwable e) {
+                log.error("remove expired grpc client settings failed. clientId:{}", clientId, e);
+            }
+        }
+    }
+
     private void removeExpiredClient(String clientId) {
         SETTING_MAP.computeIfPresent(clientId, (clientKey, settings) -> {
             if (!ArrayUtil.inArray(settings.getClientType(),
@@ -162,8 +163,16 @@ public class SettingManager extends ServiceThread implements Lifecycle {
                 return settings;
             }
 
-            String topic = settings.getSubscription().getSubscriptions(0).getTopic().getName();
-            String consumerGroup = settings.getSubscription().getGroup().getName();
+            String group = settings.getSubscription().getGroup().getName();
+            RequestContext context = RequestContext.createForInner(this.getClass());
+            ConsumerGroupInfo groupInfo = consumerController.getGroupInfo(context, group);
+
+            if (groupInfo == null || !groupInfo.existsChannel(clientId)) {
+                log.info("remove expired grpc client settings. clientId:{}, group:{}, settings:{}.",
+                    clientId, group, settings);
+
+                return null;
+            }
 
             return settings;
         });

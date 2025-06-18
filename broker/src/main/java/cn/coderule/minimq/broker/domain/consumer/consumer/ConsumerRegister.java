@@ -102,7 +102,11 @@ public class ConsumerRegister {
         return groupInfo.findChannel(channel);
     }
 
-    private ConsumerGroupInfo getGroupInfo(String group, boolean fromCompensation) {
+    public ConsumerGroupInfo getGroupInfo(String group) {
+        return getGroupInfo(group, false);
+    }
+
+    public ConsumerGroupInfo getGroupInfo(String group, boolean fromCompensation) {
         ConsumerGroupInfo groupInfo = groupMap.get(group);
 
         if (groupInfo == null && fromCompensation) {

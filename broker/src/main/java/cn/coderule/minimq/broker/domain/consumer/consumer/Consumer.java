@@ -9,6 +9,7 @@ import cn.coderule.minimq.domain.domain.dto.request.ConsumerInfo;
 import cn.coderule.minimq.domain.domain.dto.request.AckRequest;
 import cn.coderule.minimq.domain.domain.dto.request.InvisibleRequest;
 import cn.coderule.minimq.domain.domain.dto.request.PopRequest;
+import cn.coderule.minimq.domain.domain.dto.running.ConsumerGroupInfo;
 import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
 import cn.coderule.minimq.domain.domain.model.consumer.subscription.SubscriptionGroup;
 import cn.coderule.minimq.domain.service.broker.infra.SubscriptionStore;
@@ -29,6 +30,10 @@ public class Consumer  {
 
     public void unregister(ConsumerInfo consumerInfo) {
         register.unregister(consumerInfo);
+    }
+
+    public ConsumerGroupInfo getGroupInfo(RequestContext context, String groupName) {
+        return register.getGroupInfo(groupName);
     }
 
     public CompletableFuture<SubscriptionGroup> getSubscription(RequestContext context, String topicName, String groupName) {
