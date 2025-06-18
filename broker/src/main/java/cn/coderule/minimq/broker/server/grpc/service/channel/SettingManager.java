@@ -1,6 +1,7 @@
 package cn.coderule.minimq.broker.server.grpc.service.channel;
 
 import apache.rocketmq.v2.ClientType;
+import apache.rocketmq.v2.CustomizedBackoff;
 import apache.rocketmq.v2.ExponentialBackoff;
 import apache.rocketmq.v2.Settings;
 import cn.coderule.common.convention.service.Lifecycle;
@@ -9,11 +10,19 @@ import cn.coderule.common.util.lang.collection.ArrayUtil;
 import cn.coderule.minimq.broker.api.ConsumerController;
 import cn.coderule.minimq.domain.config.GrpcConfig;
 import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
+import cn.coderule.minimq.domain.domain.model.consumer.subscription.CustomizedRetryPolicy;
+import cn.coderule.minimq.domain.domain.model.consumer.subscription.ExponentialRetryPolicy;
+import cn.coderule.minimq.domain.domain.model.consumer.subscription.GroupRetryPolicy;
+import cn.coderule.minimq.domain.domain.model.consumer.subscription.GroupRetryPolicyType;
 import cn.coderule.minimq.domain.domain.model.consumer.subscription.SubscriptionGroup;
+import com.google.protobuf.Duration;
 import com.google.protobuf.util.Durations;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -104,6 +113,33 @@ public class SettingManager extends ServiceThread implements Lifecycle {
         return builder.build();
     }
 
+    private Settings mergeSubscriptionSettings(Settings settings, RequestContext context) {
+        SubscriptionGroup subscription = getSubscription(settings, context);
+        if (subscription == null) {
+            return settings;
+        }
+
+        return mergeSubscription(settings, subscription);
+    }
+
+    private Settings mergeMetric(Settings settings) {
+        return settings;
+    }
+
+    private void removeExpiredClient(String clientId) {
+        SETTING_MAP.computeIfPresent(clientId, (clientKey, settings) -> {
+            if (!ArrayUtil.inArray(settings.getClientType(),
+                ClientType.PUSH_CONSUMER, ClientType.SIMPLE_CONSUMER)) {
+                return settings;
+            }
+
+            String topic = settings.getSubscription().getSubscriptions(0).getTopic().getName();
+            String consumerGroup = settings.getSubscription().getGroup().getName();
+
+            return settings;
+        });
+    }
+
     private SubscriptionGroup getSubscription(Settings settings, RequestContext context) {
         String group = settings.getSubscription().getGroup().getName();
         String topic = settings.getSubscription().getSubscriptions(0).getTopic().getName();
@@ -118,29 +154,50 @@ public class SettingManager extends ServiceThread implements Lifecycle {
         return null;
     }
 
-    private Settings mergeSubscriptionSettings(Settings settings, RequestContext context) {
-        SubscriptionGroup subscription = getSubscription(settings, context);
+    protected Settings mergeSubscription(Settings settings, SubscriptionGroup groupConfig) {
+        Settings.Builder builder = settings.toBuilder();
 
-        return settings;
-    }
+        builder.getSubscriptionBuilder()
+            .setReceiveBatchSize(config.getConsumerPollBatchSize())
+            .setLongPollingTimeout(Durations.fromMillis(config.getConsumerMaxPollTime()))
+            .setFifo(groupConfig.isConsumeMessageOrderly());
 
-    private Settings mergeMetric(Settings settings) {
-        return settings;
-    }
+        builder.getBackoffPolicyBuilder()
+            .setMaxAttempts(groupConfig.getRetryMaxTimes() + 1);
 
-
-
-    private void removeExpiredClient(String clientId) {
-        SETTING_MAP.computeIfPresent(clientId, (clientKey, settings) -> {
-            if (!ArrayUtil.inArray(settings.getClientType(),
-                ClientType.PUSH_CONSUMER, ClientType.SIMPLE_CONSUMER)) {
-                return settings;
+        GroupRetryPolicy retryPolicy = groupConfig.getGroupRetryPolicy();
+        if (retryPolicy.getType().equals(GroupRetryPolicyType.EXPONENTIAL)) {
+            ExponentialRetryPolicy exponentialRetryPolicy = retryPolicy.getExponentialRetryPolicy();
+            if (exponentialRetryPolicy == null) {
+                exponentialRetryPolicy = new ExponentialRetryPolicy();
             }
+            builder.getBackoffPolicyBuilder().setExponentialBackoff(convertToExponentialBackoff(exponentialRetryPolicy));
+        } else {
+            CustomizedRetryPolicy customizedRetryPolicy = retryPolicy.getCustomizedRetryPolicy();
+            if (customizedRetryPolicy == null) {
+                customizedRetryPolicy = new CustomizedRetryPolicy();
+            }
+            builder.getBackoffPolicyBuilder()
+                .setCustomizedBackoff(convertToCustomizedRetryPolicy(customizedRetryPolicy));
+        }
 
-            String topic = settings.getSubscription().getSubscriptions(0).getTopic().getName();
-            String consumerGroup = settings.getSubscription().getGroup().getName();
+        return builder.build();
+    }
 
-            return settings;
-        });
+    private ExponentialBackoff convertToExponentialBackoff(ExponentialRetryPolicy retryPolicy) {
+        return ExponentialBackoff.newBuilder()
+            .setInitial(Durations.fromMillis(retryPolicy.getInitial()))
+            .setMax(Durations.fromMillis(retryPolicy.getMax()))
+            .setMultiplier(retryPolicy.getMultiplier())
+            .build();
+    }
+
+    private CustomizedBackoff convertToCustomizedRetryPolicy(CustomizedRetryPolicy retryPolicy) {
+        List<Duration> durationList = Arrays.stream(retryPolicy.getNext())
+            .mapToObj(Durations::fromMillis).collect(Collectors.toList());
+
+        return CustomizedBackoff.newBuilder()
+            .addAllNext(durationList)
+            .build();
     }
 }
