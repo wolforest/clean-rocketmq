@@ -18,7 +18,9 @@ public class GrpcConfig implements Serializable {
 
     // 5 seconds
     private int requestTimeout = 5_000;
-    private int maxConnectionIdle = 120 * 1000;
+    private int maxConnectionIdle = 120_000;
+    private int channelExpireTime = 30_000;
+    private int contextExpireTime = 60_000;
 
     private int relayTimeout = 5_000;
 
@@ -35,6 +37,17 @@ public class GrpcConfig implements Serializable {
     private int clientQueueCapacity = 10000;
     private int transactionThreadNum = SystemUtil.getProcessorNumber();
     private int transactionQueueCapacity = 10000;
+
+    private boolean enableMessageTypeCheck = true;
+
+    private int producerMaxAttempts = 3;
+    private int producerBackoffMillis = 10;
+    private int producerMaxBackoffMillis = 1000;
+    private int producerBackoffMultiplier = 2;
+
+    private int consumerMinPollTime = 5_000;
+    private int consumerMaxPollTime = 20_000;
+    private int consumerPollBatchSize = 32;
 
 
 

@@ -1,12 +1,15 @@
 package cn.coderule.minimq.rpc.broker.grpc;
 
 import apache.rocketmq.v2.ClientType;
+import apache.rocketmq.v2.ExponentialBackoff;
 import apache.rocketmq.v2.Settings;
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 import cn.coderule.common.util.lang.collection.ArrayUtil;
 import cn.coderule.minimq.domain.config.GrpcConfig;
 import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
+import com.google.protobuf.Duration;
+import com.google.protobuf.util.Durations;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -76,7 +79,23 @@ public class SettingManager extends ServiceThread implements Lifecycle {
     }
 
     private Settings mergeProducerSettings(Settings settings) {
-        return settings;
+        Settings.Builder builder = Settings.newBuilder();
+
+        ExponentialBackoff backoff = ExponentialBackoff.newBuilder()
+            .setInitial(Durations.fromMillis(config.getProducerBackoffMillis()))
+            .setMax(Durations.fromMillis(config.getProducerMaxBackoffMillis()))
+            .setMultiplier(config.getProducerBackoffMultiplier())
+            .build();
+
+        builder.getBackoffPolicyBuilder()
+            .setMaxAttempts(config.getProducerMaxAttempts())
+            .setExponentialBackoff(backoff);
+
+        builder.getPublishingBuilder()
+            .setValidateMessageType(config.isEnableMessageTypeCheck())
+            .setMaxBodySize(config.getMaxMessageSize());
+
+        return builder.build();
     }
 
     private Settings mergeSubscriptionSettings(Settings settings, RequestContext context) {

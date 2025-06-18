@@ -103,11 +103,7 @@ public class ChannelManager implements Lifecycle {
             }
 
             resultFuture.getFuture().complete(
-                new Result<>(
-                    ResponseCode.SYSTEM_BUSY,
-                    "grpc relay request timeout",
-                    null
-                )
+                new Result<>(ResponseCode.SYSTEM_BUSY,"grpc request timeout", null)
             );
         }
     }
