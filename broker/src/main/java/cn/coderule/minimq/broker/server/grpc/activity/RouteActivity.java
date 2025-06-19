@@ -106,8 +106,6 @@ public class RouteActivity {
             });
     }
 
-
-
     private List<Address> toAddressList(Endpoints endpoints) {
         List<Address> addressList = new ArrayList<>();
         for (apache.rocketmq.v2.Address address : endpoints.getAddressesList()) {
