@@ -11,12 +11,12 @@ import cn.coderule.minimq.broker.server.grpc.service.channel.ChannelManager;
 import cn.coderule.minimq.broker.server.grpc.service.channel.HeartbeatService;
 import cn.coderule.minimq.broker.server.grpc.service.channel.SettingManager;
 import cn.coderule.minimq.broker.server.grpc.service.channel.TelemetryService;
+import cn.coderule.minimq.broker.server.grpc.service.channel.TerminationService;
 import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
 import cn.coderule.minimq.rpc.broker.grpc.ContextStreamObserver;
 import cn.coderule.minimq.rpc.common.grpc.RequestPipeline;
 import cn.coderule.minimq.rpc.common.grpc.activity.ActivityHelper;
 import cn.coderule.minimq.rpc.common.grpc.core.constants.GrpcConstants;
-import com.google.protobuf.GeneratedMessage;
 import io.grpc.Context;
 import io.grpc.stub.StreamObserver;
 import java.util.concurrent.CompletableFuture;
@@ -34,6 +34,7 @@ public class ClientActivity {
 
     private HeartbeatService heartbeatService;
     private TelemetryService telemetryService;
+    private TerminationService terminationService;
 
     public ClientActivity(ThreadPoolExecutor executor) {
         this.executor = executor;
@@ -140,7 +141,7 @@ public class ClientActivity {
     }
 
     private CompletableFuture<NotifyClientTerminationResponse> terminateAsync(RequestContext context, NotifyClientTerminationRequest request) {
-        return CompletableFuture.completedFuture(null);
+        return terminationService.terminate(context, request);
     }
 
     private ActivityHelper<NotifyClientTerminationRequest, NotifyClientTerminationResponse> getTerminateHelper(
