@@ -15,7 +15,9 @@ import cn.coderule.minimq.broker.api.ConsumerController;
 import cn.coderule.minimq.broker.server.grpc.service.channel.ChannelManager;
 import cn.coderule.minimq.broker.server.grpc.service.channel.HeartbeatService;
 import cn.coderule.minimq.broker.server.grpc.service.channel.SettingManager;
+import cn.coderule.minimq.broker.server.grpc.service.channel.TelemetryService;
 import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
+import cn.coderule.minimq.rpc.broker.grpc.ContextStreamObserver;
 import cn.coderule.minimq.rpc.common.grpc.activity.ActivityHelper;
 import io.grpc.stub.StreamObserver;
 import java.util.concurrent.CompletableFuture;
@@ -28,7 +30,9 @@ public class ClientActivity {
     private ChannelManager channelManager;
     private SettingManager settingManager;
     private ConsumerController consumerController;
+
     private HeartbeatService heartbeatService;
+    private TelemetryService telemetryService;
 
     public ClientActivity(ThreadPoolExecutor executor) {
         this.executor = executor;
@@ -47,12 +51,6 @@ public class ClientActivity {
         }
     }
 
-
-
-    public StreamObserver<TelemetryCommand> telemetry(StreamObserver<TelemetryCommand> responseObserver) {
-        return responseObserver;
-    }
-
     public void notifyClientTermination(RequestContext context, NotifyClientTerminationRequest request, StreamObserver<NotifyClientTerminationResponse> responseObserver) {
         ActivityHelper<NotifyClientTerminationRequest, NotifyClientTerminationResponse> helper = getTerminateHelper(context, request, responseObserver);
         try {
@@ -65,9 +63,70 @@ public class ClientActivity {
         }
     }
 
+    public StreamObserver<TelemetryCommand> telemetry(StreamObserver<TelemetryCommand> responseObserver) {
+        Function<Status, TelemetryCommand> statusToResponse = telemetryStatueToResponse();
+        ContextStreamObserver<TelemetryCommand> response = telemetryAsync(responseObserver);
+
+        return new StreamObserver<>() {
+            @Override
+            public void onNext(TelemetryCommand command) {
+                RequestContext context = RequestContext.create();
+                ActivityHelper<TelemetryCommand, TelemetryCommand> helper = getTelemetryHelper(
+                    context,
+                    command,
+                    responseObserver,
+                    statusToResponse
+                );
+
+                try {
+                    Runnable task = () -> response.onNext(context, command);
+                    ClientActivity.this.executor.submit(helper.createTask(task));
+                } catch (Throwable t) {
+                    helper.writeResponse(null, t);
+                }
+
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                response.onError(throwable);
+            }
+
+            @Override
+            public void onCompleted() {
+                response.onCompleted();
+            }
+        };
+    }
+
+    private ContextStreamObserver<TelemetryCommand> telemetryAsync(StreamObserver<TelemetryCommand> responseObserver) {
+        return telemetryService.telemetry(responseObserver);
+    }
+
+    private Function<Status, TelemetryCommand> telemetryStatueToResponse() {
+        return status -> TelemetryCommand.newBuilder()
+            .setStatus(status)
+            .build();
+    }
+
+    private ActivityHelper<TelemetryCommand, TelemetryCommand> getTelemetryHelper(
+        RequestContext context,
+        TelemetryCommand request,
+        StreamObserver<TelemetryCommand> responseObserver,
+        Function<Status, TelemetryCommand> statusToResponse
+    ) {
+        return new ActivityHelper<>(
+            context,
+            request,
+            responseObserver,
+            statusToResponse
+        );
+    }
+
     private CompletableFuture<NotifyClientTerminationResponse> terminateAsync(RequestContext context, NotifyClientTerminationRequest request) {
         return CompletableFuture.completedFuture(null);
     }
+
 
     private ActivityHelper<NotifyClientTerminationRequest, NotifyClientTerminationResponse> getTerminateHelper(
         RequestContext context,
