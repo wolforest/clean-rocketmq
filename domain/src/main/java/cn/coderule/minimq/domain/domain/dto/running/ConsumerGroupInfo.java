@@ -145,6 +145,32 @@ public class ConsumerGroupInfo {
         return prev == null;
     }
 
+    public boolean updateSubscription(SubscriptionData sub, boolean updated) {
+        SubscriptionData old = this.subscriptionTable.get(sub.getTopic());
+
+        if (old == null) {
+            SubscriptionData prev = this.subscriptionTable.putIfAbsent(sub.getTopic(), sub);
+            if (null == prev) {
+                updated = true;
+                log.info("subscription changed, add new topic, group: {} {}",
+                    this.groupName, sub);
+            }
+
+            return updated;
+        }
+
+        if (sub.getSubVersion() > old.getSubVersion()) {
+            if (this.consumeType == ConsumeType.CONSUME_PASSIVELY) {
+                log.info("subscription changed, group: {} OLD: {} NEW: {}",
+                    this.groupName, old, sub);
+            }
+
+            this.subscriptionTable.put(sub.getTopic(), sub);
+        }
+
+        return updated;
+    }
+
     /**
      * Update subscription.
      *
@@ -155,22 +181,7 @@ public class ConsumerGroupInfo {
         boolean updated = false;
         Set<String> topicSet = new HashSet<>();
         for (SubscriptionData sub : subList) {
-            SubscriptionData old = this.subscriptionTable.get(sub.getTopic());
-            if (old == null) {
-                SubscriptionData prev = this.subscriptionTable.putIfAbsent(sub.getTopic(), sub);
-                if (null == prev) {
-                    updated = true;
-                    log.info("subscription changed, add new topic, group: {} {}",
-                        this.groupName, sub);
-                }
-            } else if (sub.getSubVersion() > old.getSubVersion()) {
-                if (this.consumeType == ConsumeType.CONSUME_PASSIVELY) {
-                    log.info("subscription changed, group: {} OLD: {} NEW: {}",
-                        this.groupName, old, sub);
-                }
-
-                this.subscriptionTable.put(sub.getTopic(), sub);
-            }
+            updated = updateSubscription(sub, updated);
             // Add all new topics to the HashSet
             topicSet.add(sub.getTopic());
         }
