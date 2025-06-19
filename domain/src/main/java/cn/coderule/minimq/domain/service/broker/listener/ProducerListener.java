@@ -11,4 +11,8 @@ import cn.coderule.minimq.domain.domain.model.cluster.ClientChannelInfo;
 public interface ProducerListener {
 
     void handle(ProducerEvent event, String group, ClientChannelInfo clientChannelInfo);
+
+    default void shutdown() {
+        // resource release operations ...
+    }
 }

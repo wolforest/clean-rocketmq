@@ -7,12 +7,19 @@ import apache.rocketmq.v2.NotifyClientTerminationRequest;
 import apache.rocketmq.v2.NotifyClientTerminationResponse;
 import apache.rocketmq.v2.Status;
 import apache.rocketmq.v2.TelemetryCommand;
+import cn.coderule.minimq.broker.api.ConsumerController;
+import cn.coderule.minimq.broker.server.grpc.service.channel.ChannelManager;
+import cn.coderule.minimq.broker.server.grpc.service.channel.SettingManager;
 import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
 import io.grpc.stub.StreamObserver;
 import java.util.concurrent.ThreadPoolExecutor;
 
 public class ClientActivity {
     private final ThreadPoolExecutor executor;
+
+    private ChannelManager channelManager;
+    private SettingManager settingManager;
+    private ConsumerController consumerController;
 
     public ClientActivity(ThreadPoolExecutor executor) {
         this.executor = executor;

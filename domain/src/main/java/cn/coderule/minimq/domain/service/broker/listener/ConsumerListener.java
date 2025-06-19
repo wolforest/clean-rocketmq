@@ -6,5 +6,7 @@ public interface ConsumerListener {
 
     void handle(ConsumerEvent event, String group, Object... args);
 
-    void shutdown();
+    default void shutdown() {
+        // resource release operations ...
+    }
 }
