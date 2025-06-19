@@ -47,6 +47,49 @@ public class ClientActivity {
         }
     }
 
+
+
+    public StreamObserver<TelemetryCommand> telemetry(StreamObserver<TelemetryCommand> responseObserver) {
+        return responseObserver;
+    }
+
+    public void notifyClientTermination(RequestContext context, NotifyClientTerminationRequest request, StreamObserver<NotifyClientTerminationResponse> responseObserver) {
+        ActivityHelper<NotifyClientTerminationRequest, NotifyClientTerminationResponse> helper = getTerminateHelper(context, request, responseObserver);
+        try {
+            Runnable task = () -> terminateAsync(context, request)
+                .whenComplete(helper::writeResponse);
+
+            this.executor.submit(helper.createTask(task));
+        } catch (Throwable t) {
+            helper.writeResponse(null, t);
+        }
+    }
+
+    private CompletableFuture<NotifyClientTerminationResponse> terminateAsync(RequestContext context, NotifyClientTerminationRequest request) {
+        return CompletableFuture.completedFuture(null);
+    }
+
+    private ActivityHelper<NotifyClientTerminationRequest, NotifyClientTerminationResponse> getTerminateHelper(
+        RequestContext context,
+        NotifyClientTerminationRequest request,
+        StreamObserver<NotifyClientTerminationResponse> responseObserver
+    ) {
+        Function<Status, NotifyClientTerminationResponse> statusToResponse = terminateStatueToResponse();
+        return new ActivityHelper<>(
+            context,
+            request,
+            responseObserver,
+            statusToResponse
+        );
+    }
+
+    private Function<Status, NotifyClientTerminationResponse> terminateStatueToResponse() {
+        return status -> NotifyClientTerminationResponse.newBuilder()
+            .setStatus(status)
+            .build();
+    }
+
+
     private CompletableFuture<HeartbeatResponse> heartbeatAsync(RequestContext context, HeartbeatRequest request) {
         return heartbeatService.heartbeat(context, request);
     }
@@ -69,24 +112,5 @@ public class ClientActivity {
         return status -> HeartbeatResponse.newBuilder()
             .setStatus(status)
             .build();
-    }
-
-
-
-    public StreamObserver<TelemetryCommand> telemetry(StreamObserver<TelemetryCommand> responseObserver) {
-        return responseObserver;
-    }
-
-    public void notifyClientTermination(RequestContext context, NotifyClientTerminationRequest request, StreamObserver<NotifyClientTerminationResponse> responseObserver) {
-        Status status = Status.newBuilder()
-            .setCode(Code.OK)
-            .setMessage(Code.OK.name())
-            .build();
-        NotifyClientTerminationResponse response = NotifyClientTerminationResponse.newBuilder()
-            .setStatus(status)
-            .build();
-
-        responseObserver.onNext(response);
-        responseObserver.onCompleted();
     }
 }
