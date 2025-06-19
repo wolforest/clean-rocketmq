@@ -177,7 +177,7 @@ public class MessageService extends MessagingServiceGrpc.MessagingServiceImplBas
 
     @Override
     public StreamObserver<TelemetryCommand> telemetry(StreamObserver<TelemetryCommand> responseObserver) {
-        return clientActivity.telemetry(responseObserver);
+        return clientActivity.telemetry(responseObserver, pipeline);
     }
 
     private <T> void executePipeline(RequestContext context, T request) {

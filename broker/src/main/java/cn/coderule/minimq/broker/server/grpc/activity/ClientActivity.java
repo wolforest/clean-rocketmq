@@ -1,14 +1,9 @@
 package cn.coderule.minimq.broker.server.grpc.activity;
 
-import apache.rocketmq.v2.Code;
 import apache.rocketmq.v2.HeartbeatRequest;
 import apache.rocketmq.v2.HeartbeatResponse;
 import apache.rocketmq.v2.NotifyClientTerminationRequest;
 import apache.rocketmq.v2.NotifyClientTerminationResponse;
-import apache.rocketmq.v2.QueryAssignmentRequest;
-import apache.rocketmq.v2.QueryAssignmentResponse;
-import apache.rocketmq.v2.QueryRouteRequest;
-import apache.rocketmq.v2.QueryRouteResponse;
 import apache.rocketmq.v2.Status;
 import apache.rocketmq.v2.TelemetryCommand;
 import cn.coderule.minimq.broker.api.ConsumerController;
@@ -18,12 +13,18 @@ import cn.coderule.minimq.broker.server.grpc.service.channel.SettingManager;
 import cn.coderule.minimq.broker.server.grpc.service.channel.TelemetryService;
 import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
 import cn.coderule.minimq.rpc.broker.grpc.ContextStreamObserver;
+import cn.coderule.minimq.rpc.common.grpc.RequestPipeline;
 import cn.coderule.minimq.rpc.common.grpc.activity.ActivityHelper;
+import cn.coderule.minimq.rpc.common.grpc.core.constants.GrpcConstants;
+import com.google.protobuf.GeneratedMessage;
+import io.grpc.Context;
 import io.grpc.stub.StreamObserver;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.function.Function;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class ClientActivity {
     private final ThreadPoolExecutor executor;
 
@@ -63,7 +64,7 @@ public class ClientActivity {
         }
     }
 
-    public StreamObserver<TelemetryCommand> telemetry(StreamObserver<TelemetryCommand> responseObserver) {
+    public StreamObserver<TelemetryCommand> telemetry(StreamObserver<TelemetryCommand> responseObserver, RequestPipeline pipeline) {
         Function<Status, TelemetryCommand> statusToResponse = telemetryStatueToResponse();
         ContextStreamObserver<TelemetryCommand> response = telemetryAsync(responseObserver);
 
@@ -71,6 +72,8 @@ public class ClientActivity {
             @Override
             public void onNext(TelemetryCommand command) {
                 RequestContext context = RequestContext.create();
+                executePipeline(context, pipeline, command);
+
                 ActivityHelper<TelemetryCommand, TelemetryCommand> helper = getTelemetryHelper(
                     context,
                     command,
@@ -78,13 +81,8 @@ public class ClientActivity {
                     statusToResponse
                 );
 
-                try {
-                    Runnable task = () -> response.onNext(context, command);
-                    ClientActivity.this.executor.submit(helper.createTask(task));
-                } catch (Throwable t) {
-                    helper.writeResponse(null, t);
-                }
 
+                execute(context, command, helper);
             }
 
             @Override
@@ -95,6 +93,24 @@ public class ClientActivity {
             @Override
             public void onCompleted() {
                 response.onCompleted();
+            }
+
+            private void execute(RequestContext context, TelemetryCommand command, ActivityHelper<TelemetryCommand, TelemetryCommand> helper) {
+                try {
+                    Runnable task = () -> response.onNext(context, command);
+                    ClientActivity.this.executor.submit(helper.createTask(task));
+                } catch (Throwable t) {
+                    helper.writeResponse(null, t);
+                }
+            }
+
+            private void executePipeline(RequestContext context, RequestPipeline pipeline, TelemetryCommand request) {
+                if (request != null) {
+                    pipeline.execute(context, GrpcConstants.METADATA.get(Context.current()), request);
+                    return;
+                }
+
+                log.error("[BUG] grpc request pipeline is not executed.");
             }
         };
     }
@@ -126,7 +142,6 @@ public class ClientActivity {
     private CompletableFuture<NotifyClientTerminationResponse> terminateAsync(RequestContext context, NotifyClientTerminationRequest request) {
         return CompletableFuture.completedFuture(null);
     }
-
 
     private ActivityHelper<NotifyClientTerminationRequest, NotifyClientTerminationResponse> getTerminateHelper(
         RequestContext context,
