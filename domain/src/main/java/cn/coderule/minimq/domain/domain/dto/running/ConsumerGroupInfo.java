@@ -123,54 +123,6 @@ public class ConsumerGroupInfo {
         return this.updateChannel(infoNew);
     }
 
-    private boolean updateConflictChannel(ClientChannelInfo infoOld, ClientChannelInfo infoNew) {
-        log.error("ConsumerGroupInfo: clientId conflict: group={}, old clientChannelInfo={}, new clientChannelInfo={}",
-            groupName, infoOld, infoNew);
-
-        this.channelInfoTable.put(infoNew.getChannel(), infoNew);
-        infoOld.setLastUpdateTime(this.lastUpdateTimestamp);
-
-        return false;
-    }
-
-    private boolean updateChannel(ClientChannelInfo infoNew) {
-        ClientChannelInfo prev = this.channelInfoTable.put(infoNew.getChannel(), infoNew);
-        if (null == prev) {
-            log.info("new consumer connected, group: {} {} {} channel: {}",
-                this.groupName, consumeType, this.messageModel, infoNew);
-        }
-
-        infoNew.setLastUpdateTime(this.lastUpdateTimestamp);
-
-        return prev == null;
-    }
-
-    public boolean updateSubscription(SubscriptionData sub, boolean updated) {
-        SubscriptionData old = this.subscriptionTable.get(sub.getTopic());
-
-        if (old == null) {
-            SubscriptionData prev = this.subscriptionTable.putIfAbsent(sub.getTopic(), sub);
-            if (null == prev) {
-                updated = true;
-                log.info("subscription changed, add new topic, group: {} {}",
-                    this.groupName, sub);
-            }
-
-            return updated;
-        }
-
-        if (sub.getSubVersion() > old.getSubVersion()) {
-            if (this.consumeType == ConsumeType.CONSUME_PASSIVELY) {
-                log.info("subscription changed, group: {} OLD: {} NEW: {}",
-                    this.groupName, old, sub);
-            }
-
-            this.subscriptionTable.put(sub.getTopic(), sub);
-        }
-
-        return updated;
-    }
-
     /**
      * Update subscription.
      *
@@ -186,21 +138,7 @@ public class ConsumerGroupInfo {
             topicSet.add(sub.getTopic());
         }
 
-        Iterator<Entry<String, SubscriptionData>> it = this.subscriptionTable.entrySet().iterator();
-        while (it.hasNext()) {
-            Entry<String, SubscriptionData> next = it.next();
-            String oldTopic = next.getKey();
-            // Check HashSet with O(1) time complexity
-            if (topicSet.contains(oldTopic)) {
-                continue;
-            }
-
-            log.warn("subscription changed, group: {} remove topic {} {}", this.groupName, oldTopic, next.getValue().toString());
-
-            it.remove();
-            updated = true;
-        }
-
+        updated = updateSubscription(topicSet, updated);
         this.lastUpdateTimestamp = System.currentTimeMillis();
 
         return updated;
@@ -249,4 +187,73 @@ public class ConsumerGroupInfo {
     public void setConsumeFromWhere(ConsumeStrategy consumeFromWhere) {
         this.consumeFromWhere = consumeFromWhere;
     }
+
+    private boolean updateConflictChannel(ClientChannelInfo infoOld, ClientChannelInfo infoNew) {
+        log.error("ConsumerGroupInfo: clientId conflict: group={}, old clientChannelInfo={}, new clientChannelInfo={}",
+            groupName, infoOld, infoNew);
+
+        this.channelInfoTable.put(infoNew.getChannel(), infoNew);
+        infoOld.setLastUpdateTime(this.lastUpdateTimestamp);
+
+        return false;
+    }
+
+    private boolean updateChannel(ClientChannelInfo infoNew) {
+        ClientChannelInfo prev = this.channelInfoTable.put(infoNew.getChannel(), infoNew);
+        if (null == prev) {
+            log.info("new consumer connected, group: {} {} {} channel: {}",
+                this.groupName, consumeType, this.messageModel, infoNew);
+        }
+
+        infoNew.setLastUpdateTime(this.lastUpdateTimestamp);
+
+        return prev == null;
+    }
+
+    private boolean updateSubscription(SubscriptionData sub, boolean updated) {
+        SubscriptionData old = this.subscriptionTable.get(sub.getTopic());
+
+        if (old == null) {
+            SubscriptionData prev = this.subscriptionTable.putIfAbsent(sub.getTopic(), sub);
+            if (null == prev) {
+                updated = true;
+                log.info("subscription changed, add new topic, group: {} {}",
+                    this.groupName, sub);
+            }
+
+            return updated;
+        }
+
+        if (sub.getSubVersion() > old.getSubVersion()) {
+            if (this.consumeType == ConsumeType.CONSUME_PASSIVELY) {
+                log.info("subscription changed, group: {} OLD: {} NEW: {}",
+                    this.groupName, old, sub);
+            }
+
+            this.subscriptionTable.put(sub.getTopic(), sub);
+        }
+
+        return updated;
+    }
+
+    private boolean updateSubscription(Set<String> topicSet, boolean updated) {
+        Iterator<Entry<String, SubscriptionData>> it = this.subscriptionTable.entrySet().iterator();
+        while (it.hasNext()) {
+            Entry<String, SubscriptionData> next = it.next();
+            String oldTopic = next.getKey();
+            // Check HashSet with O(1) time complexity
+            if (topicSet.contains(oldTopic)) {
+                continue;
+            }
+
+            log.warn("subscription changed, group: {} remove topic {} {}",
+                this.groupName, oldTopic, next.getValue().toString());
+
+            it.remove();
+            updated = true;
+        }
+
+        return updated;
+    }
+
 }
