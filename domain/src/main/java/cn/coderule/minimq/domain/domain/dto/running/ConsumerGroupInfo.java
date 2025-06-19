@@ -92,9 +92,8 @@ public class ConsumerGroupInfo {
     public ClientChannelInfo doChannelCloseEvent(final String remoteAddr, final Channel channel) {
         final ClientChannelInfo info = this.channelInfoTable.remove(channel);
         if (info != null) {
-            log.warn(
-                "NETTY EVENT: remove not active channel[{}] from ConsumerGroupInfo groupChannelTable, consumer group: {}",
-                info.toString(), groupName);
+            log.warn("NETTY EVENT: remove idle channel[{}] from ConsumerGroupInfo, consumerGroup: {}",
+                info, groupName);
         }
 
         return info;
@@ -105,41 +104,45 @@ public class ConsumerGroupInfo {
      *
      * @param infoNew Channel info of new client.
      * @param consumeType consume type of new client.
-     * @param messageModel message consuming model (CLUSTERING/BROADCASTING) of new client.
-     * @param consumeFromWhere indicate the position when the client consume message firstly.
+     * @param model message consuming model (CLUSTERING/BROADCASTING) of new client.
+     * @param strategy indicate the position when the client consume message firstly.
      * @return the result that if new connector is connected or not.
      */
-    public boolean updateChannel(final ClientChannelInfo infoNew, ConsumeType consumeType,
-        MessageModel messageModel, ConsumeStrategy consumeFromWhere) {
-        boolean updated = false;
+    public boolean updateChannel(ClientChannelInfo infoNew, ConsumeType consumeType,
+        MessageModel model, ConsumeStrategy strategy) {
         this.consumeType = consumeType;
-        this.messageModel = messageModel;
-        this.consumeFromWhere = consumeFromWhere;
-
-        ClientChannelInfo infoOld = this.channelInfoTable.get(infoNew.getChannel());
-        if (null == infoOld) {
-            ClientChannelInfo prev = this.channelInfoTable.put(infoNew.getChannel(), infoNew);
-            if (null == prev) {
-                log.info("new consumer connected, group: {} {} {} channel: {}", this.groupName, consumeType,
-                    messageModel, infoNew.toString());
-                updated = true;
-            }
-
-            infoOld = infoNew;
-        } else {
-            if (!infoOld.getClientId().equals(infoNew.getClientId())) {
-                log.error(
-                    "ConsumerGroupInfo: consumer channel exists in broker, but clientId is not the same one, "
-                        + "group={}, old clientChannelInfo={}, new clientChannelInfo={}", groupName, infoOld.toString(),
-                    infoNew.toString());
-                this.channelInfoTable.put(infoNew.getChannel(), infoNew);
-            }
-        }
+        this.messageModel = model;
+        this.consumeFromWhere = strategy;
 
         this.lastUpdateTimestamp = System.currentTimeMillis();
+        ClientChannelInfo infoOld = this.channelInfoTable.get(infoNew.getChannel());
+        if (null != infoOld && !infoOld.getClientId().equals(infoNew.getClientId())) {
+            return updateConflictChannel(infoOld, infoNew);
+        }
+
+        return this.updateChannel(infoNew);
+    }
+
+    private boolean updateConflictChannel(ClientChannelInfo infoOld, ClientChannelInfo infoNew) {
+        log.error("ConsumerGroupInfo: clientId conflict: group={}, old clientChannelInfo={}, new clientChannelInfo={}",
+            groupName, infoOld, infoNew);
+
+        this.channelInfoTable.put(infoNew.getChannel(), infoNew);
         infoOld.setLastUpdateTime(this.lastUpdateTimestamp);
 
-        return updated;
+        return false;
+    }
+
+    private boolean updateChannel(ClientChannelInfo infoNew) {
+        ClientChannelInfo prev = this.channelInfoTable.put(infoNew.getChannel(), infoNew);
+        if (null == prev) {
+            log.info("new consumer connected, group: {} {} {} channel: {}",
+                this.groupName, consumeType, this.messageModel, infoNew);
+        }
+
+        infoNew.setLastUpdateTime(this.lastUpdateTimestamp);
+
+        return prev == null;
     }
 
     /**
@@ -158,16 +161,12 @@ public class ConsumerGroupInfo {
                 if (null == prev) {
                     updated = true;
                     log.info("subscription changed, add new topic, group: {} {}",
-                        this.groupName,
-                        sub.toString());
+                        this.groupName, sub);
                 }
             } else if (sub.getSubVersion() > old.getSubVersion()) {
                 if (this.consumeType == ConsumeType.CONSUME_PASSIVELY) {
                     log.info("subscription changed, group: {} OLD: {} NEW: {}",
-                        this.groupName,
-                        old.toString(),
-                        sub.toString()
-                    );
+                        this.groupName, old, sub);
                 }
 
                 this.subscriptionTable.put(sub.getTopic(), sub);
