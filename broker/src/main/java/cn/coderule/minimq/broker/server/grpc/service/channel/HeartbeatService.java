@@ -3,8 +3,10 @@ package cn.coderule.minimq.broker.server.grpc.service.channel;
 import apache.rocketmq.v2.Code;
 import apache.rocketmq.v2.HeartbeatRequest;
 import apache.rocketmq.v2.HeartbeatResponse;
+import apache.rocketmq.v2.Resource;
 import apache.rocketmq.v2.Settings;
 import apache.rocketmq.v2.Status;
+import cn.coderule.minimq.domain.domain.enums.code.LanguageCode;
 import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
 import cn.coderule.minimq.rpc.common.grpc.response.ResponseBuilder;
 import java.util.concurrent.CompletableFuture;
@@ -38,35 +40,48 @@ public class HeartbeatService {
         HeartbeatRequest request,
         Settings settings
     ) {
-        return switch (request.getClientType()) {
+        switch (request.getClientType()) {
             case PRODUCER -> registerProducer(context, request, settings);
             case SIMPLE_CONSUMER, PUSH_CONSUMER -> registerConsumer(context, request, settings);
             default -> notSupported(settings);
         };
+
+        return success();
     }
 
-    private CompletableFuture<HeartbeatResponse> registerProducer(
-        RequestContext context,
-        HeartbeatRequest request,
-        Settings settings
-    ) {
-
-        return null;
+    private void registerProducer(RequestContext context, HeartbeatRequest request, Settings settings) {
+        for (Resource topic : settings.getPublishing().getTopicsList()) {
+            String topicName = topic.getName();
+            registerProducer(context, topicName);
+        }
     }
 
-    private CompletableFuture<HeartbeatResponse> registerConsumer(
-        RequestContext context,
-        HeartbeatRequest request,
-        Settings settings
-    ) {
+    private void registerProducer(RequestContext context, String topicName) {
+        String clientId = context.getClientID();
+        LanguageCode languageCode = LanguageCode.valueOf(context.getLanguage());
+    }
 
-        return null;
+    private void registerConsumer(RequestContext context, HeartbeatRequest request, Settings settings) {
+
     }
 
     private CompletableFuture<HeartbeatResponse> notSupported(Settings settings) {
         CompletableFuture<HeartbeatResponse> future = new CompletableFuture<>();
         Status status = ResponseBuilder.getInstance()
             .buildStatus(Code.UNRECOGNIZED_CLIENT_TYPE, settings.getClientType().name());
+
+        HeartbeatResponse response = HeartbeatResponse.newBuilder()
+            .setStatus(status)
+            .build();
+        future.complete(response);
+
+        return future;
+    }
+
+    private CompletableFuture<HeartbeatResponse> success() {
+        CompletableFuture<HeartbeatResponse> future = new CompletableFuture<>();
+        Status status = ResponseBuilder.getInstance()
+            .buildStatus(Code.OK, Code.OK.name());
 
         HeartbeatResponse response = HeartbeatResponse.newBuilder()
             .setStatus(status)

@@ -4,6 +4,7 @@ import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.lang.concurrent.thread.DefaultThreadFactory;
 import cn.coderule.common.util.lang.ThreadUtil;
 import cn.coderule.minimq.domain.config.GrpcConfig;
+import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
 import cn.coderule.minimq.rpc.broker.grpc.GrpcChannel;
 import cn.coderule.minimq.rpc.broker.grpc.ResultFuture;
 import cn.coderule.minimq.rpc.common.core.relay.RelayService;
@@ -62,6 +63,13 @@ public class ChannelManager implements Lifecycle {
     @Override
     public void shutdown() {
         this.scheduler.shutdown();
+    }
+
+    public GrpcChannel createChannel(RequestContext context, String clientId) {
+        return this.channelMap.computeIfAbsent(
+            clientId,
+            k -> new GrpcChannel(context, clientId)
+        );
     }
 
     public GrpcChannel getChannel(String clientId) {
