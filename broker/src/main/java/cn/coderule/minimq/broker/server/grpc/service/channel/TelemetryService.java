@@ -37,6 +37,22 @@ public class TelemetryService {
     }
 
     private void process(RequestContext ctx, TelemetryCommand command, StreamObserver<TelemetryCommand> responseObserver) {
+        switch (command.getCommandCase()) {
+            case SETTINGS -> processSettings(ctx, command, responseObserver);
+            case THREAD_STACK_TRACE -> processTrace(ctx, command, responseObserver);
+            case VERIFY_MESSAGE_RESULT -> processVerify(ctx, command, responseObserver);
+        }
+    }
+
+    private void processSettings(RequestContext ctx, TelemetryCommand command, StreamObserver<TelemetryCommand> responseObserver) {
+
+    }
+
+    private void processTrace(RequestContext ctx, TelemetryCommand command, StreamObserver<TelemetryCommand> responseObserver) {
+
+    }
+
+    private void processVerify(RequestContext ctx, TelemetryCommand command, StreamObserver<TelemetryCommand> responseObserver) {
 
     }
 
