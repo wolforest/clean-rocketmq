@@ -9,9 +9,13 @@ import apache.rocketmq.v2.Settings;
 import apache.rocketmq.v2.Status;
 import cn.coderule.minimq.broker.api.ConsumerController;
 import cn.coderule.minimq.broker.api.ProducerController;
+import cn.coderule.minimq.domain.domain.constant.MQVersion;
+import cn.coderule.minimq.domain.domain.enums.code.LanguageCode;
+import cn.coderule.minimq.domain.domain.model.cluster.ClientChannelInfo;
 import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
 import cn.coderule.minimq.rpc.common.grpc.response.ResponseBuilder;
 import java.util.concurrent.CompletableFuture;
+import org.apache.commons.lang3.StringUtils;
 
 public class TerminationService {
 
@@ -72,6 +76,36 @@ public class TerminationService {
         Settings settings
     ) {
 
+    }
+
+    private int parseClientVersion(String clientVersionStr) {
+        int clientVersion = MQVersion.CURRENT_VERSION;
+        if (StringUtils.isEmpty(clientVersionStr)) {
+            return clientVersion;
+        }
+
+        try {
+            String tmp = StringUtils.upperCase(clientVersionStr);
+            clientVersion = MQVersion.Version.valueOf(tmp).ordinal();
+        } catch (Exception ignored) {
+        }
+
+        return clientVersion;
+    }
+
+    private ClientChannelInfo createChannelInfo(RequestContext context) {
+        String clientId = context.getClientID();
+        LanguageCode languageCode = LanguageCode.valueOf(context.getLanguage());
+        GrpcChannel channel = channelManager.createChannel(context, clientId);
+        int version = parseClientVersion(context.getClientVersion());
+
+        return ClientChannelInfo.builder()
+            .clientId(clientId)
+            .channel(channel)
+            .language(languageCode)
+            .version(version)
+            .lastUpdateTime(System.currentTimeMillis())
+            .build();
     }
 
     private void notSupported(Settings settings) {
