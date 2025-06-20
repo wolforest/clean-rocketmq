@@ -19,11 +19,11 @@ public class ConsumerController {
         this.consumer = consumer;
     }
 
-    public boolean register(ConsumerInfo consumerInfo) {
+    public boolean register(RequestContext context, ConsumerInfo consumerInfo) {
         return consumer.register(consumerInfo);
     }
 
-    public void unregister(ConsumerInfo consumerInfo) {
+    public void unregister(RequestContext context, ConsumerInfo consumerInfo) {
         consumer.unregister(consumerInfo);
     }
 

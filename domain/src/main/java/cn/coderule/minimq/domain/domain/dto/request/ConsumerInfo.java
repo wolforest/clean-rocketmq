@@ -27,7 +27,8 @@ public class ConsumerInfo implements Serializable {
     @Builder.Default
     private Set<SubscriptionData> subscriptionSet = new TreeSet<>();
     private ClientChannelInfo channelInfo;
-    private boolean enableNotification;
+    @Builder.Default
+    private boolean enableNotification = false;
     @Builder.Default
     private boolean enableSubscriptionModification = false;
 

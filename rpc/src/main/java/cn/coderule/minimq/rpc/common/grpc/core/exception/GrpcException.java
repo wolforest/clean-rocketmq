@@ -14,7 +14,11 @@ public class GrpcException extends BusinessException {
     }
 
     public GrpcException(InvalidCode code, String message) {
-        super(500, message);
+        this(code, message, null);
+    }
+
+    public GrpcException(InvalidCode code, String message, Throwable t) {
+        super(500, message, t);
         this.invalidCode = code;
     }
 }
