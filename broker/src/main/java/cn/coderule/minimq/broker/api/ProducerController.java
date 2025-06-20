@@ -5,11 +5,13 @@ import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.minimq.broker.api.validator.MessageValidator;
 import cn.coderule.minimq.broker.api.validator.ServerValidator;
 import cn.coderule.minimq.broker.domain.producer.Producer;
+import cn.coderule.minimq.broker.domain.producer.ProducerRegister;
 import cn.coderule.minimq.domain.config.BrokerConfig;
 import cn.coderule.minimq.domain.config.MessageConfig;
 import cn.coderule.minimq.domain.domain.constant.MessageConst;
 import cn.coderule.minimq.domain.domain.enums.code.InvalidCode;
 import cn.coderule.minimq.domain.domain.exception.InvalidParameterException;
+import cn.coderule.minimq.domain.domain.model.cluster.ClientChannelInfo;
 import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
 import cn.coderule.minimq.domain.domain.model.message.MessageBO;
 import cn.coderule.minimq.domain.domain.dto.EnqueueResult;
@@ -36,6 +38,14 @@ public class ProducerController {
 
         this.serverValidator = new ServerValidator(brokerConfig);
         this.messageValidator = new MessageValidator(messageConfig);
+    }
+
+    public void register(RequestContext context, String groupName, ClientChannelInfo channelInfo) {
+        producer.register(context, groupName, channelInfo);
+    }
+
+    public void unregister(RequestContext context, String groupName, ClientChannelInfo channelInfo) {
+        producer.unregister(context, groupName, channelInfo);
     }
 
     public CompletableFuture<EnqueueResult> produce(RequestContext context, MessageBO messageBO) {

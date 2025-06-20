@@ -1,5 +1,6 @@
 package cn.coderule.minimq.broker.domain.producer;
 
+import cn.coderule.minimq.domain.domain.model.cluster.ClientChannelInfo;
 import cn.coderule.minimq.domain.domain.model.producer.ProducerInfo;
 import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
 import cn.coderule.minimq.domain.domain.model.message.MessageBO;
@@ -15,16 +16,18 @@ import lombok.extern.slf4j.Slf4j;
 public class Producer {
     private final MessageSender messageSender;
 
+    private ProducerRegister producerRegister;
+
     public Producer(MessageSender messageSender) {
         this.messageSender = messageSender;
     }
 
-    public boolean register(ProducerInfo producerInfo) {
-        return true;
+    public void register(RequestContext context, String groupName, ClientChannelInfo channelInfo) {
+        producerRegister.register(groupName, channelInfo);
     }
 
-    public boolean unregister(ProducerInfo producerInfo) {
-        return true;
+    public void unregister(RequestContext context, String groupName, ClientChannelInfo channelInfo) {
+        producerRegister.unregister(groupName, channelInfo);
     }
 
     public CompletableFuture<EnqueueResult> produce(RequestContext context, MessageBO messageBO) {

@@ -6,6 +6,8 @@ import apache.rocketmq.v2.HeartbeatResponse;
 import apache.rocketmq.v2.Resource;
 import apache.rocketmq.v2.Settings;
 import apache.rocketmq.v2.Status;
+import cn.coderule.minimq.broker.api.ConsumerController;
+import cn.coderule.minimq.broker.api.ProducerController;
 import cn.coderule.minimq.domain.domain.constant.MQVersion;
 import cn.coderule.minimq.domain.domain.enums.code.LanguageCode;
 import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
@@ -19,6 +21,9 @@ import org.apache.commons.lang3.StringUtils;
 public class HeartbeatService {
     private final SettingManager settingManager;
     private final ChannelManager channelManager;
+
+    private ProducerController producerController;
+    private ConsumerController consumerController;
 
     public HeartbeatService(SettingManager settingManager, ChannelManager channelManager) {
         this.settingManager = settingManager;
