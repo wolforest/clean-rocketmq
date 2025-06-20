@@ -67,7 +67,13 @@ public class ChannelManager implements Lifecycle {
     public GrpcChannel createChannel(RequestContext context, String clientId) {
         return this.channelMap.computeIfAbsent(
             clientId,
-            k -> new GrpcChannel(context, clientId)
+            k -> {
+                GrpcChannel channel = new GrpcChannel(context, clientId);
+                channel.setChannelManager(this);
+                channel.setSettingManager(settingManager);
+                channel.setRelayService(relayService);
+                return channel;
+            }
         );
     }
 

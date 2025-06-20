@@ -10,7 +10,9 @@ import cn.coderule.minimq.broker.api.ConsumerController;
 import cn.coderule.minimq.broker.api.ProducerController;
 import cn.coderule.minimq.domain.domain.constant.MQVersion;
 import cn.coderule.minimq.domain.domain.enums.code.LanguageCode;
+import cn.coderule.minimq.domain.domain.model.cluster.ClientChannelInfo;
 import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
+import cn.coderule.minimq.rpc.common.core.relay.RelayService;
 import cn.coderule.minimq.rpc.common.grpc.response.ResponseBuilder;
 import java.util.concurrent.CompletableFuture;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +26,7 @@ public class HeartbeatService {
     private ProducerController producerController;
     private ConsumerController consumerController;
 
-    public HeartbeatService(SettingManager settingManager, ChannelManager channelManager) {
+    public HeartbeatService(SettingManager settingManager, ChannelManager channelManager, RelayService relayService) {
         this.settingManager = settingManager;
         this.channelManager = channelManager;
     }
@@ -68,6 +70,18 @@ public class HeartbeatService {
         LanguageCode languageCode = LanguageCode.valueOf(context.getLanguage());
         GrpcChannel channel = channelManager.createChannel(context, clientId);
         int version = parseClientVersion(context.getClientVersion());
+
+        ClientChannelInfo channelInfo = ClientChannelInfo.builder()
+            .clientId(clientId)
+            .channel(channel)
+            .language(languageCode)
+            .version(version)
+            .lastUpdateTime(System.currentTimeMillis())
+            .build();
+
+        producerController.register(context, topicName, channelInfo);
+
+        // todo: add transaction subscription
     }
 
     private void registerConsumer(RequestContext context, HeartbeatRequest request, Settings settings) {
