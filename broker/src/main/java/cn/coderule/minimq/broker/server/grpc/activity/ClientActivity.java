@@ -19,7 +19,6 @@ import cn.coderule.minimq.rpc.common.grpc.activity.ActivityHelper;
 import cn.coderule.minimq.rpc.common.grpc.core.constants.GrpcConstants;
 import io.grpc.Context;
 import io.grpc.stub.StreamObserver;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.function.Function;
 import lombok.extern.slf4j.Slf4j;
@@ -44,7 +43,7 @@ public class ClientActivity {
         ActivityHelper<HeartbeatRequest, HeartbeatResponse> helper = getHeartbeatHelper(context, request, responseObserver);
 
         try {
-            Runnable task = () -> heartbeatAsync(context, request)
+            Runnable task = () -> heartbeatService.heartbeat(context, request)
                 .whenComplete(helper::writeResponse);
 
             this.executor.submit(helper.createTask(task));
@@ -56,7 +55,7 @@ public class ClientActivity {
     public void notifyClientTermination(RequestContext context, NotifyClientTerminationRequest request, StreamObserver<NotifyClientTerminationResponse> responseObserver) {
         ActivityHelper<NotifyClientTerminationRequest, NotifyClientTerminationResponse> helper = getTerminateHelper(context, request, responseObserver);
         try {
-            Runnable task = () -> terminateAsync(context, request)
+            Runnable task = () -> terminationService.terminate(context, request)
                 .whenComplete(helper::writeResponse);
 
             this.executor.submit(helper.createTask(task));
@@ -67,7 +66,7 @@ public class ClientActivity {
 
     public StreamObserver<TelemetryCommand> telemetry(StreamObserver<TelemetryCommand> responseObserver, RequestPipeline pipeline) {
         Function<Status, TelemetryCommand> statusToResponse = telemetryStatueToResponse();
-        ContextStreamObserver<TelemetryCommand> response = telemetryAsync(responseObserver);
+        ContextStreamObserver<TelemetryCommand> response = telemetryService.telemetry(responseObserver);
 
         return new StreamObserver<>() {
             @Override
@@ -96,7 +95,11 @@ public class ClientActivity {
                 response.onCompleted();
             }
 
-            private void execute(RequestContext context, TelemetryCommand command, ActivityHelper<TelemetryCommand, TelemetryCommand> helper) {
+            private void execute(
+                RequestContext context,
+                TelemetryCommand command,
+                ActivityHelper<TelemetryCommand, TelemetryCommand> helper
+            ) {
                 try {
                     Runnable task = () -> response.onNext(context, command);
                     ClientActivity.this.executor.submit(helper.createTask(task));
@@ -114,10 +117,6 @@ public class ClientActivity {
                 log.error("[BUG] grpc request pipeline is not executed.");
             }
         };
-    }
-
-    private ContextStreamObserver<TelemetryCommand> telemetryAsync(StreamObserver<TelemetryCommand> responseObserver) {
-        return telemetryService.telemetry(responseObserver);
     }
 
     private Function<Status, TelemetryCommand> telemetryStatueToResponse() {
@@ -140,10 +139,6 @@ public class ClientActivity {
         );
     }
 
-    private CompletableFuture<NotifyClientTerminationResponse> terminateAsync(RequestContext context, NotifyClientTerminationRequest request) {
-        return terminationService.terminate(context, request);
-    }
-
     private ActivityHelper<NotifyClientTerminationRequest, NotifyClientTerminationResponse> getTerminateHelper(
         RequestContext context,
         NotifyClientTerminationRequest request,
@@ -162,11 +157,6 @@ public class ClientActivity {
         return status -> NotifyClientTerminationResponse.newBuilder()
             .setStatus(status)
             .build();
-    }
-
-
-    private CompletableFuture<HeartbeatResponse> heartbeatAsync(RequestContext context, HeartbeatRequest request) {
-        return heartbeatService.heartbeat(context, request);
     }
 
     private ActivityHelper<HeartbeatRequest, HeartbeatResponse> getHeartbeatHelper(
