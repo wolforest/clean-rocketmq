@@ -38,6 +38,27 @@ public class HeartbeatService {
         HeartbeatRequest request,
         Settings settings
     ) {
+        return switch (request.getClientType()) {
+            case PRODUCER -> registerProducer(context, request, settings);
+            case SIMPLE_CONSUMER, PUSH_CONSUMER -> registerConsumer(context, request, settings);
+            default -> notSupported(settings);
+        };
+    }
+
+    private CompletableFuture<HeartbeatResponse> registerProducer(
+        RequestContext context,
+        HeartbeatRequest request,
+        Settings settings
+    ) {
+
+        return null;
+    }
+
+    private CompletableFuture<HeartbeatResponse> registerConsumer(
+        RequestContext context,
+        HeartbeatRequest request,
+        Settings settings
+    ) {
 
         return null;
     }
