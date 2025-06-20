@@ -1,6 +1,7 @@
 package cn.coderule.minimq.broker.server.grpc.service.channel;
 
 import apache.rocketmq.v2.Code;
+import apache.rocketmq.v2.HeartbeatRequest;
 import apache.rocketmq.v2.HeartbeatResponse;
 import apache.rocketmq.v2.NotifyClientTerminationRequest;
 import apache.rocketmq.v2.NotifyClientTerminationResponse;
@@ -31,7 +32,46 @@ public class TerminationService {
     }
 
     public CompletableFuture<NotifyClientTerminationResponse> terminate(RequestContext context, NotifyClientTerminationRequest request) {
-        return CompletableFuture.completedFuture(null);
+        try {
+            Settings settings = settingManager.getSettings(context);
+            if (settings == null) {
+                return noSettings();
+            }
+
+            return process(context, request, settings);
+        } catch (Throwable t) {
+            return processError(t);
+        }
+    }
+
+    private CompletableFuture<NotifyClientTerminationResponse> process(
+        RequestContext context,
+        NotifyClientTerminationRequest request,
+        Settings settings
+    ) {
+        switch (settings.getClientType()) {
+            case PRODUCER -> unregisterProducer(context, request, settings);
+            case SIMPLE_CONSUMER, PUSH_CONSUMER -> unregisterConsumer(context, request, settings);
+            default -> notSupported(settings);
+        };
+
+        return success();
+    }
+
+    private void unregisterProducer(
+        RequestContext context,
+        NotifyClientTerminationRequest request,
+        Settings settings
+    ) {
+
+    }
+
+    private void unregisterConsumer(
+        RequestContext context,
+        NotifyClientTerminationRequest request,
+        Settings settings
+    ) {
+
     }
 
     private void notSupported(Settings settings) {
