@@ -46,6 +46,11 @@ public class HeartbeatService {
         this.channelManager = channelManager;
     }
 
+    public void inject(ProducerController producerController, ConsumerController consumerController) {
+        this.producerController = producerController;
+        this.consumerController = consumerController;
+    }
+
     public CompletableFuture<HeartbeatResponse> heartbeat(RequestContext context, HeartbeatRequest request) {
         try {
             Settings settings = settingManager.getSettings(context);
