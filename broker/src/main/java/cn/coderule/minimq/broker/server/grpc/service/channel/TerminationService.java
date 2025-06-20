@@ -1,15 +1,15 @@
 package cn.coderule.minimq.broker.server.grpc.service.channel;
 
 import apache.rocketmq.v2.Code;
-import apache.rocketmq.v2.HeartbeatRequest;
-import apache.rocketmq.v2.HeartbeatResponse;
 import apache.rocketmq.v2.NotifyClientTerminationRequest;
 import apache.rocketmq.v2.NotifyClientTerminationResponse;
+import apache.rocketmq.v2.Resource;
 import apache.rocketmq.v2.Settings;
 import apache.rocketmq.v2.Status;
 import cn.coderule.minimq.broker.api.ConsumerController;
 import cn.coderule.minimq.broker.api.ProducerController;
 import cn.coderule.minimq.domain.domain.constant.MQVersion;
+import cn.coderule.minimq.domain.domain.dto.request.ConsumerInfo;
 import cn.coderule.minimq.domain.domain.enums.code.LanguageCode;
 import cn.coderule.minimq.domain.domain.model.cluster.ClientChannelInfo;
 import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
@@ -37,7 +37,7 @@ public class TerminationService {
 
     public CompletableFuture<NotifyClientTerminationResponse> terminate(RequestContext context, NotifyClientTerminationRequest request) {
         try {
-            Settings settings = settingManager.getSettings(context);
+            Settings settings = settingManager.removeSettings(context);
             if (settings == null) {
                 return noSettings();
             }
@@ -54,8 +54,8 @@ public class TerminationService {
         Settings settings
     ) {
         switch (settings.getClientType()) {
-            case PRODUCER -> unregisterProducer(context, request, settings);
-            case SIMPLE_CONSUMER, PUSH_CONSUMER -> unregisterConsumer(context, request, settings);
+            case PRODUCER -> unregisterProducer(context, settings);
+            case SIMPLE_CONSUMER, PUSH_CONSUMER -> unregisterConsumer(context, request);
             default -> notSupported(settings);
         };
 
@@ -64,18 +64,40 @@ public class TerminationService {
 
     private void unregisterProducer(
         RequestContext context,
-        NotifyClientTerminationRequest request,
         Settings settings
     ) {
+        for (Resource topic : settings.getPublishing().getTopicsList()) {
+            unregisterProducer(context, topic.getName());
+        }
+    }
 
+    private void unregisterProducer(
+        RequestContext context,
+        String topicName
+    ) {
+        ClientChannelInfo channelInfo = createChannelInfo(context);
+        if (channelInfo == null) {
+            return;
+        }
+
+        producerController.unregister(context, topicName, channelInfo);
     }
 
     private void unregisterConsumer(
         RequestContext context,
-        NotifyClientTerminationRequest request,
-        Settings settings
+        NotifyClientTerminationRequest request
     ) {
+        String consumerGroup = request.getGroup().getName();
+        ClientChannelInfo channelInfo = createChannelInfo(context);
+        if (channelInfo == null) {
+            return;
+        }
 
+        ConsumerInfo consumerInfo = ConsumerInfo.builder()
+            .groupName(consumerGroup)
+            .channelInfo(channelInfo)
+            .build();
+        consumerController.unregister(context, consumerInfo);
     }
 
     private int parseClientVersion(String clientVersionStr) {
@@ -96,7 +118,11 @@ public class TerminationService {
     private ClientChannelInfo createChannelInfo(RequestContext context) {
         String clientId = context.getClientID();
         LanguageCode languageCode = LanguageCode.valueOf(context.getLanguage());
-        GrpcChannel channel = channelManager.createChannel(context, clientId);
+        GrpcChannel channel = channelManager.removeChannel(clientId);
+        if (channel == null) {
+            return null;
+        }
+
         int version = parseClientVersion(context.getClientVersion());
 
         return ClientChannelInfo.builder()
