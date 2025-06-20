@@ -47,8 +47,8 @@ public class RequestContext {
         return this;
     }
 
+    @SuppressWarnings("unchecked")
     public <T> T get(String key) {
-        //@SuppressWarnings("unchecked")
         return (T) this.map.get(key);
     }
 

@@ -7,8 +7,8 @@ import cn.coderule.minimq.broker.server.grpc.service.channel.SettingManager;
 import cn.coderule.minimq.domain.domain.enums.consume.ConsumerEvent;
 import cn.coderule.minimq.domain.domain.model.cluster.ClientChannelInfo;
 import cn.coderule.minimq.domain.service.broker.listener.ConsumerListener;
-import cn.coderule.minimq.rpc.broker.grpc.GrpcChannel;
-import cn.coderule.minimq.rpc.common.core.channel.ChannelHelper;
+import cn.coderule.minimq.broker.server.grpc.service.channel.GrpcChannel;
+import cn.coderule.minimq.broker.server.core.ChannelHelper;
 import io.netty.channel.Channel;
 import lombok.extern.slf4j.Slf4j;
 

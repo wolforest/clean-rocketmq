@@ -11,7 +11,6 @@ import cn.coderule.minimq.broker.api.ProducerController;
 import cn.coderule.minimq.domain.domain.constant.MQVersion;
 import cn.coderule.minimq.domain.domain.enums.code.LanguageCode;
 import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
-import cn.coderule.minimq.rpc.broker.grpc.GrpcChannel;
 import cn.coderule.minimq.rpc.common.grpc.response.ResponseBuilder;
 import java.util.concurrent.CompletableFuture;
 import lombok.extern.slf4j.Slf4j;
@@ -68,6 +67,7 @@ public class HeartbeatService {
         String clientId = context.getClientID();
         LanguageCode languageCode = LanguageCode.valueOf(context.getLanguage());
         GrpcChannel channel = channelManager.createChannel(context, clientId);
+        int version = parseClientVersion(context.getClientVersion());
     }
 
     private void registerConsumer(RequestContext context, HeartbeatRequest request, Settings settings) {
@@ -76,7 +76,7 @@ public class HeartbeatService {
         GrpcChannel channel = channelManager.createChannel(context, clientId);
     }
 
-    private CompletableFuture<HeartbeatResponse> notSupported(Settings settings) {
+    private void notSupported(Settings settings) {
         CompletableFuture<HeartbeatResponse> future = new CompletableFuture<>();
         Status status = ResponseBuilder.getInstance()
             .buildStatus(Code.UNRECOGNIZED_CLIENT_TYPE, settings.getClientType().name());
@@ -86,7 +86,6 @@ public class HeartbeatService {
             .build();
         future.complete(response);
 
-        return future;
     }
 
     private CompletableFuture<HeartbeatResponse> success() {
