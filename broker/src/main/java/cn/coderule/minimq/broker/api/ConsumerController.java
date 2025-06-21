@@ -1,5 +1,6 @@
 package cn.coderule.minimq.broker.api;
 
+import cn.coderule.minimq.broker.api.validator.GroupValidator;
 import cn.coderule.minimq.broker.domain.consumer.consumer.Consumer;
 import cn.coderule.minimq.domain.domain.dto.request.AckRequest;
 import cn.coderule.minimq.domain.domain.dto.request.ConsumerInfo;
@@ -20,7 +21,7 @@ public class ConsumerController {
     }
 
     public boolean register(RequestContext context, ConsumerInfo consumerInfo) {
-        // todo: validate groupName
+        GroupValidator.validate(consumerInfo.getGroupName());
         return consumer.register(consumerInfo);
     }
 
