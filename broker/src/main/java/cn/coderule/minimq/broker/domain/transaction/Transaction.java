@@ -10,4 +10,8 @@ public class Transaction {
     public CompletableFuture<EnqueueResult> prepare(RequestContext context, MessageBO messageBO) {
         return null;
     }
+
+    public void subscribe(RequestContext context, String topicName, String groupName) {
+
+    }
 }
