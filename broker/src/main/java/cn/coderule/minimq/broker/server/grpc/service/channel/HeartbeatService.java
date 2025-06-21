@@ -70,15 +70,19 @@ public class HeartbeatService {
         Settings settings
     ) {
         switch (request.getClientType()) {
-            case PRODUCER -> registerProducer(context, request, settings);
-            case SIMPLE_CONSUMER, PUSH_CONSUMER -> registerConsumer(context, request, settings);
+            case PRODUCER -> registerProducer(context, settings);
+            case SIMPLE_CONSUMER, PUSH_CONSUMER -> {
+                String consumerGroup = request.getGroup().getName();
+                ClientType clientType = request.getClientType();
+                registerConsumer(context, consumerGroup, clientType, settings);
+            }
             default -> notSupported(settings);
         };
 
         return success();
     }
 
-    private void registerProducer(RequestContext context, HeartbeatRequest request, Settings settings) {
+    private void registerProducer(RequestContext context, Settings settings) {
         for (Resource topic : settings.getPublishing().getTopicsList()) {
             String topicName = topic.getName();
             registerProducer(context, topicName);
@@ -108,8 +112,7 @@ public class HeartbeatService {
             .build();
     }
 
-    private void registerConsumer(RequestContext context, HeartbeatRequest request, Settings settings) {
-        String consumerGroup = request.getGroup().getName();
+    private void registerConsumer(RequestContext context, String consumerGroup, ClientType clientType, Settings settings) {
         ClientChannelInfo channelInfo = createChannelInfo(context);
 
         Set<SubscriptionData> subscriptionDataSet = buildSubscriptionDataSet(
@@ -119,7 +122,7 @@ public class HeartbeatService {
         ConsumerInfo consumerInfo = ConsumerInfo.builder()
             .groupName(consumerGroup)
             .messageModel(MessageModel.CLUSTERING)
-            .consumeType(buildConsumeType(request.getClientType()))
+            .consumeType(buildConsumeType(clientType))
             .consumeStrategy(ConsumeStrategy.CONSUME_FROM_LAST_OFFSET)
             .channelInfo(channelInfo)
             .subscriptionSet(subscriptionDataSet)
