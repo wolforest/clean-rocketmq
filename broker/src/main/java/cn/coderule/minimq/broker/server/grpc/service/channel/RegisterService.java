@@ -86,7 +86,6 @@ public class RegisterService {
         ClientChannelInfo channelInfo = createChannelInfo(context);
 
         producerController.register(context, topicName, channelInfo);
-
         transactionSubscribe(context, topicName);
 
         return (GrpcChannel) channelInfo.getChannel();
