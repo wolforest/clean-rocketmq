@@ -41,6 +41,7 @@ public class ProducerController {
     }
 
     public void register(RequestContext context, String groupName, ClientChannelInfo channelInfo) {
+        // todo: validate topic
         producer.register(context, groupName, channelInfo);
     }
 

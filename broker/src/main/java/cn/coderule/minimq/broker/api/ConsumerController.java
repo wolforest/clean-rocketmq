@@ -20,6 +20,7 @@ public class ConsumerController {
     }
 
     public boolean register(RequestContext context, ConsumerInfo consumerInfo) {
+        // todo: validate groupName
         return consumer.register(consumerInfo);
     }
 

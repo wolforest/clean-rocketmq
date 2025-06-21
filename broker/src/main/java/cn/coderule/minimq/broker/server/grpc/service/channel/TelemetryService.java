@@ -11,6 +11,8 @@ import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
 import cn.coderule.minimq.rpc.broker.grpc.ContextStreamObserver;
 import cn.coderule.minimq.rpc.common.core.relay.RelayService;
 import cn.coderule.minimq.rpc.common.grpc.core.exception.GrpcException;
+import cn.coderule.minimq.rpc.common.grpc.response.ResponseBuilder;
+import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
 import lombok.extern.slf4j.Slf4j;
@@ -71,10 +73,41 @@ public class TelemetryService {
         }
     }
 
-    private void processSettings(RequestContext ctx, TelemetryCommand command, StreamObserver<TelemetryCommand> responseObserver) {
-        Settings settings = command.getSettings();
+    private void processSettings(RequestContext ctx, TelemetryCommand request, StreamObserver<TelemetryCommand> responseObserver) {
+        Settings settings = request.getSettings();
         GrpcChannel channel = registerClient(ctx, responseObserver, settings);
+
+        if (Settings.PubSubCase.PUBSUB_NOT_SET.equals(settings.getPubSubCase())) {
+            responseObserver.onError(createInvalidException());
+            return;
+        }
+
+        TelemetryCommand command = updateSettings(ctx, settings);
+        if (command != null) {
+            channel.writeTelemetryCommand(command);
+            return;
+        }
+
+        responseObserver.onNext(null);
     }
+
+    private StatusRuntimeException createInvalidException() {
+        return Status.INVALID_ARGUMENT
+            .withDescription("no publishing or subscription data in settings")
+            .asRuntimeException();
+    }
+
+    protected TelemetryCommand updateSettings(RequestContext ctx, Settings settings) {
+        String clientId = ctx.getClientID();
+        settingManager.updateSettings(clientId, settings);
+        Settings mergedSettings = settingManager.getSettings(ctx);
+
+        return TelemetryCommand.newBuilder()
+            .setStatus(ResponseBuilder.getInstance().buildStatus(Code.OK, Code.OK.name()))
+            .setSettings(mergedSettings)
+            .build();
+    }
+
 
     private void processTrace(RequestContext ctx, TelemetryCommand command, StreamObserver<TelemetryCommand> responseObserver) {
 
