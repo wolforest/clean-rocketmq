@@ -122,43 +122,50 @@ public class TelemetryService {
 
         apache.rocketmq.v2.Status status = request.getStatus();
         try {
-            if (status.getCode().equals(Code.VERIFY_FIFO_MESSAGE_UNSUPPORTED)) {
-                Result<ConsumerRunningInfo> result = new Result<>(
-                    ResponseCode.NO_PERMISSION,
-                    "forbidden to verify message",
-                    null
-                );
+            Result<ConsumerRunningInfo> result = systemError();
 
-                future.complete(result);
-                return;
+            if (status.getCode().equals(Code.VERIFY_FIFO_MESSAGE_UNSUPPORTED)) {
+                 result = noPermission();
             }
 
             if (status.getCode().equals(Code.OK)) {
-                ConsumerRunningInfo info = new ConsumerRunningInfo();
-                String threadStack = request.getThreadStackTrace().getThreadStackTrace();
-                info.setJstack(threadStack);
-                Result<ConsumerRunningInfo> result = new Result<>(
-                    ResponseCode.SUCCESS,
-                    "success",
-                    info
-                );
-
-                future.complete(result);
-                return;
+                result = success(request);
             }
 
-            Result<ConsumerRunningInfo> result = new Result<>(
-                ResponseCode.SYSTEM_ERROR,
-                "verify message failed",
-                null
-            );
-
             future.complete(result);
-
         } catch (Throwable t) {
             future.completeExceptionally(t);
         }
     }
+
+    private Result<ConsumerRunningInfo> success(TelemetryCommand request) {
+        ConsumerRunningInfo info = new ConsumerRunningInfo();
+        String threadStack = request.getThreadStackTrace().getThreadStackTrace();
+        info.setJstack(threadStack);
+        return new Result<>(
+            ResponseCode.SUCCESS,
+            "success",
+            info
+        );
+    }
+
+    private Result<ConsumerRunningInfo> systemError() {
+        return new Result<>(
+            ResponseCode.SYSTEM_ERROR,
+            "verify message failed",
+            null
+        );
+    }
+
+    private Result<ConsumerRunningInfo> noPermission() {
+        return new Result<>(
+            ResponseCode.NO_PERMISSION,
+            "forbidden to verify message",
+            null
+        );
+    }
+
+
 
     private void processVerify(RequestContext ctx, TelemetryCommand request, StreamObserver<TelemetryCommand> responseObserver) {
 
