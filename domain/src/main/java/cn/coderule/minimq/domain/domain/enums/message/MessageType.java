@@ -14,7 +14,8 @@ public enum MessageType {
     PREPARE("PREPARE"),
     COMMIT("COMMIT"),
     TRANSACTION("TRANSACTION"),
-    MIXED("MIXED");
+    MIXED("MIXED"),
+    UNKNOWN("UNKNOWN");
 
     private final String value;
 

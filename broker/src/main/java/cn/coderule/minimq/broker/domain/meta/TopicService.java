@@ -1,44 +1,39 @@
 package cn.coderule.minimq.broker.domain.meta;
 
+import cn.coderule.minimq.domain.domain.enums.message.MessageType;
 import cn.coderule.minimq.domain.domain.model.meta.topic.Topic;
-import cn.coderule.minimq.domain.service.store.api.TopicStore;
+import cn.coderule.minimq.domain.service.broker.infra.TopicStore;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * topic service
  *  - create/get/save topic
  *  - support local/remote mode
  */
-public class TopicService {
-    private TopicStore topicClient;
+public class TopicService implements TopicStore {
+    private final TopicStore store;
 
-    public boolean exists(String topicName) {
-        return topicClient.exists(topicName);
+    public TopicService(TopicStore store) {
+        this.store = store;
     }
 
-    public Topic getOrCreate(String topicName) {
-        Topic oldTopic = get(topicName);
-        if (null != oldTopic) {
-            return oldTopic;
+    @Override
+    public CompletableFuture<Topic> getTopicAsync(String topicName) {
+        return store.getTopicAsync(topicName);
+    }
+
+    @Override
+    public Topic getTopic(String topicName) {
+        return store.getTopic(topicName);
+    }
+
+    public MessageType getTopicType(String topicName) {
+        Topic topic = getTopic(topicName);
+        if (topic == null) {
+            return MessageType.UNKNOWN;
         }
 
-        Topic newTopic = Topic.builder()
-            .topicName(topicName)
-            .build();
-
-        save(newTopic);
-        return newTopic;
-    }
-
-    public Topic get(String topicName) {
-        return topicClient.getTopic(topicName);
-    }
-
-    public void save(Topic topicName) {
-        topicClient.saveTopic(topicName);
-    }
-
-    public void delete(String topicName) {
-        topicClient.deleteTopic(topicName);
+        return topic.getTopicType();
     }
 
 }
