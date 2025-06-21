@@ -21,6 +21,9 @@ public class BrokerConfig extends ServerIdentity implements Serializable {
     private int maxChannelFetchTimes = 3;
     private int maxChannelRetryTimes = 3;
 
+    private int scanIdleChannelsInterval = 10_000;
+    private int scanIdleChannelsDelay = 10_000;
+
     private int producerThreadNum = SystemUtil.getProcessorNumber();
     private int producerQueueCapacity = 10000;
     private int consumerThreadNum = SystemUtil.getProcessorNumber();
