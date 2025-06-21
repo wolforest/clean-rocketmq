@@ -32,6 +32,10 @@ public class Consumer  {
         register.unregister(consumerInfo);
     }
 
+    public void scanIdleChannels() {
+        register.scanIdleChannels();
+    }
+
     public ConsumerGroupInfo getGroupInfo(RequestContext context, String groupName) {
         return register.getGroupInfo(groupName);
     }

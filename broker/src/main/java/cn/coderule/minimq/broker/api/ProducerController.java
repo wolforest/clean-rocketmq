@@ -48,6 +48,10 @@ public class ProducerController {
         producer.unregister(context, groupName, channelInfo);
     }
 
+    public void scanIdleChannels() {
+        producer.scanIdleChannels();
+    }
+
     public CompletableFuture<EnqueueResult> produce(RequestContext context, MessageBO messageBO) {
         serverValidator.checkServerReady();
         prepareMessage(messageBO);

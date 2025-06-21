@@ -30,6 +30,10 @@ public class Producer {
         producerRegister.unregister(groupName, channelInfo);
     }
 
+    public void scanIdleChannels() {
+        producerRegister.scanIdleChannels();
+    }
+
     public CompletableFuture<EnqueueResult> produce(RequestContext context, MessageBO messageBO) {
         return messageSender.send(context, messageBO);
     }

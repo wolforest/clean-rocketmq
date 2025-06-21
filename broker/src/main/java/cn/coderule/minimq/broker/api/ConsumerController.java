@@ -29,6 +29,10 @@ public class ConsumerController {
         consumer.unregister(consumerInfo);
     }
 
+    public void scanIdleChannels() {
+        consumer.scanIdleChannels();
+    }
+
     public ConsumerGroupInfo getGroupInfo(RequestContext context, String groupName) {
         return consumer.getGroupInfo(context, groupName);
     }
