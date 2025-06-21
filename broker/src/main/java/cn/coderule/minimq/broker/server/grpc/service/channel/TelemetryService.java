@@ -7,6 +7,8 @@ import apache.rocketmq.v2.Settings;
 import apache.rocketmq.v2.TelemetryCommand;
 import cn.coderule.minimq.broker.api.ConsumerController;
 import cn.coderule.minimq.broker.api.ProducerController;
+import cn.coderule.minimq.broker.api.RouteController;
+import cn.coderule.minimq.broker.api.TransactionController;
 import cn.coderule.minimq.domain.domain.enums.consume.CMResult;
 import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
 import cn.coderule.minimq.rpc.broker.grpc.ContextStreamObserver;
@@ -36,8 +38,13 @@ public class TelemetryService {
         registerService = new RegisterService(channelManager);
     }
 
-    public void inject(ProducerController producerController, ConsumerController consumerController) {
-        registerService.inject(producerController, consumerController);
+    public void inject(
+        RouteController routeController,
+        ProducerController producerController,
+        ConsumerController consumerController,
+        TransactionController transactionController
+    ) {
+        registerService.inject(routeController, producerController, consumerController, transactionController);
     }
 
     public ContextStreamObserver<TelemetryCommand> telemetry(StreamObserver<TelemetryCommand> responseObserver) {

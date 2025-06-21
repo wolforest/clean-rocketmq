@@ -7,6 +7,8 @@ import apache.rocketmq.v2.Settings;
 import apache.rocketmq.v2.SubscriptionEntry;
 import cn.coderule.minimq.broker.api.ConsumerController;
 import cn.coderule.minimq.broker.api.ProducerController;
+import cn.coderule.minimq.broker.api.RouteController;
+import cn.coderule.minimq.broker.api.TransactionController;
 import cn.coderule.minimq.broker.server.grpc.converter.GrpcConverter;
 import cn.coderule.minimq.domain.domain.constant.MQVersion;
 import cn.coderule.minimq.domain.domain.dto.request.ConsumerInfo;
@@ -15,6 +17,7 @@ import cn.coderule.minimq.domain.domain.enums.code.LanguageCode;
 import cn.coderule.minimq.domain.domain.enums.consume.ConsumeStrategy;
 import cn.coderule.minimq.domain.domain.enums.consume.ConsumeType;
 import cn.coderule.minimq.domain.domain.enums.message.MessageModel;
+import cn.coderule.minimq.domain.domain.enums.message.MessageType;
 import cn.coderule.minimq.domain.domain.model.cluster.ClientChannelInfo;
 import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
 import cn.coderule.minimq.domain.domain.model.cluster.heartbeat.SubscriptionData;
@@ -30,14 +33,23 @@ public class RegisterService {
 
     private ProducerController producerController;
     private ConsumerController consumerController;
+    private TransactionController transactionController;
+    private RouteController routeController;
 
     public RegisterService(ChannelManager channelManager) {
         this.channelManager = channelManager;
     }
 
-    public void inject(ProducerController producerController, ConsumerController consumerController) {
+    public void inject(
+        RouteController routeController,
+        ProducerController producerController,
+        ConsumerController consumerController,
+        TransactionController transactionController
+    ) {
+        this.routeController = routeController;
         this.producerController = producerController;
         this.consumerController = consumerController;
+        this.transactionController = transactionController;
     }
 
     public GrpcChannel registerConsumer(RequestContext context, String consumerGroup, ClientType clientType, Settings settings, boolean updateSubscription) {
@@ -75,9 +87,18 @@ public class RegisterService {
 
         producerController.register(context, topicName, channelInfo);
 
-        // todo: add transaction subscription
+        transactionSubscribe(context, topicName);
 
         return (GrpcChannel) channelInfo.getChannel();
+    }
+
+    private void transactionSubscribe(RequestContext context, String topicName) {
+        MessageType messageType = routeController.getTopicType(topicName);
+        if (!messageType.isTransaction()) {
+            return;
+        }
+
+        transactionController.subscribe(context, topicName, topicName);
     }
 
     private ClientChannelInfo createChannelInfo(RequestContext context) {

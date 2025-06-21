@@ -8,6 +8,8 @@ import apache.rocketmq.v2.Settings;
 import apache.rocketmq.v2.Status;
 import cn.coderule.minimq.broker.api.ConsumerController;
 import cn.coderule.minimq.broker.api.ProducerController;
+import cn.coderule.minimq.broker.api.RouteController;
+import cn.coderule.minimq.broker.api.TransactionController;
 import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
 import cn.coderule.minimq.rpc.common.core.relay.RelayService;
 import cn.coderule.minimq.rpc.common.grpc.response.ResponseBuilder;
@@ -21,9 +23,6 @@ public class HeartbeatService {
 
     private final RegisterService registerService;
 
-    private ProducerController producerController;
-    private ConsumerController consumerController;
-
     public HeartbeatService(SettingManager settingManager, ChannelManager channelManager, RelayService relayService) {
         this.settingManager = settingManager;
         this.channelManager = channelManager;
@@ -31,11 +30,13 @@ public class HeartbeatService {
         registerService = new RegisterService(channelManager);
     }
 
-    public void inject(ProducerController producerController, ConsumerController consumerController) {
-        this.producerController = producerController;
-        this.consumerController = consumerController;
-
-        registerService.inject(producerController, consumerController);
+    public void inject(
+        RouteController routeController,
+        ProducerController producerController,
+        ConsumerController consumerController,
+        TransactionController transactionController
+    ) {
+        registerService.inject(routeController, producerController, consumerController, transactionController);
     }
 
     public CompletableFuture<HeartbeatResponse> heartbeat(RequestContext context, HeartbeatRequest request) {

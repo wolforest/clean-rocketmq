@@ -23,6 +23,10 @@ public enum MessageType {
         this.value = value;
     }
 
+    public boolean isTransaction() {
+        return this == TRANSACTION;
+    }
+
     public static Set<String> typeSet() {
         return Sets.newHashSet(
             UNSPECIFIED.value,
