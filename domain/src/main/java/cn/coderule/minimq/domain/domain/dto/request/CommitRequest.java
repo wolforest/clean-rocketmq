@@ -2,8 +2,6 @@ package cn.coderule.minimq.domain.domain.dto.request;
 
 import cn.coderule.minimq.domain.domain.enums.produce.TransactionStatus;
 import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
-import cn.coderule.minimq.domain.domain.model.cluster.heartbeat.SubscriptionData;
-import cn.coderule.minimq.domain.service.broker.consume.PopFilter;
 import java.io.Serializable;
 import lombok.Data;
 

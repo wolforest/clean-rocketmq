@@ -5,6 +5,7 @@ import cn.coderule.minimq.domain.domain.enums.consume.ConsumeStrategy;
 import cn.coderule.minimq.domain.domain.enums.consume.ConsumeType;
 import cn.coderule.minimq.domain.domain.enums.message.MessageModel;
 import cn.coderule.minimq.domain.domain.model.cluster.ClientChannelInfo;
+import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
 import cn.coderule.minimq.domain.domain.model.cluster.heartbeat.SubscriptionData;
 import java.io.Serializable;
 import java.util.Set;
@@ -20,6 +21,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ConsumerInfo implements Serializable {
+    private RequestContext requestContext;
+
     private String groupName;
     private MessageModel messageModel;
     private ConsumeType consumeType;

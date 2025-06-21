@@ -1,6 +1,7 @@
 package cn.coderule.minimq.broker.api;
 
 import cn.coderule.minimq.broker.domain.transaction.Transaction;
+import cn.coderule.minimq.domain.domain.dto.request.CommitRequest;
 import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
 import java.util.concurrent.CompletableFuture;
 
@@ -12,8 +13,9 @@ public class TransactionController {
     }
 
     public void subscribe(RequestContext context, String topicName, String groupName) {
+        transaction.subscribe(context, topicName, groupName);
     }
-    public CompletableFuture<Object> commit() {
-        return null;
+    public CompletableFuture<Object> commit(CommitRequest request) {
+        return transaction.commit(request);
     }
 }
