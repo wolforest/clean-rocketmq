@@ -19,7 +19,7 @@ public class MessageValidator {
 
     }
 
-    private void validateTopic(String topicName) {
+    public void validateTopic(String topicName) {
         TopicValidator.validateTopic(topicName);
     }
 

@@ -5,7 +5,6 @@ import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.minimq.broker.api.validator.MessageValidator;
 import cn.coderule.minimq.broker.api.validator.ServerValidator;
 import cn.coderule.minimq.broker.domain.producer.Producer;
-import cn.coderule.minimq.broker.domain.producer.ProducerRegister;
 import cn.coderule.minimq.domain.config.BrokerConfig;
 import cn.coderule.minimq.domain.config.MessageConfig;
 import cn.coderule.minimq.domain.domain.constant.MessageConst;
@@ -40,9 +39,9 @@ public class ProducerController {
         this.messageValidator = new MessageValidator(messageConfig);
     }
 
-    public void register(RequestContext context, String groupName, ClientChannelInfo channelInfo) {
-        // todo: validate topic
-        producer.register(context, groupName, channelInfo);
+    public void register(RequestContext context, String topicName, ClientChannelInfo channelInfo) {
+        this.messageValidator.validateTopic(topicName);
+        producer.register(context, topicName, channelInfo);
     }
 
     public void unregister(RequestContext context, String groupName, ClientChannelInfo channelInfo) {
