@@ -27,11 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 public class TelemetryService {
     private final SettingManager settingManager;
     private final ChannelManager channelManager;
-
     private final RegisterService registerService;
-
-    private ProducerController producerController;
-    private ConsumerController consumerController;
 
     public TelemetryService(SettingManager settingManager, ChannelManager channelManager, RelayService relayService) {
         this.settingManager = settingManager;
@@ -41,9 +37,6 @@ public class TelemetryService {
     }
 
     public void inject(ProducerController producerController, ConsumerController consumerController) {
-        this.producerController = producerController;
-        this.consumerController = consumerController;
-
         registerService.inject(producerController, consumerController);
     }
 
