@@ -10,7 +10,7 @@ public class RemoteSubscriptionStore extends AbstractRemoteStore implements Subs
     }
 
     @Override
-    public CompletableFuture<SubscriptionGroup> getGroup(String topicName, String groupName) {
+    public CompletableFuture<SubscriptionGroup> getGroupAsync(String topicName, String groupName) {
         return null;
     }
 }

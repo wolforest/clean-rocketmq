@@ -37,7 +37,7 @@ public class Consumer  {
     }
 
     public CompletableFuture<SubscriptionGroup> getSubscription(RequestContext context, String topicName, String groupName) {
-        return subscriptionStore.getGroup(topicName, groupName);
+        return subscriptionStore.getGroupAsync(topicName, groupName);
     }
 
     public CompletableFuture<PopResult> popMessage(RequestContext context, PopRequest request) {

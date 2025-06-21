@@ -4,5 +4,5 @@ import cn.coderule.minimq.domain.domain.model.consumer.subscription.Subscription
 import java.util.concurrent.CompletableFuture;
 
 public interface SubscriptionStore {
-    CompletableFuture<SubscriptionGroup> getGroup(String topicName, String groupName);
+    CompletableFuture<SubscriptionGroup> getGroupAsync(String topicName, String groupName);
 }

@@ -18,7 +18,7 @@ public class EmbedSubscriptionStore implements SubscriptionStore {
     }
 
     @Override
-    public CompletableFuture<SubscriptionGroup> getGroup(String topicName, String groupName) {
+    public CompletableFuture<SubscriptionGroup> getGroupAsync(String topicName, String groupName) {
         return null;
     }
 

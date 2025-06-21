@@ -20,16 +20,16 @@ public class BrokerSubscriptionStore implements SubscriptionStore {
     }
 
     @Override
-    public CompletableFuture<SubscriptionGroup> getGroup(String topicName, String groupName) {
+    public CompletableFuture<SubscriptionGroup> getGroupAsync(String topicName, String groupName) {
         if (embedSubscriptionStore.existsGroup(groupName)) {
-            return embedSubscriptionStore.getGroup(topicName, groupName);
+            return embedSubscriptionStore.getGroupAsync(topicName, groupName);
         }
 
         if (!brokerConfig.isEnableRemoteStore()) {
             return null;
         }
 
-        return remoteSubscriptionStore.getGroup(topicName, groupName);
+        return remoteSubscriptionStore.getGroupAsync(topicName, groupName);
     }
 
 }
