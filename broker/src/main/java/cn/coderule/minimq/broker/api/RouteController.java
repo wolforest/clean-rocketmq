@@ -65,7 +65,7 @@ public class RouteController {
         List<Address> addressList) throws ExecutionException, InterruptedException {
         RouteInfo routeInfo = getRoute(context, topicName, addressList).get();
 
-        boolean isConsumeOrderly = routeService.isConsumeOrderly(topicName, groupName);
+        boolean isConsumeOrderly = subscriptionService.isConsumeOrderly(topicName, groupName);
         routeInfo.setConsumeOrderly(isConsumeOrderly);
 
         return CompletableFuture.completedFuture(routeInfo);

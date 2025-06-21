@@ -59,10 +59,6 @@ public class RouteService {
         return formatRouteAddress(context, routeInfo, addressList);
     }
 
-    public boolean isConsumeOrderly(String topicName, String groupName) {
-        return false;
-    }
-
     private RouteInfo formatRouteAddress(RequestContext context, RouteInfo routeInfo, List<Address> addressList) {
         if (routeInfo == null || CollectionUtil.isEmpty(addressList)) {
             return routeInfo;
