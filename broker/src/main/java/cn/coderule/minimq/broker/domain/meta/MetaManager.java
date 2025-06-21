@@ -10,7 +10,7 @@ import cn.coderule.minimq.domain.config.TopicConfig;
 import cn.coderule.minimq.domain.domain.exception.InvalidConfigException;
 import cn.coderule.minimq.rpc.registry.route.RouteLoader;
 
-public class RouteManager implements Lifecycle {
+public class MetaManager implements Lifecycle {
     private BrokerConfig brokerConfig;
     @Override
     public void initialize() {

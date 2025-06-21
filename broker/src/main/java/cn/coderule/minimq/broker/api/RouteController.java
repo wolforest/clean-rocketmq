@@ -2,7 +2,10 @@ package cn.coderule.minimq.broker.api;
 
 import cn.coderule.common.util.net.Address;
 import cn.coderule.minimq.broker.domain.meta.RouteService;
+import cn.coderule.minimq.broker.domain.meta.TopicService;
 import cn.coderule.minimq.domain.config.TopicConfig;
+import cn.coderule.minimq.domain.domain.enums.message.MessageType;
+import cn.coderule.minimq.domain.domain.model.meta.topic.Topic;
 import cn.coderule.minimq.domain.domain.model.meta.topic.TopicValidator;
 import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
 import cn.coderule.minimq.domain.domain.model.cluster.route.RouteInfo;
@@ -14,9 +17,26 @@ public class RouteController {
     private final RouteService routeService;
     private final TopicConfig topicConfig;
 
+    private TopicService topicService;
+
     public RouteController(TopicConfig topicConfig, RouteService routeService) {
         this.routeService = routeService;
         this.topicConfig = topicConfig;
+    }
+
+    public Topic getTopic(String topicName) {
+        TopicValidator.validateTopic(topicName);
+        return topicService.getTopic(topicName);
+    }
+
+    public CompletableFuture<Topic> getTopicAsync(String topicName) {
+        TopicValidator.validateTopic(topicName);
+        return topicService.getTopicAsync(topicName);
+    }
+
+    public MessageType getTopicType(String topicName) {
+        TopicValidator.validateTopic(topicName);
+        return topicService.getTopicType(topicName);
     }
 
     public CompletableFuture<RouteInfo> getRoute(RequestContext context, String topicName, List<Address> addressList) {

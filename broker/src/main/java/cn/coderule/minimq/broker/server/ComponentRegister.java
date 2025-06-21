@@ -4,7 +4,7 @@ import cn.coderule.common.convention.service.LifecycleManager;
 import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.minimq.broker.domain.consumer.ConsumerManager;
 import cn.coderule.minimq.broker.domain.producer.ProducerManager;
-import cn.coderule.minimq.broker.domain.meta.RouteManager;
+import cn.coderule.minimq.broker.domain.meta.MetaManager;
 import cn.coderule.minimq.broker.domain.timer.TimerManager;
 import cn.coderule.minimq.broker.domain.transaction.TransactionManager;
 import cn.coderule.minimq.broker.infra.BrokerRegister;
@@ -116,7 +116,7 @@ public class ComponentRegister {
     }
 
     private void registerRoute() {
-        RouteManager component = new RouteManager();
+        MetaManager component = new MetaManager();
         manager.register(component);
     }
 
