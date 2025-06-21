@@ -38,17 +38,23 @@ public class HeartbeatService {
     private final SettingManager settingManager;
     private final ChannelManager channelManager;
 
+    private final RegisterService registerService;
+
     private ProducerController producerController;
     private ConsumerController consumerController;
 
     public HeartbeatService(SettingManager settingManager, ChannelManager channelManager, RelayService relayService) {
         this.settingManager = settingManager;
         this.channelManager = channelManager;
+
+        registerService = new RegisterService(channelManager);
     }
 
     public void inject(ProducerController producerController, ConsumerController consumerController) {
         this.producerController = producerController;
         this.consumerController = consumerController;
+
+        registerService.inject(producerController, consumerController);
     }
 
     public CompletableFuture<HeartbeatResponse> heartbeat(RequestContext context, HeartbeatRequest request) {
@@ -70,96 +76,16 @@ public class HeartbeatService {
         Settings settings
     ) {
         switch (request.getClientType()) {
-            case PRODUCER -> registerProducer(context, settings);
+            case PRODUCER -> registerService.registerProducer(context, settings);
             case SIMPLE_CONSUMER, PUSH_CONSUMER -> {
                 String consumerGroup = request.getGroup().getName();
                 ClientType clientType = request.getClientType();
-                registerConsumer(context, consumerGroup, clientType, settings);
+                registerService.registerConsumer(context, consumerGroup, clientType, settings);
             }
             default -> notSupported(settings);
         };
 
         return success();
-    }
-
-    private void registerProducer(RequestContext context, Settings settings) {
-        for (Resource topic : settings.getPublishing().getTopicsList()) {
-            String topicName = topic.getName();
-            registerProducer(context, topicName);
-        }
-    }
-
-    private void registerProducer(RequestContext context, String topicName) {
-        ClientChannelInfo channelInfo = createChannelInfo(context);
-
-        producerController.register(context, topicName, channelInfo);
-
-        // todo: add transaction subscription
-    }
-
-    private ClientChannelInfo createChannelInfo(RequestContext context) {
-        String clientId = context.getClientID();
-        LanguageCode languageCode = LanguageCode.valueOf(context.getLanguage());
-        GrpcChannel channel = channelManager.createChannel(context, clientId);
-        int version = parseClientVersion(context.getClientVersion());
-
-        return ClientChannelInfo.builder()
-            .clientId(clientId)
-            .channel(channel)
-            .language(languageCode)
-            .version(version)
-            .lastUpdateTime(System.currentTimeMillis())
-            .build();
-    }
-
-    private void registerConsumer(RequestContext context, String consumerGroup, ClientType clientType, Settings settings) {
-        ClientChannelInfo channelInfo = createChannelInfo(context);
-
-        Set<SubscriptionData> subscriptionDataSet = buildSubscriptionDataSet(
-            settings.getSubscription().getSubscriptionsList()
-        );
-
-        ConsumerInfo consumerInfo = ConsumerInfo.builder()
-            .groupName(consumerGroup)
-            .messageModel(MessageModel.CLUSTERING)
-            .consumeType(buildConsumeType(clientType))
-            .consumeStrategy(ConsumeStrategy.CONSUME_FROM_LAST_OFFSET)
-            .channelInfo(channelInfo)
-            .subscriptionSet(subscriptionDataSet)
-            .enableNotification(false)
-            .enableSubscriptionModification(false)
-            .build();
-
-        consumerController.register(context, consumerInfo);
-    }
-
-    protected ConsumeType buildConsumeType(ClientType clientType) {
-        return switch (clientType) {
-            case SIMPLE_CONSUMER -> ConsumeType.CONSUME_ACTIVELY;
-            case PUSH_CONSUMER -> ConsumeType.CONSUME_PASSIVELY;
-            default -> throw new IllegalArgumentException(
-                "Client type is not consumer, type: " + clientType);
-        };
-    }
-
-    protected Set<SubscriptionData> buildSubscriptionDataSet(List<SubscriptionEntry> subscriptionEntryList) {
-        Set<SubscriptionData> subscriptionDataSet = new HashSet<>();
-        for (SubscriptionEntry sub : subscriptionEntryList) {
-            String topicName = sub.getTopic().getName();
-            FilterExpression filterExpression = sub.getExpression();
-            subscriptionDataSet.add(buildSubscriptionData(topicName, filterExpression));
-        }
-        return subscriptionDataSet;
-    }
-
-    protected SubscriptionData buildSubscriptionData(String topicName, FilterExpression filterExpression) {
-        String expression = filterExpression.getExpression();
-        String expressionType = GrpcConverter.getInstance().buildExpressionType(filterExpression.getType());
-        try {
-            return FilterAPI.build(topicName, expression, expressionType);
-        } catch (Exception e) {
-            throw new GrpcException(InvalidCode.ILLEGAL_FILTER_EXPRESSION, "expression format is not correct", e);
-        }
     }
 
     private void notSupported(Settings settings) {
@@ -206,18 +132,4 @@ public class HeartbeatService {
         return future;
     }
 
-    private int parseClientVersion(String clientVersionStr) {
-        int clientVersion = MQVersion.CURRENT_VERSION;
-        if (StringUtils.isEmpty(clientVersionStr)) {
-            return clientVersion;
-        }
-
-        try {
-            String tmp = StringUtils.upperCase(clientVersionStr);
-            clientVersion = MQVersion.Version.valueOf(tmp).ordinal();
-        } catch (Exception ignored) {
-        }
-
-        return clientVersion;
-    }
 }
