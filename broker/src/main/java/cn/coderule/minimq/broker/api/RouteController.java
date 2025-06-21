@@ -2,9 +2,11 @@ package cn.coderule.minimq.broker.api;
 
 import cn.coderule.common.util.net.Address;
 import cn.coderule.minimq.broker.domain.meta.RouteService;
+import cn.coderule.minimq.broker.domain.meta.SubscriptionService;
 import cn.coderule.minimq.broker.domain.meta.TopicService;
 import cn.coderule.minimq.domain.config.TopicConfig;
 import cn.coderule.minimq.domain.domain.enums.message.MessageType;
+import cn.coderule.minimq.domain.domain.model.consumer.subscription.SubscriptionGroup;
 import cn.coderule.minimq.domain.domain.model.meta.topic.Topic;
 import cn.coderule.minimq.domain.domain.model.meta.topic.TopicValidator;
 import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
@@ -18,6 +20,7 @@ public class RouteController {
     private final TopicConfig topicConfig;
 
     private TopicService topicService;
+    private SubscriptionService subscriptionService;
 
     public RouteController(TopicConfig topicConfig, RouteService routeService) {
         this.routeService = routeService;
@@ -37,6 +40,18 @@ public class RouteController {
     public MessageType getTopicType(String topicName) {
         TopicValidator.validateTopic(topicName);
         return topicService.getTopicType(topicName);
+    }
+
+    public SubscriptionGroup getGroup(String topicName, String groupName) {
+        return subscriptionService.getGroup(topicName, groupName);
+    }
+
+    public CompletableFuture<SubscriptionGroup> getGroupAsync(String topicName, String groupName) {
+        return subscriptionService.getGroupAsync(topicName, groupName);
+    }
+
+    public boolean isConsumeOrderly(String topicName, String groupName) {
+        return subscriptionService.isConsumeOrderly(topicName, groupName);
     }
 
     public CompletableFuture<RouteInfo> getRoute(RequestContext context, String topicName, List<Address> addressList) {
