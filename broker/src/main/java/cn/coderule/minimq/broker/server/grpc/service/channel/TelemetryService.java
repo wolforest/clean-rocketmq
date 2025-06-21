@@ -7,8 +7,10 @@ import apache.rocketmq.v2.Settings;
 import apache.rocketmq.v2.TelemetryCommand;
 import cn.coderule.minimq.broker.api.ConsumerController;
 import cn.coderule.minimq.broker.api.ProducerController;
+import cn.coderule.minimq.domain.domain.enums.consume.CMResult;
 import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
 import cn.coderule.minimq.rpc.broker.grpc.ContextStreamObserver;
+import cn.coderule.minimq.rpc.broker.rpc.protocol.body.ConsumeMessageDirectlyResult;
 import cn.coderule.minimq.rpc.broker.rpc.protocol.body.ConsumerRunningInfo;
 import cn.coderule.minimq.rpc.common.core.relay.RelayService;
 import cn.coderule.minimq.rpc.common.core.relay.response.Result;
@@ -165,10 +167,43 @@ public class TelemetryService {
         );
     }
 
-
-
     private void processVerify(RequestContext ctx, TelemetryCommand request, StreamObserver<TelemetryCommand> responseObserver) {
+        String nonce = request.getThreadStackTrace().getNonce();
+        CompletableFuture<Result<ConsumeMessageDirectlyResult>> future = channelManager.getAndRemoveResult(nonce);
+        if (future == null) {
+            return;
+        }
 
+        try {
+            ConsumeMessageDirectlyResult result = buildConsumeResult(request.getStatus());
+            future.complete(new Result<>(
+                ResponseCode.SUCCESS,
+                "success",
+                result
+            ));
+        } catch (Throwable t) {
+            future.completeExceptionally(t);
+        }
+    }
+
+    protected ConsumeMessageDirectlyResult buildConsumeResult(apache.rocketmq.v2.Status status) {
+        ConsumeMessageDirectlyResult consumeMessageDirectlyResult = new ConsumeMessageDirectlyResult();
+        switch (status.getCode().getNumber()) {
+            case Code.OK_VALUE: {
+                consumeMessageDirectlyResult.setConsumeResult(CMResult.CR_SUCCESS);
+                break;
+            }
+            case Code.FAILED_TO_CONSUME_MESSAGE_VALUE: {
+                consumeMessageDirectlyResult.setConsumeResult(CMResult.CR_LATER);
+                break;
+            }
+            case Code.MESSAGE_CORRUPTED_VALUE: {
+                consumeMessageDirectlyResult.setConsumeResult(CMResult.CR_RETURN_NULL);
+                break;
+            }
+        }
+        consumeMessageDirectlyResult.setRemark("from gRPC client");
+        return consumeMessageDirectlyResult;
     }
 
     private GrpcChannel registerClient(RequestContext ctx, StreamObserver<TelemetryCommand> responseObserver, Settings settings) {
