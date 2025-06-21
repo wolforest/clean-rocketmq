@@ -9,12 +9,16 @@ import cn.coderule.minimq.broker.api.ConsumerController;
 import cn.coderule.minimq.broker.api.ProducerController;
 import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
 import cn.coderule.minimq.rpc.broker.grpc.ContextStreamObserver;
+import cn.coderule.minimq.rpc.broker.rpc.protocol.body.ConsumerRunningInfo;
 import cn.coderule.minimq.rpc.common.core.relay.RelayService;
+import cn.coderule.minimq.rpc.common.core.relay.response.Result;
 import cn.coderule.minimq.rpc.common.grpc.core.exception.GrpcException;
 import cn.coderule.minimq.rpc.common.grpc.response.ResponseBuilder;
+import cn.coderule.minimq.rpc.common.rpc.protocol.code.ResponseCode;
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
+import java.util.concurrent.CompletableFuture;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -109,11 +113,54 @@ public class TelemetryService {
     }
 
 
-    private void processTrace(RequestContext ctx, TelemetryCommand command, StreamObserver<TelemetryCommand> responseObserver) {
+    private void processTrace(RequestContext ctx, TelemetryCommand request, StreamObserver<TelemetryCommand> responseObserver) {
+        String nonce = request.getThreadStackTrace().getNonce();
+        CompletableFuture<Result<ConsumerRunningInfo>> future = channelManager.getAndRemoveResult(nonce);
+        if (future == null) {
+            return;
+        }
 
+        apache.rocketmq.v2.Status status = request.getStatus();
+        try {
+            if (status.getCode().equals(Code.VERIFY_FIFO_MESSAGE_UNSUPPORTED)) {
+                Result<ConsumerRunningInfo> result = new Result<>(
+                    ResponseCode.NO_PERMISSION,
+                    "forbidden to verify message",
+                    null
+                );
+
+                future.complete(result);
+                return;
+            }
+
+            if (status.getCode().equals(Code.OK)) {
+                ConsumerRunningInfo info = new ConsumerRunningInfo();
+                String threadStack = request.getThreadStackTrace().getThreadStackTrace();
+                info.setJstack(threadStack);
+                Result<ConsumerRunningInfo> result = new Result<>(
+                    ResponseCode.SUCCESS,
+                    "success",
+                    info
+                );
+
+                future.complete(result);
+                return;
+            }
+
+            Result<ConsumerRunningInfo> result = new Result<>(
+                ResponseCode.SYSTEM_ERROR,
+                "verify message failed",
+                null
+            );
+
+            future.complete(result);
+
+        } catch (Throwable t) {
+            future.completeExceptionally(t);
+        }
     }
 
-    private void processVerify(RequestContext ctx, TelemetryCommand command, StreamObserver<TelemetryCommand> responseObserver) {
+    private void processVerify(RequestContext ctx, TelemetryCommand request, StreamObserver<TelemetryCommand> responseObserver) {
 
     }
 
