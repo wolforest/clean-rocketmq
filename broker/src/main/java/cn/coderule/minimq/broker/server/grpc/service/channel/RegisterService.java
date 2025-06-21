@@ -40,7 +40,7 @@ public class RegisterService {
         this.consumerController = consumerController;
     }
 
-    public void registerConsumer(RequestContext context, String consumerGroup, ClientType clientType, Settings settings) {
+    public GrpcChannel registerConsumer(RequestContext context, String consumerGroup, ClientType clientType, Settings settings, boolean updateSubscription) {
         ClientChannelInfo channelInfo = createChannelInfo(context);
 
         Set<SubscriptionData> subscriptionDataSet = buildSubscriptionDataSet(
@@ -55,10 +55,12 @@ public class RegisterService {
             .channelInfo(channelInfo)
             .subscriptionSet(subscriptionDataSet)
             .enableNotification(false)
-            .enableSubscriptionModification(false)
+            .enableSubscriptionModification(updateSubscription)
             .build();
 
         consumerController.register(context, consumerInfo);
+
+        return (GrpcChannel) channelInfo.getChannel();
     }
 
     public void registerProducer(RequestContext context, Settings settings) {
@@ -68,12 +70,14 @@ public class RegisterService {
         }
     }
 
-    public void registerProducer(RequestContext context, String topicName) {
+    public GrpcChannel registerProducer(RequestContext context, String topicName) {
         ClientChannelInfo channelInfo = createChannelInfo(context);
 
         producerController.register(context, topicName, channelInfo);
 
         // todo: add transaction subscription
+
+        return (GrpcChannel) channelInfo.getChannel();
     }
 
     private ClientChannelInfo createChannelInfo(RequestContext context) {

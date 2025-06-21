@@ -1,10 +1,15 @@
 package cn.coderule.minimq.broker.server.grpc.service.channel;
 
+import apache.rocketmq.v2.ClientType;
 import apache.rocketmq.v2.Code;
+import apache.rocketmq.v2.Resource;
 import apache.rocketmq.v2.Settings;
 import apache.rocketmq.v2.TelemetryCommand;
+import cn.coderule.minimq.broker.api.ConsumerController;
+import cn.coderule.minimq.broker.api.ProducerController;
 import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
 import cn.coderule.minimq.rpc.broker.grpc.ContextStreamObserver;
+import cn.coderule.minimq.rpc.common.core.relay.RelayService;
 import cn.coderule.minimq.rpc.common.grpc.core.exception.GrpcException;
 import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
@@ -12,6 +17,27 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class TelemetryService {
+    private final SettingManager settingManager;
+    private final ChannelManager channelManager;
+
+    private final RegisterService registerService;
+
+    private ProducerController producerController;
+    private ConsumerController consumerController;
+
+    public TelemetryService(SettingManager settingManager, ChannelManager channelManager, RelayService relayService) {
+        this.settingManager = settingManager;
+        this.channelManager = channelManager;
+
+        registerService = new RegisterService(channelManager);
+    }
+
+    public void inject(ProducerController producerController, ConsumerController consumerController) {
+        this.producerController = producerController;
+        this.consumerController = consumerController;
+
+        registerService.inject(producerController, consumerController);
+    }
 
     public ContextStreamObserver<TelemetryCommand> telemetry(StreamObserver<TelemetryCommand> responseObserver) {
         return new ContextStreamObserver<>() {
@@ -47,6 +73,7 @@ public class TelemetryService {
 
     private void processSettings(RequestContext ctx, TelemetryCommand command, StreamObserver<TelemetryCommand> responseObserver) {
         Settings settings = command.getSettings();
+        GrpcChannel channel = registerClient(ctx, responseObserver, settings);
     }
 
     private void processTrace(RequestContext ctx, TelemetryCommand command, StreamObserver<TelemetryCommand> responseObserver) {
@@ -55,6 +82,50 @@ public class TelemetryService {
 
     private void processVerify(RequestContext ctx, TelemetryCommand command, StreamObserver<TelemetryCommand> responseObserver) {
 
+    }
+
+    private GrpcChannel registerClient(RequestContext ctx, StreamObserver<TelemetryCommand> responseObserver, Settings settings) {
+        GrpcChannel channel = null;
+        switch (settings.getPubSubCase()) {
+            case PUBLISHING:
+                channel = registerProducer(ctx, responseObserver, settings);
+                break;
+            case SUBSCRIPTION:
+                channel = registerConsumer(ctx, responseObserver, settings);
+                break;
+            default:
+                break;
+        }
+        return channel;
+    }
+
+    private GrpcChannel registerProducer(RequestContext ctx, StreamObserver<TelemetryCommand> responseObserver, Settings settings) {
+        GrpcChannel channel = null;
+
+        for (Resource topic : settings.getPublishing().getTopicsList()) {
+            String topicName = topic.getName();
+            channel = registerService.registerProducer(ctx, topicName);
+            channel.setClientObserver(responseObserver);
+        }
+
+        return channel;
+    }
+
+    private GrpcChannel registerConsumer(RequestContext ctx, StreamObserver<TelemetryCommand> responseObserver, Settings settings) {
+        String groupName = settings.getSubscription().getGroup().getName();
+        ClientType clientType = settings.getClientType();
+
+        GrpcChannel channel = registerService.registerConsumer(
+            ctx,
+            groupName,
+            clientType,
+            settings,
+            true
+        );
+
+        channel.setClientObserver(responseObserver);
+
+        return channel;
     }
 
     private void processException(TelemetryCommand request, Throwable t,
