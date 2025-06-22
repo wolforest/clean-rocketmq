@@ -8,12 +8,14 @@ import java.util.concurrent.CompletableFuture;
 
 public class Transaction {
 
+    private PrepareService prepareService;
+
     public void subscribe(RequestContext context, String topicName, String groupName) {
 
     }
 
     public CompletableFuture<EnqueueResult> prepare(RequestContext context, MessageBO messageBO) {
-        return null;
+        return prepareService.prepare(context, messageBO);
     }
 
     public CompletableFuture<Object> commit(CommitRequest request) {
