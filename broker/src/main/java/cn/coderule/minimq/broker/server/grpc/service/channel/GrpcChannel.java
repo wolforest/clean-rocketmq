@@ -4,7 +4,7 @@ import apache.rocketmq.v2.Settings;
 import apache.rocketmq.v2.TelemetryCommand;
 import cn.coderule.minimq.broker.server.core.ChannelHelper;
 import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
-import cn.coderule.minimq.rpc.broker.core.AbstractChannel;
+import cn.coderule.minimq.broker.server.core.ClientChannel;
 import cn.coderule.minimq.rpc.common.core.channel.ChannelExtendAttributeGetter;
 import cn.coderule.minimq.rpc.common.core.enums.ChannelProtocolType;
 import cn.coderule.minimq.rpc.common.core.relay.RelayService;
@@ -23,7 +23,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class GrpcChannel extends AbstractChannel implements Serializable {
+public class GrpcChannel extends ClientChannel implements Serializable {
     private final Object lock;
     private final String clientId;
     private final AtomicReference<StreamObserver<TelemetryCommand>> commandRef;

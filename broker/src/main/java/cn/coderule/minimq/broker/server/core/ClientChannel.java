@@ -1,8 +1,9 @@
 
-package cn.coderule.minimq.rpc.broker.core;
+package cn.coderule.minimq.broker.server.core;
 
 import cn.coderule.common.util.net.NetworkUtil;
 import cn.coderule.minimq.rpc.common.core.channel.mock.MockChannel;
+import cn.coderule.minimq.rpc.common.core.relay.RelayService;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelConfig;
 import io.netty.channel.ChannelId;
@@ -13,23 +14,25 @@ import java.net.SocketAddress;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public abstract class AbstractChannel extends MockChannel {
+public abstract class ClientChannel extends MockChannel {
     protected final SocketAddress remoteSocketAddress;
     protected final SocketAddress localSocketAddress;
 
-    protected AbstractChannel(Channel parent, String remoteAddress,
+    protected ClientChannel(Channel parent, String remoteAddress,
         String localAddress) {
         super(parent, remoteAddress, localAddress);
         this.remoteSocketAddress = NetworkUtil.toSocketAddress(remoteAddress);
         this.localSocketAddress = NetworkUtil.toSocketAddress(localAddress);
     }
 
-    protected AbstractChannel(Channel parent, ChannelId id, String remoteAddress,
+    protected ClientChannel(Channel parent, ChannelId id, String remoteAddress,
         String localAddress) {
         super(parent, id, remoteAddress, localAddress);
         this.remoteSocketAddress = NetworkUtil.toSocketAddress(remoteAddress);
         this.localSocketAddress = NetworkUtil.toSocketAddress(localAddress);
     }
+
+    public abstract RelayService getRelayService();
 
 //    @Override
 //    public ChannelFuture writeAndFlush(Object msg) {

@@ -4,9 +4,10 @@ package cn.coderule.minimq.broker.server.rpc;
 import cn.coderule.common.util.net.NetworkUtil;
 import cn.coderule.minimq.broker.server.core.ChannelHelper;
 import cn.coderule.minimq.domain.domain.model.cluster.heartbeat.SubscriptionData;
-import cn.coderule.minimq.rpc.broker.core.AbstractChannel;
+import cn.coderule.minimq.broker.server.core.ClientChannel;
 import cn.coderule.minimq.rpc.common.core.channel.ChannelExtendAttributeGetter;
 import cn.coderule.minimq.rpc.common.core.enums.ChannelProtocolType;
+import cn.coderule.minimq.rpc.common.core.relay.RelayService;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.TypeReference;
 import com.google.common.base.MoreObjects;
@@ -16,16 +17,21 @@ import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelMetadata;
 import java.time.Duration;
 import java.util.Set;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 
 @Slf4j
-public class RpcChannel extends AbstractChannel {
+public class RpcChannel extends ClientChannel {
     private static final long DEFAULT_MQ_CLIENT_TIMEOUT = Duration.ofSeconds(3).toMillis();
     private final String clientId;
     private final String remoteAddress;
     private final String localAddress;
     private final Set<SubscriptionData> subscriptionData;
+
+    @Getter @Setter
+    private RelayService relayService;
 
     public RpcChannel(Channel parent, String clientId, Set<SubscriptionData> subscriptionData) {
         super(parent, parent.id(),
