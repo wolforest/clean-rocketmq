@@ -1,7 +1,7 @@
 package cn.coderule.minimq.registry.processor;
 
 import cn.coderule.common.util.lang.string.StringUtil;
-import cn.coderule.minimq.domain.config.RegistryConfig;
+import cn.coderule.minimq.domain.config.server.RegistryConfig;
 import cn.coderule.minimq.registry.domain.store.service.TopicService;
 import cn.coderule.minimq.rpc.common.rpc.RpcProcessor;
 import cn.coderule.minimq.rpc.common.rpc.core.exception.RemotingCommandException;

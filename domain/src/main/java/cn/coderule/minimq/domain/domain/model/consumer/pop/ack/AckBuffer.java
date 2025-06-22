@@ -1,6 +1,6 @@
 package cn.coderule.minimq.domain.domain.model.consumer.pop.ack;
 
-import cn.coderule.minimq.domain.config.MessageConfig;
+import cn.coderule.minimq.domain.config.message.MessageConfig;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.checkpoint.PopCheckPointWrapper;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.helper.QueueWithTime;
 import java.io.Serializable;

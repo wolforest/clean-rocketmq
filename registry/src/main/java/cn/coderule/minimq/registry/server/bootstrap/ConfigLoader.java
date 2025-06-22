@@ -1,6 +1,6 @@
 package cn.coderule.minimq.registry.server.bootstrap;
 
-import cn.coderule.minimq.domain.config.RegistryConfig;
+import cn.coderule.minimq.domain.config.server.RegistryConfig;
 import cn.coderule.minimq.rpc.common.rpc.config.RpcClientConfig;
 import cn.coderule.minimq.rpc.common.rpc.config.RpcServerConfig;
 

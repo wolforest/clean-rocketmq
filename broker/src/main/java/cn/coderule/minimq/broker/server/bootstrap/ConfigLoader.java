@@ -1,9 +1,9 @@
 package cn.coderule.minimq.broker.server.bootstrap;
 
-import cn.coderule.minimq.domain.config.BrokerConfig;
-import cn.coderule.minimq.domain.config.GrpcConfig;
-import cn.coderule.minimq.domain.config.MessageConfig;
-import cn.coderule.minimq.domain.config.TopicConfig;
+import cn.coderule.minimq.domain.config.server.BrokerConfig;
+import cn.coderule.minimq.domain.config.server.GrpcConfig;
+import cn.coderule.minimq.domain.config.message.MessageConfig;
+import cn.coderule.minimq.domain.config.message.TopicConfig;
 
 public class ConfigLoader {
     public static void load() {

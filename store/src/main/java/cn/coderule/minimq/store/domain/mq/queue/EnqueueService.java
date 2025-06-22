@@ -1,6 +1,6 @@
 package cn.coderule.minimq.store.domain.mq.queue;
 
-import cn.coderule.minimq.domain.config.StoreConfig;
+import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.domain.domain.dto.EnqueueResult;
 import cn.coderule.minimq.domain.domain.dto.InsertFuture;
 import cn.coderule.minimq.domain.domain.lock.queue.EnqueueLock;

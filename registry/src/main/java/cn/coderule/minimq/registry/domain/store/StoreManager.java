@@ -1,7 +1,7 @@
 package cn.coderule.minimq.registry.domain.store;
 
 import cn.coderule.common.convention.service.Lifecycle;
-import cn.coderule.minimq.domain.config.RegistryConfig;
+import cn.coderule.minimq.domain.config.server.RegistryConfig;
 import cn.coderule.minimq.registry.domain.kv.KVService;
 import cn.coderule.minimq.registry.domain.store.model.Route;
 import cn.coderule.minimq.registry.domain.store.service.ChannelCloser;

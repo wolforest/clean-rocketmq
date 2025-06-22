@@ -1,7 +1,7 @@
 package cn.coderule.minimq.broker.infra.remote;
 
 import cn.coderule.common.convention.service.Lifecycle;
-import cn.coderule.minimq.domain.config.BrokerConfig;
+import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.domain.model.message.MessageBO;
 import cn.coderule.minimq.domain.domain.dto.EnqueueResult;
 import cn.coderule.minimq.domain.domain.dto.DequeueRequest;

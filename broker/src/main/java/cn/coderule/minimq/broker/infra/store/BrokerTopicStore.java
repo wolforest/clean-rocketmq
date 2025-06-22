@@ -2,7 +2,7 @@ package cn.coderule.minimq.broker.infra.store;
 
 import cn.coderule.minimq.broker.infra.embed.EmbedTopicStore;
 import cn.coderule.minimq.broker.infra.remote.RemoteTopicStore;
-import cn.coderule.minimq.domain.config.BrokerConfig;
+import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.domain.model.meta.topic.Topic;
 import cn.coderule.minimq.domain.service.broker.infra.TopicStore;
 import java.util.concurrent.CompletableFuture;

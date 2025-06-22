@@ -1,7 +1,7 @@
 package cn.coderule.minimq.store.server.rpc.server;
 
 import cn.coderule.common.convention.service.Lifecycle;
-import cn.coderule.minimq.domain.config.StoreConfig;
+import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.rpc.common.rpc.RpcProcessor;
 import cn.coderule.minimq.rpc.common.rpc.RpcServer;
 import cn.coderule.minimq.rpc.common.rpc.config.RpcServerConfig;

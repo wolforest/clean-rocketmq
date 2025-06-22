@@ -1,8 +1,8 @@
 package cn.coderule.minimq.store.server.rpc;
 
 import cn.coderule.common.convention.service.Lifecycle;
-import cn.coderule.minimq.domain.config.StoreConfig;
-import cn.coderule.minimq.domain.config.TopicConfig;
+import cn.coderule.minimq.domain.config.server.StoreConfig;
+import cn.coderule.minimq.domain.config.message.TopicConfig;
 import cn.coderule.minimq.domain.service.store.api.SubscriptionStore;
 import cn.coderule.minimq.domain.service.store.api.TopicStore;
 import cn.coderule.minimq.rpc.common.rpc.config.RpcServerConfig;

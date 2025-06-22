@@ -4,8 +4,8 @@ import cn.coderule.minimq.broker.api.ProducerController;
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.minimq.broker.infra.store.BrokerMQStore;
 import cn.coderule.minimq.broker.server.bootstrap.BrokerContext;
-import cn.coderule.minimq.domain.config.BrokerConfig;
-import cn.coderule.minimq.domain.config.MessageConfig;
+import cn.coderule.minimq.domain.config.server.BrokerConfig;
+import cn.coderule.minimq.domain.config.message.MessageConfig;
 
 public class ProducerManager implements Lifecycle {
     private BrokerConfig brokerConfig;

@@ -1,6 +1,6 @@
 package cn.coderule.minimq.store.domain.commitlog.vo;
 
-import cn.coderule.minimq.domain.config.MessageConfig;
+import cn.coderule.minimq.domain.config.message.MessageConfig;
 import cn.coderule.minimq.domain.domain.model.message.MessageBO;
 import cn.coderule.minimq.domain.domain.model.message.MessageEncoder;
 

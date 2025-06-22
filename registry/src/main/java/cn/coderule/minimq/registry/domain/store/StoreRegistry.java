@@ -2,7 +2,7 @@ package cn.coderule.minimq.registry.domain.store;
 
 import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
-import cn.coderule.minimq.domain.config.RegistryConfig;
+import cn.coderule.minimq.domain.config.server.RegistryConfig;
 import cn.coderule.minimq.domain.domain.constant.MQConstants;
 import cn.coderule.minimq.domain.domain.constant.PermName;
 import cn.coderule.minimq.domain.domain.model.meta.topic.Topic;

@@ -1,7 +1,7 @@
 package cn.coderule.minimq.broker.api.validator;
 
 import cn.coderule.common.util.lang.string.StringUtil;
-import cn.coderule.minimq.domain.config.MessageConfig;
+import cn.coderule.minimq.domain.config.message.MessageConfig;
 import cn.coderule.minimq.domain.domain.enums.code.InvalidCode;
 import cn.coderule.minimq.domain.domain.model.message.MessageBO;
 import cn.coderule.minimq.domain.domain.model.meta.topic.TopicValidator;

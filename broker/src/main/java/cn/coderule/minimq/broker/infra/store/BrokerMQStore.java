@@ -2,7 +2,7 @@ package cn.coderule.minimq.broker.infra.store;
 
 import cn.coderule.minimq.broker.infra.embed.EmbedMQStore;
 import cn.coderule.minimq.broker.infra.remote.RemoteMQStore;
-import cn.coderule.minimq.domain.config.BrokerConfig;
+import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.domain.dto.EnqueueResult;
 import cn.coderule.minimq.domain.domain.dto.DequeueRequest;
 import cn.coderule.minimq.domain.domain.dto.DequeueResult;

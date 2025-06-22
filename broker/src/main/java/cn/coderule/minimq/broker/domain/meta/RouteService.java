@@ -3,7 +3,7 @@ package cn.coderule.minimq.broker.domain.meta;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.common.util.net.Address;
 import cn.coderule.common.util.net.NetworkUtil;
-import cn.coderule.minimq.domain.config.BrokerConfig;
+import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.domain.exception.InvalidConfigException;
 import cn.coderule.minimq.domain.domain.model.cluster.selector.MessageQueueView;
 import cn.coderule.minimq.domain.domain.model.cluster.cluster.GroupInfo;

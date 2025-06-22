@@ -4,7 +4,7 @@ import cn.coderule.common.util.net.Address;
 import cn.coderule.minimq.broker.domain.meta.RouteService;
 import cn.coderule.minimq.broker.domain.meta.SubscriptionService;
 import cn.coderule.minimq.broker.domain.meta.TopicService;
-import cn.coderule.minimq.domain.config.TopicConfig;
+import cn.coderule.minimq.domain.config.message.TopicConfig;
 import cn.coderule.minimq.domain.domain.enums.message.MessageType;
 import cn.coderule.minimq.domain.domain.model.consumer.subscription.SubscriptionGroup;
 import cn.coderule.minimq.domain.domain.model.meta.topic.Topic;

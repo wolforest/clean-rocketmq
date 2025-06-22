@@ -1,7 +1,7 @@
 package cn.coderule.minimq.registry.server.rpc;
 
 import cn.coderule.common.convention.service.Lifecycle;
-import cn.coderule.minimq.domain.config.RegistryConfig;
+import cn.coderule.minimq.domain.config.server.RegistryConfig;
 import cn.coderule.minimq.registry.processor.ClusterProcessor;
 import cn.coderule.minimq.registry.processor.KVProcessor;
 import cn.coderule.minimq.registry.processor.PropertyProcessor;

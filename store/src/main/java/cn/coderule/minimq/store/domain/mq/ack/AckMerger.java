@@ -1,7 +1,7 @@
 package cn.coderule.minimq.store.domain.mq.ack;
 
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
-import cn.coderule.minimq.domain.config.MessageConfig;
+import cn.coderule.minimq.domain.config.message.MessageConfig;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.ack.AckBuffer;
 import lombok.extern.slf4j.Slf4j;
 

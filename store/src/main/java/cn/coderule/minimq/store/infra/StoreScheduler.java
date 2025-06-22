@@ -1,7 +1,7 @@
 package cn.coderule.minimq.store.infra;
 
 import cn.coderule.common.convention.service.Lifecycle;
-import cn.coderule.minimq.domain.config.StoreConfig;
+import cn.coderule.minimq.domain.config.server.StoreConfig;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;

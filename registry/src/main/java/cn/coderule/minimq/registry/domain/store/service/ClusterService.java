@@ -1,6 +1,6 @@
 package cn.coderule.minimq.registry.domain.store.service;
 
-import cn.coderule.minimq.domain.config.RegistryConfig;
+import cn.coderule.minimq.domain.config.server.RegistryConfig;
 import cn.coderule.minimq.domain.domain.constant.PermName;
 import cn.coderule.minimq.domain.domain.model.meta.topic.Topic;
 import cn.coderule.minimq.registry.domain.store.model.Route;

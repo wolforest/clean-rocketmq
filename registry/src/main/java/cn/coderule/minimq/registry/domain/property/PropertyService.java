@@ -1,6 +1,6 @@
 package cn.coderule.minimq.registry.domain.property;
 
-import cn.coderule.minimq.domain.config.RegistryConfig;
+import cn.coderule.minimq.domain.config.server.RegistryConfig;
 import cn.coderule.minimq.rpc.common.rpc.config.Configuration;
 import cn.coderule.minimq.rpc.common.rpc.config.RpcServerConfig;
 import java.util.Arrays;

@@ -1,8 +1,8 @@
 package cn.coderule.minimq.broker.domain.meta;
 
 import cn.coderule.minimq.broker.infra.embed.EmbedTopicStore;
-import cn.coderule.minimq.domain.config.BrokerConfig;
-import cn.coderule.minimq.domain.config.TopicConfig;
+import cn.coderule.minimq.domain.config.server.BrokerConfig;
+import cn.coderule.minimq.domain.config.message.TopicConfig;
 import cn.coderule.minimq.domain.domain.model.meta.topic.Topic;
 import cn.coderule.minimq.domain.domain.model.cluster.cluster.GroupInfo;
 import cn.coderule.minimq.domain.domain.model.cluster.route.QueueInfo;

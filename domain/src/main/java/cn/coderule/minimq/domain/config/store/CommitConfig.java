@@ -1,4 +1,4 @@
-package cn.coderule.minimq.domain.config;
+package cn.coderule.minimq.domain.config.store;
 
 import cn.coderule.minimq.domain.domain.enums.store.FlushType;
 import java.io.Serializable;

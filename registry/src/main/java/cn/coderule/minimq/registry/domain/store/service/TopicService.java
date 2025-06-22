@@ -2,7 +2,7 @@ package cn.coderule.minimq.registry.domain.store.service;
 
 import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.common.util.lang.collection.MapUtil;
-import cn.coderule.minimq.domain.config.RegistryConfig;
+import cn.coderule.minimq.domain.config.server.RegistryConfig;
 import cn.coderule.minimq.domain.domain.constant.flag.TopicSysFlag;
 import cn.coderule.minimq.domain.domain.enums.message.MessageType;
 import cn.coderule.minimq.domain.domain.model.meta.topic.Topic;

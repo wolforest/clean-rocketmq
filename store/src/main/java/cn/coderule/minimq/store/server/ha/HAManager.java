@@ -1,7 +1,7 @@
 package cn.coderule.minimq.store.server.ha;
 
 import cn.coderule.common.convention.service.Lifecycle;
-import cn.coderule.minimq.domain.config.StoreConfig;
+import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.store.infra.StoreRegister;
 import cn.coderule.minimq.store.server.bootstrap.StoreContext;
 

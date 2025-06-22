@@ -1,6 +1,6 @@
 package cn.coderule.minimq.broker.domain.consumer.consumer;
 
-import cn.coderule.minimq.domain.config.BrokerConfig;
+import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.domain.dto.request.ConsumerInfo;
 import cn.coderule.minimq.domain.domain.dto.running.ConsumerGroupInfo;
 import cn.coderule.minimq.domain.domain.enums.consume.ConsumerEvent;

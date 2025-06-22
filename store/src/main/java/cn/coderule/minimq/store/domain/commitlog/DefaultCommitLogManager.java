@@ -1,8 +1,8 @@
 package cn.coderule.minimq.store.domain.commitlog;
 
-import cn.coderule.minimq.domain.config.CommitConfig;
-import cn.coderule.minimq.domain.config.MessageConfig;
-import cn.coderule.minimq.domain.config.StoreConfig;
+import cn.coderule.minimq.domain.config.store.CommitConfig;
+import cn.coderule.minimq.domain.config.message.MessageConfig;
+import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.domain.service.store.api.CommitLogStore;
 import cn.coderule.minimq.domain.service.store.domain.commitlog.CommitLog;
 import cn.coderule.minimq.domain.service.store.infra.MappedFileQueue;

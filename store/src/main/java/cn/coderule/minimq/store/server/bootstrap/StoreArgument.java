@@ -1,7 +1,7 @@
 package cn.coderule.minimq.store.server.bootstrap;
 
 import cn.coderule.common.convention.container.ApplicationContext;
-import cn.coderule.minimq.domain.config.StoreConfig;
+import cn.coderule.minimq.domain.config.server.StoreConfig;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

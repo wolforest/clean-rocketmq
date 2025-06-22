@@ -2,7 +2,7 @@ package cn.coderule.minimq.broker.domain.consumer.pop;
 
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.minimq.broker.server.bootstrap.BrokerContext;
-import cn.coderule.minimq.domain.config.BrokerConfig;
+import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.domain.model.meta.topic.KeyBuilder;
 
 public class PopManager implements Lifecycle {

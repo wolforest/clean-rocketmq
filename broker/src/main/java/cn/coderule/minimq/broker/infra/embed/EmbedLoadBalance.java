@@ -1,6 +1,6 @@
 package cn.coderule.minimq.broker.infra.embed;
 
-import cn.coderule.minimq.domain.config.BrokerConfig;
+import cn.coderule.minimq.domain.config.server.BrokerConfig;
 
 public class EmbedLoadBalance {
     private final BrokerConfig brokerConfig;

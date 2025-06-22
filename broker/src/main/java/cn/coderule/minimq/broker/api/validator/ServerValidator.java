@@ -1,6 +1,6 @@
 package cn.coderule.minimq.broker.api.validator;
 
-import cn.coderule.minimq.domain.config.BrokerConfig;
+import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.domain.enums.code.InvalidCode;
 import cn.coderule.minimq.domain.domain.exception.InvalidParameterException;
 

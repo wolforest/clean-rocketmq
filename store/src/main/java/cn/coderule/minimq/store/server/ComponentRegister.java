@@ -1,7 +1,7 @@
 package cn.coderule.minimq.store.server;
 
 import cn.coderule.common.convention.service.LifecycleManager;
-import cn.coderule.minimq.domain.config.StoreConfig;
+import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.domain.service.common.ServerEventBus;
 import cn.coderule.minimq.domain.service.store.domain.commitlog.CommitLogManager;
 import cn.coderule.minimq.domain.service.store.domain.commitlog.CommitLogDispatcherManager;

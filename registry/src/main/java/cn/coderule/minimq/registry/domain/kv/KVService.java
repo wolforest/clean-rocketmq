@@ -1,7 +1,7 @@
 package cn.coderule.minimq.registry.domain.kv;
 
 import cn.coderule.common.util.io.FileUtil;
-import cn.coderule.minimq.domain.config.RegistryConfig;
+import cn.coderule.minimq.domain.config.server.RegistryConfig;
 import cn.coderule.minimq.rpc.registry.protocol.body.KVTable;
 import java.util.HashMap;
 import java.util.Map.Entry;

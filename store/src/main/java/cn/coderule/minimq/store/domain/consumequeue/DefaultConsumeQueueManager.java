@@ -1,6 +1,6 @@
 package cn.coderule.minimq.store.domain.consumequeue;
 
-import cn.coderule.minimq.domain.config.ConsumeQueueConfig;
+import cn.coderule.minimq.domain.config.store.ConsumeQueueConfig;
 import cn.coderule.minimq.domain.service.store.domain.commitlog.CommitEventDispatcher;
 import cn.coderule.minimq.domain.service.store.domain.consumequeue.ConsumeQueueGateway;
 import cn.coderule.minimq.domain.service.store.domain.meta.TopicService;

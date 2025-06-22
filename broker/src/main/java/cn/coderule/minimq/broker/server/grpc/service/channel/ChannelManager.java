@@ -3,7 +3,7 @@ package cn.coderule.minimq.broker.server.grpc.service.channel;
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.lang.concurrent.thread.DefaultThreadFactory;
 import cn.coderule.common.util.lang.ThreadUtil;
-import cn.coderule.minimq.domain.config.GrpcConfig;
+import cn.coderule.minimq.domain.config.server.GrpcConfig;
 import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
 import cn.coderule.minimq.rpc.broker.grpc.ResultFuture;
 import cn.coderule.minimq.rpc.common.core.relay.RelayService;

@@ -13,7 +13,7 @@ import cn.coderule.minimq.broker.infra.remote.RemoteStoreManager;
 import cn.coderule.minimq.broker.infra.store.StoreManager;
 import cn.coderule.minimq.broker.server.bootstrap.BrokerContext;
 import cn.coderule.minimq.broker.server.grpc.GrpcManager;
-import cn.coderule.minimq.domain.config.BrokerConfig;
+import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.service.common.ServerEventBus;
 import cn.coderule.minimq.rpc.registry.route.RouteLoader;
 import cn.coderule.minimq.store.server.bootstrap.StoreContext;

@@ -1,6 +1,6 @@
 package cn.coderule.minimq.domain.domain.model.message;
 
-import cn.coderule.minimq.domain.config.MessageConfig;
+import cn.coderule.minimq.domain.config.message.MessageConfig;
 import cn.coderule.minimq.domain.domain.enums.store.EnqueueStatus;
 import cn.coderule.minimq.domain.domain.enums.message.MessageVersion;
 import cn.coderule.minimq.domain.domain.exception.EnqueueException;

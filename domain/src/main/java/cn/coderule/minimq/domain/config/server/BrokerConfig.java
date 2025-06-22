@@ -1,7 +1,11 @@
-package cn.coderule.minimq.domain.config;
+package cn.coderule.minimq.domain.config.server;
 
 import cn.coderule.common.util.lang.SystemUtil;
 import cn.coderule.common.util.net.NetworkUtil;
+import cn.coderule.minimq.domain.config.message.MessageConfig;
+import cn.coderule.minimq.domain.config.TimerConfig;
+import cn.coderule.minimq.domain.config.message.TopicConfig;
+import cn.coderule.minimq.domain.config.TransactionConfig;
 import java.io.Serializable;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

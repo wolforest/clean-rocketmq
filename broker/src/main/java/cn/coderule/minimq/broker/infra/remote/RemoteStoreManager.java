@@ -3,7 +3,7 @@ package cn.coderule.minimq.broker.infra.remote;
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.minimq.rpc.registry.route.RouteLoader;
 import cn.coderule.minimq.broker.server.bootstrap.BrokerContext;
-import cn.coderule.minimq.domain.config.BrokerConfig;
+import cn.coderule.minimq.domain.config.server.BrokerConfig;
 
 public class RemoteStoreManager implements Lifecycle {
     private BrokerConfig brokerConfig;

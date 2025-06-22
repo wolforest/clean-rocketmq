@@ -2,7 +2,7 @@ package cn.coderule.minimq.registry.server.rpc;
 
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.util.lang.collection.MapUtil;
-import cn.coderule.minimq.domain.config.RegistryConfig;
+import cn.coderule.minimq.domain.config.server.RegistryConfig;
 import cn.coderule.minimq.registry.domain.store.model.Route;
 import cn.coderule.minimq.registry.domain.store.model.StoreStatusInfo;
 import cn.coderule.minimq.rpc.common.rpc.RpcClient;

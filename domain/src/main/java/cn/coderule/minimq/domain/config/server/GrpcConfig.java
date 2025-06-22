@@ -1,4 +1,4 @@
-package cn.coderule.minimq.domain.config;
+package cn.coderule.minimq.domain.config.server;
 
 import cn.coderule.common.util.lang.SystemUtil;
 import java.io.Serializable;

@@ -1,6 +1,6 @@
 package cn.coderule.minimq.store.domain.commitlog.flush;
 
-import cn.coderule.minimq.domain.config.CommitConfig;
+import cn.coderule.minimq.domain.config.store.CommitConfig;
 import cn.coderule.minimq.domain.service.store.infra.MappedFileQueue;
 import lombok.extern.slf4j.Slf4j;
 

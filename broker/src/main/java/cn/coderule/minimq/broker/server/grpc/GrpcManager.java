@@ -4,8 +4,8 @@ import cn.coderule.minimq.broker.server.grpc.service.message.MessageManager;
 import cn.coderule.minimq.broker.server.grpc.service.message.MessageService;
 import cn.coderule.minimq.broker.server.bootstrap.BrokerContext;
 import cn.coderule.common.convention.service.Lifecycle;
-import cn.coderule.minimq.domain.config.BrokerConfig;
-import cn.coderule.minimq.domain.config.GrpcConfig;
+import cn.coderule.minimq.domain.config.server.BrokerConfig;
+import cn.coderule.minimq.domain.config.server.GrpcConfig;
 
 public class GrpcManager implements Lifecycle {
     private GrpcConfig grpcConfig;

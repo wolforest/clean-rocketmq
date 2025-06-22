@@ -3,7 +3,7 @@ package cn.coderule.minimq.store.domain.commitlog.flush;
 import cn.coderule.minimq.domain.service.store.server.CheckPoint;
 import cn.coderule.minimq.store.domain.commitlog.vo.GroupCommitRequest;
 import cn.coderule.common.convention.service.Lifecycle;
-import cn.coderule.minimq.domain.config.CommitConfig;
+import cn.coderule.minimq.domain.config.store.CommitConfig;
 import cn.coderule.minimq.domain.domain.enums.store.FlushType;
 import cn.coderule.minimq.domain.domain.dto.EnqueueResult;
 import cn.coderule.minimq.domain.domain.dto.InsertFuture;
