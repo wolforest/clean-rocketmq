@@ -7,7 +7,9 @@ import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
 import cn.coderule.minimq.domain.domain.model.message.MessageBO;
 import cn.coderule.minimq.domain.utils.MessageUtils;
 import java.util.concurrent.CompletableFuture;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class PrepareService {
     public CompletableFuture<EnqueueResult> prepare(RequestContext context, MessageBO messageBO) {
         return null;
