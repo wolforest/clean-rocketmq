@@ -1,6 +1,6 @@
-package cn.coderule.minimq.domain.domain.model.producer;
+package cn.coderule.minimq.domain.domain.producer;
 
-import cn.coderule.minimq.domain.domain.model.cluster.ClientChannelInfo;
+import cn.coderule.minimq.domain.domain.cluster.ClientChannelInfo;
 import java.io.Serializable;
 import lombok.Data;
 

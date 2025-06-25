@@ -1,4 +1,4 @@
-package cn.coderule.minimq.domain.domain.model.cluster.store;
+package cn.coderule.minimq.domain.domain.cluster.store;
 
 import cn.coderule.minimq.domain.service.store.infra.MappedFile;
 import java.io.Serializable;

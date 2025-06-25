@@ -1,7 +1,7 @@
 
 package cn.coderule.minimq.rpc.broker.rpc.protocol.body;
 
-import cn.coderule.minimq.domain.domain.core.enums.consume.CMResult;
+import cn.coderule.minimq.domain.core.enums.consume.CMResult;
 import cn.coderule.minimq.rpc.common.rpc.protocol.codec.RpcSerializable;
 
 public class ConsumeMessageDirectlyResult extends RpcSerializable {

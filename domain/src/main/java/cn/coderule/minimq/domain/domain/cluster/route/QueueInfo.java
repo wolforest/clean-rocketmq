@@ -2,10 +2,10 @@
 
 /*
   $Id: QueueData.java 1835 2013-05-16 02:00:50Z vintagewang@apache.org $
- */package cn.coderule.minimq.domain.domain.model.cluster.route;
+ */package cn.coderule.minimq.domain.domain.cluster.route;
 
-import cn.coderule.minimq.domain.domain.core.enums.message.MessageType;
-import cn.coderule.minimq.domain.domain.model.meta.topic.Topic;
+import cn.coderule.minimq.domain.core.enums.message.MessageType;
+import cn.coderule.minimq.domain.domain.meta.topic.Topic;
 import lombok.Getter;
 import lombok.Setter;
 

@@ -2,7 +2,7 @@ package cn.coderule.minimq.broker.server.grpc.interceptor;
 
 import cn.coderule.minimq.broker.server.grpc.service.channel.ChannelManager;
 import cn.coderule.minimq.broker.server.grpc.service.channel.SettingManager;
-import cn.coderule.minimq.domain.domain.core.enums.produce.ProducerEvent;
+import cn.coderule.minimq.domain.core.enums.produce.ProducerEvent;
 import cn.coderule.minimq.domain.domain.model.cluster.ClientChannelInfo;
 import cn.coderule.minimq.domain.service.broker.listener.ProducerListener;
 import lombok.extern.slf4j.Slf4j;

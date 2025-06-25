@@ -1,11 +1,11 @@
-package cn.coderule.minimq.domain.domain.model.message;
+package cn.coderule.minimq.domain.domain.message;
 
 import cn.coderule.common.util.lang.collection.MapUtil;
-import cn.coderule.minimq.domain.domain.core.constant.flag.MessageSysFlag;
-import cn.coderule.minimq.domain.domain.core.constant.MessageConst;
-import cn.coderule.minimq.domain.domain.core.enums.message.MessageStatus;
-import cn.coderule.minimq.domain.domain.core.enums.message.MessageVersion;
-import cn.coderule.minimq.domain.domain.core.enums.message.TagType;
+import cn.coderule.minimq.domain.core.constant.flag.MessageSysFlag;
+import cn.coderule.minimq.domain.core.constant.MessageConst;
+import cn.coderule.minimq.domain.core.enums.message.MessageStatus;
+import cn.coderule.minimq.domain.core.enums.message.MessageVersion;
+import cn.coderule.minimq.domain.core.enums.message.TagType;
 import cn.coderule.minimq.domain.utils.MessageUtils;
 import java.io.Serializable;
 import java.net.SocketAddress;

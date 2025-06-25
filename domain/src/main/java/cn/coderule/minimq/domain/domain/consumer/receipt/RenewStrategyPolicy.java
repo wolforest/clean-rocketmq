@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.coderule.minimq.domain.domain.model.consumer.receipt;
+package cn.coderule.minimq.domain.domain.consumer.receipt;
 
 import cn.coderule.minimq.domain.service.broker.consume.RetryPolicy;
 import com.google.common.base.MoreObjects;

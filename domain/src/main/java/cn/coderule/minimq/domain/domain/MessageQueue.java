@@ -1,6 +1,6 @@
 package cn.coderule.minimq.domain.domain;
 
-import cn.coderule.minimq.domain.domain.core.enums.message.MessageType;
+import cn.coderule.minimq.domain.core.enums.message.MessageType;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

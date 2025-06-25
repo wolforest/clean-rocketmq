@@ -1,8 +1,8 @@
-package cn.coderule.minimq.domain.domain.model.meta.topic;
+package cn.coderule.minimq.domain.domain.meta.topic;
 
-import cn.coderule.minimq.domain.domain.core.enums.message.MessageType;
-import cn.coderule.minimq.domain.utils.attribute.Attribute;
-import cn.coderule.minimq.domain.utils.attribute.EnumAttribute;
+import cn.coderule.minimq.domain.core.enums.message.MessageType;
+import cn.coderule.minimq.domain.core.attribute.Attribute;
+import cn.coderule.minimq.domain.core.attribute.EnumAttribute;
 import java.util.HashMap;
 import java.util.Map;
 

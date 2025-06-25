@@ -1,9 +1,9 @@
 
-package cn.coderule.minimq.domain.domain.model.consumer.receipt;
+package cn.coderule.minimq.domain.domain.consumer.receipt;
 
 import cn.coderule.minimq.domain.config.message.MessageConfig;
-import cn.coderule.minimq.domain.domain.core.enums.code.BrokerExceptionCode;
-import cn.coderule.minimq.domain.domain.core.exception.BrokerException;
+import cn.coderule.minimq.domain.core.enums.code.BrokerExceptionCode;
+import cn.coderule.minimq.domain.core.exception.BrokerException;
 import com.google.common.base.MoreObjects;
 import java.util.Map;
 import java.util.Set;

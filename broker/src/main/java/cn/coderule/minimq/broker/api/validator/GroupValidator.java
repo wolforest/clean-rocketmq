@@ -1,8 +1,8 @@
 package cn.coderule.minimq.broker.api.validator;
 
 import cn.coderule.common.util.lang.string.StringUtil;
-import cn.coderule.minimq.domain.domain.core.enums.code.InvalidCode;
-import cn.coderule.minimq.domain.domain.core.exception.InvalidParameterException;
+import cn.coderule.minimq.domain.core.enums.code.InvalidCode;
+import cn.coderule.minimq.domain.core.exception.InvalidParameterException;
 
 import static cn.coderule.minimq.domain.domain.meta.topic.TopicValidator.isTopicOrGroupIllegal;
 

@@ -1,5 +1,5 @@
 
-package cn.coderule.minimq.domain.domain.model.cluster.selector;
+package cn.coderule.minimq.domain.domain.cluster.selector;
 
 import cn.coderule.common.lang.concurrent.thread.local.ThreadLocalSequence;
 import cn.coderule.minimq.domain.service.broker.selector.LatencyFaultTolerance;

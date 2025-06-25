@@ -1,6 +1,6 @@
-package cn.coderule.minimq.domain.domain.model.cluster;
+package cn.coderule.minimq.domain.domain.cluster;
 
-import cn.coderule.minimq.domain.domain.core.enums.code.LanguageCode;
+import cn.coderule.minimq.domain.core.enums.code.LanguageCode;
 import io.netty.channel.Channel;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;

@@ -4,7 +4,7 @@ import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.common.util.net.Address;
 import cn.coderule.common.util.net.NetworkUtil;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
-import cn.coderule.minimq.domain.domain.core.exception.InvalidConfigException;
+import cn.coderule.minimq.domain.core.exception.InvalidConfigException;
 import cn.coderule.minimq.domain.domain.cluster.selector.MessageQueueView;
 import cn.coderule.minimq.domain.domain.cluster.cluster.GroupInfo;
 import cn.coderule.minimq.domain.domain.cluster.route.RouteInfo;

@@ -2,7 +2,7 @@
 package cn.coderule.minimq.rpc.broker.rpc.protocol.body;
 
 import cn.coderule.minimq.domain.domain.model.MessageQueue;
-import cn.coderule.minimq.domain.domain.core.enums.consume.ConsumeType;
+import cn.coderule.minimq.domain.core.enums.consume.ConsumeType;
 import cn.coderule.minimq.domain.domain.model.consumer.running.ConsumeStatus;
 import cn.coderule.minimq.domain.domain.model.consumer.running.PopProcessQueueInfo;
 import cn.coderule.minimq.domain.domain.model.consumer.running.ProcessQueueInfo;

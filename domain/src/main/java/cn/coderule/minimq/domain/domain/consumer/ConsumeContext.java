@@ -1,6 +1,6 @@
-package cn.coderule.minimq.domain.domain.model.consumer;
+package cn.coderule.minimq.domain.domain.consumer;
 
-import cn.coderule.minimq.domain.domain.model.meta.topic.Topic;
+import cn.coderule.minimq.domain.domain.meta.topic.Topic;
 import java.util.Map;
 
 public class ConsumeContext {

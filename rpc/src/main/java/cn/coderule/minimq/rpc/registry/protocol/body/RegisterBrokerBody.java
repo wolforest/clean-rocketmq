@@ -1,7 +1,7 @@
 
 package cn.coderule.minimq.rpc.registry.protocol.body;
 
-import cn.coderule.minimq.domain.domain.core.constant.MQConstants;
+import cn.coderule.minimq.domain.core.constant.MQConstants;
 import cn.coderule.minimq.domain.domain.model.meta.topic.Topic;
 import cn.coderule.minimq.domain.domain.model.meta.DataVersion;
 import cn.coderule.minimq.rpc.common.rpc.protocol.codec.RpcSerializable;

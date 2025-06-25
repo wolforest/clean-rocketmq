@@ -1,7 +1,7 @@
 
 package cn.coderule.minimq.rpc.broker.rpc.protocol.header;
 
-import cn.coderule.minimq.domain.domain.core.constant.flag.MessageSysFlag;
+import cn.coderule.minimq.domain.core.constant.flag.MessageSysFlag;
 import cn.coderule.minimq.rpc.common.rpc.core.annotation.CFNotNull;
 import cn.coderule.minimq.rpc.common.rpc.core.annotation.CFNullable;
 import cn.coderule.minimq.rpc.common.rpc.core.annotation.RocketMQAction;

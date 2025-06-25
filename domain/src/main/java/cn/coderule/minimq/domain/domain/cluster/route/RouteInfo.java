@@ -2,12 +2,12 @@
 
 /**
  * $Id: TopicRouteData.java 1835 2013-05-16 02:00:50Z vintagewang@apache.org $
- */package cn.coderule.minimq.domain.domain.model.cluster.route;
+ */package cn.coderule.minimq.domain.domain.cluster.route;
 
 import cn.coderule.common.util.lang.string.JSONUtil;
-import cn.coderule.minimq.domain.domain.core.enums.message.MessageType;
-import cn.coderule.minimq.domain.domain.model.cluster.cluster.GroupInfo;
-import cn.coderule.minimq.domain.domain.model.meta.statictopic.TopicQueueMappingInfo;
+import cn.coderule.minimq.domain.core.enums.message.MessageType;
+import cn.coderule.minimq.domain.domain.cluster.cluster.GroupInfo;
+import cn.coderule.minimq.domain.domain.meta.statictopic.TopicQueueMappingInfo;
 import com.alibaba.fastjson2.JSONWriter;
 import java.io.Serializable;
 import java.util.ArrayList;

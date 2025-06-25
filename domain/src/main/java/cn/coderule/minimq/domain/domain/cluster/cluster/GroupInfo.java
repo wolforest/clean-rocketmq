@@ -1,6 +1,6 @@
-package cn.coderule.minimq.domain.domain.model.cluster.cluster;
+package cn.coderule.minimq.domain.domain.cluster.cluster;
 
-import cn.coderule.minimq.domain.domain.core.constant.MQConstants;
+import cn.coderule.minimq.domain.core.constant.MQConstants;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;

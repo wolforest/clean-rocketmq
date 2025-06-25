@@ -1,4 +1,4 @@
-package cn.coderule.minimq.domain.domain.model.meta.statictopic;
+package cn.coderule.minimq.domain.domain.meta.statictopic;
 
 import java.util.List;
 import java.util.Map;

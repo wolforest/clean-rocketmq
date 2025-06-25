@@ -5,7 +5,7 @@ import com.sun.jna.NativeLong;
 import com.sun.jna.Pointer;
 import cn.coderule.common.util.lang.ByteUtil;
 import cn.coderule.common.util.io.DirUtil;
-import cn.coderule.minimq.domain.domain.core.enums.store.FlushType;
+import cn.coderule.minimq.domain.core.enums.store.FlushType;
 import cn.coderule.minimq.domain.service.store.infra.MappedFile;
 import cn.coderule.minimq.domain.domain.model.cluster.store.InsertResult;
 import cn.coderule.minimq.domain.domain.model.cluster.store.SelectedMappedBuffer;

@@ -3,10 +3,10 @@ package cn.coderule.minimq.store.domain.commitlog.flush;
 import cn.coderule.minimq.domain.service.store.server.CheckPoint;
 import cn.coderule.minimq.store.domain.commitlog.vo.GroupCommitRequest;
 import cn.coderule.common.util.lang.ThreadUtil;
-import cn.coderule.minimq.domain.domain.core.enums.store.EnqueueStatus;
+import cn.coderule.minimq.domain.core.enums.store.EnqueueStatus;
 import cn.coderule.minimq.domain.service.store.infra.MappedFileQueue;
-import cn.coderule.minimq.domain.domain.core.lock.commitlog.CommitLogLock;
-import cn.coderule.minimq.domain.domain.core.lock.commitlog.CommitLogSpinLock;
+import cn.coderule.minimq.domain.core.lock.commitlog.CommitLogLock;
+import cn.coderule.minimq.domain.core.lock.commitlog.CommitLogSpinLock;
 import java.util.LinkedList;
 import lombok.extern.slf4j.Slf4j;
 

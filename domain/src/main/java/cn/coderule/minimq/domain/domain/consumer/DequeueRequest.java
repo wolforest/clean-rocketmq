@@ -1,4 +1,4 @@
-package cn.coderule.minimq.domain.domain.model.consumer;
+package cn.coderule.minimq.domain.domain.consumer;
 
 import cn.coderule.minimq.domain.service.store.domain.mq.MessageFilter;
 import java.io.Serializable;

@@ -1,7 +1,7 @@
-package cn.coderule.minimq.domain.domain.model.meta;
+package cn.coderule.minimq.domain.domain.meta;
 
-import cn.coderule.minimq.domain.domain.model.MessageQueue;
-import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
+import cn.coderule.minimq.domain.domain.MessageQueue;
+import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import java.io.Serializable;
 import lombok.Data;
 

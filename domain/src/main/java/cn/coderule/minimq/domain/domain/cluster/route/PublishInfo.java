@@ -1,8 +1,8 @@
-package cn.coderule.minimq.domain.domain.model.cluster.route;
+package cn.coderule.minimq.domain.domain.cluster.route;
 
 import cn.coderule.common.lang.concurrent.thread.local.ThreadLocalSequence;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
-import cn.coderule.minimq.domain.domain.model.MessageQueue;
+import cn.coderule.minimq.domain.domain.MessageQueue;
 import cn.coderule.minimq.domain.service.common.QueueFilter;
 import com.google.common.base.Preconditions;
 import java.io.Serializable;

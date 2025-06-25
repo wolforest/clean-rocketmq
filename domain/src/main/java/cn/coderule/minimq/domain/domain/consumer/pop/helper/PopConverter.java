@@ -1,13 +1,13 @@
-package cn.coderule.minimq.domain.domain.model.consumer.pop.helper;
+package cn.coderule.minimq.domain.domain.consumer.pop.helper;
 
-import cn.coderule.minimq.domain.domain.core.constant.MQConstants;
-import cn.coderule.minimq.domain.domain.core.constant.MessageConst;
-import cn.coderule.minimq.domain.domain.core.constant.PopConstants;
-import cn.coderule.minimq.domain.domain.model.consumer.pop.ack.AckMsg;
-import cn.coderule.minimq.domain.domain.model.consumer.pop.ack.BatchAckMsg;
-import cn.coderule.minimq.domain.domain.model.consumer.pop.checkpoint.PopCheckPoint;
-import cn.coderule.minimq.domain.domain.model.message.MessageBO;
-import cn.coderule.minimq.domain.domain.model.meta.topic.KeyBuilder;
+import cn.coderule.minimq.domain.core.constant.MQConstants;
+import cn.coderule.minimq.domain.core.constant.MessageConst;
+import cn.coderule.minimq.domain.core.constant.PopConstants;
+import cn.coderule.minimq.domain.domain.consumer.ack.AckMsg;
+import cn.coderule.minimq.domain.domain.consumer.ack.BatchAckMsg;
+import cn.coderule.minimq.domain.domain.consumer.pop.checkpoint.PopCheckPoint;
+import cn.coderule.minimq.domain.domain.message.MessageBO;
+import cn.coderule.minimq.domain.domain.meta.topic.KeyBuilder;
 import cn.coderule.minimq.domain.utils.MessageUtils;
 import com.alibaba.fastjson2.JSON;
 import java.net.SocketAddress;

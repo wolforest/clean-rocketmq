@@ -1,11 +1,11 @@
-package cn.coderule.minimq.domain.domain.model.meta.topic;
+package cn.coderule.minimq.domain.domain.meta.topic;
 
 import cn.coderule.common.util.lang.collection.MapUtil;
-import cn.coderule.minimq.domain.domain.core.enums.message.MessageType;
+import cn.coderule.minimq.domain.core.enums.message.MessageType;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.TypeReference;
 import com.alibaba.fastjson2.annotation.JSONField;
-import cn.coderule.minimq.domain.domain.core.enums.message.TagType;
+import cn.coderule.minimq.domain.core.enums.message.TagType;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;

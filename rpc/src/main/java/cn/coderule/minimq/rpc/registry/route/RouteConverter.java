@@ -2,8 +2,8 @@ package cn.coderule.minimq.rpc.registry.route;
 
 import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.common.util.lang.collection.MapUtil;
-import cn.coderule.minimq.domain.domain.core.constant.MQConstants;
-import cn.coderule.minimq.domain.domain.core.constant.PermName;
+import cn.coderule.minimq.domain.core.constant.MQConstants;
+import cn.coderule.minimq.domain.core.constant.PermName;
 import cn.coderule.minimq.domain.domain.model.MessageQueue;
 import cn.coderule.minimq.domain.domain.model.cluster.cluster.GroupInfo;
 import cn.coderule.minimq.domain.domain.model.cluster.route.PublishInfo;

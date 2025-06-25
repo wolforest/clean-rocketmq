@@ -1,7 +1,7 @@
-package cn.coderule.minimq.domain.domain.model.cluster.route;
+package cn.coderule.minimq.domain.domain.cluster.route;
 
-import cn.coderule.minimq.domain.domain.model.meta.topic.Topic;
-import cn.coderule.minimq.domain.domain.core.enums.RequestType;
+import cn.coderule.minimq.domain.domain.meta.topic.Topic;
+import cn.coderule.minimq.domain.core.enums.RequestType;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

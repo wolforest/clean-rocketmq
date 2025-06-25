@@ -1,6 +1,6 @@
 package cn.coderule.minimq.store.domain.consumequeue.queue;
 
-import cn.coderule.minimq.domain.domain.core.enums.store.QueueType;
+import cn.coderule.minimq.domain.core.enums.store.QueueType;
 import cn.coderule.minimq.domain.domain.model.cluster.store.CommitEvent;
 import cn.coderule.minimq.domain.domain.model.cluster.store.QueueUnit;
 import cn.coderule.minimq.domain.service.store.domain.consumequeue.ConsumeQueue;

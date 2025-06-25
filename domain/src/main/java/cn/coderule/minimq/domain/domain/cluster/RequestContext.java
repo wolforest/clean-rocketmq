@@ -1,4 +1,4 @@
-package cn.coderule.minimq.domain.domain.model.cluster;
+package cn.coderule.minimq.domain.domain.cluster;
 
 import io.netty.channel.Channel;
 import java.util.HashMap;

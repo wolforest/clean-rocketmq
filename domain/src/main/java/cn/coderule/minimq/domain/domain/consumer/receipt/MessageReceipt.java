@@ -1,5 +1,5 @@
 
-package cn.coderule.minimq.domain.domain.model.consumer.receipt;
+package cn.coderule.minimq.domain.domain.consumer.receipt;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;

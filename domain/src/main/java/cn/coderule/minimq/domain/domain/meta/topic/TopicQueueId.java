@@ -1,4 +1,4 @@
-package cn.coderule.minimq.domain.domain.model.meta.topic;
+package cn.coderule.minimq.domain.domain.meta.topic;
 
 import cn.coderule.common.util.lang.bean.BeanUtil;
 

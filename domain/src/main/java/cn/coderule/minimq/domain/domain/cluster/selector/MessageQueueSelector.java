@@ -1,11 +1,11 @@
-package cn.coderule.minimq.domain.domain.model.cluster.selector;
+package cn.coderule.minimq.domain.domain.cluster.selector;
 
 import cn.coderule.common.util.lang.string.StringUtil;
-import cn.coderule.minimq.domain.domain.core.constant.PermName;
-import cn.coderule.minimq.domain.domain.model.MessageQueue;
-import cn.coderule.minimq.domain.domain.model.meta.topic.TopicRouteWrapper;
+import cn.coderule.minimq.domain.core.constant.PermName;
+import cn.coderule.minimq.domain.domain.MessageQueue;
+import cn.coderule.minimq.domain.domain.meta.topic.TopicRouteWrapper;
 import cn.coderule.minimq.domain.service.common.QueueFilter;
-import cn.coderule.minimq.domain.domain.model.cluster.route.QueueInfo;
+import cn.coderule.minimq.domain.domain.cluster.route.QueueInfo;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Preconditions;
 import com.google.common.math.IntMath;

@@ -1,4 +1,4 @@
-package cn.coderule.minimq.domain.domain.model.meta.statictopic;
+package cn.coderule.minimq.domain.domain.meta.statictopic;
 
 import com.google.common.collect.ImmutableList;
 import java.util.List;

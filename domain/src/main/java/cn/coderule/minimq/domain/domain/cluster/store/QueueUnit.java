@@ -1,4 +1,4 @@
-package cn.coderule.minimq.domain.domain.model.cluster.store;
+package cn.coderule.minimq.domain.domain.cluster.store;
 
 import java.io.Serializable;
 import java.nio.ByteBuffer;

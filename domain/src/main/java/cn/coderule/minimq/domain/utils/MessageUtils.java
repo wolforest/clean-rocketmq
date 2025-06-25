@@ -1,7 +1,7 @@
 package cn.coderule.minimq.domain.utils;
 
 import cn.coderule.common.util.lang.string.StringUtil;
-import cn.coderule.minimq.domain.domain.core.enums.message.TagType;
+import cn.coderule.minimq.domain.core.enums.message.TagType;
 import java.util.HashMap;
 import java.util.Map;
 

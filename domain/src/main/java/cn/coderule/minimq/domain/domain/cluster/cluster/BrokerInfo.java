@@ -1,4 +1,4 @@
-package cn.coderule.minimq.domain.domain.model.cluster.cluster;
+package cn.coderule.minimq.domain.domain.cluster.cluster;
 
 import java.io.Serializable;
 

@@ -2,7 +2,7 @@
 
 /**
  * $Id: ProducerData.java 1835 2013-05-16 02:00:50Z vintagewang@apache.org $
- */package cn.coderule.minimq.domain.domain.model.cluster.heartbeat;
+ */package cn.coderule.minimq.domain.domain.cluster.heartbeat;
 
 public class ProducerData {
     private String groupName;

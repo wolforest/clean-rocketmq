@@ -1,7 +1,7 @@
-package cn.coderule.minimq.domain.domain.model.cluster.selector;
+package cn.coderule.minimq.domain.domain.cluster.selector;
 
-import cn.coderule.minimq.domain.domain.model.cluster.route.RouteInfo;
-import cn.coderule.minimq.domain.domain.model.meta.topic.TopicRouteWrapper;
+import cn.coderule.minimq.domain.domain.cluster.route.RouteInfo;
+import cn.coderule.minimq.domain.domain.meta.topic.TopicRouteWrapper;
 import com.google.common.base.MoreObjects;
 
 

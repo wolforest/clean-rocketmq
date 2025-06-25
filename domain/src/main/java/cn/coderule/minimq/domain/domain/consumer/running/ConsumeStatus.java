@@ -1,5 +1,5 @@
 
-package cn.coderule.minimq.domain.domain.model.consumer.running;
+package cn.coderule.minimq.domain.domain.consumer.running;
 
 public class ConsumeStatus {
     private double pullRT;

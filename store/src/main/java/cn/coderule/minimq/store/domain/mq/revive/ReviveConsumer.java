@@ -4,7 +4,7 @@ import cn.coderule.common.util.lang.ByteUtil;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.common.util.lang.string.JSONUtil;
 import cn.coderule.minimq.domain.config.message.MessageConfig;
-import cn.coderule.minimq.domain.domain.core.constant.PopConstants;
+import cn.coderule.minimq.domain.core.constant.PopConstants;
 import cn.coderule.minimq.domain.domain.model.consumer.DequeueRequest;
 import cn.coderule.minimq.domain.domain.model.consumer.DequeueResult;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.ack.AckMsg;

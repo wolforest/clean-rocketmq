@@ -1,7 +1,7 @@
-package cn.coderule.minimq.domain.domain.model.cluster.store;
+package cn.coderule.minimq.domain.domain.cluster.store;
 
-import cn.coderule.minimq.domain.domain.model.producer.EnqueueResult;
-import cn.coderule.minimq.domain.domain.core.enums.store.EnqueueStatus;
+import cn.coderule.minimq.domain.domain.producer.EnqueueResult;
+import cn.coderule.minimq.domain.core.enums.store.EnqueueStatus;
 import java.io.Serializable;
 import java.util.concurrent.CompletableFuture;
 import lombok.AllArgsConstructor;

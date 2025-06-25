@@ -1,9 +1,9 @@
-package cn.coderule.minimq.domain.domain.model.message;
+package cn.coderule.minimq.domain.domain.message;
 
 import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.common.util.lang.SystemUtil;
 import cn.coderule.common.util.net.NetworkUtil;
-import cn.coderule.minimq.domain.domain.core.constant.MessageConst;
+import cn.coderule.minimq.domain.core.constant.MessageConst;
 import java.nio.ByteBuffer;
 import java.util.Calendar;
 import java.util.Date;

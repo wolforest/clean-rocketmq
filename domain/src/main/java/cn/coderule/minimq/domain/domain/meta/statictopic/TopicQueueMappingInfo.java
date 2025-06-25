@@ -1,6 +1,6 @@
-package cn.coderule.minimq.domain.domain.model.meta.statictopic;
+package cn.coderule.minimq.domain.domain.meta.statictopic;
 
-import cn.coderule.minimq.domain.domain.core.constant.MQConstants;
+import cn.coderule.minimq.domain.core.constant.MQConstants;
 import java.io.Serializable;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;

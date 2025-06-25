@@ -1,7 +1,7 @@
-package cn.coderule.minimq.domain.domain.model.message;
+package cn.coderule.minimq.domain.domain.message;
 
 import cn.coderule.common.util.encrypt.HashUtil;
-import cn.coderule.minimq.domain.domain.core.enums.message.MessageVersion;
+import cn.coderule.minimq.domain.core.enums.message.MessageVersion;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;

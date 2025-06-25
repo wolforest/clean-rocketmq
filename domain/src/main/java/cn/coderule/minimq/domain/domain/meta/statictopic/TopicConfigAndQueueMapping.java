@@ -1,6 +1,6 @@
-package cn.coderule.minimq.domain.domain.model.meta.statictopic;
+package cn.coderule.minimq.domain.domain.meta.statictopic;
 
-import cn.coderule.minimq.domain.domain.model.meta.topic.Topic;
+import cn.coderule.minimq.domain.domain.meta.topic.Topic;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;

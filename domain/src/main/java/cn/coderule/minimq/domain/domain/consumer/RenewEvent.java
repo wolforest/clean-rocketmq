@@ -1,9 +1,9 @@
 
-package cn.coderule.minimq.domain.domain.model.consumer;
+package cn.coderule.minimq.domain.domain.consumer;
 
-import cn.coderule.minimq.domain.domain.model.consumer.pop.ack.AckResult;
-import cn.coderule.minimq.domain.domain.model.consumer.receipt.MessageReceipt;
-import cn.coderule.minimq.domain.domain.model.consumer.receipt.ReceiptHandleGroupKey;
+import cn.coderule.minimq.domain.domain.consumer.ack.AckResult;
+import cn.coderule.minimq.domain.domain.consumer.receipt.MessageReceipt;
+import cn.coderule.minimq.domain.domain.consumer.receipt.ReceiptHandleGroupKey;
 import java.util.concurrent.CompletableFuture;
 
 public class RenewEvent {

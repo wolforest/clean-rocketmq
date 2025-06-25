@@ -1,6 +1,6 @@
 package cn.coderule.minimq.broker.domain.meta;
 
-import cn.coderule.minimq.domain.domain.core.enums.message.MessageType;
+import cn.coderule.minimq.domain.core.enums.message.MessageType;
 import cn.coderule.minimq.domain.domain.meta.topic.Topic;
 import cn.coderule.minimq.domain.service.broker.infra.TopicStore;
 import java.util.concurrent.CompletableFuture;

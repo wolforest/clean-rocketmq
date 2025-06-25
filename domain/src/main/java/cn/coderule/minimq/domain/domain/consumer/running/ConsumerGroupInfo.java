@@ -1,10 +1,10 @@
-package cn.coderule.minimq.domain.domain.model.consumer.running;
+package cn.coderule.minimq.domain.domain.consumer.running;
 
-import cn.coderule.minimq.domain.domain.core.enums.consume.ConsumeStrategy;
-import cn.coderule.minimq.domain.domain.core.enums.consume.ConsumeType;
-import cn.coderule.minimq.domain.domain.core.enums.message.MessageModel;
-import cn.coderule.minimq.domain.domain.model.cluster.ClientChannelInfo;
-import cn.coderule.minimq.domain.domain.model.cluster.heartbeat.SubscriptionData;
+import cn.coderule.minimq.domain.core.enums.consume.ConsumeStrategy;
+import cn.coderule.minimq.domain.core.enums.consume.ConsumeType;
+import cn.coderule.minimq.domain.core.enums.message.MessageModel;
+import cn.coderule.minimq.domain.domain.cluster.ClientChannelInfo;
+import cn.coderule.minimq.domain.domain.cluster.heartbeat.SubscriptionData;
 import io.netty.channel.Channel;
 import java.util.ArrayList;
 import java.util.HashSet;

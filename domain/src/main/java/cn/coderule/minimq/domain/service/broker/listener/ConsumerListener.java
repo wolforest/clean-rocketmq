@@ -1,6 +1,6 @@
 package cn.coderule.minimq.domain.service.broker.listener;
 
-import cn.coderule.minimq.domain.domain.core.enums.consume.ConsumerEvent;
+import cn.coderule.minimq.domain.core.enums.consume.ConsumerEvent;
 
 public interface ConsumerListener {
 

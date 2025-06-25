@@ -1,7 +1,7 @@
-package cn.coderule.minimq.domain.domain.model.meta.topic;
+package cn.coderule.minimq.domain.domain.meta.topic;
 
-import cn.coderule.minimq.domain.domain.model.meta.DataVersion;
-import cn.coderule.minimq.domain.utils.attribute.AttributeUtils;
+import cn.coderule.minimq.domain.domain.meta.DataVersion;
+import cn.coderule.minimq.domain.core.attribute.AttributeUtils;
 import com.google.common.collect.ImmutableMap;
 import java.io.Serializable;
 import java.util.HashMap;

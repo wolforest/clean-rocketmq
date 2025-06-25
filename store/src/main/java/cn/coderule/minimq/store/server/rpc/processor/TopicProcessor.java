@@ -2,7 +2,7 @@ package cn.coderule.minimq.store.server.rpc.processor;
 
 import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.minimq.domain.config.message.TopicConfig;
-import cn.coderule.minimq.domain.domain.core.enums.message.MessageType;
+import cn.coderule.minimq.domain.core.enums.message.MessageType;
 import cn.coderule.minimq.domain.domain.model.meta.topic.Topic;
 import cn.coderule.minimq.domain.service.store.api.meta.TopicStore;
 import cn.coderule.minimq.domain.domain.model.meta.topic.TopicValidator;

@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package cn.coderule.minimq.domain.domain.model.cluster.store;
+package cn.coderule.minimq.domain.domain.cluster.store;
 
 import java.nio.ByteBuffer;
 import java.util.Arrays;

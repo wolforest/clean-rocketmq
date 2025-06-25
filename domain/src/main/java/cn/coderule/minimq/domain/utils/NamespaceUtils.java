@@ -1,8 +1,8 @@
 package cn.coderule.minimq.domain.utils;
 
 import cn.coderule.common.util.lang.string.StringUtil;
-import cn.coderule.minimq.domain.domain.core.constant.MQConstants;
-import cn.coderule.minimq.domain.domain.model.meta.topic.TopicValidator;
+import cn.coderule.minimq.domain.core.constant.MQConstants;
+import cn.coderule.minimq.domain.domain.meta.topic.TopicValidator;
 
 public class NamespaceUtils {
     public static final char NAMESPACE_SEPARATOR = '%';

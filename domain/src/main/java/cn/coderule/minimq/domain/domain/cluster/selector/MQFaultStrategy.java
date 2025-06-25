@@ -1,12 +1,12 @@
 
-package cn.coderule.minimq.domain.domain.model.cluster.selector;
+package cn.coderule.minimq.domain.domain.cluster.selector;
 
-import cn.coderule.minimq.domain.domain.model.MessageQueue;
+import cn.coderule.minimq.domain.domain.MessageQueue;
 import cn.coderule.minimq.domain.service.broker.selector.LatencyFaultTolerance;
 import cn.coderule.minimq.domain.service.broker.selector.Resolver;
 import cn.coderule.minimq.domain.service.broker.selector.ServiceDetector;
 import cn.coderule.minimq.domain.service.common.QueueFilter;
-import cn.coderule.minimq.domain.domain.model.cluster.route.PublishInfo;
+import cn.coderule.minimq.domain.domain.cluster.route.PublishInfo;
 
 public class MQFaultStrategy {
     private final LatencyFaultTolerance<String> latencyFaultTolerance;

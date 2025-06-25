@@ -2,7 +2,7 @@ package cn.coderule.minimq.rpc.registry.client;
 
 import cn.coderule.common.lang.concurrent.thread.DefaultThreadFactory;
 import cn.coderule.common.util.lang.ThreadUtil;
-import cn.coderule.minimq.domain.domain.core.exception.RpcException;
+import cn.coderule.minimq.domain.core.exception.RpcException;
 import cn.coderule.minimq.rpc.common.rpc.config.RpcClientConfig;
 import cn.coderule.minimq.rpc.common.rpc.core.invoke.RpcCommand;
 import cn.coderule.minimq.rpc.common.rpc.netty.NettyClient;

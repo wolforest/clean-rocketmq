@@ -1,7 +1,7 @@
-package cn.coderule.minimq.domain.domain.model.consumer.pop.checkpoint;
+package cn.coderule.minimq.domain.domain.consumer.pop.checkpoint;
 
-import cn.coderule.minimq.domain.domain.core.constant.PopConstants;
-import cn.coderule.minimq.domain.domain.model.consumer.pop.helper.PopKeyBuilder;
+import cn.coderule.minimq.domain.core.constant.PopConstants;
+import cn.coderule.minimq.domain.domain.consumer.pop.helper.PopKeyBuilder;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class PopCheckPointWrapper {

@@ -1,4 +1,4 @@
-package cn.coderule.minimq.domain.domain.model.message;
+package cn.coderule.minimq.domain.domain.message;
 
 import java.io.Serializable;
 import java.net.SocketAddress;

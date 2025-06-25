@@ -1,6 +1,6 @@
-package cn.coderule.minimq.domain.domain.model.message;
+package cn.coderule.minimq.domain.domain.message;
 
-import cn.coderule.minimq.domain.domain.core.enums.message.MessageVersion;
+import cn.coderule.minimq.domain.core.enums.message.MessageVersion;
 import java.io.Serializable;
 import java.net.SocketAddress;
 import java.util.ArrayList;

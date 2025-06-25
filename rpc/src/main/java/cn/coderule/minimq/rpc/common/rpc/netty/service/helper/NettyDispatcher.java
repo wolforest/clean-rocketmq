@@ -4,7 +4,7 @@ import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.lang.type.Pair;
 import cn.coderule.common.util.lang.bean.ExceptionUtil;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
-import cn.coderule.minimq.domain.domain.core.exception.AbortProcessException;
+import cn.coderule.minimq.domain.core.exception.AbortProcessException;
 import cn.coderule.minimq.rpc.common.rpc.RpcHook;
 import cn.coderule.minimq.rpc.common.rpc.RpcProcessor;
 import cn.coderule.minimq.rpc.common.rpc.core.invoke.RequestTask;

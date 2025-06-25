@@ -1,8 +1,8 @@
 
-package cn.coderule.minimq.domain.domain.model.consumer.receipt;
+package cn.coderule.minimq.domain.domain.consumer.receipt;
 
-import cn.coderule.minimq.domain.domain.core.constant.MessageConst;
-import cn.coderule.minimq.domain.domain.model.meta.topic.KeyBuilder;
+import cn.coderule.minimq.domain.core.constant.MessageConst;
+import cn.coderule.minimq.domain.domain.meta.topic.KeyBuilder;
 import java.util.Arrays;
 import java.util.List;
 

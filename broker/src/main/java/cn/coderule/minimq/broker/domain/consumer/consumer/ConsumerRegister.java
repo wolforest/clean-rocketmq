@@ -3,7 +3,7 @@ package cn.coderule.minimq.broker.domain.consumer.consumer;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.domain.consumer.ConsumerInfo;
 import cn.coderule.minimq.domain.domain.consumer.running.ConsumerGroupInfo;
-import cn.coderule.minimq.domain.domain.core.enums.consume.ConsumerEvent;
+import cn.coderule.minimq.domain.core.enums.consume.ConsumerEvent;
 import cn.coderule.minimq.domain.domain.cluster.ClientChannelInfo;
 import cn.coderule.minimq.domain.domain.cluster.heartbeat.SubscriptionData;
 import cn.coderule.minimq.domain.service.broker.listener.ConsumerListener;

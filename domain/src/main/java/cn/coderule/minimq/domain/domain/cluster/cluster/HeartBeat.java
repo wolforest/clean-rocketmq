@@ -1,6 +1,6 @@
-package cn.coderule.minimq.domain.domain.model.cluster.cluster;
+package cn.coderule.minimq.domain.domain.cluster.cluster;
 
-import cn.coderule.minimq.domain.domain.model.meta.DataVersion;
+import cn.coderule.minimq.domain.domain.meta.DataVersion;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

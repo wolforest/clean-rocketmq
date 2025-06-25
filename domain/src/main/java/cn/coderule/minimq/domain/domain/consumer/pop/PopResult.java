@@ -1,7 +1,7 @@
-package cn.coderule.minimq.domain.domain.model.consumer.pop;
+package cn.coderule.minimq.domain.domain.consumer.pop;
 
-import cn.coderule.minimq.domain.domain.core.enums.consume.PopStatus;
-import cn.coderule.minimq.domain.domain.model.message.MessageBO;
+import cn.coderule.minimq.domain.core.enums.consume.PopStatus;
+import cn.coderule.minimq.domain.domain.message.MessageBO;
 import java.io.Serializable;
 import java.util.List;
 import lombok.Data;

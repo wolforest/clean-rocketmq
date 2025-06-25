@@ -1,7 +1,7 @@
 
-package cn.coderule.minimq.domain.domain.model.meta.topic;
+package cn.coderule.minimq.domain.domain.meta.topic;
 
-import cn.coderule.minimq.domain.domain.model.meta.DataVersion;
+import cn.coderule.minimq.domain.domain.meta.DataVersion;
 import java.io.Serializable;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;

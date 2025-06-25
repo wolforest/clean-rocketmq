@@ -1,4 +1,4 @@
-package cn.coderule.minimq.domain.domain.model.meta;
+package cn.coderule.minimq.domain.domain.meta;
 
 import cn.coderule.common.util.lang.string.StringUtil;
 import com.alibaba.fastjson2.annotation.JSONField;

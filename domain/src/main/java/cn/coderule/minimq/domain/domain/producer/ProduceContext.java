@@ -1,10 +1,10 @@
-package cn.coderule.minimq.domain.domain.model.producer;
+package cn.coderule.minimq.domain.domain.producer;
 
-import cn.coderule.minimq.domain.domain.core.enums.message.MessageType;
-import cn.coderule.minimq.domain.domain.model.MessageQueue;
-import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
-import cn.coderule.minimq.domain.domain.model.message.MessageBO;
-import cn.coderule.minimq.domain.domain.model.meta.topic.Topic;
+import cn.coderule.minimq.domain.core.enums.message.MessageType;
+import cn.coderule.minimq.domain.domain.MessageQueue;
+import cn.coderule.minimq.domain.domain.cluster.RequestContext;
+import cn.coderule.minimq.domain.domain.message.MessageBO;
+import cn.coderule.minimq.domain.domain.meta.topic.Topic;
 import java.io.Serializable;
 import java.util.Properties;
 import lombok.AllArgsConstructor;
