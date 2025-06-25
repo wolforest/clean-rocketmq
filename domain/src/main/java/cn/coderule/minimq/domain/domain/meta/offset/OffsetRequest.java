@@ -1,4 +1,4 @@
-package cn.coderule.minimq.domain.domain.meta;
+package cn.coderule.minimq.domain.domain.meta.offset;
 
 import cn.coderule.minimq.domain.domain.MessageQueue;
 import cn.coderule.minimq.domain.domain.cluster.RequestContext;

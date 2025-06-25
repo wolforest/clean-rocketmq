@@ -1,6 +1,7 @@
-package cn.coderule.minimq.domain.domain.meta;
+package cn.coderule.minimq.domain.domain.meta.offset;
 
 import cn.coderule.common.util.lang.string.StringUtil;
+import cn.coderule.minimq.domain.domain.meta.DataVersion;
 import com.alibaba.fastjson2.annotation.JSONField;
 import java.io.Serializable;
 import java.util.Map;
