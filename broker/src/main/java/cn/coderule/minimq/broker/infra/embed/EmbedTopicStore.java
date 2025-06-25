@@ -4,7 +4,7 @@ import cn.coderule.minimq.domain.domain.model.meta.topic.Topic;
 import cn.coderule.minimq.domain.service.broker.infra.TopicStore;
 import java.util.concurrent.CompletableFuture;
 
-public class EmbedTopicStore implements TopicStore, cn.coderule.minimq.domain.service.store.api.TopicStore {
+public class EmbedTopicStore implements TopicStore, cn.coderule.minimq.domain.service.store.api.meta.TopicStore {
 
     public EmbedTopicStore(EmbedLoadBalance loadBalance) {
     }

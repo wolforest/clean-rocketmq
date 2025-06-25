@@ -1,4 +1,4 @@
-package cn.coderule.minimq.domain.service.store.api;
+package cn.coderule.minimq.domain.service.store.api.meta;
 
 public interface ConsumeOffsetStore {
     Long getOffset(String group, String topic, int queueId);

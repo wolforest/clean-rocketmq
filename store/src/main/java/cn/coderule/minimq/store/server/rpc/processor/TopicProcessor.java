@@ -4,7 +4,7 @@ import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.minimq.domain.config.message.TopicConfig;
 import cn.coderule.minimq.domain.domain.enums.message.MessageType;
 import cn.coderule.minimq.domain.domain.model.meta.topic.Topic;
-import cn.coderule.minimq.domain.service.store.api.TopicStore;
+import cn.coderule.minimq.domain.service.store.api.meta.TopicStore;
 import cn.coderule.minimq.domain.domain.model.meta.topic.TopicValidator;
 import cn.coderule.minimq.rpc.common.rpc.RpcProcessor;
 import cn.coderule.minimq.rpc.common.rpc.core.exception.RemotingCommandException;

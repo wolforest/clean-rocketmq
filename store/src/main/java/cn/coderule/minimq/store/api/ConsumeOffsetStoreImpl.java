@@ -1,6 +1,6 @@
 package cn.coderule.minimq.store.api;
 
-import cn.coderule.minimq.domain.service.store.api.ConsumeOffsetStore;
+import cn.coderule.minimq.domain.service.store.api.meta.ConsumeOffsetStore;
 import cn.coderule.minimq.domain.service.store.domain.meta.ConsumeOffsetService;
 
 public class ConsumeOffsetStoreImpl implements ConsumeOffsetStore {
