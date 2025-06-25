@@ -6,12 +6,12 @@ import cn.coderule.minimq.rpc.common.rpc.core.exception.RemotingCommandException
 import cn.coderule.minimq.rpc.common.rpc.core.invoke.RpcCommand;
 import cn.coderule.minimq.rpc.common.rpc.core.invoke.RpcContext;
 import cn.coderule.minimq.rpc.common.rpc.netty.service.helper.NettyHelper;
-import cn.coderule.minimq.domain.domain.model.meta.DataVersion;
+import cn.coderule.minimq.domain.domain.meta.DataVersion;
 import cn.coderule.minimq.rpc.common.rpc.protocol.code.RequestCode;
 import cn.coderule.minimq.rpc.common.rpc.protocol.codec.RpcSerializable;
 import cn.coderule.minimq.rpc.registry.protocol.body.BrokerMemberGroup;
 import cn.coderule.minimq.rpc.registry.protocol.body.GetBrokerMemberGroupResponseBody;
-import cn.coderule.minimq.domain.domain.model.cluster.cluster.StoreInfo;
+import cn.coderule.minimq.domain.domain.cluster.cluster.StoreInfo;
 import cn.coderule.minimq.rpc.registry.protocol.header.AddWritePermOfBrokerResponseHeader;
 import cn.coderule.minimq.rpc.registry.protocol.header.BrokerHeartbeatRequestHeader;
 import cn.coderule.minimq.rpc.registry.protocol.header.GetBrokerMemberGroupRequestHeader;

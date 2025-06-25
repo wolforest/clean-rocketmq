@@ -10,7 +10,7 @@ import cn.coderule.minimq.broker.api.ConsumerController;
 import cn.coderule.minimq.broker.api.ProducerController;
 import cn.coderule.minimq.broker.api.RouteController;
 import cn.coderule.minimq.broker.api.TransactionController;
-import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
+import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import cn.coderule.minimq.rpc.common.core.relay.RelayService;
 import cn.coderule.minimq.rpc.common.grpc.response.ResponseBuilder;
 import java.util.concurrent.CompletableFuture;

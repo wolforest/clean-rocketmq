@@ -1,6 +1,6 @@
 package cn.coderule.minimq.rpc.common.core.relay;
 
-import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
+import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import cn.coderule.minimq.rpc.common.core.relay.request.ConsumerRequest;
 import cn.coderule.minimq.rpc.common.core.relay.request.TransactionRequest;
 import cn.coderule.minimq.rpc.common.core.relay.response.ConsumeResult;

@@ -6,7 +6,7 @@ import apache.rocketmq.v2.Settings;
 import cn.coderule.minimq.broker.api.ConsumerController;
 import cn.coderule.minimq.broker.server.grpc.service.channel.ChannelManager;
 import cn.coderule.minimq.broker.server.grpc.service.channel.SettingManager;
-import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
+import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import io.grpc.stub.StreamObserver;
 import java.util.concurrent.CompletableFuture;
 import lombok.extern.slf4j.Slf4j;

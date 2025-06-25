@@ -1,7 +1,7 @@
 package cn.coderule.minimq.domain.service.store.api;
 
-import cn.coderule.minimq.domain.domain.model.cluster.store.InsertResult;
-import cn.coderule.minimq.domain.domain.model.cluster.store.SelectedMappedBuffer;
+import cn.coderule.minimq.domain.domain.cluster.store.InsertResult;
+import cn.coderule.minimq.domain.domain.cluster.store.SelectedMappedBuffer;
 
 /**
  * CommitLog APIs, for M/S

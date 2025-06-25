@@ -3,8 +3,8 @@ package cn.coderule.minimq.store.domain.mq.revive;
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.minimq.domain.config.message.MessageConfig;
-import cn.coderule.minimq.domain.domain.model.consumer.pop.checkpoint.PopCheckPoint;
-import cn.coderule.minimq.domain.domain.model.consumer.pop.revive.ReviveBuffer;
+import cn.coderule.minimq.domain.domain.consumer.pop.checkpoint.PopCheckPoint;
+import cn.coderule.minimq.domain.domain.consumer.revive.ReviveBuffer;
 import java.util.ArrayList;
 import lombok.extern.slf4j.Slf4j;
 

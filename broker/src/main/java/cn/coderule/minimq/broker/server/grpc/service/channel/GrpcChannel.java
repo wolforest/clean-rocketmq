@@ -3,7 +3,7 @@ package cn.coderule.minimq.broker.server.grpc.service.channel;
 import apache.rocketmq.v2.Settings;
 import apache.rocketmq.v2.TelemetryCommand;
 import cn.coderule.minimq.broker.server.core.ChannelHelper;
-import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
+import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import cn.coderule.minimq.broker.server.core.ClientChannel;
 import cn.coderule.minimq.rpc.common.core.channel.ChannelExtendAttributeGetter;
 import cn.coderule.minimq.rpc.common.core.enums.ChannelProtocolType;

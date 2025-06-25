@@ -1,7 +1,7 @@
 package cn.coderule.minimq.broker.infra.embed;
 
-import cn.coderule.minimq.domain.domain.model.consumer.pop.ack.AckMsg;
-import cn.coderule.minimq.domain.domain.model.consumer.pop.checkpoint.PopCheckPoint;
+import cn.coderule.minimq.domain.domain.consumer.ack.AckMsg;
+import cn.coderule.minimq.domain.domain.consumer.pop.checkpoint.PopCheckPoint;
 import cn.coderule.minimq.domain.service.store.api.AckStore;
 
 public class EmbedAckStore extends AbstractEmbedStore implements AckStore {

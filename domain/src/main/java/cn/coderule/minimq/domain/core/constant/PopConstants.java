@@ -1,6 +1,6 @@
 package cn.coderule.minimq.domain.core.constant;
 
-import cn.coderule.minimq.domain.domain.model.meta.topic.TopicValidator;
+import cn.coderule.minimq.domain.domain.meta.topic.TopicValidator;
 
 /**
  *

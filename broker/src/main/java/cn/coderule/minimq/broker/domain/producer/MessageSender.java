@@ -12,7 +12,7 @@ import cn.coderule.minimq.domain.core.enums.code.InvalidCode;
 import cn.coderule.minimq.domain.core.enums.message.CleanupPolicy;
 import cn.coderule.minimq.domain.core.enums.message.MessageType;
 import cn.coderule.minimq.domain.core.exception.InvalidParameterException;
-import cn.coderule.minimq.domain.domain.model.MessageQueue;
+import cn.coderule.minimq.domain.domain.MessageQueue;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import cn.coderule.minimq.domain.domain.meta.topic.Topic;

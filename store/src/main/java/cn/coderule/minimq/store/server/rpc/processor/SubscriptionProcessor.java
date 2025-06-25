@@ -1,5 +1,6 @@
 package cn.coderule.minimq.store.server.rpc.processor;
 
+import cn.coderule.minimq.domain.domain.meta.subscription.SubscriptionGroup;
 import cn.coderule.minimq.domain.service.store.api.meta.SubscriptionStore;
 import cn.coderule.minimq.rpc.common.rpc.RpcProcessor;
 import cn.coderule.minimq.rpc.common.rpc.core.exception.RemotingCommandException;
@@ -9,7 +10,6 @@ import cn.coderule.minimq.rpc.common.rpc.netty.service.helper.NettyHelper;
 import cn.coderule.minimq.rpc.common.rpc.protocol.code.RequestCode;
 import cn.coderule.minimq.rpc.common.rpc.protocol.code.ResponseCode;
 import cn.coderule.minimq.rpc.common.rpc.protocol.codec.RpcSerializable;
-import cn.coderule.minimq.domain.domain.model.consumer.subscription.SubscriptionGroup;
 import cn.coderule.minimq.rpc.store.protocol.header.DeleteSubscriptionGroupRequestHeader;
 import cn.coderule.minimq.rpc.store.protocol.header.GetSubscriptionGroupConfigRequestHeader;
 import java.util.Set;

@@ -1,6 +1,6 @@
 package cn.coderule.minimq.registry.domain.store.model;
 
-import cn.coderule.minimq.domain.domain.model.meta.DataVersion;
+import cn.coderule.minimq.domain.domain.meta.DataVersion;
 import io.netty.channel.Channel;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;

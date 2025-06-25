@@ -16,7 +16,7 @@
  */
 package cn.coderule.minimq.rpc.common.grpc;
 
-import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
+import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import com.google.protobuf.GeneratedMessage;
 import io.grpc.Metadata;
 

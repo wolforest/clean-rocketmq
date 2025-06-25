@@ -5,7 +5,7 @@
  */package cn.coderule.minimq.rpc.store.protocol.header;
 
 import cn.coderule.minimq.domain.core.enums.message.TagType;
-import cn.coderule.minimq.domain.domain.model.meta.topic.Topic;
+import cn.coderule.minimq.domain.domain.meta.topic.Topic;
 import cn.coderule.minimq.domain.core.attribute.AttributeParser;
 import cn.coderule.minimq.rpc.common.rpc.core.annotation.CFNotNull;
 import cn.coderule.minimq.rpc.common.rpc.core.annotation.CFNullable;

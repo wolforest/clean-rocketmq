@@ -1,6 +1,6 @@
 package cn.coderule.minimq.rpc.common.grpc.core;
 
-import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
+import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import io.grpc.stub.StreamObserver;
 import lombok.Data;
 

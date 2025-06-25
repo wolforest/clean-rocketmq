@@ -1,8 +1,8 @@
 package cn.coderule.minimq.broker.domain.transaction.backup;
 
 import cn.coderule.minimq.rpc.common.core.relay.response.TransactionResult;
-import cn.coderule.minimq.domain.domain.model.message.MessageBO;
-import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
+import cn.coderule.minimq.domain.domain.message.MessageBO;
+import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import java.util.List;
 
 

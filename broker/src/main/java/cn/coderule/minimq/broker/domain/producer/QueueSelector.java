@@ -5,10 +5,10 @@ import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.minimq.broker.domain.meta.RouteService;
 import cn.coderule.minimq.domain.core.enums.code.BrokerExceptionCode;
 import cn.coderule.minimq.domain.core.exception.BrokerException;
-import cn.coderule.minimq.domain.domain.model.MessageQueue;
-import cn.coderule.minimq.domain.domain.model.message.MessageBO;
-import cn.coderule.minimq.domain.domain.model.cluster.selector.MessageQueueView;
-import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
+import cn.coderule.minimq.domain.domain.MessageQueue;
+import cn.coderule.minimq.domain.domain.message.MessageBO;
+import cn.coderule.minimq.domain.domain.cluster.selector.MessageQueueView;
+import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 

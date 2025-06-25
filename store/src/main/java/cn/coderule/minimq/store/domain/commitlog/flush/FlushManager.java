@@ -5,10 +5,10 @@ import cn.coderule.minimq.store.domain.commitlog.vo.GroupCommitRequest;
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.minimq.domain.config.store.CommitConfig;
 import cn.coderule.minimq.domain.core.enums.store.FlushType;
-import cn.coderule.minimq.domain.domain.model.producer.EnqueueResult;
-import cn.coderule.minimq.domain.domain.model.cluster.store.InsertFuture;
-import cn.coderule.minimq.domain.domain.model.cluster.store.InsertResult;
-import cn.coderule.minimq.domain.domain.model.message.MessageBO;
+import cn.coderule.minimq.domain.domain.producer.EnqueueResult;
+import cn.coderule.minimq.domain.domain.cluster.store.InsertFuture;
+import cn.coderule.minimq.domain.domain.cluster.store.InsertResult;
+import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.service.store.infra.MappedFileQueue;
 import java.util.concurrent.CompletableFuture;
 

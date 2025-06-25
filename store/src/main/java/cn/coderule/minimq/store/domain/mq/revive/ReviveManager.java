@@ -2,7 +2,7 @@ package cn.coderule.minimq.store.domain.mq.revive;
 
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
-import cn.coderule.minimq.domain.domain.model.meta.topic.KeyBuilder;
+import cn.coderule.minimq.domain.domain.meta.topic.KeyBuilder;
 import cn.coderule.minimq.domain.service.common.ServerEvent;
 import cn.coderule.minimq.domain.service.common.ServerEventBus;
 import cn.coderule.minimq.domain.service.store.domain.consumequeue.ConsumeQueueGateway;

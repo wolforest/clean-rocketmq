@@ -11,7 +11,7 @@ import cn.coderule.minimq.rpc.common.rpc.protocol.code.RequestCode;
 import cn.coderule.minimq.rpc.common.rpc.protocol.code.ResponseCode;
 import cn.coderule.minimq.rpc.common.rpc.protocol.code.SystemResponseCode;
 import cn.coderule.minimq.rpc.registry.protocol.header.GetRouteInfoRequestHeader;
-import cn.coderule.minimq.domain.domain.model.cluster.route.RouteInfo;
+import cn.coderule.minimq.domain.domain.cluster.route.RouteInfo;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;

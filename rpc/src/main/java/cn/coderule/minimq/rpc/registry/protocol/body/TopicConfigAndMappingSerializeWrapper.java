@@ -1,10 +1,10 @@
 
 package cn.coderule.minimq.rpc.registry.protocol.body;
 
-import cn.coderule.minimq.domain.domain.model.meta.DataVersion;
-import cn.coderule.minimq.domain.domain.model.meta.topic.TopicConfigSerializeWrapper;
-import cn.coderule.minimq.domain.domain.model.meta.statictopic.TopicQueueMappingDetail;
-import cn.coderule.minimq.domain.domain.model.meta.statictopic.TopicQueueMappingInfo;
+import cn.coderule.minimq.domain.domain.meta.DataVersion;
+import cn.coderule.minimq.domain.domain.meta.topic.TopicConfigSerializeWrapper;
+import cn.coderule.minimq.domain.domain.meta.statictopic.TopicQueueMappingDetail;
+import cn.coderule.minimq.domain.domain.meta.statictopic.TopicQueueMappingInfo;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 

@@ -18,7 +18,7 @@ import cn.coderule.common.util.net.NetworkUtil;
 import cn.coderule.minimq.domain.core.constant.MessageConst;
 import cn.coderule.minimq.domain.core.constant.flag.MessageSysFlag;
 import cn.coderule.minimq.domain.core.enums.consume.ExpressionType;
-import cn.coderule.minimq.domain.domain.model.message.MessageBO;
+import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.utils.NamespaceUtils;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.util.Timestamps;

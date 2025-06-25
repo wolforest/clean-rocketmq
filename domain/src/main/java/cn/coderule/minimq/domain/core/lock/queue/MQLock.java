@@ -1,6 +1,6 @@
 package cn.coderule.minimq.domain.core.lock.queue;
 
-import cn.coderule.minimq.domain.domain.model.MessageQueue;
+import cn.coderule.minimq.domain.domain.MessageQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 

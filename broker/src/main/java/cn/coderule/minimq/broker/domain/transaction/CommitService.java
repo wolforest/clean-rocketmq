@@ -1,6 +1,6 @@
 package cn.coderule.minimq.broker.domain.transaction;
 
-import cn.coderule.minimq.domain.domain.model.consumer.CommitRequest;
+import cn.coderule.minimq.domain.domain.transaction.CommitRequest;
 import java.util.concurrent.CompletableFuture;
 import lombok.extern.slf4j.Slf4j;
 

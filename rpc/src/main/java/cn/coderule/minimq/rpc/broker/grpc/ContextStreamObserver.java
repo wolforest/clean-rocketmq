@@ -17,7 +17,7 @@
 
 package cn.coderule.minimq.rpc.broker.grpc;
 
-import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
+import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 
 public interface ContextStreamObserver<V> {
 

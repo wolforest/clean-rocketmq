@@ -16,7 +16,7 @@
  */
 package cn.coderule.minimq.domain.service.store.domain.mq;
 
-import cn.coderule.minimq.domain.domain.model.cluster.store.ConsumeUnit;
+import cn.coderule.minimq.domain.domain.cluster.store.ConsumeUnit;
 import java.nio.ByteBuffer;
 import java.util.Map;
 

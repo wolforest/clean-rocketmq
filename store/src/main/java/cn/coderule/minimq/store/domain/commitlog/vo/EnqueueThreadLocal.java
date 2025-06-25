@@ -1,8 +1,8 @@
 package cn.coderule.minimq.store.domain.commitlog.vo;
 
 import cn.coderule.minimq.domain.config.message.MessageConfig;
-import cn.coderule.minimq.domain.domain.model.message.MessageBO;
-import cn.coderule.minimq.domain.domain.model.message.MessageEncoder;
+import cn.coderule.minimq.domain.domain.message.MessageBO;
+import cn.coderule.minimq.domain.domain.message.MessageEncoder;
 
 public class EnqueueThreadLocal {
     private final MessageEncoder encoder;

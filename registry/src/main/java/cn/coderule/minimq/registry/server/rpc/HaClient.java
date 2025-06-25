@@ -10,7 +10,7 @@ import cn.coderule.minimq.rpc.common.rpc.config.RpcClientConfig;
 import cn.coderule.minimq.rpc.common.rpc.core.invoke.RpcCommand;
 import cn.coderule.minimq.rpc.common.rpc.netty.NettyClient;
 import cn.coderule.minimq.rpc.common.rpc.protocol.code.RequestCode;
-import cn.coderule.minimq.domain.domain.model.cluster.cluster.GroupInfo;
+import cn.coderule.minimq.domain.domain.cluster.cluster.GroupInfo;
 import cn.coderule.minimq.rpc.registry.protocol.header.NotifyMinBrokerIdChangeRequestHeader;
 import java.util.ArrayList;
 import java.util.Collections;

@@ -2,7 +2,7 @@ package cn.coderule.minimq.store.domain.dispatcher;
 
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 import cn.coderule.common.util.lang.ThreadUtil;
-import cn.coderule.minimq.domain.domain.model.cluster.store.CommitEvent;
+import cn.coderule.minimq.domain.domain.cluster.store.CommitEvent;
 import cn.coderule.minimq.domain.service.store.domain.commitlog.CommitLog;
 import cn.coderule.minimq.domain.service.store.domain.commitlog.CommitEventHandler;
 import cn.coderule.minimq.domain.service.store.domain.commitlog.CommitEventDispatcher;

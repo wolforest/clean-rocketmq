@@ -1,6 +1,6 @@
 package cn.coderule.minimq.store.api;
 
-import cn.coderule.minimq.domain.domain.model.consumer.subscription.SubscriptionGroup;
+import cn.coderule.minimq.domain.domain.meta.subscription.SubscriptionGroup;
 import cn.coderule.minimq.domain.service.store.api.meta.SubscriptionStore;
 import cn.coderule.minimq.domain.service.store.domain.meta.SubscriptionService;
 import lombok.extern.slf4j.Slf4j;

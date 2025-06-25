@@ -12,7 +12,7 @@ import cn.coderule.minimq.broker.server.grpc.service.channel.HeartbeatService;
 import cn.coderule.minimq.broker.server.grpc.service.channel.SettingManager;
 import cn.coderule.minimq.broker.server.grpc.service.channel.TelemetryService;
 import cn.coderule.minimq.broker.server.grpc.service.channel.TerminationService;
-import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
+import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import cn.coderule.minimq.rpc.broker.grpc.ContextStreamObserver;
 import cn.coderule.minimq.rpc.common.grpc.RequestPipeline;
 import cn.coderule.minimq.rpc.common.grpc.activity.ActivityHelper;

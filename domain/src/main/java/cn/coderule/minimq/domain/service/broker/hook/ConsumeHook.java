@@ -1,6 +1,6 @@
 package cn.coderule.minimq.domain.service.broker.hook;
 
-import cn.coderule.minimq.domain.domain.model.consumer.ConsumeContext;
+import cn.coderule.minimq.domain.domain.consumer.ConsumeContext;
 
 public interface ConsumeHook {
     String hookName();

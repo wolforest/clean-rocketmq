@@ -1,9 +1,9 @@
 package cn.coderule.minimq.broker.domain.producer;
 
-import cn.coderule.minimq.domain.domain.model.cluster.ClientChannelInfo;
-import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
-import cn.coderule.minimq.domain.domain.model.message.MessageBO;
-import cn.coderule.minimq.domain.domain.model.producer.EnqueueResult;
+import cn.coderule.minimq.domain.domain.cluster.ClientChannelInfo;
+import cn.coderule.minimq.domain.domain.cluster.RequestContext;
+import cn.coderule.minimq.domain.domain.message.MessageBO;
+import cn.coderule.minimq.domain.domain.producer.EnqueueResult;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import lombok.extern.slf4j.Slf4j;

@@ -1,8 +1,8 @@
 package cn.coderule.minimq.domain.service.broker.consume;
 
-import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
-import cn.coderule.minimq.domain.domain.model.cluster.heartbeat.SubscriptionData;
-import cn.coderule.minimq.domain.domain.model.message.MessageBO;
+import cn.coderule.minimq.domain.domain.cluster.RequestContext;
+import cn.coderule.minimq.domain.domain.cluster.heartbeat.SubscriptionData;
+import cn.coderule.minimq.domain.domain.message.MessageBO;
 
 public interface PopFilter {
 

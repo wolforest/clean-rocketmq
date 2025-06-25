@@ -1,8 +1,8 @@
 package cn.coderule.minimq.store.domain.mq.queue;
 
-import cn.coderule.minimq.domain.domain.model.consumer.DequeueResult;
+import cn.coderule.minimq.domain.domain.consumer.DequeueResult;
 import cn.coderule.minimq.domain.core.lock.queue.DequeueLock;
-import cn.coderule.minimq.domain.domain.model.message.MessageBO;
+import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.service.store.domain.meta.ConsumeOffsetService;
 import java.util.concurrent.CompletableFuture;
 import lombok.extern.slf4j.Slf4j;

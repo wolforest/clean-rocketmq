@@ -1,11 +1,11 @@
 package cn.coderule.minimq.registry.domain.store.model;
 
 import cn.coderule.common.util.lang.collection.MapUtil;
-import cn.coderule.minimq.domain.domain.model.meta.topic.Topic;
-import cn.coderule.minimq.domain.domain.model.meta.DataVersion;
-import cn.coderule.minimq.domain.domain.model.cluster.cluster.GroupInfo;
-import cn.coderule.minimq.domain.domain.model.cluster.cluster.StoreInfo;
-import cn.coderule.minimq.domain.domain.model.meta.statictopic.TopicQueueMappingInfo;
+import cn.coderule.minimq.domain.domain.meta.topic.Topic;
+import cn.coderule.minimq.domain.domain.meta.DataVersion;
+import cn.coderule.minimq.domain.domain.cluster.cluster.GroupInfo;
+import cn.coderule.minimq.domain.domain.cluster.cluster.StoreInfo;
+import cn.coderule.minimq.domain.domain.meta.statictopic.TopicQueueMappingInfo;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;

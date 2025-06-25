@@ -1,7 +1,7 @@
 package cn.coderule.minimq.domain.service.store.domain.meta;
 
-import cn.coderule.minimq.domain.domain.model.meta.topic.Topic;
-import cn.coderule.minimq.domain.domain.model.meta.topic.TopicMap;
+import cn.coderule.minimq.domain.domain.meta.topic.Topic;
+import cn.coderule.minimq.domain.domain.meta.topic.TopicMap;
 import java.util.Map;
 
 public interface TopicService extends MetaService {

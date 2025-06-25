@@ -33,7 +33,7 @@ import cn.coderule.minimq.broker.server.grpc.activity.ConsumerActivity;
 import cn.coderule.minimq.broker.server.grpc.activity.ProducerActivity;
 import cn.coderule.minimq.broker.server.grpc.activity.RouteActivity;
 import cn.coderule.minimq.broker.server.grpc.activity.TransactionActivity;
-import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
+import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import cn.coderule.minimq.rpc.common.grpc.RequestPipeline;
 import cn.coderule.minimq.rpc.common.grpc.core.constants.GrpcConstants;
 import com.google.protobuf.GeneratedMessage;

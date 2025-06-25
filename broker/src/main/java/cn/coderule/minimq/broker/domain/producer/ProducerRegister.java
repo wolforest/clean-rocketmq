@@ -4,7 +4,7 @@ import cn.coderule.common.lang.concurrent.atomic.PositiveAtomicCounter;
 import cn.coderule.common.util.lang.collection.MapUtil;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.core.enums.produce.ProducerEvent;
-import cn.coderule.minimq.domain.domain.model.cluster.ClientChannelInfo;
+import cn.coderule.minimq.domain.domain.cluster.ClientChannelInfo;
 import cn.coderule.minimq.domain.service.broker.listener.ProducerListener;
 import cn.coderule.minimq.rpc.broker.rpc.protocol.body.ProducerInfo;
 import cn.coderule.minimq.rpc.broker.rpc.protocol.body.ProducerTableInfo;

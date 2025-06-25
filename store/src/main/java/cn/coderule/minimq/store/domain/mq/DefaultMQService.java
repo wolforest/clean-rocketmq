@@ -1,11 +1,11 @@
 package cn.coderule.minimq.store.domain.mq;
 
 import cn.coderule.common.util.lang.collection.CollectionUtil;
-import cn.coderule.minimq.domain.domain.model.consumer.DequeueRequest;
-import cn.coderule.minimq.domain.domain.model.consumer.DequeueResult;
+import cn.coderule.minimq.domain.domain.consumer.DequeueRequest;
+import cn.coderule.minimq.domain.domain.consumer.DequeueResult;
 import cn.coderule.minimq.domain.service.store.domain.mq.MQService;
-import cn.coderule.minimq.domain.domain.model.producer.EnqueueResult;
-import cn.coderule.minimq.domain.domain.model.message.MessageBO;
+import cn.coderule.minimq.domain.domain.producer.EnqueueResult;
+import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.store.domain.mq.queue.DequeueService;
 import cn.coderule.minimq.store.domain.mq.queue.EnqueueService;
 import cn.coderule.minimq.store.domain.mq.queue.MessageService;
