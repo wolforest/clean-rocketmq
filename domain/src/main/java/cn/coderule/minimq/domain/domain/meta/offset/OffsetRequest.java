@@ -20,4 +20,8 @@ public class OffsetRequest implements Serializable {
     private String consumerGroup;
 
     private long newOffset;
+
+    public MessageQueue.MessageQueueBuilder messageQueueBuilder() {
+        return MessageQueue.builder();
+    }
 }
