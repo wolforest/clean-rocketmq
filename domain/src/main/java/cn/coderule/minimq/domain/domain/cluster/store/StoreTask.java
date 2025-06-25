@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class StoreTask implements Serializable {
-    private String groupName;
+    private String storeGroup;
 
     @Builder.Default
     private Set<Integer> reviveQueueSet = new TreeSet<>();
