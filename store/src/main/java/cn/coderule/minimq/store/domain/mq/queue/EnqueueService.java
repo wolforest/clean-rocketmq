@@ -1,9 +1,9 @@
 package cn.coderule.minimq.store.domain.mq.queue;
 
 import cn.coderule.minimq.domain.config.server.StoreConfig;
-import cn.coderule.minimq.domain.domain.dto.EnqueueResult;
-import cn.coderule.minimq.domain.domain.dto.InsertFuture;
-import cn.coderule.minimq.domain.domain.lock.queue.EnqueueLock;
+import cn.coderule.minimq.domain.domain.model.producer.EnqueueResult;
+import cn.coderule.minimq.domain.domain.model.cluster.store.InsertFuture;
+import cn.coderule.minimq.domain.domain.core.lock.queue.EnqueueLock;
 import cn.coderule.minimq.domain.domain.model.message.MessageBO;
 import cn.coderule.minimq.domain.service.store.domain.commitlog.CommitLog;
 import cn.coderule.minimq.domain.service.store.domain.consumequeue.ConsumeQueueGateway;

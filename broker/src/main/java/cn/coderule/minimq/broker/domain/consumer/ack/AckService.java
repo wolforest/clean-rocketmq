@@ -1,8 +1,8 @@
 package cn.coderule.minimq.broker.domain.consumer.ack;
 
-import cn.coderule.minimq.domain.domain.dto.request.AckRequest;
-import cn.coderule.minimq.domain.domain.dto.response.AckResult;
-import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
+import cn.coderule.minimq.domain.domain.consumer.pop.ack.AckRequest;
+import cn.coderule.minimq.domain.domain.consumer.pop.ack.AckResult;
+import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import java.util.concurrent.CompletableFuture;
 
 public class AckService {

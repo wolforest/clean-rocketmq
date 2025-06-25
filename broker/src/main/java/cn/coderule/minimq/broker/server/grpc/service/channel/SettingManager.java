@@ -9,7 +9,7 @@ import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 import cn.coderule.common.util.lang.collection.ArrayUtil;
 import cn.coderule.minimq.broker.api.ConsumerController;
 import cn.coderule.minimq.domain.config.server.GrpcConfig;
-import cn.coderule.minimq.domain.domain.dto.running.ConsumerGroupInfo;
+import cn.coderule.minimq.domain.domain.model.consumer.running.ConsumerGroupInfo;
 import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
 import cn.coderule.minimq.domain.domain.model.consumer.subscription.CustomizedRetryPolicy;
 import cn.coderule.minimq.domain.domain.model.consumer.subscription.ExponentialRetryPolicy;

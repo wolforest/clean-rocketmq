@@ -1,7 +1,7 @@
 package cn.coderule.minimq.store.domain.mq.queue;
 
-import cn.coderule.minimq.domain.domain.dto.DequeueResult;
-import cn.coderule.minimq.domain.domain.lock.queue.DequeueLock;
+import cn.coderule.minimq.domain.domain.model.consumer.DequeueResult;
+import cn.coderule.minimq.domain.domain.core.lock.queue.DequeueLock;
 import cn.coderule.minimq.domain.domain.model.message.MessageBO;
 import cn.coderule.minimq.domain.service.store.domain.meta.ConsumeOffsetService;
 import java.util.concurrent.CompletableFuture;

@@ -5,7 +5,7 @@ import cn.coderule.common.util.net.NetworkUtil;
 import cn.coderule.minimq.domain.config.message.MessageConfig;
 import cn.coderule.minimq.domain.config.TimerConfig;
 import cn.coderule.minimq.domain.config.message.TopicConfig;
-import cn.coderule.minimq.domain.domain.constant.PermName;
+import cn.coderule.minimq.domain.domain.core.constant.PermName;
 import java.io.File;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

@@ -2,8 +2,8 @@ package cn.coderule.minimq.store;
 
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.convention.service.LifecycleManager;
-import cn.coderule.minimq.domain.domain.lock.server.StartupLock;
-import cn.coderule.minimq.domain.domain.lock.server.ShutdownLock;
+import cn.coderule.minimq.domain.domain.core.lock.server.StartupLock;
+import cn.coderule.minimq.domain.domain.core.lock.server.ShutdownLock;
 import cn.coderule.minimq.store.server.bootstrap.ContextInitializer;
 import cn.coderule.minimq.store.server.ComponentRegister;
 import cn.coderule.minimq.store.server.bootstrap.StoreArgument;

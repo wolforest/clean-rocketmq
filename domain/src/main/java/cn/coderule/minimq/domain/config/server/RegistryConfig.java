@@ -1,6 +1,6 @@
 package cn.coderule.minimq.domain.config.server;
 
-import cn.coderule.minimq.domain.domain.constant.MQConstants;
+import cn.coderule.minimq.domain.domain.core.constant.MQConstants;
 import java.io.File;
 import java.io.Serializable;
 import lombok.Data;

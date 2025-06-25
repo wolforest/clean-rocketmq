@@ -1,8 +1,8 @@
 package cn.coderule.minimq.broker.domain.transaction;
 
-import cn.coderule.minimq.domain.domain.constant.MessageConst;
-import cn.coderule.minimq.domain.domain.constant.flag.MessageSysFlag;
-import cn.coderule.minimq.domain.domain.dto.EnqueueResult;
+import cn.coderule.minimq.domain.domain.core.constant.MessageConst;
+import cn.coderule.minimq.domain.domain.core.constant.flag.MessageSysFlag;
+import cn.coderule.minimq.domain.domain.model.producer.EnqueueResult;
 import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
 import cn.coderule.minimq.domain.domain.model.message.MessageBO;
 import cn.coderule.minimq.domain.utils.MessageUtils;

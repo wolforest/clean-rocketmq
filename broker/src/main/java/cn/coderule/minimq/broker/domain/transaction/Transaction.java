@@ -1,7 +1,7 @@
 package cn.coderule.minimq.broker.domain.transaction;
 
-import cn.coderule.minimq.domain.domain.dto.EnqueueResult;
-import cn.coderule.minimq.domain.domain.dto.request.CommitRequest;
+import cn.coderule.minimq.domain.domain.model.producer.EnqueueResult;
+import cn.coderule.minimq.domain.domain.model.consumer.CommitRequest;
 import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
 import cn.coderule.minimq.domain.domain.model.message.MessageBO;
 import java.util.concurrent.CompletableFuture;

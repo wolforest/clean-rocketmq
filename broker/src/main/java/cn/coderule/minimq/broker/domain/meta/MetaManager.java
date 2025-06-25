@@ -7,7 +7,7 @@ import cn.coderule.minimq.broker.infra.embed.EmbedTopicStore;
 import cn.coderule.minimq.broker.server.bootstrap.BrokerContext;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.config.message.TopicConfig;
-import cn.coderule.minimq.domain.domain.exception.InvalidConfigException;
+import cn.coderule.minimq.domain.domain.core.exception.InvalidConfigException;
 import cn.coderule.minimq.rpc.registry.route.RouteLoader;
 
 public class MetaManager implements Lifecycle {

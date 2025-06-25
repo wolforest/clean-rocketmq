@@ -1,6 +1,6 @@
 package cn.coderule.minimq.store.domain.mq.revive;
 
-import cn.coderule.minimq.domain.domain.constant.PopConstants;
+import cn.coderule.minimq.domain.domain.core.constant.PopConstants;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.revive.ReviveBuffer;
 import cn.coderule.minimq.domain.service.store.domain.consumequeue.ConsumeQueueGateway;
 import cn.coderule.minimq.domain.service.store.domain.meta.ConsumeOffsetService;

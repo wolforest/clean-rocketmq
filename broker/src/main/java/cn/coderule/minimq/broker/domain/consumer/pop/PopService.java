@@ -1,8 +1,8 @@
 package cn.coderule.minimq.broker.domain.consumer.pop;
 
-import cn.coderule.minimq.domain.domain.dto.request.PopRequest;
-import cn.coderule.minimq.domain.domain.dto.response.PopResult;
-import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
+import cn.coderule.minimq.domain.domain.consumer.pop.PopRequest;
+import cn.coderule.minimq.domain.domain.consumer.pop.PopResult;
+import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import java.util.concurrent.CompletableFuture;
 
 public class PopService {

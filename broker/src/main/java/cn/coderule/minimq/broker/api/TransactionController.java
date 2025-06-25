@@ -1,8 +1,8 @@
 package cn.coderule.minimq.broker.api;
 
 import cn.coderule.minimq.broker.domain.transaction.Transaction;
-import cn.coderule.minimq.domain.domain.dto.request.CommitRequest;
-import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
+import cn.coderule.minimq.domain.domain.consumer.CommitRequest;
+import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import java.util.concurrent.CompletableFuture;
 
 public class TransactionController {

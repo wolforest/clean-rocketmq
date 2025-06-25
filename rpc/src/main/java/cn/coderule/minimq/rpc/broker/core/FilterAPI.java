@@ -1,6 +1,6 @@
 package cn.coderule.minimq.rpc.broker.core;
 
-import cn.coderule.minimq.domain.domain.enums.consume.ExpressionType;
+import cn.coderule.minimq.domain.domain.core.enums.consume.ExpressionType;
 import cn.coderule.minimq.domain.domain.model.cluster.heartbeat.SubscriptionData;
 import java.util.Arrays;
 import org.apache.commons.lang3.StringUtils;

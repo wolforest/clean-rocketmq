@@ -1,9 +1,9 @@
 package cn.coderule.minimq.store.domain.mq.revive;
 
 import cn.coderule.minimq.domain.config.server.StoreConfig;
-import cn.coderule.minimq.domain.domain.constant.PopConstants;
-import cn.coderule.minimq.domain.domain.dto.EnqueueResult;
-import cn.coderule.minimq.domain.domain.enums.message.TagType;
+import cn.coderule.minimq.domain.domain.core.constant.PopConstants;
+import cn.coderule.minimq.domain.domain.model.producer.EnqueueResult;
+import cn.coderule.minimq.domain.domain.core.enums.message.TagType;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.checkpoint.PopCheckPoint;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.helper.PopConverter;
 import cn.coderule.minimq.domain.domain.model.message.MessageBO;

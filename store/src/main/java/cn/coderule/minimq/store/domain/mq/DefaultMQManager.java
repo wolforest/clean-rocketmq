@@ -1,7 +1,7 @@
 package cn.coderule.minimq.store.domain.mq;
 
 import cn.coderule.minimq.domain.config.server.StoreConfig;
-import cn.coderule.minimq.domain.domain.lock.queue.DequeueLock;
+import cn.coderule.minimq.domain.domain.core.lock.queue.DequeueLock;
 import cn.coderule.minimq.domain.service.store.api.MQStore;
 import cn.coderule.minimq.domain.service.store.domain.commitlog.CommitLog;
 import cn.coderule.minimq.domain.service.store.domain.consumequeue.ConsumeQueueGateway;

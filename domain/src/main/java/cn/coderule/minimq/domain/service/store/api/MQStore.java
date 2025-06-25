@@ -1,9 +1,9 @@
 package cn.coderule.minimq.domain.service.store.api;
 
-import cn.coderule.minimq.domain.domain.dto.EnqueueResult;
+import cn.coderule.minimq.domain.domain.model.producer.EnqueueResult;
 import cn.coderule.minimq.domain.domain.model.message.MessageBO;
-import cn.coderule.minimq.domain.domain.dto.DequeueRequest;
-import cn.coderule.minimq.domain.domain.dto.DequeueResult;
+import cn.coderule.minimq.domain.domain.model.consumer.DequeueRequest;
+import cn.coderule.minimq.domain.domain.model.consumer.DequeueResult;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 

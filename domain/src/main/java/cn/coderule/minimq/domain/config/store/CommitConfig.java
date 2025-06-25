@@ -1,6 +1,6 @@
 package cn.coderule.minimq.domain.config.store;
 
-import cn.coderule.minimq.domain.domain.enums.store.FlushType;
+import cn.coderule.minimq.domain.domain.core.enums.store.FlushType;
 import java.io.Serializable;
 import lombok.Data;
 

@@ -3,7 +3,7 @@ package cn.coderule.minimq.store.domain.mq.ack;
 import cn.coderule.common.util.lang.ByteUtil;
 import cn.coderule.minimq.domain.config.message.MessageConfig;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
-import cn.coderule.minimq.domain.domain.dto.EnqueueResult;
+import cn.coderule.minimq.domain.domain.model.producer.EnqueueResult;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.ack.AckBuffer;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.ack.AckMsg;
 import cn.coderule.minimq.domain.domain.model.consumer.pop.ack.BatchAckMsg;

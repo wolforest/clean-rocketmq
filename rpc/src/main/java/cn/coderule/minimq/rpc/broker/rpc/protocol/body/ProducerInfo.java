@@ -1,6 +1,6 @@
 package cn.coderule.minimq.rpc.broker.rpc.protocol.body;
 
-import cn.coderule.minimq.domain.domain.enums.code.LanguageCode;
+import cn.coderule.minimq.domain.domain.core.enums.code.LanguageCode;
 import cn.coderule.minimq.rpc.common.rpc.protocol.codec.RpcSerializable;
 
 public class ProducerInfo extends RpcSerializable {

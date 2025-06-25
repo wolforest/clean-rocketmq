@@ -1,7 +1,7 @@
 package cn.coderule.minimq.store.domain.commitlog.vo;
 
 import cn.coderule.minimq.domain.domain.model.message.MessageBO;
-import cn.coderule.minimq.domain.domain.dto.EnqueueResult;
+import cn.coderule.minimq.domain.domain.model.producer.EnqueueResult;
 import cn.coderule.minimq.domain.service.store.infra.MappedFile;
 import cn.coderule.minimq.domain.domain.model.message.MessageEncoder;
 import java.io.Serializable;

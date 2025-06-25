@@ -1,8 +1,8 @@
 package cn.coderule.minimq.domain.service.store.infra;
 
-import cn.coderule.minimq.domain.domain.enums.store.FlushType;
-import cn.coderule.minimq.domain.domain.dto.InsertResult;
-import cn.coderule.minimq.domain.domain.dto.SelectedMappedBuffer;
+import cn.coderule.minimq.domain.domain.core.enums.store.FlushType;
+import cn.coderule.minimq.domain.domain.model.cluster.store.InsertResult;
+import cn.coderule.minimq.domain.domain.model.cluster.store.SelectedMappedBuffer;
 import java.nio.ByteBuffer;
 import java.nio.MappedByteBuffer;
 

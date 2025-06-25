@@ -1,9 +1,9 @@
 package cn.coderule.minimq.broker.domain.transaction;
 
 import cn.coderule.common.util.lang.string.StringUtil;
-import cn.coderule.minimq.domain.domain.constant.MQConstants;
-import cn.coderule.minimq.domain.domain.constant.MessageConst;
-import cn.coderule.minimq.domain.domain.constant.flag.MessageSysFlag;
+import cn.coderule.minimq.domain.domain.core.constant.MQConstants;
+import cn.coderule.minimq.domain.domain.core.constant.MessageConst;
+import cn.coderule.minimq.domain.domain.core.constant.flag.MessageSysFlag;
 import cn.coderule.minimq.domain.domain.model.message.MessageBO;
 import cn.coderule.minimq.domain.domain.model.meta.topic.TopicValidator;
 import cn.coderule.minimq.domain.utils.MessageUtils;

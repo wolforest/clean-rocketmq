@@ -2,15 +2,15 @@ package cn.coderule.minimq.broker.api;
 
 import cn.coderule.minimq.broker.api.validator.GroupValidator;
 import cn.coderule.minimq.broker.domain.consumer.consumer.Consumer;
-import cn.coderule.minimq.domain.domain.dto.request.AckRequest;
-import cn.coderule.minimq.domain.domain.dto.request.ConsumerInfo;
-import cn.coderule.minimq.domain.domain.dto.request.InvisibleRequest;
-import cn.coderule.minimq.domain.domain.dto.request.PopRequest;
-import cn.coderule.minimq.domain.domain.dto.response.AckResult;
-import cn.coderule.minimq.domain.domain.dto.response.PopResult;
-import cn.coderule.minimq.domain.domain.dto.running.ConsumerGroupInfo;
-import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
-import cn.coderule.minimq.domain.domain.model.consumer.subscription.SubscriptionGroup;
+import cn.coderule.minimq.domain.domain.consumer.pop.ack.AckRequest;
+import cn.coderule.minimq.domain.domain.consumer.ConsumerInfo;
+import cn.coderule.minimq.domain.domain.consumer.InvisibleRequest;
+import cn.coderule.minimq.domain.domain.consumer.pop.PopRequest;
+import cn.coderule.minimq.domain.domain.consumer.pop.ack.AckResult;
+import cn.coderule.minimq.domain.domain.consumer.pop.PopResult;
+import cn.coderule.minimq.domain.domain.consumer.running.ConsumerGroupInfo;
+import cn.coderule.minimq.domain.domain.cluster.RequestContext;
+import cn.coderule.minimq.domain.domain.consumer.subscription.SubscriptionGroup;
 import java.util.concurrent.CompletableFuture;
 
 public class ConsumerController {

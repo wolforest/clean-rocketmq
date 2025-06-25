@@ -9,7 +9,7 @@ import cn.coderule.minimq.broker.api.ConsumerController;
 import cn.coderule.minimq.broker.api.ProducerController;
 import cn.coderule.minimq.broker.api.RouteController;
 import cn.coderule.minimq.broker.api.TransactionController;
-import cn.coderule.minimq.domain.domain.enums.consume.CMResult;
+import cn.coderule.minimq.domain.domain.core.enums.consume.CMResult;
 import cn.coderule.minimq.domain.domain.model.cluster.RequestContext;
 import cn.coderule.minimq.rpc.broker.grpc.ContextStreamObserver;
 import cn.coderule.minimq.rpc.broker.rpc.protocol.body.ConsumeMessageDirectlyResult;

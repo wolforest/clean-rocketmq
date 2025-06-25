@@ -1,6 +1,6 @@
 package cn.coderule.minimq.domain.utils;
 
-import cn.coderule.minimq.domain.domain.enums.message.CleanupPolicy;
+import cn.coderule.minimq.domain.domain.core.enums.message.CleanupPolicy;
 import cn.coderule.minimq.domain.domain.model.meta.topic.Topic;
 import cn.coderule.minimq.domain.domain.model.meta.topic.TopicAttributes;
 import java.util.Map;
