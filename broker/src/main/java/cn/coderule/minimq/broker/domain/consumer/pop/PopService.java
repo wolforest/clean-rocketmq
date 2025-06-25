@@ -1,7 +1,7 @@
 package cn.coderule.minimq.broker.domain.consumer.pop;
 
-import cn.coderule.minimq.domain.domain.consumer.pop.PopRequest;
-import cn.coderule.minimq.domain.domain.consumer.pop.PopResult;
+import cn.coderule.minimq.domain.domain.consumer.consume.pop.PopRequest;
+import cn.coderule.minimq.domain.domain.consumer.consume.pop.PopResult;
 import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import java.util.concurrent.CompletableFuture;
 

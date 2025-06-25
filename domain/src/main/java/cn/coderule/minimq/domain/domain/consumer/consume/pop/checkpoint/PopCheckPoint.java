@@ -1,4 +1,4 @@
-package cn.coderule.minimq.domain.domain.consumer.pop.checkpoint;
+package cn.coderule.minimq.domain.domain.consumer.consume.pop.checkpoint;
 
 import com.alibaba.fastjson2.annotation.JSONField;
 import java.util.ArrayList;

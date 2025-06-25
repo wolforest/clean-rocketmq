@@ -4,7 +4,7 @@ import cn.coderule.minimq.broker.infra.embed.EmbedAckStore;
 import cn.coderule.minimq.broker.infra.remote.RemoteAckStore;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.domain.consumer.ack.AckMsg;
-import cn.coderule.minimq.domain.domain.consumer.pop.checkpoint.PopCheckPoint;
+import cn.coderule.minimq.domain.domain.consumer.consume.pop.checkpoint.PopCheckPoint;
 import cn.coderule.minimq.domain.service.store.api.AckStore;
 
 public class BrokerAckStore implements AckStore {

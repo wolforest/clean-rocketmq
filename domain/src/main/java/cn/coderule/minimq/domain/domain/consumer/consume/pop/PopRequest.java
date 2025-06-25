@@ -1,4 +1,4 @@
-package cn.coderule.minimq.domain.domain.consumer.pop;
+package cn.coderule.minimq.domain.domain.consumer.consume.pop;
 
 import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import cn.coderule.minimq.domain.domain.cluster.heartbeat.SubscriptionData;

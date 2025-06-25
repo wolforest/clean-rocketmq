@@ -1,5 +1,5 @@
 
-package cn.coderule.minimq.domain.domain.consumer;
+package cn.coderule.minimq.domain.domain.consumer.revive;
 
 import cn.coderule.minimq.domain.domain.consumer.ack.AckResult;
 import cn.coderule.minimq.domain.domain.consumer.receipt.MessageReceipt;

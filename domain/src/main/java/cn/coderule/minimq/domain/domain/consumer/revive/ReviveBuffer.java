@@ -1,7 +1,7 @@
 package cn.coderule.minimq.domain.domain.consumer.revive;
 
-import cn.coderule.minimq.domain.domain.consumer.pop.checkpoint.PopCheckPoint;
-import cn.coderule.minimq.domain.domain.consumer.pop.helper.PopKeyBuilder;
+import cn.coderule.minimq.domain.domain.consumer.consume.pop.checkpoint.PopCheckPoint;
+import cn.coderule.minimq.domain.domain.consumer.consume.pop.helper.PopKeyBuilder;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;

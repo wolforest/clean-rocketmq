@@ -1,9 +1,9 @@
-package cn.coderule.minimq.domain.domain.consumer.pop.helper;
+package cn.coderule.minimq.domain.domain.consumer.consume.pop.helper;
 
 import cn.coderule.minimq.domain.core.constant.PopConstants;
 import cn.coderule.minimq.domain.domain.consumer.ack.AckMsg;
 import cn.coderule.minimq.domain.domain.consumer.ack.BatchAckMsg;
-import cn.coderule.minimq.domain.domain.consumer.pop.checkpoint.PopCheckPoint;
+import cn.coderule.minimq.domain.domain.consumer.consume.pop.checkpoint.PopCheckPoint;
 import cn.coderule.minimq.domain.domain.meta.topic.KeyBuilder;
 
 public class PopKeyBuilder {

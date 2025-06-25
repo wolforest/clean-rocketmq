@@ -1,4 +1,4 @@
-package cn.coderule.minimq.domain.domain.consumer;
+package cn.coderule.minimq.domain.domain.consumer.consume;
 
 import cn.coderule.minimq.domain.domain.meta.topic.Topic;
 import java.util.Map;

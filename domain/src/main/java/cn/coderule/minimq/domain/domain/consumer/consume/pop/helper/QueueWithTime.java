@@ -1,4 +1,4 @@
-package cn.coderule.minimq.domain.domain.consumer.pop.helper;
+package cn.coderule.minimq.domain.domain.consumer.consume.pop.helper;
 
 import java.io.Serializable;
 import java.util.concurrent.LinkedBlockingDeque;
