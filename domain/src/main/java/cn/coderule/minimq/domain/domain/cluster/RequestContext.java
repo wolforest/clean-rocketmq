@@ -1,10 +1,13 @@
 package cn.coderule.minimq.domain.domain.cluster;
 
 import io.netty.channel.Channel;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import lombok.Data;
 
-public class RequestContext {
+@Data
+public class RequestContext implements Serializable {
     public static final String REMOTE_ADDRESS = "remote-address";
     public static final String LOCAL_ADDRESS = "local-address";
     public static final String CLIENT_ID = "client-id";
@@ -25,6 +28,8 @@ public class RequestContext {
 
     public static final String INNER_ACTION_PREFIX = "Inner";
     private final Map<String, Object> map = new HashMap<>();
+
+    private String storeGroup;
 
     public static RequestContext create() {
         return new RequestContext();
