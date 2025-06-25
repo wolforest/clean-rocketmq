@@ -5,7 +5,7 @@ import cn.coderule.minimq.domain.domain.producer.EnqueueRequest;
 import cn.coderule.minimq.domain.domain.producer.EnqueueResult;
 import cn.coderule.minimq.domain.domain.consumer.consume.DequeueRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.DequeueResult;
-import cn.coderule.minimq.domain.service.store.api.MQStore;
+import cn.coderule.minimq.domain.service.broker.infra.MQStore;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -41,13 +41,4 @@ public class EmbedMQStore extends AbstractEmbedStore implements MQStore {
         return mqStore.get(request);
     }
 
-    @Override
-    public MessageBO getMessage(String topic, int queueId, long offset) {
-        return mqStore.getMessage(topic, queueId, offset);
-    }
-
-    @Override
-    public List<MessageBO> getMessage(String topic, int queueId, long offset, int num) {
-        return mqStore.getMessage(topic, queueId, offset, num);
-    }
 }

@@ -5,7 +5,7 @@ import cn.coderule.minimq.domain.domain.producer.EnqueueRequest;
 import cn.coderule.minimq.domain.domain.producer.EnqueueResult;
 import cn.coderule.minimq.domain.domain.consumer.consume.DequeueRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.DequeueResult;
-import cn.coderule.minimq.domain.service.store.api.MQStore;
+import cn.coderule.minimq.domain.service.broker.infra.MQStore;
 import cn.coderule.minimq.rpc.common.rpc.RpcClient;
 import cn.coderule.minimq.rpc.store.StoreClient;
 import java.util.List;
@@ -43,19 +43,6 @@ public class MQClient extends AbstractStoreClient implements StoreClient, MQStor
     public DequeueResult get(DequeueRequest request) {
 
         return null;
-    }
-
-    @Override
-    public MessageBO getMessage(String topic, int queueId, long offset) {
-
-        return null;
-    }
-
-    @Override
-    public List<MessageBO> getMessage(String topic, int queueId, long offset, int num) {
-
-
-        return List.of();
     }
 
 }
