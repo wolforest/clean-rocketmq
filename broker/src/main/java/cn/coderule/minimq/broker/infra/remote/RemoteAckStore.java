@@ -2,7 +2,7 @@ package cn.coderule.minimq.broker.infra.remote;
 
 import cn.coderule.minimq.domain.domain.consumer.ack.AckMsg;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.checkpoint.PopCheckPoint;
-import cn.coderule.minimq.domain.service.store.api.AckStore;
+import cn.coderule.minimq.domain.service.store.api.meta.AckStore;
 
 public class RemoteAckStore extends AbstractRemoteStore implements AckStore {
     public RemoteAckStore(RemoteLoadBalance loadBalance) {

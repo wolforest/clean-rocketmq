@@ -1,4 +1,4 @@
-package cn.coderule.minimq.domain.service.store.api;
+package cn.coderule.minimq.domain.service.store.api.meta;
 
 import cn.coderule.minimq.domain.domain.consumer.ack.AckMsg;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.checkpoint.PopCheckPoint;

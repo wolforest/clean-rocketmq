@@ -4,7 +4,7 @@ import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.domain.domain.consumer.ack.AckBuffer;
 import cn.coderule.minimq.domain.domain.meta.topic.KeyBuilder;
-import cn.coderule.minimq.domain.service.store.api.AckStore;
+import cn.coderule.minimq.domain.service.store.api.meta.AckStore;
 import cn.coderule.minimq.domain.service.store.domain.mq.MQService;
 import cn.coderule.minimq.store.api.AckStoreImpl;
 import cn.coderule.minimq.store.server.bootstrap.StoreContext;

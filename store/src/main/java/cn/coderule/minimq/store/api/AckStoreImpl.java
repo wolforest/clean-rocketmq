@@ -2,7 +2,7 @@ package cn.coderule.minimq.store.api;
 
 import cn.coderule.minimq.domain.domain.consumer.ack.AckMsg;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.checkpoint.PopCheckPoint;
-import cn.coderule.minimq.domain.service.store.api.AckStore;
+import cn.coderule.minimq.domain.service.store.api.meta.AckStore;
 import cn.coderule.minimq.store.domain.mq.ack.AckService;
 
 public class AckStoreImpl implements AckStore {
@@ -24,6 +24,6 @@ public class AckStoreImpl implements AckStore {
 
     @Override
     public long getLatestOffset(String topic, String group, int queueId) {
-        return ackService.getLatestOffset(topic, group, queueId);
+        return ackService.getBufferedOffset(topic, group, queueId);
     }
 }
