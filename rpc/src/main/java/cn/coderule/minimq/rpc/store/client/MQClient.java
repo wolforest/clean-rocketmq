@@ -1,6 +1,7 @@
 package cn.coderule.minimq.rpc.store.client;
 
 import cn.coderule.minimq.domain.domain.message.MessageBO;
+import cn.coderule.minimq.domain.domain.producer.EnqueueRequest;
 import cn.coderule.minimq.domain.domain.producer.EnqueueResult;
 import cn.coderule.minimq.domain.domain.consumer.consume.DequeueRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.DequeueResult;
@@ -19,37 +20,22 @@ public class MQClient extends AbstractStoreClient implements StoreClient, MQStor
     }
 
     @Override
-    public EnqueueResult enqueue(MessageBO messageBO) {
-
-
+    public EnqueueResult enqueue(EnqueueRequest request) {
         return null;
     }
 
     @Override
-    public CompletableFuture<EnqueueResult> enqueueAsync(MessageBO messageBO) {
-
+    public CompletableFuture<EnqueueResult> enqueueAsync(EnqueueRequest request) {
         return null;
     }
 
     @Override
-    public CompletableFuture<DequeueResult> dequeueAsync(String group, String topic, int queueId, int num) {
+    public DequeueResult dequeue(DequeueRequest request) {
         return null;
     }
 
     @Override
-    public DequeueResult dequeue(String group, String topic, int queueId, int num) {
-        return null;
-    }
-
-    @Override
-    public DequeueResult get(String topic, int queueId, long offset) {
-
-        return null;
-    }
-
-    @Override
-    public DequeueResult get(String topic, int queueId, long offset, int num) {
-
+    public CompletableFuture<DequeueResult> dequeueAsync(DequeueRequest request) {
         return null;
     }
 

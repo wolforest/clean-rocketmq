@@ -2,8 +2,9 @@ package cn.coderule.minimq.store.api;
 
 import cn.coderule.minimq.domain.domain.consumer.consume.DequeueRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.DequeueResult;
-import cn.coderule.minimq.domain.service.store.api.MQStore;
+import cn.coderule.minimq.domain.domain.producer.EnqueueRequest;
 import cn.coderule.minimq.domain.domain.producer.EnqueueResult;
+import cn.coderule.minimq.domain.service.store.api.MQStore;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.service.store.domain.mq.MQService;
 import java.util.List;
@@ -17,33 +18,23 @@ public class MQStoreImpl implements MQStore {
     }
 
     @Override
-    public EnqueueResult enqueue(MessageBO messageBO) {
-        return mqService.enqueue(messageBO);
+    public EnqueueResult enqueue(EnqueueRequest result) {
+        return mqService.enqueue(result.getMessageBO());
     }
 
     @Override
-    public CompletableFuture<EnqueueResult> enqueueAsync(MessageBO messageBO) {
-        return mqService.enqueueAsync(messageBO);
+    public CompletableFuture<EnqueueResult> enqueueAsync(EnqueueRequest request) {
+        return mqService.enqueueAsync(request.getMessageBO());
     }
 
     @Override
-    public CompletableFuture<DequeueResult> dequeueAsync(String group, String topic, int queueId, int num) {
-        return mqService.dequeueAsync(group, topic, queueId, num);
+    public DequeueResult dequeue(DequeueRequest request) {
+        return mqService.dequeue(request);
     }
 
     @Override
-    public DequeueResult dequeue(String group, String topic, int queueId, int num) {
-        return mqService.dequeue(group, topic, queueId, num);
-    }
-
-    @Override
-    public DequeueResult get(String topic, int queueId, long offset) {
-        return mqService.get(topic, queueId, offset);
-    }
-
-    @Override
-    public DequeueResult get(String topic, int queueId, long offset, int num) {
-        return mqService.get(topic, queueId, offset, num);
+    public CompletableFuture<DequeueResult> dequeueAsync(DequeueRequest request) {
+        return mqService.dequeueAsync(request);
     }
 
     @Override

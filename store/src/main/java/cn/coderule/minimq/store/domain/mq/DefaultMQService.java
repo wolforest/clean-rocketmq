@@ -41,23 +41,18 @@ public class DefaultMQService implements MQService {
     }
 
     @Override
-    public CompletableFuture<DequeueResult> dequeueAsync(String group, String topic, int queueId, int num) {
-        return dequeueService.dequeueAsync(group, topic, queueId, num);
+    public DequeueResult dequeue(DequeueRequest request) {
+        return dequeueService.dequeue(request);
     }
 
     @Override
-    public DequeueResult dequeue(String group, String topic, int queueId, int num) {
-        return dequeueService.dequeue(group, topic, queueId, num);
+    public CompletableFuture<DequeueResult> dequeueAsync(DequeueRequest request) {
+        return dequeueService.dequeueAsync(request);
     }
 
     @Override
     public DequeueResult get(String topic, int queueId, long offset) {
-        return get(topic, queueId, offset, 1);
-    }
-
-    @Override
-    public DequeueResult get(String topic, int queueId, long offset, int num) {
-        return messageService.get(topic, queueId, offset, num);
+        return messageService.get(topic, queueId, offset, 1);
     }
 
     @Override
@@ -76,7 +71,15 @@ public class DefaultMQService implements MQService {
 
     @Override
     public List<MessageBO> getMessage(String topic, int queueId, long offset, int num) {
-        DequeueResult result = get(topic, queueId, offset, num);
+        DequeueRequest request = DequeueRequest.builder()
+            .topic(topic)
+            .queueId(queueId)
+            .offset(offset)
+            .num(num)
+            .maxSize(num)
+            .build();
+
+        DequeueResult result = get(request);
         return result.getMessageList();
     }
 

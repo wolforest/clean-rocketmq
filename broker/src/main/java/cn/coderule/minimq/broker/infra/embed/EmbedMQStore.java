@@ -1,6 +1,7 @@
 package cn.coderule.minimq.broker.infra.embed;
 
 import cn.coderule.minimq.domain.domain.message.MessageBO;
+import cn.coderule.minimq.domain.domain.producer.EnqueueRequest;
 import cn.coderule.minimq.domain.domain.producer.EnqueueResult;
 import cn.coderule.minimq.domain.domain.consumer.consume.DequeueRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.DequeueResult;
@@ -16,33 +17,23 @@ public class EmbedMQStore extends AbstractEmbedStore implements MQStore {
     }
 
     @Override
-    public EnqueueResult enqueue(MessageBO messageBO) {
-        return mqStore.enqueue(messageBO);
+    public EnqueueResult enqueue(EnqueueRequest request) {
+        return mqStore.enqueue(request);
     }
 
     @Override
-    public CompletableFuture<EnqueueResult> enqueueAsync(MessageBO messageBO) {
-        return mqStore.enqueueAsync(messageBO);
+    public CompletableFuture<EnqueueResult> enqueueAsync(EnqueueRequest request) {
+        return mqStore.enqueueAsync(request);
     }
 
     @Override
-    public CompletableFuture<DequeueResult> dequeueAsync(String group, String topic, int queueId, int num) {
-        return mqStore.dequeueAsync(group, topic, queueId, num);
+    public DequeueResult dequeue(DequeueRequest request) {
+        return mqStore.dequeue(request);
     }
 
     @Override
-    public DequeueResult dequeue(String group, String topic, int queueId, int num) {
-        return mqStore.dequeue(group, topic, queueId, num);
-    }
-
-    @Override
-    public DequeueResult get(String topic, int queueId, long offset) {
-        return mqStore.get(topic, queueId, offset);
-    }
-
-    @Override
-    public DequeueResult get(String topic, int queueId, long offset, int num) {
-        return mqStore.get(topic, queueId, offset, num);
+    public CompletableFuture<DequeueResult> dequeueAsync(DequeueRequest request) {
+        return mqStore.dequeueAsync(request);
     }
 
     @Override

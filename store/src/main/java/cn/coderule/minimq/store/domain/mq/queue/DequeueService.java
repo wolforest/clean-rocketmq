@@ -1,5 +1,6 @@
 package cn.coderule.minimq.store.domain.mq.queue;
 
+import cn.coderule.minimq.domain.domain.consumer.consume.DequeueRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.DequeueResult;
 import cn.coderule.minimq.domain.core.lock.queue.DequeueLock;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
@@ -22,6 +23,24 @@ public class DequeueService {
 
         this.messageService = messageService;
         this.consumeOffsetService = consumeOffsetService;
+    }
+
+    public DequeueResult dequeue(DequeueRequest request) {
+        return dequeue(
+            request.getGroup(),
+            request.getTopic(),
+            request.getQueueId(),
+            request.getNum()
+        );
+    }
+
+    public CompletableFuture<DequeueResult> dequeueAsync(DequeueRequest request) {
+        return dequeueAsync(
+            request.getGroup(),
+            request.getTopic(),
+            request.getQueueId(),
+            request.getNum()
+        );
     }
 
     public CompletableFuture<DequeueResult> dequeueAsync(String group, String topic, int queueId, int num) {

@@ -3,12 +3,12 @@ package cn.coderule.minimq.broker.infra.store;
 import cn.coderule.minimq.broker.infra.embed.EmbedMQStore;
 import cn.coderule.minimq.broker.infra.remote.RemoteMQStore;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
+import cn.coderule.minimq.domain.domain.producer.EnqueueRequest;
 import cn.coderule.minimq.domain.domain.producer.EnqueueResult;
 import cn.coderule.minimq.domain.domain.consumer.consume.DequeueRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.DequeueResult;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
-import cn.coderule.minimq.domain.service.store.api.MQStore;
-import java.util.List;
+import cn.coderule.minimq.domain.service.broker.infra.MQStore;
 import java.util.concurrent.CompletableFuture;
 
 public class BrokerMQStore implements MQStore {
@@ -23,73 +23,64 @@ public class BrokerMQStore implements MQStore {
     }
 
     @Override
-    public EnqueueResult enqueue(MessageBO messageBO) {
+    public EnqueueResult enqueue(EnqueueRequest request) {
+        MessageBO messageBO = request.getMessageBO();
         if (embedMQStore.isEmbed(messageBO.getTopic())) {
-            return embedMQStore.enqueue(messageBO);
+            return embedMQStore.enqueue(request);
         }
 
         if (!brokerConfig.isEnableRemoteStore()) {
             return EnqueueResult.notAvailable();
         }
 
-        return remoteMQStore.enqueue(messageBO);
+        return remoteMQStore.enqueue(request);
     }
 
     @Override
-    public CompletableFuture<EnqueueResult> enqueueAsync(MessageBO messageBO) {
+    public CompletableFuture<EnqueueResult> enqueueAsync(EnqueueRequest request) {
+        MessageBO messageBO = request.getMessageBO();
         if (embedMQStore.isEmbed(messageBO.getTopic())) {
-            return embedMQStore.enqueueAsync(messageBO);
+            return embedMQStore.enqueueAsync(request);
         }
 
         if (!brokerConfig.isEnableRemoteStore()) {
-            return CompletableFuture.completedFuture(EnqueueResult.notAvailable());
+            return CompletableFuture.completedFuture(
+                EnqueueResult.notAvailable()
+            );
         }
 
-        return remoteMQStore.enqueueAsync(messageBO);
+        return remoteMQStore.enqueueAsync(request);
     }
 
+
     @Override
-    public CompletableFuture<DequeueResult> dequeueAsync(String group, String topic, int queueId, int num) {
+    public CompletableFuture<DequeueResult> dequeueAsync(DequeueRequest request) {
+        String topic = request.getTopic();
         if (embedMQStore.isEmbed(topic)) {
-            return embedMQStore.dequeueAsync(group, topic, queueId, num);
+            return embedMQStore.dequeueAsync(request);
         }
 
         if (!brokerConfig.isEnableRemoteStore()) {
-            return CompletableFuture.completedFuture(DequeueResult.notFound());
+            return CompletableFuture.completedFuture(
+                DequeueResult.notFound()
+            );
         }
 
-        return remoteMQStore.dequeueAsync(group, topic, queueId, num);
+        return remoteMQStore.dequeueAsync(request);
     }
 
     @Override
-    public DequeueResult dequeue(String group, String topic, int queueId, int num) {
+    public DequeueResult dequeue(DequeueRequest request) {
+        String topic = request.getTopic();
         if (embedMQStore.isEmbed(topic)) {
-            return embedMQStore.dequeue(group, topic, queueId, num);
+            return embedMQStore.dequeue(request);
         }
 
         if (!brokerConfig.isEnableRemoteStore()) {
             return DequeueResult.notFound();
         }
 
-        return remoteMQStore.dequeue(group, topic, queueId, num);
-    }
-
-    @Override
-    public DequeueResult get(String topic, int queueId, long offset) {
-        if (embedMQStore.isEmbed(topic)) {
-            return embedMQStore.get(topic, queueId, offset);
-        }
-
-        return remoteMQStore.get(topic, queueId, offset);
-    }
-
-    @Override
-    public DequeueResult get(String topic, int queueId, long offset, int num) {
-        if (embedMQStore.isEmbed(topic)) {
-            return embedMQStore.get(topic, queueId, offset, num);
-        }
-
-        return remoteMQStore.get(topic, queueId, offset, num);
+        return remoteMQStore.dequeue(request);
     }
 
     @Override
@@ -101,21 +92,4 @@ public class BrokerMQStore implements MQStore {
         return remoteMQStore.get(request);
     }
 
-    @Override
-    public MessageBO getMessage(String topic, int queueId, long offset) {
-        if (embedMQStore.isEmbed(topic)) {
-            return embedMQStore.getMessage(topic, queueId, offset);
-        }
-
-        return remoteMQStore.getMessage(topic, queueId, offset);
-    }
-
-    @Override
-    public List<MessageBO> getMessage(String topic, int queueId, long offset, int num) {
-        if (embedMQStore.isEmbed(topic)) {
-            return embedMQStore.getMessage(topic, queueId, offset, num);
-        }
-
-        return remoteMQStore.getMessage(topic, queueId, offset, num);
-    }
 }

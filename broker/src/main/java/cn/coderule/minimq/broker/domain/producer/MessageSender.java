@@ -7,6 +7,7 @@ import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.minimq.broker.domain.transaction.Transaction;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.core.constant.MessageConst;
+import cn.coderule.minimq.domain.domain.producer.EnqueueRequest;
 import cn.coderule.minimq.domain.domain.producer.EnqueueResult;
 import cn.coderule.minimq.domain.core.enums.code.InvalidCode;
 import cn.coderule.minimq.domain.core.enums.message.CleanupPolicy;
@@ -17,8 +18,8 @@ import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import cn.coderule.minimq.domain.domain.meta.topic.Topic;
 import cn.coderule.minimq.domain.domain.producer.ProduceContext;
+import cn.coderule.minimq.domain.service.broker.infra.MQStore;
 import cn.coderule.minimq.domain.service.broker.infra.TopicStore;
-import cn.coderule.minimq.domain.service.store.api.MQStore;
 import cn.coderule.minimq.domain.utils.CleanupUtils;
 import cn.coderule.minimq.domain.utils.MessageUtils;
 import java.net.InetSocketAddress;
@@ -142,7 +143,8 @@ public class MessageSender implements Lifecycle {
         if (context.isPrepareMessage()) {
             future = transaction.prepare(context.getRequestContext(), context.getMessageBO());
         } else {
-            future = MQStore.enqueueAsync(context.getMessageBO());
+            EnqueueRequest request = EnqueueRequest.create(context.getMessageBO());
+            future = MQStore.enqueueAsync(request);
         }
 
         return future;

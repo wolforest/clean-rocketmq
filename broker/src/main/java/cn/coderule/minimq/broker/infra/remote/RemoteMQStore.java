@@ -3,6 +3,7 @@ package cn.coderule.minimq.broker.infra.remote;
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
+import cn.coderule.minimq.domain.domain.producer.EnqueueRequest;
 import cn.coderule.minimq.domain.domain.producer.EnqueueResult;
 import cn.coderule.minimq.domain.domain.consumer.consume.DequeueRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.DequeueResult;
@@ -48,40 +49,33 @@ public class RemoteMQStore extends AbstractRemoteStore implements MQStore, Lifec
     }
 
     @Override
-    public EnqueueResult enqueue(MessageBO messageBO) {
+    public EnqueueResult enqueue(EnqueueRequest request) {
+        MessageBO messageBO = request.getMessageBO();
         String address = loadBalance.findByTopic(messageBO.getTopic());
-        return getClient(address).enqueue(messageBO);
+        return getClient(address).enqueue(request);
     }
 
     @Override
-    public CompletableFuture<EnqueueResult> enqueueAsync(MessageBO messageBO) {
+    public CompletableFuture<EnqueueResult> enqueueAsync(EnqueueRequest request) {
+        MessageBO messageBO = request.getMessageBO();
         String address = loadBalance.findByTopic(messageBO.getTopic());
-        return getClient(address).enqueueAsync(messageBO);
+        return getClient(address).enqueueAsync(request);
     }
 
     @Override
-    public CompletableFuture<DequeueResult> dequeueAsync(String group, String topic, int queueId, int num) {
+    public CompletableFuture<DequeueResult> dequeueAsync(DequeueRequest request) {
+        String topic = request.getTopic();
         String address = loadBalance.findByTopic(topic);
-        return getClient(address).dequeueAsync(group, topic, queueId, num);
+        return getClient(address).dequeueAsync(request);
     }
 
     @Override
-    public DequeueResult dequeue(String group, String topic, int queueId, int num) {
+    public DequeueResult dequeue(DequeueRequest request) {
+        String topic = request.getTopic();
         String address = loadBalance.findByTopic(topic);
-        return getClient(address).dequeue(group, topic, queueId, num);
+        return getClient(address).dequeue(request);
     }
 
-    @Override
-    public DequeueResult get(String topic, int queueId, long offset) {
-        String address = loadBalance.findByTopic(topic);
-        return getClient(address).get(topic, queueId, offset);
-    }
-
-    @Override
-    public DequeueResult get(String topic, int queueId, long offset, int num) {
-        String address = loadBalance.findByTopic(topic);
-        return getClient(address).get(topic, queueId, offset, num);
-    }
 
     @Override
     public DequeueResult get(DequeueRequest request) {
