@@ -1,4 +1,4 @@
-package cn.coderule.minimq.domain.domain.consumer.ack;
+package cn.coderule.minimq.domain.domain.consumer.ack.broker;
 
 import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import cn.coderule.minimq.domain.domain.consumer.receipt.ReceiptHandle;

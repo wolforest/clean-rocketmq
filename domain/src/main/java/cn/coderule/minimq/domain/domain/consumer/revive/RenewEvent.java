@@ -1,7 +1,7 @@
 
 package cn.coderule.minimq.domain.domain.consumer.revive;
 
-import cn.coderule.minimq.domain.domain.consumer.ack.AckResult;
+import cn.coderule.minimq.domain.domain.consumer.ack.broker.AckResult;
 import cn.coderule.minimq.domain.domain.consumer.receipt.MessageReceipt;
 import cn.coderule.minimq.domain.domain.consumer.receipt.ReceiptHandleGroupKey;
 import java.util.concurrent.CompletableFuture;

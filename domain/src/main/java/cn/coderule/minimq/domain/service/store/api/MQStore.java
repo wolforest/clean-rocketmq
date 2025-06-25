@@ -21,4 +21,5 @@ public interface MQStore {
     DequeueResult get(DequeueRequest request);
     MessageBO getMessage(String topic, int queueId, long offset);
     List<MessageBO> getMessage(String topic, int queueId, long offset, int num);
+
 }

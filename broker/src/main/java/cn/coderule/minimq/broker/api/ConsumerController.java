@@ -2,11 +2,11 @@ package cn.coderule.minimq.broker.api;
 
 import cn.coderule.minimq.broker.api.validator.GroupValidator;
 import cn.coderule.minimq.broker.domain.consumer.consumer.Consumer;
-import cn.coderule.minimq.domain.domain.consumer.ack.AckRequest;
+import cn.coderule.minimq.domain.domain.consumer.ack.broker.AckRequest;
 import cn.coderule.minimq.domain.domain.consumer.ConsumerInfo;
-import cn.coderule.minimq.domain.domain.consumer.ack.InvisibleRequest;
+import cn.coderule.minimq.domain.domain.consumer.ack.broker.InvisibleRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.PopRequest;
-import cn.coderule.minimq.domain.domain.consumer.ack.AckResult;
+import cn.coderule.minimq.domain.domain.consumer.ack.broker.AckResult;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.PopResult;
 import cn.coderule.minimq.domain.domain.consumer.running.ConsumerGroupInfo;
 import cn.coderule.minimq.domain.domain.cluster.RequestContext;

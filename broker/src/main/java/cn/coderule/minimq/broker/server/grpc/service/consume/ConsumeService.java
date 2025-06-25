@@ -8,7 +8,7 @@ import apache.rocketmq.v2.Status;
 import cn.coderule.minimq.broker.api.ConsumerController;
 import cn.coderule.minimq.broker.server.grpc.converter.GrpcConverter;
 import cn.coderule.minimq.domain.core.constant.MessageConst;
-import cn.coderule.minimq.domain.domain.consumer.ack.InvisibleRequest;
+import cn.coderule.minimq.domain.domain.consumer.ack.broker.InvisibleRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.PopResult;
 import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import cn.coderule.minimq.domain.domain.consumer.receipt.ReceiptHandle;
