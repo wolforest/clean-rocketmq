@@ -1,9 +1,16 @@
 package cn.coderule.minimq.broker.infra.task.loader;
 
+import cn.coderule.minimq.broker.infra.task.TaskContext;
 import cn.coderule.minimq.domain.service.broker.infra.task.TaskFactory;
 import cn.coderule.minimq.domain.service.broker.infra.task.TaskLoader;
 
 public class EmbedTaskLoader implements TaskLoader {
+    private final TaskContext taskContext;
+
+    public EmbedTaskLoader(TaskContext taskContext) {
+        this.taskContext = taskContext;
+    }
+
     @Override
     public void setTimerFactory(TaskFactory factory) {
 
