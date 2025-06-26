@@ -32,7 +32,7 @@ public class TaskManager implements Lifecycle {
     private void initContext() {
         BrokerConfig brokerConfig = BrokerContext.getBean(BrokerConfig.class);
         TaskConfig taskConfig = brokerConfig.getTaskConfig();
-        taskContext = new TaskContext(taskConfig);
+        taskContext = new TaskContext(brokerConfig);
     }
 
 }

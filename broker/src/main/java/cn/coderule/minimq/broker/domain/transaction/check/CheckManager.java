@@ -3,8 +3,8 @@ package cn.coderule.minimq.broker.domain.transaction.check;
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
+import cn.coderule.minimq.domain.domain.cluster.task.QueueTask;
 import cn.coderule.minimq.domain.domain.cluster.task.StoreTask;
-import cn.coderule.minimq.domain.domain.cluster.task.StoreTaskSet;
 import cn.coderule.minimq.domain.service.broker.infra.task.TaskFactory;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -20,7 +20,7 @@ public class CheckManager implements TaskFactory, Lifecycle {
     }
 
     @Override
-    public void create(StoreTaskSet taskSet) {
+    public void create(StoreTask taskSet) {
         Set<Integer> queueSet = taskSet.getTransactionQueueSet();
         if (CollectionUtil.isEmpty(queueSet)) {
             return;
@@ -28,7 +28,7 @@ public class CheckManager implements TaskFactory, Lifecycle {
 
         for (Integer queueId : queueSet) {
             checkerMap.computeIfAbsent(queueId, k -> {
-                StoreTask task = new StoreTask(taskSet.getStoreGroup(), queueId);
+                QueueTask task = new QueueTask(taskSet.getStoreGroup(), queueId);
                 TransactionChecker checker = new TransactionChecker(brokerConfig, task);
 
                 checker.start();

@@ -2,13 +2,13 @@ package cn.coderule.minimq.broker.domain.transaction.check;
 
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
-import cn.coderule.minimq.domain.domain.cluster.task.StoreTask;
+import cn.coderule.minimq.domain.domain.cluster.task.QueueTask;
 
 public class TransactionChecker extends ServiceThread {
     private final BrokerConfig brokerConfig;
-    private final StoreTask task;
+    private final QueueTask task;
 
-    public TransactionChecker(BrokerConfig brokerConfig, StoreTask task) {
+    public TransactionChecker(BrokerConfig brokerConfig, QueueTask task) {
         this.brokerConfig = brokerConfig;
         this.task = task;
     }

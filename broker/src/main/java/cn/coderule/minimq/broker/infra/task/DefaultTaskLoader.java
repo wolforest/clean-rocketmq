@@ -1,5 +1,7 @@
 package cn.coderule.minimq.broker.infra.task;
 
+import cn.coderule.minimq.broker.infra.task.loader.EmbedTaskLoader;
+import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.service.broker.infra.task.TaskFactory;
 import cn.coderule.minimq.domain.service.broker.infra.task.TaskLoader;
 
@@ -27,6 +29,15 @@ public class DefaultTaskLoader implements TaskLoader {
 
     @Override
     public void load() {
+        TaskLoader loader = null;
 
+        BrokerConfig brokerConfig = taskContext.getBrokerConfig();
+        if (brokerConfig.isEnableEmbedStore()) {
+            loader = new EmbedTaskLoader(taskContext);
+        }
+
+        if (loader != null) {
+            loader.load();
+        }
     }
 }
