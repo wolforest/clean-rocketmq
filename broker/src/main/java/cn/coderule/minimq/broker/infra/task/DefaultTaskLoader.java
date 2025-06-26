@@ -1,7 +1,10 @@
 package cn.coderule.minimq.broker.infra.task;
 
+import cn.coderule.minimq.broker.infra.task.loader.BindingTaskLoader;
 import cn.coderule.minimq.broker.infra.task.loader.EmbedTaskLoader;
+import cn.coderule.minimq.broker.infra.task.loader.ShardingTaskLoader;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
+import cn.coderule.minimq.domain.config.server.TaskConfig;
 import cn.coderule.minimq.domain.service.broker.infra.task.TaskFactory;
 import cn.coderule.minimq.domain.service.broker.infra.task.TaskLoader;
 
@@ -34,6 +37,15 @@ public class DefaultTaskLoader implements TaskLoader {
         BrokerConfig brokerConfig = taskContext.getBrokerConfig();
         if (brokerConfig.isEnableEmbedStore()) {
             loader = new EmbedTaskLoader(taskContext);
+        }
+
+        TaskConfig taskConfig = brokerConfig.getTaskConfig();
+        if ("binding".equalsIgnoreCase(taskConfig.getTaskMode())) {
+            loader = new BindingTaskLoader(taskContext);
+        }
+
+        if ("sharding".equalsIgnoreCase(taskConfig.getTaskMode())) {
+            loader = new ShardingTaskLoader(taskContext);
         }
 
         if (loader != null) {

@@ -9,12 +9,9 @@ public class TaskConfig implements Serializable {
     // bind | preempt | assign
     /**
      * taskMode:
-     * 1. bind:
-     *   1.1 embed
-     *   1.2 static binding
-     *   1.3 dynamic binding
-     * 2. preempt:
-     * 3. assign:
+     * 1. embed:
+     * 2. binding:
+     * 3. sharding:
      */
     private String taskMode = "";
 }
