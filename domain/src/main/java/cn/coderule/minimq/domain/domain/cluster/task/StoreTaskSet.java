@@ -1,4 +1,4 @@
-package cn.coderule.minimq.domain.domain.cluster.store;
+package cn.coderule.minimq.domain.domain.cluster.task;
 
 import java.io.Serializable;
 import java.util.Set;
@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class StoreTask implements Serializable {
+public class StoreTaskSet implements Serializable {
     private String storeGroup;
 
     @Builder.Default

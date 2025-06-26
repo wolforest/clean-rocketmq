@@ -1,7 +1,7 @@
 package cn.coderule.minimq.domain.service.broker.infra.task;
 
-import cn.coderule.minimq.domain.domain.cluster.store.StoreTask;
+import cn.coderule.minimq.domain.domain.cluster.task.StoreTaskSet;
 
 public interface TaskFactory {
-    void create(StoreTask task);
+    void create(StoreTaskSet task);
 }
