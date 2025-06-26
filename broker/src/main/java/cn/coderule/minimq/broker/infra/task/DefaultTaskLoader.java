@@ -4,18 +4,29 @@ import cn.coderule.minimq.domain.service.broker.infra.task.TaskFactory;
 import cn.coderule.minimq.domain.service.broker.infra.task.TaskLoader;
 
 public class DefaultTaskLoader implements TaskLoader {
-    @Override
-    public void addTimerFactory(TaskFactory factory) {
+    private final TaskContext taskContext;
 
+    public DefaultTaskLoader(TaskContext taskContext) {
+        this.taskContext = taskContext;
     }
 
     @Override
-    public void addReviveFactory(TaskFactory factory) {
-
+    public void setTimerFactory(TaskFactory factory) {
+        taskContext.setTimerFactory(factory);
     }
 
     @Override
-    public void addTransactionFactory(TaskFactory factory) {
+    public void setReviveFactory(TaskFactory factory) {
+        taskContext.setReviveFactory(factory);
+    }
+
+    @Override
+    public void setTransactionFactory(TaskFactory factory) {
+        taskContext.setTransactionFactory(factory);
+    }
+
+    @Override
+    public void load() {
 
     }
 }
