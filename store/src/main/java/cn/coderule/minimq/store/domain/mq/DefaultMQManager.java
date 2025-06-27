@@ -10,10 +10,10 @@ import cn.coderule.minimq.domain.service.store.domain.mq.MQManager;
 import cn.coderule.minimq.domain.service.store.domain.mq.MQService;
 import cn.coderule.minimq.store.api.MQStoreImpl;
 import cn.coderule.minimq.store.domain.mq.ack.AckManager;
+import cn.coderule.minimq.store.domain.mq.ack.AckService;
 import cn.coderule.minimq.store.domain.mq.queue.DequeueService;
 import cn.coderule.minimq.store.domain.mq.queue.EnqueueService;
 import cn.coderule.minimq.store.domain.mq.queue.MessageService;
-import cn.coderule.minimq.store.domain.mq.revive.ReviveManager;
 import cn.coderule.minimq.store.server.bootstrap.StoreContext;
 import cn.coderule.minimq.store.server.ha.commitlog.CommitLogSynchronizer;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +21,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class DefaultMQManager implements MQManager {
     private DequeueLock dequeueLock;
-    private ReviveManager reviveManager;
     private AckManager ackManager;
 
     @Override
@@ -30,33 +29,27 @@ public class DefaultMQManager implements MQManager {
 
         initMQManager();
         initAckManager();
-        initReviveManager();
     }
 
     @Override
     public void start() {
         dequeueLock.start();
         ackManager.start();
-        reviveManager.start();
     }
 
     @Override
     public void shutdown() {
         dequeueLock.shutdown();
-        reviveManager.shutdown();
         ackManager.shutdown();
     }
 
     private void initMQManager() {
-        MQService MQService = initMQService();
-        MQStore MQStore = new MQStoreImpl(MQService);
+        MQService mqService = initMQService();
+        AckService ackService = StoreContext.getBean(AckService.class);
+        MQStore MQStore = new MQStoreImpl(mqService, ackService);
         StoreContext.registerAPI(MQStore, MQStore.class);
     }
 
-    private void initReviveManager() {
-        reviveManager = new ReviveManager();
-        reviveManager.initialize();
-    }
 
     private void initAckManager() {
         ackManager = new AckManager();

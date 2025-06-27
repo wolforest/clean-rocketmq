@@ -1,4 +1,4 @@
-package cn.coderule.minimq.store.domain.mq.revive;
+package cn.coderule.minimq.broker.domain.consumer.revive;
 
 import cn.coderule.minimq.domain.core.constant.PopConstants;
 import cn.coderule.minimq.domain.domain.consumer.revive.ReviveBuffer;

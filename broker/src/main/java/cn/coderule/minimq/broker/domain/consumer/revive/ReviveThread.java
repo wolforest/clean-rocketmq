@@ -1,4 +1,4 @@
-package cn.coderule.minimq.store.domain.mq.revive;
+package cn.coderule.minimq.broker.domain.consumer.revive;
 
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 import cn.coderule.common.util.lang.collection.CollectionUtil;

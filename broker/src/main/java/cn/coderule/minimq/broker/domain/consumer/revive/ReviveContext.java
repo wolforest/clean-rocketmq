@@ -1,4 +1,4 @@
-package cn.coderule.minimq.store.domain.mq.revive;
+package cn.coderule.minimq.broker.domain.consumer.revive;
 
 import cn.coderule.minimq.domain.config.message.MessageConfig;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
