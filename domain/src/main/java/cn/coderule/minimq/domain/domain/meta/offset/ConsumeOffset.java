@@ -4,14 +4,17 @@ import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.minimq.domain.domain.meta.DataVersion;
 import com.alibaba.fastjson2.annotation.JSONField;
 import java.io.Serializable;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 @Data
+@Slf4j
 public class ConsumeOffset implements Serializable {
     public static final String TOPIC_GROUP_SEPARATOR = "@";
 
@@ -53,11 +56,37 @@ public class ConsumeOffset implements Serializable {
 
     @JSONField(serialize = false)
     public void deleteByTopic(String topicName) {
+        if (StringUtil.isBlank(topicName)) {
+            return;
+        }
     }
 
     @JSONField(serialize = false)
     public void deleteByGroup(String groupName) {
+        if (StringUtil.isBlank(groupName)) {
+            return;
+        }
 
+        Iterator<Map.Entry<String, ConcurrentMap<Integer, Long>>> iterator
+            = offsetTable.entrySet().iterator();
+
+        while (iterator.hasNext()) {
+            Map.Entry<String, ConcurrentMap<Integer, Long>> entry = iterator.next();
+
+            String topicAtGroup = entry.getKey();
+            if (!topicAtGroup.contains(groupName)) {
+                continue;
+            }
+
+            String[] arr = topicAtGroup.split(TOPIC_GROUP_SEPARATOR);
+            if (arr.length != 2 || !groupName.equals(arr[1])) {
+                continue;
+            }
+
+            iterator.remove();
+            log.warn("delete consumeOffset by topic: key:{}, value:{}",
+                topicAtGroup, entry.getValue());
+        }
     }
 
     @JSONField(serialize = false)
