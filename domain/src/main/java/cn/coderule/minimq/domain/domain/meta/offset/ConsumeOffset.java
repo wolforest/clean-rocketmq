@@ -6,6 +6,7 @@ import com.alibaba.fastjson2.annotation.JSONField;
 import java.io.Serializable;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
@@ -59,6 +60,27 @@ public class ConsumeOffset implements Serializable {
         if (StringUtil.isBlank(topicName)) {
             return;
         }
+
+        Iterator<Entry<String, ConcurrentMap<Integer, Long>>> iterator
+            = offsetTable.entrySet().iterator();
+
+        while (iterator.hasNext()) {
+            Entry<String, ConcurrentMap<Integer, Long>> entry = iterator.next();
+
+            String topicAtGroup = entry.getKey();
+            if (!topicAtGroup.contains(topicName)) {
+                continue;
+            }
+
+            String[] arr = topicAtGroup.split(TOPIC_GROUP_SEPARATOR);
+            if (arr.length != 2 || !topicName.equals(arr[0])) {
+                continue;
+            }
+
+            iterator.remove();
+            log.warn("delete consumeOffset by topic: key:{}, value:{}",
+                topicAtGroup, entry.getValue());
+        }
     }
 
     @JSONField(serialize = false)
@@ -67,11 +89,11 @@ public class ConsumeOffset implements Serializable {
             return;
         }
 
-        Iterator<Map.Entry<String, ConcurrentMap<Integer, Long>>> iterator
+        Iterator<Entry<String, ConcurrentMap<Integer, Long>>> iterator
             = offsetTable.entrySet().iterator();
 
         while (iterator.hasNext()) {
-            Map.Entry<String, ConcurrentMap<Integer, Long>> entry = iterator.next();
+            Entry<String, ConcurrentMap<Integer, Long>> entry = iterator.next();
 
             String topicAtGroup = entry.getKey();
             if (!topicAtGroup.contains(groupName)) {
@@ -84,7 +106,7 @@ public class ConsumeOffset implements Serializable {
             }
 
             iterator.remove();
-            log.warn("delete consumeOffset by topic: key:{}, value:{}",
+            log.warn("delete consumeOffset by group: key:{}, value:{}",
                 topicAtGroup, entry.getValue());
         }
     }
@@ -97,7 +119,7 @@ public class ConsumeOffset implements Serializable {
 
         Set<String> topicSet = new TreeSet<>();
 
-        for (Map.Entry<String, ConcurrentMap<Integer, Long>> entry : offsetTable.entrySet()) {
+        for (Entry<String, ConcurrentMap<Integer, Long>> entry : offsetTable.entrySet()) {
             String[] arr = entry.getKey().split(TOPIC_GROUP_SEPARATOR);
             if (arr.length != 2) {
                 continue;
@@ -118,7 +140,7 @@ public class ConsumeOffset implements Serializable {
         }
 
         Set<String> groupSet = new TreeSet<>();
-        for (Map.Entry<String, ConcurrentMap<Integer, Long>> entry : offsetTable.entrySet()) {
+        for (Entry<String, ConcurrentMap<Integer, Long>> entry : offsetTable.entrySet()) {
             String[] arr = entry.getKey().split(TOPIC_GROUP_SEPARATOR);
             if (arr.length != 2) {
                 continue;
