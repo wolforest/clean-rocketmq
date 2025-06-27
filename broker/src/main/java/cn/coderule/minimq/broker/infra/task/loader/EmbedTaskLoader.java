@@ -1,8 +1,10 @@
 package cn.coderule.minimq.broker.infra.task.loader;
 
+import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.minimq.broker.infra.task.TaskContext;
 import cn.coderule.minimq.domain.config.message.MessageConfig;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
+import cn.coderule.minimq.domain.domain.cluster.task.QueueTask;
 import cn.coderule.minimq.domain.domain.cluster.task.StoreTask;
 import cn.coderule.minimq.domain.service.broker.infra.task.TaskFactory;
 import cn.coderule.minimq.domain.service.broker.infra.task.TaskLoader;
@@ -20,22 +22,77 @@ public class EmbedTaskLoader implements TaskLoader {
 
     @Override
     public void setTimerFactory(TaskFactory factory) {
-
     }
 
     @Override
     public void setReviveFactory(TaskFactory factory) {
-
     }
 
     @Override
     public void setTransactionFactory(TaskFactory factory) {
-
     }
 
     @Override
     public void load() {
         initStoreTask();
+        startStoreTask();
+    }
+
+    private void startStoreTask() {
+        startTimerTask();
+        startReviveTask();
+        startTransactionTask();
+    }
+
+    private void startTransactionTask() {
+        if (null == taskContext.getTransactionFactory()) {
+            return;
+        }
+
+        StoreTask task = taskContext.getTask();
+        if (CollectionUtil.isEmpty(task.getTransactionQueueSet())) {
+            return;
+        }
+
+        for (Integer queueId : task.getTransactionQueueSet()) {
+            QueueTask queueTask = new QueueTask(task.getStoreGroup(), queueId);
+            TaskFactory factory = taskContext.getTransactionFactory();
+            factory.create(queueTask);
+        }
+    }
+
+    private void startReviveTask() {
+        if (null == taskContext.getReviveFactory()) {
+            return;
+        }
+
+        StoreTask task = taskContext.getTask();
+        if (CollectionUtil.isEmpty(task.getReviveQueueSet())) {
+            return;
+        }
+
+        for (Integer queueId : task.getReviveQueueSet()) {
+            QueueTask queueTask = new QueueTask(task.getStoreGroup(), queueId);
+            TaskFactory factory = taskContext.getReviveFactory();
+            factory.create(queueTask);
+        }
+    }
+
+    private void startTimerTask() {
+        if (null == taskContext.getTimerFactory()) {
+            return;
+        }
+
+        StoreTask task = taskContext.getTask();
+        if (CollectionUtil.isEmpty(task.getTimerQueueSet())) {
+            return;
+        }
+
+        for (Integer queueId : task.getTimerQueueSet()) {
+            QueueTask queueTask = new QueueTask(task.getStoreGroup(), queueId);
+            TaskFactory factory = taskContext.getTimerFactory();
+            factory.create(queueTask);
+        }
     }
 
     private void initStoreTask() {
