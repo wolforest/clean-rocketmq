@@ -1,8 +1,8 @@
 package cn.coderule.minimq.broker.infra.task;
 
-import cn.coderule.minimq.broker.infra.task.loader.BindingTaskLoader;
-import cn.coderule.minimq.broker.infra.task.loader.EmbedTaskLoader;
-import cn.coderule.minimq.broker.infra.task.loader.ShardingTaskLoader;
+import cn.coderule.minimq.broker.infra.task.strategy.BindingTaskLoader;
+import cn.coderule.minimq.broker.infra.task.strategy.EmbedTaskLoader;
+import cn.coderule.minimq.broker.infra.task.strategy.ShardingTaskLoader;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.config.server.TaskConfig;
 import cn.coderule.minimq.domain.service.broker.infra.task.TaskFactory;

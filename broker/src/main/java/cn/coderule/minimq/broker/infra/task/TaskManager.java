@@ -26,12 +26,10 @@ public class TaskManager implements Lifecycle {
 
     @Override
     public void shutdown() {
-
     }
 
     private void initContext() {
         BrokerConfig brokerConfig = BrokerContext.getBean(BrokerConfig.class);
-        TaskConfig taskConfig = brokerConfig.getTaskConfig();
         taskContext = new TaskContext(brokerConfig);
     }
 

@@ -1,4 +1,4 @@
-package cn.coderule.minimq.broker.infra.task.loader;
+package cn.coderule.minimq.broker.infra.task.strategy;
 
 import cn.coderule.minimq.broker.infra.task.TaskContext;
 import cn.coderule.minimq.domain.service.broker.infra.task.TaskFactory;
