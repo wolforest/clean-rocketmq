@@ -55,6 +55,9 @@ public class MessageConfig implements Serializable {
     private long reviveAckWaitMs = TimeUnit.MINUTES.toMillis(3);
     private boolean enablePopLog = false;
 
+    private int timerQueueNum = 1;
+    private int transactionQueueNum = 1;
+
     private boolean enablePopBufferMerge = false;
     private int popCkStayBufferTime = 10 * 1000;
     private int popCkStayBufferTimeOut = 3 * 1000;

@@ -1,8 +1,15 @@
 package cn.coderule.minimq.broker.infra.task.loader;
 
 import cn.coderule.minimq.broker.infra.task.TaskContext;
+import cn.coderule.minimq.domain.config.message.MessageConfig;
+import cn.coderule.minimq.domain.config.server.BrokerConfig;
+import cn.coderule.minimq.domain.domain.cluster.task.StoreTask;
 import cn.coderule.minimq.domain.service.broker.infra.task.TaskFactory;
 import cn.coderule.minimq.domain.service.broker.infra.task.TaskLoader;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.stream.IntStream;
 
 public class EmbedTaskLoader implements TaskLoader {
     private final TaskContext taskContext;
@@ -28,6 +35,49 @@ public class EmbedTaskLoader implements TaskLoader {
 
     @Override
     public void load() {
-
+        initStoreTask();
     }
+
+    private void initStoreTask() {
+        StoreTask task = new StoreTask();
+        taskContext.setTask(task);
+
+        BrokerConfig brokerConfig = taskContext.getBrokerConfig();
+        task.setStoreGroup(brokerConfig.getGroup());
+
+        initTimerTask(task);
+        initReviveTask(task);
+        initTransactionTask(task);
+    }
+
+    private void initReviveTask(StoreTask task) {
+        MessageConfig messageConfig = taskContext.getBrokerConfig().getMessageConfig();
+        List<Integer> reviveQueueList = IntStream
+            .range(0, messageConfig.getReviveQueueNum())
+            .boxed()
+            .toList();
+        Set<Integer> reviveQueueSet = new TreeSet<>(reviveQueueList);
+        task.setReviveQueueSet(reviveQueueSet);
+    }
+
+    private void initTimerTask(StoreTask task) {
+        MessageConfig messageConfig = taskContext.getBrokerConfig().getMessageConfig();
+        List<Integer> timerQueueList = IntStream
+            .range(0, messageConfig.getTimerQueueNum())
+            .boxed()
+            .toList();
+        Set<Integer> timerQueueSet = new TreeSet<>(timerQueueList);
+        task.setTimerQueueSet(timerQueueSet);
+    }
+
+    private void initTransactionTask(StoreTask task) {
+        MessageConfig messageConfig = taskContext.getBrokerConfig().getMessageConfig();
+        List<Integer> transactionQueueList = IntStream
+            .range(0, messageConfig.getTransactionQueueNum())
+            .boxed()
+            .toList();
+        Set<Integer> transactionQueueSet = new TreeSet<>(transactionQueueList);
+        task.setTransactionQueueSet(transactionQueueSet);
+    }
+
 }
