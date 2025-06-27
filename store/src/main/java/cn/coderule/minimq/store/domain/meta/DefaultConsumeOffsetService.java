@@ -32,12 +32,12 @@ public class DefaultConsumeOffsetService implements ConsumeOffsetService {
 
     @Override
     public void deleteByTopic(String topicName) {
-
+        consumeOffset.deleteByTopic(topicName);
     }
 
     @Override
     public void deleteByGroup(String groupName) {
-
+        consumeOffset.deleteByGroup(groupName);
     }
 
     @Override

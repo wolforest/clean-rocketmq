@@ -46,10 +46,21 @@ public class ConsumeOffset implements Serializable {
         return null;
     }
 
+    @JSONField(serialize = false)
     public void putOffset(String group, String topic, int queueId, long offset) {
 
     }
 
+    @JSONField(serialize = false)
+    public void deleteByTopic(String topicName) {
+    }
+
+    @JSONField(serialize = false)
+    public void deleteByGroup(String groupName) {
+
+    }
+
+    @JSONField(serialize = false)
     public Set<String> findTopicByGroup(String group) {
         if (StringUtil.isBlank(group)) {
             return Set.of();
@@ -71,6 +82,7 @@ public class ConsumeOffset implements Serializable {
         return topicSet;
     }
 
+    @JSONField(serialize = false)
     public Set<String> findGroupByTopic(String topic) {
         if (StringUtil.isBlank(topic)) {
             return Set.of();
