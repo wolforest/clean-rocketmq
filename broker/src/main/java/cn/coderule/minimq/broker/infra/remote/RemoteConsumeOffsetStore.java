@@ -1,4 +1,4 @@
-package cn.coderule.minimq.broker.infra.embed;
+package cn.coderule.minimq.broker.infra.remote;
 
 import cn.coderule.minimq.domain.domain.meta.offset.GroupResult;
 import cn.coderule.minimq.domain.domain.meta.offset.OffsetFilter;
@@ -7,12 +7,10 @@ import cn.coderule.minimq.domain.domain.meta.offset.OffsetResult;
 import cn.coderule.minimq.domain.domain.meta.offset.TopicResult;
 import cn.coderule.minimq.domain.service.broker.infra.meta.ConsumeOffsetFacade;
 
-public class EmbedConsumeOffsetStore extends AbstractEmbedStore implements ConsumeOffsetFacade {
-
-    public EmbedConsumeOffsetStore(EmbedLoadBalance loadBalance) {
+public class RemoteConsumeOffsetStore extends AbstractRemoteStore implements ConsumeOffsetFacade {
+    public RemoteConsumeOffsetStore(RemoteLoadBalance loadBalance) {
         super(loadBalance);
     }
-
     @Override
     public OffsetResult getOffset(OffsetRequest request) {
         return null;
