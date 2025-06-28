@@ -8,6 +8,12 @@ import lombok.Data;
 public class GroupResult implements Serializable {
     private Set<String> groupSet;
 
+    public static GroupResult empty() {
+        GroupResult result = new GroupResult();
+        result.groupSet = Set.of();
+        return result;
+    }
+
     public static GroupResult build(Set<String> topicSet) {
         GroupResult result = new GroupResult();
         result.groupSet = topicSet;

@@ -8,6 +8,12 @@ import lombok.Data;
 public class TopicResult implements Serializable {
     private Set<String> topicSet;
 
+    public static TopicResult empty() {
+        TopicResult result = new TopicResult();
+        result.topicSet = Set.of();
+        return result;
+    }
+
     public static TopicResult build(Set<String> topicSet) {
         TopicResult result = new TopicResult();
         result.topicSet = topicSet;
