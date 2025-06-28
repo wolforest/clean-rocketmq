@@ -3,15 +3,18 @@ package cn.coderule.minimq.store.domain.meta;
 import cn.coderule.common.util.io.FileUtil;
 import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.common.util.lang.string.JSONUtil;
+import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.domain.domain.meta.offset.ConsumeOffset;
 import cn.coderule.minimq.domain.service.store.domain.meta.ConsumeOffsetService;
 import java.util.Set;
 
 public class DefaultConsumeOffsetService implements ConsumeOffsetService {
+    private final StoreConfig storeConfig;
     private final String storePath;
     private ConsumeOffset consumeOffset;
 
-    public DefaultConsumeOffsetService(String storePath) {
+    public DefaultConsumeOffsetService(StoreConfig storeConfig, String storePath) {
+        this.storeConfig = storeConfig;
         this.storePath = storePath;
     }
 
@@ -72,7 +75,7 @@ public class DefaultConsumeOffsetService implements ConsumeOffsetService {
             return;
         }
 
-        this.consumeOffset = new ConsumeOffset();
+        this.consumeOffset = new ConsumeOffset(storeConfig);
     }
 
     private void decode(String data) {

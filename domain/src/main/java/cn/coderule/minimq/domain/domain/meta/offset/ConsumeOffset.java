@@ -1,6 +1,7 @@
 package cn.coderule.minimq.domain.domain.meta.offset;
 
 import cn.coderule.common.util.lang.string.StringUtil;
+import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.domain.domain.meta.DataVersion;
 import com.alibaba.fastjson2.annotation.JSONField;
 import java.io.Serializable;
@@ -19,6 +20,8 @@ import lombok.extern.slf4j.Slf4j;
 public class ConsumeOffset implements Serializable {
     public static final String TOPIC_GROUP_SEPARATOR = "@";
 
+    private final StoreConfig storeConfig;
+
     /**
      * topic@group -> queueId -> offset
      */
@@ -27,7 +30,9 @@ public class ConsumeOffset implements Serializable {
     private ConcurrentMap<String, ConcurrentMap<Integer, Long>> pullOffsetTable;
     private DataVersion dataVersion;
 
-    public ConsumeOffset() {
+    public ConsumeOffset(StoreConfig storeConfig) {
+        this.storeConfig = storeConfig;
+
         offsetTable = new ConcurrentHashMap<>(512);
         pullOffsetTable = new ConcurrentHashMap<>(512);
         resetOffsetTable = new ConcurrentHashMap<>(512);

@@ -1,5 +1,6 @@
 package cn.coderule.minimq.store.domain.meta;
 
+import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.domain.service.store.api.meta.ConsumeOffsetStore;
 import cn.coderule.minimq.domain.service.store.api.meta.SubscriptionStore;
 import cn.coderule.minimq.domain.service.store.api.meta.TopicStore;
@@ -47,7 +48,8 @@ public class DefaultMetaManager implements MetaManager {
     }
 
     private void initConsumerOffset() {
-        offsetService = new DefaultConsumeOffsetService(StorePath.getConsumerOffsetPath());
+        StoreConfig storeConfig = StoreContext.getBean(StoreConfig.class);
+        offsetService = new DefaultConsumeOffsetService(storeConfig, StorePath.getConsumerOffsetPath());
         StoreContext.register(offsetService, ConsumeOffsetService.class);
 
         offsetService.load();
