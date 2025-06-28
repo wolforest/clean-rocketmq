@@ -2,6 +2,11 @@ package cn.coderule.minimq.broker.infra.remote;
 
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
+import cn.coderule.minimq.domain.domain.consumer.ack.store.AckRequest;
+import cn.coderule.minimq.domain.domain.consumer.ack.store.CheckPointRequest;
+import cn.coderule.minimq.domain.domain.consumer.ack.store.OffsetRequest;
+import cn.coderule.minimq.domain.domain.consumer.consume.mq.QueueRequest;
+import cn.coderule.minimq.domain.domain.consumer.consume.mq.QueueResult;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.domain.producer.EnqueueRequest;
 import cn.coderule.minimq.domain.domain.producer.EnqueueResult;
@@ -80,6 +85,41 @@ public class RemoteMQStore extends AbstractRemoteStore implements MQStore, Lifec
     public DequeueResult get(DequeueRequest request) {
         String address = loadBalance.findByTopic(request.getTopic());
         return getClient(address).get(request);
+    }
+
+    @Override
+    public void addCheckPoint(CheckPointRequest request) {
+        String topic = request.getCheckPoint().getTopic();
+        String address = loadBalance.findByTopic(topic);
+        getClient(address).addCheckPoint(request);
+    }
+
+    @Override
+    public void ack(AckRequest request) {
+        String topic = request.getAckMsg().getTopic();
+        String address = loadBalance.findByTopic(topic);
+        getClient(address).ack(request);
+    }
+
+    @Override
+    public long getBufferedOffset(OffsetRequest request) {
+        String topic = request.getTopicName();
+        String address = loadBalance.findByTopic(topic);
+        return getClient(address).getBufferedOffset(request);
+    }
+
+    @Override
+    public QueueResult getMinOffset(QueueRequest request) {
+        String topic = request.getTopic();
+        String address = loadBalance.findByTopic(topic);
+        return getClient(address).getMinOffset(request);
+    }
+
+    @Override
+    public QueueResult getMaxOffset(QueueRequest request) {
+        String topic = request.getTopic();
+        String address = loadBalance.findByTopic(topic);
+        return getClient(address).getMaxOffset(request);
     }
 
     public MQClient getClient(String address) {
