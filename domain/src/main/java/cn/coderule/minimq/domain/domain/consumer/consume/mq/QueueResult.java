@@ -13,5 +13,17 @@ import lombok.NoArgsConstructor;
 public class QueueResult implements Serializable {
     private long minOffset;
     private long maxOffset;
+
+    public static QueueResult minOffset(long minOffset) {
+        return QueueResult.builder()
+            .minOffset(minOffset)
+            .build();
+    }
+
+    public static QueueResult maxOffset(long maxOffset) {
+        return QueueResult.builder()
+            .maxOffset(maxOffset)
+            .build();
+    }
 }
 

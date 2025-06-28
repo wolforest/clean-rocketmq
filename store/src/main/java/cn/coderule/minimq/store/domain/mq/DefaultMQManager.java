@@ -46,7 +46,9 @@ public class DefaultMQManager implements MQManager {
     private void initMQManager() {
         MQService mqService = initMQService();
         AckService ackService = StoreContext.getBean(AckService.class);
-        MQStore MQStore = new MQStoreImpl(mqService, ackService);
+        ConsumeQueueGateway consumeQueueGateway = StoreContext.getBean(ConsumeQueueGateway.class);
+
+        MQStore MQStore = new MQStoreImpl(mqService, ackService, consumeQueueGateway);
         StoreContext.registerAPI(MQStore, MQStore.class);
     }
 
