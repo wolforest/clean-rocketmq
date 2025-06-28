@@ -19,7 +19,7 @@ import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import cn.coderule.minimq.domain.domain.meta.topic.Topic;
 import cn.coderule.minimq.domain.domain.producer.ProduceContext;
 import cn.coderule.minimq.domain.service.broker.infra.MQStore;
-import cn.coderule.minimq.domain.service.broker.infra.TopicStore;
+import cn.coderule.minimq.domain.service.broker.infra.meta.TopicStore;
 import cn.coderule.minimq.domain.utils.CleanupUtils;
 import cn.coderule.minimq.domain.utils.MessageUtils;
 import java.net.InetSocketAddress;

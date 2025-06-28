@@ -1,4 +1,4 @@
-package cn.coderule.minimq.domain.service.broker.infra;
+package cn.coderule.minimq.domain.service.broker.infra.meta;
 
 import cn.coderule.minimq.domain.domain.meta.subscription.SubscriptionGroup;
 import java.util.concurrent.CompletableFuture;

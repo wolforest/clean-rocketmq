@@ -1,7 +1,7 @@
 package cn.coderule.minimq.broker.infra.embed;
 
 import cn.coderule.minimq.domain.domain.meta.subscription.SubscriptionGroup;
-import cn.coderule.minimq.domain.service.broker.infra.SubscriptionStore;
+import cn.coderule.minimq.domain.service.broker.infra.meta.SubscriptionStore;
 import java.util.concurrent.CompletableFuture;
 
 public class EmbedSubscriptionStore implements SubscriptionStore {

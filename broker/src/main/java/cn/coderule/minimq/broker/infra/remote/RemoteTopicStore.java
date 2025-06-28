@@ -1,7 +1,7 @@
 package cn.coderule.minimq.broker.infra.remote;
 
 import cn.coderule.minimq.domain.domain.meta.topic.Topic;
-import cn.coderule.minimq.domain.service.broker.infra.TopicStore;
+import cn.coderule.minimq.domain.service.broker.infra.meta.TopicStore;
 import java.util.concurrent.CompletableFuture;
 
 public class RemoteTopicStore extends AbstractRemoteStore implements TopicStore {
