@@ -9,12 +9,12 @@ import cn.coderule.minimq.domain.domain.producer.EnqueueRequest;
 import cn.coderule.minimq.domain.domain.producer.EnqueueResult;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueResult;
-import cn.coderule.minimq.domain.service.broker.infra.MQStore;
+import cn.coderule.minimq.domain.service.broker.infra.MQFacade;
 import java.util.concurrent.CompletableFuture;
 
-public class EmbedMQStore extends AbstractEmbedStore implements MQStore {
-    private final MQStore mqStore;
-    public EmbedMQStore(MQStore mqStore, EmbedLoadBalance loadBalance) {
+public class EmbedMQStore extends AbstractEmbedStore implements MQFacade {
+    private final MQFacade mqStore;
+    public EmbedMQStore(MQFacade mqStore, EmbedLoadBalance loadBalance) {
         super(loadBalance);
         this.mqStore = mqStore;
     }

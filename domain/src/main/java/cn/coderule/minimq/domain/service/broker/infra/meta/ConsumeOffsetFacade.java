@@ -6,7 +6,7 @@ import cn.coderule.minimq.domain.domain.meta.offset.OffsetRequest;
 import cn.coderule.minimq.domain.domain.meta.offset.OffsetResult;
 import cn.coderule.minimq.domain.domain.meta.offset.TopicResult;
 
-public interface ConsumeOffsetStore {
+public interface ConsumeOffsetFacade {
     OffsetResult getOffset(OffsetRequest request);
     OffsetResult getAndRemove(OffsetRequest request);
 

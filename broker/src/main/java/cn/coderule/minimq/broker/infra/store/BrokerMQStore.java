@@ -1,6 +1,5 @@
 package cn.coderule.minimq.broker.infra.store;
 
-import cn.coderule.common.lang.type.string.Str;
 import cn.coderule.minimq.broker.infra.embed.EmbedMQStore;
 import cn.coderule.minimq.broker.infra.remote.RemoteMQStore;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
@@ -14,10 +13,10 @@ import cn.coderule.minimq.domain.domain.producer.EnqueueResult;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueResult;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
-import cn.coderule.minimq.domain.service.broker.infra.MQStore;
+import cn.coderule.minimq.domain.service.broker.infra.MQFacade;
 import java.util.concurrent.CompletableFuture;
 
-public class BrokerMQStore implements MQStore {
+public class BrokerMQStore implements MQFacade {
     private final BrokerConfig brokerConfig;
     private final EmbedMQStore embedMQStore;
     private final RemoteMQStore remoteMQStore;

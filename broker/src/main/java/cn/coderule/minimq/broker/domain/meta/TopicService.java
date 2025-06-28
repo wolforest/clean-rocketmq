@@ -2,7 +2,7 @@ package cn.coderule.minimq.broker.domain.meta;
 
 import cn.coderule.minimq.domain.core.enums.message.MessageType;
 import cn.coderule.minimq.domain.domain.meta.topic.Topic;
-import cn.coderule.minimq.domain.service.broker.infra.meta.TopicStore;
+import cn.coderule.minimq.domain.service.broker.infra.meta.TopicFacade;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -10,10 +10,10 @@ import java.util.concurrent.CompletableFuture;
  *  - create/get/save topic
  *  - support local/remote mode
  */
-public class TopicService implements TopicStore {
-    private final TopicStore store;
+public class TopicService implements TopicFacade {
+    private final TopicFacade store;
 
-    public TopicService(TopicStore store) {
+    public TopicService(TopicFacade store) {
         this.store = store;
     }
 

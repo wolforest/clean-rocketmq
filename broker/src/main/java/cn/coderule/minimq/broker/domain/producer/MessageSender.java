@@ -18,8 +18,8 @@ import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import cn.coderule.minimq.domain.domain.meta.topic.Topic;
 import cn.coderule.minimq.domain.domain.producer.ProduceContext;
-import cn.coderule.minimq.domain.service.broker.infra.MQStore;
-import cn.coderule.minimq.domain.service.broker.infra.meta.TopicStore;
+import cn.coderule.minimq.domain.service.broker.infra.MQFacade;
+import cn.coderule.minimq.domain.service.broker.infra.meta.TopicFacade;
 import cn.coderule.minimq.domain.utils.CleanupUtils;
 import cn.coderule.minimq.domain.utils.MessageUtils;
 import java.net.InetSocketAddress;
@@ -35,16 +35,16 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class MessageSender implements Lifecycle {
     private final BrokerConfig brokerConfig;
-    private final MQStore MQStore;
+    private final MQFacade MQStore;
     private final ThreadPoolExecutor executor;
 
 
     private ProduceHookManager hookManager;
     private QueueSelector queueSelector;
-    private TopicStore topicStore;
+    private TopicFacade topicStore;
     private Transaction transaction;
 
-    public MessageSender(BrokerConfig brokerConfig, MQStore MQStore) {
+    public MessageSender(BrokerConfig brokerConfig, MQFacade MQStore) {
         this.brokerConfig = brokerConfig;
         this.MQStore = MQStore;
         this.executor = createExecutor();

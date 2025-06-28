@@ -11,7 +11,7 @@ import cn.coderule.minimq.domain.domain.producer.EnqueueRequest;
 import cn.coderule.minimq.domain.domain.producer.EnqueueResult;
 import java.util.concurrent.CompletableFuture;
 
-public interface MQStore {
+public interface MQFacade {
     EnqueueResult enqueue(EnqueueRequest request);
     CompletableFuture<EnqueueResult> enqueueAsync(EnqueueRequest request);
 

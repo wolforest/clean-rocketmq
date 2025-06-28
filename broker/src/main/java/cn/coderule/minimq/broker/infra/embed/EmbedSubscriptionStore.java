@@ -1,10 +1,10 @@
 package cn.coderule.minimq.broker.infra.embed;
 
 import cn.coderule.minimq.domain.domain.meta.subscription.SubscriptionGroup;
-import cn.coderule.minimq.domain.service.broker.infra.meta.SubscriptionStore;
+import cn.coderule.minimq.domain.service.broker.infra.meta.SubscriptionFacade;
 import java.util.concurrent.CompletableFuture;
 
-public class EmbedSubscriptionStore implements SubscriptionStore {
+public class EmbedSubscriptionStore implements SubscriptionFacade {
 
     public EmbedSubscriptionStore(EmbedLoadBalance loadBalance) {
     }

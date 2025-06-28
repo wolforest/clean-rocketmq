@@ -4,10 +4,10 @@ import cn.coderule.minimq.broker.infra.embed.EmbedSubscriptionStore;
 import cn.coderule.minimq.broker.infra.remote.RemoteSubscriptionStore;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.domain.meta.subscription.SubscriptionGroup;
-import cn.coderule.minimq.domain.service.broker.infra.meta.SubscriptionStore;
+import cn.coderule.minimq.domain.service.broker.infra.meta.SubscriptionFacade;
 import java.util.concurrent.CompletableFuture;
 
-public class BrokerSubscriptionStore implements SubscriptionStore {
+public class BrokerSubscriptionStore implements SubscriptionFacade {
     private final BrokerConfig brokerConfig;
     private final EmbedSubscriptionStore embedSubscriptionStore;
     private final RemoteSubscriptionStore remoteSubscriptionStore;

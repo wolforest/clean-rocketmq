@@ -12,7 +12,7 @@ import cn.coderule.minimq.domain.domain.consumer.consume.pop.PopRequest;
 import cn.coderule.minimq.domain.domain.consumer.running.ConsumerGroupInfo;
 import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import cn.coderule.minimq.domain.domain.meta.subscription.SubscriptionGroup;
-import cn.coderule.minimq.domain.service.broker.infra.meta.SubscriptionStore;
+import cn.coderule.minimq.domain.service.broker.infra.meta.SubscriptionFacade;
 import java.util.concurrent.CompletableFuture;
 
 public class Consumer  {
@@ -22,7 +22,7 @@ public class Consumer  {
     private PopService popService;
     private AckService ackService;
     private InvisibleService invisibleService;
-    private SubscriptionStore subscriptionStore;
+    private SubscriptionFacade subscriptionStore;
 
     public boolean register(ConsumerInfo consumerInfo) {
         return register.register(consumerInfo);

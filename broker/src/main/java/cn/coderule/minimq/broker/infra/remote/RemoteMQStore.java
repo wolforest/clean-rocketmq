@@ -12,7 +12,7 @@ import cn.coderule.minimq.domain.domain.producer.EnqueueRequest;
 import cn.coderule.minimq.domain.domain.producer.EnqueueResult;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueResult;
-import cn.coderule.minimq.domain.service.broker.infra.MQStore;
+import cn.coderule.minimq.domain.service.broker.infra.MQFacade;
 import cn.coderule.minimq.rpc.common.rpc.RpcClient;
 import cn.coderule.minimq.rpc.common.rpc.config.RpcClientConfig;
 import cn.coderule.minimq.rpc.common.rpc.netty.NettyClient;
@@ -21,7 +21,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-public class RemoteMQStore extends AbstractRemoteStore implements MQStore, Lifecycle {
+public class RemoteMQStore extends AbstractRemoteStore implements MQFacade, Lifecycle {
     private final BrokerConfig brokerConfig;
     private final ConcurrentMap<String, MQClient> clientMap;
     private final RpcClient rpcClient;

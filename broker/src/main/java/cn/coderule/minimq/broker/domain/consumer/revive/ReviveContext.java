@@ -2,9 +2,9 @@ package cn.coderule.minimq.broker.domain.consumer.revive;
 
 import cn.coderule.minimq.domain.config.message.MessageConfig;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
-import cn.coderule.minimq.domain.service.broker.infra.MQStore;
-import cn.coderule.minimq.domain.service.broker.infra.meta.SubscriptionStore;
-import cn.coderule.minimq.domain.service.broker.infra.meta.TopicStore;
+import cn.coderule.minimq.domain.service.broker.infra.MQFacade;
+import cn.coderule.minimq.domain.service.broker.infra.meta.SubscriptionFacade;
+import cn.coderule.minimq.domain.service.broker.infra.meta.TopicFacade;
 import cn.coderule.minimq.domain.service.store.domain.consumequeue.ConsumeQueueGateway;
 import cn.coderule.minimq.domain.service.store.domain.meta.ConsumeOffsetService;
 import cn.coderule.minimq.domain.service.store.domain.meta.SubscriptionService;
@@ -27,9 +27,9 @@ public class ReviveContext implements Serializable {
     private String reviveTopic;
     private RetryService retryService;
 
-    private MQStore mqStore;
-    private TopicStore topicStore;
-    private SubscriptionStore subscriptionStore;
+    private MQFacade mqStore;
+    private TopicFacade topicStore;
+    private SubscriptionFacade subscriptionStore;
 
     private MQService mqService;
     private ConsumeQueueGateway consumeQueueGateway;;

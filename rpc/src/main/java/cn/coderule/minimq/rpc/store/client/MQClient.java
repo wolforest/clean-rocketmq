@@ -9,14 +9,14 @@ import cn.coderule.minimq.domain.domain.producer.EnqueueRequest;
 import cn.coderule.minimq.domain.domain.producer.EnqueueResult;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueResult;
-import cn.coderule.minimq.domain.service.broker.infra.MQStore;
+import cn.coderule.minimq.domain.service.broker.infra.MQFacade;
 import cn.coderule.minimq.rpc.common.rpc.RpcClient;
 import cn.coderule.minimq.rpc.store.StoreClient;
 import java.util.concurrent.CompletableFuture;
 import lombok.Setter;
 
 @Setter
-public class MQClient extends AbstractStoreClient implements StoreClient, MQStore {
+public class MQClient extends AbstractStoreClient implements StoreClient, MQFacade {
 
     public MQClient(RpcClient rpcClient, String address) {
         super(rpcClient, address);
