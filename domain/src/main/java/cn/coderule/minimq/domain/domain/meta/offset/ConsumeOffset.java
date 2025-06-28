@@ -37,21 +37,25 @@ public class ConsumeOffset implements Serializable {
 
     @JSONField(serialize = false)
     public long getOffset(String group, String topic, int queueId) {
+        String key = buildKey(topic, group);
         return 0;
     }
 
     @JSONField(serialize = false)
     public long getAndRemove(String group, String topic, int queueId) {
+        String key = buildKey(topic, group);
         return 0;
     }
 
     @JSONField(serialize = false)
     public Map<Integer, Long> getAll(String group, String topic) {
+        String key = buildKey(topic, group);
         return null;
     }
 
     @JSONField(serialize = false)
     public void putOffset(String group, String topic, int queueId, long offset) {
+        String key = buildKey(topic, group);
 
     }
 
@@ -152,6 +156,10 @@ public class ConsumeOffset implements Serializable {
         }
 
         return groupSet;
+    }
+
+    private String buildKey(String topic, String group) {
+        return topic + TOPIC_GROUP_SEPARATOR + group;
     }
 
 }
