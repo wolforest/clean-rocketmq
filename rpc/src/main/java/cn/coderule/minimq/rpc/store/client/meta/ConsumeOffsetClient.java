@@ -1,4 +1,4 @@
-package cn.coderule.minimq.rpc.store.client;
+package cn.coderule.minimq.rpc.store.client.meta;
 
 import cn.coderule.minimq.domain.domain.meta.offset.GroupResult;
 import cn.coderule.minimq.domain.domain.meta.offset.OffsetFilter;
@@ -8,6 +8,7 @@ import cn.coderule.minimq.domain.domain.meta.offset.TopicResult;
 import cn.coderule.minimq.domain.service.broker.infra.meta.ConsumeOffsetStore;
 import cn.coderule.minimq.rpc.common.rpc.RpcClient;
 import cn.coderule.minimq.rpc.store.StoreClient;
+import cn.coderule.minimq.rpc.store.client.AbstractStoreClient;
 
 public class ConsumeOffsetClient extends AbstractStoreClient implements StoreClient, ConsumeOffsetStore {
     public ConsumeOffsetClient(RpcClient rpcClient, String address) {
