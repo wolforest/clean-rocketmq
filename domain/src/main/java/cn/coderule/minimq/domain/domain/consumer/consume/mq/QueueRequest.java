@@ -1,4 +1,4 @@
-package cn.coderule.minimq.domain.domain.consumer.consume;
+package cn.coderule.minimq.domain.domain.consumer.consume.mq;
 
 import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import java.io.Serializable;

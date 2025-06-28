@@ -5,7 +5,7 @@ import cn.coderule.common.util.lang.ByteUtil;
 import cn.coderule.common.util.lang.ThreadUtil;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.domain.core.constant.PopConstants;
-import cn.coderule.minimq.domain.domain.consumer.consume.DequeueResult;
+import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueResult;
 import cn.coderule.minimq.domain.core.enums.message.MessageStatus;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.checkpoint.PopCheckPoint;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.helper.PopConverter;

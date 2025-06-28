@@ -1,4 +1,4 @@
-package cn.coderule.minimq.domain.domain.consumer.consume;
+package cn.coderule.minimq.domain.domain.consumer.consume.mq;
 
 import java.io.Serializable;
 import lombok.AllArgsConstructor;

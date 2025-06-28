@@ -1,4 +1,4 @@
-package cn.coderule.minimq.domain.domain.consumer.consume;
+package cn.coderule.minimq.domain.domain.consumer.consume.mq;
 
 import cn.coderule.minimq.domain.core.enums.message.MessageStatus;
 import cn.coderule.minimq.domain.domain.message.MessageBO;

@@ -1,7 +1,7 @@
 package cn.coderule.minimq.domain.service.broker.infra;
 
-import cn.coderule.minimq.domain.domain.consumer.consume.DequeueRequest;
-import cn.coderule.minimq.domain.domain.consumer.consume.DequeueResult;
+import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueRequest;
+import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueResult;
 import cn.coderule.minimq.domain.domain.producer.EnqueueRequest;
 import cn.coderule.minimq.domain.domain.producer.EnqueueResult;
 import java.util.concurrent.CompletableFuture;
