@@ -5,6 +5,7 @@ import cn.coderule.common.util.net.NetworkUtil;
 import cn.coderule.minimq.domain.config.message.MessageConfig;
 import cn.coderule.minimq.domain.config.TimerConfig;
 import cn.coderule.minimq.domain.config.message.TopicConfig;
+import cn.coderule.minimq.domain.config.store.MetaConfig;
 import cn.coderule.minimq.domain.core.constant.PermName;
 import java.io.File;
 import lombok.Data;
@@ -68,4 +69,5 @@ public class StoreConfig extends ServerIdentity {
     private MessageConfig messageConfig;
     private TopicConfig topicConfig;
     private TimerConfig timerConfig;
+    private MetaConfig metaConfig;
 }

@@ -38,24 +38,47 @@ public class ConsumeOffset implements Serializable {
     @JSONField(serialize = false)
     public long getOffset(String group, String topic, int queueId) {
         String key = buildKey(topic, group);
-        return 0;
+        ConcurrentMap<Integer, Long> map = offsetTable.get(key);
+        if (map == null) {
+            return 0;
+        }
+
+        return map.get(queueId);
     }
 
     @JSONField(serialize = false)
     public long getAndRemove(String group, String topic, int queueId) {
         String key = buildKey(topic, group);
-        return 0;
+        ConcurrentMap<Integer, Long> map = offsetTable.get(key);
+        if (map == null) {
+            return 0;
+        }
+
+        Long old = map.remove(queueId);
+
+        return old == null ? 0L : old;
     }
 
     @JSONField(serialize = false)
     public Map<Integer, Long> getAll(String group, String topic) {
         String key = buildKey(topic, group);
-        return null;
+        return offsetTable.get(key);
     }
 
     @JSONField(serialize = false)
     public void putOffset(String group, String topic, int queueId, long offset) {
         String key = buildKey(topic, group);
+        offsetTable.computeIfAbsent(key, k -> new ConcurrentHashMap<>(32));
+
+        ConcurrentMap<Integer, Long> map = offsetTable.get(key);
+
+        Long oldOffset = map.put(queueId, offset);
+        if (oldOffset != null && offset < oldOffset) {
+            log.warn("[NOTIFYME] consume offset error, new offset is less than old offset,"
+                + "key={}, queueId={}, newOffset={}, oldOffset={}",
+                key, queueId, offset, oldOffset
+            );
+        }
 
     }
 
