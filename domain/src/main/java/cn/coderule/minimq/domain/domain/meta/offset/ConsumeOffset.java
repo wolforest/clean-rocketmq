@@ -2,6 +2,7 @@ package cn.coderule.minimq.domain.domain.meta.offset;
 
 import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
+import cn.coderule.minimq.domain.config.store.MetaConfig;
 import cn.coderule.minimq.domain.domain.meta.DataVersion;
 import com.alibaba.fastjson2.annotation.JSONField;
 import java.io.Serializable;
@@ -12,6 +13,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.atomic.AtomicLong;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
@@ -21,6 +23,7 @@ public class ConsumeOffset implements Serializable {
     public static final String TOPIC_GROUP_SEPARATOR = "@";
 
     private final StoreConfig storeConfig;
+    private final MetaConfig metaConfig;
 
     /**
      * topic@group -> queueId -> offset
@@ -28,16 +31,20 @@ public class ConsumeOffset implements Serializable {
     private ConcurrentMap<String, ConcurrentMap<Integer, Long>> offsetTable;
     private ConcurrentMap<String, ConcurrentMap<Integer, Long>> resetOffsetTable;
     private ConcurrentMap<String, ConcurrentMap<Integer, Long>> pullOffsetTable;
+
     private DataVersion dataVersion;
+    private final transient AtomicLong versionCounter;
 
     public ConsumeOffset(StoreConfig storeConfig) {
         this.storeConfig = storeConfig;
+        this.metaConfig = storeConfig.getMetaConfig();
 
         offsetTable = new ConcurrentHashMap<>(512);
         pullOffsetTable = new ConcurrentHashMap<>(512);
         resetOffsetTable = new ConcurrentHashMap<>(512);
 
         dataVersion = new DataVersion();
+        versionCounter = new AtomicLong(0);
     }
 
     @JSONField(serialize = false)
@@ -85,6 +92,10 @@ public class ConsumeOffset implements Serializable {
             );
         }
 
+        long step = versionCounter.incrementAndGet();
+        if (step % metaConfig.getConsumeOffsetVersionUpdateStep() == 0) {
+           dataVersion.nextVersion(0);
+        }
     }
 
     @JSONField(serialize = false)

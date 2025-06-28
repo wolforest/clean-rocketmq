@@ -66,6 +66,8 @@ public class StoreConfig extends ServerIdentity {
     private int transientFileSize = 100 * 1024 * 1024;
     private boolean fastFailIfNotExistInTransientPool = true;
 
+    private long stateMachineVersion = 0;
+
     private MessageConfig messageConfig;
     private TopicConfig topicConfig;
     private TimerConfig timerConfig;
