@@ -1,4 +1,4 @@
-package cn.coderule.minimq.domain.domain.meta.offset;
+package cn.coderule.minimq.domain.domain.meta.topic;
 
 import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import java.io.Serializable;
@@ -11,14 +11,10 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class OffsetRequest implements Serializable {
+public class TopicRequest implements Serializable {
     private RequestContext requestContext;
-    private long timeout;
 
     private String topicName;
-    private String consumerGroup;
-    private int queueId;
-
-    private long newOffset;
+    private Topic topic;
 
 }
