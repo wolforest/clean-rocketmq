@@ -28,10 +28,10 @@ public class ReviveContext implements Serializable {
     private String reviveTopic;
     private RetryService retryService;
 
-    private MQFacade mqStore;
-    private TopicFacade topicStore;
-    private SubscriptionFacade subscriptionStore;
-    private ConsumeOffsetFacade consumeOffsetStore;
+    private MQFacade mqFacade;
+    private TopicFacade topicFacade;
+    private SubscriptionFacade subscriptionFacade;
+    private ConsumeOffsetFacade consumeOffsetFacade;
 
     private MQService mqService;
     private ConsumeQueueGateway consumeQueueGateway;;

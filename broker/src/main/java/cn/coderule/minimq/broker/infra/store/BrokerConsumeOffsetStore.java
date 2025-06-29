@@ -26,7 +26,7 @@ public class BrokerConsumeOffsetStore implements ConsumeOffsetFacade {
 
     @Override
     public OffsetResult getOffset(OffsetRequest request) {
-        String topicName = request.getMessageQueue().getTopicName();
+        String topicName = request.getTopicName();
         if (embedConsumeOffsetStore.isEmbed(topicName)) {
             return embedConsumeOffsetStore.getOffset(request);
         }
@@ -39,7 +39,7 @@ public class BrokerConsumeOffsetStore implements ConsumeOffsetFacade {
 
     @Override
     public OffsetResult getAndRemove(OffsetRequest request) {
-        String topicName = request.getMessageQueue().getTopicName();
+        String topicName = request.getTopicName();
         if (embedConsumeOffsetStore.isEmbed(topicName)) {
             return embedConsumeOffsetStore.getAndRemove(request);
         }
@@ -53,7 +53,7 @@ public class BrokerConsumeOffsetStore implements ConsumeOffsetFacade {
 
     @Override
     public void putOffset(OffsetRequest request) {
-        String topicName = request.getMessageQueue().getTopicName();
+        String topicName = request.getTopicName();
         if (embedConsumeOffsetStore.isEmbed(topicName)) {
             embedConsumeOffsetStore.putOffset(request);
             return;

@@ -31,8 +31,8 @@ public class OffsetService {
         this.reviveTopic = context.getReviveTopic();
         this.queueId = queueId;
 
-        this.mqFacade = context.getMqStore();
-        this.consumeOffsetFacade = context.getConsumeOffsetStore();
+        this.mqFacade = context.getMqFacade();
+        this.consumeOffsetFacade = context.getConsumeOffsetFacade();
     }
 
     public long getReviveDelayTime() {
@@ -75,13 +75,9 @@ public class OffsetService {
 
         OffsetRequest request = OffsetRequest.builder()
             .consumerGroup(PopConstants.REVIVE_GROUP)
-            .build();
-
-        MessageQueue mq = MessageQueue.builder()
             .topicName(reviveTopic)
             .queueId(queueId)
             .build();
-        request.setMessageQueue(mq);
 
         reviveOffset = consumeOffsetFacade.
             getOffset(request)
@@ -105,14 +101,10 @@ public class OffsetService {
     private void commitOffset(long offset) {
         OffsetRequest request = OffsetRequest.builder()
             .consumerGroup(PopConstants.REVIVE_GROUP)
-            .newOffset(offset)
-            .build();
-
-        MessageQueue mq = MessageQueue.builder()
             .topicName(reviveTopic)
             .queueId(queueId)
+            .newOffset(offset)
             .build();
-        request.setMessageQueue(mq);
 
         consumeOffsetFacade.putOffset(request);
     }

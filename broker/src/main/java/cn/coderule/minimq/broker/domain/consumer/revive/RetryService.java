@@ -2,12 +2,17 @@ package cn.coderule.minimq.broker.domain.consumer.revive;
 
 import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.domain.core.constant.PopConstants;
+import cn.coderule.minimq.domain.domain.meta.offset.OffsetRequest;
+import cn.coderule.minimq.domain.domain.producer.EnqueueRequest;
 import cn.coderule.minimq.domain.domain.producer.EnqueueResult;
 import cn.coderule.minimq.domain.core.enums.message.TagType;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.checkpoint.PopCheckPoint;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.helper.PopConverter;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.domain.meta.topic.Topic;
+import cn.coderule.minimq.domain.service.broker.infra.MQFacade;
+import cn.coderule.minimq.domain.service.broker.infra.meta.ConsumeOffsetFacade;
+import cn.coderule.minimq.domain.service.broker.infra.meta.TopicFacade;
 import cn.coderule.minimq.domain.service.store.domain.meta.ConsumeOffsetService;
 import cn.coderule.minimq.domain.service.store.domain.meta.TopicService;
 import cn.coderule.minimq.domain.service.store.domain.mq.MQService;
@@ -25,12 +30,22 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class RetryService {
     private final StoreConfig storeConfig;
+
+    private final MQFacade mqFacade;
+    private final TopicFacade topicFacade;
+    private final ConsumeOffsetFacade consumeOffsetFacade;
+
     private final MQService mqService;
     private final TopicService topicService;
     private final ConsumeOffsetService consumeOffsetService;
 
     public RetryService(ReviveContext context) {
         this.storeConfig = context.getStoreConfig();
+
+        this.mqFacade = context.getMqFacade();
+        this.topicFacade = context.getTopicFacade();
+        this.consumeOffsetFacade = context.getConsumeOffsetFacade();
+
         this.mqService = context.getMqService();
         this.topicService = context.getTopicService();
         this.consumeOffsetService = context.getConsumeOffsetService();
@@ -41,7 +56,8 @@ public class RetryService {
         initRetryTopic(retryMessage.getTopic());
         initConsumeOffset(retryMessage.getTopic(), point.getCId());
 
-        EnqueueResult result = mqService.enqueue(retryMessage);
+        EnqueueRequest request = EnqueueRequest.create(retryMessage);
+        EnqueueResult result = mqFacade.enqueue(request);
         if (!result.isSuccess()) {
             log.error("Retry failed, retryMessage: {}, result: {}", retryMessage, result);
         }
@@ -71,21 +87,26 @@ public class RetryService {
     }
 
     private void initConsumeOffset(String topicName, String groupName) {
-        long offset = consumeOffsetService.getOffset(
-            groupName,
-            topicName,
-            0
-        );
+        OffsetRequest getRequest = OffsetRequest.builder()
+            .consumerGroup(groupName)
+            .topicName(topicName)
+            .queueId(0)
+            .build();
+
+        long offset = consumeOffsetFacade
+            .getOffset(getRequest)
+            .getOffset();
 
         if (offset >= 0) {
             return;
         }
 
-        consumeOffsetService.putOffset(
-            groupName,
-            topicName,
-            0,
-            0
-        );
+        OffsetRequest putRequest = OffsetRequest.builder()
+            .consumerGroup(groupName)
+            .topicName(topicName)
+            .queueId(0)
+            .newOffset(0)
+            .build();
+        consumeOffsetFacade.putOffset(putRequest);
     }
 }

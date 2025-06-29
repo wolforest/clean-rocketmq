@@ -56,11 +56,11 @@ public class ReviveManager implements Lifecycle {
             .storeConfig(storeConfig)
             .messageConfig(storeConfig.getMessageConfig())
 
-            .mqStore(StoreContext.getBean(MQFacade.class))
+            .mqFacade(StoreContext.getBean(MQFacade.class))
 
-            .topicStore(StoreContext.getBean(TopicFacade.class))
-            .subscriptionStore(StoreContext.getBean(SubscriptionFacade.class))
-            .consumeOffsetStore(StoreContext.getBean(ConsumeOffsetFacade.class))
+            .topicFacade(StoreContext.getBean(TopicFacade.class))
+            .subscriptionFacade(StoreContext.getBean(SubscriptionFacade.class))
+            .consumeOffsetFacade(StoreContext.getBean(ConsumeOffsetFacade.class))
 
             /* to be deleted */
             .mqService(StoreContext.getBean(MQService.class))

@@ -20,8 +20,8 @@ public class ConsumeOffsetStoreImpl implements ConsumeOffsetStore {
     public OffsetResult getOffset(OffsetRequest request) {
         long offset = offsetService.getOffset(
             request.getConsumerGroup(),
-            request.getMessageQueue().getTopicName(),
-            request.getMessageQueue().getQueueId()
+            request.getTopicName(),
+            request.getQueueId()
         );
         return OffsetResult.build(offset);
     }
@@ -30,8 +30,8 @@ public class ConsumeOffsetStoreImpl implements ConsumeOffsetStore {
     public OffsetResult getAndRemove(OffsetRequest request) {
         long offset = offsetService.getAndRemove(
             request.getConsumerGroup(),
-            request.getMessageQueue().getTopicName(),
-            request.getMessageQueue().getQueueId()
+            request.getTopicName(),
+            request.getQueueId()
         );
         return OffsetResult.build(offset);
     }
@@ -40,8 +40,8 @@ public class ConsumeOffsetStoreImpl implements ConsumeOffsetStore {
     public void putOffset(OffsetRequest request) {
         offsetService.putOffset(
             request.getConsumerGroup(),
-            request.getMessageQueue().getTopicName(),
-            request.getMessageQueue().getQueueId(),
+            request.getTopicName(),
+            request.getQueueId(),
             request.getNewOffset()
         );
     }
