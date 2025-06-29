@@ -7,6 +7,7 @@ import cn.coderule.minimq.domain.domain.meta.topic.Topic;
 import cn.coderule.minimq.domain.domain.cluster.cluster.GroupInfo;
 import cn.coderule.minimq.domain.domain.cluster.route.QueueInfo;
 import cn.coderule.minimq.domain.domain.cluster.route.RouteInfo;
+import cn.coderule.minimq.domain.domain.meta.topic.TopicRequest;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
@@ -39,7 +40,7 @@ public class RouteMocker {
 
         try {
             Topic topic = createTopic(topicName);
-            topicStore.saveTopic(topic);
+            topicStore.saveTopic(TopicRequest.build(topic));
             return topic;
         } catch (Exception e) {
             log.error("create topic={} error", topicName, e);

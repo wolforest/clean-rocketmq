@@ -1,6 +1,7 @@
 package cn.coderule.minimq.store.api;
 
 import cn.coderule.minimq.domain.domain.meta.topic.Topic;
+import cn.coderule.minimq.domain.domain.meta.topic.TopicRequest;
 import cn.coderule.minimq.domain.service.store.api.meta.TopicStore;
 import cn.coderule.minimq.domain.service.store.domain.meta.TopicService;
 
@@ -29,5 +30,15 @@ public class TopicStoreImpl implements TopicStore {
     @Override
     public void deleteTopic(String topicName) {
         topicService.deleteTopic(topicName);
+    }
+
+    @Override
+    public void saveTopic(TopicRequest request) {
+        topicService.saveTopic(request.getTopic());
+    }
+
+    @Override
+    public void deleteTopic(TopicRequest request) {
+        topicService.deleteTopic(request.getTopicName());
     }
 }

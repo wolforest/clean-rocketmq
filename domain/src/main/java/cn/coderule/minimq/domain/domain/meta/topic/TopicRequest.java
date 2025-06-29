@@ -17,4 +17,10 @@ public class TopicRequest implements Serializable {
     private String topicName;
     private Topic topic;
 
+    public static TopicRequest build(Topic topic) {
+        return TopicRequest.builder()
+            .topic(topic)
+            .build();
+    }
+
 }

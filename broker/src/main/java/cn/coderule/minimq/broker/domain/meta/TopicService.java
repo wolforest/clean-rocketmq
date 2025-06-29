@@ -2,6 +2,7 @@ package cn.coderule.minimq.broker.domain.meta;
 
 import cn.coderule.minimq.domain.core.enums.message.MessageType;
 import cn.coderule.minimq.domain.domain.meta.topic.Topic;
+import cn.coderule.minimq.domain.domain.meta.topic.TopicRequest;
 import cn.coderule.minimq.domain.service.broker.infra.meta.TopicFacade;
 import java.util.concurrent.CompletableFuture;
 
@@ -18,6 +19,11 @@ public class TopicService implements TopicFacade {
     }
 
     @Override
+    public boolean exists(String topicName) {
+        return store.exists(topicName);
+    }
+
+    @Override
     public CompletableFuture<Topic> getTopicAsync(String topicName) {
         return store.getTopicAsync(topicName);
     }
@@ -25,6 +31,16 @@ public class TopicService implements TopicFacade {
     @Override
     public Topic getTopic(String topicName) {
         return store.getTopic(topicName);
+    }
+
+    @Override
+    public void saveTopic(TopicRequest request) {
+        store.saveTopic(request);
+    }
+
+    @Override
+    public void deleteTopic(TopicRequest request) {
+        store.deleteTopic(request);
     }
 
     public MessageType getTopicType(String topicName) {
