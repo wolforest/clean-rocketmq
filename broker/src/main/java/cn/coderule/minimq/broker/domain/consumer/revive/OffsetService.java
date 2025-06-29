@@ -1,9 +1,12 @@
 package cn.coderule.minimq.broker.domain.consumer.revive;
 
 import cn.coderule.minimq.domain.core.constant.PopConstants;
+import cn.coderule.minimq.domain.domain.MessageQueue;
+import cn.coderule.minimq.domain.domain.consumer.consume.mq.QueueRequest;
 import cn.coderule.minimq.domain.domain.consumer.revive.ReviveBuffer;
-import cn.coderule.minimq.domain.service.store.domain.consumequeue.ConsumeQueueGateway;
-import cn.coderule.minimq.domain.service.store.domain.meta.ConsumeOffsetService;
+import cn.coderule.minimq.domain.domain.meta.offset.OffsetRequest;
+import cn.coderule.minimq.domain.service.broker.infra.MQFacade;
+import cn.coderule.minimq.domain.service.broker.infra.meta.ConsumeOffsetFacade;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -21,15 +24,15 @@ public class OffsetService {
     @Setter
     private volatile boolean skipRevive = false;
 
-    private final ConsumeOffsetService consumeOffsetService;
-    private final ConsumeQueueGateway consumeQueueGateway;
+    private final MQFacade mqFacade;
+    private final ConsumeOffsetFacade consumeOffsetFacade;
 
     public OffsetService(ReviveContext context, int queueId) {
         this.reviveTopic = context.getReviveTopic();
         this.queueId = queueId;
 
-        this.consumeOffsetService = context.getConsumeOffsetService();
-        this.consumeQueueGateway = context.getConsumeQueueGateway();
+        this.mqFacade = context.getMqStore();
+        this.consumeOffsetFacade = context.getConsumeOffsetStore();
     }
 
     public long getReviveDelayTime() {
@@ -37,7 +40,12 @@ public class OffsetService {
             return 0;
         }
 
-        long maxOffset = consumeQueueGateway.getMaxOffset(reviveTopic, queueId);
+        QueueRequest request = QueueRequest.builder()
+            .topic(reviveTopic)
+            .queueId(queueId)
+            .build();
+
+        long maxOffset = mqFacade.getMaxOffset(request).getMaxOffset();
         if (maxOffset > reviveOffset + 1) {
             long now = System.currentTimeMillis();
             return Math.max(now, reviveTimestamp);
@@ -51,7 +59,12 @@ public class OffsetService {
             return 0;
         }
 
-        long maxOffset = consumeQueueGateway.getMaxOffset(reviveTopic, queueId);
+        QueueRequest request = QueueRequest.builder()
+            .topic(reviveTopic)
+            .queueId(queueId)
+            .build();
+
+        long maxOffset = mqFacade.getMaxOffset(request).getMaxOffset();
         long diff = maxOffset - reviveOffset;
         return Math.max(diff, 0);
     }
@@ -60,11 +73,19 @@ public class OffsetService {
         log.info("start revive topic={}; reviveQueueId={}",
             reviveTopic, queueId);
 
-        reviveOffset = consumeOffsetService.getOffset(
-            PopConstants.REVIVE_GROUP,
-            reviveTopic,
-            queueId
-        );
+        OffsetRequest request = OffsetRequest.builder()
+            .consumerGroup(PopConstants.REVIVE_GROUP)
+            .build();
+
+        MessageQueue mq = MessageQueue.builder()
+            .topicName(reviveTopic)
+            .queueId(queueId)
+            .build();
+        request.setMessageQueue(mq);
+
+        reviveOffset = consumeOffsetFacade.
+            getOffset(request)
+            .getOffset();
     }
 
     public void resetOffset(ReviveBuffer buffer) {
@@ -82,12 +103,18 @@ public class OffsetService {
     }
 
     private void commitOffset(long offset) {
-        consumeOffsetService.putOffset(
-            PopConstants.REVIVE_GROUP,
-            reviveTopic,
-            queueId,
-            offset
-        );
+        OffsetRequest request = OffsetRequest.builder()
+            .consumerGroup(PopConstants.REVIVE_GROUP)
+            .newOffset(offset)
+            .build();
+
+        MessageQueue mq = MessageQueue.builder()
+            .topicName(reviveTopic)
+            .queueId(queueId)
+            .build();
+        request.setMessageQueue(mq);
+
+        consumeOffsetFacade.putOffset(request);
     }
 
 }
