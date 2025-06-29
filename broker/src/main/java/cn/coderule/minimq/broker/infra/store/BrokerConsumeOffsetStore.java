@@ -15,10 +15,13 @@ public class BrokerConsumeOffsetStore implements ConsumeOffsetFacade {
     private final EmbedConsumeOffsetStore embedConsumeOffsetStore;
     private final RemoteConsumeOffsetStore remoteConsumeOffsetStore;
 
-    public BrokerConsumeOffsetStore(BrokerConfig brokerConfig) {
+    public BrokerConsumeOffsetStore(
+        BrokerConfig brokerConfig,
+        EmbedConsumeOffsetStore embedConsumeOffsetStore,
+        RemoteConsumeOffsetStore remoteConsumeOffsetStore) {
         this.brokerConfig = brokerConfig;
-        this.embedConsumeOffsetStore = new EmbedConsumeOffsetStore(brokerConfig.getLoadBalance());
-        this.remoteConsumeOffsetStore = new RemoteConsumeOffsetStore(brokerConfig.getLoadBalance());
+        this.embedConsumeOffsetStore = embedConsumeOffsetStore;
+        this.remoteConsumeOffsetStore = remoteConsumeOffsetStore;
     }
 
     @Override
