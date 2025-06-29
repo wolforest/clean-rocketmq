@@ -3,6 +3,10 @@ package cn.coderule.minimq.broker.domain.consumer.revive;
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.domain.domain.meta.topic.KeyBuilder;
+import cn.coderule.minimq.domain.service.broker.infra.MQFacade;
+import cn.coderule.minimq.domain.service.broker.infra.meta.ConsumeOffsetFacade;
+import cn.coderule.minimq.domain.service.broker.infra.meta.SubscriptionFacade;
+import cn.coderule.minimq.domain.service.broker.infra.meta.TopicFacade;
 import cn.coderule.minimq.domain.service.common.ServerEvent;
 import cn.coderule.minimq.domain.service.common.ServerEventBus;
 import cn.coderule.minimq.domain.service.store.domain.consumequeue.ConsumeQueueGateway;
@@ -52,12 +56,21 @@ public class ReviveManager implements Lifecycle {
             .storeConfig(storeConfig)
             .messageConfig(storeConfig.getMessageConfig())
 
+            .mqStore(StoreContext.getBean(MQFacade.class))
+
+            .topicStore(StoreContext.getBean(TopicFacade.class))
+            .subscriptionStore(StoreContext.getBean(SubscriptionFacade.class))
+            .consumeOffsetStore(StoreContext.getBean(ConsumeOffsetFacade.class))
+
+            /* to be deleted */
             .mqService(StoreContext.getBean(MQService.class))
             .consumeQueueGateway(StoreContext.getBean(ConsumeQueueGateway.class))
 
             .topicService(StoreContext.getBean(TopicService.class))
             .subscriptionService(StoreContext.getBean(SubscriptionService.class))
             .consumeOffsetService(StoreContext.getBean(ConsumeOffsetService.class))
+            /* to be deleted */
+
             .build();
     }
 

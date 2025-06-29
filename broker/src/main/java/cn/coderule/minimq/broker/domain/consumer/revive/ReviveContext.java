@@ -3,6 +3,7 @@ package cn.coderule.minimq.broker.domain.consumer.revive;
 import cn.coderule.minimq.domain.config.message.MessageConfig;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.domain.service.broker.infra.MQFacade;
+import cn.coderule.minimq.domain.service.broker.infra.meta.ConsumeOffsetFacade;
 import cn.coderule.minimq.domain.service.broker.infra.meta.SubscriptionFacade;
 import cn.coderule.minimq.domain.service.broker.infra.meta.TopicFacade;
 import cn.coderule.minimq.domain.service.store.domain.consumequeue.ConsumeQueueGateway;
@@ -30,6 +31,7 @@ public class ReviveContext implements Serializable {
     private MQFacade mqStore;
     private TopicFacade topicStore;
     private SubscriptionFacade subscriptionStore;
+    private ConsumeOffsetFacade consumeOffsetStore;
 
     private MQService mqService;
     private ConsumeQueueGateway consumeQueueGateway;;
