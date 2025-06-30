@@ -5,17 +5,21 @@ import cn.coderule.common.util.lang.ByteUtil;
 import cn.coderule.common.util.lang.ThreadUtil;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.domain.core.constant.PopConstants;
+import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueResult;
 import cn.coderule.minimq.domain.core.enums.message.MessageStatus;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.checkpoint.PopCheckPoint;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.helper.PopConverter;
 import cn.coderule.minimq.domain.domain.consumer.revive.ReviveBuffer;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
+import cn.coderule.minimq.domain.domain.meta.offset.OffsetRequest;
 import cn.coderule.minimq.domain.domain.meta.topic.KeyBuilder;
-import cn.coderule.minimq.domain.service.store.domain.meta.ConsumeOffsetService;
+import cn.coderule.minimq.domain.domain.producer.EnqueueRequest;
+import cn.coderule.minimq.domain.service.broker.infra.MQFacade;
+import cn.coderule.minimq.domain.service.broker.infra.meta.ConsumeOffsetFacade;
+import cn.coderule.minimq.domain.service.broker.infra.meta.SubscriptionFacade;
+import cn.coderule.minimq.domain.service.broker.infra.meta.TopicFacade;
 import cn.coderule.minimq.domain.service.store.domain.meta.SubscriptionService;
-import cn.coderule.minimq.domain.service.store.domain.meta.TopicService;
-import cn.coderule.minimq.domain.service.store.domain.mq.MQService;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.util.ArrayList;
@@ -30,12 +34,15 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class Reviver {
     private final StoreConfig storeConfig;
-    private final MQService mqService;
     private final RetryService retryService;
 
-    private final TopicService topicService;
+
     private final SubscriptionService subscriptionService;
-    private final ConsumeOffsetService consumeOffsetService;
+
+    private final MQFacade mqFacade;
+    private final TopicFacade topicFacade;
+    private final SubscriptionFacade subscriptionFacade;
+    private final ConsumeOffsetFacade consumeOffsetFacade;
 
     private final String reviveTopic;
     private final int queueId;
@@ -57,12 +64,14 @@ public class Reviver {
         this.reviveTopic = context.getReviveTopic();
         this.queueId = queueId;
 
-        this.mqService = context.getMqService();
         this.retryService = retryService;
 
-        this.topicService = context.getTopicService();
+        this.mqFacade = context.getMqFacade();
+        this.topicFacade = context.getTopicFacade();
+        this.subscriptionFacade = context.getSubscriptionFacade();
+        this.consumeOffsetFacade = context.getConsumeOffsetFacade();
+
         this.subscriptionService = context.getSubscriptionService();
-        this.consumeOffsetService = context.getConsumeOffsetService();
 
         this.inflightMap = Collections.synchronizedNavigableMap(new TreeMap<>());
     }
@@ -113,7 +122,7 @@ public class Reviver {
     private boolean existsTopicAndSubscription(PopCheckPoint popCheckPoint) {
         // check normal topic, skip ck , if normal topic is not exist
         String topic = KeyBuilder.removeRetryPrefix(popCheckPoint.getTopic(), popCheckPoint.getCId());
-        if (!topicService.exists(topic)) {
+        if (!topicFacade.exists(topic)) {
             log.warn("reviveQueueId={}, can not get normal topic {}, then continue", queueId, popCheckPoint.getTopic());
             return false;
         }
@@ -153,7 +162,7 @@ public class Reviver {
         SocketAddress storeHost = new InetSocketAddress(storeConfig.getHost(), storeConfig.getPort());
         MessageBO message = PopConverter.toMessage(newCheckPoint, queueId, reviveTopic, storeHost);
 
-        mqService.enqueue(message);
+        mqFacade.enqueue(EnqueueRequest.create(message));
     }
 
     private void reviveFromCheckpoint(PopCheckPoint point) {
@@ -200,7 +209,15 @@ public class Reviver {
             if (ByteUtil.getBit(point.getBitMap(), i)) continue;
 
             long offset = point.ackOffsetByIndex((byte) i);
-            DequeueResult result = mqService.get(point.getTopic(), point.getQueueId(), offset);
+
+            DequeueRequest request = DequeueRequest.builder()
+                    .topic(point.getTopic())
+                    .queueId(point.getQueueId())
+                    .offset(offset)
+                    .num(1)
+                    .build();
+
+            DequeueResult result = mqFacade.get(request);
 
             boolean isSuccess = retryOriginalMessage(point, result);
             if (isSuccess) {
@@ -230,11 +247,13 @@ public class Reviver {
     }
 
     private void commitOffset(long offset) {
-        consumeOffsetService.putOffset(
-            PopConstants.REVIVE_GROUP,
-            reviveTopic,
-            queueId,
-            offset
-        );
+        OffsetRequest request = OffsetRequest.builder()
+            .consumerGroup(PopConstants.REVIVE_GROUP)
+            .topicName(reviveTopic)
+            .queueId(queueId)
+            .newOffset(offset)
+            .build();
+
+        consumeOffsetFacade.putOffset(request);
     }
 }
