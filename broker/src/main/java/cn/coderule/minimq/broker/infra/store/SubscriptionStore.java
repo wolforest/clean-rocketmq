@@ -7,12 +7,12 @@ import cn.coderule.minimq.domain.domain.meta.subscription.SubscriptionGroup;
 import cn.coderule.minimq.domain.service.broker.infra.meta.SubscriptionFacade;
 import java.util.concurrent.CompletableFuture;
 
-public class BrokerSubscriptionStore implements SubscriptionFacade {
+public class SubscriptionStore implements SubscriptionFacade {
     private final BrokerConfig brokerConfig;
     private final EmbedSubscriptionStore embedSubscriptionStore;
     private final RemoteSubscriptionStore remoteSubscriptionStore;
 
-    public BrokerSubscriptionStore(BrokerConfig brokerConfig, EmbedSubscriptionStore embedSubscriptionStore,
+    public SubscriptionStore(BrokerConfig brokerConfig, EmbedSubscriptionStore embedSubscriptionStore,
         RemoteSubscriptionStore remoteSubscriptionStore) {
         this.brokerConfig = brokerConfig;
         this.embedSubscriptionStore = embedSubscriptionStore;

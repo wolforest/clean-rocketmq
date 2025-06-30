@@ -8,12 +8,12 @@ import cn.coderule.minimq.domain.domain.meta.topic.TopicRequest;
 import cn.coderule.minimq.domain.service.broker.infra.meta.TopicFacade;
 import java.util.concurrent.CompletableFuture;
 
-public class BrokerTopicStore implements TopicFacade {
+public class TopicStore implements TopicFacade {
     private final BrokerConfig brokerConfig;
     private final EmbedTopicStore embedTopicStore;
     private final RemoteTopicStore remoteTopicStore;
 
-    public BrokerTopicStore(BrokerConfig brokerConfig, EmbedTopicStore embedTopicStore, RemoteTopicStore remoteTopicStore) {
+    public TopicStore(BrokerConfig brokerConfig, EmbedTopicStore embedTopicStore, RemoteTopicStore remoteTopicStore) {
         this.brokerConfig = brokerConfig;
         this.embedTopicStore = embedTopicStore;
         this.remoteTopicStore = remoteTopicStore;

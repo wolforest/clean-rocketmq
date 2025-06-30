@@ -10,12 +10,12 @@ import cn.coderule.minimq.domain.domain.meta.offset.OffsetResult;
 import cn.coderule.minimq.domain.domain.meta.offset.TopicResult;
 import cn.coderule.minimq.domain.service.broker.infra.meta.ConsumeOffsetFacade;
 
-public class BrokerConsumeOffsetStore implements ConsumeOffsetFacade {
+public class ConsumeOffsetStore implements ConsumeOffsetFacade {
     private final BrokerConfig brokerConfig;
     private final EmbedConsumeOffsetStore embedConsumeOffsetStore;
     private final RemoteConsumeOffsetStore remoteConsumeOffsetStore;
 
-    public BrokerConsumeOffsetStore(
+    public ConsumeOffsetStore(
         BrokerConfig brokerConfig,
         EmbedConsumeOffsetStore embedConsumeOffsetStore,
         RemoteConsumeOffsetStore remoteConsumeOffsetStore) {

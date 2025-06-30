@@ -7,6 +7,7 @@ import cn.coderule.minimq.domain.domain.consumer.ack.AckMsg;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.checkpoint.PopCheckPoint;
 import cn.coderule.minimq.domain.service.store.api.meta.AckStore;
 
+@Deprecated
 public class BrokerAckStore implements AckStore {
     private final BrokerConfig brokerConfig;
     private final EmbedAckStore embedAckStore;

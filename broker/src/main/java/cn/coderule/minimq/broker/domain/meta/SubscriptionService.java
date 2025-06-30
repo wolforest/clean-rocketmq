@@ -1,15 +1,15 @@
 package cn.coderule.minimq.broker.domain.meta;
 
-import cn.coderule.minimq.broker.infra.store.BrokerSubscriptionStore;
+import cn.coderule.minimq.broker.infra.store.SubscriptionStore;
 import cn.coderule.minimq.domain.domain.meta.subscription.SubscriptionGroup;
 import java.util.concurrent.CompletableFuture;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class SubscriptionService {
-    private final BrokerSubscriptionStore subscriptionStore;
+    private final SubscriptionStore subscriptionStore;
 
-    public SubscriptionService(BrokerSubscriptionStore subscriptionStore) {
+    public SubscriptionService(SubscriptionStore subscriptionStore) {
         this.subscriptionStore = subscriptionStore;
     }
 

@@ -16,12 +16,12 @@ import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.service.broker.infra.MQFacade;
 import java.util.concurrent.CompletableFuture;
 
-public class BrokerMQStore implements MQFacade {
+public class MQStore implements MQFacade {
     private final BrokerConfig brokerConfig;
     private final EmbedMQStore embedMQStore;
     private final RemoteMQStore remoteMQStore;
 
-    public BrokerMQStore(BrokerConfig brokerConfig, EmbedMQStore embedMQStore, RemoteMQStore remoteMQStore) {
+    public MQStore(BrokerConfig brokerConfig, EmbedMQStore embedMQStore, RemoteMQStore remoteMQStore) {
         this.brokerConfig = brokerConfig;
         this.embedMQStore = embedMQStore;
         this.remoteMQStore = remoteMQStore;
