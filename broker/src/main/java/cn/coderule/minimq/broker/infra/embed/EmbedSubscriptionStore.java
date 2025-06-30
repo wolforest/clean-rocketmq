@@ -31,16 +31,17 @@ public class EmbedSubscriptionStore extends AbstractEmbedStore implements Subscr
 
     @Override
     public void putGroup(SubscriptionRequest request) {
+        subscriptionStore.saveGroup(request);
     }
 
     @Override
     public void saveGroup(SubscriptionRequest request) {
-
+        subscriptionStore.saveGroup(request);
     }
 
     @Override
     public void deleteGroup(SubscriptionRequest request) {
-
+        subscriptionStore.deleteGroup(request);
     }
 
 }
