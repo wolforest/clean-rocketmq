@@ -20,4 +20,7 @@ public class RemoteLoadBalance {
         return null;
     }
 
+    public String findByStoreGroup(String storeGroup) {
+        return null;
+    }
 }
