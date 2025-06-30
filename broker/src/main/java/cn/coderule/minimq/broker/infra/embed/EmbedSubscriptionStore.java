@@ -3,29 +3,34 @@ package cn.coderule.minimq.broker.infra.embed;
 import cn.coderule.minimq.domain.domain.meta.subscription.SubscriptionGroup;
 import cn.coderule.minimq.domain.domain.meta.subscription.SubscriptionRequest;
 import cn.coderule.minimq.domain.service.broker.infra.meta.SubscriptionFacade;
+import cn.coderule.minimq.domain.service.store.api.meta.SubscriptionStore;
 import java.util.concurrent.CompletableFuture;
 
-public class EmbedSubscriptionStore implements SubscriptionFacade {
+public class EmbedSubscriptionStore extends AbstractEmbedStore implements SubscriptionFacade {
+    private final SubscriptionStore subscriptionStore;
 
-    public EmbedSubscriptionStore(EmbedLoadBalance loadBalance) {
+    public EmbedSubscriptionStore(SubscriptionStore subscriptionStore, EmbedLoadBalance loadBalance) {
+        super(loadBalance);
+        this.subscriptionStore = subscriptionStore;
     }
 
     public boolean existsGroup(String topicName, String groupName) {
-        return false;
+        return subscriptionStore.existsGroup(groupName);
     }
 
     public SubscriptionGroup getGroup(String topicName, String groupName) {
-        return null;
+        return subscriptionStore.getGroup(groupName);
     }
 
     @Override
     public CompletableFuture<SubscriptionGroup> getGroupAsync(String topicName, String groupName) {
-        return null;
+        return CompletableFuture.completedFuture(
+            subscriptionStore.getGroup(groupName)
+        );
     }
 
     @Override
     public void putGroup(SubscriptionRequest request) {
-
     }
 
     @Override

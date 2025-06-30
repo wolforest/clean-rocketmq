@@ -5,6 +5,8 @@ import cn.coderule.minimq.domain.domain.meta.subscription.SubscriptionGroup;
 public interface SubscriptionStore {
     boolean existsGroup(String groupName);
     SubscriptionGroup getGroup(String groupName);
+
+
     void saveGroup(SubscriptionGroup group);
     default void deleteGroup(String groupName) {
         this.deleteGroup(groupName, false);
