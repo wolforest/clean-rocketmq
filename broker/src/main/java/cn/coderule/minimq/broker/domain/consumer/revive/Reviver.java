@@ -19,7 +19,6 @@ import cn.coderule.minimq.domain.service.broker.infra.MQFacade;
 import cn.coderule.minimq.domain.service.broker.infra.meta.ConsumeOffsetFacade;
 import cn.coderule.minimq.domain.service.broker.infra.meta.SubscriptionFacade;
 import cn.coderule.minimq.domain.service.broker.infra.meta.TopicFacade;
-import cn.coderule.minimq.domain.service.store.domain.meta.SubscriptionService;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.util.ArrayList;
@@ -35,9 +34,6 @@ import lombok.extern.slf4j.Slf4j;
 public class Reviver {
     private final StoreConfig storeConfig;
     private final RetryService retryService;
-
-
-    private final SubscriptionService subscriptionService;
 
     private final MQFacade mqFacade;
     private final TopicFacade topicFacade;
@@ -70,8 +66,6 @@ public class Reviver {
         this.topicFacade = context.getTopicFacade();
         this.subscriptionFacade = context.getSubscriptionFacade();
         this.consumeOffsetFacade = context.getConsumeOffsetFacade();
-
-        this.subscriptionService = context.getSubscriptionService();
 
         this.inflightMap = Collections.synchronizedNavigableMap(new TreeMap<>());
     }
@@ -127,7 +121,7 @@ public class Reviver {
             return false;
         }
 
-        if (!subscriptionService.existsGroup(popCheckPoint.getCId())) {
+        if (!subscriptionFacade.existsGroup(popCheckPoint.getTopic(), popCheckPoint.getCId())) {
             log.warn("reviveQueueId={}, can not get cid {}, then continue", queueId, popCheckPoint.getCId());
             return false;
         }
