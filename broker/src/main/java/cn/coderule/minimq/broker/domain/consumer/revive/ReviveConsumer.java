@@ -14,7 +14,7 @@ import cn.coderule.minimq.domain.domain.consumer.consume.pop.helper.PopConverter
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.helper.PopKeyBuilder;
 import cn.coderule.minimq.domain.domain.consumer.revive.ReviveBuffer;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
-import cn.coderule.minimq.domain.service.store.domain.mq.MQService;
+import cn.coderule.minimq.domain.service.broker.infra.MQFacade;
 import java.util.List;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -35,14 +35,14 @@ public class ReviveConsumer {
     private final String reviveTopic;
     private final int queueId;
 
-    private final MQService mqService;
+    private final MQFacade mqFacade;
 
     public ReviveConsumer(ReviveContext context, int queueId) {
         this.messageConfig = context.getMessageConfig();
         this.reviveTopic = context.getReviveTopic();
         this.queueId = queueId;
 
-        this.mqService = context.getMqService();
+        this.mqFacade = context.getMqFacade();
     }
 
     public ReviveBuffer consume(long offset) {
@@ -237,7 +237,7 @@ public class ReviveConsumer {
             .num(32)
             .build();
 
-        DequeueResult result = mqService.get(request);
+        DequeueResult result = mqFacade.get(request);
 
         return result.getMessageList();
     }
