@@ -3,6 +3,7 @@ package cn.coderule.minimq.broker.domain.consumer.revive;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.domain.core.constant.PopConstants;
 import cn.coderule.minimq.domain.domain.meta.offset.OffsetRequest;
+import cn.coderule.minimq.domain.domain.meta.topic.TopicRequest;
 import cn.coderule.minimq.domain.domain.producer.EnqueueRequest;
 import cn.coderule.minimq.domain.domain.producer.EnqueueResult;
 import cn.coderule.minimq.domain.core.enums.message.TagType;
@@ -35,20 +36,12 @@ public class RetryService {
     private final TopicFacade topicFacade;
     private final ConsumeOffsetFacade consumeOffsetFacade;
 
-    private final MQService mqService;
-    private final TopicService topicService;
-    private final ConsumeOffsetService consumeOffsetService;
-
     public RetryService(ReviveContext context) {
         this.storeConfig = context.getStoreConfig();
 
         this.mqFacade = context.getMqFacade();
         this.topicFacade = context.getTopicFacade();
         this.consumeOffsetFacade = context.getConsumeOffsetFacade();
-
-        this.mqService = context.getMqService();
-        this.topicService = context.getTopicService();
-        this.consumeOffsetService = context.getConsumeOffsetService();
     }
 
     public boolean retry(PopCheckPoint point, MessageBO message) {
@@ -71,7 +64,7 @@ public class RetryService {
     }
 
     private void initRetryTopic(String topicName) {
-        if (topicService.exists(topicName)) {
+        if (topicFacade.exists(topicName)) {
             return;
         }
 
@@ -83,7 +76,7 @@ public class RetryService {
             .perm(6)
             .topicSysFlag(0)
             .build();
-        topicService.putTopic(retryTopic);
+        topicFacade.saveTopic(TopicRequest.build(retryTopic));
     }
 
     private void initConsumeOffset(String topicName, String groupName) {
