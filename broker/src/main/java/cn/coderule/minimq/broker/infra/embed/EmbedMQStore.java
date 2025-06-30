@@ -15,6 +15,7 @@ import java.util.concurrent.CompletableFuture;
 
 public class EmbedMQStore extends AbstractEmbedStore implements MQFacade {
     private final MQStore mqStore;
+
     public EmbedMQStore(MQStore mqStore, EmbedLoadBalance loadBalance) {
         super(loadBalance);
         this.mqStore = mqStore;
