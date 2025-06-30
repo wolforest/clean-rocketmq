@@ -3,36 +3,42 @@ package cn.coderule.minimq.broker.infra.embed;
 import cn.coderule.minimq.domain.domain.meta.topic.Topic;
 import cn.coderule.minimq.domain.domain.meta.topic.TopicRequest;
 import cn.coderule.minimq.domain.service.broker.infra.meta.TopicFacade;
+import cn.coderule.minimq.domain.service.store.api.meta.TopicStore;
 import java.util.concurrent.CompletableFuture;
 
-public class EmbedTopicStore implements TopicFacade {
+public class EmbedTopicStore extends AbstractEmbedStore implements TopicFacade {
+    private final TopicStore topicStore;
 
-    public EmbedTopicStore(EmbedLoadBalance loadBalance) {
+    public EmbedTopicStore(TopicStore topicStore, EmbedLoadBalance loadBalance) {
+        super(loadBalance);
+        this.topicStore = topicStore;
     }
 
     public boolean exists(String topicName) {
-        return false;
+        return topicStore.exists(topicName);
     }
 
     @Override
     public Topic getTopic(String topicName) {
-        return null;
-    }
-
-    @Override
-    public void saveTopic(TopicRequest request) {
-
-    }
-
-    @Override
-    public void deleteTopic(TopicRequest request) {
-
+        return topicStore.getTopic(topicName);
     }
 
     @Override
     public CompletableFuture<Topic> getTopicAsync(String topicName) {
-        return null;
+        return CompletableFuture.completedFuture(
+            topicStore.getTopic(topicName)
+        );
     }
 
+
+    @Override
+    public void saveTopic(TopicRequest request) {
+        topicStore.saveTopic(request);
+    }
+
+    @Override
+    public void deleteTopic(TopicRequest request) {
+        topicStore.deleteTopic(request);
+    }
 
 }
