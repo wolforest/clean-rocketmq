@@ -1,7 +1,6 @@
 package cn.coderule.minimq.broker.domain.consumer.revive;
 
 import cn.coderule.minimq.domain.core.constant.PopConstants;
-import cn.coderule.minimq.domain.domain.MessageQueue;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.QueueRequest;
 import cn.coderule.minimq.domain.domain.consumer.revive.ReviveBuffer;
 import cn.coderule.minimq.domain.domain.meta.offset.OffsetRequest;

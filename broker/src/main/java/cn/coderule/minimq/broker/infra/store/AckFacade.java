@@ -8,12 +8,12 @@ import cn.coderule.minimq.domain.domain.consumer.consume.pop.checkpoint.PopCheck
 import cn.coderule.minimq.domain.service.store.api.meta.AckStore;
 
 @Deprecated
-public class BrokerAckStore implements AckStore {
+public class AckFacade implements AckStore {
     private final BrokerConfig brokerConfig;
     private final EmbedAckStore embedAckStore;
     private final RemoteAckStore remoteAckStore;
 
-    public BrokerAckStore(BrokerConfig brokerConfig, EmbedAckStore embedAckStore, RemoteAckStore remoteAckStore) {
+    public AckFacade(BrokerConfig brokerConfig, EmbedAckStore embedAckStore, RemoteAckStore remoteAckStore) {
         this.brokerConfig = brokerConfig;
         this.embedAckStore = embedAckStore;
         this.remoteAckStore = remoteAckStore;
