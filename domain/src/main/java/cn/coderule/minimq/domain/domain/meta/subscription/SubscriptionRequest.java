@@ -17,11 +17,13 @@ public class SubscriptionRequest implements Serializable {
     private String topicName;
     private String groupName;
     private SubscriptionGroup group;
-    private SubscriptionMap subscriptionMap;
 
-    public static SubscriptionRequest build(SubscriptionGroup topic) {
+    @Builder.Default
+    private boolean cleanOffset = false;
+
+    public static SubscriptionRequest build(SubscriptionGroup group) {
         return SubscriptionRequest.builder()
-            .group(topic)
+            .group(group)
             .build();
     }
 

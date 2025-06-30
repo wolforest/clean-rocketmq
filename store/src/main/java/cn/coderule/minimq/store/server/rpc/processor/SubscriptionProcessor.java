@@ -1,6 +1,7 @@
 package cn.coderule.minimq.store.server.rpc.processor;
 
 import cn.coderule.minimq.domain.domain.meta.subscription.SubscriptionGroup;
+import cn.coderule.minimq.domain.domain.meta.subscription.SubscriptionRequest;
 import cn.coderule.minimq.domain.service.store.api.meta.SubscriptionStore;
 import cn.coderule.minimq.rpc.common.rpc.RpcProcessor;
 import cn.coderule.minimq.rpc.common.rpc.core.exception.RemotingCommandException;
@@ -59,7 +60,10 @@ public class SubscriptionProcessor implements RpcProcessor {
         }
 
         try {
-            subscriptionStore.saveGroup(group);
+
+            subscriptionStore.saveGroup(
+                SubscriptionRequest.build(group)
+            );
         } catch (Exception e) {
             log.error("save group error", e);
             return response.setCodeAndRemark(ResponseCode.SYSTEM_ERROR, "save group error");
@@ -75,7 +79,11 @@ public class SubscriptionProcessor implements RpcProcessor {
             requestHeader.getGroupName(), NettyHelper.getRemoteAddr(ctx.channel()));
 
         try {
-            subscriptionStore.deleteGroup(requestHeader.getGroupName(), requestHeader.isCleanOffset());
+            SubscriptionRequest subscriptionRequest = SubscriptionRequest.builder()
+                    .groupName(requestHeader.getGroupName())
+                    .cleanOffset(requestHeader.isCleanOffset())
+                    .build();
+            subscriptionStore.deleteGroup(subscriptionRequest);
         } catch (Exception e) {
             log.error("delete group error", e);
             return response.setCodeAndRemark(ResponseCode.SYSTEM_ERROR, "delete group error");

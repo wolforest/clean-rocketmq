@@ -1,16 +1,12 @@
 package cn.coderule.minimq.domain.service.store.api.meta;
 
 import cn.coderule.minimq.domain.domain.meta.subscription.SubscriptionGroup;
+import cn.coderule.minimq.domain.domain.meta.subscription.SubscriptionRequest;
 
 public interface SubscriptionStore {
     boolean existsGroup(String groupName);
     SubscriptionGroup getGroup(String groupName);
 
-
-    void saveGroup(SubscriptionGroup group);
-    default void deleteGroup(String groupName) {
-        this.deleteGroup(groupName, false);
-    }
-
-    void deleteGroup(String groupName, boolean cleanOffset);
+    void saveGroup(SubscriptionRequest request);
+    void deleteGroup(SubscriptionRequest request);
 }
