@@ -6,8 +6,8 @@ import java.util.concurrent.CompletableFuture;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class CommitService {
-    public CompletableFuture<CommitResult> commit(CommitRequest request) {
+public class RollbackService {
+    public CompletableFuture<CommitResult> rollback(CommitRequest request) {
         return null;
     }
 }
