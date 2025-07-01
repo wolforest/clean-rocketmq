@@ -11,17 +11,25 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class CheckerFactory implements TaskFactory, Lifecycle {
     private final BrokerConfig brokerConfig;
+    private final CheckContext checkContext;
     private final ConcurrentMap<Integer, TransactionChecker> checkerMap;
 
     public CheckerFactory(BrokerConfig brokerConfig) {
         this.brokerConfig = brokerConfig;
         this.checkerMap = new ConcurrentHashMap<>();
+        this.checkContext = buildContext();
+    }
+
+    private CheckContext buildContext() {
+        return CheckContext.builder()
+            .brokerConfig(brokerConfig)
+            .build();
     }
 
     @Override
     public void create(QueueTask task) {
         checkerMap.computeIfAbsent(task.getQueueId(), queueId -> {
-            TransactionChecker checker = new TransactionChecker(brokerConfig, task);
+            TransactionChecker checker = new TransactionChecker(checkContext, task);
             log.info("create transaction checker: storeGroup={}, queueId={}",
                 task.getStoreGroup(), queueId);
 
