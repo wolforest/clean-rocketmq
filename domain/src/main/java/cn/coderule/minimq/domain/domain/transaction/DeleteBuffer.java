@@ -1,4 +1,4 @@
-package cn.coderule.minimq.broker.domain.transaction.model;
+package cn.coderule.minimq.domain.domain.transaction;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;

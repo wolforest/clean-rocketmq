@@ -1,6 +1,6 @@
 package cn.coderule.minimq.broker.domain.transaction.service;
 
-import cn.coderule.minimq.broker.domain.transaction.model.DeleteBuffer;
+import cn.coderule.minimq.domain.domain.transaction.DeleteBuffer;
 import cn.coderule.minimq.domain.domain.transaction.CommitRequest;
 import cn.coderule.minimq.domain.domain.transaction.CommitResult;
 import java.util.concurrent.CompletableFuture;

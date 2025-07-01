@@ -1,4 +1,4 @@
-package cn.coderule.minimq.broker.domain.transaction;
+package cn.coderule.minimq.domain.domain.transaction;
 
 import cn.coderule.minimq.domain.core.constant.MQConstants;
 import cn.coderule.minimq.domain.domain.meta.topic.TopicValidator;

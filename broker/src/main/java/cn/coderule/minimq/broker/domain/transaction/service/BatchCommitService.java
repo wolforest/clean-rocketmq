@@ -1,7 +1,7 @@
 package cn.coderule.minimq.broker.domain.transaction.service;
 
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
-import cn.coderule.minimq.broker.domain.transaction.model.DeleteBuffer;
+import cn.coderule.minimq.domain.domain.transaction.DeleteBuffer;
 
 public class BatchCommitService extends ServiceThread {
     private final DeleteBuffer deleteBuffer;
