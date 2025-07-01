@@ -2,7 +2,7 @@ package cn.coderule.minimq.broker.domain.producer;
 
 import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.minimq.domain.domain.producer.ProduceContext;
-import cn.coderule.minimq.domain.service.broker.hook.ProduceHook;
+import cn.coderule.minimq.domain.service.broker.produce.ProduceHook;
 import java.util.ArrayList;
 import java.util.List;
 

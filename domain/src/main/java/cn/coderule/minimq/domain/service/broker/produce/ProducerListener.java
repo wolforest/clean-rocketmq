@@ -1,4 +1,4 @@
-package cn.coderule.minimq.domain.service.broker.listener;
+package cn.coderule.minimq.domain.service.broker.produce;
 
 import cn.coderule.minimq.domain.core.enums.produce.ProducerEvent;
 import cn.coderule.minimq.domain.domain.cluster.ClientChannelInfo;

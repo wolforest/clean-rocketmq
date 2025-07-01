@@ -1,4 +1,4 @@
-package cn.coderule.minimq.domain.service.broker.hook;
+package cn.coderule.minimq.domain.service.broker.produce;
 
 import cn.coderule.minimq.domain.domain.producer.ProduceContext;
 

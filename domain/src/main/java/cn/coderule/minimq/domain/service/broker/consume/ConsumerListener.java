@@ -1,4 +1,4 @@
-package cn.coderule.minimq.domain.service.broker.listener;
+package cn.coderule.minimq.domain.service.broker.consume;
 
 import cn.coderule.minimq.domain.core.enums.consume.ConsumerEvent;
 

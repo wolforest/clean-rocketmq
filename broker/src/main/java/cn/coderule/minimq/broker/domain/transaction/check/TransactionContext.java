@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CheckContext implements Serializable {
+public class TransactionContext implements Serializable {
     private BrokerConfig brokerConfig;
     private MessageService messageService;
 

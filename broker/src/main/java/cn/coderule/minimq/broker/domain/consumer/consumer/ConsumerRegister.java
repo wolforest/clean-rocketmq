@@ -6,7 +6,7 @@ import cn.coderule.minimq.domain.domain.consumer.running.ConsumerGroupInfo;
 import cn.coderule.minimq.domain.core.enums.consume.ConsumerEvent;
 import cn.coderule.minimq.domain.domain.cluster.ClientChannelInfo;
 import cn.coderule.minimq.domain.domain.cluster.heartbeat.SubscriptionData;
-import cn.coderule.minimq.domain.service.broker.listener.ConsumerListener;
+import cn.coderule.minimq.domain.service.broker.consume.ConsumerListener;
 import cn.coderule.minimq.rpc.common.rpc.netty.service.helper.NettyHelper;
 import io.netty.channel.Channel;
 import java.util.ArrayList;

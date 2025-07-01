@@ -12,15 +12,15 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class TransactionChecker extends ServiceThread {
-    private final CheckContext checkContext;
+    private final TransactionContext transactionContext;
     private final TransactionConfig transactionConfig;
     private final QueueTask task;
 
     private final MessageService messageService;
 
-    public TransactionChecker(CheckContext context, QueueTask task) {
+    public TransactionChecker(TransactionContext context, QueueTask task) {
         this.task = task;
-        this.checkContext = context;
+        this.transactionContext = context;
         this.transactionConfig = context.getBrokerConfig().getTransactionConfig();
 
         this.messageService = context.getMessageService();

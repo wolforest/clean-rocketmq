@@ -1,4 +1,4 @@
-package cn.coderule.minimq.domain.service.broker.hook;
+package cn.coderule.minimq.domain.service.broker.consume;
 
 import cn.coderule.minimq.domain.domain.consumer.consume.ConsumeContext;
 
