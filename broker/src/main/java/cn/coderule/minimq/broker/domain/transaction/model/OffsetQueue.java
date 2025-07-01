@@ -45,6 +45,16 @@ public class OffsetQueue implements Serializable {
                 || queue.isEmpty();
     }
 
+    public String poll() {
+        return queue.poll();
+    }
+
+    public int addAndGet(int delta) {
+        int size = totalSize.addAndGet(delta);
+        lastWriteTime = System.currentTimeMillis();
+        return size;
+    }
+
     public boolean offer(String data, long timeout) {
         try {
             boolean result = queue.offer(data, timeout, TimeUnit.MILLISECONDS);

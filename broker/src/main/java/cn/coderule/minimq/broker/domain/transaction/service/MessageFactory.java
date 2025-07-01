@@ -9,6 +9,7 @@ import cn.coderule.minimq.domain.core.constant.MessageConst;
 import cn.coderule.minimq.domain.core.constant.flag.MessageSysFlag;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.utils.MessageUtils;
+import java.nio.charset.StandardCharsets;
 
 public class MessageFactory {
     private final TransactionConfig transactionConfig;
@@ -68,13 +69,54 @@ public class MessageFactory {
     }
 
     public MessageBO createCommitMessage(int queueId, String offset) {
-        String commitTopic = TransactionUtil.buildCommitTopic();
         OffsetQueue offsetQueue = deleteBuffer.getQueue(queueId);
 
         int offsetLength = null == offset ? 0 : offset.length();
-        int bodyLength = calculateBodyLength(offsetLength, offsetQueue);
 
-        return null;
+        int bodyLength = calculateBodyLength(offsetLength, offsetQueue);
+        StringBuilder bodyBuilder = buildBody(bodyLength, offset, offsetQueue);
+        if (bodyBuilder.isEmpty()) {
+            return null;
+        }
+
+        int size = bodyBuilder.length() - offsetLength;
+        offsetQueue.addAndGet(size);
+
+        return buildCommitMessage(bodyBuilder);
+    }
+
+    private MessageBO buildCommitMessage(StringBuilder bodyBuilder) {
+        byte[] body = bodyBuilder.toString().getBytes(StandardCharsets.UTF_8);
+        String commitTopic = TransactionUtil.buildCommitTopic();
+        MessageBO messageBO = MessageBO.builder()
+            .topic(commitTopic)
+            .body(body)
+            .build();
+
+        messageBO.setTags(TransactionUtil.REMOVE_TAG);
+
+        return messageBO;
+    }
+
+    private StringBuilder buildBody(int bodyLength, String offset, OffsetQueue offsetQueue) {
+        StringBuilder sb = new StringBuilder(bodyLength);
+        if (offset != null) {
+            sb.append(offset);
+        }
+
+        int maxLength = transactionConfig.getMaxCommitMessageLength();
+        while (!offsetQueue.isEmpty()) {
+            if (sb.length() >= maxLength) {
+                break;
+            }
+
+            String data = offsetQueue.poll();
+            if (data != null) {
+                sb.append(data);
+            }
+        }
+
+        return sb;
     }
 
     private int calculateBodyLength(int offsetLength, OffsetQueue offsetQueue) {
