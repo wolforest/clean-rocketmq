@@ -20,8 +20,9 @@ public class TransactionConfig implements Serializable {
     private int maxCommitMessageLength = 4096;
     private int batchCommitInterval = 3_000;
 
-    private int maxBatchCheckNumber = 15;
+    private long checkTimeout = 6_000;
     private int checkInterval = 30_000;
+    private int batchCheckNumber = 15;
 
     private int metricsFlushInterval = 3_000;
 }
