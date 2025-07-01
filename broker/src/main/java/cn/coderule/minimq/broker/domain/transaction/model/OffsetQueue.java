@@ -41,7 +41,8 @@ public class OffsetQueue implements Serializable {
     }
 
     public boolean isEmpty() {
-        return queue.isEmpty();
+        return totalSize.get() <= 0
+                || queue.isEmpty();
     }
 
     public boolean offer(String data, long timeout) {
