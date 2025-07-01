@@ -3,6 +3,7 @@ package cn.coderule.minimq.broker.infra.task.strategy;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.minimq.broker.infra.task.TaskContext;
 import cn.coderule.minimq.domain.config.message.MessageConfig;
+import cn.coderule.minimq.domain.config.message.TopicConfig;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.domain.cluster.task.QueueTask;
 import cn.coderule.minimq.domain.domain.cluster.task.StoreTask;
@@ -108,9 +109,9 @@ public class EmbedTaskLoader implements TaskLoader {
     }
 
     private void initReviveTask(StoreTask task) {
-        MessageConfig messageConfig = taskContext.getBrokerConfig().getMessageConfig();
+        TopicConfig topicConfig = taskContext.getBrokerConfig().getTopicConfig();
         List<Integer> reviveQueueList = IntStream
-            .range(0, messageConfig.getReviveQueueNum())
+            .range(0, topicConfig.getReviveQueueNum())
             .boxed()
             .toList();
         Set<Integer> reviveQueueSet = new TreeSet<>(reviveQueueList);
@@ -118,9 +119,9 @@ public class EmbedTaskLoader implements TaskLoader {
     }
 
     private void initTimerTask(StoreTask task) {
-        MessageConfig messageConfig = taskContext.getBrokerConfig().getMessageConfig();
+        TopicConfig topicConfig = taskContext.getBrokerConfig().getTopicConfig();
         List<Integer> timerQueueList = IntStream
-            .range(0, messageConfig.getTimerQueueNum())
+            .range(0, topicConfig.getTimerQueueNum())
             .boxed()
             .toList();
         Set<Integer> timerQueueSet = new TreeSet<>(timerQueueList);
@@ -128,9 +129,9 @@ public class EmbedTaskLoader implements TaskLoader {
     }
 
     private void initTransactionTask(StoreTask task) {
-        MessageConfig messageConfig = taskContext.getBrokerConfig().getMessageConfig();
+        TopicConfig topicConfig = taskContext.getBrokerConfig().getTopicConfig();
         List<Integer> transactionQueueList = IntStream
-            .range(0, messageConfig.getTransactionQueueNum())
+            .range(0, topicConfig.getTransactionQueueNum())
             .boxed()
             .toList();
         Set<Integer> transactionQueueSet = new TreeSet<>(transactionQueueList);

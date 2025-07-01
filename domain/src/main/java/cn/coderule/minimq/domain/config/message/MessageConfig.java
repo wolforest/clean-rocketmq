@@ -47,16 +47,13 @@ public class MessageConfig implements Serializable {
     private int popPollingMapSize = 100000;
     // 20w cost 200M heap memory.
     private long maxPopPollingSize = 100000;
-    private int reviveQueueNum = 8;
+
     private long reviveInterval = 1000;
     private long reviveMaxSlow = 3;
     private long reviveScanTime = 10000;
     private boolean enableSkipLongAwaitingAck = false;
     private long reviveAckWaitMs = TimeUnit.MINUTES.toMillis(3);
     private boolean enablePopLog = false;
-
-    private int timerQueueNum = 1;
-    private int transactionQueueNum = 1;
 
     private boolean enablePopBufferMerge = false;
     private int popCkStayBufferTime = 10 * 1000;
@@ -70,7 +67,5 @@ public class MessageConfig implements Serializable {
     private boolean enableNotifyAfterPopOrderLockRelease = true;
     private boolean initPopOffsetByCheckMsgInMem = true;
 
-    // read message from pop retry topic v1, for the compatibility, will be removed in the future version
-    private boolean retrieveMessageFromPopRetryTopicV1 = true;
-    private boolean enableRetryTopicV2 = false;
+
 }
