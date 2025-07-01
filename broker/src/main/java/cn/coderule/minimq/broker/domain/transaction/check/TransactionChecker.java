@@ -24,6 +24,17 @@ public class TransactionChecker extends ServiceThread {
 
     @Override
     public void run() {
+        log.info("start transaction checking thread");
+        while (!this.isStopped()) {
+            long interval = transactionConfig.getCheckInterval();
+            this.await(interval);
 
+            check();
+        }
+
+        log.info("transaction checking thread end");
+    }
+
+    private void check() {
     }
 }
