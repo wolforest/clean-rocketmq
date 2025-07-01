@@ -18,6 +18,7 @@ package cn.coderule.minimq.broker.domain.transaction.model;
 
 import java.io.Serializable;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import lombok.Data;
 
@@ -41,5 +42,21 @@ public class OffsetQueue implements Serializable {
 
     public boolean isEmpty() {
         return queue.isEmpty();
+    }
+
+    public boolean offer(String data, long timeout) {
+        try {
+            boolean result = queue.offer(data, timeout, TimeUnit.MILLISECONDS);
+            totalSize.addAndGet(data.length());
+
+            return result;
+        } catch (InterruptedException ignore) {
+        }
+
+        return false;
+    }
+
+    public int getTotalSize() {
+        return totalSize.get();
     }
 }
