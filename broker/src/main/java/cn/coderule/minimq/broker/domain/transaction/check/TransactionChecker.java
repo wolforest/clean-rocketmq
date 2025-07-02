@@ -6,6 +6,7 @@ import cn.coderule.minimq.broker.domain.transaction.service.MessageService;
 import cn.coderule.minimq.domain.config.TransactionConfig;
 import cn.coderule.minimq.domain.domain.MessageQueue;
 import cn.coderule.minimq.domain.domain.cluster.task.QueueTask;
+import cn.coderule.minimq.domain.domain.transaction.CheckBuffer;
 import cn.coderule.minimq.domain.domain.transaction.TransactionUtil;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +18,7 @@ public class TransactionChecker extends ServiceThread {
     private final QueueTask task;
 
     private final MessageService messageService;
+    private final CheckBuffer checkBuffer;
 
     public TransactionChecker(TransactionContext context, QueueTask task) {
         this.task = task;
@@ -24,6 +26,7 @@ public class TransactionChecker extends ServiceThread {
         this.transactionConfig = context.getBrokerConfig().getTransactionConfig();
 
         this.messageService = context.getMessageService();
+        this.checkBuffer = new CheckBuffer();
     }
 
     @Override
@@ -67,5 +70,23 @@ public class TransactionChecker extends ServiceThread {
     }
 
     private void checkMessageQueue(MessageQueue queue) {
+
+    }
+
+    private CheckContext buildCheckContext(MessageQueue prepareQueue) {
+        MessageQueue commitQueue = checkBuffer.createCommitQueue(prepareQueue);
+
+        CheckContext checkContext = CheckContext.builder()
+                .transactionContext(transactionContext)
+                .transactionConfig(transactionConfig)
+                .prepareQueue(prepareQueue)
+                .commitQueue(commitQueue)
+                .build();
+
+        return checkContext;
+    }
+
+    private void initCheckOffset(CheckContext checkContext) {
+
     }
 }

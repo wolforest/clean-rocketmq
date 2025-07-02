@@ -8,14 +8,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class CheckContext implements Serializable {
     private TransactionContext transactionContext;
     private TransactionConfig transactionConfig;
-
-    private long startTime = System.currentTimeMillis();
 
     private MessageQueue prepareQueue;
     private MessageQueue commitQueue;
@@ -27,15 +31,23 @@ public class CheckContext implements Serializable {
     private long commitOffset;
     private long commitNextOffset;
 
+    @Builder.Default
+    private long startTime = System.currentTimeMillis();
     // commitOffset list
+    @Builder.Default
     private List<Long> commitOffsetList = new ArrayList<>();
     // prepareOffset -> commitOffset
+    @Builder.Default
     private Map<Long, Long> offsetMap = new HashMap<>();
     // commitOffset -> Set<PrepareOffset>
+    @Builder.Default
     private Map<Long, Set<Long>> commitOffsetMap = new HashMap<>();
 
+    @Builder.Default
     private int invalidMessageCount = 1;
     // count of renewed prepare message
+    @Builder.Default
     private int renewMessageCount = 0;
+    @Builder.Default
     private int rpcFailureCount = 0;
 }
