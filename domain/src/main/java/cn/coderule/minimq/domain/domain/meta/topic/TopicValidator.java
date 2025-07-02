@@ -15,9 +15,15 @@ public class TopicValidator {
 
     /**
      * transaction related topics:
-     * 1, RMQ_SYS_TRANS_HALF_TOPIC: for prepare message
-     * 2, RMQ_SYS_TRANS_OP_HALF_TOPIC: for commit/rollback message
-     * 3, RMQ_SYS_TRANS_CHECK_MAX_TIME_TOPIC: for check max time
+     * 1, RMQ_SYS_TRANS_HALF_TOPIC:
+     *      store prepare message,
+     *      by default, there is only one queue for this topic
+     * 2, RMQ_SYS_TRANS_OP_HALF_TOPIC:
+     *      store commit/rollback message
+     *      by default, there is only one queue for this topic
+     * 3, RMQ_SYS_TRANS_CHECK_MAX_TIME_TOPIC:
+     *      store discard message, which is checked too many times
+     *      by default, there is only one queue for this topic
      */
     public static final String RMQ_SYS_TRANS_HALF_TOPIC = "RMQ_SYS_TRANS_HALF_TOPIC";
     public static final String RMQ_SYS_TRANS_OP_HALF_TOPIC = "RMQ_SYS_TRANS_OP_HALF_TOPIC";

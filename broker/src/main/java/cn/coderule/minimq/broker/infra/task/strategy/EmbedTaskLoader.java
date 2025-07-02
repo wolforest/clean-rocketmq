@@ -2,7 +2,6 @@ package cn.coderule.minimq.broker.infra.task.strategy;
 
 import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.minimq.broker.infra.task.TaskContext;
-import cn.coderule.minimq.domain.config.message.MessageConfig;
 import cn.coderule.minimq.domain.config.message.TopicConfig;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.domain.cluster.task.QueueTask;
@@ -131,7 +130,7 @@ public class EmbedTaskLoader implements TaskLoader {
     private void initTransactionTask(StoreTask task) {
         TopicConfig topicConfig = taskContext.getBrokerConfig().getTopicConfig();
         List<Integer> transactionQueueList = IntStream
-            .range(0, topicConfig.getTransactionQueueNum())
+            .range(0, topicConfig.getPrepareQueueNum())
             .boxed()
             .toList();
         Set<Integer> transactionQueueSet = new TreeSet<>(transactionQueueList);
