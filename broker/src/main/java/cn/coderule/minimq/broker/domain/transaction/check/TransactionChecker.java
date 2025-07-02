@@ -14,6 +14,9 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class TransactionChecker extends ServiceThread {
+    private static final int MAX_CHECK_TIME = 60_000;
+    private static final int MAX_RETRY_TIMES = 10;
+
     private final TransactionContext transactionContext;
     private final TransactionConfig transactionConfig;
     private final QueueTask task;
@@ -93,7 +96,13 @@ public class TransactionChecker extends ServiceThread {
     }
 
     private void checkCommitResult(CheckContext checkContext, DequeueResult commitResult) {
-
+        while (true) {
+            if (checkContext.isTimeout(MAX_CHECK_TIME)) {
+                log.info("check timeout: prepareQueue={}, maxTime={}ms",
+                    checkContext.getPrepareQueue(), MAX_CHECK_TIME);
+                break;
+            }
+        }
     }
 
     private void updateOffset(CheckContext checkContext, DequeueResult commitResult) {

@@ -60,4 +60,9 @@ public class CheckContext implements Serializable {
         this.prepareMessageCount = prepareOffset;
         this.commitNextOffset = commitNextOffset;
     }
+
+    public boolean isTimeout(long maxTime) {
+        long elapsedTime = System.currentTimeMillis() - this.startTime;
+        return elapsedTime > maxTime;
+    }
 }
