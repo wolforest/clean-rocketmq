@@ -1,5 +1,6 @@
-package cn.coderule.minimq.broker.domain.transaction.service;
+package cn.coderule.minimq.broker.domain.transaction.check;
 
+import cn.coderule.minimq.broker.domain.transaction.service.MessageService;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
 import lombok.extern.slf4j.Slf4j;
 
