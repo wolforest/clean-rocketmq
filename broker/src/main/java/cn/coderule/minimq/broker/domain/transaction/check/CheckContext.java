@@ -54,4 +54,10 @@ public class CheckContext implements Serializable {
     public boolean isOffsetValid() {
         return prepareOffset >= 0 && commitOffset >= 0;
     }
+
+    public void initOffset(long commitNextOffset) {
+        this.prepareNextOffset = prepareOffset;
+        this.prepareMessageCount = prepareOffset;
+        this.commitNextOffset = commitNextOffset;
+    }
 }

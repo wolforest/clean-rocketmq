@@ -6,6 +6,7 @@ import cn.coderule.minimq.broker.domain.transaction.service.MessageService;
 import cn.coderule.minimq.domain.config.TransactionConfig;
 import cn.coderule.minimq.domain.domain.MessageQueue;
 import cn.coderule.minimq.domain.domain.cluster.task.QueueTask;
+import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueResult;
 import cn.coderule.minimq.domain.domain.transaction.CheckBuffer;
 import cn.coderule.minimq.domain.domain.transaction.TransactionUtil;
 import java.util.Set;
@@ -19,6 +20,7 @@ public class TransactionChecker extends ServiceThread {
 
     private final MessageService messageService;
     private final CheckBuffer checkBuffer;
+    private final CommitMessageLoader commitMessageLoader;
 
     public TransactionChecker(TransactionContext context, QueueTask task) {
         this.task = task;
@@ -27,6 +29,7 @@ public class TransactionChecker extends ServiceThread {
 
         this.messageService = context.getMessageService();
         this.checkBuffer = new CheckBuffer();
+        this.commitMessageLoader = new CommitMessageLoader(transactionContext);
     }
 
     @Override
@@ -77,7 +80,14 @@ public class TransactionChecker extends ServiceThread {
             return;
         }
 
+        DequeueResult dequeueResult = commitMessageLoader.load(checkContext);
+        if (dequeueResult.isEmpty()) {
+            log.error("no commit message for checking: commitQueue={}, commitOffset={}",
+                checkContext.getCommitQueue(), checkContext.getCommitOffset());
+            return;
+        }
 
+        checkContext.initOffset(dequeueResult.getNextOffset());
     }
 
     private CheckContext buildCheckContext(MessageQueue prepareQueue) {
