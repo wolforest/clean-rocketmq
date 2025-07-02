@@ -50,4 +50,8 @@ public class CheckContext implements Serializable {
     private int renewMessageCount = 0;
     @Builder.Default
     private int rpcFailureCount = 0;
+
+    public boolean isOffsetValid() {
+        return prepareOffset >= 0 && commitOffset >= 0;
+    }
 }

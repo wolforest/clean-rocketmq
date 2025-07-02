@@ -71,6 +71,13 @@ public class TransactionChecker extends ServiceThread {
 
     private void checkMessageQueue(MessageQueue prepareQueue) {
         CheckContext checkContext = buildCheckContext(prepareQueue);
+        if (!checkContext.isOffsetValid()) {
+            log.error("invalid offset for checking: prepareQueue={}, prepareOffset={}, commitOffset={}",
+                prepareQueue, checkContext.getPrepareOffset(), checkContext.getCommitOffset());
+            return;
+        }
+
+
     }
 
     private CheckContext buildCheckContext(MessageQueue prepareQueue) {
