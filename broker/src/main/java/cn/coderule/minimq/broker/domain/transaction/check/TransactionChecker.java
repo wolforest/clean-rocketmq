@@ -80,14 +80,24 @@ public class TransactionChecker extends ServiceThread {
             return;
         }
 
-        DequeueResult dequeueResult = commitMessageLoader.load(checkContext);
-        if (dequeueResult.isEmpty()) {
+        DequeueResult commitResult = commitMessageLoader.load(checkContext);
+        if (commitResult.isEmpty()) {
             log.error("no commit message for checking: commitQueue={}, commitOffset={}",
                 checkContext.getCommitQueue(), checkContext.getCommitOffset());
             return;
         }
 
-        checkContext.initOffset(dequeueResult.getNextOffset());
+        checkContext.initOffset(commitResult.getNextOffset());
+        checkCommitResult(checkContext, commitResult);
+        updateOffset(checkContext, commitResult);
+    }
+
+    private void checkCommitResult(CheckContext checkContext, DequeueResult commitResult) {
+
+    }
+
+    private void updateOffset(CheckContext checkContext, DequeueResult commitResult) {
+
     }
 
     private CheckContext buildCheckContext(MessageQueue prepareQueue) {
