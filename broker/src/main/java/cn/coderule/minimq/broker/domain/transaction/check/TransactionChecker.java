@@ -69,8 +69,8 @@ public class TransactionChecker extends ServiceThread {
         }
     }
 
-    private void checkMessageQueue(MessageQueue queue) {
-
+    private void checkMessageQueue(MessageQueue prepareQueue) {
+        CheckContext checkContext = buildCheckContext(prepareQueue);
     }
 
     private CheckContext buildCheckContext(MessageQueue prepareQueue) {
@@ -83,10 +83,18 @@ public class TransactionChecker extends ServiceThread {
                 .commitQueue(commitQueue)
                 .build();
 
+        initCheckOffset(checkContext);
+
         return checkContext;
     }
 
     private void initCheckOffset(CheckContext checkContext) {
+        MessageQueue prepareQueue = checkContext.getPrepareQueue();
+        long prepareOffset = messageService.getConsumeOffset(prepareQueue);
+        checkContext.setPrepareOffset(prepareOffset);
 
+        MessageQueue commitQueue = checkContext.getCommitQueue();
+        long commitOffset = messageService.getConsumeOffset(commitQueue);
+        checkContext.setCommitOffset(commitOffset);
     }
 }
