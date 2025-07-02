@@ -1,5 +1,6 @@
 package cn.coderule.minimq.broker.domain.transaction.check;
 
+import cn.coderule.minimq.domain.config.TransactionConfig;
 import cn.coderule.minimq.domain.domain.MessageQueue;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -11,6 +12,9 @@ import lombok.Data;
 
 @Data
 public class CheckContext implements Serializable {
+    private TransactionContext transactionContext;
+    private TransactionConfig transactionConfig;
+
     private long startTime = System.currentTimeMillis();
 
     private MessageQueue prepareQueue;

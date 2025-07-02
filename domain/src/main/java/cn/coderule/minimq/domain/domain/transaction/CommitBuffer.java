@@ -3,12 +3,12 @@ package cn.coderule.minimq.domain.domain.transaction;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-public class DeleteBuffer {
+public class CommitBuffer {
     private static final int DEFAULT_QUEUE_LENGTH = 20_000;
 
     private final ConcurrentMap<Integer, OffsetQueue> queueMap;
 
-    public DeleteBuffer() {
+    public CommitBuffer() {
         this.queueMap = new ConcurrentHashMap<>();
     }
 

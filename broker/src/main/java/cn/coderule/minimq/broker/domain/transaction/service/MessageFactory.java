@@ -2,7 +2,7 @@ package cn.coderule.minimq.broker.domain.transaction.service;
 
 import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.minimq.domain.domain.transaction.TransactionUtil;
-import cn.coderule.minimq.domain.domain.transaction.DeleteBuffer;
+import cn.coderule.minimq.domain.domain.transaction.CommitBuffer;
 import cn.coderule.minimq.domain.domain.transaction.OffsetQueue;
 import cn.coderule.minimq.domain.config.TransactionConfig;
 import cn.coderule.minimq.domain.core.constant.MessageConst;
@@ -13,11 +13,11 @@ import java.nio.charset.StandardCharsets;
 
 public class MessageFactory {
     private final TransactionConfig transactionConfig;
-    private final DeleteBuffer deleteBuffer;
+    private final CommitBuffer commitBuffer;
 
-    public MessageFactory(TransactionConfig transactionConfig, DeleteBuffer deleteBuffer) {
+    public MessageFactory(TransactionConfig transactionConfig, CommitBuffer commitBuffer) {
         this.transactionConfig = transactionConfig;
-        this.deleteBuffer = deleteBuffer;
+        this.commitBuffer = commitBuffer;
     }
 
 
@@ -69,7 +69,7 @@ public class MessageFactory {
     }
 
     public MessageBO createCommitMessage(int queueId, String offset) {
-        OffsetQueue offsetQueue = deleteBuffer.getQueue(queueId);
+        OffsetQueue offsetQueue = commitBuffer.getQueue(queueId);
 
         int offsetLength = null == offset ? 0 : offset.length();
 
