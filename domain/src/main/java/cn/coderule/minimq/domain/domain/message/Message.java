@@ -14,11 +14,11 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Message implements Serializable {
-    private String topic;
-    private int flag;
-    private Map<String, String> properties;
-    private byte[] body;
-    private String transactionId;
+    protected String topic;
+    protected int flag;
+    protected Map<String, String> properties;
+    protected byte[] body;
+    protected String transactionId;
 
 
     public String getStringBody() {

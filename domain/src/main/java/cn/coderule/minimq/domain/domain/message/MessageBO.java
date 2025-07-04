@@ -61,6 +61,14 @@ public class MessageBO extends Message implements Serializable {
 
     private MessageVersion version = MessageVersion.V1;
 
+    public String getBodyString() {
+        if (body == null) {
+            return "";
+        }
+
+        return new String(body);
+    }
+
     public boolean isValid() {
         return MessageStatus.FOUND.equals(status);
     }
