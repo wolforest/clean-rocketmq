@@ -6,6 +6,7 @@ import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.minimq.broker.domain.transaction.check.context.CheckContext;
 import cn.coderule.minimq.broker.domain.transaction.check.context.TransactionContext;
 import cn.coderule.minimq.broker.domain.transaction.check.loader.CommitMessageLoader;
+import cn.coderule.minimq.broker.domain.transaction.check.loader.PrepareMessageLoader;
 import cn.coderule.minimq.broker.domain.transaction.service.MessageService;
 import cn.coderule.minimq.domain.config.TransactionConfig;
 import cn.coderule.minimq.domain.domain.MessageQueue;
@@ -30,6 +31,7 @@ public class TransactionChecker extends ServiceThread {
     private final MessageService messageService;
     private final CheckBuffer checkBuffer;
     private final CommitMessageLoader commitMessageLoader;
+    private final PrepareMessageLoader prepareMessageLoader;
 
     public TransactionChecker(TransactionContext context, QueueTask task) {
         this.task = task;
@@ -39,6 +41,7 @@ public class TransactionChecker extends ServiceThread {
         this.messageService = context.getMessageService();
         this.checkBuffer = new CheckBuffer();
         this.commitMessageLoader = new CommitMessageLoader(transactionContext);
+        this.prepareMessageLoader = new PrepareMessageLoader(transactionContext);
     }
 
     @Override
@@ -96,7 +99,7 @@ public class TransactionChecker extends ServiceThread {
         }
 
         checkContext.initOffset(commitResult.getNextOffset());
-        checkCommitResult(checkContext, commitResult);
+        checkMessage(checkContext);
         updateOffset(checkContext, commitResult);
     }
 
@@ -200,11 +203,11 @@ public class TransactionChecker extends ServiceThread {
         context.removePrepareOffset(context.getPrepareCounter());
     }
 
-    private boolean checkMessage(CheckContext check) {
+    private boolean loadAndCheckPrepareMessage(CheckContext check) {
         return true;
     }
 
-    private void checkCommitResult(CheckContext context, DequeueResult result) {
+    private void checkMessage(CheckContext context) {
         while (true) {
             if (context.isTimeout(MAX_CHECK_TIME)) {
                 log.info("check timeout: prepareQueue={}, maxTime={}ms",
@@ -214,7 +217,7 @@ public class TransactionChecker extends ServiceThread {
 
             if (context.containsPrepareOffset(context.getPrepareCounter())) {
                 removeMessage(context);
-            } else if (!checkMessage(context)) {
+            } else if (!loadAndCheckPrepareMessage(context)) {
                 break;
             }
 
