@@ -36,6 +36,15 @@ public class DequeueResult implements Serializable {
             : messageList.get(0);
     }
 
+    public boolean isOffsetIllegal() {
+        return MessageStatus.OFFSET_FOUND_NULL.equals(status)
+            || MessageStatus.OFFSET_OVERFLOW_BADLY.equals(status)
+            || MessageStatus.OFFSET_OVERFLOW_ONE.equals(status)
+            || MessageStatus.OFFSET_TOO_SMALL.equals(status)
+            || MessageStatus.OFFSET_RESET.equals(status)
+            ;
+    }
+
     public void addMessage(@NonNull MessageBO messageBO) {
         status = messageBO.getStatus();
         messageList.add(messageBO);
