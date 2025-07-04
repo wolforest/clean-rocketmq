@@ -80,4 +80,8 @@ public class CheckContext implements Serializable {
     public void putOffsetMap(long commitOffset, Set<Long> prepareOffsetMap) {
         this.commitOffsetMap.put(commitOffset, prepareOffsetMap);
     }
+
+    public void linkOffset(long commitOffset, long prepareOffset) {
+        this.offsetMap.put(prepareOffset, commitOffset);
+    }
 }

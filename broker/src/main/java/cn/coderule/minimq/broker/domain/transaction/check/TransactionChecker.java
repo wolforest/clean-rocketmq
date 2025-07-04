@@ -2,6 +2,7 @@ package cn.coderule.minimq.broker.domain.transaction.check;
 
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
+import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.minimq.broker.domain.transaction.check.context.CheckContext;
 import cn.coderule.minimq.broker.domain.transaction.check.context.TransactionContext;
 import cn.coderule.minimq.broker.domain.transaction.check.loader.CommitMessageLoader;
@@ -134,8 +135,33 @@ public class TransactionChecker extends ServiceThread {
         }
     }
 
-    private Set<Long> getCommitOffset(CheckContext context, MessageBO messageBO) {
+    private Set<Long> getCommitOffset(CheckContext context, MessageBO message) {
+        String body = message.getBodyString();
         Set<Long> set = new HashSet<>();
+        log.debug("parse commitMessage: topic={}, tags={}, commitOffset={}, prepareOffsets={}",
+            message.getTopic(), message.getTags(), message.getQueueOffset(), body);
+
+        if (StringUtil.isBlank(body)) {
+            log.error("commitMessage body is null, message={}", message);
+            return set;
+        }
+
+        if (!TransactionUtil.REMOVE_TAG.equals(message.getTags())) {
+            log.error("commit message tag is not remove tag, message={}", message);
+            return set;
+        }
+
+        String[] arr = body.split(TransactionUtil.OFFSET_SEPARATOR);
+        for (String offsetString : arr) {
+            Long offset = StringUtil.getLong(offsetString, -1);
+            if (offset < context.getPrepareOffset()) {
+                continue;
+            }
+
+            context.linkOffset(message.getQueueOffset(), offset);
+            set.add(offset);
+        }
+
 
         return set;
     }
