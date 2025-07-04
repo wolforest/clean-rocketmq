@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class CommitMessageLoader {
+    private static final int DEFAULT_PULL_NUM = 32;
     private MessageService messageService;
     private TransactionContext transactionContext;
 
@@ -17,6 +18,10 @@ public class CommitMessageLoader {
     }
 
     public DequeueResult load(CheckContext checkContext) {
+        return load(checkContext, DEFAULT_PULL_NUM);
+    }
+
+    public DequeueResult load(CheckContext checkContext, int num) {
         return DequeueResult.notFound();
     }
 }
