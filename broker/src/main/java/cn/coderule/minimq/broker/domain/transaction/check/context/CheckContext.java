@@ -93,4 +93,24 @@ public class CheckContext implements Serializable {
     public boolean containsPrepareOffset(long prepareOffset) {
         return this.offsetMap.containsKey(prepareOffset);
     }
+
+    public void removePrepareOffset(long prepareOffset) {
+        Long commitOffset = this.offsetMap.remove(prepareOffset);
+        if (commitOffset == null) {
+            return;
+        }
+
+        Set<Long> prepareOffsetSet = this.commitOffsetMap.get(commitOffset);
+        if (null == prepareOffsetSet) {
+            return;
+        }
+
+        prepareOffsetSet.remove(prepareOffset);
+        if (!prepareOffsetSet.isEmpty()) {
+            return;
+        }
+
+        this.commitOffsetMap.remove(commitOffset);
+        this.committedOffsetList.add(commitOffset);
+    }
 }
