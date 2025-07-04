@@ -7,6 +7,7 @@ import cn.coderule.minimq.broker.domain.transaction.check.context.TransactionCon
 import cn.coderule.minimq.broker.domain.transaction.check.loader.CommitMessageLoader;
 import cn.coderule.minimq.broker.domain.transaction.service.MessageService;
 import cn.coderule.minimq.domain.config.TransactionConfig;
+import cn.coderule.minimq.domain.core.enums.message.MessageStatus;
 import cn.coderule.minimq.domain.domain.MessageQueue;
 import cn.coderule.minimq.domain.domain.cluster.task.QueueTask;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueResult;
@@ -98,9 +99,7 @@ public class TransactionChecker extends ServiceThread {
 
     private DequeueResult loadCommitMessage(CheckContext checkContext) {
         DequeueResult commitResult = commitMessageLoader.load(checkContext);
-        if (commitResult.isEmpty()) {
-            log.error("no commit message for checking: commitQueue={}, commitOffset={}",
-                checkContext.getCommitQueue(), checkContext.getCommitOffset());
+        if (validateCommitResult(checkContext, commitResult)) {
             return commitResult;
         }
 
@@ -108,6 +107,21 @@ public class TransactionChecker extends ServiceThread {
 
 
         return commitResult;
+    }
+
+    private boolean validateCommitResult(CheckContext context, DequeueResult result) {
+        if (null == result) {
+            log.error("illegal result, commitResult can't be null");
+            return false;
+        }
+
+        if (result.isEmpty()) {
+            log.error("no commit message for checking: commitQueue={}, commitOffset={}",
+                context.getCommitQueue(), context.getCommitOffset());
+            return false;
+        }
+
+        return true;
     }
 
     private void checkCommitResult(CheckContext checkContext, DequeueResult commitResult) {
