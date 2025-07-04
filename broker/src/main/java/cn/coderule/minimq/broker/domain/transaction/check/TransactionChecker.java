@@ -7,7 +7,6 @@ import cn.coderule.minimq.broker.domain.transaction.check.context.TransactionCon
 import cn.coderule.minimq.broker.domain.transaction.check.loader.CommitMessageLoader;
 import cn.coderule.minimq.broker.domain.transaction.service.MessageService;
 import cn.coderule.minimq.domain.config.TransactionConfig;
-import cn.coderule.minimq.domain.core.enums.message.MessageStatus;
 import cn.coderule.minimq.domain.domain.MessageQueue;
 import cn.coderule.minimq.domain.domain.cluster.task.QueueTask;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueResult;
@@ -115,7 +114,7 @@ public class TransactionChecker extends ServiceThread {
         log.error("body of commitMessage is null, queueId={}, offset={}",
             message.getQueueId(), message.getQueueOffset());
 
-        context.addCommitOffset(message.getQueueOffset());
+        context.addCommittedOffset(message.getQueueOffset());
     }
 
     private void formatCommitResult(CheckContext context, DequeueResult result) {
@@ -126,12 +125,12 @@ public class TransactionChecker extends ServiceThread {
             }
 
             Set<Long> prepareOffsetSet = getCommitOffset(context, message);
-
-            if (!prepareOffsetSet.isEmpty()) {
-                context.putOffsetMap(message.getQueueOffset(), prepareOffsetSet);
-            } else {
-                context.addCommitOffset(message.getQueueOffset());
+            if (prepareOffsetSet.isEmpty()) {
+                context.addCommittedOffset(message.getQueueOffset());
+                continue;
             }
+
+            context.putOffsetMap(message.getQueueOffset(), prepareOffsetSet);
         }
     }
 

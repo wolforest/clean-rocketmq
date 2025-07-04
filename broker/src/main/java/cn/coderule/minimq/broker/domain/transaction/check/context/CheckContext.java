@@ -36,14 +36,17 @@ public class CheckContext implements Serializable {
     /**
      * committed offset list
      * - if the body of message is null
-     * - if
+     * - if the body contains no prepare offset
      */
     @Builder.Default
-    private List<Long> commitOffsetList = new ArrayList<>();
+    private List<Long> committedOffsetList = new ArrayList<>();
     // prepareOffset -> commitOffset
     @Builder.Default
     private Map<Long, Long> offsetMap = new HashMap<>();
-    // commitOffset -> Set<PrepareOffset>
+    /**
+     * prepare offset map, waiting for check
+     * commitOffset -> Set<PrepareOffset>
+     */
     @Builder.Default
     private Map<Long, Set<Long>> commitOffsetMap = new HashMap<>();
 
@@ -70,8 +73,8 @@ public class CheckContext implements Serializable {
         return elapsedTime > maxTime;
     }
 
-    public void addCommitOffset(long offset) {
-        this.commitOffsetList.add(offset);
+    public void addCommittedOffset(long offset) {
+        this.committedOffsetList.add(offset);
     }
 
     public void putOffsetMap(long commitOffset, Set<Long> prepareOffsetMap) {
