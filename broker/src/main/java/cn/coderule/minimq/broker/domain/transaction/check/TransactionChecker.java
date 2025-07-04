@@ -135,19 +135,28 @@ public class TransactionChecker extends ServiceThread {
         }
     }
 
-    private Set<Long> getCommitOffset(CheckContext context, MessageBO message) {
-        String body = message.getBodyString();
-        Set<Long> set = new HashSet<>();
+    private boolean validateCommitBody(MessageBO message, String body) {
         log.debug("parse commitMessage: topic={}, tags={}, commitOffset={}, prepareOffsets={}",
             message.getTopic(), message.getTags(), message.getQueueOffset(), body);
 
         if (StringUtil.isBlank(body)) {
             log.error("commitMessage body is null, message={}", message);
-            return set;
+            return false;
         }
 
         if (!TransactionUtil.REMOVE_TAG.equals(message.getTags())) {
             log.error("commit message tag is not remove tag, message={}", message);
+            return false;
+        }
+
+        return true;
+
+    }
+
+    private Set<Long> getCommitOffset(CheckContext context, MessageBO message) {
+        String body = message.getBodyString();
+        Set<Long> set = new HashSet<>();
+        if (!validateCommitBody(message, body)) {
             return set;
         }
 
@@ -161,7 +170,6 @@ public class TransactionChecker extends ServiceThread {
             context.linkOffset(message.getQueueOffset(), offset);
             set.add(offset);
         }
-
 
         return set;
     }
