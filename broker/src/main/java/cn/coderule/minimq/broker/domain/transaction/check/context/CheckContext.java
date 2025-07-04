@@ -26,7 +26,7 @@ public class CheckContext implements Serializable {
 
     private long prepareOffset;
     private long prepareNextOffset;
-    private long prepareMessageCount;
+    private long prepareCounter;
 
     private long commitOffset;
     private long commitNextOffset;
@@ -62,9 +62,14 @@ public class CheckContext implements Serializable {
         return prepareOffset >= 0 && commitOffset >= 0;
     }
 
+    public void increasePrepareCounter() {
+        this.prepareCounter++;
+        this.prepareNextOffset = prepareCounter;
+    }
+
     public void initOffset(long commitNextOffset) {
         this.prepareNextOffset = prepareOffset;
-        this.prepareMessageCount = prepareOffset;
+        this.prepareCounter = prepareOffset;
         this.commitNextOffset = commitNextOffset;
     }
 
@@ -83,5 +88,9 @@ public class CheckContext implements Serializable {
 
     public void linkOffset(long commitOffset, long prepareOffset) {
         this.offsetMap.put(prepareOffset, commitOffset);
+    }
+
+    public boolean containsPrepareOffset(long prepareOffset) {
+        return this.offsetMap.containsKey(prepareOffset);
     }
 }

@@ -195,13 +195,29 @@ public class TransactionChecker extends ServiceThread {
         return true;
     }
 
-    private void checkCommitResult(CheckContext checkContext, DequeueResult commitResult) {
+    private void removeMessage(CheckContext context) {
+
+    }
+
+    private boolean checkMessage(CheckContext check) {
+        return true;
+    }
+
+    private void checkCommitResult(CheckContext context, DequeueResult result) {
         while (true) {
-            if (checkContext.isTimeout(MAX_CHECK_TIME)) {
+            if (context.isTimeout(MAX_CHECK_TIME)) {
                 log.info("check timeout: prepareQueue={}, maxTime={}ms",
-                    checkContext.getPrepareQueue(), MAX_CHECK_TIME);
+                    context.getPrepareQueue(), MAX_CHECK_TIME);
                 break;
             }
+
+            if (context.containsPrepareOffset(context.getPrepareCounter())) {
+                removeMessage(context);
+            } else if (!checkMessage(context)) {
+                break;
+            }
+
+            context.increasePrepareCounter();
         }
     }
 
