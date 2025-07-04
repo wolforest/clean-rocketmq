@@ -14,6 +14,7 @@ import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueResult;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.domain.transaction.CheckBuffer;
 import cn.coderule.minimq.domain.domain.transaction.TransactionUtil;
+import java.util.HashSet;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 
@@ -110,8 +111,34 @@ public class TransactionChecker extends ServiceThread {
         return commitResult;
     }
 
-    private void formatCommitResult(CheckContext context, DequeueResult result) {
+    private void handleEmptyMessage(CheckContext context, MessageBO message) {
+        log.error("body of commitMessage is null, queueId={}, offset={}",
+            message.getQueueId(), message.getQueueOffset());
 
+        context.addCommitOffset(message.getQueueOffset());
+    }
+
+    private void formatCommitResult(CheckContext context, DequeueResult result) {
+        for (MessageBO message : result.getMessageList()) {
+            if (null == message.getBody()) {
+                handleEmptyMessage(context, message);
+                continue;
+            }
+
+            Set<Long> prepareOffsetSet = getCommitOffset(context, message);
+
+            if (!prepareOffsetSet.isEmpty()) {
+                context.putOffsetMap(message.getQueueOffset(), prepareOffsetSet);
+            } else {
+                context.addCommitOffset(message.getQueueOffset());
+            }
+        }
+    }
+
+    private Set<Long> getCommitOffset(CheckContext context, MessageBO messageBO) {
+        Set<Long> set = new HashSet<>();
+
+        return set;
     }
 
     private boolean validateCommitResult(CheckContext context, DequeueResult result) {

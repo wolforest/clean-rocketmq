@@ -33,7 +33,11 @@ public class CheckContext implements Serializable {
 
     @Builder.Default
     private long startTime = System.currentTimeMillis();
-    // commitOffset list
+    /**
+     * committed offset list
+     * - if the body of message is null
+     * - if
+     */
     @Builder.Default
     private List<Long> commitOffsetList = new ArrayList<>();
     // prepareOffset -> commitOffset
@@ -64,5 +68,13 @@ public class CheckContext implements Serializable {
     public boolean isTimeout(long maxTime) {
         long elapsedTime = System.currentTimeMillis() - this.startTime;
         return elapsedTime > maxTime;
+    }
+
+    public void addCommitOffset(long offset) {
+        this.commitOffsetList.add(offset);
+    }
+
+    public void putOffsetMap(long commitOffset, Set<Long> prepareOffsetMap) {
+        this.commitOffsetMap.put(commitOffset, prepareOffsetMap);
     }
 }
