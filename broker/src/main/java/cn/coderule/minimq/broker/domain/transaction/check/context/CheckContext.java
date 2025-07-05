@@ -51,7 +51,7 @@ public class CheckContext implements Serializable {
     private Map<Long, Set<Long>> commitOffsetMap = new HashMap<>();
 
     @Builder.Default
-    private int invalidMessageCount = 1;
+    private int invalidPrepareMessageCount = 1;
     // count of renewed prepare message
     @Builder.Default
     private int renewMessageCount = 0;
@@ -60,6 +60,15 @@ public class CheckContext implements Serializable {
 
     public boolean isOffsetValid() {
         return prepareOffset >= 0 && commitOffset >= 0;
+    }
+
+    public void increaseInvalidPrepareMessageCount() {
+        this.invalidPrepareMessageCount++;
+    }
+
+    public void setPrepareCounter(long counter) {
+        this.prepareCounter = counter;
+        this.prepareNextOffset = counter;
     }
 
     public void increasePrepareCounter() {

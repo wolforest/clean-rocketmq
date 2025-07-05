@@ -22,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class TransactionChecker extends ServiceThread {
     private static final int MAX_CHECK_TIME = 60_000;
+    private static final int MAX_INVALID_PREPARE_MESSAGE_NUM = 1;
     private static final int MAX_RETRY_TIMES = 10;
 
     private final TransactionContext transactionContext;
@@ -114,7 +115,7 @@ public class TransactionChecker extends ServiceThread {
         return commitResult;
     }
 
-    private void handleEmptyMessage(CheckContext context, MessageBO message) {
+    private void handleEmptyCommitMessage(CheckContext context, MessageBO message) {
         log.error("body of commitMessage is null, queueId={}, offset={}",
             message.getQueueId(), message.getQueueOffset());
 
@@ -124,7 +125,7 @@ public class TransactionChecker extends ServiceThread {
     private void formatCommitResult(CheckContext context, DequeueResult result) {
         for (MessageBO message : result.getMessageList()) {
             if (null == message.getBody()) {
-                handleEmptyMessage(context, message);
+                handleEmptyCommitMessage(context, message);
                 continue;
             }
 
@@ -204,6 +205,34 @@ public class TransactionChecker extends ServiceThread {
     }
 
     private boolean loadAndCheckPrepareMessage(CheckContext check) {
+        DequeueResult prepareResult = prepareMessageLoader.load(check);
+        if (prepareResult.isEmpty()) {
+            return handleEmptyPrepareMessage(check, prepareResult);
+        }
+
+        return true;
+    }
+
+    private boolean handleEmptyPrepareMessage(CheckContext context, DequeueResult result) {
+        context.increaseInvalidPrepareMessageCount();
+
+        if (context.getInvalidPrepareMessageCount() > MAX_INVALID_PREPARE_MESSAGE_NUM) {
+            return false;
+        }
+
+        if (!result.hasNewMessage()) {
+            log.debug("No new prepare message, context={}", context);
+            return false;
+        }
+
+        log.info("illegal prepare message offset,"
+                + " offset={}, queue={}, illegalCount={}, result={}",
+                context.getPrepareCounter(),
+                context.getPrepareQueue(),
+                context.getInvalidPrepareMessageCount(),
+                result
+        );
+        context.setPrepareCounter(result.getNextOffset());
         return true;
     }
 
