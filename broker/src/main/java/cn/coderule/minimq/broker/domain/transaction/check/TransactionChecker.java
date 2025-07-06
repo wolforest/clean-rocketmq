@@ -251,6 +251,17 @@ public class TransactionChecker extends ServiceThread {
         return true;
     }
 
+    private boolean checkImmunityTime(CheckContext context, DequeueResult result) {
+        return false;
+    }
+
+    private boolean needCheck(CheckContext context, DequeueResult result) {
+        return false;
+    }
+
+    private void pullMoreCommitMessage(CheckContext context) {
+    }
+
     private boolean loadAndCheckPrepareMessage(CheckContext context) {
         DequeueResult result = prepareMessageLoader.load(context);
         if (result.isEmpty()) {
@@ -264,6 +275,11 @@ public class TransactionChecker extends ServiceThread {
 
         if (isBornBeforeCheck(context, result)) {
             return false;
+        }
+
+        if (!needCheck(context, result)) {
+            pullMoreCommitMessage(context);
+            return true;
         }
 
         return true;
