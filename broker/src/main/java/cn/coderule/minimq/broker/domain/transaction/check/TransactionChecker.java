@@ -262,6 +262,10 @@ public class TransactionChecker extends ServiceThread {
     private void pullMoreCommitMessage(CheckContext context) {
     }
 
+    private boolean renewPrepareMessage(CheckContext context, DequeueResult result) {
+        return false;
+    }
+
     private boolean loadAndCheckPrepareMessage(CheckContext context) {
         DequeueResult result = prepareMessageLoader.load(context);
         if (result.isEmpty()) {
@@ -279,6 +283,10 @@ public class TransactionChecker extends ServiceThread {
 
         if (!needCheck(context, result)) {
             pullMoreCommitMessage(context);
+            return true;
+        }
+
+        if (!renewPrepareMessage(context, result)) {
             return true;
         }
 
