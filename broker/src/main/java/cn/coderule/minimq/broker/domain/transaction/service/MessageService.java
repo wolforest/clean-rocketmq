@@ -5,8 +5,11 @@ import cn.coderule.minimq.domain.domain.MessageQueue;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueResult;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
+import java.util.HashSet;
 import java.util.Set;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class MessageService {
     private final BrokerConfig brokerConfig;
 
@@ -26,7 +29,14 @@ public class MessageService {
     }
 
     public Set<MessageQueue> getMessageQueues(String storeGroup, String topic) {
-        return null;
+        Set<MessageQueue> result = new HashSet<>();
+
+        if (!result.isEmpty()) {
+            return result;
+        }
+
+        log.warn("no prepare message queue: storeGroup={}, topic={}", storeGroup, topic);
+        return result;
     }
 
     public DequeueResult getPrepareMessage(String storeGroup, int queueId, long offset, int num) {

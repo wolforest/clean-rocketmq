@@ -12,7 +12,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Data
 @Builder
 @NoArgsConstructor
@@ -59,7 +61,15 @@ public class CheckContext implements Serializable {
     private int rpcFailureCount = 0;
 
     public boolean isOffsetValid() {
-        return prepareOffset >= 0 && commitOffset >= 0;
+        boolean status = prepareOffset >= 0 && commitOffset >= 0;
+        if (!status) {
+            return false;
+        }
+
+        log.error("invalid offset for checking: prepareQueue={}, prepareOffset={}, commitOffset={}",
+            prepareQueue, prepareOffset, commitOffset);
+
+        return true;
     }
 
     public void increaseInvalidPrepareMessageCount() {
