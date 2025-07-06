@@ -26,9 +26,9 @@ public class CheckContext implements Serializable {
     private MessageQueue prepareQueue;
     private MessageQueue commitQueue;
 
+    private long prepareStartOffset;
     private long prepareOffset;
     private long prepareNextOffset;
-    private long prepareCounter;
 
     private long commitOffset;
     private long commitNextOffset;
@@ -61,13 +61,13 @@ public class CheckContext implements Serializable {
     private int rpcFailureCount = 0;
 
     public boolean isOffsetValid() {
-        boolean status = prepareOffset >= 0 && commitOffset >= 0;
+        boolean status = prepareStartOffset >= 0 && commitOffset >= 0;
         if (!status) {
             return false;
         }
 
         log.error("invalid offset for checking: prepareQueue={}, prepareOffset={}, commitOffset={}",
-            prepareQueue, prepareOffset, commitOffset);
+            prepareQueue, prepareStartOffset, commitOffset);
 
         return true;
     }
@@ -76,19 +76,19 @@ public class CheckContext implements Serializable {
         this.invalidPrepareMessageCount++;
     }
 
-    public void setPrepareCounter(long counter) {
-        this.prepareCounter = counter;
+    public void setPrepareOffset(long counter) {
+        this.prepareOffset = counter;
         this.prepareNextOffset = counter;
     }
 
     public void increasePrepareCounter() {
-        this.prepareCounter++;
-        this.prepareNextOffset = prepareCounter;
+        this.prepareOffset++;
+        this.prepareNextOffset = prepareOffset;
     }
 
     public void initOffset(long commitNextOffset) {
-        this.prepareNextOffset = prepareOffset;
-        this.prepareCounter = prepareOffset;
+        this.prepareNextOffset = prepareStartOffset;
+        this.prepareOffset = prepareStartOffset;
         this.commitNextOffset = commitNextOffset;
     }
 

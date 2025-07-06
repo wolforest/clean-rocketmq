@@ -164,7 +164,7 @@ public class TransactionChecker extends ServiceThread {
         String[] arr = body.split(TransactionUtil.OFFSET_SEPARATOR);
         for (String offsetString : arr) {
             Long offset = StringUtil.getLong(offsetString, -1);
-            if (offset < context.getPrepareOffset()) {
+            if (offset < context.getPrepareStartOffset()) {
                 continue;
             }
 
@@ -197,8 +197,8 @@ public class TransactionChecker extends ServiceThread {
     }
 
     private void removePrepareOffset(CheckContext context) {
-        log.debug("prepare offset has been committed/rollback: {}", context.getPrepareCounter());
-        context.removePrepareOffset(context.getPrepareCounter());
+        log.debug("prepare offset has been committed/rollback: {}", context.getPrepareOffset());
+        context.removePrepareOffset(context.getPrepareOffset());
     }
 
     private boolean handleEmptyPrepareMessage(CheckContext context, DequeueResult result) {
@@ -215,12 +215,12 @@ public class TransactionChecker extends ServiceThread {
 
         log.info("illegal prepare message offset,"
                 + " offset={}, queue={}, illegalCount={}, result={}",
-            context.getPrepareCounter(),
+            context.getPrepareOffset(),
             context.getPrepareQueue(),
             context.getInvalidPrepareMessageCount(),
             result
         );
-        context.setPrepareCounter(result.getNextOffset());
+        context.setPrepareOffset(result.getNextOffset());
         return true;
     }
 
@@ -241,7 +241,7 @@ public class TransactionChecker extends ServiceThread {
         }
 
         log.debug("Fresh prepare message, check it later. offset={}, msgStoreTime={}",
-            context.getPrepareCounter(), DateUtil.asLocalDateTime(message.getBornTimestamp()));
+            context.getPrepareOffset(), DateUtil.asLocalDateTime(message.getBornTimestamp()));
 
         return true;
     }
@@ -319,7 +319,7 @@ public class TransactionChecker extends ServiceThread {
                 break;
             }
 
-            if (context.containsPrepareOffset(context.getPrepareCounter())) {
+            if (context.containsPrepareOffset(context.getPrepareOffset())) {
                 removePrepareOffset(context);
                 context.increasePrepareCounter();
                 continue;
@@ -353,7 +353,7 @@ public class TransactionChecker extends ServiceThread {
     private void initCheckOffset(CheckContext checkContext) {
         MessageQueue prepareQueue = checkContext.getPrepareQueue();
         long prepareOffset = messageService.getConsumeOffset(prepareQueue);
-        checkContext.setPrepareOffset(prepareOffset);
+        checkContext.setPrepareStartOffset(prepareOffset);
 
         MessageQueue commitQueue = checkContext.getCommitQueue();
         long commitOffset = messageService.getConsumeOffset(commitQueue);
