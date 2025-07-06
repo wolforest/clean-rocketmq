@@ -266,6 +266,9 @@ public class TransactionChecker extends ServiceThread {
         return false;
     }
 
+    private void increasePrepareCounter(CheckContext context) {
+    }
+
     private boolean loadAndCheckPrepareMessage(CheckContext context) {
         DequeueResult result = prepareMessageLoader.load(context);
         if (result.isEmpty()) {
@@ -290,6 +293,7 @@ public class TransactionChecker extends ServiceThread {
             return true;
         }
 
+        increasePrepareCounter(context);
         return true;
     }
 
