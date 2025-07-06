@@ -3,6 +3,7 @@ package cn.coderule.minimq.broker.domain.transaction.check;
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.common.util.lang.string.StringUtil;
+import cn.coderule.common.util.lang.time.DateUtil;
 import cn.coderule.minimq.broker.domain.transaction.check.context.CheckContext;
 import cn.coderule.minimq.broker.domain.transaction.check.context.TransactionContext;
 import cn.coderule.minimq.broker.domain.transaction.check.loader.CommitMessageLoader;
@@ -17,6 +18,7 @@ import cn.coderule.minimq.domain.domain.transaction.CheckBuffer;
 import cn.coderule.minimq.domain.domain.transaction.TransactionUtil;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -204,15 +206,6 @@ public class TransactionChecker extends ServiceThread {
         context.removePrepareOffset(context.getPrepareCounter());
     }
 
-    private boolean loadAndCheckPrepareMessage(CheckContext check) {
-        DequeueResult prepareResult = prepareMessageLoader.load(check);
-        if (prepareResult.isEmpty()) {
-            return handleEmptyPrepareMessage(check, prepareResult);
-        }
-
-        return true;
-    }
-
     private boolean handleEmptyPrepareMessage(CheckContext context, DequeueResult result) {
         context.increaseInvalidPrepareMessageCount();
 
@@ -227,14 +220,56 @@ public class TransactionChecker extends ServiceThread {
 
         log.info("illegal prepare message offset,"
                 + " offset={}, queue={}, illegalCount={}, result={}",
-                context.getPrepareCounter(),
-                context.getPrepareQueue(),
-                context.getInvalidPrepareMessageCount(),
-                result
+            context.getPrepareCounter(),
+            context.getPrepareQueue(),
+            context.getInvalidPrepareMessageCount(),
+            result
         );
         context.setPrepareCounter(result.getNextOffset());
         return true;
     }
+
+    private void discardPrepareMessage(CheckContext context, DequeueResult result) {
+
+    }
+
+    private boolean isOverMaxCheckTimes(CheckContext context, DequeueResult result) {
+        return false;
+    }
+
+    private boolean isBornBeforeCheck(CheckContext context, DequeueResult result) {
+        MessageBO message = result.getMessage();
+
+        long bornAt = message.getBornTimestamp();
+        if (bornAt < context.getStartTime()) {
+            return false;
+        }
+
+        log.debug("Fresh prepare message, check it later. offset={}, msgStoreTime={}",
+            context.getPrepareCounter(), DateUtil.asLocalDateTime(message.getBornTimestamp()));
+
+        return true;
+    }
+
+    private boolean loadAndCheckPrepareMessage(CheckContext context) {
+        DequeueResult result = prepareMessageLoader.load(context);
+        if (result.isEmpty()) {
+            return handleEmptyPrepareMessage(context, result);
+        }
+
+        if (isOverMaxCheckTimes(context, result)) {
+            discardPrepareMessage(context, result);
+            return true;
+        }
+
+        if (isBornBeforeCheck(context, result)) {
+            return false;
+        }
+
+        return true;
+    }
+
+
 
     private void checkMessage(CheckContext context) {
         while (true) {
