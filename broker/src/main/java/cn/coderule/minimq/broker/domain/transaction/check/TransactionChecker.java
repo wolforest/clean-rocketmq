@@ -1,6 +1,7 @@
 package cn.coderule.minimq.broker.domain.transaction.check;
 
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
+import cn.coderule.common.util.lang.ThreadUtil;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.common.util.lang.time.DateUtil;
@@ -18,6 +19,7 @@ import cn.coderule.minimq.domain.domain.transaction.CheckBuffer;
 import cn.coderule.minimq.domain.domain.transaction.TransactionUtil;
 import java.util.HashSet;
 import java.util.Set;
+import javax.print.DocFlavor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -25,6 +27,7 @@ public class TransactionChecker extends ServiceThread {
     private static final int MAX_CHECK_TIME = 60_000;
     private static final int MAX_INVALID_PREPARE_MESSAGE_NUM = 1;
     private static final int MAX_RETRY_TIMES = 10;
+    private static final int WAIT_WHILE_NO_COMMIT_MESSAGE = 1_000;
 
     private final TransactionContext transactionContext;
     private final TransactionConfig transactionConfig;
@@ -99,6 +102,21 @@ public class TransactionChecker extends ServiceThread {
         context.initOffset(commitResult.getNextOffset());
         checkPrepareMessage(context);
         updateOffset(context, commitResult);
+    }
+
+    private void loadMoreCommitMessage(CheckContext context) {
+        DequeueResult result = loadCommitMessage(context);
+
+        if (result == null
+            || !result.hasNewMessage()
+            || result.isEmpty()
+            || result.isOffsetIllegal()
+        ) {
+            ThreadUtil.sleep(WAIT_WHILE_NO_COMMIT_MESSAGE);
+            return;
+        }
+
+        context.setCommitNextOffset(result.getNextOffset());
     }
 
     private DequeueResult loadCommitMessage(CheckContext checkContext) {
@@ -266,11 +284,10 @@ public class TransactionChecker extends ServiceThread {
         return false;
     }
 
-    private void loadMoreCommitMessage(CheckContext context) {
-    }
 
-    private boolean renewPrepareMessage(CheckContext context, DequeueResult result) {
-        return false;
+
+    private void renewPrepareMessage(CheckContext context, DequeueResult result) {
+        increaseRenewCount(context);
     }
 
     private void increaseRenewCount(CheckContext context) {
@@ -294,7 +311,7 @@ public class TransactionChecker extends ServiceThread {
 
         Long immunityTime = getImmunityTime(context, result, now);
         if (immunityTime == null) {
-            context.increasePrepareCounter();
+            context.increasePrepareOffset();
             return false;
         }
 
@@ -303,11 +320,7 @@ public class TransactionChecker extends ServiceThread {
             return true;
         }
 
-        if (!renewPrepareMessage(context, result)) {
-            return true;
-        }
-
-        increaseRenewCount(context);
+        renewPrepareMessage(context, result);
         return true;
     }
 
@@ -321,7 +334,7 @@ public class TransactionChecker extends ServiceThread {
 
             if (context.containsPrepareOffset(context.getPrepareOffset())) {
                 removePrepareOffset(context);
-                context.increasePrepareCounter();
+                context.increasePrepareOffset();
                 continue;
             }
 

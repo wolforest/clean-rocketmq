@@ -81,7 +81,7 @@ public class CheckContext implements Serializable {
         this.prepareNextOffset = counter;
     }
 
-    public void increasePrepareCounter() {
+    public void increasePrepareOffset() {
         this.prepareOffset++;
         this.prepareNextOffset = prepareOffset;
     }
