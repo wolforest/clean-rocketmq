@@ -28,6 +28,10 @@ public class MessageService {
         return 0;
     }
 
+    public void updateConsumeOffset(MessageQueue mq, long offset) {
+
+    }
+
     public Set<MessageQueue> getMessageQueues(String storeGroup, String topic) {
         Set<MessageQueue> result = new HashSet<>();
 
@@ -39,7 +43,7 @@ public class MessageService {
         return result;
     }
 
-    public DequeueResult getPrepareMessage(String storeGroup, int queueId, long offset, int num) {
+    public DequeueResult getMessage(MessageQueue mq, int num) {
         return null;
     }
 

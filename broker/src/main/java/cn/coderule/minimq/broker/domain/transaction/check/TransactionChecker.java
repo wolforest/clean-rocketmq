@@ -19,7 +19,6 @@ import cn.coderule.minimq.domain.domain.transaction.CheckBuffer;
 import cn.coderule.minimq.domain.domain.transaction.TransactionUtil;
 import java.util.HashSet;
 import java.util.Set;
-import javax.print.DocFlavor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
