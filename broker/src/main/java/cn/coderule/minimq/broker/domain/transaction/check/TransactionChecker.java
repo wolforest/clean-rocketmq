@@ -28,6 +28,9 @@ public class TransactionChecker extends ServiceThread {
     private static final int MAX_RETRY_TIMES = 10;
     private static final int WAIT_WHILE_NO_COMMIT_MESSAGE = 1_000;
 
+    private static final int DEFAULT_COMMIT_MESSAGE_BATCH_SIZE = 32;
+    private static final int DEFAULT_PREPARE_MESSAGE_BATCH_SIZE = 1;
+
     private final TransactionContext transactionContext;
     private final TransactionConfig transactionConfig;
     private final QueueTask task;
@@ -119,98 +122,7 @@ public class TransactionChecker extends ServiceThread {
     }
 
     private DequeueResult loadCommitMessage(CheckContext checkContext) {
-        DequeueResult commitResult = commitMessageLoader.load(checkContext);
-        if (validateCommitResult(checkContext, commitResult)) {
-            return commitResult;
-        }
-
-        formatCommitResult(checkContext, commitResult);
-
-        return commitResult;
-    }
-
-    private void handleEmptyCommitMessage(CheckContext context, MessageBO message) {
-        log.error("body of commitMessage is null, queueId={}, offset={}",
-            message.getQueueId(), message.getQueueOffset());
-
-        context.addCommittedOffset(message.getQueueOffset());
-    }
-
-    private void formatCommitResult(CheckContext context, DequeueResult result) {
-        for (MessageBO message : result.getMessageList()) {
-            if (null == message.getBody()) {
-                handleEmptyCommitMessage(context, message);
-                continue;
-            }
-
-            Set<Long> prepareOffsetSet = getCommitOffset(context, message);
-            if (prepareOffsetSet.isEmpty()) {
-                context.addCommittedOffset(message.getQueueOffset());
-                continue;
-            }
-
-            context.putOffsetMap(message.getQueueOffset(), prepareOffsetSet);
-        }
-    }
-
-    private boolean validateCommitBody(MessageBO message, String body) {
-        log.debug("parse commitMessage: topic={}, tags={}, commitOffset={}, prepareOffsets={}",
-            message.getTopic(), message.getTags(), message.getQueueOffset(), body);
-
-        if (StringUtil.isBlank(body)) {
-            log.error("commitMessage body is null, message={}", message);
-            return false;
-        }
-
-        if (!TransactionUtil.REMOVE_TAG.equals(message.getTags())) {
-            log.error("commit message tag is not remove tag, message={}", message);
-            return false;
-        }
-
-        return true;
-
-    }
-
-    private Set<Long> getCommitOffset(CheckContext context, MessageBO message) {
-        String body = message.getBodyString();
-        Set<Long> set = new HashSet<>();
-        if (!validateCommitBody(message, body)) {
-            return set;
-        }
-
-        String[] arr = body.split(TransactionUtil.OFFSET_SEPARATOR);
-        for (String offsetString : arr) {
-            Long offset = StringUtil.getLong(offsetString, -1);
-            if (offset < context.getPrepareStartOffset()) {
-                continue;
-            }
-
-            context.linkOffset(message.getQueueOffset(), offset);
-            set.add(offset);
-        }
-
-        return set;
-    }
-
-    private boolean validateCommitResult(CheckContext context, DequeueResult result) {
-        if (null == result) {
-            log.error("illegal result, commitResult can't be null");
-            return false;
-        }
-
-        if (result.isEmpty()) {
-            log.error("no commit message for checking: commitQueue={}, commitOffset={}",
-                context.getCommitQueue(), context.getCommitOffset());
-            return false;
-        }
-
-        if (result.isOffsetIllegal()) {
-            log.error("commit message offset illegal: commitQueue={}, commitOffset={}, nextOffset={}",
-                context.getCommitQueue(), context.getCommitOffset(), result.getNextOffset());
-            return false;
-        }
-
-        return true;
+        return commitMessageLoader.load(checkContext);
     }
 
     private void removePrepareOffset(CheckContext context) {
