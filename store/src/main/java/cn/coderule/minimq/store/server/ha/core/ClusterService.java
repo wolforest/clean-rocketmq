@@ -1,4 +1,4 @@
-package cn.coderule.minimq.store.server.ha;
+package cn.coderule.minimq.store.server.ha.core;
 
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.lang.concurrent.thread.DefaultThreadFactory;
