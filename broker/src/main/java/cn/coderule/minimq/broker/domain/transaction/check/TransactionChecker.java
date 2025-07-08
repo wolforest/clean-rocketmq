@@ -97,11 +97,6 @@ public class TransactionChecker extends ServiceThread {
         updateOffset(context, commitResult);
     }
 
-    private void removePrepareOffset(CheckContext context) {
-        log.debug("prepare offset has been committed/rollback: {}", context.getPrepareOffset());
-        context.removePrepareOffset(context.getPrepareOffset());
-    }
-
     private void checkMessage(CheckContext context) {
         while (true) {
             if (context.isTimeout(MAX_CHECK_TIME)) {
@@ -124,6 +119,11 @@ public class TransactionChecker extends ServiceThread {
 
     private void updateOffset(CheckContext checkContext, DequeueResult commitResult) {
 
+    }
+
+    private void removePrepareOffset(CheckContext context) {
+        log.debug("prepare offset has been committed/rollback: {}", context.getPrepareOffset());
+        context.removePrepareOffset(context.getPrepareOffset());
     }
 
     private CheckContext buildCheckContext(MessageQueue prepareQueue) {

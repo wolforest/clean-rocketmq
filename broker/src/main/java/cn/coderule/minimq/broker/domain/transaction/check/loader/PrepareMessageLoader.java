@@ -5,6 +5,8 @@ import cn.coderule.common.util.lang.time.DateUtil;
 import cn.coderule.minimq.broker.domain.transaction.check.context.CheckContext;
 import cn.coderule.minimq.broker.domain.transaction.check.context.TransactionContext;
 import cn.coderule.minimq.broker.domain.transaction.service.MessageService;
+import cn.coderule.minimq.domain.config.TransactionConfig;
+import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueResult;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
 import lombok.extern.slf4j.Slf4j;
@@ -15,11 +17,13 @@ public class PrepareMessageLoader {
     private static final int WAIT_WHILE_NO_COMMIT_MESSAGE = 1_000;
     private static final int MAX_INVALID_PREPARE_MESSAGE_NUM = 1;
     private final MessageService messageService;
+    private final TransactionConfig transactionConfig;
     private final CommitMessageLoader commitMessageLoader;
-    private TransactionContext transactionContext;
+    private final TransactionContext transactionContext;
 
     public PrepareMessageLoader(TransactionContext transactionContext, CommitMessageLoader commitMessageLoader) {
         this.transactionContext = transactionContext;
+        this.transactionConfig = transactionContext.getBrokerConfig().getTransactionConfig();
         this.commitMessageLoader = commitMessageLoader;
         this.messageService = transactionContext.getMessageService();
     }
@@ -54,7 +58,7 @@ public class PrepareMessageLoader {
             return false;
         }
 
-        if (!needCheck(context, now, immunityTime)) {
+        if (!needCheck(context, result, now, immunityTime)) {
             loadMoreCommitMessage(context);
             return true;
         }
@@ -124,8 +128,21 @@ public class PrepareMessageLoader {
         return null;
     }
 
-    private boolean needCheck(CheckContext context, long now, long immunityTime) {
-        return false;
+    private boolean needCheck(CheckContext context, DequeueResult result, long now, long immunityTime) {
+        if (now <= -1) {
+            return true;
+        }
+
+        if (result.isEmpty() && now > immunityTime) {
+            return true;
+        }
+
+        if (result.isEmpty()) {
+            return false;
+        }
+
+        MessageBO message = result.getLastMessage();
+        return message.getBornTimestamp() - context.getStartTime() > transactionConfig.getTransactionTimeout();
     }
 
     private void renewPrepareMessage(CheckContext context, DequeueResult result) {

@@ -31,9 +31,19 @@ public class DequeueResult implements Serializable {
     }
 
     public MessageBO getMessage() {
+        return getFirstMessage();
+    }
+
+    public MessageBO getFirstMessage() {
         return messageList.isEmpty()
             ? null
             : messageList.get(0);
+    }
+
+    public MessageBO getLastMessage() {
+        return messageList.isEmpty()
+            ? null
+            : messageList.get(messageList.size() - 1);
     }
 
     public boolean hasNewMessage() {
