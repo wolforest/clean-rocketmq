@@ -141,4 +141,24 @@ public class DefaultHAClient extends ServiceThread implements HAClient, Lifecycl
         long interval = System.currentTimeMillis() - lastWriteTime;
         return interval > storeConfig.getHaHeartbeatInterval();
     }
+
+    private boolean reportSlaveOffset(final long maxOffset) {
+        this.reportBuffer.position(0);
+        this.reportBuffer.limit(REPORT_HEADER_SIZE);
+        this.reportBuffer.putLong(maxOffset);
+        this.reportBuffer.position(0);
+        this.reportBuffer.limit(REPORT_HEADER_SIZE);
+
+        for (int i = 0; i < 3 && this.reportBuffer.hasRemaining(); i++) {
+            try {
+                this.socketChannel.write(this.reportBuffer);
+            } catch (IOException e) {
+                log.error(this.getServiceName()
+                    + "reportSlaveMaxOffset this.socketChannel.write exception", e);
+                return false;
+            }
+        }
+        lastWriteTime = System.currentTimeMillis();
+        return !this.reportBuffer.hasRemaining();
+    }
 }
