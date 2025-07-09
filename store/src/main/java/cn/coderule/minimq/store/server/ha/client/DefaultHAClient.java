@@ -154,7 +154,33 @@ public class DefaultHAClient extends ServiceThread implements HAClient, Lifecycl
 
     @Override
     public void closeMaster() {
+        if (null == this.socketChannel) {
+            return;
+        }
 
+        try {
+            SelectionKey sk = this.socketChannel.keyFor(this.selector);
+            if (sk != null) {
+                sk.cancel();
+            }
+
+            this.socketChannel.close();
+            this.socketChannel = null;
+
+            log.info("HAClient close connection with master {}", this.masterHaAddress.get());
+            this.state = ConnectionState.READY;
+        } catch (IOException e) {
+            log.warn("closeMaster exception. ", e);
+        }
+
+        this.lastReadTime = 0;
+        this.dispatchPosition = 0;
+
+        this.backupBuffer.position(0);
+        this.backupBuffer.limit(MAX_READ_BUFFER_SIZE);
+
+        this.reportBuffer.position(0);
+        this.reportBuffer.limit(MAX_READ_BUFFER_SIZE);
     }
 
     @Override
