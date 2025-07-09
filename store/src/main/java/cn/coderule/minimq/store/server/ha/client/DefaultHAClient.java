@@ -6,6 +6,7 @@ import cn.coderule.common.util.net.NetworkUtil;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.store.server.ha.HAClient;
 import cn.coderule.minimq.store.server.ha.core.ConnectionState;
+import cn.coderule.minimq.store.server.ha.core.DefaultHAConnection;
 import cn.coderule.minimq.store.server.ha.core.FlowMonitor;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -137,9 +138,99 @@ public class DefaultHAClient extends ServiceThread implements HAClient, Lifecycl
 
     }
 
-    private boolean isTimeToHeartbeat() {
-        long interval = System.currentTimeMillis() - lastWriteTime;
-        return interval > storeConfig.getHaHeartbeatInterval();
+    private boolean processReadEvent() {
+        int readSizeZeroTimes = 0;
+        while (this.readBuffer.hasRemaining()) {
+            try {
+                int readSize = this.socketChannel.read(this.readBuffer);
+                if (readSize > 0) {
+                    flowMonitor.addTransferredByte(readSize);
+                    readSizeZeroTimes = 0;
+                    boolean result = this.dispatchReadRequest();
+                    if (!result) {
+                        log.error("HAClient, dispatchReadRequest error");
+                        return false;
+                    }
+                    lastReadTime = System.currentTimeMillis();
+                } else if (readSize == 0) {
+                    if (++readSizeZeroTimes >= 3) {
+                        break;
+                    }
+                } else {
+                    log.info("HAClient, processReadEvent read socket < 0");
+                    return false;
+                }
+            } catch (IOException e) {
+                log.info("HAClient, processReadEvent read socket exception", e);
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private boolean dispatchReadRequest() {
+        int readSocketPos = this.readBuffer.position();
+
+        while (true) {
+            int diff = this.readBuffer.position() - this.dispatchPosition;
+            if (diff >= DefaultHAConnection.TRANSFER_HEADER_SIZE) {
+                int bodySize = this.readBuffer.getInt(this.dispatchPosition + 8);
+
+                long masterPhyOffset = this.readBuffer.getLong(this.dispatchPosition);
+                // todo: get slave max commitLog offset
+                long slavePhyOffset = 1;
+
+                if (slavePhyOffset != 0) {
+                    if (slavePhyOffset != masterPhyOffset) {
+                        log.error("master pushed offset not equal the max phy offset in slave, SLAVE: " + slavePhyOffset + " MASTER: " + masterPhyOffset);
+                        return false;
+                    }
+                }
+
+                if (diff >= (DefaultHAConnection.TRANSFER_HEADER_SIZE + bodySize)) {
+                    byte[] bodyData = readBuffer.array();
+                    int dataStart = this.dispatchPosition + DefaultHAConnection.TRANSFER_HEADER_SIZE;
+
+                    // todo
+                    // this.defaultMessageStore.appendToCommitLog(masterPhyOffset, bodyData, dataStart, bodySize);
+                    this.readBuffer.position(readSocketPos);
+                    this.dispatchPosition += DefaultHAConnection.TRANSFER_HEADER_SIZE + bodySize;
+
+                    if (!reportSlaveOffset()) {
+                        return false;
+                    }
+
+                    continue;
+                }
+            }
+
+            if (!this.readBuffer.hasRemaining()) {
+                this.reallocateBuffer();
+            }
+
+            break;
+        }
+
+        return true;
+    }
+
+    private boolean reportSlaveOffset() {
+        // todo: this.defaultMessageStore.getMaxPhyOffset()
+        long currentPhyOffset = 10;
+        if (currentPhyOffset <= this.reportedOffset) {
+            return true;
+        }
+
+        this.reportedOffset = currentPhyOffset;
+        boolean result = this.reportSlaveOffset(this.reportedOffset);
+        if (result) {
+            return true;
+        }
+
+        this.closeMaster();
+        log.error("HAClient, reportSlaveMaxOffset error, {}", this.reportedOffset);
+        return false;
     }
 
     private boolean reportSlaveOffset(final long maxOffset) {
@@ -153,8 +244,8 @@ public class DefaultHAClient extends ServiceThread implements HAClient, Lifecycl
             try {
                 this.socketChannel.write(this.reportBuffer);
             } catch (IOException e) {
-                log.error(this.getServiceName()
-                    + "reportSlaveMaxOffset this.socketChannel.write exception", e);
+                log.error("{} reportSlaveMaxOffset this.socketChannel.write exception",
+                    this.getServiceName(), e);
                 return false;
             }
         }
@@ -184,4 +275,10 @@ public class DefaultHAClient extends ServiceThread implements HAClient, Lifecycl
         this.readBuffer = this.backupBuffer;
         this.backupBuffer = tmp;
     }
+
+    private boolean isTimeToHeartbeat() {
+        long interval = System.currentTimeMillis() - lastWriteTime;
+        return interval > storeConfig.getHaHeartbeatInterval();
+    }
+
 }
