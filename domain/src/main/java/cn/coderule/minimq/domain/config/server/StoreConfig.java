@@ -30,7 +30,7 @@ public class StoreConfig extends ServerIdentity {
     private boolean refreshHaAddress = false;
 
     private String masterAddress;
-    private String haAddress;
+
     private String registryAddress = "127.0.0.1:9876";
     // private String registryAddress = System.getProperty(RegistryUtils.NAMESRV_ADDR_PROPERTY, System.getenv(RegistryUtils.NAMESRV_ADDR_ENV));
 
@@ -67,6 +67,11 @@ public class StoreConfig extends ServerIdentity {
     private boolean fastFailIfNotExistInTransientPool = true;
 
     private long stateMachineVersion = 0;
+
+    private String haAddress;
+    private boolean enableHaFlowControl = false;
+    private long maxHaTransferBytesPerSecond = 100 * 1024 * 1024;
+    private long maxSlaveDelayTime = 15_000;
 
     private MessageConfig messageConfig;
     private TopicConfig topicConfig;
