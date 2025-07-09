@@ -161,4 +161,27 @@ public class DefaultHAClient extends ServiceThread implements HAClient, Lifecycl
         lastWriteTime = System.currentTimeMillis();
         return !this.reportBuffer.hasRemaining();
     }
+
+    private void reallocateBuffer() {
+        int remain = MAX_READ_BUFFER_SIZE - this.dispatchPosition;
+        if (remain > 0) {
+            this.readBuffer.position(this.dispatchPosition);
+
+            this.backupBuffer.position(0);
+            this.backupBuffer.limit(MAX_READ_BUFFER_SIZE);
+            this.backupBuffer.put(this.readBuffer);
+        }
+
+        this.swapBuffer();
+
+        this.readBuffer.position(remain);
+        this.readBuffer.limit(MAX_READ_BUFFER_SIZE);
+        this.dispatchPosition = 0;
+    }
+
+    private void swapBuffer() {
+        ByteBuffer tmp = this.readBuffer;
+        this.readBuffer = this.backupBuffer;
+        this.backupBuffer = tmp;
+    }
 }
