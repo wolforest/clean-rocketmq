@@ -30,13 +30,12 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class DefaultHAClient extends ServiceThread implements HAClient, Lifecycle {
     public static final int REPORT_HEADER_SIZE = 8;
-    private static final int READ_MAX_BUFFER_SIZE = 4 * 1024 * 1024;
+    private static final int MAX_READ_BUFFER_SIZE = 4 * 1024 * 1024;
 
     private final StoreConfig storeConfig;
 
     private final AtomicReference<String> masterHaAddress = new AtomicReference<>();
     private final AtomicReference<String> masterAddress = new AtomicReference<>();
-    private final ByteBuffer reportOffset = ByteBuffer.allocate(REPORT_HEADER_SIZE);
     private SocketChannel socketChannel;
     private final Selector selector;
     private final FlowMonitor flowMonitor;
@@ -44,16 +43,19 @@ public class DefaultHAClient extends ServiceThread implements HAClient, Lifecycl
     /**
      * last time that slave reads date from master.
      */
-    private long lastReadTime = System.currentTimeMillis();
+    private long lastReadTime;
     /**
      * last time that slave reports offset to master.
      */
-    private long lastWriteTime = System.currentTimeMillis();
+    private long lastWriteTime;
 
     private long reportedOffset = 0;
     private int dispatchPosition = 0;
-    private ByteBuffer readBuffer = ByteBuffer.allocate(READ_MAX_BUFFER_SIZE);
-    private ByteBuffer backupBuffer = ByteBuffer.allocate(READ_MAX_BUFFER_SIZE);
+
+    private ByteBuffer readBuffer = ByteBuffer.allocate(MAX_READ_BUFFER_SIZE);
+    private ByteBuffer backupBuffer = ByteBuffer.allocate(MAX_READ_BUFFER_SIZE);
+    private final ByteBuffer reportBuffer = ByteBuffer.allocate(REPORT_HEADER_SIZE);
+
     private volatile ConnectionState state = ConnectionState.READY;
 
     public DefaultHAClient(StoreConfig storeConfig) throws IOException {
@@ -61,6 +63,10 @@ public class DefaultHAClient extends ServiceThread implements HAClient, Lifecycl
 
         this.selector = NetworkUtil.openSelector();
         this.flowMonitor = new FlowMonitor(storeConfig);
+
+        long now = System.currentTimeMillis();
+        this.lastReadTime = now;
+        this.lastWriteTime = now;
     }
 
     @Override
@@ -89,7 +95,17 @@ public class DefaultHAClient extends ServiceThread implements HAClient, Lifecycl
     }
 
     @Override
-    public void updateMasterAddress(String newAddress) {
+    public String getMasterAddress() {
+        return masterAddress.get();
+    }
+
+    @Override
+    public String getMasterHaAddress() {
+        return masterHaAddress.get();
+    }
+
+    @Override
+    public void setMasterAddress(String newAddress) {
         String addr = this.masterAddress.get();
         if (masterAddress.compareAndSet(addr, newAddress)) {
             log.info("update master address from {} to {}",
@@ -98,7 +114,7 @@ public class DefaultHAClient extends ServiceThread implements HAClient, Lifecycl
     }
 
     @Override
-    public void updateMasterHaAddress(String newAddress) {
+    public void setMasterHaAddress(String newAddress) {
         String addr = this.masterHaAddress.get();
         if (masterHaAddress.compareAndSet(addr, newAddress)) {
             log.info("update master ha address from {} to {}",

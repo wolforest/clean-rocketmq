@@ -6,8 +6,10 @@ public interface HAClient {
     ConnectionState getConnectionState();
     void changeConnectionState(ConnectionState state);
 
-    void updateMasterAddress(String newAddress);
-    void updateMasterHaAddress(String newAddress);
+    String getMasterAddress();
+    String getMasterHaAddress();
+    void setMasterAddress(String newAddress);
+    void setMasterHaAddress(String newAddress);
 
     boolean connectMaster();
     void closeMaster();
