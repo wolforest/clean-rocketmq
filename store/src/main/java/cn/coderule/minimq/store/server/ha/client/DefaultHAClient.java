@@ -4,12 +4,16 @@ import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 import cn.coderule.common.util.net.NetworkUtil;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
+import cn.coderule.minimq.rpc.common.rpc.netty.service.helper.NettyHelper;
 import cn.coderule.minimq.store.server.ha.HAClient;
 import cn.coderule.minimq.store.server.ha.core.ConnectionState;
 import cn.coderule.minimq.store.server.ha.core.DefaultHAConnection;
 import cn.coderule.minimq.store.server.ha.core.FlowMonitor;
 import java.io.IOException;
+import java.net.SocketAddress;
 import java.nio.ByteBuffer;
+import java.nio.channels.ClosedChannelException;
+import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
 import java.util.concurrent.atomic.AtomicReference;
@@ -124,8 +128,28 @@ public class DefaultHAClient extends ServiceThread implements HAClient, Lifecycl
     }
 
     @Override
-    public boolean connectMaster() {
-        return false;
+    public boolean connectMaster() throws ClosedChannelException {
+        if (null != socketChannel) {
+            return true;
+        }
+
+        String addr = this.masterHaAddress.get();
+        if (addr != null) {
+            SocketAddress socketAddress = NetworkUtil.toSocketAddress(addr);
+            this.socketChannel = NettyHelper.connect(socketAddress);
+            if (this.socketChannel != null) {
+                this.socketChannel.register(this.selector, SelectionKey.OP_READ);
+                log.info("HAClient connect to master {}", addr);
+                this.state = ConnectionState.TRANSFER;
+            }
+        }
+
+
+        // this.currentReportedOffset = this.defaultMessageStore.getMaxPhyOffset();
+        this.reportedOffset = 0;
+        this.lastReadTime = System.currentTimeMillis();
+
+        return this.socketChannel != null;
     }
 
     @Override
@@ -139,13 +163,13 @@ public class DefaultHAClient extends ServiceThread implements HAClient, Lifecycl
     }
 
     private boolean processReadEvent() {
-        int readSizeZeroTimes = 0;
+        int emptyReadTimes = 0;
         while (this.readBuffer.hasRemaining()) {
             try {
                 int readSize = this.socketChannel.read(this.readBuffer);
                 if (readSize > 0) {
                     flowMonitor.addTransferredByte(readSize);
-                    readSizeZeroTimes = 0;
+                    emptyReadTimes = 0;
                     boolean result = this.dispatchReadRequest();
                     if (!result) {
                         log.error("HAClient, dispatchReadRequest error");
@@ -153,7 +177,7 @@ public class DefaultHAClient extends ServiceThread implements HAClient, Lifecycl
                     }
                     lastReadTime = System.currentTimeMillis();
                 } else if (readSize == 0) {
-                    if (++readSizeZeroTimes >= 3) {
+                    if (++emptyReadTimes >= 3) {
                         break;
                     }
                 } else {

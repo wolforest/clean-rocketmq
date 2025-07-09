@@ -1,6 +1,7 @@
 package cn.coderule.minimq.store.server.ha;
 
 import cn.coderule.minimq.store.server.ha.core.ConnectionState;
+import java.nio.channels.ClosedChannelException;
 
 public interface HAClient {
     ConnectionState getConnectionState();
@@ -11,6 +12,6 @@ public interface HAClient {
     void setMasterAddress(String newAddress);
     void setMasterHaAddress(String newAddress);
 
-    boolean connectMaster();
+    boolean connectMaster() throws ClosedChannelException;
     void closeMaster();
 }
