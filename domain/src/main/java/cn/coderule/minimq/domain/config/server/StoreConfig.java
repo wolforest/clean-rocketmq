@@ -16,7 +16,7 @@ import lombok.EqualsAndHashCode;
 public class StoreConfig extends ServerIdentity {
     private String host = NetworkUtil.getLocalAddress();
     private int port = 6888;
-    private int haPort = 10912;
+
 
     private boolean enableMasterElection = false;
 
@@ -69,6 +69,10 @@ public class StoreConfig extends ServerIdentity {
     private long stateMachineVersion = 0;
 
     private String haAddress;
+    private int haPort = 10912;
+    private int haHeartbeatInterval = 5_000;
+    private int haHouseKeepingInterval = 20_000;
+
     private boolean enableHaFlowControl = false;
     private long maxHaTransferBytesPerSecond = 100 * 1024 * 1024;
     private long maxSlaveDelayTime = 15_000;
