@@ -194,12 +194,59 @@ public class DefaultHAClient extends ServiceThread implements HAClient, Lifecycl
 
     @Override
     public void run() {
+        log.info("{} service started", this.getServiceName());
 
+        this.flowMonitor.start();
+
+        while (!this.isStopped()) {
+            try {
+                switch (this.state) {
+                    case SHUTDOWN:
+                        this.flowMonitor.shutdown(true);
+                        return;
+                    case READY:
+                        if (!this.connectMaster()) {
+                            log.warn("HAClient connect to master {} failed", this.masterHaAddress.get());
+                            this.await(5_000);
+                        }
+                        continue;
+                    case TRANSFER:
+                        if (!transferFromMaster()) {
+                            closeMasterAndWait();
+                            continue;
+                        }
+                        break;
+                    default:
+                        this.await(2_000);
+                        continue;
+                }
+
+                tryCloseMaster();
+            } catch (Exception e) {
+                log.warn("{} service has exception. ", this.getServiceName(), e);
+                this.closeMasterAndWait();
+            }
+        }
+
+        this.flowMonitor.shutdown(true);
+        log.info("{} service end", this.getServiceName());
     }
 
     public void closeMasterAndWait() {
         this.closeMaster();
         this.await(5_000);
+    }
+
+    private void tryCloseMaster() {
+        long interval = System.currentTimeMillis() - this.lastReadTime;
+        if (interval <= storeConfig.getHaHouseKeepingInterval()) {
+            return;
+        }
+
+        log.warn("AutoRecoverHAClient, housekeeping, found this connection[{}] expired, {}",
+            this.masterHaAddress, interval);
+        this.closeMaster();
+        log.warn("AutoRecoverHAClient, master not response some time, so close connection");
     }
 
     private boolean transferFromMaster() throws IOException {
