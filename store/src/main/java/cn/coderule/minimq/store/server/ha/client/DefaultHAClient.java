@@ -197,6 +197,31 @@ public class DefaultHAClient extends ServiceThread implements HAClient, Lifecycl
 
     }
 
+    public void closeMasterAndWait() {
+        this.closeMaster();
+        this.await(5_000);
+    }
+
+    private boolean transferFromMaster() throws IOException {
+        boolean result;
+        if (this.isTimeToHeartbeat()) {
+            log.info("Slave report current offset {}", this.reportedOffset);
+            result = this.reportSlaveOffset(this.reportedOffset);
+            if (!result) {
+                return false;
+            }
+        }
+
+        this.selector.select(1000);
+
+        result = this.processReadEvent();
+        if (!result) {
+            return false;
+        }
+
+        return reportSlaveOffset();
+    }
+
     private boolean processReadEvent() {
         int emptyReadTimes = 0;
         while (this.readBuffer.hasRemaining()) {
