@@ -1,4 +1,4 @@
-package cn.coderule.minimq.store.server.ha.client;
+package cn.coderule.minimq.store.server.ha.client.synchronizer;
 
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.minimq.store.infra.StoreScheduler;
