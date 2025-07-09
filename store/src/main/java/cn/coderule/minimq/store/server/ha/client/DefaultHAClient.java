@@ -136,4 +136,9 @@ public class DefaultHAClient extends ServiceThread implements HAClient, Lifecycl
     public void run() {
 
     }
+
+    private boolean isTimeToHeartbeat() {
+        long interval = System.currentTimeMillis() - lastWriteTime;
+        return interval > storeConfig.getHaHeartbeatInterval();
+    }
 }
