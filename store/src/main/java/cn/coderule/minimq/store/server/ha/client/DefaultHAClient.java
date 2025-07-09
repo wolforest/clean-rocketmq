@@ -81,7 +81,16 @@ public class DefaultHAClient extends ServiceThread implements HAClient, Lifecycl
 
     @Override
     public void shutdown() {
+        this.state = ConnectionState.SHUTDOWN;
+        this.flowMonitor.shutdown();
+        super.shutdown();
 
+        closeMaster();
+        try {
+            this.selector.close();
+        } catch (IOException e) {
+            log.warn("Close the selector of AutoRecoverHAClient error, ", e);
+        }
     }
 
     @Override
