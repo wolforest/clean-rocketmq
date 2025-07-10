@@ -16,12 +16,12 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public abstract class AbstractAcceptService extends ServiceThread {
-    private final SocketAddress socketAddressListen;
-    private ServerSocketChannel serverSocketChannel;
-    private Selector selector;
+    protected final SocketAddress socketAddressListen;
+    protected ServerSocketChannel serverSocketChannel;
+    protected Selector selector;
 
-    private final StoreConfig storeConfig;
-    private final ConnectionPool connectionPool;
+    protected final StoreConfig storeConfig;
+    protected final ConnectionPool connectionPool;
 
     public AbstractAcceptService(StoreConfig storeConfig, ConnectionPool connectionPool) {
         this.storeConfig = storeConfig;
