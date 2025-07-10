@@ -1,4 +1,4 @@
-package cn.coderule.minimq.store.server.ha.processor;
+package cn.coderule.minimq.store.server.ha.server.processor;
 
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 import cn.coderule.minimq.domain.domain.producer.EnqueueResult;

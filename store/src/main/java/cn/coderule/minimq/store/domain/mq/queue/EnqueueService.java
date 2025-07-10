@@ -8,7 +8,7 @@ import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.service.store.domain.commitlog.CommitLog;
 import cn.coderule.minimq.domain.service.store.domain.consumequeue.ConsumeQueueGateway;
 import cn.coderule.minimq.store.server.bootstrap.StoreContext;
-import cn.coderule.minimq.store.server.ha.processor.CommitLogSynchronizer;
+import cn.coderule.minimq.store.server.ha.server.processor.CommitLogSynchronizer;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;

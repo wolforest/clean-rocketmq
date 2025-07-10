@@ -15,7 +15,7 @@ import cn.coderule.minimq.store.domain.mq.queue.DequeueService;
 import cn.coderule.minimq.store.domain.mq.queue.EnqueueService;
 import cn.coderule.minimq.store.domain.mq.queue.MessageService;
 import cn.coderule.minimq.store.server.bootstrap.StoreContext;
-import cn.coderule.minimq.store.server.ha.processor.CommitLogSynchronizer;
+import cn.coderule.minimq.store.server.ha.server.processor.CommitLogSynchronizer;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
