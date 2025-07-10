@@ -5,6 +5,7 @@ import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 import cn.coderule.common.lang.concurrent.thread.WakeupCoordinator;
 import cn.coderule.minimq.store.server.ha.HAConnection;
 import cn.coderule.minimq.store.server.ha.HAServer;
+import cn.coderule.minimq.store.server.ha.server.socket.ConnectionPool;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -13,12 +14,10 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class DefaultHAServer extends ServiceThread implements HAServer, Lifecycle {
-
-    private final AtomicInteger connectionCount = new AtomicInteger(0);
-    private final List<HAConnection> connectionList = new LinkedList<>();
-
+    private final ConnectionPool connectionPool = new ConnectionPool();
     private final WakeupCoordinator wakeupCoordinator = new WakeupCoordinator();
     private AtomicLong pushedOffset = new AtomicLong(0);
+
 
     @Override
     public String getServiceName() {
@@ -32,6 +31,6 @@ public class DefaultHAServer extends ServiceThread implements HAServer, Lifecycl
 
     @Override
     public List<HAConnection> getConnectionList() {
-        return connectionList;
+        return connectionPool.getConnectionList();
     }
 }
