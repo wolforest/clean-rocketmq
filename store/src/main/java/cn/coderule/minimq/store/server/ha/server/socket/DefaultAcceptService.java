@@ -1,8 +1,9 @@
 package cn.coderule.minimq.store.server.ha.server.socket;
 
 import cn.coderule.minimq.domain.config.server.StoreConfig;
-import cn.coderule.minimq.store.server.ha.HAConnection;
+import cn.coderule.minimq.store.server.ha.core.HAConnection;
 import cn.coderule.minimq.store.server.ha.core.DefaultHAConnection;
+import cn.coderule.minimq.store.server.ha.server.ConnectionPool;
 import java.io.IOException;
 import java.nio.channels.SocketChannel;
 

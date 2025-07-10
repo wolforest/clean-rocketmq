@@ -3,7 +3,6 @@ package cn.coderule.minimq.store.server.ha.core;
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.store.server.ha.HAClient;
-import cn.coderule.minimq.store.server.ha.HAConnection;
 import cn.coderule.minimq.store.server.ha.HAServer;
 import java.net.InetSocketAddress;
 import lombok.extern.slf4j.Slf4j;

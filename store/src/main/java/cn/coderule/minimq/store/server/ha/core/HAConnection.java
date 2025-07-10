@@ -1,6 +1,5 @@
-package cn.coderule.minimq.store.server.ha;
+package cn.coderule.minimq.store.server.ha.core;
 
-import cn.coderule.minimq.store.server.ha.core.ConnectionState;
 import java.nio.channels.SocketChannel;
 
 public interface HAConnection {

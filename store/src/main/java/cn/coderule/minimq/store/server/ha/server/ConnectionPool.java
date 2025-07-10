@@ -1,6 +1,6 @@
-package cn.coderule.minimq.store.server.ha.server.socket;
+package cn.coderule.minimq.store.server.ha.server;
 
-import cn.coderule.minimq.store.server.ha.HAConnection;
+import cn.coderule.minimq.store.server.ha.core.HAConnection;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
