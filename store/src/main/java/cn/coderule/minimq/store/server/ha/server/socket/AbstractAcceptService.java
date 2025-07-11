@@ -1,5 +1,6 @@
 package cn.coderule.minimq.store.server.ha.server.socket;
 
+import cn.coderule.common.convention.service.LifecycleManager;
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 import cn.coderule.common.util.net.NetworkUtil;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
@@ -23,10 +24,12 @@ public abstract class AbstractAcceptService extends ServiceThread {
 
     protected final StoreConfig storeConfig;
     protected final ConnectionPool connectionPool;
+    protected final LifecycleManager resourcePool;
 
-    public AbstractAcceptService(StoreConfig storeConfig, ConnectionPool connectionPool) {
+    public AbstractAcceptService(StoreConfig storeConfig, ConnectionPool connectionPool, LifecycleManager resourcePool) {
         this.storeConfig = storeConfig;
         this.connectionPool = connectionPool;
+        this.resourcePool = resourcePool;
         this.socketAddressListen = new InetSocketAddress(storeConfig.getHaPort());
     }
 

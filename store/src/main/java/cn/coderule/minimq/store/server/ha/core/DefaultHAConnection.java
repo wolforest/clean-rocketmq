@@ -3,6 +3,7 @@ package cn.coderule.minimq.store.server.ha.core;
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.rpc.common.rpc.config.RpcSystemConfig;
+import cn.coderule.minimq.store.server.ha.server.ConnectionContext;
 import java.io.IOException;
 import java.nio.channels.SocketChannel;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +25,8 @@ public class DefaultHAConnection implements HAConnection, Lifecycle {
      */
     public static final int TRANSFER_HEADER_SIZE = 8 + 4;
 
+    private final ConnectionContext context;
+
     private final StoreConfig storeConfig;
     private final SocketChannel socketChannel;
     private final String clientAddress;
@@ -34,9 +37,9 @@ public class DefaultHAConnection implements HAConnection, Lifecycle {
     private volatile ConnectionState state = ConnectionState.TRANSFER;
     private final FlowMonitor flowMonitor;
 
-    public DefaultHAConnection(StoreConfig storeConfig, SocketChannel socketChannel) throws IOException {
-        this.storeConfig = storeConfig;
-        this.socketChannel = socketChannel;
+    public DefaultHAConnection(ConnectionContext context) throws IOException {
+        this.storeConfig = context.getStoreConfig();
+        this.socketChannel = context.getSocketChannel();
         this.clientAddress = socketChannel.socket().getRemoteSocketAddress().toString();
 
         this.flowMonitor = new FlowMonitor(storeConfig);
