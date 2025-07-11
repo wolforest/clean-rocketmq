@@ -7,6 +7,7 @@ import cn.coderule.common.lang.concurrent.thread.WakeupCoordinator;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.store.server.ha.core.HAConnection;
 import cn.coderule.minimq.store.server.ha.HAServer;
+import cn.coderule.minimq.store.server.ha.core.StateNotificationService;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 import lombok.extern.slf4j.Slf4j;
@@ -17,10 +18,15 @@ public class DefaultHAServer extends ServiceThread implements HAServer, Lifecycl
     private final LifecycleManager resourcePool = new LifecycleManager();
     private final ConnectionPool connectionPool = new ConnectionPool();
     private final WakeupCoordinator wakeupCoordinator = new WakeupCoordinator();
+
+    private StateNotificationService stateNotificationService;
+
     private AtomicLong pushedOffset = new AtomicLong(0);
 
     public DefaultHAServer(StoreConfig storeConfig) {
         this.storeConfig = storeConfig;
+
+
     }
 
     @Override

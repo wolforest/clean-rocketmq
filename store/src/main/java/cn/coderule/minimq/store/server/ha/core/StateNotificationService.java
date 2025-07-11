@@ -13,7 +13,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class StateNotificationService extends ServiceThread {
-    private static final long CONNECTION_ESTABLISH_TIMEOUT = 10 * 1000;
+    private static final long CONNECTION_ESTABLISH_TIMEOUT = 10_000;
 
     private final StoreConfig storeConfig;
 
@@ -21,6 +21,10 @@ public class StateNotificationService extends ServiceThread {
     private volatile long lastCheckTimeStamp = -1;
     private final HAServer haServer;
     private final HAClient haClient;
+
+    public StateNotificationService(StoreConfig storeConfig, HAServer haServer) {
+        this(storeConfig, haServer, null);
+    }
 
     public StateNotificationService(StoreConfig storeConfig, HAServer haServer, HAClient haClient) {
         this.storeConfig = storeConfig;
@@ -46,37 +50,59 @@ public class StateNotificationService extends ServiceThread {
             return;
         }
 
-        if (!storeConfig.isMaster()) {
-            if (haClient.getConnectionState() == this.request.getExpectState()) {
-                this.request.getRequestFuture().complete(true);
-                this.request = null;
-            } else if (haClient.getConnectionState() == ConnectionState.READY) {
-                if ((System.currentTimeMillis() - lastCheckTimeStamp) > CONNECTION_ESTABLISH_TIMEOUT) {
-                    log.error("Slave Wait HA connection establish with {} timeout", this.request.getRemoteAddr());
-                    this.request.getRequestFuture().complete(false);
-                    this.request = null;
-                }
-            } else {
-                lastCheckTimeStamp = System.currentTimeMillis();
-            }
+        if (storeConfig.isMaster()) {
+            masterCheck();
         } else {
-            boolean connectionFound = false;
-            for (HAConnection connection : haServer.getConnectionList()) {
-                if (checkConnectionStateAndNotify(connection)) {
-                    connectionFound = true;
-                }
-            }
+            slaveCheck();
+        }
+    }
 
-            if (connectionFound) {
-                lastCheckTimeStamp = System.currentTimeMillis();
-            }
-
-            if (!connectionFound && (System.currentTimeMillis() - lastCheckTimeStamp) > CONNECTION_ESTABLISH_TIMEOUT) {
-                log.error("Master Wait HA connection establish with {} timeout", this.request.getRemoteAddr());
-                this.request.getRequestFuture().complete(false);
-                this.request = null;
+    private void masterCheck() {
+        boolean connectionFound = false;
+        for (HAConnection connection : haServer.getConnectionList()) {
+            if (checkConnectionStateAndNotify(connection)) {
+                connectionFound = true;
             }
         }
+
+        if (connectionFound) {
+            lastCheckTimeStamp = System.currentTimeMillis();
+            return;
+        }
+
+        long elapseTime = System.currentTimeMillis() - lastCheckTimeStamp;
+        if (elapseTime <= CONNECTION_ESTABLISH_TIMEOUT) {
+            return;
+        }
+
+        log.error("Master Wait HA connection establish with {} timeout",
+            this.request.getRemoteAddr());
+        this.request.getRequestFuture().complete(false);
+        this.request = null;
+    }
+
+    private void slaveCheck() {
+        if (haClient.getConnectionState() == this.request.getExpectState()) {
+            this.request.getRequestFuture().complete(true);
+            this.request = null;
+            return;
+        }
+
+        if (haClient.getConnectionState() != ConnectionState.READY) {
+            lastCheckTimeStamp = System.currentTimeMillis();
+            return;
+        }
+
+        long elapseTime = System.currentTimeMillis() - lastCheckTimeStamp;
+        if (elapseTime <= CONNECTION_ESTABLISH_TIMEOUT) {
+            return;
+        }
+
+        log.error("Slave Wait HA connection establish with {} timeout",
+            this.request.getRemoteAddr());
+        this.request.getRequestFuture().complete(false);
+        this.request = null;
+
     }
 
     /**
@@ -94,18 +120,22 @@ public class StateNotificationService extends ServiceThread {
         try {
             remoteAddress = ((InetSocketAddress) connection.getSocketChannel().getRemoteAddress())
                 .getAddress().getHostAddress();
-            if (remoteAddress.equals(request.getRemoteAddr())) {
-                ConnectionState connState = connection.getConnectionState();
-
-                if (connState == this.request.getExpectState()) {
-                    this.request.getRequestFuture().complete(true);
-                    this.request = null;
-                } else if (this.request.isNotifyWhenShutdown() && connState == ConnectionState.SHUTDOWN) {
-                    this.request.getRequestFuture().complete(false);
-                    this.request = null;
-                }
-                return true;
+            if (!remoteAddress.equals(request.getRemoteAddr())) {
+                return false;
             }
+
+            ConnectionState connState = connection.getConnectionState();
+
+            if (connState == this.request.getExpectState()) {
+                this.request.getRequestFuture().complete(true);
+                this.request = null;
+            } else if (this.request.isNotifyWhenShutdown()
+                && connState == ConnectionState.SHUTDOWN) {
+                this.request.getRequestFuture().complete(false);
+                this.request = null;
+            }
+
+            return true;
         } catch (Exception e) {
             log.error("Check connection address exception: ", e);
         }

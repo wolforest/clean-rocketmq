@@ -232,6 +232,10 @@ public class DefaultHAClient extends ServiceThread implements HAClient, Lifecycl
         log.info("{} service end", this.getServiceName());
     }
 
+    private void process() {
+
+    }
+
     public void closeMasterAndWait() {
         this.closeMaster();
         this.await(5_000);
