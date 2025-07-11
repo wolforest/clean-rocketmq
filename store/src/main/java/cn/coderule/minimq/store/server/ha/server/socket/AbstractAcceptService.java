@@ -5,6 +5,7 @@ import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 import cn.coderule.common.util.net.NetworkUtil;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.store.server.ha.core.HAConnection;
+import cn.coderule.minimq.store.server.ha.core.WakeupCoordinator;
 import cn.coderule.minimq.store.server.ha.server.ConnectionPool;
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -18,19 +19,27 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public abstract class AbstractAcceptService extends ServiceThread {
-    protected final SocketAddress socketAddressListen;
+    protected final SocketAddress socketAddress;
     protected ServerSocketChannel serverSocketChannel;
     protected Selector selector;
 
     protected final StoreConfig storeConfig;
     protected final ConnectionPool connectionPool;
     protected final LifecycleManager resourcePool;
+    protected final WakeupCoordinator wakeupCoordinator;
 
-    public AbstractAcceptService(StoreConfig storeConfig, ConnectionPool connectionPool, LifecycleManager resourcePool) {
+    public AbstractAcceptService(
+        StoreConfig storeConfig,
+        ConnectionPool connectionPool,
+        LifecycleManager resourcePool,
+        WakeupCoordinator wakeupCoordinator
+    ) {
         this.storeConfig = storeConfig;
         this.connectionPool = connectionPool;
         this.resourcePool = resourcePool;
-        this.socketAddressListen = new InetSocketAddress(storeConfig.getHaPort());
+        this.wakeupCoordinator = wakeupCoordinator;
+
+        this.socketAddress = new InetSocketAddress(storeConfig.getHaPort());
     }
 
     /**
@@ -47,7 +56,7 @@ public abstract class AbstractAcceptService extends ServiceThread {
         this.serverSocketChannel = ServerSocketChannel.open();
         this.selector = NetworkUtil.openSelector();
         this.serverSocketChannel.socket().setReuseAddress(true);
-        this.serverSocketChannel.socket().bind(this.socketAddressListen);
+        this.serverSocketChannel.socket().bind(this.socketAddress);
 
         if (0 == storeConfig.getHaPort()) {
             int port = serverSocketChannel.socket().getLocalPort();

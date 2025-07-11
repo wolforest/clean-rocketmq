@@ -4,6 +4,7 @@ import cn.coderule.common.convention.service.LifecycleManager;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.store.server.ha.core.HAConnection;
 import cn.coderule.minimq.store.server.ha.core.DefaultHAConnection;
+import cn.coderule.minimq.store.server.ha.core.WakeupCoordinator;
 import cn.coderule.minimq.store.server.ha.server.ConnectionContext;
 import cn.coderule.minimq.store.server.ha.server.ConnectionPool;
 import java.io.IOException;
@@ -19,8 +20,13 @@ import java.nio.channels.SocketChannel;
  */
 public class DefaultAcceptService extends AbstractAcceptService {
 
-    public DefaultAcceptService(StoreConfig storeConfig, ConnectionPool connectionPool, LifecycleManager resourcePool) {
-        super(storeConfig, connectionPool, resourcePool);
+    public DefaultAcceptService(
+        StoreConfig storeConfig,
+        ConnectionPool connectionPool,
+        LifecycleManager resourcePool,
+        WakeupCoordinator wakeupCoordinator
+    ) {
+        super(storeConfig, connectionPool, resourcePool, wakeupCoordinator);
     }
 
     @Override
@@ -36,10 +42,11 @@ public class DefaultAcceptService extends AbstractAcceptService {
 
     private ConnectionContext buildContext(SocketChannel socketChannel) {
         return ConnectionContext.builder()
-                .storeConfig(storeConfig)
-                .resourcePool(resourcePool)
-                .connectionPool(connectionPool)
-                .socketChannel(socketChannel)
-                .build();
+            .storeConfig(storeConfig)
+            .wakeupCoordinator(wakeupCoordinator)
+            .resourcePool(resourcePool)
+            .connectionPool(connectionPool)
+            .socketChannel(socketChannel)
+            .build();
     }
 }
