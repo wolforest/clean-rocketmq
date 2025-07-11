@@ -1,4 +1,4 @@
-package cn.coderule.minimq.store.server.ha.core;
+package cn.coderule.minimq.store.server.ha.core.monitor;
 
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 import cn.coderule.minimq.domain.config.server.StoreConfig;

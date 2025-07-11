@@ -1,9 +1,11 @@
-package cn.coderule.minimq.store.server.ha.core;
+package cn.coderule.minimq.store.server.ha.core.monitor;
 
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.store.server.ha.HAClient;
 import cn.coderule.minimq.store.server.ha.HAServer;
+import cn.coderule.minimq.store.server.ha.core.ConnectionState;
+import cn.coderule.minimq.store.server.ha.core.HAConnection;
 import java.net.InetSocketAddress;
 import lombok.extern.slf4j.Slf4j;
 
@@ -12,21 +14,21 @@ import lombok.extern.slf4j.Slf4j;
  * Service to periodically check and notify for certain connection state.
  */
 @Slf4j
-public class StateNotificationService extends ServiceThread {
+public class StateMonitor extends ServiceThread {
     private static final long CONNECTION_ESTABLISH_TIMEOUT = 10_000;
 
     private final StoreConfig storeConfig;
 
-    private volatile StateNotificationRequest request;
+    private volatile StateRequest request;
     private volatile long lastCheckTimeStamp = -1;
     private final HAServer haServer;
     private final HAClient haClient;
 
-    public StateNotificationService(StoreConfig storeConfig, HAServer haServer) {
+    public StateMonitor(StoreConfig storeConfig, HAServer haServer) {
         this(storeConfig, haServer, null);
     }
 
-    public StateNotificationService(StoreConfig storeConfig, HAServer haServer, HAClient haClient) {
+    public StateMonitor(StoreConfig storeConfig, HAServer haServer, HAClient haClient) {
         this.storeConfig = storeConfig;
         this.haServer = haServer;
         this.haClient = haClient;
@@ -34,10 +36,10 @@ public class StateNotificationService extends ServiceThread {
 
     @Override
     public String getServiceName() {
-        return StateNotificationService.class.getSimpleName();
+        return StateMonitor.class.getSimpleName();
     }
 
-    public synchronized void setRequest(StateNotificationRequest request) {
+    public synchronized void setRequest(StateRequest request) {
         if (this.request != null) {
             this.request.getRequestFuture().cancel(true);
         }

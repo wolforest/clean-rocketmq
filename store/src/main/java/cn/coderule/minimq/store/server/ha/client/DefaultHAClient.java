@@ -8,7 +8,7 @@ import cn.coderule.minimq.rpc.common.rpc.netty.service.helper.NettyHelper;
 import cn.coderule.minimq.store.server.ha.HAClient;
 import cn.coderule.minimq.store.server.ha.core.ConnectionState;
 import cn.coderule.minimq.store.server.ha.core.DefaultHAConnection;
-import cn.coderule.minimq.store.server.ha.core.FlowMonitor;
+import cn.coderule.minimq.store.server.ha.core.monitor.FlowMonitor;
 import java.io.IOException;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
