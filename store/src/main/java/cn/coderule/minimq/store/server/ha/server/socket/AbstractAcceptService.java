@@ -34,6 +34,11 @@ public abstract class AbstractAcceptService extends ServiceThread {
     }
 
     /**
+     * Create ha connection
+     */
+    protected abstract HAConnection createConnection(final SocketChannel sc) throws IOException;
+
+    /**
      * Starts listening to slave connections.
      *
      * @throws Exception If fails.
@@ -43,10 +48,13 @@ public abstract class AbstractAcceptService extends ServiceThread {
         this.selector = NetworkUtil.openSelector();
         this.serverSocketChannel.socket().setReuseAddress(true);
         this.serverSocketChannel.socket().bind(this.socketAddressListen);
+
         if (0 == storeConfig.getHaPort()) {
-            storeConfig.setHaPort(this.serverSocketChannel.socket().getLocalPort());
+            int port = serverSocketChannel.socket().getLocalPort();
+            storeConfig.setHaPort(port);
             log.info("OS picked up {} to listen for HA", storeConfig.getHaPort());
         }
+
         this.serverSocketChannel.configureBlocking(false);
         this.serverSocketChannel.register(this.selector, SelectionKey.OP_ACCEPT);
     }
@@ -85,40 +93,47 @@ public abstract class AbstractAcceptService extends ServiceThread {
                     continue;
                 }
 
-                for (SelectionKey k : selected) {
-                    if (k.isAcceptable()) {
-                        SocketChannel sc = ((ServerSocketChannel) k.channel()).accept();
-
-                        if (null == sc) {
-                            continue;
-                        }
-
-                        log.info("HAService receive new connection, {}", sc.socket().getRemoteSocketAddress());
-                        try {
-                            HAConnection conn = createConnection(sc);
-                            conn.start();
-                            connectionPool.addConnection(conn);
-                        } catch (Exception e) {
-                            log.error("new HAConnection exception", e);
-                            sc.close();
-                        }
-                    } else {
-                        log.warn("Unexpected ops in select {}", k.readyOps());
-                    }
-                }
-
+                accept(selected);
                 selected.clear();
             } catch (Exception e) {
-                log.error("{} service has exception.", this.getServiceName(), e);
+                log.error("{} service has exception.",
+                    this.getServiceName(), e);
             }
         }
 
         log.info("{} service end", this.getServiceName());
     }
 
-    /**
-     * Create ha connection
-     */
-    protected abstract HAConnection createConnection(final SocketChannel sc) throws IOException;
+    protected void accept(Set<SelectionKey> selected) throws IOException {
+        for (SelectionKey k : selected) {
+            if (!k.isAcceptable()) {
+                log.warn("Unexpected ops in select {}", k.readyOps());
+                continue;
+            }
+
+            ServerSocketChannel ss = (ServerSocketChannel) k.channel();
+            SocketChannel sc = ss.accept();
+            if (null == sc) {
+                continue;
+            }
+
+            createAndStartConnection(sc);
+        }
+    }
+
+    protected void createAndStartConnection(SocketChannel sc) throws IOException {
+        log.info("HAService receive new connection, {}",
+            sc.socket().getRemoteSocketAddress());
+
+        try {
+            HAConnection conn = createConnection(sc);
+            conn.start();
+            connectionPool.addConnection(conn);
+        } catch (Exception e) {
+            log.error("new HAConnection exception", e);
+            sc.close();
+        }
+    }
+
 
 }

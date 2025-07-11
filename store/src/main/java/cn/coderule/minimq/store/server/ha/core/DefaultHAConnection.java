@@ -38,6 +38,7 @@ public class DefaultHAConnection implements HAConnection, Lifecycle {
     private final FlowMonitor flowMonitor;
 
     public DefaultHAConnection(ConnectionContext context) throws IOException {
+        this.context = context;
         this.storeConfig = context.getStoreConfig();
         this.socketChannel = context.getSocketChannel();
         this.clientAddress = socketChannel.socket().getRemoteSocketAddress().toString();

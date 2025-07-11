@@ -9,6 +9,11 @@ import cn.coderule.minimq.store.server.ha.server.ConnectionPool;
 import java.io.IOException;
 import java.nio.channels.SocketChannel;
 
+/**
+ * socket accept service
+ * - bind port (AbstractAcceptService)
+ * - accept new connection (AbstractAcceptService)
+ */
 public class DefaultAcceptService extends AbstractAcceptService {
 
     public DefaultAcceptService(StoreConfig storeConfig, ConnectionPool connectionPool, LifecycleManager resourcePool) {
