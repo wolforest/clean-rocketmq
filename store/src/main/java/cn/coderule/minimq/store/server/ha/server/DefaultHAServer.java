@@ -6,7 +6,6 @@ import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 import cn.coderule.common.lang.concurrent.thread.WakeupCoordinator;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.store.server.ha.core.HAConnection;
-import cn.coderule.minimq.store.server.ha.HAServer;
 import cn.coderule.minimq.store.server.ha.core.monitor.StateMonitor;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;

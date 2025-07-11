@@ -1,4 +1,4 @@
-package cn.coderule.minimq.store.server.ha;
+package cn.coderule.minimq.store.server.ha.server;
 
 import cn.coderule.minimq.store.server.ha.core.HAConnection;
 import java.util.List;

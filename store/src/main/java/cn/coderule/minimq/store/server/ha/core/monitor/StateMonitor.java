@@ -2,8 +2,8 @@ package cn.coderule.minimq.store.server.ha.core.monitor;
 
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
-import cn.coderule.minimq.store.server.ha.HAClient;
-import cn.coderule.minimq.store.server.ha.HAServer;
+import cn.coderule.minimq.store.server.ha.client.HAClient;
+import cn.coderule.minimq.store.server.ha.server.HAServer;
 import cn.coderule.minimq.store.server.ha.core.ConnectionState;
 import cn.coderule.minimq.store.server.ha.core.HAConnection;
 import java.net.InetSocketAddress;

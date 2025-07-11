@@ -2,8 +2,10 @@ package cn.coderule.minimq.store.server.ha;
 
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
+import cn.coderule.minimq.store.server.ha.client.HAClient;
 import cn.coderule.minimq.store.server.ha.core.monitor.StateMonitor;
 import cn.coderule.minimq.store.server.ha.core.monitor.StateRequest;
+import cn.coderule.minimq.store.server.ha.server.HAServer;
 
 public class HAService implements Lifecycle {
     private final StoreConfig storeConfig;
