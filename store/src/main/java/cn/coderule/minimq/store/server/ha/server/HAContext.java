@@ -16,24 +16,10 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ConnectionContext implements Serializable {
+public class HAContext implements Serializable {
     private StoreConfig storeConfig;
 
     private LifecycleManager resourcePool;
     private ConnectionPool connectionPool;
     private WakeupCoordinator wakeupCoordinator;
-
-    private FlowMonitor flowMonitor;
-    private SlaveMonitor slaveMonitor;
-
-    private SocketChannel socketChannel;
-
-    public static ConnectionContext of(HAContext haContext) {
-        return ConnectionContext.builder()
-            .storeConfig(haContext.getStoreConfig())
-            .wakeupCoordinator(haContext.getWakeupCoordinator())
-            .resourcePool(haContext.getResourcePool())
-            .connectionPool(haContext.getConnectionPool())
-            .build();
-    }
 }
