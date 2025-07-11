@@ -13,6 +13,9 @@ import java.nio.channels.SocketChannel;
  * socket accept service
  * - bind port (AbstractAcceptService)
  * - accept new connection (AbstractAcceptService)
+ * - create connection
+ *   - create connection context
+ *   - create connection with context
  */
 public class DefaultAcceptService extends AbstractAcceptService {
 
