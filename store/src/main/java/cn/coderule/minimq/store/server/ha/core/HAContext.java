@@ -21,7 +21,8 @@ public class HAContext implements Serializable {
     private StoreConfig storeConfig;
 
     private HAServer haServer;
-    private HAClient haClient;
+    @Builder.Default
+    private HAClient haClient = null;
 
     private LifecycleManager resourcePool;
     private ConnectionPool connectionPool;

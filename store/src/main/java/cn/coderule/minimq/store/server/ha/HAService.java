@@ -1,28 +1,25 @@
 package cn.coderule.minimq.store.server.ha;
 
 import cn.coderule.common.convention.service.Lifecycle;
-import cn.coderule.minimq.domain.config.server.StoreConfig;
-import cn.coderule.minimq.store.server.ha.client.HAClient;
+import cn.coderule.minimq.store.server.ha.core.HAContext;
 import cn.coderule.minimq.store.server.ha.core.monitor.StateMonitor;
 import cn.coderule.minimq.store.server.ha.core.monitor.StateRequest;
-import cn.coderule.minimq.store.server.ha.server.HAServer;
+import cn.coderule.minimq.store.server.ha.server.processor.SlaveMonitor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class HAService implements Lifecycle {
-    private final StoreConfig storeConfig;
-    private final HAServer haServer;
-    private final HAClient haClient;
-
     private final StateMonitor stateMonitor;
+    private final SlaveMonitor slaveMonitor;
 
-    public HAService(StoreConfig storeConfig, HAServer haServer) {
-        this(storeConfig, haServer, null);
-    }
+    public HAService(HAContext context) {
+        this.stateMonitor = new StateMonitor(
+            context.getStoreConfig(),
+            context.getHaServer(),
+            context.getHaClient()
+        );
 
-    public HAService(StoreConfig storeConfig, HAServer haServer, HAClient haClient) {
-        this.storeConfig = storeConfig;
-        this.haServer = haServer;
-        this.haClient = haClient;
-        this.stateMonitor = new StateMonitor(storeConfig, haServer, haClient);
+        this.slaveMonitor = context.getSlaveMonitor();
     }
 
     public void monitorState(StateRequest request) {
