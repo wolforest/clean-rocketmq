@@ -11,6 +11,7 @@ public class HAService implements Lifecycle {
     private final StoreConfig storeConfig;
     private final HAServer haServer;
     private final HAClient haClient;
+
     private final StateMonitor stateMonitor;
 
     public HAService(StoreConfig storeConfig, HAServer haServer) {
