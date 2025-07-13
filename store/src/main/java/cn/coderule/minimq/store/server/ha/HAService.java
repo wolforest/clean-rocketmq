@@ -1,12 +1,15 @@
 package cn.coderule.minimq.store.server.ha;
 
 import cn.coderule.common.convention.service.Lifecycle;
+import cn.coderule.minimq.domain.domain.cluster.store.InsertFuture;
+import cn.coderule.minimq.domain.domain.producer.EnqueueResult;
 import cn.coderule.minimq.store.server.ha.client.HAClient;
 import cn.coderule.minimq.store.server.ha.core.HAContext;
 import cn.coderule.minimq.store.server.ha.core.monitor.StateMonitor;
 import cn.coderule.minimq.store.server.ha.core.monitor.StateRequest;
 import cn.coderule.minimq.store.server.ha.server.HAServer;
 import cn.coderule.minimq.store.server.ha.server.processor.SlaveMonitor;
+import java.util.concurrent.CompletableFuture;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -44,6 +47,17 @@ public class HAService implements Lifecycle {
         }
 
         haClient.setMasterHaAddress(addr);
+    }
+
+    public CompletableFuture<EnqueueResult> syncCommitLog(InsertFuture result) {
+        return result.getFuture();
+    }
+
+    public void wakeupHAClient() {
+        if (haClient == null) {
+            return;
+        }
+
     }
 
     public void monitorState(StateRequest request) {
