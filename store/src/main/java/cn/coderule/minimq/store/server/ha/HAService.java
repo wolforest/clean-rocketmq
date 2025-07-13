@@ -36,6 +36,16 @@ public class HAService implements Lifecycle {
         );
     }
 
+    @Override
+    public void start() {
+        this.stateMonitor.start();
+    }
+
+    @Override
+    public void shutdown() {
+        this.stateMonitor.stop();
+    }
+
     public void updateMasterAddress(String addr) {
         if (haClient == null) {
             return;
@@ -68,13 +78,5 @@ public class HAService implements Lifecycle {
         this.stateMonitor.setRequest(request);
     }
 
-    @Override
-    public void start() {
-        this.stateMonitor.start();
-    }
 
-    @Override
-    public void shutdown() {
-        this.stateMonitor.stop();
-    }
 }

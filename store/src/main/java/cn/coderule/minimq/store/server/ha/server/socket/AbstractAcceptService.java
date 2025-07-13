@@ -2,14 +2,12 @@ package cn.coderule.minimq.store.server.ha.server.socket;
 
 import cn.coderule.common.convention.service.LifecycleManager;
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
-import cn.coderule.common.util.net.NetworkUtil;
+import cn.coderule.common.lang.concurrent.thread.WakeupCoordinator;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.store.server.ha.core.HAConnection;
-import cn.coderule.minimq.store.server.ha.core.WakeupCoordinator;
+import cn.coderule.minimq.store.server.ha.core.HAContext;
 import cn.coderule.minimq.store.server.ha.server.ConnectionPool;
 import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.net.SocketAddress;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
@@ -19,8 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public abstract class AbstractAcceptService extends ServiceThread {
-    protected final SocketAddress socketAddress;
-    protected ServerSocketChannel serverSocketChannel;
     protected Selector selector;
 
     protected final StoreConfig storeConfig;
@@ -28,18 +24,12 @@ public abstract class AbstractAcceptService extends ServiceThread {
     protected final LifecycleManager resourcePool;
     protected final WakeupCoordinator wakeupCoordinator;
 
-    public AbstractAcceptService(
-        StoreConfig storeConfig,
-        ConnectionPool connectionPool,
-        LifecycleManager resourcePool,
-        WakeupCoordinator wakeupCoordinator
-    ) {
-        this.storeConfig = storeConfig;
-        this.connectionPool = connectionPool;
-        this.resourcePool = resourcePool;
-        this.wakeupCoordinator = wakeupCoordinator;
-
-        this.socketAddress = new InetSocketAddress(storeConfig.getHaPort());
+    public AbstractAcceptService(HAContext haContext) {
+        this.storeConfig = haContext.getStoreConfig();
+        this.connectionPool = haContext.getConnectionPool();
+        this.resourcePool = haContext.getResourcePool();
+        this.wakeupCoordinator = haContext.getWakeupCoordinator();
+        this.selector = haContext.getSelector();
     }
 
     /**
@@ -47,26 +37,6 @@ public abstract class AbstractAcceptService extends ServiceThread {
      */
     protected abstract HAConnection createConnection(final SocketChannel sc) throws IOException;
 
-    /**
-     * Starts listening to slave connections.
-     *
-     * @throws Exception If fails.
-     */
-    public void beginAccept() throws Exception {
-        this.serverSocketChannel = ServerSocketChannel.open();
-        this.selector = NetworkUtil.openSelector();
-        this.serverSocketChannel.socket().setReuseAddress(true);
-        this.serverSocketChannel.socket().bind(this.socketAddress);
-
-        if (0 == storeConfig.getHaPort()) {
-            int port = serverSocketChannel.socket().getLocalPort();
-            storeConfig.setHaPort(port);
-            log.info("OS picked up {} to listen for HA", storeConfig.getHaPort());
-        }
-
-        this.serverSocketChannel.configureBlocking(false);
-        this.serverSocketChannel.register(this.selector, SelectionKey.OP_ACCEPT);
-    }
 
     /**
      * {@inheritDoc}
@@ -74,17 +44,6 @@ public abstract class AbstractAcceptService extends ServiceThread {
     @Override
     public void shutdown(final boolean interrupt) {
         super.shutdown(interrupt);
-        try {
-            if (null != this.serverSocketChannel) {
-                this.serverSocketChannel.close();
-            }
-
-            if (null != this.selector) {
-                this.selector.close();
-            }
-        } catch (IOException e) {
-            log.error("AcceptSocketService shutdown exception", e);
-        }
     }
 
     /**
