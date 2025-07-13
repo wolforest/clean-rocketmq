@@ -12,6 +12,7 @@ public interface HAClient {
     void setMasterAddress(String newAddress);
     void setMasterHaAddress(String newAddress);
 
+    void wakeup();
     boolean connectMaster() throws ClosedChannelException;
     void closeMaster();
 }

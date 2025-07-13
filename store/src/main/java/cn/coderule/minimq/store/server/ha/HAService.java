@@ -8,6 +8,7 @@ import cn.coderule.minimq.store.server.ha.core.HAContext;
 import cn.coderule.minimq.store.server.ha.core.monitor.StateMonitor;
 import cn.coderule.minimq.store.server.ha.core.monitor.StateRequest;
 import cn.coderule.minimq.store.server.ha.server.HAServer;
+import cn.coderule.minimq.store.server.ha.server.processor.CommitLogSynchronizer;
 import cn.coderule.minimq.store.server.ha.server.processor.SlaveMonitor;
 import java.util.concurrent.CompletableFuture;
 import lombok.extern.slf4j.Slf4j;
@@ -20,17 +21,19 @@ public class HAService implements Lifecycle {
     private final HAServer haServer;
     private final HAClient haClient;
 
+    private final CommitLogSynchronizer commitLogSynchronizer;
+
     public HAService(HAContext context) {
         this.haServer = context.getHaServer();
         this.haClient = context.getHaClient();
+        this.slaveMonitor = context.getSlaveMonitor();
+        this.commitLogSynchronizer = context.getCommitLogSynchronizer();
 
         this.stateMonitor = new StateMonitor(
             context.getStoreConfig(),
             context.getHaServer(),
             context.getHaClient()
         );
-
-        this.slaveMonitor = context.getSlaveMonitor();
     }
 
     public void updateMasterAddress(String addr) {
@@ -50,7 +53,7 @@ public class HAService implements Lifecycle {
     }
 
     public CompletableFuture<EnqueueResult> syncCommitLog(InsertFuture result) {
-        return result.getFuture();
+        return commitLogSynchronizer.sync(result);
     }
 
     public void wakeupHAClient() {
@@ -58,6 +61,7 @@ public class HAService implements Lifecycle {
             return;
         }
 
+        haClient.wakeup();
     }
 
     public void monitorState(StateRequest request) {

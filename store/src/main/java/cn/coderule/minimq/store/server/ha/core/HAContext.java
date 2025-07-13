@@ -6,6 +6,7 @@ import cn.coderule.minimq.store.server.ha.HAService;
 import cn.coderule.minimq.store.server.ha.client.HAClient;
 import cn.coderule.minimq.store.server.ha.server.ConnectionPool;
 import cn.coderule.minimq.store.server.ha.server.HAServer;
+import cn.coderule.minimq.store.server.ha.server.processor.CommitLogSynchronizer;
 import cn.coderule.minimq.store.server.ha.server.processor.SlaveMonitor;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
@@ -29,4 +30,5 @@ public class HAContext implements Serializable {
     private WakeupCoordinator wakeupCoordinator;
 
     private SlaveMonitor slaveMonitor;
+    private CommitLogSynchronizer commitLogSynchronizer;
 }
