@@ -4,6 +4,8 @@ import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 import cn.coderule.common.lang.concurrent.thread.WakeupCoordinator;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
+import cn.coderule.minimq.domain.core.constant.MQConstants;
+import cn.coderule.minimq.domain.core.enums.store.EnqueueStatus;
 import cn.coderule.minimq.domain.core.lock.commitlog.CommitLogLock;
 import cn.coderule.minimq.domain.core.lock.commitlog.CommitLogSpinLock;
 import cn.coderule.minimq.domain.domain.cluster.store.GroupCommitEvent;
@@ -77,7 +79,28 @@ public class CommitLogSynchronizer extends ServiceThread implements Lifecycle {
     }
 
     private void waitTransfer() {
+        if (this.readRequests.isEmpty()) {
+            return;
+        }
 
+        for (GroupCommitEvent event : this.readRequests) {
+            boolean allDone = event.getAckNums() == MQConstants.ALL_ACK_IN_SYNC_STATE_SET;
+            boolean transferDone = waitTransfer(event, allDone);
+
+            if (!transferDone) {
+                log.warn("wait transfer timeout, offset: {}, request ack: {}",
+                    event.getNextOffset(), event.getAckNums());
+            }
+
+            EnqueueStatus status = transferDone
+                ? EnqueueStatus.PUT_OK
+                : EnqueueStatus.FLUSH_SLAVE_TIMEOUT;
+            event.wakeupCustomer(status);
+        }
+    }
+
+    private boolean waitTransfer(GroupCommitEvent event, boolean allDone) {
+        return true;
     }
 
     private void swapRequests() {
