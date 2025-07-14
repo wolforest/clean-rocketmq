@@ -41,7 +41,19 @@ public class CommitLogSynchronizer extends ServiceThread implements Lifecycle {
 
     @Override
     public void run() {
+        log.info("{} service started", this.getServiceName());
 
+        while (!this.isStopped()) {
+            try {
+                this.await(10);
+                this.swapRequests();
+                this.waitTransfer();
+            } catch (Exception e) {
+                log.warn("{} occurs exception.", this.getServiceName(), e);
+            }
+        }
+
+        log.info("{} service end", this.getServiceName());
     }
 
     public CompletableFuture<EnqueueResult> sync(InsertFuture request) {
@@ -62,6 +74,10 @@ public class CommitLogSynchronizer extends ServiceThread implements Lifecycle {
 
     public void wakeupCoordinator() {
         wakeupCoordinator.wakeup();
+    }
+
+    private void waitTransfer() {
+
     }
 
     private void swapRequests() {
