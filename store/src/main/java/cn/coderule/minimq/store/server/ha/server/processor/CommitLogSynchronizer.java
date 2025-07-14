@@ -10,6 +10,7 @@ import cn.coderule.minimq.domain.domain.cluster.store.GroupCommitEvent;
 import cn.coderule.minimq.domain.domain.producer.EnqueueResult;
 import cn.coderule.minimq.domain.domain.cluster.store.InsertFuture;
 import cn.coderule.minimq.domain.service.store.api.CommitLogStore;
+import cn.coderule.minimq.store.domain.commitlog.vo.GroupCommitRequest;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -21,14 +22,14 @@ public class CommitLogSynchronizer extends ServiceThread implements Lifecycle {
     private CommitLogStore commitLogStore;
     private WakeupCoordinator wakeupCoordinator;
 
-    private final CommitLogLock commitLogLock;
+    private final CommitLogLock lock;
 
     private volatile List<GroupCommitEvent> writeRequests;
     private volatile List<GroupCommitEvent> readRequests;
 
 
     public CommitLogSynchronizer() {
-        this.commitLogLock = new CommitLogSpinLock();
+        this.lock = new CommitLogSpinLock();
         this.readRequests = new LinkedList<>();
         this.writeRequests = new LinkedList<>();
     }
@@ -47,11 +48,11 @@ public class CommitLogSynchronizer extends ServiceThread implements Lifecycle {
         long timeout = storeConfig.getSlaveTimeout();
         GroupCommitEvent event = new GroupCommitEvent(request, timeout);
 
-        commitLogLock.lock();
+        lock.lock();
         try {
             this.writeRequests.add(event);
         } finally {
-            commitLogLock.unlock();
+            lock.unlock();
         }
 
         wakeup();
@@ -63,7 +64,16 @@ public class CommitLogSynchronizer extends ServiceThread implements Lifecycle {
         wakeupCoordinator.wakeup();
     }
 
-
+    private void swapRequests() {
+        lock.lock();
+        try {
+            List<GroupCommitEvent> tmp = this.writeRequests;
+            this.writeRequests = this.readRequests;
+            this.readRequests = tmp;
+        } finally {
+            lock.unlock();
+        }
+    }
 
 
 }
