@@ -23,6 +23,7 @@ public class CommitLogSynchronizer extends ServiceThread implements Lifecycle {
     private StoreConfig storeConfig;
     private CommitLogStore commitLogStore;
     private WakeupCoordinator wakeupCoordinator;
+    private SlaveMonitor slaveMonitor;
 
     private final CommitLogLock lock;
 
@@ -100,7 +101,29 @@ public class CommitLogSynchronizer extends ServiceThread implements Lifecycle {
     }
 
     private boolean waitTransfer(GroupCommitEvent event, boolean allDone) {
-        return true;
+        boolean transferDone = false;
+
+        for (int i=0; !transferDone && event.getDeadLine() - System.nanoTime() > 0; i++) {
+            if (i > 0) {
+                wakeupCoordinator.await(1);
+            }
+
+            if (!allDone && event.getAckNums() <= 1) {
+                transferDone = slaveMonitor.getAckOffset() >= event.getNextOffset();
+                continue;
+            }
+
+            transferDone = waitTransfer(event);
+        }
+
+        return transferDone;
+    }
+
+    private boolean waitTransfer(GroupCommitEvent event) {
+        boolean transferDone = false;
+
+
+        return transferDone;
     }
 
     private void swapRequests() {
