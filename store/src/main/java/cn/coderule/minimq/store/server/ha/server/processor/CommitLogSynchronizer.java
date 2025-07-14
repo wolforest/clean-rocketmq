@@ -42,6 +42,15 @@ public class CommitLogSynchronizer extends ServiceThread implements Lifecycle {
         long timeout = storeConfig.getSlaveTimeout();
         GroupCommitEvent event = new GroupCommitEvent(request, timeout);
 
+        commitLogLock.lock();
+        try {
+            this.writeRequests.add(event);
+        } finally {
+            commitLogLock.unlock();
+        }
+
+        wakeup();
+
         return null;
     }
 
