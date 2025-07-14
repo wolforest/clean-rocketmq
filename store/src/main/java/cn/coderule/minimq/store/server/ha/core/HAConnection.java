@@ -9,6 +9,6 @@ public interface HAConnection {
     ConnectionState getConnectionState();
     void setConnectionState(ConnectionState state);
 
-    void start();
+    void start() throws Exception;
     void close();
 }

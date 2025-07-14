@@ -3,6 +3,7 @@ package cn.coderule.minimq.broker.domain.consumer.revive;
 import cn.coderule.common.lang.type.Pair;
 import cn.coderule.common.util.lang.ByteUtil;
 import cn.coderule.common.util.lang.ThreadUtil;
+import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.domain.core.constant.PopConstants;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueRequest;
@@ -32,7 +33,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class Reviver {
-    private final StoreConfig storeConfig;
+    private final BrokerConfig brokerConfig;
     private final RetryService retryService;
 
     private final MQFacade mqFacade;
@@ -56,7 +57,7 @@ public class Reviver {
     private final NavigableMap<PopCheckPoint, Pair<Long, Boolean>> inflightMap;
 
     public Reviver(ReviveContext context, int queueId, RetryService retryService) {
-        this.storeConfig = context.getStoreConfig();
+        this.brokerConfig = context.getBrokerConfig();
         this.reviveTopic = context.getReviveTopic();
         this.queueId = queueId;
 
@@ -153,7 +154,7 @@ public class Reviver {
     private void reputCheckpoint(PopCheckPoint point, long startOffset) {
         PopCheckPoint newCheckPoint = PopConverter.toCheckPoint(point, startOffset);
 
-        SocketAddress storeHost = new InetSocketAddress(storeConfig.getHost(), storeConfig.getPort());
+        SocketAddress storeHost = new InetSocketAddress(brokerConfig.getHost(), brokerConfig.getPort());
         MessageBO message = PopConverter.toMessage(newCheckPoint, queueId, reviveTopic, storeHost);
 
         mqFacade.enqueue(EnqueueRequest.create(message));

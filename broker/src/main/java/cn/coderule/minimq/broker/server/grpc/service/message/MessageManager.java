@@ -51,7 +51,7 @@ public class MessageManager implements Lifecycle {
     }
 
     @Override
-    public void initialize() {
+    public void initialize() throws Exception {
         initClientActivity();
         initRouteActivity();
         initProducerActivity();
@@ -62,7 +62,7 @@ public class MessageManager implements Lifecycle {
     }
 
     @Override
-    public void start() {
+    public void start() throws Exception {
         injectRouteController();
         injectProducerController();
         injectConsumerController();
@@ -70,7 +70,7 @@ public class MessageManager implements Lifecycle {
     }
 
     @Override
-    public void shutdown() {
+    public void shutdown() throws Exception {
         this.clientThreadPoolExecutor.shutdown();
         this.routeThreadPoolExecutor.shutdown();
         this.producerThreadPoolExecutor.shutdown();

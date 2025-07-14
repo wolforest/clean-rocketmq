@@ -9,7 +9,7 @@ import cn.coderule.minimq.rpc.common.rpc.config.RpcServerConfig;
 
 public class PropertyManager implements Lifecycle {
     @Override
-    public void initialize() {
+    public void initialize() throws Exception {
         PropertyService propertyService = new PropertyService(
             RegistryContext.getBean(RegistryConfig.class),
             RegistryContext.getBean(RpcServerConfig.class)
@@ -23,8 +23,8 @@ public class PropertyManager implements Lifecycle {
     }
 
     @Override
-    public void start() { }
+    public void start() throws Exception { }
 
     @Override
-    public void shutdown() { }
+    public void shutdown() throws Exception { }
 }

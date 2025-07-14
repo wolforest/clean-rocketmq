@@ -17,12 +17,12 @@ public class SynchronizerManager implements Lifecycle, Synchronizer {
     }
 
     @Override
-    public void initialize() {
+    public void initialize() throws Exception {
         synchronizerList.add(new TimerSynchronizer());
     }
 
     @Override
-    public void start() {
+    public void start() throws Exception {
         storeScheduler.scheduleAtFixedRate(
             this::sync,
             10_000,
@@ -32,7 +32,7 @@ public class SynchronizerManager implements Lifecycle, Synchronizer {
     }
 
     @Override
-    public void shutdown() {
+    public void shutdown() throws Exception {
     }
 
     @Override

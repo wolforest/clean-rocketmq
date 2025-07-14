@@ -63,7 +63,7 @@ public class AllocateMappedFileService extends ServiceThread implements Lifecycl
     }
 
     @Override
-    public void shutdown() {
+    public void shutdown() throws Exception {
         super.shutdown(true);
 
         for (AllocateRequest req : this.requestTable.values()) {
@@ -77,11 +77,11 @@ public class AllocateMappedFileService extends ServiceThread implements Lifecycl
     }
 
     @Override
-    public void initialize() {
+    public void initialize() throws Exception {
     }
 
     @Override
-    public void cleanup() {
+    public void cleanup() throws Exception {
     }
 
     @Override

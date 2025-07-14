@@ -10,7 +10,7 @@ public class RemoteStoreManager implements Lifecycle {
     private RemoteLoadBalance loadBalance;
 
     @Override
-    public void initialize() {
+    public void initialize() throws Exception {
         this.brokerConfig = BrokerContext.getBean(BrokerConfig.class);
         if (!this.brokerConfig.isEnableRemoteStore()) {
             return;
@@ -23,14 +23,14 @@ public class RemoteStoreManager implements Lifecycle {
     }
 
     @Override
-    public void start() {
+    public void start() throws Exception {
         if (!brokerConfig.isEnableRemoteStore()) {
             return;
         }
     }
 
     @Override
-    public void shutdown() {
+    public void shutdown() throws Exception {
         if (!brokerConfig.isEnableRemoteStore()) {
             return;
         }

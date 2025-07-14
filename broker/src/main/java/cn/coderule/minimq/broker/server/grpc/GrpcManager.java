@@ -14,26 +14,26 @@ public class GrpcManager implements Lifecycle {
     private GrpcServer grpcServer;
 
     @Override
-    public void initialize() {
+    public void initialize() throws Exception {
         initConfig();
         initMessageService();
         initGrpcServer();
     }
 
     @Override
-    public void start() {
+    public void start() throws Exception {
         this.messageManager.start();
         this.grpcServer.start();
     }
 
     @Override
-    public void shutdown() {
+    public void shutdown() throws Exception {
         this.messageManager.shutdown();
         this.grpcServer.shutdown();
     }
 
     @Override
-    public void cleanup() {
+    public void cleanup() throws Exception {
 
     }
 
@@ -51,12 +51,20 @@ public class GrpcManager implements Lifecycle {
 
     private void initMessageService() {
         this.messageManager = new MessageManager(grpcConfig);
-        messageManager.initialize();
+        try {
+            messageManager.initialize();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         this.messageService = this.messageManager.getMessageService();
     }
 
     private void initGrpcServer() {
         this.grpcServer = new GrpcServer(grpcConfig, messageService);
-        this.grpcServer.initialize();
+        try {
+            this.grpcServer.initialize();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

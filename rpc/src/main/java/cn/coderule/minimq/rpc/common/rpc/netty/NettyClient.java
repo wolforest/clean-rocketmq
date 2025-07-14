@@ -60,9 +60,13 @@ public class NettyClient extends NettyService implements RpcClient {
     }
 
     @Override
-    public void start() {
-        eventExecutor.start();
-        dispatcher.start();
+    public void start()  {
+        try {
+            eventExecutor.start();
+            dispatcher.start();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void shutdownCallbackExecutor() {

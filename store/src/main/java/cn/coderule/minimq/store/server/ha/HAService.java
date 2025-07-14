@@ -37,12 +37,12 @@ public class HAService implements Lifecycle {
     }
 
     @Override
-    public void start() {
+    public void start() throws Exception {
         this.stateMonitor.start();
     }
 
     @Override
-    public void shutdown() {
+    public void shutdown() throws Exception {
         this.stateMonitor.stop();
     }
 

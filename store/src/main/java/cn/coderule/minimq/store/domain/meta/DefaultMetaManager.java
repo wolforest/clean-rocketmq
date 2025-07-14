@@ -22,19 +22,19 @@ public class DefaultMetaManager implements MetaManager {
     private SubscriptionService subscriptionService;
 
     @Override
-    public void initialize() {
+    public void initialize() throws Exception {
         initConsumerOffset();
         initTopic();
         initSubscription();
     }
 
     @Override
-    public void start() {
+    public void start() throws Exception {
         injectDependency();
     }
 
     @Override
-    public void shutdown() {
+    public void shutdown() throws Exception {
         offsetService.store();
         topicService.store();
         subscriptionService.store();

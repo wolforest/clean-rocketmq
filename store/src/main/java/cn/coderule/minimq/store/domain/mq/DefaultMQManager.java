@@ -24,7 +24,7 @@ public class DefaultMQManager implements MQManager {
     private AckManager ackManager;
 
     @Override
-    public void initialize() {
+    public void initialize() throws Exception {
         dequeueLock = new DequeueLock();
 
         initMQManager();
@@ -32,13 +32,13 @@ public class DefaultMQManager implements MQManager {
     }
 
     @Override
-    public void start() {
+    public void start() throws Exception {
         dequeueLock.start();
         ackManager.start();
     }
 
     @Override
-    public void shutdown() {
+    public void shutdown() throws Exception {
         dequeueLock.shutdown();
         ackManager.shutdown();
     }
@@ -55,7 +55,11 @@ public class DefaultMQManager implements MQManager {
 
     private void initAckManager() {
         ackManager = new AckManager();
-        ackManager.initialize();
+        try {
+            ackManager.initialize();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private MQService initMQService() {

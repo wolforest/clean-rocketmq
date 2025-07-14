@@ -27,8 +27,16 @@ import lombok.extern.slf4j.Slf4j;
 public class Store implements Lifecycle {
     public static void main(String[] args) {
         Store store = new Store(args);
-        store.initialize();
-        store.start();
+        try {
+            store.initialize();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        try {
+            store.start();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private final StoreArgument argument;
@@ -46,7 +54,7 @@ public class Store implements Lifecycle {
     }
 
     @Override
-    public void initialize() {
+    public void initialize() throws Exception {
         ContextInitializer.init(argument);
 
         startupLock = new StartupLock(StorePath.getLockFile());
@@ -58,7 +66,7 @@ public class Store implements Lifecycle {
     }
 
     @Override
-    public void start() {
+    public void start() throws Exception {
         log.info("Store is starting");
 
         startupLock.lock();
@@ -69,7 +77,7 @@ public class Store implements Lifecycle {
     }
 
     @Override
-    public void shutdown() {
+    public void shutdown() throws Exception {
         log.info("Store is shutting down ...");
 
         this.componentManager.shutdown();
@@ -82,7 +90,7 @@ public class Store implements Lifecycle {
     }
 
     @Override
-    public void cleanup() {
+    public void cleanup() throws Exception {
         this.componentManager.cleanup();
     }
 

@@ -13,6 +13,7 @@ import cn.coderule.minimq.rpc.common.rpc.protocol.code.ResponseCode;
 import cn.coderule.minimq.rpc.registry.RegistryClient;
 import cn.coderule.minimq.domain.domain.cluster.route.PublishInfo;
 import cn.coderule.minimq.domain.domain.cluster.route.RouteInfo;
+import java.lang.Exception;
 import java.util.Set;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -51,7 +52,7 @@ public class RouteLoader implements Lifecycle {
     }
 
     @Override
-    public void start() {
+    public void start() throws Exception {
         this.scheduler.scheduleAtFixedRate(
             RouteLoader.this::load,
             1000,
@@ -61,7 +62,7 @@ public class RouteLoader implements Lifecycle {
     }
 
     @Override
-    public void shutdown() {
+    public void shutdown() throws Exception {
         this.scheduler.shutdown();
     }
 

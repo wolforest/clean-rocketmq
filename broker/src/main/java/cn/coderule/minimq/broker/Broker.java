@@ -21,7 +21,11 @@ public class Broker implements Lifecycle {
      * @param args command line argument
      */
     public static void main(String[] args) {
-        new Broker(args).start();
+        try {
+            new Broker(args).start();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private final String[] args;
@@ -37,7 +41,7 @@ public class Broker implements Lifecycle {
      * called by this.start()
      */
     @Override
-    public void initialize() {
+    public void initialize() throws Exception {
         ContextInitializer.init(args);
         ConfigLoader.load();
 
@@ -46,7 +50,7 @@ public class Broker implements Lifecycle {
     }
 
     @Override
-    public void start() {
+    public void start() throws Exception {
         try {
             this.initialize();
 
@@ -64,7 +68,7 @@ public class Broker implements Lifecycle {
     }
 
     @Override
-    public void shutdown() {
+    public void shutdown() throws Exception {
         log.info("Broker is shutting down ...");
 
         try {
@@ -82,7 +86,7 @@ public class Broker implements Lifecycle {
     }
 
     @Override
-    public void cleanup() {
+    public void cleanup() throws Exception {
         this.componentManager.cleanup();
     }
 
@@ -93,7 +97,13 @@ public class Broker implements Lifecycle {
 
     private void addShutdownHook() {
         Runtime.getRuntime().addShutdownHook(
-            new Thread(this::shutdown)
+            new Thread(() -> {
+                try {
+                    shutdown();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            })
         );
     }
 }

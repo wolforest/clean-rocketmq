@@ -5,7 +5,7 @@ import cn.coderule.minimq.domain.domain.meta.offset.OffsetFilter;
 import cn.coderule.minimq.domain.domain.meta.offset.OffsetRequest;
 import cn.coderule.minimq.domain.domain.meta.offset.OffsetResult;
 import cn.coderule.minimq.domain.domain.meta.offset.TopicResult;
-import cn.coderule.minimq.domain.service.broker.infra.meta.ConsumeOffsetStore;
+import cn.coderule.minimq.domain.service.store.api.meta.ConsumeOffsetStore;
 import cn.coderule.minimq.rpc.common.rpc.RpcClient;
 import cn.coderule.minimq.rpc.store.StoreClient;
 import cn.coderule.minimq.rpc.store.client.AbstractStoreClient;

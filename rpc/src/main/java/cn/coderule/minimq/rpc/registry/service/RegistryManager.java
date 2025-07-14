@@ -11,6 +11,7 @@ import io.netty.channel.Channel;
 import io.netty.util.HashedWheelTimer;
 import io.netty.util.Timeout;
 import io.netty.util.TimerTask;
+import java.lang.Exception;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -60,13 +61,13 @@ public class RegistryManager implements Lifecycle {
     }
 
     @Override
-    public void start() {
+    public void start() throws Exception {
         this.scanAvailableRegistry();
         this.startScanService();
     }
 
     @Override
-    public void shutdown() {
+    public void shutdown() throws Exception {
         try {
             this.timer.stop();
             this.scanExecutor.shutdown();

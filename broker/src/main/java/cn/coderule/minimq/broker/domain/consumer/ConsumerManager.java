@@ -9,7 +9,7 @@ public class ConsumerManager implements Lifecycle {
     private Consumer consumer;
 
     @Override
-    public void initialize() {
+    public void initialize() throws Exception {
         consumer = new Consumer();
 
         ConsumerController controller = new ConsumerController(consumer);
@@ -17,11 +17,11 @@ public class ConsumerManager implements Lifecycle {
     }
 
     @Override
-    public void start() {
+    public void start() throws Exception {
     }
 
     @Override
-    public void shutdown() {
+    public void shutdown() throws Exception {
     }
 
 }

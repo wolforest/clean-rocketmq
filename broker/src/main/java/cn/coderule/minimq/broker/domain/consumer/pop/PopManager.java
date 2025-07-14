@@ -7,7 +7,7 @@ import cn.coderule.minimq.domain.domain.meta.topic.KeyBuilder;
 
 public class PopManager implements Lifecycle {
     @Override
-    public void initialize() {
+    public void initialize() throws Exception {
         BrokerConfig brokerConfig = BrokerContext.getBean(BrokerConfig.class);
         String reviveTopic = KeyBuilder.buildClusterReviveTopic(brokerConfig.getCluster());
 
@@ -15,12 +15,12 @@ public class PopManager implements Lifecycle {
     }
 
     @Override
-    public void start() {
+    public void start() throws Exception {
 
     }
 
     @Override
-    public void shutdown() {
+    public void shutdown() throws Exception {
 
     }
 

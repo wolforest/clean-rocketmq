@@ -13,7 +13,7 @@ public class AckManager implements Lifecycle {
     private AckMerger ackMerger;
 
     @Override
-    public void initialize() {
+    public void initialize() throws Exception {
         StoreConfig storeConfig = StoreContext.getBean(StoreConfig.class);
         AckBuffer ackBuffer = new AckBuffer(storeConfig.getMessageConfig());
 
@@ -29,12 +29,12 @@ public class AckManager implements Lifecycle {
     }
 
     @Override
-    public void start() {
+    public void start() throws Exception {
         ackMerger.start();
     }
 
     @Override
-    public void shutdown() {
+    public void shutdown() throws Exception {
         ackMerger.shutdown();
     }
 }

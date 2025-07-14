@@ -10,12 +10,12 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class DefaultReceiptHandler implements ReceiptHandler, Lifecycle {
     @Override
-    public void start() {
+    public void start() throws Exception {
 
     }
 
     @Override
-    public void shutdown() {
+    public void shutdown() throws Exception {
 
     }
 

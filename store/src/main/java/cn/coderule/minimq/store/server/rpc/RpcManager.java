@@ -21,7 +21,7 @@ public class RpcManager implements Lifecycle {
     private StoreServer storeServer;
 
     @Override
-    public void initialize() {
+    public void initialize() throws Exception {
         storeConfig = StoreContext.getBean(StoreConfig.class);
 
         initExecutor();
@@ -30,13 +30,13 @@ public class RpcManager implements Lifecycle {
     }
 
     @Override
-    public void start() {
+    public void start() throws Exception {
         if (null != executorManager) executorManager.start();
         if (null != storeServer) storeServer.start();
     }
 
     @Override
-    public void shutdown() {
+    public void shutdown() throws Exception {
         if (null != executorManager) executorManager.shutdown();
         if (null != storeServer) storeServer.shutdown();
     }
@@ -44,7 +44,11 @@ public class RpcManager implements Lifecycle {
 
     private void initExecutor() {
         executorManager = new ExecutorManager(storeConfig);
-        executorManager.initialize();
+        try {
+            executorManager.initialize();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void initServer() {

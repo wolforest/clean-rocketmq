@@ -27,17 +27,17 @@ public class RegistryServer implements Lifecycle {
     }
 
     @Override
-    public void initialize() {
+    public void initialize() throws Exception {
         registerProcessor();
     }
 
     @Override
-    public void start() {
+    public void start() throws Exception {
         rpcServer.start();
     }
 
     @Override
-    public void shutdown() {
+    public void shutdown() throws Exception {
         rpcServer.shutdown();
     }
 

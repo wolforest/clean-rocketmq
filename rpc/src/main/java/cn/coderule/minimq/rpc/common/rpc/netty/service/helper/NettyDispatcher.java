@@ -43,13 +43,13 @@ public class NettyDispatcher implements Lifecycle {
     }
 
     @Override
-    public void start() {
+    public void start() throws Exception {
         this.stopping.set(false);
         this.responseHandler.start();
     }
 
     @Override
-    public void shutdown() {
+    public void shutdown() throws Exception {
         this.stopping.set(true);
         this.responseHandler.shutdown();
     }

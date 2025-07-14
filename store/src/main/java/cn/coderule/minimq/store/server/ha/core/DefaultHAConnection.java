@@ -83,14 +83,14 @@ public class DefaultHAConnection implements HAConnection, Lifecycle {
     }
 
     @Override
-    public void start() {
+    public void start() throws Exception {
         this.state = ConnectionState.TRANSFER;
 
         this.flowMonitor.start();
     }
 
     @Override
-    public void shutdown() {
+    public void shutdown() throws Exception {
         this.state = ConnectionState.SHUTDOWN;
         this.flowMonitor.shutdown();
         this.close();

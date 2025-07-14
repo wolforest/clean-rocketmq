@@ -32,7 +32,7 @@ public class TransientPool implements Lifecycle {
      * It's a heavy init method.
      */
     @Override
-    public void start() {
+    public void start() throws Exception {
         for (int i = 0; i < poolSize; i++) {
             ByteBuffer byteBuffer = ByteBuffer.allocateDirect(fileSize);
 
@@ -45,7 +45,7 @@ public class TransientPool implements Lifecycle {
     }
 
     @Override
-    public void shutdown() {
+    public void shutdown() throws Exception {
         for (ByteBuffer byteBuffer : availableBuffers) {
             long address = ByteUtil.directBufferAddress(byteBuffer);
             Pointer pointer = new Pointer(address);
@@ -72,12 +72,12 @@ public class TransientPool implements Lifecycle {
     }
 
     @Override
-    public void initialize() {
+    public void initialize() throws Exception {
 
     }
 
     @Override
-    public void cleanup() {
+    public void cleanup() throws Exception {
 
     }
 

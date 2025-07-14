@@ -11,7 +11,7 @@ public class HAManager implements Lifecycle {
     private ClusterService clusterService;
 
     @Override
-    public void initialize() {
+    public void initialize() throws Exception {
         this.storeConfig = StoreContext.getBean(StoreConfig.class);
         StoreRegister storeRegister = StoreContext.getBean(StoreRegister.class);
 
@@ -19,12 +19,12 @@ public class HAManager implements Lifecycle {
     }
 
     @Override
-    public void start() {
+    public void start() throws Exception {
         clusterService.start();
     }
 
     @Override
-    public void shutdown() {
+    public void shutdown() throws Exception {
         clusterService.shutdown();
     }
 

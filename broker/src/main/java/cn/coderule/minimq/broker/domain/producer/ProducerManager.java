@@ -13,7 +13,7 @@ public class ProducerManager implements Lifecycle {
     private Producer producer;
 
     @Override
-    public void initialize() {
+    public void initialize() throws Exception {
         this.brokerConfig = BrokerContext.getBean(BrokerConfig.class);
 
         MQStore messageStore = BrokerContext.getBean(MQStore.class);
@@ -26,12 +26,12 @@ public class ProducerManager implements Lifecycle {
     }
 
     @Override
-    public void start() {
+    public void start() throws Exception {
         messageSender.start();
     }
 
     @Override
-    public void shutdown() {
+    public void shutdown() throws Exception {
         messageSender.shutdown();
     }
 

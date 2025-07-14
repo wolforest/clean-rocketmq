@@ -35,7 +35,7 @@ public class RemoteMQStore extends AbstractRemoteStore implements MQFacade, Life
     }
 
     @Override
-    public void start() {
+    public void start() throws Exception {
         if (!brokerConfig.isEnableRemoteStore()) {
             return;
         }
@@ -44,7 +44,7 @@ public class RemoteMQStore extends AbstractRemoteStore implements MQFacade, Life
     }
 
     @Override
-    public void shutdown() {
+    public void shutdown() throws Exception {
         if (!brokerConfig.isEnableRemoteStore()) {
             return;
         }

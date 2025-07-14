@@ -22,7 +22,7 @@ public class DefaultConsumeQueueManager implements ConsumeQueueManager {
     private ConsumeQueueGateway consumeQueueGateway;
 
     @Override
-    public void initialize() {
+    public void initialize() throws Exception {
         initConfig();
         initConsumeQueue();
 
@@ -33,17 +33,17 @@ public class DefaultConsumeQueueManager implements ConsumeQueueManager {
     }
 
     @Override
-    public void start() {
+    public void start() throws Exception {
         flusher.start();
     }
 
     @Override
-    public void shutdown() {
+    public void shutdown() throws Exception {
         flusher.shutdown();
     }
 
     @Override
-    public void cleanup() {
+    public void cleanup() throws Exception {
 
     }
 

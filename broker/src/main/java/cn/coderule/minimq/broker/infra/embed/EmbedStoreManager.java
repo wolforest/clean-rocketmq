@@ -11,14 +11,14 @@ public class EmbedStoreManager implements Lifecycle {
     private Store store;
 
     @Override
-    public void initialize() {
+    public void initialize() throws Exception {
         StoreArgument storeArgument = new StoreArgument();
         store = new Store(storeArgument);
         store.initialize();
     }
 
     @Override
-    public void start() {
+    public void start() throws Exception {
         store.start();
 
         ApplicationContext storeApi = StoreContext.API;
@@ -26,12 +26,12 @@ public class EmbedStoreManager implements Lifecycle {
     }
 
     @Override
-    public void shutdown() {
+    public void shutdown() throws Exception {
         store.shutdown();
     }
 
     @Override
-    public void cleanup() {
+    public void cleanup() throws Exception {
         store.cleanup();
     }
 

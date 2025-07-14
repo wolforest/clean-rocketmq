@@ -32,7 +32,7 @@ public class DefaultCommitLogManager implements CommitLogManager {
     private CheckPoint checkpoint;
 
     @Override
-    public void initialize() {
+    public void initialize() throws Exception {
         initConfig();
         initMappedFileQueue();
         initCommitLog();
@@ -43,17 +43,17 @@ public class DefaultCommitLogManager implements CommitLogManager {
     }
 
     @Override
-    public void start() {
+    public void start() throws Exception {
         flushManager.start();
     }
 
     @Override
-    public void shutdown() {
+    public void shutdown() throws Exception {
         flushManager.shutdown();
     }
 
     @Override
-    public void cleanup() {
+    public void cleanup() throws Exception {
         flushManager.cleanup();
     }
 

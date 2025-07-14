@@ -1,7 +1,7 @@
 package cn.coderule.minimq.broker.domain.consumer.revive;
 
 import cn.coderule.common.convention.service.Lifecycle;
-import cn.coderule.minimq.domain.config.server.StoreConfig;
+import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.domain.meta.topic.KeyBuilder;
 import cn.coderule.minimq.domain.service.broker.infra.MQFacade;
 import cn.coderule.minimq.domain.service.broker.infra.meta.ConsumeOffsetFacade;
@@ -22,10 +22,10 @@ public class ReviveManager implements Lifecycle {
     private final List<ReviveThread> reviveThreadList = new ArrayList<>();
 
     @Override
-    public void initialize() {
+    public void initialize() throws Exception {
         ReviveContext context = initContext();
         RetryService retryService = new RetryService(context);
-        int queueNum = context.getMessageConfig().getReviveQueueNum();
+        int queueNum = context.getTopicConfig().getReviveQueueNum();
 
         for (int i = 0; i < queueNum; i++) {
             ReviveThread task = createReviveThread(context, i, retryService);
@@ -34,27 +34,28 @@ public class ReviveManager implements Lifecycle {
     }
 
     @Override
-    public void start() {
+    public void start() throws Exception {
         for (ReviveThread reviveThread : reviveThreadList) {
             reviveThread.start();
         }
     }
 
     @Override
-    public void shutdown() {
+    public void shutdown() throws Exception {
         for (ReviveThread reviveThread : reviveThreadList) {
             reviveThread.shutdown();
         }
     }
 
     private ReviveContext initContext() {
-        StoreConfig storeConfig = StoreContext.getBean(StoreConfig.class);
-        String reviveTopic = KeyBuilder.buildClusterReviveTopic(storeConfig.getCluster());
+        BrokerConfig brokerConfig = StoreContext.getBean(BrokerConfig.class);
+        String reviveTopic = KeyBuilder.buildClusterReviveTopic(brokerConfig.getCluster());
 
         return ReviveContext.builder()
             .reviveTopic(reviveTopic)
-            .storeConfig(storeConfig)
-            .messageConfig(storeConfig.getMessageConfig())
+            .brokerConfig(brokerConfig)
+            .messageConfig(brokerConfig.getMessageConfig())
+            .topicConfig(brokerConfig.getTopicConfig())
 
             .mqFacade(StoreContext.getBean(MQFacade.class))
 
@@ -76,9 +77,6 @@ public class ReviveManager implements Lifecycle {
 
     private ReviveThread createReviveThread(ReviveContext context, int queueId, RetryService retryService) {
         ReviveThread reviveThread = new ReviveThread(context, queueId, retryService);
-
-        boolean isMaster = context.getStoreConfig().isMaster();
-        reviveThread.setSkipRevive(!isMaster);
 
         ServerEventBus eventBus = StoreContext.getBean(ServerEventBus.class);
         eventBus.on(ServerEvent.BECOME_MASTER, (arg) -> reviveThread.setSkipRevive(false));

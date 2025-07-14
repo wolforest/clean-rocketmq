@@ -27,7 +27,7 @@ public class ChannelScheduler implements Lifecycle {
     }
 
     @Override
-    public void initialize() {
+    public void initialize() throws Exception {
         producerController = BrokerContext.getAPI(ProducerController.class);
         consumerController = BrokerContext.getAPI(ConsumerController.class);
 
@@ -49,12 +49,12 @@ public class ChannelScheduler implements Lifecycle {
     }
 
     @Override
-    public void start() {
+    public void start() throws Exception {
 
     }
 
     @Override
-    public void shutdown() {
+    public void shutdown() throws Exception {
         scheduler.shutdown();
     }
 

@@ -8,7 +8,7 @@ import cn.coderule.minimq.registry.server.bootstrap.RegistryContext;
 
 public class KVManager implements Lifecycle {
     @Override
-    public void initialize() {
+    public void initialize() throws Exception {
         KVService kvService = new KVService(
             RegistryContext.getBean(RegistryConfig.class)
         );
@@ -21,8 +21,8 @@ public class KVManager implements Lifecycle {
     }
 
     @Override
-    public void start() { }
+    public void start() throws Exception { }
 
     @Override
-    public void shutdown() { }
+    public void shutdown() throws Exception { }
 }

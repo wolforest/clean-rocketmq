@@ -70,8 +70,12 @@ public class NettyServer extends NettyService implements RpcServer {
     public void start() {
         startServer();
 
-        eventExecutor.start();
-        dispatcher.start();
+        try {
+            eventExecutor.start();
+            dispatcher.start();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         monitor.start();
     }

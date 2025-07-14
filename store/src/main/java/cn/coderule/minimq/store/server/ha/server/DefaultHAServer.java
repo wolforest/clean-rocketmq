@@ -45,7 +45,7 @@ public class DefaultHAServer implements HAServer {
     }
 
     @Override
-    public void start() {
+    public void start() throws Exception {
         try {
             this.bind();
             acceptService.start();
@@ -55,7 +55,7 @@ public class DefaultHAServer implements HAServer {
     }
 
     @Override
-    public void shutdown() {
+    public void shutdown() throws Exception {
         try {
             acceptService.shutdown();
 

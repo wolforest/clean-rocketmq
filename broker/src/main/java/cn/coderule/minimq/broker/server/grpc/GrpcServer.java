@@ -33,7 +33,7 @@ public class GrpcServer implements Lifecycle {
     }
 
     @Override
-    public void initialize() {
+    public void initialize() throws Exception {
         this.serverBuilder = NettyServerBuilder.forPort(config.getPort())
             .maxInboundMessageSize(config.getMaxInboundMessageSize())
             .maxConnectionIdle(config.getMaxConnectionIdle(), TimeUnit.MILLISECONDS)
@@ -48,7 +48,7 @@ public class GrpcServer implements Lifecycle {
     }
 
     @Override
-    public void start() {
+    public void start() throws Exception {
         try {
             this.server.start();
         } catch (Exception e) {
@@ -58,7 +58,7 @@ public class GrpcServer implements Lifecycle {
     }
 
     @Override
-    public void shutdown() {
+    public void shutdown() throws Exception {
         try {
             this.cleanup();
             this.businessThreadPool.shutdown();
@@ -71,7 +71,7 @@ public class GrpcServer implements Lifecycle {
     }
 
     @Override
-    public void cleanup() {
+    public void cleanup() throws Exception {
 
     }
 

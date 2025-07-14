@@ -23,17 +23,17 @@ public class StoreServer implements Lifecycle {
     }
 
     @Override
-    public void start() {
+    public void start() throws Exception {
         rpcServer.start();
     }
 
     @Override
-    public void shutdown() {
+    public void shutdown() throws Exception {
         rpcServer.shutdown();
     }
 
     @Override
-    public void initialize() {
+    public void initialize() throws Exception {
     }
 
     public void registerProcessor(RpcProcessor processor) {

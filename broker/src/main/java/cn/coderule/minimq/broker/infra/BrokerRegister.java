@@ -27,12 +27,12 @@ public class BrokerRegister implements Lifecycle {
     }
 
     @Override
-    public void start() {
+    public void start() throws Exception {
         registryClient.start();
     }
 
     @Override
-    public void shutdown() {
+    public void shutdown() throws Exception {
         registryClient.shutdown();
     }
 

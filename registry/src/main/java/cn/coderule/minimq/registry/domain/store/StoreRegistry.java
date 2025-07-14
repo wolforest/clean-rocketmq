@@ -1,5 +1,6 @@
 package cn.coderule.minimq.registry.domain.store;
 
+import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.minimq.domain.config.server.RegistryConfig;
@@ -32,7 +33,7 @@ import java.util.concurrent.ConcurrentMap;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class StoreRegistry {
+public class StoreRegistry implements Lifecycle {
     private static final long DEFAULT_BROKER_CHANNEL_EXPIRED_TIME = 1000 * 60 * 2;
 
     private final RegistryConfig config;
@@ -49,11 +50,13 @@ public class StoreRegistry {
         this.unregisterService = new UnregisterService(config, this);
     }
 
-    public void start() {
+    @Override
+    public void start() throws Exception {
         unregisterService.start();
     }
 
-    public void shutdown() {
+    @Override
+    public void shutdown() throws Exception {
         unregisterService.shutdown();
     }
 

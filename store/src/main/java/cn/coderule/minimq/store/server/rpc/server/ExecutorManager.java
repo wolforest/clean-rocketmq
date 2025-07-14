@@ -25,17 +25,17 @@ public class ExecutorManager implements Lifecycle {
     }
 
     @Override
-    public void initialize() {
+    public void initialize() throws Exception {
         initPullExecutor();
         initAdminExecutor();
         initEnqueueExecutor();
     }
 
     @Override
-    public void start() { }
+    public void start() throws Exception { }
 
     @Override
-    public void shutdown() {
+    public void shutdown() throws Exception {
         if (null != adminExecutor) adminExecutor.shutdown();
         if (null != enqueueExecutor) enqueueExecutor.shutdown();
         if (null != pullExecutor) pullExecutor.shutdown();

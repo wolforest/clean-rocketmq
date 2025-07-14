@@ -10,7 +10,7 @@ public class RpcManager implements Lifecycle {
     private RegistryServer server;
 
     @Override
-    public void initialize() {
+    public void initialize() throws Exception {
         ChannelCloser channelCloser = RegistryContext.getBean(ChannelCloser.class);
         ConnectionManager connectionManager = new ConnectionManager(channelCloser);
 
@@ -22,12 +22,12 @@ public class RpcManager implements Lifecycle {
     }
 
     @Override
-    public void start() {
+    public void start() throws Exception {
         server.start();
     }
 
     @Override
-    public void shutdown() {
+    public void shutdown() throws Exception {
         server.shutdown();
     }
 

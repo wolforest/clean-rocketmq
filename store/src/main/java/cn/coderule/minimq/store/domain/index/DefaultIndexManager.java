@@ -6,7 +6,7 @@ import cn.coderule.minimq.store.server.bootstrap.StoreContext;
 
 public class DefaultIndexManager implements IndexManager {
     @Override
-    public void initialize() {
+    public void initialize() throws Exception {
         CommitEventDispatcher dispatcher = StoreContext.getBean(CommitEventDispatcher.class);
         IndexCommitEventHandler handler = new IndexCommitEventHandler();
         dispatcher.registerHandler(handler);
@@ -15,19 +15,19 @@ public class DefaultIndexManager implements IndexManager {
     }
 
     @Override
-    public void start() {
+    public void start() throws Exception {
 
     }
 
     @Override
-    public void shutdown() {
+    public void shutdown() throws Exception {
 
     }
 
 
 
     @Override
-    public void cleanup() {
+    public void cleanup() throws Exception {
 
     }
 

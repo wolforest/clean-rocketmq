@@ -45,7 +45,7 @@ public class ChannelManager implements Lifecycle {
     }
 
     @Override
-    public void initialize() {
+    public void initialize() throws Exception {
         this.scheduler.scheduleAtFixedRate(
             this::scanExpiredResult,
             10,
@@ -55,12 +55,12 @@ public class ChannelManager implements Lifecycle {
     }
 
     @Override
-    public void start() {
+    public void start() throws Exception {
 
     }
 
     @Override
-    public void shutdown() {
+    public void shutdown() throws Exception {
         this.scheduler.shutdown();
     }
 

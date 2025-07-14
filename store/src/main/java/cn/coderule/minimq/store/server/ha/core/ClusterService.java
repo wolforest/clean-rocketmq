@@ -37,18 +37,18 @@ public class ClusterService implements Lifecycle {
     }
 
     @Override
-    public void initialize() {
+    public void initialize() throws Exception {
     }
 
     @Override
-    public void start() {
+    public void start() throws Exception {
         shouldRegister = storeConfig.isMaster();
         registerStore();
         startHeartbeat();
     }
 
     @Override
-    public void shutdown() {
+    public void shutdown() throws Exception {
         heartbeatScheduler.shutdown();
         unregisterStore();
     }

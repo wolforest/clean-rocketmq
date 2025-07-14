@@ -106,11 +106,11 @@ public class FlushManager implements Lifecycle {
     }
 
     @Override
-    public void initialize() {
+    public void initialize() throws Exception {
     }
 
     @Override
-    public void start() {
+    public void start() throws Exception {
         this.state = State.STARTING;
 
         this.flusher.start();
@@ -126,7 +126,7 @@ public class FlushManager implements Lifecycle {
     }
 
     @Override
-    public void shutdown() {
+    public void shutdown() throws Exception {
         this.state = State.SHUTTING_DOWN;
 
         this.flusher.shutdown();
@@ -140,7 +140,7 @@ public class FlushManager implements Lifecycle {
     }
 
     @Override
-    public void cleanup() {
+    public void cleanup() throws Exception {
 
     }
 

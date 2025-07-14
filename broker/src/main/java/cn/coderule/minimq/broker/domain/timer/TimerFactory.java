@@ -22,23 +22,32 @@ public class TimerFactory implements TaskFactory, Lifecycle {
             log.info("create timer consumer: storeGroup={}, queueId={}",
                 task.getStoreGroup(), queueId);
 
-            consumer.start();
-            log.info("start timer consumer: storeGroup={}, queueId={}",
-                task.getStoreGroup(), queueId);
-
+            startTimer(consumer, task);
             return consumer;
         });
     }
 
     @Override
-    public void start() {
+    public void start() throws Exception {
 
     }
 
     @Override
-    public void shutdown() {
+    public void shutdown() throws Exception {
         for (TimerConsumer worker : workerMap.values()) {
             worker.shutdown();
         }
+    }
+
+    private void startTimer(TimerConsumer consumer, QueueTask task) {
+        try {
+            consumer.start();
+        } catch (Exception e) {
+            log.error("start timer consumer error: storeGroup={}, queueId={}",
+                task.getStoreGroup(), task.getQueueId(), e);
+            return;
+        }
+        log.info("start timer consumer: storeGroup={}, queueId={}",
+            task.getStoreGroup(), task.getQueueId());
     }
 }

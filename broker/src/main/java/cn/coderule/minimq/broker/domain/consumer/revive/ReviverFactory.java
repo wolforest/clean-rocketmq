@@ -29,25 +29,35 @@ public class ReviverFactory implements TaskFactory, Lifecycle {
             log.info("create reviver: storeGroup={}, queueId={}",
                 task.getStoreGroup(), queueId);
 
-            reviver.start();
-            log.info("start reviver: storeGroup={}, queueId={}",
-                task.getStoreGroup(), queueId);
+            startReviver(reviver, task);
 
             return reviver;
         });
     }
 
     @Override
-    public void start() {
+    public void start() throws Exception {
 
     }
 
     @Override
-    public void shutdown() {
+    public void shutdown() throws Exception {
         for (ReviveThread reviver : workerMap.values()) {
             reviver.shutdown();
         }
     }
 
+    private void startReviver(ReviveThread reviver, QueueTask task) {
+        try {
+            reviver.start();
+        } catch (Exception e) {
+            log.error("start reviver error: storeGroup={}, queueId={}",
+                task.getStoreGroup(), task.getQueueId());
+            return;
+        }
+
+        log.info("start reviver: storeGroup={}, queueId={}",
+            task.getStoreGroup(), task.getQueueId());
+    }
 
 }

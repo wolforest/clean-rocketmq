@@ -9,7 +9,7 @@ public class DefaultCommitLogDispatcherManager implements CommitLogDispatcherMan
     private DefaultCommitEventDispatcher dispatcher;
 
     @Override
-    public void initialize() {
+    public void initialize() throws Exception {
         CommitLog commitLog = StoreContext.getBean(CommitLog.class);
         dispatcher = new DefaultCommitEventDispatcher(commitLog);
 
@@ -17,17 +17,17 @@ public class DefaultCommitLogDispatcherManager implements CommitLogDispatcherMan
     }
 
     @Override
-    public void start() {
+    public void start() throws Exception {
         dispatcher.start();
     }
 
     @Override
-    public void shutdown() {
+    public void shutdown() throws Exception {
 
     }
 
     @Override
-    public void cleanup() {
+    public void cleanup() throws Exception {
 
     }
 

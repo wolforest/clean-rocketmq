@@ -48,13 +48,13 @@ public class DefaultRegistryClient implements RegistryClient {
     }
 
     @Override
-    public void start() {
+    public void start() throws Exception {
         this.nettyClient.start();
         this.registryManager.start();
     }
 
     @Override
-    public void shutdown() {
+    public void shutdown() throws Exception {
         try {
             this.nettyClient.shutdown();
             this.registryManager.shutdown();

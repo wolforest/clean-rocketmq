@@ -13,7 +13,7 @@ import cn.coderule.minimq.rpc.registry.route.RouteLoader;
 public class MetaManager implements Lifecycle {
     private BrokerConfig brokerConfig;
     @Override
-    public void initialize() {
+    public void initialize() throws Exception {
         brokerConfig = BrokerContext.getBean(BrokerConfig.class);
 
         RouteService routeService = initRouteService();
@@ -25,12 +25,12 @@ public class MetaManager implements Lifecycle {
     }
 
     @Override
-    public void start() {
+    public void start() throws Exception {
 
     }
 
     @Override
-    public void shutdown() {
+    public void shutdown() throws Exception {
 
     }
 

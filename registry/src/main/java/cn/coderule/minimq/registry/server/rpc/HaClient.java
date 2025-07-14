@@ -29,12 +29,12 @@ public class HaClient implements Lifecycle {
     }
 
     @Override
-    public void start() {
+    public void start() throws Exception {
         this.rpcClient.start();
     }
 
     @Override
-    public void shutdown() {
+    public void shutdown() throws Exception {
         this.rpcClient.shutdown();
     }
 

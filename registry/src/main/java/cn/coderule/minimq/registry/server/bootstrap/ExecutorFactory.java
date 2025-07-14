@@ -31,12 +31,12 @@ public class ExecutorFactory implements Lifecycle {
     }
 
     @Override
-    public void start() {
+    public void start() throws Exception {
 
     }
 
     @Override
-    public void shutdown() {
+    public void shutdown() throws Exception {
         defaultExecutor.shutdown();
         routeExecutor.shutdown();
         scheduler.shutdown();

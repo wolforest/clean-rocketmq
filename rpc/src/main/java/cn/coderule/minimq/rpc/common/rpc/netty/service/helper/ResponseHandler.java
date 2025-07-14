@@ -36,12 +36,12 @@ public class ResponseHandler implements Lifecycle {
     }
 
     @Override
-    public void start() {
+    public void start() throws Exception {
         this.startScanResponse();
     }
 
     @Override
-    public void shutdown() {
+    public void shutdown() throws Exception {
         this.timer.stop();
     }
 

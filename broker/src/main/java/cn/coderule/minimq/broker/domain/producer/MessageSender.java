@@ -85,12 +85,12 @@ public class MessageSender implements Lifecycle {
     }
 
     @Override
-    public void start() {
+    public void start() throws Exception {
 
     }
 
     @Override
-    public void shutdown() {
+    public void shutdown() throws Exception {
         this.executor.shutdown();
     }
 

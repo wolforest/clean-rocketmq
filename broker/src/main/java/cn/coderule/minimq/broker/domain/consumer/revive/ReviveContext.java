@@ -1,6 +1,8 @@
 package cn.coderule.minimq.broker.domain.consumer.revive;
 
 import cn.coderule.minimq.domain.config.message.MessageConfig;
+import cn.coderule.minimq.domain.config.message.TopicConfig;
+import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.domain.service.broker.infra.MQFacade;
 import cn.coderule.minimq.domain.service.broker.infra.meta.ConsumeOffsetFacade;
@@ -22,7 +24,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReviveContext implements Serializable {
-    private StoreConfig storeConfig;
+    private BrokerConfig brokerConfig;
+    private TopicConfig topicConfig;
     private MessageConfig messageConfig;
 
     private String reviveTopic;

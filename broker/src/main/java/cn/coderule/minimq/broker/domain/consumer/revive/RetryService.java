@@ -1,5 +1,6 @@
 package cn.coderule.minimq.broker.domain.consumer.revive;
 
+import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.domain.core.constant.PopConstants;
 import cn.coderule.minimq.domain.domain.meta.offset.OffsetRequest;
@@ -27,14 +28,14 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class RetryService {
-    private final StoreConfig storeConfig;
+    private final BrokerConfig brokerConfig;
 
     private final MQFacade mqFacade;
     private final TopicFacade topicFacade;
     private final ConsumeOffsetFacade consumeOffsetFacade;
 
     public RetryService(ReviveContext context) {
-        this.storeConfig = context.getStoreConfig();
+        this.brokerConfig = context.getBrokerConfig();
 
         this.mqFacade = context.getMqFacade();
         this.topicFacade = context.getTopicFacade();
@@ -56,7 +57,7 @@ public class RetryService {
     }
 
     private MessageBO createRetryMessage(PopCheckPoint point, MessageBO message) {
-        SocketAddress storeHost = new InetSocketAddress(storeConfig.getHost(), storeConfig.getPort());
+        SocketAddress storeHost = new InetSocketAddress(brokerConfig.getHost(), brokerConfig.getPort());
         return PopConverter.toMessageBO(point, message, storeHost);
     }
 

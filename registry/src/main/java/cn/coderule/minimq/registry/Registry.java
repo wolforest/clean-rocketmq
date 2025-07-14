@@ -21,7 +21,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class Registry implements Lifecycle {
     public static void main(String[] args) {
-        new Registry(args).start();
+        try {
+            new Registry(args).start();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private final String[] args;
@@ -32,7 +36,7 @@ public class Registry implements Lifecycle {
     }
 
     @Override
-    public void initialize() {
+    public void initialize() throws Exception {
         ContextInitializer.init(args);
         ConfigLoader.load();
 
@@ -41,7 +45,7 @@ public class Registry implements Lifecycle {
     }
 
     @Override
-    public void start() {
+    public void start() throws Exception {
         try {
             this.initialize();
             this.componentManager.start();
@@ -55,7 +59,7 @@ public class Registry implements Lifecycle {
     }
 
     @Override
-    public void shutdown() {
+    public void shutdown() throws Exception {
         log.info("Registry is shutting down ...");
 
         try {
@@ -70,13 +74,19 @@ public class Registry implements Lifecycle {
     }
 
     @Override
-    public void cleanup() {
+    public void cleanup() throws Exception {
         this.componentManager.cleanup();
     }
 
     private void addShutdownHook() {
         Runtime.getRuntime().addShutdownHook(
-            new Thread(this::shutdown)
+            new Thread(() -> {
+                try {
+                    shutdown();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            })
         );
     }
 

@@ -78,8 +78,9 @@ public class DefaultHAClient extends ServiceThread implements HAClient, Lifecycl
         return DefaultHAClient.class.getSimpleName();
     }
 
+
     @Override
-    public void shutdown() {
+    public void shutdown() throws Exception {
         this.state = ConnectionState.SHUTDOWN;
         this.flowMonitor.shutdown();
         super.shutdown();
@@ -93,7 +94,7 @@ public class DefaultHAClient extends ServiceThread implements HAClient, Lifecycl
     }
 
     @Override
-    public void initialize() {
+    public void initialize() throws Exception {
         Lifecycle.super.initialize();
     }
 
@@ -195,7 +196,7 @@ public class DefaultHAClient extends ServiceThread implements HAClient, Lifecycl
     public void run() {
         log.info("{} service started", this.getServiceName());
 
-        this.flowMonitor.start();
+        startFlowMonitor();
 
         while (!this.isStopped()) {
             try {
@@ -231,8 +232,12 @@ public class DefaultHAClient extends ServiceThread implements HAClient, Lifecycl
         log.info("{} service end", this.getServiceName());
     }
 
-    private void process() {
-
+    private void startFlowMonitor() {
+        try {
+            this.flowMonitor.start();
+        } catch (Exception e) {
+            log.error("{} service has exception.", this.getServiceName(), e);
+        }
     }
 
     public void closeMasterAndWait() {

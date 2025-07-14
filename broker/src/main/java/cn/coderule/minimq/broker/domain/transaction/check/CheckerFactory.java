@@ -34,22 +34,32 @@ public class CheckerFactory implements TaskFactory, Lifecycle {
             log.info("create transaction checker: storeGroup={}, queueId={}",
                 task.getStoreGroup(), queueId);
 
-            checker.start();
-            log.info("start transaction checker: storeGroup={}, queueId={}",
-                task.getStoreGroup(), queueId);
+            startChecker(checker, task);
             return checker;
         });
     }
 
     @Override
-    public void start() {
+    public void start() throws Exception {
 
     }
 
     @Override
-    public void shutdown() {
+    public void shutdown() throws Exception {
         for (TransactionChecker checker : checkerMap.values()) {
             checker.shutdown();
         }
+    }
+
+    private void startChecker(TransactionChecker checker, QueueTask task) {
+        try {
+            checker.start();
+        } catch (Exception e) {
+            log.error("start transaction check error: storeGroup={}, queueId={}",
+                task.getStoreGroup(), task.getQueueId(), e);
+            return;
+        }
+        log.info("start transaction checker: storeGroup={}, queueId={}",
+            task.getStoreGroup(), task.getQueueId());
     }
 }

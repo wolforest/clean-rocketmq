@@ -4,22 +4,22 @@ import cn.coderule.minimq.domain.service.store.domain.timer.TimerManager;
 
 public class DefaultTimerManager implements TimerManager {
     @Override
-    public void start() {
+    public void start() throws Exception {
 
     }
 
     @Override
-    public void shutdown() {
+    public void shutdown() throws Exception {
 
     }
 
     @Override
-    public void initialize() {
+    public void initialize() throws Exception {
 
     }
 
     @Override
-    public void cleanup() {
+    public void cleanup() throws Exception {
 
     }
 

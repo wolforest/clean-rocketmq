@@ -27,7 +27,7 @@ public class StoreManager implements Lifecycle {
     private TopicService topicService;
 
     @Override
-    public void initialize() {
+    public void initialize() throws Exception {
         this.route = new Route();
         this.factory = RegistryContext.getBean(ExecutorFactory.class);
         this.registryConfig = RegistryContext.getBean(RegistryConfig.class);
@@ -37,13 +37,13 @@ public class StoreManager implements Lifecycle {
     }
 
     @Override
-    public void start() {
+    public void start() throws Exception {
         this.storeRegistry.start();
         this.idleScanner.start();
     }
 
     @Override
-    public void shutdown() {
+    public void shutdown() throws Exception {
         this.storeRegistry.shutdown();
         this.idleScanner.shutdown();
     }
