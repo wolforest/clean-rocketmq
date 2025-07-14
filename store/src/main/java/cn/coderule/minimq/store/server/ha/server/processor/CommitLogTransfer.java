@@ -7,6 +7,12 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class CommitLogTransfer extends ServiceThread implements Lifecycle {
 
+
+
+    public CommitLogTransfer() {
+
+    }
+
     @Override
     public String getServiceName() {
         return CommitLogTransfer.class.getSimpleName();

@@ -7,17 +7,26 @@ import lombok.Data;
 
 @Data
 public class GroupCommitEvent implements Serializable {
+    private InsertFuture insertFuture;
+
     private final long nextOffset;
     /**
      * Indicate the GroupCommitRequest result: true or false
      */
-    private final CompletableFuture<EnqueueStatus> flushOKFuture = new CompletableFuture<>();
+    private final CompletableFuture<EnqueueStatus> syncFuture = new CompletableFuture<>();
     /**
      * slave nums, in controller mode: -1
      */
     private volatile int ackNums = 1;
 
     private final long deadLine;
+
+    public GroupCommitEvent(InsertFuture insertFuture, long timeoutMillis) {
+        InsertResult insertResult = insertFuture.getInsertResult();
+        this.nextOffset = insertResult.getWroteOffset() + insertResult.getWroteBytes();
+        this.insertFuture = insertFuture;
+        this.deadLine = System.nanoTime() + timeoutMillis * 1_000_000;
+    }
 
     public GroupCommitEvent(long nextOffset, long timeoutMillis) {
         this.nextOffset = nextOffset;
@@ -30,10 +39,10 @@ public class GroupCommitEvent implements Serializable {
     }
 
     public void wakeupCustomer(final EnqueueStatus status) {
-        this.flushOKFuture.complete(status);
+        this.syncFuture.complete(status);
     }
 
     public CompletableFuture<EnqueueStatus> future() {
-        return flushOKFuture;
+        return syncFuture;
     }
 }

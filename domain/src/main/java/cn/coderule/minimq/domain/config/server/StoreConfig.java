@@ -72,6 +72,7 @@ public class StoreConfig extends ServerIdentity {
     private int haPort = 10912;
     private int haHeartbeatInterval = 5_000;
     private int haHouseKeepingInterval = 20_000;
+    private int slaveTimeout = 3_000;
 
     private boolean enableHaFlowControl = false;
     private long maxHaTransferBytesPerSecond = 100 * 1024 * 1024;
