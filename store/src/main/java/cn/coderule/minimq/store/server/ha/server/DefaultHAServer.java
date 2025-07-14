@@ -47,7 +47,7 @@ public class DefaultHAServer implements HAServer {
     @Override
     public void start() {
         try {
-            bind();
+            this.bind();
             acceptService.start();
         } catch (Throwable t) {
             log.error("start DefaultHAServer error", t);
