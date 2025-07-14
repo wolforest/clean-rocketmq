@@ -76,6 +76,7 @@ public class StoreConfig extends ServerIdentity {
 
     private boolean enableHaFlowControl = false;
     private long maxHaTransferBytesPerSecond = 100 * 1024 * 1024;
+    private int maxSlaveGap = 256 * 1024 * 1024;
     private long maxSlaveDelayTime = 15_000;
 
     private MessageConfig messageConfig;

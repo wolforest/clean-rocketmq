@@ -13,6 +13,9 @@ import cn.coderule.minimq.domain.domain.producer.EnqueueResult;
 import cn.coderule.minimq.domain.domain.cluster.store.InsertFuture;
 import cn.coderule.minimq.domain.service.store.api.CommitLogStore;
 import cn.coderule.minimq.store.domain.commitlog.vo.GroupCommitRequest;
+import cn.coderule.minimq.store.server.ha.core.HAConnection;
+import cn.coderule.minimq.store.server.ha.server.ConnectionPool;
+import cn.coderule.minimq.store.server.ha.server.SlaveOffsetCounter;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -23,7 +26,8 @@ public class CommitLogSynchronizer extends ServiceThread implements Lifecycle {
     private StoreConfig storeConfig;
     private CommitLogStore commitLogStore;
     private WakeupCoordinator wakeupCoordinator;
-    private SlaveMonitor slaveMonitor;
+    private ConnectionPool connectionPool;
+    private SlaveOffsetCounter slaveOffsetCounter;
 
     private final CommitLogLock lock;
 
@@ -109,7 +113,7 @@ public class CommitLogSynchronizer extends ServiceThread implements Lifecycle {
             }
 
             if (!allDone && event.getAckNums() <= 1) {
-                transferDone = slaveMonitor.getAckOffset() >= event.getNextOffset();
+                transferDone = slaveOffsetCounter.getMaxOffset() >= event.getNextOffset();
                 continue;
             }
 
@@ -122,6 +126,17 @@ public class CommitLogSynchronizer extends ServiceThread implements Lifecycle {
     private boolean waitTransfer(GroupCommitEvent event) {
         boolean transferDone = false;
 
+        int ackNums = 1;
+        for (HAConnection connection : connectionPool.getConnectionList()) {
+            if (connection.getSlaveOffset() >= event.getNextOffset()) {
+                ackNums++;
+            }
+
+            if (ackNums >= event.getAckNums()) {
+                transferDone = true;
+                break;
+            }
+        }
 
         return transferDone;
     }

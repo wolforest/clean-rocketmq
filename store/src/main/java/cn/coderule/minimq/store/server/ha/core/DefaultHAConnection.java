@@ -5,6 +5,7 @@ import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.rpc.common.rpc.config.RpcSystemConfig;
 import cn.coderule.minimq.store.server.ha.core.monitor.FlowMonitor;
 import cn.coderule.minimq.store.server.ha.server.ConnectionContext;
+import cn.coderule.minimq.store.server.ha.server.processor.SlaveMonitor;
 import java.io.IOException;
 import java.nio.channels.SocketChannel;
 import lombok.extern.slf4j.Slf4j;
@@ -37,6 +38,7 @@ public class DefaultHAConnection implements HAConnection, Lifecycle {
 
     private volatile ConnectionState state = ConnectionState.TRANSFER;
     private final FlowMonitor flowMonitor;
+    private final SlaveMonitor slaveMonitor;
 
     public DefaultHAConnection(ConnectionContext context) throws IOException {
         this.context = context;
@@ -45,6 +47,7 @@ public class DefaultHAConnection implements HAConnection, Lifecycle {
         this.clientAddress = socketChannel.socket().getRemoteSocketAddress().toString();
 
         this.flowMonitor = new FlowMonitor(storeConfig);
+        this.slaveMonitor = new SlaveMonitor();
 
         this.configureSocketChannel();
     }
@@ -67,6 +70,11 @@ public class DefaultHAConnection implements HAConnection, Lifecycle {
     @Override
     public void setConnectionState(ConnectionState state) {
         this.state = state;
+    }
+
+    @Override
+    public long getSlaveOffset() {
+        return slaveMonitor.getAckOffset();
     }
 
     @Override

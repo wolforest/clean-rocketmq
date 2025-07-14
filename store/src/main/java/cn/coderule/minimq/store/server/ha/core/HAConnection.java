@@ -9,6 +9,8 @@ public interface HAConnection {
     ConnectionState getConnectionState();
     void setConnectionState(ConnectionState state);
 
+    long getSlaveOffset();
+
     void start() throws Exception;
     void close();
 }

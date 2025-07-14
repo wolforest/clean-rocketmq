@@ -16,4 +16,8 @@ public class ConnectionPool implements Serializable {
         connectionList.add(connection);
         connectionCount.addAndGet(1);
     }
+
+    public int getConnectionCount() {
+        return connectionCount.get();
+    }
 }
