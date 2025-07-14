@@ -19,12 +19,14 @@ import lombok.extern.slf4j.Slf4j;
 public abstract class AbstractAcceptService extends ServiceThread {
     protected Selector selector;
 
+    protected HAContext haContext;
     protected final StoreConfig storeConfig;
     protected final ConnectionPool connectionPool;
     protected final LifecycleManager resourcePool;
     protected final WakeupCoordinator wakeupCoordinator;
 
     public AbstractAcceptService(HAContext haContext) {
+        this.haContext = haContext;
         this.storeConfig = haContext.getStoreConfig();
         this.connectionPool = haContext.getConnectionPool();
         this.resourcePool = haContext.getResourcePool();

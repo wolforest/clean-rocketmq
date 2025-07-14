@@ -1,6 +1,5 @@
 package cn.coderule.minimq.store.server.ha.server;
 
-import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.convention.service.LifecycleManager;
 import cn.coderule.common.lang.concurrent.thread.WakeupCoordinator;
 import cn.coderule.common.util.net.NetworkUtil;

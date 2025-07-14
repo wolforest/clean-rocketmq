@@ -35,10 +35,12 @@ public class DefaultAcceptService extends AbstractAcceptService {
     private ConnectionContext buildContext(SocketChannel socketChannel) {
         return ConnectionContext.builder()
             .storeConfig(storeConfig)
+            .socketChannel(socketChannel)
             .wakeupCoordinator(wakeupCoordinator)
             .resourcePool(resourcePool)
             .connectionPool(connectionPool)
-            .socketChannel(socketChannel)
+            .slaveMonitor(haContext.getSlaveMonitor())
+            .commitLogSynchronizer(haContext.getCommitLogSynchronizer())
             .build();
     }
 }
