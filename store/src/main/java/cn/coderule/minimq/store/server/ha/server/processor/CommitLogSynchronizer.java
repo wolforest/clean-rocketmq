@@ -38,6 +38,11 @@ public class CommitLogSynchronizer extends ServiceThread implements Lifecycle {
         return CommitLogSynchronizer.class.getSimpleName();
     }
 
+    @Override
+    public void run() {
+
+    }
+
     public CompletableFuture<EnqueueResult> sync(InsertFuture request) {
         long timeout = storeConfig.getSlaveTimeout();
         GroupCommitEvent event = new GroupCommitEvent(request, timeout);
@@ -54,8 +59,11 @@ public class CommitLogSynchronizer extends ServiceThread implements Lifecycle {
         return null;
     }
 
-    @Override
-    public void run() {
-
+    public void wakeupCoordinator() {
+        wakeupCoordinator.wakeup();
     }
+
+
+
+
 }
