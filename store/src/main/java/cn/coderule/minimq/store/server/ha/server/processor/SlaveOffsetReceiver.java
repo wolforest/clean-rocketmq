@@ -3,9 +3,12 @@ package cn.coderule.minimq.store.server.ha.server.processor;
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
+import cn.coderule.minimq.store.server.ha.core.ConnectionState;
 import cn.coderule.minimq.store.server.ha.core.HAConnection;
+import cn.coderule.minimq.store.server.ha.server.ConnectionPool;
 import java.io.Serializable;
 import java.nio.ByteBuffer;
+import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
 import lombok.Getter;
@@ -17,6 +20,7 @@ public class SlaveOffsetReceiver extends ServiceThread implements Serializable, 
     private static final int READ_MAX_BUFFER_SIZE = 1024 * 1024;
 
     private StoreConfig storeConfig;
+    private ConnectionPool connectionPool;
     private HAConnection connection;
 
     @Getter @Setter
@@ -80,6 +84,10 @@ public class SlaveOffsetReceiver extends ServiceThread implements Serializable, 
     }
 
     private void releaseResources() {
+        connection.setConnectionState(ConnectionState.SHUTDOWN);
+        this.stop();
 
+        // stop commitLog transfer
+        connectionPool.removeConnection(connection);
     }
 }

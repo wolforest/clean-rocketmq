@@ -14,7 +14,12 @@ public class ConnectionPool implements Serializable {
 
     public void addConnection(HAConnection connection) {
         connectionList.add(connection);
-        connectionCount.addAndGet(1);
+        connectionCount.incrementAndGet();
+    }
+
+    public void removeConnection(HAConnection connection) {
+        connectionList.remove(connection);
+        connectionCount.decrementAndGet();
     }
 
     public int getConnectionCount() {
