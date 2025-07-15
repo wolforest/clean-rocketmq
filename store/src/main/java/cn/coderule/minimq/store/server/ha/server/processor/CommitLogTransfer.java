@@ -82,6 +82,10 @@ public class CommitLogTransfer extends ServiceThread implements Lifecycle {
         log.info("{} service end", this.getServiceName());
     }
 
+    private void transfer() {
+
+    }
+
     private void initOffset() {
         if (-1 == this.nextTransferOffset) {
             return;
@@ -138,10 +142,30 @@ public class CommitLogTransfer extends ServiceThread implements Lifecycle {
     }
 
     private boolean transferData() {
-        return true;
+        writeHeader();
+
+        if (null == this.selectedBuffer) {
+            return !this.headerBuffer.hasRemaining();
+        }
+
+        writeBody();
+
+        boolean result = !headerBuffer.hasRemaining()
+            && !selectedBuffer.getByteBuffer().hasRemaining();
+
+        if (!selectedBuffer.getByteBuffer().hasRemaining()) {
+            this.selectedBuffer.release();
+            this.selectedBuffer = null;
+        }
+
+        return result;
     }
 
-    private void transfer() {
+    private void writeHeader() {
+
+    }
+
+    private void writeBody() {
 
     }
 
