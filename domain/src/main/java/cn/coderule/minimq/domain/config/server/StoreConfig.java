@@ -80,6 +80,7 @@ public class StoreConfig extends ServerIdentity {
     private long maxHaTransferBytesPerSecond = 100 * 1024 * 1024;
     private int maxSlaveGap = 256 * 1024 * 1024;
     private long maxSlaveDelayTime = 15_000;
+    private int maxHaTransferSize = 32 * 1024;
 
     private MessageConfig messageConfig;
     private TopicConfig topicConfig;

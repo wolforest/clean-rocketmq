@@ -2,6 +2,7 @@ package cn.coderule.minimq.store.server.ha.server.processor;
 
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
+import cn.coderule.common.lang.concurrent.thread.WakeupCoordinator;
 import cn.coderule.common.util.lang.ThreadUtil;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.domain.config.store.CommitConfig;
@@ -17,6 +18,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -25,6 +27,7 @@ public class CommitLogTransfer extends ServiceThread implements Lifecycle {
     private final HAConnection connection;
     private final CommitLogStore commitLogStore;
     private final FlowMonitor flowMonitor;
+    private final WakeupCoordinator wakeupCoordinator;
 
     private final Selector selector;
     private final SocketChannel socketChannel;
@@ -32,6 +35,7 @@ public class CommitLogTransfer extends ServiceThread implements Lifecycle {
     private SelectedMappedBuffer selectedBuffer;
 
     private boolean transferDone = true;
+    @Getter
     private long nextTransferOffset;
     private long lastWriteTime;
     private long lastReportTime;
@@ -42,6 +46,7 @@ public class CommitLogTransfer extends ServiceThread implements Lifecycle {
         this.storeConfig = context.getStoreConfig();
         this.commitLogStore = context.getCommitLogStore();
         this.flowMonitor = context.getFlowMonitor();
+        this.wakeupCoordinator = context.getWakeupCoordinator();
 
         this.socketChannel = connection.getSocketChannel();
         this.selector = connection.openSelector();
@@ -88,8 +93,36 @@ public class CommitLogTransfer extends ServiceThread implements Lifecycle {
         log.info("{} service end", this.getServiceName());
     }
 
-    private void transfer() {
+    private void transfer() throws Exception {
+        SelectedMappedBuffer result = commitLogStore.select(this.nextTransferOffset);
+        if (result == null) {
+            wakeupCoordinator.awaitAll(100);
+            return;
+        }
+        int size = result.getSize();
+        if (size > storeConfig.getMaxHaTransferSize()) {
+            size = storeConfig.getMaxHaTransferSize();
+        }
 
+        int availableSize = flowMonitor.getAvailableTransferByte();
+        if (size > availableSize) {
+            long now = System.currentTimeMillis();
+            if (now - lastReportTime > 1_000) {
+                log.warn("Trigger HA flow control, max transfer speed {}KB/s, current speed: {}KB/s",
+                    String.format("%.2f", flowMonitor.getMaxTransferBytePerSecond() / 1024.0),
+                    String.format("%.2f", flowMonitor.getTransferredBytePerSecond() / 1024.0));
+                lastReportTime  = now;
+            }
+            size = availableSize;
+        }
+
+        long tmpOffset = this.nextTransferOffset;
+        this.nextTransferOffset += size;
+        result.getByteBuffer().limit(size);
+        this.selectedBuffer = result;
+
+        writeHeaderBuffer(tmpOffset, size);
+        this.transferDone = this.transferData();
     }
 
     private void initOffset() {
@@ -121,7 +154,7 @@ public class CommitLogTransfer extends ServiceThread implements Lifecycle {
         return masterOffset;
     }
 
-    private boolean transferUnfinishedData() {
+    private boolean transferUnfinishedData() throws Exception {
         if (!this.transferDone) {
             this.transferDone = transferData();
             return this.transferDone;
@@ -133,17 +166,17 @@ public class CommitLogTransfer extends ServiceThread implements Lifecycle {
             return true;
         }
 
-        initHeaderBuffer();
+        writeHeaderBuffer(this.nextTransferOffset, 0);
 
         this.transferDone = transferData();
         return transferDone;
     }
 
-    private void initHeaderBuffer() {
+    private void writeHeaderBuffer(long offset, int size) {
         this.headerBuffer.position(0);
         this.headerBuffer.limit(DefaultHAConnection.TRANSFER_HEADER_SIZE);
-        this.headerBuffer.putLong(this.nextTransferOffset);
-        this.headerBuffer.putInt(0);
+        this.headerBuffer.putLong(offset);
+        this.headerBuffer.putInt(size);
         this.headerBuffer.flip();
     }
 
