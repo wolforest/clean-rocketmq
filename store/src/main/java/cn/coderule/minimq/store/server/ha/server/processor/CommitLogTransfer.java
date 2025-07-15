@@ -2,6 +2,7 @@ package cn.coderule.minimq.store.server.ha.server.processor;
 
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
+import cn.coderule.common.util.lang.ThreadUtil;
 import cn.coderule.minimq.domain.domain.cluster.store.SelectedMappedBuffer;
 import cn.coderule.minimq.domain.service.store.api.CommitLogStore;
 import cn.coderule.minimq.store.server.ha.core.DefaultHAConnection;
@@ -49,14 +50,45 @@ public class CommitLogTransfer extends ServiceThread implements Lifecycle {
 
     @Override
     public void run() {
+        log.info("{} service started", this.getServiceName());
 
+        while (!this.isStopped()) {
+            try {
+                this.selector.select(1_000);
+                if (-1 == connection.getSlaveOffset()) {
+                    ThreadUtil.sleep(10);
+                    continue;
+                }
+
+                initOffset();
+                if (!transferUnfinishedData()) {
+                    continue;
+                }
+
+                transfer();
+            } catch (Exception e) {
+                log.error("{} service has exception. ", this.getServiceName(), e);
+                break;
+            }
+        }
+
+        releaseResource();
+        log.info("{} service end", this.getServiceName());
     }
 
     private void initOffset() {
 
     }
 
+    private boolean transferUnfinishedData() {
+        return true;
+    }
+
     private void transfer() {
+
+    }
+
+    private void releaseResource() {
 
     }
 }
