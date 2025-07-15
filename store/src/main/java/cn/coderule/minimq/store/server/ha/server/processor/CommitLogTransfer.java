@@ -186,8 +186,25 @@ public class CommitLogTransfer extends ServiceThread implements Lifecycle {
         }
     }
 
-    private void writeBody() {
+    private void writeBody() throws Exception {
+        int writeSizeZeroTimes = 0;
+        if (this.headerBuffer.hasRemaining()) {
+            return;
+        }
 
+        while (this.selectedBuffer.getByteBuffer().hasRemaining()) {
+            int writeSize = this.socketChannel.write(this.selectedBuffer.getByteBuffer());
+            if (writeSize > 0) {
+                writeSizeZeroTimes = 0;
+                this.lastWriteTime = System.currentTimeMillis();
+            } else if (writeSize == 0) {
+                if (++writeSizeZeroTimes >= 3) {
+                    break;
+                }
+            } else {
+                throw new Exception("ha master write body error < 0");
+            }
+        }
     }
 
     private void releaseResource() {
