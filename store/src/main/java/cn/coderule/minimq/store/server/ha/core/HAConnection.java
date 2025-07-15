@@ -8,6 +8,8 @@ import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
 
 public interface HAConnection {
+    ConnectionContext getContext();
+
     SocketChannel getSocketChannel();
     String getClientAddress();
 
@@ -18,7 +20,7 @@ public interface HAConnection {
     ConnectionState getConnectionState();
     void setConnectionState(ConnectionState state);
 
-    ConnectionContext getContext();
+    boolean isSlaveHealthy(long masterOffset);
     long getSlaveOffset();
 
     void start() throws Exception;

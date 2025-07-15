@@ -92,6 +92,12 @@ public class DefaultHAConnection implements HAConnection, Lifecycle {
     }
 
     @Override
+    public boolean isSlaveHealthy(long masterOffset) {
+        long lag = masterOffset - getSlaveOffset();
+        return lag < storeConfig.getMaxSlaveGap();
+    }
+
+    @Override
     public ConnectionContext getContext() {
         return context;
     }

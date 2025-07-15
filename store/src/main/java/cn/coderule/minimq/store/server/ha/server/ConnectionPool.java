@@ -25,4 +25,15 @@ public class ConnectionPool implements Serializable {
     public int getConnectionCount() {
         return connectionCount.get();
     }
+
+    public int countHealthyConnection(long masterOffset) {
+        int count = 1;
+        for (HAConnection connection : connectionList) {
+            if (connection.isSlaveHealthy(masterOffset)) {
+                count++;
+            }
+        }
+
+        return count;
+    }
 }
