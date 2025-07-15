@@ -20,4 +20,24 @@ public class CommitLogStoreImpl implements CommitLogStore {
     public InsertResult insert(long offset, byte[] data, int start, int size) {
         return commitLog.insert(offset, data, start, size);
     }
+
+    @Override
+    public long getMinOffset() {
+        return commitLog.getMinOffset();
+    }
+
+    @Override
+    public long getMaxOffset() {
+        return commitLog.getMaxOffset();
+    }
+
+    @Override
+    public long getFlushedOffset() {
+        return commitLog.getFlushedOffset();
+    }
+
+    @Override
+    public long getUnFlushedSize() {
+        return commitLog.getUnFlushedSize();
+    }
 }

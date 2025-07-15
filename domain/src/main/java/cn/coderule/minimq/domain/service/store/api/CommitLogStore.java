@@ -9,4 +9,10 @@ import cn.coderule.minimq.domain.domain.cluster.store.SelectedMappedBuffer;
 public interface CommitLogStore {
     SelectedMappedBuffer select(long offset);
     InsertResult insert(long offset, byte[] data, int start, int size);
+
+    long getMinOffset();
+    long getMaxOffset();
+
+    long getFlushedOffset();
+    long getUnFlushedSize();
 }

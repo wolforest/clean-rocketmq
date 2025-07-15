@@ -2,6 +2,7 @@ package cn.coderule.minimq.store.server.ha.server.processor;
 
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
+import cn.coderule.minimq.domain.service.store.api.CommitLogStore;
 import cn.coderule.minimq.store.server.ha.core.HAConnection;
 import java.io.IOException;
 import java.nio.channels.SelectionKey;
@@ -14,6 +15,8 @@ public class CommitLogTransfer extends ServiceThread implements Lifecycle {
     private final HAConnection connection;
     private final Selector selector;
     private final SocketChannel socketChannel;
+
+    private CommitLogStore commitLogStore;
 
     public CommitLogTransfer(HAConnection connection) throws IOException {
         this.connection = connection;
