@@ -130,7 +130,11 @@ public class CommitLogTransfer extends ServiceThread implements Lifecycle {
     }
 
     private void initHeaderBuffer() {
-
+        this.headerBuffer.position(0);
+        this.headerBuffer.limit(DefaultHAConnection.TRANSFER_HEADER_SIZE);
+        this.headerBuffer.putLong(this.nextTransferOffset);
+        this.headerBuffer.putInt(0);
+        this.headerBuffer.flip();
     }
 
     private boolean transferData() {
