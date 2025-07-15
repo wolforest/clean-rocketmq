@@ -112,6 +112,28 @@ public class CommitLogTransfer extends ServiceThread implements Lifecycle {
     }
 
     private boolean transferUnfinishedData() {
+        if (!this.transferDone) {
+            this.transferDone = transferData();
+            return this.transferDone;
+        }
+
+        long interval = System.currentTimeMillis() - this.lastWriteTime;
+        long heartbeatInterval = storeConfig.getHaHeartbeatInterval();
+        if (interval <= heartbeatInterval) {
+            return true;
+        }
+
+        initHeaderBuffer();
+
+        this.transferDone = transferData();
+        return transferDone;
+    }
+
+    private void initHeaderBuffer() {
+
+    }
+
+    private boolean transferData() {
         return true;
     }
 
