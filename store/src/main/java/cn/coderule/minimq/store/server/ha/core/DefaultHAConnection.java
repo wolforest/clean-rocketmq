@@ -1,12 +1,16 @@
 package cn.coderule.minimq.store.server.ha.core;
 
 import cn.coderule.common.convention.service.Lifecycle;
+import cn.coderule.common.util.net.NetworkUtil;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.rpc.common.rpc.config.RpcSystemConfig;
 import cn.coderule.minimq.store.server.ha.core.monitor.FlowMonitor;
 import cn.coderule.minimq.store.server.ha.server.ConnectionContext;
 import cn.coderule.minimq.store.server.ha.server.processor.SlaveOffsetReceiver;
 import java.io.IOException;
+import java.nio.channels.ClosedChannelException;
+import java.nio.channels.SelectionKey;
+import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
 import lombok.extern.slf4j.Slf4j;
 
@@ -47,7 +51,7 @@ public class DefaultHAConnection implements HAConnection, Lifecycle {
         this.clientAddress = socketChannel.socket().getRemoteSocketAddress().toString();
 
         this.flowMonitor = new FlowMonitor(storeConfig);
-        this.slaveOffsetReceiver = new SlaveOffsetReceiver();
+        this.slaveOffsetReceiver = new SlaveOffsetReceiver(this);
 
         this.configureSocketChannel();
     }
@@ -60,6 +64,16 @@ public class DefaultHAConnection implements HAConnection, Lifecycle {
     @Override
     public String getClientAddress() {
         return clientAddress;
+    }
+
+    @Override
+    public Selector openSelector() throws IOException {
+        return NetworkUtil.openSelector();
+    }
+
+    @Override
+    public SelectionKey registerSelector(Selector selector, int ops) throws ClosedChannelException {
+        return socketChannel.register(selector, ops);
     }
 
     @Override

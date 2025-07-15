@@ -28,7 +28,9 @@ public class SlaveOffsetReceiver extends ServiceThread implements Serializable, 
     private volatile long lastReadTime;
     private HAConnection connection;
 
-    public SlaveOffsetReceiver() {
+    public SlaveOffsetReceiver(HAConnection connection) {
+        this.connection = connection;
+
         this.readBuffer = ByteBuffer.allocate(READ_MAX_BUFFER_SIZE);
         this.lastReadTime = System.currentTimeMillis();
         this.processPosition = 0;
