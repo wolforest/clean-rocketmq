@@ -9,14 +9,14 @@ import cn.coderule.minimq.store.server.ha.core.monitor.StateMonitor;
 import cn.coderule.minimq.store.server.ha.core.monitor.StateRequest;
 import cn.coderule.minimq.store.server.ha.server.HAServer;
 import cn.coderule.minimq.store.server.ha.server.processor.CommitLogSynchronizer;
-import cn.coderule.minimq.store.server.ha.server.processor.SlaveMonitor;
+import cn.coderule.minimq.store.server.ha.server.processor.SlaveOffsetReceiver;
 import java.util.concurrent.CompletableFuture;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class HAService implements Lifecycle {
     private final StateMonitor stateMonitor;
-    private final SlaveMonitor slaveMonitor;
+    private final SlaveOffsetReceiver slaveOffsetReceiver;
 
     private final HAServer haServer;
     private final HAClient haClient;
@@ -26,7 +26,7 @@ public class HAService implements Lifecycle {
     public HAService(HAContext context) {
         this.haServer = context.getHaServer();
         this.haClient = context.getHaClient();
-        this.slaveMonitor = context.getSlaveMonitor();
+        this.slaveOffsetReceiver = context.getSlaveOffsetReceiver();
         this.commitLogSynchronizer = context.getCommitLogSynchronizer();
 
         this.stateMonitor = new StateMonitor(

@@ -6,13 +6,13 @@ import java.io.Serializable;
 import lombok.Data;
 
 @Data
-public class SlaveMonitor extends ServiceThread implements Serializable, Lifecycle {
+public class SlaveOffsetReceiver extends ServiceThread implements Serializable, Lifecycle {
     private volatile long requestOffset = -1;
     private volatile long ackOffset = -1;
 
     @Override
     public String getServiceName() {
-        return SlaveMonitor.class.getSimpleName();
+        return SlaveOffsetReceiver.class.getSimpleName();
     }
 
     @Override

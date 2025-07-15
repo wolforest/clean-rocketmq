@@ -39,7 +39,7 @@ public class DefaultAcceptService extends AbstractAcceptService {
             .wakeupCoordinator(wakeupCoordinator)
             .resourcePool(resourcePool)
             .connectionPool(connectionPool)
-            .slaveMonitor(haContext.getSlaveMonitor())
+            .slaveOffsetReceiver(haContext.getSlaveOffsetReceiver())
             .commitLogSynchronizer(haContext.getCommitLogSynchronizer())
             .build();
     }

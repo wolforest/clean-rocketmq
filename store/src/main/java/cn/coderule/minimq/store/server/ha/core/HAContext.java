@@ -6,7 +6,7 @@ import cn.coderule.minimq.store.server.ha.client.HAClient;
 import cn.coderule.minimq.store.server.ha.server.ConnectionPool;
 import cn.coderule.minimq.store.server.ha.server.HAServer;
 import cn.coderule.minimq.store.server.ha.server.processor.CommitLogSynchronizer;
-import cn.coderule.minimq.store.server.ha.server.processor.SlaveMonitor;
+import cn.coderule.minimq.store.server.ha.server.processor.SlaveOffsetReceiver;
 import cn.coderule.common.lang.concurrent.thread.WakeupCoordinator;
 import java.io.Serializable;
 import java.net.SocketAddress;
@@ -32,7 +32,7 @@ public class HAContext implements Serializable {
     private ConnectionPool connectionPool;
     private WakeupCoordinator wakeupCoordinator;
 
-    private SlaveMonitor slaveMonitor;
+    private SlaveOffsetReceiver slaveOffsetReceiver;
     private CommitLogSynchronizer commitLogSynchronizer;
 
     private SocketAddress socketAddress;
