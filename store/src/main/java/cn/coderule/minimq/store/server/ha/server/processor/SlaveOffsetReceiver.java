@@ -3,9 +3,12 @@ package cn.coderule.minimq.store.server.ha.server.processor;
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
+import cn.coderule.minimq.store.server.ha.client.DefaultHAClient;
 import cn.coderule.minimq.store.server.ha.core.ConnectionState;
 import cn.coderule.minimq.store.server.ha.core.HAConnection;
 import cn.coderule.minimq.store.server.ha.server.ConnectionPool;
+import cn.coderule.minimq.store.server.ha.server.SlaveOffsetCounter;
+import java.io.IOException;
 import java.io.Serializable;
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
@@ -22,6 +25,7 @@ public class SlaveOffsetReceiver extends ServiceThread implements Serializable, 
     private StoreConfig storeConfig;
     private ConnectionPool connectionPool;
     private HAConnection connection;
+    private SlaveOffsetCounter slaveOffsetCounter;
 
     @Getter @Setter
     private volatile long requestOffset = -1;
@@ -80,6 +84,45 @@ public class SlaveOffsetReceiver extends ServiceThread implements Serializable, 
     }
 
     private boolean receive() {
+        if (!this.readBuffer.hasRemaining()) {
+            this.readBuffer.flip();
+            this.processPosition = 0;
+        }
+
+        int emptyCount = 0;
+        while (this.readBuffer.hasRemaining()) {
+            try {
+                int readSize = this.socketChannel.read(this.readBuffer);
+                if (readSize < 0) {
+                    log.error("readSize less than 0: clientAddress={}", connection.getClientAddress());
+                    return false;
+                }
+
+                if (readSize == 0) {
+                    if (++emptyCount >= 3) {
+                        break;
+                    }
+                    continue;
+                }
+
+                emptyCount = 0;
+                this.lastReadTime = System.currentTimeMillis();
+                if (readBuffer.position() - processPosition < DefaultHAClient.REPORT_HEADER_SIZE) {
+                    continue;
+                }
+
+                int pos = readBuffer.position() - (readBuffer.position() % DefaultHAClient.REPORT_HEADER_SIZE);
+                long readOffset = readBuffer.getLong(pos - 8);
+                this.processPosition = pos;
+
+                this.ackOffset = readOffset;
+                slaveOffsetCounter.update(readOffset);
+            } catch (IOException e) {
+                log.error("{} read socket exception", this.getServiceName(), e);
+                return false;
+            }
+        }
+
         return true;
     }
 
@@ -87,13 +130,11 @@ public class SlaveOffsetReceiver extends ServiceThread implements Serializable, 
         connection.setConnectionState(ConnectionState.SHUTDOWN);
         this.stop();
 
-        // stop commitLog transfer
+        //todo: stop commitLog transfer
         connectionPool.removeConnection(connection);
 
         cancelSelectionKey();
         closeChannel();
-
-
     }
 
     private void closeChannel() {
