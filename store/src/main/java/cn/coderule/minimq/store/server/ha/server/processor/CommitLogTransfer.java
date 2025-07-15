@@ -122,16 +122,21 @@ public class CommitLogTransfer extends ServiceThread implements Lifecycle {
         }
 
         size = availableSize;
-
-        long now = System.currentTimeMillis();
-        if (now - lastReportTime > 1_000) {
-            log.warn("Trigger HA flow control, max transfer speed {}KB/s, current speed: {}KB/s",
-                String.format("%.2f", flowMonitor.getMaxTransferBytePerSecond() / 1024.0),
-                String.format("%.2f", flowMonitor.getTransferredBytePerSecond() / 1024.0));
-            lastReportTime  = now;
-        }
+        reportFlowControl();
 
         return size;
+    }
+
+    private void reportFlowControl() {
+        long now = System.currentTimeMillis();
+        if (now - lastReportTime <= 1_000) {
+            return;
+        }
+
+        log.warn("Trigger HA flow control, max transfer speed {}KB/s, current speed: {}KB/s",
+            String.format("%.2f", flowMonitor.getMaxTransferBytePerSecond() / 1024.0),
+            String.format("%.2f", flowMonitor.getTransferredBytePerSecond() / 1024.0));
+        lastReportTime  = now;
     }
 
     private void initOffset() {
