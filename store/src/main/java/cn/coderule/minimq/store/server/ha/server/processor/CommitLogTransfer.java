@@ -120,4 +120,22 @@ public class CommitLogTransfer extends ServiceThread implements Lifecycle {
     private void releaseResource() {
 
     }
+
+    private void closeChannel() {
+        try {
+            this.selector.close();
+            this.socketChannel.close();
+        } catch (Exception e) {
+            log.error("{} release resources error", this.getServiceName(), e);
+        }
+    }
+
+    private void cancelSelectionKey() {
+        SelectionKey key = connection.keyFor(selector);
+        if (key == null) {
+            return;
+        }
+        key.cancel();
+    }
+
 }
