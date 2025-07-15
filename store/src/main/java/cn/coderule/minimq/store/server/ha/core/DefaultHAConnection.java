@@ -73,6 +73,11 @@ public class DefaultHAConnection implements HAConnection, Lifecycle {
     }
 
     @Override
+    public ConnectionContext getContext() {
+        return context;
+    }
+
+    @Override
     public long getSlaveOffset() {
         return slaveOffsetReceiver.getAckOffset();
     }

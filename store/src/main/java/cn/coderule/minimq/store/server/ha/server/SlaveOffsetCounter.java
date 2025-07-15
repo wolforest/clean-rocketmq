@@ -8,6 +8,7 @@ public class SlaveOffsetCounter {
     private final StoreConfig storeConfig;
     private final ConnectionPool connectionPool;
     private final AtomicLong maxOffset;
+    private final AtomicLong minOffset;
 
     private CommitLogSynchronizer commitLogSynchronizer;
 
@@ -15,6 +16,7 @@ public class SlaveOffsetCounter {
         this.storeConfig = storeConfig;
         this.connectionPool = connectionPool;
         maxOffset = new AtomicLong(0);
+        minOffset = new AtomicLong(0);
     }
 
     public long getMaxOffset() {
@@ -29,6 +31,11 @@ public class SlaveOffsetCounter {
     }
 
     public void update(long slaveOffset) {
+        setMaxOffset(slaveOffset);
+        // setMinOffset(slaveOffset);
+    }
+
+    public void setMaxOffset(long slaveOffset) {
         for (long value = maxOffset.get(); slaveOffset > value; ) {
             if (maxOffset.compareAndSet(value, slaveOffset)) {
                 break;
@@ -37,4 +44,16 @@ public class SlaveOffsetCounter {
             value = maxOffset.get();
         }
     }
+
+    public void setMinOffset(long slaveOffset) {
+        for (long value = minOffset.get(); slaveOffset < value; ) {
+            if (minOffset.compareAndSet(value, slaveOffset)) {
+                break;
+            }
+
+            value = minOffset.get();
+        }
+    }
+
+
 }
