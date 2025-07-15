@@ -10,6 +10,7 @@ import cn.coderule.minimq.domain.service.store.api.CommitLogStore;
 import cn.coderule.minimq.store.server.ha.core.ConnectionState;
 import cn.coderule.minimq.store.server.ha.core.DefaultHAConnection;
 import cn.coderule.minimq.store.server.ha.core.HAConnection;
+import cn.coderule.minimq.store.server.ha.core.monitor.FlowMonitor;
 import cn.coderule.minimq.store.server.ha.server.ConnectionContext;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -20,9 +21,10 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class CommitLogTransfer extends ServiceThread implements Lifecycle {
-    private CommitLogStore commitLogStore;
     private final StoreConfig storeConfig;
     private final HAConnection connection;
+    private final CommitLogStore commitLogStore;
+    private final FlowMonitor flowMonitor;
 
     private final Selector selector;
     private final SocketChannel socketChannel;
@@ -35,8 +37,12 @@ public class CommitLogTransfer extends ServiceThread implements Lifecycle {
     private long lastReportTime;
 
     public CommitLogTransfer(HAConnection connection) throws IOException {
-        this.storeConfig = connection.getContext().getStoreConfig();
         this.connection = connection;
+        ConnectionContext context = connection.getContext();
+        this.storeConfig = context.getStoreConfig();
+        this.commitLogStore = context.getCommitLogStore();
+        this.flowMonitor = context.getFlowMonitor();
+
         this.socketChannel = connection.getSocketChannel();
         this.selector = connection.openSelector();
         connection.registerSelector(selector, SelectionKey.OP_WRITE);
@@ -141,7 +147,7 @@ public class CommitLogTransfer extends ServiceThread implements Lifecycle {
         this.headerBuffer.flip();
     }
 
-    private boolean transferData() {
+    private boolean transferData() throws Exception {
         writeHeader();
 
         if (null == this.selectedBuffer) {
@@ -161,8 +167,23 @@ public class CommitLogTransfer extends ServiceThread implements Lifecycle {
         return result;
     }
 
-    private void writeHeader() {
-
+    private void writeHeader() throws Exception {
+        int writeSizeZeroTimes = 0;
+        // Write Header
+        while (this.headerBuffer.hasRemaining()) {
+            int writeSize = this.socketChannel.write(this.headerBuffer);
+            if (writeSize > 0) {
+                flowMonitor.addTransferredByte(writeSize);
+                writeSizeZeroTimes = 0;
+                this.lastWriteTime = System.currentTimeMillis();
+            } else if (writeSize == 0) {
+                if (++writeSizeZeroTimes >= 3) {
+                    break;
+                }
+            } else {
+                throw new Exception("ha master write header error < 0");
+            }
+        }
     }
 
     private void writeBody() {
