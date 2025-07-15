@@ -13,6 +13,7 @@ public interface HAConnection {
 
     Selector openSelector() throws IOException;
     SelectionKey registerSelector(Selector selector, int ops) throws ClosedChannelException;
+    SelectionKey keyFor(Selector selector);
 
     ConnectionState getConnectionState();
     void setConnectionState(ConnectionState state);

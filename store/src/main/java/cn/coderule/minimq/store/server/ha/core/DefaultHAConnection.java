@@ -77,6 +77,11 @@ public class DefaultHAConnection implements HAConnection, Lifecycle {
     }
 
     @Override
+    public SelectionKey keyFor(Selector selector) {
+        return socketChannel.keyFor(selector);
+    }
+
+    @Override
     public ConnectionState getConnectionState() {
         return state;
     }
