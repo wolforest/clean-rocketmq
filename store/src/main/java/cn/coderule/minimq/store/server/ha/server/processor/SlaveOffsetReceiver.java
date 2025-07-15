@@ -26,6 +26,7 @@ public class SlaveOffsetReceiver extends ServiceThread implements Serializable, 
     private ConnectionPool connectionPool;
     private HAConnection connection;
     private SlaveOffsetCounter slaveOffsetCounter;
+    private CommitLogTransfer commitLogTransfer;
 
     @Getter @Setter
     private volatile long requestOffset = -1;
@@ -130,7 +131,7 @@ public class SlaveOffsetReceiver extends ServiceThread implements Serializable, 
         connection.setConnectionState(ConnectionState.SHUTDOWN);
         this.stop();
 
-        //todo: stop commitLog transfer
+        commitLogTransfer.stop();
         connectionPool.removeConnection(connection);
 
         cancelSelectionKey();
