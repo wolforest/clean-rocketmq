@@ -91,14 +91,18 @@ public class SlaveOffsetReceiver extends ServiceThread implements Serializable, 
         connectionPool.removeConnection(connection);
 
         cancelSelectionKey();
+        closeChannel();
 
+
+    }
+
+    private void closeChannel() {
         try {
             this.selector.close();
             this.socketChannel.close();
         } catch (Exception e) {
             log.error("{} release resources error", this.getServiceName(), e);
         }
-
     }
 
     private void cancelSelectionKey() {
