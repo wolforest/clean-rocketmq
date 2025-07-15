@@ -322,7 +322,7 @@ public class DefaultHAClient extends ServiceThread implements HAClient, Lifecycl
 
                 if (slavePhyOffset != 0) {
                     if (slavePhyOffset != masterPhyOffset) {
-                        log.error("master pushed offset not equal the max phy offset in slave, SLAVE: " + slavePhyOffset + " MASTER: " + masterPhyOffset);
+                        log.error("master pushed offset not equal the max phy offset in slave, SLAVE: {} MASTER: {}", slavePhyOffset, masterPhyOffset);
                         return false;
                     }
                 }
