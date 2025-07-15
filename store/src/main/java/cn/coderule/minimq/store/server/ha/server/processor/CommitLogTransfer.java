@@ -99,22 +99,7 @@ public class CommitLogTransfer extends ServiceThread implements Lifecycle {
             wakeupCoordinator.awaitAll(100);
             return;
         }
-        int size = result.getSize();
-        if (size > storeConfig.getMaxHaTransferSize()) {
-            size = storeConfig.getMaxHaTransferSize();
-        }
-
-        int availableSize = flowMonitor.getAvailableTransferByte();
-        if (size > availableSize) {
-            long now = System.currentTimeMillis();
-            if (now - lastReportTime > 1_000) {
-                log.warn("Trigger HA flow control, max transfer speed {}KB/s, current speed: {}KB/s",
-                    String.format("%.2f", flowMonitor.getMaxTransferBytePerSecond() / 1024.0),
-                    String.format("%.2f", flowMonitor.getTransferredBytePerSecond() / 1024.0));
-                lastReportTime  = now;
-            }
-            size = availableSize;
-        }
+        int size = calculateSize(result);
 
         long tmpOffset = this.nextTransferOffset;
         this.nextTransferOffset += size;
@@ -123,6 +108,30 @@ public class CommitLogTransfer extends ServiceThread implements Lifecycle {
 
         writeHeaderBuffer(tmpOffset, size);
         this.transferDone = this.transferData();
+    }
+
+    private int calculateSize(SelectedMappedBuffer result) {
+        int size = result.getSize();
+        if (size > storeConfig.getMaxHaTransferSize()) {
+            size = storeConfig.getMaxHaTransferSize();
+        }
+
+        int availableSize = flowMonitor.getAvailableTransferByte();
+        if (size <= availableSize) {
+            return size;
+        }
+
+        size = availableSize;
+
+        long now = System.currentTimeMillis();
+        if (now - lastReportTime > 1_000) {
+            log.warn("Trigger HA flow control, max transfer speed {}KB/s, current speed: {}KB/s",
+                String.format("%.2f", flowMonitor.getMaxTransferBytePerSecond() / 1024.0),
+                String.format("%.2f", flowMonitor.getTransferredBytePerSecond() / 1024.0));
+            lastReportTime  = now;
+        }
+
+        return size;
     }
 
     private void initOffset() {
