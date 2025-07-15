@@ -5,6 +5,8 @@ import cn.coderule.common.util.net.NetworkUtil;
 import cn.coderule.minimq.domain.config.message.MessageConfig;
 import cn.coderule.minimq.domain.config.TimerConfig;
 import cn.coderule.minimq.domain.config.message.TopicConfig;
+import cn.coderule.minimq.domain.config.store.CommitConfig;
+import cn.coderule.minimq.domain.config.store.ConsumeQueueConfig;
 import cn.coderule.minimq.domain.config.store.MetaConfig;
 import cn.coderule.minimq.domain.core.constant.PermName;
 import java.io.File;
@@ -81,6 +83,9 @@ public class StoreConfig extends ServerIdentity {
 
     private MessageConfig messageConfig;
     private TopicConfig topicConfig;
+
+    private CommitConfig commitConfig;
+    private ConsumeQueueConfig consumeQueueConfig;
     private TimerConfig timerConfig;
     private MetaConfig metaConfig;
 }

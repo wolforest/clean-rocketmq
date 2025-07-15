@@ -3,6 +3,8 @@ package cn.coderule.minimq.store.server.ha.server.processor;
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 import cn.coderule.common.util.lang.ThreadUtil;
+import cn.coderule.minimq.domain.config.server.StoreConfig;
+import cn.coderule.minimq.domain.config.store.CommitConfig;
 import cn.coderule.minimq.domain.domain.cluster.store.SelectedMappedBuffer;
 import cn.coderule.minimq.domain.service.store.api.CommitLogStore;
 import cn.coderule.minimq.store.server.ha.core.DefaultHAConnection;
@@ -17,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class CommitLogTransfer extends ServiceThread implements Lifecycle {
     private CommitLogStore commitLogStore;
+    private final StoreConfig storeConfig;
     private final HAConnection connection;
 
     private final Selector selector;
@@ -30,6 +33,7 @@ public class CommitLogTransfer extends ServiceThread implements Lifecycle {
     private long lastReportTime;
 
     public CommitLogTransfer(HAConnection connection) throws IOException {
+        this.storeConfig = connection.getContext().getStoreConfig();
         this.connection = connection;
         this.socketChannel = connection.getSocketChannel();
         this.selector = connection.openSelector();
@@ -77,7 +81,32 @@ public class CommitLogTransfer extends ServiceThread implements Lifecycle {
     }
 
     private void initOffset() {
+        if (-1 == this.nextTransferOffset) {
+            return;
+        }
 
+        long slaveOffset = connection.getSlaveOffset();
+        if (0 != slaveOffset) {
+            this.nextTransferOffset = slaveOffset;
+        } else {
+            this.nextTransferOffset = getMasterOffset();
+        }
+
+        log.info("{} init offset: nextTransferOffset={}, slaveOffset={}",
+            this.getServiceName(), this.nextTransferOffset, slaveOffset);
+    }
+
+    private long getMasterOffset() {
+        CommitConfig commitConfig = storeConfig.getCommitConfig();
+        long masterOffset = commitLogStore.getMaxOffset();
+        long fileSize = commitConfig.getFileSize();
+
+        masterOffset = masterOffset - (masterOffset % fileSize);
+        if (masterOffset < 0) {
+            masterOffset = 0;
+        }
+
+        return masterOffset;
     }
 
     private boolean transferUnfinishedData() {
