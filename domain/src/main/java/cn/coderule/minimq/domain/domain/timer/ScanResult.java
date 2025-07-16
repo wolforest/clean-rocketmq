@@ -1,4 +1,3 @@
-
 package cn.coderule.minimq.domain.domain.timer;
 
 import java.io.Serializable;
