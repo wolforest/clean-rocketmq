@@ -16,16 +16,14 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TimerRequest implements Serializable {
+public class TimerEvent implements Serializable {
 
     /**
      * commitLog offset
-     * @renamed from offsetPy to commitLogOffset
      */
     private long commitLogOffset;
     /**
      * size of message in the commitLog
-     * @renamed from sizePy to messageSize
      */
     private int messageSize;
     /**
