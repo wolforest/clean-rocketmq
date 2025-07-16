@@ -138,6 +138,7 @@ public class CommitLogReceiver implements Lifecycle {
 
                     // todo
                     // this.defaultMessageStore.appendToCommitLog(masterPhyOffset, bodyData, dataStart, bodySize);
+                    commitLogStore.insert(masterPhyOffset, bodyData, dataStart, bodySize);
                     this.readBuffer.position(readSocketPos);
                     this.dispatchPosition += DefaultHAConnection.TRANSFER_HEADER_SIZE + bodySize;
 
