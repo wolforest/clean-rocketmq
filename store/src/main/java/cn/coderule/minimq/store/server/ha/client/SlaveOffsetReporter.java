@@ -62,17 +62,25 @@ public class SlaveOffsetReporter implements Lifecycle {
         this.reportBuffer.position(0);
         this.reportBuffer.limit(REPORT_HEADER_SIZE);
 
+        if (!writeReport()) {
+            return false;
+        }
+
+        lastWriteTime = System.currentTimeMillis();
+        return !this.reportBuffer.hasRemaining();
+    }
+
+    private boolean writeReport() {
         for (int i = 0; i < 3 && this.reportBuffer.hasRemaining(); i++) {
             try {
                 haClient.getSocketChannel().write(this.reportBuffer);
             } catch (IOException e) {
-                log.error("reportSlaveMaxOffset this.socketChannel.write exception",
-                    e);
+                log.error("reportSlaveMaxOffset write socket exception", e);
                 return false;
             }
         }
-        lastWriteTime = System.currentTimeMillis();
-        return !this.reportBuffer.hasRemaining();
+
+        return true;
     }
 
     @Override
