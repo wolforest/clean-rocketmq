@@ -4,6 +4,7 @@ import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 import cn.coderule.common.util.net.NetworkUtil;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
+import cn.coderule.minimq.domain.service.store.api.CommitLogStore;
 import cn.coderule.minimq.rpc.common.rpc.netty.service.helper.NettyHelper;
 import cn.coderule.minimq.store.server.ha.core.ConnectionState;
 import cn.coderule.minimq.store.server.ha.core.monitor.FlowMonitor;
@@ -33,6 +34,7 @@ import lombok.extern.slf4j.Slf4j;
 public class DefaultHAClient extends ServiceThread implements HAClient, Lifecycle {
     public static final int REPORT_HEADER_SIZE = 8;
 
+    @Getter
     private final StoreConfig storeConfig;
 
     private final AtomicReference<String> masterHaAddress = new AtomicReference<>();
@@ -43,16 +45,19 @@ public class DefaultHAClient extends ServiceThread implements HAClient, Lifecycl
     private final Selector selector;
     @Getter
     private final FlowMonitor flowMonitor;
+    @Getter
+    private final CommitLogStore commitLogStore;
     private final CommitLogReceiver commitLogReceiver;
 
     private volatile ConnectionState state = ConnectionState.READY;
 
-    public DefaultHAClient(StoreConfig storeConfig) throws IOException {
+    public DefaultHAClient(StoreConfig storeConfig, CommitLogStore commitLogStore) throws IOException {
         this.storeConfig = storeConfig;
+        this.commitLogStore = commitLogStore;
 
         this.selector = NetworkUtil.openSelector();
         this.flowMonitor = new FlowMonitor(storeConfig);
-        this.commitLogReceiver = new CommitLogReceiver(storeConfig, this);
+        this.commitLogReceiver = new CommitLogReceiver(this);
     }
 
     @Override
