@@ -2,6 +2,7 @@ package cn.coderule.minimq.store.server.ha.client;
 
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
+import cn.coderule.minimq.domain.service.store.api.CommitLogStore;
 import cn.coderule.minimq.store.server.ha.core.DefaultHAConnection;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -16,6 +17,7 @@ public class CommitLogReceiver implements Lifecycle {
 
     private final StoreConfig storeConfig;
     private final DefaultHAClient haClient;
+    private CommitLogStore commitLogStore;
 
     /**
      * last time that slave reads date from master.
@@ -56,7 +58,7 @@ public class CommitLogReceiver implements Lifecycle {
     @Override
     public void initialize() throws Exception {
         // this.currentReportedOffset = this.defaultMessageStore.getMaxPhyOffset();
-        this.reportedOffset = 0;
+        this.reportedOffset = commitLogStore.getMaxOffset();
         this.lastReadTime = System.currentTimeMillis();
     }
 
@@ -121,7 +123,7 @@ public class CommitLogReceiver implements Lifecycle {
 
                 long masterPhyOffset = this.readBuffer.getLong(this.dispatchPosition);
                 // todo: get slave max commitLog offset
-                long slavePhyOffset = 1;
+                long slavePhyOffset = commitLogStore.getMaxOffset();
 
                 if (slavePhyOffset != 0) {
                     if (slavePhyOffset != masterPhyOffset) {
