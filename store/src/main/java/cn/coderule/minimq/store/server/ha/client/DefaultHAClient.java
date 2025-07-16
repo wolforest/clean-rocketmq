@@ -6,16 +6,14 @@ import cn.coderule.common.util.net.NetworkUtil;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.rpc.common.rpc.netty.service.helper.NettyHelper;
 import cn.coderule.minimq.store.server.ha.core.ConnectionState;
-import cn.coderule.minimq.store.server.ha.core.DefaultHAConnection;
 import cn.coderule.minimq.store.server.ha.core.monitor.FlowMonitor;
 import java.io.IOException;
 import java.net.SocketAddress;
-import java.nio.ByteBuffer;
-import java.nio.channels.ClosedChannelException;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
 import java.util.concurrent.atomic.AtomicReference;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -34,31 +32,18 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class DefaultHAClient extends ServiceThread implements HAClient, Lifecycle {
     public static final int REPORT_HEADER_SIZE = 8;
-    private static final int MAX_READ_BUFFER_SIZE = 4 * 1024 * 1024;
 
     private final StoreConfig storeConfig;
 
     private final AtomicReference<String> masterHaAddress = new AtomicReference<>();
     private final AtomicReference<String> masterAddress = new AtomicReference<>();
+    @Getter
     private SocketChannel socketChannel;
+    @Getter
     private final Selector selector;
+    @Getter
     private final FlowMonitor flowMonitor;
-
-    /**
-     * last time that slave reads date from master.
-     */
-    private long lastReadTime;
-    /**
-     * last time that slave reports offset to master.
-     */
-    private long lastWriteTime;
-
-    private long reportedOffset = 0;
-    private int dispatchPosition = 0;
-
-    private ByteBuffer readBuffer = ByteBuffer.allocate(MAX_READ_BUFFER_SIZE);
-    private ByteBuffer backupBuffer = ByteBuffer.allocate(MAX_READ_BUFFER_SIZE);
-    private final ByteBuffer reportBuffer = ByteBuffer.allocate(REPORT_HEADER_SIZE);
+    private final CommitLogReceiver commitLogReceiver;
 
     private volatile ConnectionState state = ConnectionState.READY;
 
@@ -67,10 +52,7 @@ public class DefaultHAClient extends ServiceThread implements HAClient, Lifecycl
 
         this.selector = NetworkUtil.openSelector();
         this.flowMonitor = new FlowMonitor(storeConfig);
-
-        long now = System.currentTimeMillis();
-        this.lastReadTime = now;
-        this.lastWriteTime = now;
+        this.commitLogReceiver = new CommitLogReceiver(storeConfig, this);
     }
 
     @Override
@@ -83,14 +65,12 @@ public class DefaultHAClient extends ServiceThread implements HAClient, Lifecycl
     public void shutdown() throws Exception {
         this.state = ConnectionState.SHUTDOWN;
         this.flowMonitor.shutdown();
-        super.shutdown();
+        commitLogReceiver.shutdown();
 
         closeMaster();
-        try {
-            this.selector.close();
-        } catch (IOException e) {
-            log.warn("Close the selector of AutoRecoverHAClient error, ", e);
-        }
+        closeSelector();
+
+        super.shutdown();
     }
 
     @Override
@@ -137,7 +117,7 @@ public class DefaultHAClient extends ServiceThread implements HAClient, Lifecycl
     }
 
     @Override
-    public boolean connectMaster() throws ClosedChannelException {
+    public boolean connectMaster() throws Exception {
         if (null != socketChannel) {
             return true;
         }
@@ -153,10 +133,7 @@ public class DefaultHAClient extends ServiceThread implements HAClient, Lifecycl
             }
         }
 
-
-        // this.currentReportedOffset = this.defaultMessageStore.getMaxPhyOffset();
-        this.reportedOffset = 0;
-        this.lastReadTime = System.currentTimeMillis();
+        commitLogReceiver.initialize();
 
         return this.socketChannel != null;
     }
@@ -181,15 +158,6 @@ public class DefaultHAClient extends ServiceThread implements HAClient, Lifecycl
         } catch (IOException e) {
             log.warn("closeMaster exception. ", e);
         }
-
-        this.lastReadTime = 0;
-        this.dispatchPosition = 0;
-
-        this.backupBuffer.position(0);
-        this.backupBuffer.limit(MAX_READ_BUFFER_SIZE);
-
-        this.reportBuffer.position(0);
-        this.reportBuffer.limit(MAX_READ_BUFFER_SIZE);
     }
 
     @Override
@@ -197,6 +165,7 @@ public class DefaultHAClient extends ServiceThread implements HAClient, Lifecycl
         log.info("{} service started", this.getServiceName());
 
         startFlowMonitor();
+        startCommitLogReceiver();
 
         while (!this.isStopped()) {
             try {
@@ -211,7 +180,7 @@ public class DefaultHAClient extends ServiceThread implements HAClient, Lifecycl
                         }
                         continue;
                     case TRANSFER:
-                        if (!transferFromMaster()) {
+                        if (!commitLogReceiver.receive()) {
                             closeMasterAndWait();
                             continue;
                         }
@@ -236,7 +205,15 @@ public class DefaultHAClient extends ServiceThread implements HAClient, Lifecycl
         try {
             this.flowMonitor.start();
         } catch (Exception e) {
-            log.error("{} service has exception.", this.getServiceName(), e);
+            log.error("{} startFlowMonitor exception.", this.getServiceName(), e);
+        }
+    }
+
+    private void startCommitLogReceiver() {
+        try {
+            this.commitLogReceiver.start();
+        } catch (Exception e) {
+            log.error("{} startCommitLogReceiver exception.", this.getServiceName(), e);
         }
     }
 
@@ -246,7 +223,7 @@ public class DefaultHAClient extends ServiceThread implements HAClient, Lifecycl
     }
 
     private void tryCloseMaster() {
-        long interval = System.currentTimeMillis() - this.lastReadTime;
+        long interval = System.currentTimeMillis() - commitLogReceiver.getLastReadTime();
         if (interval <= storeConfig.getHaHouseKeepingInterval()) {
             return;
         }
@@ -257,167 +234,11 @@ public class DefaultHAClient extends ServiceThread implements HAClient, Lifecycl
         log.warn("AutoRecoverHAClient, master not response some time, so close connection");
     }
 
-    private boolean transferFromMaster() throws IOException {
-        boolean result;
-        if (this.isTimeToHeartbeat()) {
-            log.info("Slave report current offset {}", this.reportedOffset);
-            result = this.reportSlaveOffset(this.reportedOffset);
-            if (!result) {
-                return false;
-            }
+    private void closeSelector() {
+        try {
+            this.selector.close();
+        } catch (IOException e) {
+            log.warn("Close the selector of AutoRecoverHAClient error, ", e);
         }
-
-        this.selector.select(1000);
-
-        result = this.processReadEvent();
-        if (!result) {
-            return false;
-        }
-
-        return reportSlaveOffset();
     }
-
-    private boolean processReadEvent() {
-        int emptyReadTimes = 0;
-        while (this.readBuffer.hasRemaining()) {
-            try {
-                int readSize = this.socketChannel.read(this.readBuffer);
-                if (readSize > 0) {
-                    flowMonitor.addTransferredByte(readSize);
-                    emptyReadTimes = 0;
-                    boolean result = this.dispatchReadRequest();
-                    if (!result) {
-                        log.error("HAClient, dispatchReadRequest error");
-                        return false;
-                    }
-                    lastReadTime = System.currentTimeMillis();
-                } else if (readSize == 0) {
-                    if (++emptyReadTimes >= 3) {
-                        break;
-                    }
-                } else {
-                    log.info("HAClient, processReadEvent read socket < 0");
-                    return false;
-                }
-            } catch (IOException e) {
-                log.info("HAClient, processReadEvent read socket exception", e);
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    private boolean dispatchReadRequest() {
-        int readSocketPos = this.readBuffer.position();
-
-        while (true) {
-            int diff = this.readBuffer.position() - this.dispatchPosition;
-            if (diff >= DefaultHAConnection.TRANSFER_HEADER_SIZE) {
-                int bodySize = this.readBuffer.getInt(this.dispatchPosition + 8);
-
-                long masterPhyOffset = this.readBuffer.getLong(this.dispatchPosition);
-                // todo: get slave max commitLog offset
-                long slavePhyOffset = 1;
-
-                if (slavePhyOffset != 0) {
-                    if (slavePhyOffset != masterPhyOffset) {
-                        log.error("master pushed offset not equal the max phy offset in slave, SLAVE: {} MASTER: {}", slavePhyOffset, masterPhyOffset);
-                        return false;
-                    }
-                }
-
-                if (diff >= (DefaultHAConnection.TRANSFER_HEADER_SIZE + bodySize)) {
-                    byte[] bodyData = readBuffer.array();
-                    int dataStart = this.dispatchPosition + DefaultHAConnection.TRANSFER_HEADER_SIZE;
-
-                    // todo
-                    // this.defaultMessageStore.appendToCommitLog(masterPhyOffset, bodyData, dataStart, bodySize);
-                    this.readBuffer.position(readSocketPos);
-                    this.dispatchPosition += DefaultHAConnection.TRANSFER_HEADER_SIZE + bodySize;
-
-                    if (!reportSlaveOffset()) {
-                        return false;
-                    }
-
-                    continue;
-                }
-            }
-
-            if (!this.readBuffer.hasRemaining()) {
-                this.reallocateBuffer();
-            }
-
-            break;
-        }
-
-        return true;
-    }
-
-    private boolean reportSlaveOffset() {
-        // todo: this.defaultMessageStore.getMaxPhyOffset()
-        long currentPhyOffset = 10;
-        if (currentPhyOffset <= this.reportedOffset) {
-            return true;
-        }
-
-        this.reportedOffset = currentPhyOffset;
-        boolean result = this.reportSlaveOffset(this.reportedOffset);
-        if (result) {
-            return true;
-        }
-
-        this.closeMaster();
-        log.error("HAClient, reportSlaveMaxOffset error, {}", this.reportedOffset);
-        return false;
-    }
-
-    private boolean reportSlaveOffset(final long maxOffset) {
-        this.reportBuffer.position(0);
-        this.reportBuffer.limit(REPORT_HEADER_SIZE);
-        this.reportBuffer.putLong(maxOffset);
-        this.reportBuffer.position(0);
-        this.reportBuffer.limit(REPORT_HEADER_SIZE);
-
-        for (int i = 0; i < 3 && this.reportBuffer.hasRemaining(); i++) {
-            try {
-                this.socketChannel.write(this.reportBuffer);
-            } catch (IOException e) {
-                log.error("{} reportSlaveMaxOffset this.socketChannel.write exception",
-                    this.getServiceName(), e);
-                return false;
-            }
-        }
-        lastWriteTime = System.currentTimeMillis();
-        return !this.reportBuffer.hasRemaining();
-    }
-
-    private void reallocateBuffer() {
-        int remain = MAX_READ_BUFFER_SIZE - this.dispatchPosition;
-        if (remain > 0) {
-            this.readBuffer.position(this.dispatchPosition);
-
-            this.backupBuffer.position(0);
-            this.backupBuffer.limit(MAX_READ_BUFFER_SIZE);
-            this.backupBuffer.put(this.readBuffer);
-        }
-
-        this.swapBuffer();
-
-        this.readBuffer.position(remain);
-        this.readBuffer.limit(MAX_READ_BUFFER_SIZE);
-        this.dispatchPosition = 0;
-    }
-
-    private void swapBuffer() {
-        ByteBuffer tmp = this.readBuffer;
-        this.readBuffer = this.backupBuffer;
-        this.backupBuffer = tmp;
-    }
-
-    private boolean isTimeToHeartbeat() {
-        long interval = System.currentTimeMillis() - lastWriteTime;
-        return interval > storeConfig.getHaHeartbeatInterval();
-    }
-
 }
