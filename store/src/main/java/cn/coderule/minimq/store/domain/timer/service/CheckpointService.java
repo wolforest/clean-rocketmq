@@ -1,4 +1,4 @@
-package cn.coderule.minimq.store.domain.timer;
+package cn.coderule.minimq.store.domain.timer.service;
 
 import cn.coderule.minimq.domain.domain.timer.TimerCheckpoint;
 
