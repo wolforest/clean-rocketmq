@@ -438,6 +438,11 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
     }
 
     @Override
+    public void setWritePosition(int writePosition) {
+        WRITE_POSITION_UPDATER.set(this, writePosition);
+    }
+
+    @Override
     public int getCommitPosition() {
         return COMMIT_POSITION_UPDATER.get(this);
     }
