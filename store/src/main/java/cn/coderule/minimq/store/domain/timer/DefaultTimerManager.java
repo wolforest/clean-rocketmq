@@ -4,6 +4,11 @@ import cn.coderule.minimq.domain.service.store.domain.timer.TimerManager;
 
 public class DefaultTimerManager implements TimerManager {
     @Override
+    public void initialize() throws Exception {
+        // init Timer
+    }
+
+    @Override
     public void start() throws Exception {
 
     }
@@ -13,18 +18,6 @@ public class DefaultTimerManager implements TimerManager {
 
     }
 
-    @Override
-    public void initialize() throws Exception {
 
-    }
 
-    @Override
-    public void cleanup() throws Exception {
-
-    }
-
-    @Override
-    public State getState() {
-        return null;
-    }
 }
