@@ -32,7 +32,7 @@ public class RocksdbTimer implements Timer {
     }
 
     @Override
-    public ScanResult scan() {
+    public ScanResult scan(long delayTime) {
         return null;
     }
 }

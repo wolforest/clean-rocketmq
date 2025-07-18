@@ -37,8 +37,8 @@ public class TimerService implements Timer {
     }
 
     @Override
-    public ScanResult scan() {
-        return timer.scan();
+    public ScanResult scan(long delayTime) {
+        return timer.scan(delayTime);
     }
 
     private Timer initTimer(StoreConfig storeConfig) {

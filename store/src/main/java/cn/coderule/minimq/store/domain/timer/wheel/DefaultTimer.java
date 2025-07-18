@@ -11,9 +11,16 @@ public class DefaultTimer implements Timer {
     private final StoreConfig storeConfig;
     private final CheckpointService checkpointService;
 
+    private final TaskScheduler taskScheduler;
+    private final WheelScanner wheelScanner;
+
+
     public DefaultTimer(StoreConfig storeConfig, CheckpointService checkpointService) {
         this.storeConfig = storeConfig;
         this.checkpointService = checkpointService;
+
+        this.wheelScanner = new WheelScanner(storeConfig);
+        this.taskScheduler = new TaskScheduler(storeConfig);
     }
 
     @Override
@@ -28,11 +35,11 @@ public class DefaultTimer implements Timer {
 
     @Override
     public boolean addTimer(TimerEvent event) {
-        return false;
+        return taskScheduler.addTimer(event);
     }
 
     @Override
-    public ScanResult scan() {
-        return null;
+    public ScanResult scan(long delayTime) {
+        return wheelScanner.scan(delayTime);
     }
 }

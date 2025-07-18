@@ -9,6 +9,6 @@ public interface Timer {
     TimerCheckpoint loadCheckpoint();
 
     boolean addTimer(TimerEvent event);
-    ScanResult scan();
+    ScanResult scan(long delayTime);
 
 }
