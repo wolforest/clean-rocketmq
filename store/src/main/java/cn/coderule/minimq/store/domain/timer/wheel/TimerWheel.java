@@ -65,10 +65,10 @@ public class TimerWheel {
             this.byteBuffer = ByteBuffer.allocateDirect(wheelLength);
             this.byteBuffer.put(mappedByteBuffer);
         } catch (FileNotFoundException e) {
-            log.error("create file channel " + fileName + " Failed. ", e);
+            log.error("create file channel {} Failed. ", fileName, e);
             throw e;
         } catch (IOException e) {
-            log.error("map file " + fileName + " Failed. ", e);
+            log.error("map file {} Failed. ", fileName, e);
             throw e;
         }
     }

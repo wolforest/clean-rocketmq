@@ -86,6 +86,15 @@ public class StorePath {
     public static String getTimerCheckPath() {
         return ROOT_PATH + File.separator + "config" + File.separator + "timercheck";
     }
+
+    public static String getTimerLogPath() {
+        return ROOT_PATH + File.separator + "timerlog";
+    }
+
+    public static String getTimerWheelPath() {
+        return ROOT_PATH + File.separator + "timerwheel";
+    }
+
     public static String getTimerMetricsPath() {
         return ROOT_PATH + File.separator + "config" + File.separator + "timermetrics";
     }
