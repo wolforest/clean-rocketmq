@@ -3,8 +3,10 @@ package cn.coderule.minimq.store.domain.timer.wheel;
 import cn.coderule.common.util.lang.time.DateUtil;
 import cn.coderule.minimq.domain.config.TimerConfig;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
+import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.domain.timer.TimerConstants;
 import cn.coderule.minimq.domain.domain.timer.TimerEvent;
+import cn.coderule.minimq.domain.domain.timer.wheel.Slot;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -28,17 +30,28 @@ public class TaskScheduler {
         );
 
         int magic = TimerConstants.MAGIC_DEFAULT;
-        long now = System.currentTimeMillis();
-        if (needRoll(event, now)) {
+        if (needRoll(event)) {
             magic = magic | TimerConstants.MAGIC_ROLL;
         }
+
+        magic = addDeleteFlag(event.getMessageBO(), magic);
+        Slot slot = timerWheel.getSlot(event.getDelayTime());
 
         return false;
     }
 
-    private boolean needRoll(TimerEvent event, long now) {
-        return event.getDelayTime() - now
+    private boolean needRoll(TimerEvent event) {
+        return event.getDelayTime() - event.getBatchTime()
             > (long) timerConfig.getWheelSlots() * timerConfig.getPrecision();
+    }
+
+    private int addDeleteFlag(MessageBO messageBO, int magic) {
+        String key = messageBO.getProperty(TimerConstants.TIMER_DELETE_UNIQUE_KEY);
+        if (key == null) {
+            return magic;
+        }
+
+        return magic | TimerConstants.MAGIC_DELETE;
     }
 
 }

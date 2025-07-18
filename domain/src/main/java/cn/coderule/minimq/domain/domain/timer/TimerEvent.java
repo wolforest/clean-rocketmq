@@ -30,6 +30,8 @@ public class TimerEvent implements Serializable {
      * delayTime of message, stored in message property map
      */
     private long delayTime;
+
+    private long batchTime = 0L;
     /**
      * magic code, always equals TimerMessageAccepter.MAGIC_DEFAULT (1)
      */
@@ -53,6 +55,15 @@ public class TimerEvent implements Serializable {
     private boolean success;
 
     private Set<String> deleteList;
+
+    public long getBatchTime() {
+        if (batchTime <= 0) {
+            return batchTime;
+        }
+
+        batchTime = System.currentTimeMillis();
+        return batchTime;
+    }
 
     @Override
     public String toString() {
