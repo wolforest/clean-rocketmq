@@ -1,4 +1,4 @@
-package cn.coderule.minimq.domain.domain.timer;
+package cn.coderule.minimq.domain.domain.timer.state;
 
 import cn.coderule.minimq.domain.domain.meta.DataVersion;
 import java.io.Serializable;

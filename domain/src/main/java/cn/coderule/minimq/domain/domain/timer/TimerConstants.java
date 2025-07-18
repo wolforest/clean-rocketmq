@@ -16,8 +16,5 @@ public class TimerConstants {
     public static final String TIMER_ROLL_TIMES = MessageConst.PROPERTY_TIMER_ROLL_TIMES;
     public static final String TIMER_DELETE_UNIQUE_KEY = MessageConst.PROPERTY_TIMER_DEL_UNIQKEY;
 
-    /**
-     *
-     */
     public static final int TIMER_BLANK_SLOTS = 60;
 }
