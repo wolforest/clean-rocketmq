@@ -1,7 +1,13 @@
 package cn.coderule.minimq.domain.domain.timer.wheel;
 
 
+import java.io.Serializable;
 import java.nio.ByteBuffer;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.checkerframework.checker.units.qual.N;
 
 /**
  * Represents a block of timer log. Format:
@@ -11,7 +17,10 @@ import java.nio.ByteBuffer;
  * │   4bytes   │   8bytes  │ 4bytes │      8bytes       │      4bytes      │   8bytes  │   8bytes  │           4bytes         │         8bytes       │
  * └────────────┴───────────┴────────┴───────────────────┴──────────────────┴───────────┴───────────┴──────────────────────────┴──────────────────────┘
  */
-public class Block {
+@Data
+@Builder
+@NoArgsConstructor
+public class Block implements Serializable {
     public static final short SIZE = 0
             + 4 //size
             + 8 //prev pos
