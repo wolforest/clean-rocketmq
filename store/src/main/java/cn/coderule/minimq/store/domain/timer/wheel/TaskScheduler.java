@@ -32,16 +32,23 @@ public class TaskScheduler {
         );
 
         int magic = TimerConstants.MAGIC_DEFAULT;
+        long delayTime = event.getDelayTime();
         if (needRoll(event)) {
             magic = magic | TimerConstants.MAGIC_ROLL;
+            // roll delay time
         }
 
         magic = addDeleteFlag(event.getMessageBO(), magic);
         Slot slot = timerWheel.getSlot(event.getDelayTime());
 
-        long timerLogOffset = appendTimerLog(event, magic, slot);
+        long timerLogOffset = appendTimerLog(event, delayTime, magic, slot);
+        if (-1 == timerLogOffset) {
+            return false;
+        }
 
-        return -1 != timerLogOffset;
+        putWheelSlot(timerLogOffset, delayTime, slot, event);
+
+        return true;
     }
 
     private boolean needRoll(TimerEvent event) {
@@ -50,23 +57,22 @@ public class TaskScheduler {
     }
 
     private int addDeleteFlag(MessageBO messageBO, int magic) {
-        String key = messageBO.getProperty(TimerConstants.TIMER_DELETE_UNIQUE_KEY);
-        if (key == null) {
+        if (!isDelete(messageBO)) {
             return magic;
         }
 
         return magic | TimerConstants.MAGIC_DELETE;
     }
 
-    private long appendTimerLog(TimerEvent event, int magic, Slot slot) {
+    private long appendTimerLog(TimerEvent event, long delayTime, int magic, Slot slot) {
         String realTopic = event.getMessageBO().getProperty(MessageConst.PROPERTY_REAL_TOPIC);
-        int delayTime = (int) (event.getDelayTime() - event.getBatchTime());
+        int realDelayTime = (int) (delayTime - event.getBatchTime());
         Block block = Block.builder()
             .size(Block.SIZE)
             .prevPos(slot.lastPos)
             .magic(magic)
             .currWriteTime(event.getBatchTime())
-            .delayedTime(delayTime)
+            .delayedTime(realDelayTime)
             .offsetPy(event.getCommitLogOffset())
             .sizePy(event.getMessageSize())
             .hashCodeOfRealTopic(getTopicHashCode(realTopic))
@@ -75,6 +81,24 @@ public class TaskScheduler {
 
         return timerLog.append(block, 0 , Block.SIZE);
     }
+
+    private void putWheelSlot(long timerLogOffset, long delayTime, Slot slot, TimerEvent event) {
+        long firstPos = -1 == slot.firstPos
+            ? timerLogOffset
+            : slot.firstPos;
+
+        int num = isDelete(event.getMessageBO())
+            ? slot.num - 1
+            : slot.num + 1;
+
+        timerWheel.putSlot(delayTime, firstPos, timerLogOffset, num, slot.magic);
+    }
+
+    private boolean isDelete(MessageBO messageBO) {
+        String key = messageBO.getProperty(TimerConstants.TIMER_DELETE_UNIQUE_KEY);
+        return key != null;
+    }
+
 
     public int getTopicHashCode(String topic) {
         return null == topic ? 0 : topic.hashCode();
