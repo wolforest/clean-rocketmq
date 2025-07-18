@@ -8,13 +8,17 @@ import cn.coderule.minimq.domain.domain.timer.TimerEvent;
 import cn.coderule.minimq.domain.service.store.domain.timer.Timer;
 import cn.coderule.minimq.store.domain.timer.rocksdb.RocksdbTimer;
 import cn.coderule.minimq.store.domain.timer.wheel.DefaultTimer;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class TimerService implements Timer {
     private final TimerConfig timerConfig;
     private final CheckpointService checkpointService;
+
     private final Timer timer;
 
-    public TimerService(StoreConfig storeConfig, CheckpointService checkpointService) {
+    public TimerService(StoreConfig storeConfig,
+        CheckpointService checkpointService) {
         this.timerConfig = storeConfig.getTimerConfig();
         this.checkpointService = checkpointService;
 
@@ -42,14 +46,35 @@ public class TimerService implements Timer {
     }
 
     private Timer initTimer(StoreConfig storeConfig) {
-        if (!timerConfig.isEnableTimer()) {
-            return new BlackHoleTimer();
+        try {
+            if (!timerConfig.isEnableTimer()) {
+                return new BlackHoleTimer();
+            }
+
+            if (timerConfig.isEnableRocksDB()) {
+                return new RocksdbTimer(storeConfig, checkpointService);
+            }
+
+            return new DefaultTimer(storeConfig, checkpointService);
+        } catch (Exception e) {
+            log.error("init timer error", e);
         }
 
-        if (timerConfig.isEnableRocksDB()) {
-            return new RocksdbTimer(storeConfig, checkpointService);
-        }
+        return new BlackHoleTimer();
+    }
 
-        return new DefaultTimer(storeConfig, checkpointService);
+    @Override
+    public void initialize() throws Exception {
+        timer.initialize();
+    }
+
+    @Override
+    public void start() throws Exception {
+        timer.start();
+    }
+
+    @Override
+    public void shutdown() throws Exception {
+        timer.shutdown();
     }
 }

@@ -25,4 +25,14 @@ public class BlackHoleTimer implements Timer {
     public ScanResult scan(long delayTime) {
         return new ScanResult();
     }
+
+    @Override
+    public void start() throws Exception {
+
+    }
+
+    @Override
+    public void shutdown() throws Exception {
+
+    }
 }

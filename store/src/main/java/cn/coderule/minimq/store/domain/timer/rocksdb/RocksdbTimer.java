@@ -35,4 +35,14 @@ public class RocksdbTimer implements Timer {
     public ScanResult scan(long delayTime) {
         return null;
     }
+
+    @Override
+    public void start() throws Exception {
+
+    }
+
+    @Override
+    public void shutdown() throws Exception {
+
+    }
 }
