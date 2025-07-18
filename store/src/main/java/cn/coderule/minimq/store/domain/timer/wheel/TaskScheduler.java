@@ -35,7 +35,7 @@ public class TaskScheduler {
         long delayTime = event.getDelayTime();
         if (needRoll(event)) {
             magic = magic | TimerConstants.MAGIC_ROLL;
-            // roll delay time
+            delayTime = getRolledDelayedTime(event.getBatchTime(), delayTime);
         }
 
         magic = addDeleteFlag(event.getMessageBO(), magic);
@@ -54,6 +54,28 @@ public class TaskScheduler {
     private boolean needRoll(TimerEvent event) {
         return event.getDelayTime() - event.getBatchTime()
             > (long) timerConfig.getWheelSlots() * timerConfig.getPrecision();
+    }
+
+    private long getRolledDelayedTime(long batchTime, long delayedTime) {
+        int wheelSlots = timerConfig.getWheelSlots();
+        int precision = timerConfig.getPrecision();
+        if (delayedTime - batchTime - (long) wheelSlots * precision < (long) wheelSlots / 3 * precision) {
+            // if delayedTime less than 4/3 times timerWheel slots
+            // set delayedTime to 1/2 times timeWheel slots * precision
+            // for example:
+            // if timerWheel slots is 2 days
+            // delayedTime between 2days and 2.667 days
+            // the delayedTime will set to slot corresponding to 1 day
+
+            //give enough time to next roll
+            return batchTime + (long) (wheelSlots / 2) * precision;
+        }
+
+        // else set delayedTime to timerWheel slots * precision
+        // for example:
+        // if timerWheel slots is 2 days
+        // the delayedTime will be set to slot corresponding to 2day
+        return batchTime + (long) wheelSlots * precision;
     }
 
     private int addDeleteFlag(MessageBO messageBO, int magic) {
