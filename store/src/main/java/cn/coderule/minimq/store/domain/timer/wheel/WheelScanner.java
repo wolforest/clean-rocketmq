@@ -6,6 +6,7 @@ import cn.coderule.minimq.domain.domain.cluster.store.SelectedMappedBuffer;
 import cn.coderule.minimq.domain.domain.timer.ScanResult;
 import cn.coderule.minimq.domain.domain.timer.TimerEvent;
 import cn.coderule.minimq.domain.domain.timer.wheel.Slot;
+import cn.coderule.minimq.domain.utils.TimerUtils;
 import java.nio.ByteBuffer;
 import java.util.LinkedList;
 import java.util.Set;
@@ -56,6 +57,7 @@ public class WheelScanner {
                 break;
             }
 
+            currentOffset = addScanResult(result, currentOffset, buffer, deleteKeys);
         }
     }
 
@@ -90,7 +92,13 @@ public class WheelScanner {
 
             prevPos = getPrevPos(byteBuffer, currentOffset);
             TimerEvent event = getTimerEvent(byteBuffer, deleteKeys);
+            int magic = event.getMagic();
 
+            if (TimerUtils.needDelete(magic) && !TimerUtils.needRoll(magic)) {
+                result.addDeleteMsgStack(event);
+            } else {
+                result.addNormalMsgStack(event);
+            }
         } catch (Exception e) {
             log.error("addScanResult error", e);
         } finally {
