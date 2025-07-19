@@ -10,16 +10,18 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class TimerFactory implements TaskFactory, Lifecycle {
+    private final TimerContext context;
     private final ConcurrentMap<Integer, TimerQueueConsumer> workerMap;
 
-    public TimerFactory() {
+    public TimerFactory(TimerContext context) {
+        this.context = context;
         this.workerMap = new ConcurrentHashMap<>();
     }
 
     @Override
     public void create(QueueTask task) {
         workerMap.computeIfAbsent(task.getQueueId(), queueId -> {
-            TimerQueueConsumer consumer = new TimerQueueConsumer(task);
+            TimerQueueConsumer consumer = new TimerQueueConsumer(context, task);
             log.info("create timer consumer: storeGroup={}, queueId={}",
                 task.getStoreGroup(), queueId);
 
