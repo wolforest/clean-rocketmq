@@ -89,20 +89,7 @@ public class WheelScanner {
             ByteBuffer byteBuffer = buffer.getByteBuffer();
 
             prevPos = getPrevPos(byteBuffer, currentOffset);
-            int magic = byteBuffer.getInt();
-            long enqueueTime = byteBuffer.getLong();
-            long delayedTime = byteBuffer.getInt() + enqueueTime;
-            long committedOffset = byteBuffer.getLong();
-            int size = byteBuffer.getInt();
-
-            TimerEvent event = TimerEvent.builder()
-                    .magic(magic)
-                    .messageSize(size)
-                    .deleteList(deleteKeys)
-                    .delayTime(delayedTime)
-                    .enqueueTime(enqueueTime)
-                    .commitLogOffset(committedOffset)
-                    .build();
+            TimerEvent event = getTimerEvent(byteBuffer, deleteKeys);
 
         } catch (Exception e) {
             log.error("addScanResult error", e);
@@ -111,6 +98,23 @@ public class WheelScanner {
         }
 
         return currentOffset;
+    }
+
+    private TimerEvent getTimerEvent(ByteBuffer byteBuffer, Set<String> deleteKeys) {
+        int magic = byteBuffer.getInt();
+        long enqueueTime = byteBuffer.getLong();
+        long delayedTime = byteBuffer.getInt() + enqueueTime;
+        long committedOffset = byteBuffer.getLong();
+        int size = byteBuffer.getInt();
+
+        TimerEvent event = TimerEvent.builder()
+            .magic(magic)
+            .messageSize(size)
+            .deleteList(deleteKeys)
+            .delayTime(delayedTime)
+            .enqueueTime(enqueueTime)
+            .commitLogOffset(committedOffset)
+            .build();
     }
 
     private long getPrevPos(ByteBuffer byteBuffer, long currentOffset) {
