@@ -15,13 +15,11 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class WheelScanner {
-    private final StoreConfig storeConfig;
     private final TimerConfig timerConfig;
     private final TimerLog timerLog;
     private final TimerWheel timerWheel;
 
     public WheelScanner(StoreConfig storeConfig, TimerLog timerLog, TimerWheel timerWheel) {
-        this.storeConfig = storeConfig;
         this.timerConfig = storeConfig.getTimerConfig();
         this.timerLog = timerLog;
         this.timerWheel = timerWheel;
@@ -67,14 +65,6 @@ public class WheelScanner {
         releaseBufferResult(bufferList);
     }
 
-    private void releaseBufferResult(LinkedList<SelectedMappedBuffer> bufferList) {
-        for (SelectedMappedBuffer sbr : bufferList) {
-            if (null != sbr) {
-                sbr.release();
-            }
-        }
-    }
-
     private SelectedMappedBuffer scanTimeLog(
         SelectedMappedBuffer buffer,
         long currentOffset,
@@ -91,6 +81,30 @@ public class WheelScanner {
 
         bufferList.add(buffer);
         return buffer;
+    }
+
+    private long getPrevPos(ByteBuffer byteBuffer, long currentOffset) {
+        int position = (int) (currentOffset % timerConfig.getTimerLogFileSize());
+        byteBuffer.position(position);
+        byteBuffer.getInt(); //size
+        return byteBuffer.getLong();
+    }
+
+    private TimerEvent getTimerEvent(ByteBuffer byteBuffer, Set<String> deleteKeys) {
+        int magic = byteBuffer.getInt();
+        long enqueueTime = byteBuffer.getLong();
+        long delayedTime = byteBuffer.getInt() + enqueueTime;
+        long committedOffset = byteBuffer.getLong();
+        int size = byteBuffer.getInt();
+
+        return TimerEvent.builder()
+            .magic(magic)
+            .messageSize(size)
+            .deleteList(deleteKeys)
+            .delayTime(delayedTime)
+            .enqueueTime(enqueueTime)
+            .commitLogOffset(committedOffset)
+            .build();
     }
 
     private long addScanResult(
@@ -122,27 +136,11 @@ public class WheelScanner {
         return currentOffset;
     }
 
-    private TimerEvent getTimerEvent(ByteBuffer byteBuffer, Set<String> deleteKeys) {
-        int magic = byteBuffer.getInt();
-        long enqueueTime = byteBuffer.getLong();
-        long delayedTime = byteBuffer.getInt() + enqueueTime;
-        long committedOffset = byteBuffer.getLong();
-        int size = byteBuffer.getInt();
-
-        return TimerEvent.builder()
-            .magic(magic)
-            .messageSize(size)
-            .deleteList(deleteKeys)
-            .delayTime(delayedTime)
-            .enqueueTime(enqueueTime)
-            .commitLogOffset(committedOffset)
-            .build();
-    }
-
-    private long getPrevPos(ByteBuffer byteBuffer, long currentOffset) {
-        int position = (int) (currentOffset % timerConfig.getTimerLogFileSize());
-        byteBuffer.position(position);
-        byteBuffer.getInt(); //size
-        return byteBuffer.getLong();
+    private void releaseBufferResult(LinkedList<SelectedMappedBuffer> bufferList) {
+        for (SelectedMappedBuffer sbr : bufferList) {
+            if (null != sbr) {
+                sbr.release();
+            }
+        }
     }
 }
