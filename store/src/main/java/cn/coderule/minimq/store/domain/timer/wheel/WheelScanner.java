@@ -107,7 +107,7 @@ public class WheelScanner {
         long committedOffset = byteBuffer.getLong();
         int size = byteBuffer.getInt();
 
-        TimerEvent event = TimerEvent.builder()
+        return TimerEvent.builder()
             .magic(magic)
             .messageSize(size)
             .deleteList(deleteKeys)
