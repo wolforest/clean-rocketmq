@@ -2,6 +2,7 @@ package cn.coderule.minimq.store.domain.timer.wheel;
 
 import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.domain.domain.timer.ScanResult;
+import cn.coderule.minimq.domain.domain.timer.wheel.Slot;
 
 public class WheelScanner {
     private final StoreConfig storeConfig;
@@ -15,6 +16,12 @@ public class WheelScanner {
     }
 
     public ScanResult scan(long delayTime) {
-        return null;
+        ScanResult result = new ScanResult();
+        Slot slot = timerWheel.getSlot(delayTime);
+        if (-1 == slot.getTimeMs()) {
+            return result;
+        }
+
+        return result;
     }
 }

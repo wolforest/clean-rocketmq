@@ -13,13 +13,11 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class TaskScheduler {
-    private final StoreConfig storeConfig;
     private final TimerConfig timerConfig;
     private final TimerLog timerLog;
     private final TimerWheel timerWheel;
 
     public TaskScheduler(StoreConfig storeConfig, TimerLog timerLog, TimerWheel timerWheel) {
-        this.storeConfig = storeConfig;
         this.timerConfig = storeConfig.getTimerConfig();
         this.timerLog = timerLog;
         this.timerWheel = timerWheel;
@@ -91,7 +89,7 @@ public class TaskScheduler {
         int realDelayTime = (int) (delayTime - event.getBatchTime());
         Block block = Block.builder()
             .size(Block.SIZE)
-            .prevPos(slot.lastPos)
+            .prevPos(slot.getLastPos())
             .magic(magic)
             .currWriteTime(event.getBatchTime())
             .delayedTime(realDelayTime)
@@ -105,22 +103,21 @@ public class TaskScheduler {
     }
 
     private void putWheelSlot(long timerLogOffset, long delayTime, Slot slot, TimerEvent event) {
-        long firstPos = -1 == slot.firstPos
+        long firstPos = -1 == slot.getFirstPos()
             ? timerLogOffset
-            : slot.firstPos;
+            : slot.getFirstPos();
 
         int num = isDelete(event.getMessageBO())
-            ? slot.num - 1
-            : slot.num + 1;
+            ? slot.getNum() - 1
+            : slot.getNum() + 1;
 
-        timerWheel.putSlot(delayTime, firstPos, timerLogOffset, num, slot.magic);
+        timerWheel.putSlot(delayTime, firstPos, timerLogOffset, num, slot.getMagic());
     }
 
     private boolean isDelete(MessageBO messageBO) {
         String key = messageBO.getProperty(TimerConstants.TIMER_DELETE_UNIQUE_KEY);
         return key != null;
     }
-
 
     public int getTopicHashCode(String topic) {
         return null == topic ? 0 : topic.hashCode();

@@ -1,5 +1,8 @@
 package cn.coderule.minimq.domain.domain.timer.wheel;
 
+import java.io.Serializable;
+import lombok.Data;
+
 /**
  * Represents a slot of timing wheel. Format:
  * ┌────────────┬───────────┬───────────┬───────────┬───────────┐
@@ -8,7 +11,8 @@ package cn.coderule.minimq.domain.domain.timer.wheel;
  * │   8bytes   │   8bytes  │  8bytes   │   4bytes  │   4bytes  │
  * └────────────┴───────────┴───────────┴───────────┴───────────┘
  */
-public class Slot {
+@Data
+public class Slot implements Serializable {
     public static final short SIZE = 32;
     public final long timeMs; //delayed time
     public final long firstPos;
