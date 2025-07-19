@@ -35,7 +35,7 @@ public class MessageService {
             .queueId(queueId)
             .offset(offset)
             .num(num)
-            .maxSize(messageConfig.getMaxSize())
+            .maxNum(messageConfig.getMaxSize())
             .build();
         return get(request);
     }

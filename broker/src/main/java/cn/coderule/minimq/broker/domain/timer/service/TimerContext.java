@@ -1,5 +1,6 @@
 package cn.coderule.minimq.broker.domain.timer.service;
 
+import cn.coderule.minimq.broker.infra.store.MQStore;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.domain.timer.TimerQueue;
 import cn.coderule.minimq.domain.domain.timer.state.TimerState;
@@ -17,4 +18,6 @@ public class TimerContext implements Serializable {
     private BrokerConfig brokerConfig;
     private TimerQueue timerQueue;
     private TimerState timerState;
+
+    private MQStore mqStore;
 }

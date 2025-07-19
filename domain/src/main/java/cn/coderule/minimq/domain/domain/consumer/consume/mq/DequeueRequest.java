@@ -12,6 +12,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DequeueRequest implements Serializable {
+    private String storeGroup;
+
     private String group;
     private String topic;
     private int queueId;
@@ -19,7 +21,7 @@ public class DequeueRequest implements Serializable {
 
     @Builder.Default
     private int num = 1;
-    private int maxSize;
+    private int maxNum;
 
     @Builder.Default
     private MessageFilter filter = null;

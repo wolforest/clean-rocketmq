@@ -76,7 +76,7 @@ public class DefaultMQService implements MQService {
             .queueId(queueId)
             .offset(offset)
             .num(num)
-            .maxSize(num)
+            .maxNum(num)
             .build();
 
         DequeueResult result = get(request);

@@ -1,11 +1,14 @@
 package cn.coderule.minimq.domain.domain.timer;
 
+import cn.coderule.minimq.domain.core.constant.MQConstants;
 import cn.coderule.minimq.domain.core.constant.MessageConst;
 import cn.coderule.minimq.domain.domain.meta.topic.TopicValidator;
 
 public class TimerConstants {
     public static final String TIMER_TOPIC = TopicValidator.SYSTEM_TOPIC_PREFIX + "wheel_timer";
-    public static final int INITIAL = 0, RUNNING = 1, HAULT = 2, SHUTDOWN = 3;
+    public static final String TIMER_GROUP = MQConstants.CID_RMQ_SYS_PREFIX + "TIMER_GROUP";
+
+    public static final int INITIAL = 0, RUNNING = 1, HALT = 2, SHUTDOWN = 3;
     public static final int MAGIC_DEFAULT = 1;
     public static final int MAGIC_ROLL = 1 << 1;
     public static final int MAGIC_DELETE = 1 << 2;

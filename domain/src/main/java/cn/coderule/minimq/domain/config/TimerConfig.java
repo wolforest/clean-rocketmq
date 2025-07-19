@@ -11,6 +11,10 @@ public class TimerConfig implements Serializable {
     private boolean skipUnknownError = false;
     private boolean enableDisruptor = false;
 
+    private boolean stopConsume = false;
+    private int consumeBatchNum = 32;
+    private int consumeMaxNum = 32;
+
     private int timerLogFileSize = 100 * 1024 * 1024;
 
     private int totalSlots = 7 * 24 * 3600;
