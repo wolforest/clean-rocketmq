@@ -1,8 +1,12 @@
 package cn.coderule.minimq.store.domain.timer.wheel;
 
 import cn.coderule.minimq.domain.config.server.StoreConfig;
+import cn.coderule.minimq.domain.domain.cluster.store.SelectedMappedBuffer;
 import cn.coderule.minimq.domain.domain.timer.ScanResult;
 import cn.coderule.minimq.domain.domain.timer.wheel.Slot;
+import java.util.LinkedList;
+import java.util.Set;
+import java.util.concurrent.ConcurrentSkipListSet;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -36,6 +40,35 @@ public class WheelScanner {
     }
 
     private void scanBySlot(ScanResult result, Slot slot) {
+        long currentOffset = slot.getLastPos();
+        Set<String> deleteKeys = new ConcurrentSkipListSet<>();
+        LinkedList<SelectedMappedBuffer> bufferList = new LinkedList<>();
+        SelectedMappedBuffer buffer = null;
 
+        while (-1 != currentOffset) {
+            buffer = scanTimeLog(buffer, currentOffset, bufferList);
+            if (buffer == null) {
+                break;
+            }
+
+        }
+    }
+
+    private SelectedMappedBuffer scanTimeLog(
+        SelectedMappedBuffer buffer,
+        long currentOffset,
+        LinkedList<SelectedMappedBuffer> bufferList
+    ) {
+        if (null != buffer && buffer.getStartOffset() <= currentOffset) {
+            return buffer;
+        }
+
+        buffer = timerLog.getWholeBuffer(currentOffset);
+        if (null == buffer) {
+            return null;
+        }
+
+        bufferList.add(buffer);
+        return buffer;
     }
 }
