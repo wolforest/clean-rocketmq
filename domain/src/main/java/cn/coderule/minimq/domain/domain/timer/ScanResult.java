@@ -25,4 +25,8 @@ public class ScanResult implements Serializable {
     public int sizeOfNormalMsgStack() {
         return normalMsgStack.size();
     }
+
+    public boolean isEmpty() {
+        return normalMsgStack.isEmpty() && deleteMsgStack.isEmpty();
+    }
 }

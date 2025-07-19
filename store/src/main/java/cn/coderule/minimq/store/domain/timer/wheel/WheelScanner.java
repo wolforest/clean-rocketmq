@@ -42,6 +42,10 @@ public class WheelScanner {
             log.error("scan timer log error", e);
         }
 
+        if (result.isEmpty()) {
+            log.warn("No Timer task from timerLog: delayTime={}", delayTime);
+        }
+
         return result;
     }
 
@@ -58,6 +62,16 @@ public class WheelScanner {
             }
 
             currentOffset = addScanResult(result, currentOffset, buffer, deleteKeys);
+        }
+
+        releaseBufferResult(bufferList);
+    }
+
+    private void releaseBufferResult(LinkedList<SelectedMappedBuffer> bufferList) {
+        for (SelectedMappedBuffer sbr : bufferList) {
+            if (null != sbr) {
+                sbr.release();
+            }
         }
     }
 
