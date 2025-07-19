@@ -1,9 +1,12 @@
 package cn.coderule.minimq.store.domain.timer.wheel;
 
+import cn.coderule.minimq.domain.config.TimerConfig;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.domain.domain.cluster.store.SelectedMappedBuffer;
 import cn.coderule.minimq.domain.domain.timer.ScanResult;
+import cn.coderule.minimq.domain.domain.timer.TimerEvent;
 import cn.coderule.minimq.domain.domain.timer.wheel.Slot;
+import java.nio.ByteBuffer;
 import java.util.LinkedList;
 import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListSet;
@@ -12,11 +15,13 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class WheelScanner {
     private final StoreConfig storeConfig;
+    private final TimerConfig timerConfig;
     private final TimerLog timerLog;
     private final TimerWheel timerWheel;
 
     public WheelScanner(StoreConfig storeConfig, TimerLog timerLog, TimerWheel timerWheel) {
         this.storeConfig = storeConfig;
+        this.timerConfig = storeConfig.getTimerConfig();
         this.timerLog = timerLog;
         this.timerWheel = timerWheel;
     }
@@ -70,5 +75,48 @@ public class WheelScanner {
 
         bufferList.add(buffer);
         return buffer;
+    }
+
+    private long addScanResult(
+        ScanResult result,
+        long currentOffset,
+        SelectedMappedBuffer buffer,
+        Set<String> deleteKeys
+    ) {
+        long prevPos = -1;
+
+        try {
+            ByteBuffer byteBuffer = buffer.getByteBuffer();
+
+            prevPos = getPrevPos(byteBuffer, currentOffset);
+            int magic = byteBuffer.getInt();
+            long enqueueTime = byteBuffer.getLong();
+            long delayedTime = byteBuffer.getInt() + enqueueTime;
+            long committedOffset = byteBuffer.getLong();
+            int size = byteBuffer.getInt();
+
+            TimerEvent event = TimerEvent.builder()
+                    .magic(magic)
+                    .messageSize(size)
+                    .deleteList(deleteKeys)
+                    .delayTime(delayedTime)
+                    .enqueueTime(enqueueTime)
+                    .commitLogOffset(committedOffset)
+                    .build();
+
+        } catch (Exception e) {
+            log.error("addScanResult error", e);
+        } finally {
+            currentOffset = prevPos;
+        }
+
+        return currentOffset;
+    }
+
+    private long getPrevPos(ByteBuffer byteBuffer, long currentOffset) {
+        int position = (int) (currentOffset % timerConfig.getTimerLogFileSize());
+        byteBuffer.position(position);
+        byteBuffer.getInt(); //size
+        return byteBuffer.getLong();
     }
 }
