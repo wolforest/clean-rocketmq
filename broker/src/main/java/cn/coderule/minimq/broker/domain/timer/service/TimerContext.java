@@ -1,4 +1,4 @@
-package cn.coderule.minimq.broker.domain.timer;
+package cn.coderule.minimq.broker.domain.timer.service;
 
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.domain.timer.TimerQueue;

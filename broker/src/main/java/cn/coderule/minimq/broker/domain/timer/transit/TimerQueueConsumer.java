@@ -1,7 +1,7 @@
 package cn.coderule.minimq.broker.domain.timer.transit;
 
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
-import cn.coderule.minimq.broker.domain.timer.TimerContext;
+import cn.coderule.minimq.broker.domain.timer.service.TimerContext;
 import cn.coderule.minimq.domain.domain.cluster.task.QueueTask;
 
 public class TimerQueueConsumer extends ServiceThread {

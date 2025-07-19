@@ -1,4 +1,4 @@
-package cn.coderule.minimq.broker.domain.timer;
+package cn.coderule.minimq.broker.domain.timer.service;
 
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.minimq.broker.domain.timer.transit.TimerQueueConsumer;
