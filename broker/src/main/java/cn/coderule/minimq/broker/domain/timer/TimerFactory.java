@@ -1,6 +1,7 @@
 package cn.coderule.minimq.broker.domain.timer;
 
 import cn.coderule.common.convention.service.Lifecycle;
+import cn.coderule.minimq.broker.domain.timer.transit.TimerQueueConsumer;
 import cn.coderule.minimq.domain.domain.cluster.task.QueueTask;
 import cn.coderule.minimq.domain.service.broker.infra.task.TaskFactory;
 import java.util.concurrent.ConcurrentHashMap;
@@ -9,7 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class TimerFactory implements TaskFactory, Lifecycle {
-    private final ConcurrentMap<Integer, TimerConsumer> workerMap;
+    private final ConcurrentMap<Integer, TimerQueueConsumer> workerMap;
 
     public TimerFactory() {
         this.workerMap = new ConcurrentHashMap<>();
@@ -18,7 +19,7 @@ public class TimerFactory implements TaskFactory, Lifecycle {
     @Override
     public void create(QueueTask task) {
         workerMap.computeIfAbsent(task.getQueueId(), queueId -> {
-            TimerConsumer consumer = new TimerConsumer(task);
+            TimerQueueConsumer consumer = new TimerQueueConsumer(task);
             log.info("create timer consumer: storeGroup={}, queueId={}",
                 task.getStoreGroup(), queueId);
 
@@ -34,12 +35,12 @@ public class TimerFactory implements TaskFactory, Lifecycle {
 
     @Override
     public void shutdown() throws Exception {
-        for (TimerConsumer worker : workerMap.values()) {
+        for (TimerQueueConsumer worker : workerMap.values()) {
             worker.shutdown();
         }
     }
 
-    private void startTimer(TimerConsumer consumer, QueueTask task) {
+    private void startTimer(TimerQueueConsumer consumer, QueueTask task) {
         try {
             consumer.start();
         } catch (Exception e) {
