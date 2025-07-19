@@ -9,6 +9,7 @@ public class TimerConfig implements Serializable {
     private boolean enableRocksDB = false;
     private boolean enableWarmup = false;
     private boolean skipUnknownError = false;
+    private boolean enableDisruptor = false;
 
     private int timerLogFileSize = 100 * 1024 * 1024;
 
