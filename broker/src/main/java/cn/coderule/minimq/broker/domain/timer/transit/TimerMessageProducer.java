@@ -26,7 +26,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class TimerMessageProducer extends ServiceThread {
     private final TimerContext timerContext;
-    private final BrokerConfig brokerConfig;
     private final TimerConfig timerConfig;
     private final TimerQueue timerQueue;
     private final TimerState timerState;
@@ -36,7 +35,6 @@ public class TimerMessageProducer extends ServiceThread {
 
     public TimerMessageProducer(TimerContext context) {
         this.timerContext = context;
-        this.brokerConfig = context.getBrokerConfig();
         this.timerConfig = context.getBrokerConfig().getTimerConfig();
         this.timerQueue = context.getTimerQueue();
         this.timerState = context.getTimerState();

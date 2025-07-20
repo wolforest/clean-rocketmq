@@ -7,6 +7,7 @@ import cn.coderule.minimq.domain.domain.cluster.task.QueueTask;
 import cn.coderule.minimq.domain.domain.timer.TimerQueue;
 import cn.coderule.minimq.domain.domain.timer.state.TimerState;
 import java.io.Serializable;
+import java.util.concurrent.TimeoutException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -34,7 +35,7 @@ public class TimerContext implements Serializable {
         this.queueTask = task;
     }
 
-    public QueueTask getOrWaitQueueTask() throws InterruptedException {
+    public QueueTask getOrWaitQueueTask() throws TimeoutException, InterruptedException {
         int i = 0;
         while (i < MAX_WAIT_TIMES) {
             i++;
@@ -46,6 +47,6 @@ public class TimerContext implements Serializable {
             Thread.sleep(100);
         }
 
-        throw new InterruptedException("wait queue task timeout");
+        throw new TimeoutException("wait queue task timeout");
     }
 }
