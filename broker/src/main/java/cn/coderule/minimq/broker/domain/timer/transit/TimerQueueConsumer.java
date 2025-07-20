@@ -5,7 +5,6 @@ import cn.coderule.minimq.broker.domain.timer.service.TimerContext;
 import cn.coderule.minimq.broker.domain.timer.service.TimerConverter;
 import cn.coderule.minimq.broker.infra.store.MQStore;
 import cn.coderule.minimq.domain.config.TimerConfig;
-import cn.coderule.minimq.domain.core.constant.MessageConst;
 import cn.coderule.minimq.domain.domain.cluster.task.QueueTask;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueResult;
@@ -80,7 +79,7 @@ public class TimerQueueConsumer extends ServiceThread {
             timerState.setLatestTimerMessageTime(now);
             timerState.setLatestTimerMessageStoreTime(messageBO.getStoreTimestamp());
 
-            TimerEvent event = TimerConverter.convert(messageBO, now, TimerConstants.MAGIC_DEFAULT);
+            TimerEvent event = TimerConverter.toEvent(messageBO, now, TimerConstants.MAGIC_DEFAULT);
             if (!enqueueEvent(event)) {
                 return false;
             }

@@ -5,10 +5,17 @@ import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.domain.timer.TimerEvent;
 
 public class TimerConverter {
-    public static TimerEvent convert(MessageBO messageBO, long enqueueTime, int magic) {
+    public static TimerEvent toEvent(MessageBO messageBO, long enqueueTime, int magic) {
+        long delayTime = getDelayTime(messageBO);
+
         return TimerEvent.builder()
-                .messageBO(messageBO)
-                .build();
+            .commitLogOffset(messageBO.getCommitLogOffset())
+            .messageSize(messageBO.getStoreSize())
+            .delayTime(delayTime)
+            .magic(magic)
+            .enqueueTime(enqueueTime)
+            .messageBO(messageBO)
+            .build();
     }
 
     private static long getDelayTime(MessageBO messageBO) {
