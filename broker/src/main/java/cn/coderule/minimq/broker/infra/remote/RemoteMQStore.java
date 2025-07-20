@@ -21,7 +21,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-public class RemoteMQStore extends AbstractRemoteStore implements MQFacade, Lifecycle {
+public class RemoteMQStore extends AbstractRemoteStore implements MQFacade {
     private final BrokerConfig brokerConfig;
     private final ConcurrentMap<String, MQClient> clientMap;
     private final RpcClient rpcClient;
@@ -32,24 +32,6 @@ public class RemoteMQStore extends AbstractRemoteStore implements MQFacade, Life
         this.brokerConfig = brokerConfig;
         clientMap = new ConcurrentHashMap<>();
         this.rpcClient = rpcClient;
-    }
-
-    @Override
-    public void start() throws Exception {
-        if (!brokerConfig.isEnableRemoteStore()) {
-            return;
-        }
-
-        rpcClient.start();
-    }
-
-    @Override
-    public void shutdown() throws Exception {
-        if (!brokerConfig.isEnableRemoteStore()) {
-            return;
-        }
-
-        rpcClient.shutdown();
     }
 
     @Override
