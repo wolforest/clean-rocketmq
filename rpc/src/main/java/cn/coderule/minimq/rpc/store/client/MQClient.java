@@ -13,9 +13,7 @@ import cn.coderule.minimq.rpc.common.rpc.RpcClient;
 import cn.coderule.minimq.rpc.store.StoreClient;
 import cn.coderule.minimq.rpc.store.facade.MQFacade;
 import java.util.concurrent.CompletableFuture;
-import lombok.Setter;
 
-@Setter
 public class MQClient extends AbstractStoreClient implements StoreClient, MQFacade {
 
     public MQClient(RpcClient rpcClient, String address) {

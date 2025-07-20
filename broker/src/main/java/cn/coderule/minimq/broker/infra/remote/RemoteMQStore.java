@@ -26,12 +26,12 @@ public class RemoteMQStore extends AbstractRemoteStore implements MQFacade, Life
     private final ConcurrentMap<String, MQClient> clientMap;
     private final RpcClient rpcClient;
 
-    public RemoteMQStore(BrokerConfig brokerConfig, RemoteLoadBalance loadBalance) {
+    public RemoteMQStore(BrokerConfig brokerConfig, RemoteLoadBalance loadBalance, RpcClient rpcClient) {
         super(loadBalance);
 
         this.brokerConfig = brokerConfig;
         clientMap = new ConcurrentHashMap<>();
-        this.rpcClient = new NettyClient(new RpcClientConfig());
+        this.rpcClient = rpcClient;
     }
 
     @Override
