@@ -2,6 +2,7 @@ package cn.coderule.minimq.broker.domain.timer.transit;
 
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 import cn.coderule.minimq.broker.domain.timer.service.TimerContext;
+import cn.coderule.minimq.broker.domain.timer.service.TimerConverter;
 import cn.coderule.minimq.broker.infra.store.MQStore;
 import cn.coderule.minimq.domain.config.TimerConfig;
 import cn.coderule.minimq.domain.core.constant.MessageConst;
@@ -10,6 +11,7 @@ import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueResult;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.domain.timer.TimerConstants;
+import cn.coderule.minimq.domain.domain.timer.TimerEvent;
 import cn.coderule.minimq.domain.domain.timer.state.TimerState;
 import lombok.extern.slf4j.Slf4j;
 
@@ -63,19 +65,20 @@ public class TimerQueueConsumer extends ServiceThread {
         }
 
         parseMessage(result);
-        timerState.setTimerQueueOffset(result.getNextOffset());
         return true;
     }
 
     private void parseMessage(DequeueResult result) {
+        long offset = timerState.getTimerQueueOffset();
         for (MessageBO messageBO : result.getMessageList()) {
-            long delayTime = getDelayTime(messageBO);
-        }
-    }
+            offset++;
+            messageBO.setQueueOffset(offset);
 
-    private long getDelayTime(MessageBO messageBO) {
-        String delayString = messageBO.getProperty(MessageConst.PROPERTY_TIMER_OUT_MS);
-        return Long.parseLong(delayString);
+            long now = System.currentTimeMillis();
+            TimerEvent event = TimerConverter.convert(messageBO, now);
+        }
+
+        timerState.setTimerQueueOffset(offset);
     }
 
     private DequeueResult pullMessage() {
