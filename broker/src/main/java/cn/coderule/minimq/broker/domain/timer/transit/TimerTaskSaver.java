@@ -7,22 +7,26 @@ import cn.coderule.minimq.domain.domain.timer.TimerQueue;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class TimerTaskStore extends ServiceThread {
+public class TimerTaskSaver extends ServiceThread {
     private final BrokerConfig brokerConfig;
     private final TimerQueue timerQueue;
 
-    public TimerTaskStore(TimerContext context) {
+    public TimerTaskSaver(TimerContext context) {
         this.brokerConfig = context.getBrokerConfig();
         this.timerQueue = context.getTimerQueue();
     }
 
     @Override
     public String getServiceName() {
-        return TimerTaskStore.class.getSimpleName();
+        return TimerTaskSaver.class.getSimpleName();
     }
 
     @Override
     public void run() {
+
+    }
+
+    private void save() {
 
     }
 }
