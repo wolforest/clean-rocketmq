@@ -286,7 +286,7 @@ public class DefaultConsumeQueue implements ConsumeQueue {
         this.writeBuffer.flip();
         this.writeBuffer.limit(config.getUnitSize());
         this.writeBuffer.putLong(messageBO.getCommitLogOffset());
-        this.writeBuffer.putInt(messageBO.getStoreSize());
+        this.writeBuffer.putInt(messageBO.getMessageSize());
         this.writeBuffer.putLong(messageBO.getTagsCode());
     }
 
@@ -295,7 +295,7 @@ public class DefaultConsumeQueue implements ConsumeQueue {
      * @param event commitLogEvent
      */
     private void postEnqueue(CommitEvent event) {
-        long offset = event.getMessageBO().getCommitLogOffset() + event.getMessageBO().getStoreSize();
+        long offset = event.getMessageBO().getCommitLogOffset() + event.getMessageBO().getMessageSize();
         if (offset > maxCommitLogOffset) {
             maxCommitLogOffset = offset;
         }

@@ -30,7 +30,7 @@ public class MessageBO extends Message implements Serializable {
      */
     private int queueId;
     private String topicKey;
-    private int storeSize;
+    private int messageSize;
 
     /**
      * set by consumeQueue while putting process of CommitLog
@@ -74,7 +74,7 @@ public class MessageBO extends Message implements Serializable {
     }
 
     public boolean isEmpty() {
-        return 0 == this.storeSize;
+        return 0 == this.messageSize;
     }
 
     public long getTagsCode() {
