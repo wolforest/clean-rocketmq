@@ -65,6 +65,14 @@ public class TimerEvent implements Serializable {
         return batchTime;
     }
 
+    public void idempotentRelease(boolean success) {
+        this.success = success;
+        if (!released && latch != null) {
+            released = true;
+            latch.countDown();
+        }
+    }
+
     @Override
     public String toString() {
         return "TimerRequest{" +

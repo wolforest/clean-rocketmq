@@ -3,6 +3,7 @@ package cn.coderule.minimq.broker.domain.timer.transit;
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 import cn.coderule.minimq.broker.domain.timer.service.TimerContext;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
+import cn.coderule.minimq.domain.domain.timer.TimerEvent;
 import cn.coderule.minimq.domain.domain.timer.TimerQueue;
 import lombok.extern.slf4j.Slf4j;
 
@@ -29,7 +30,7 @@ public class TimerMessageProducer extends ServiceThread {
     public void run() {
         log.info("{} service started", this.getServiceName());
 
-        while (!this.isStopped()) {
+        while (!this.isStopped() || !timerQueue.isProduceQueueEmpty()) {
             try {
                 produce();
             } catch (Throwable t) {
@@ -40,7 +41,24 @@ public class TimerMessageProducer extends ServiceThread {
         log.info("{} service end", this.getServiceName());
     }
 
-    private void produce() {
+    private void produce() throws InterruptedException {
+        TimerEvent event = timerQueue.pollProduceEvent(10);
+        if (event == null) {
+            return;
+        }
 
+        boolean dequeueFlag = false;
+        try {
+            dequeueFlag = handleEvent(event);
+        } catch (Throwable t) {
+            log.error("{} service has exception. ", this.getServiceName(), t);
+        } finally {
+            event.idempotentRelease(!dequeueFlag);
+        }
+
+    }
+
+    private boolean handleEvent(TimerEvent event) {
+        return false;
     }
 }
