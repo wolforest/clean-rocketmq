@@ -77,6 +77,9 @@ public class TimerQueueConsumer extends ServiceThread {
             messageBO.setQueueOffset(offset);
 
             long now = System.currentTimeMillis();
+            timerState.setLatestTimerMessageTime(now);
+            timerState.setLatestTimerMessageStoreTime(messageBO.getStoreTimestamp());
+
             TimerEvent event = TimerConverter.convert(messageBO, now, TimerConstants.MAGIC_DEFAULT);
             if (!enqueueEvent(event)) {
                 return false;

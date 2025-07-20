@@ -19,6 +19,15 @@ public class TimerState implements Serializable {
     private volatile long lastCommitTime;
     private volatile long lastCommittedQueueOffset;
 
+    /**
+     * the latest time when pull message from message queue
+     */
+    public long latestTimerMessageTime;
+    /**
+     * the time of the latest messageExt.storeTimeStamp
+     */
+    public long latestTimerMessageStoreTime;
+
     private boolean dequeueFlag;
 
     public boolean isRunning() {
