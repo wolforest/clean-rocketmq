@@ -1,10 +1,16 @@
 package cn.coderule.minimq.broker.domain.timer.transit;
 
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
+import cn.coderule.common.util.lang.ThreadUtil;
 import cn.coderule.minimq.broker.domain.timer.service.TimerContext;
+import cn.coderule.minimq.broker.domain.timer.service.TimerConverter;
+import cn.coderule.minimq.domain.config.TimerConfig;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
+import cn.coderule.minimq.domain.domain.message.MessageBO;
+import cn.coderule.minimq.domain.domain.timer.TimerConstants;
 import cn.coderule.minimq.domain.domain.timer.TimerEvent;
 import cn.coderule.minimq.domain.domain.timer.TimerQueue;
+import cn.coderule.minimq.domain.domain.timer.state.TimerState;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -14,11 +20,15 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class TimerMessageProducer extends ServiceThread {
     private final BrokerConfig brokerConfig;
+    private final TimerConfig timerConfig;
     private final TimerQueue timerQueue;
+    private final TimerState timerState;
 
     public TimerMessageProducer(TimerContext context) {
         this.brokerConfig = context.getBrokerConfig();
+        this.timerConfig = context.getBrokerConfig().getTimerConfig();
         this.timerQueue = context.getTimerQueue();
+        this.timerState = context.getTimerState();
     }
 
     @Override
@@ -59,6 +69,38 @@ public class TimerMessageProducer extends ServiceThread {
     }
 
     private boolean handleEvent(TimerEvent event) {
-        return false;
+        boolean stopping = false;
+        boolean dequeueException = false;
+
+        while (!isStopped() && !stopping) {
+            if (isStopProduce()) {
+                timerState.setDequeueExceptionFlag(true);
+                dequeueException = true;
+                break;
+            }
+
+            try {
+                MessageBO messageBO = TimerConverter.toMessage(event);
+
+            } catch (Throwable t) {
+                stopping = handleHandleException(t, stopping);
+            }
+        }
+
+        return dequeueException;
+    }
+
+    private boolean handleHandleException(Throwable t, boolean stopping) {
+        log.info("handle timer event exception", t);
+        if (timerConfig.isSkipUnknownError()) {
+            return true;
+        }
+
+        ThreadUtil.sleep(50);
+        return stopping;
+    }
+
+    private boolean isStopProduce() {
+        return !timerState.isRunning();
     }
 }

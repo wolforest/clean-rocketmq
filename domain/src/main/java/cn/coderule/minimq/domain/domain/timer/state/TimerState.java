@@ -8,6 +8,18 @@ import lombok.Data;
 public class TimerState implements Serializable {
     private volatile int state = TimerConstants.INITIAL;
 
+    /**
+     * True if current store is master
+     *  or current brokerId is equal to the minimum brokerId
+     *  of the replica group in slaveActingMaster mode.
+     */
+    private volatile boolean shouldDequeue;
+    /**
+     * the dequeue is an asynchronous process,
+     * use this flag to track if the status has changed
+     */
+    private volatile boolean dequeueExceptionFlag = false;
+
     private volatile long timerQueueOffset;
     private volatile long committedQueueOffset;
 
