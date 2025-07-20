@@ -39,12 +39,24 @@ public class TimerConverter {
         }
 
         messageBO.putProperty(TimerConstants.TIMER_ENQUEUE_MS, System.currentTimeMillis() + "");
-        return messageBO;
+        return recreateMessage(messageBO, needRoll);
     }
 
     private static MessageBO recreateMessage(MessageBO message, boolean needRoll) {
         MessageBO newMessage = MessageBO.builder()
+            .body(message.getBody())
+            .flag(message.getFlag())
+            .properties(message.getProperties())
+            .tagsCode(message.getTagsCode())
+            .propertiesString(message.getPropertiesString())
+            .sysFlag(message.getSysFlag())
+            .bornTimestamp(message.getBornTimestamp())
+            .bornHost(message.getBornHost())
+            .storeHost(message.getStoreHost())
+            .reconsumeTimes(message.getReconsumeTimes())
             .build();
+
+        newMessage.setWaitStore(false);
 
         if (needRoll) {
             newMessage.setTopic(message.getTopic());
@@ -52,7 +64,8 @@ public class TimerConverter {
         } else {
             newMessage.setTopic(message.getProperty(MessageConst.PROPERTY_REAL_TOPIC));
             newMessage.setQueueId(Integer.parseInt(message.getProperty(MessageConst.PROPERTY_REAL_QUEUE_ID)));
-
+            newMessage.removeProperty(MessageConst.PROPERTY_REAL_TOPIC);
+            newMessage.removeProperty(MessageConst.PROPERTY_REAL_QUEUE_ID);
         }
 
         return newMessage;
