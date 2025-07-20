@@ -15,6 +15,10 @@ import cn.coderule.minimq.domain.domain.timer.TimerQueue;
 import cn.coderule.minimq.domain.domain.timer.state.TimerState;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * consume timer queue, then enqueue in-memory queue
+ * @rocketmq origin name: TimerEnqueueGetService
+ */
 @Slf4j
 public class TimerQueueConsumer extends ServiceThread {
     private final TimerConfig timerConfig;
