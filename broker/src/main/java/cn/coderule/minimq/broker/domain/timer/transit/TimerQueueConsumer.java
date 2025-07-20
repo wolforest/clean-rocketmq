@@ -12,6 +12,7 @@ import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueResult;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.domain.timer.TimerConstants;
 import cn.coderule.minimq.domain.domain.timer.TimerEvent;
+import cn.coderule.minimq.domain.domain.timer.TimerQueue;
 import cn.coderule.minimq.domain.domain.timer.state.TimerState;
 import lombok.extern.slf4j.Slf4j;
 
@@ -19,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 public class TimerQueueConsumer extends ServiceThread {
     private final TimerConfig timerConfig;
     private final TimerState timerState;
+    private final TimerQueue timerQueue;
     private final QueueTask task;
 
     private final MQStore mqStore;
@@ -27,6 +29,7 @@ public class TimerQueueConsumer extends ServiceThread {
         this.task = task;
         this.timerConfig = context.getBrokerConfig().getTimerConfig();
         this.timerState = context.getTimerState();
+        this.timerQueue = context.getTimerQueue();
         this.mqStore = context.getMqStore();
     }
 
@@ -64,21 +67,40 @@ public class TimerQueueConsumer extends ServiceThread {
             return false;
         }
 
-        parseMessage(result);
-        return true;
+        return parseMessage(result);
     }
 
-    private void parseMessage(DequeueResult result) {
+    private boolean parseMessage(DequeueResult result) {
         long offset = timerState.getTimerQueueOffset();
         for (MessageBO messageBO : result.getMessageList()) {
             offset++;
             messageBO.setQueueOffset(offset);
 
             long now = System.currentTimeMillis();
-            TimerEvent event = TimerConverter.convert(messageBO, now);
+            TimerEvent event = TimerConverter.convert(messageBO, now, TimerConstants.MAGIC_DEFAULT);
+            if (!enqueueEvent(event)) {
+                return false;
+            }
+
+            timerState.setTimerQueueOffset(offset);
         }
 
-        timerState.setTimerQueueOffset(offset);
+        return true;
+    }
+
+    private boolean enqueueEvent(TimerEvent event) {
+        while (true) {
+            try {
+                if (timerQueue.offerConsumeEvent(event, 3_000)) {
+                    return true;
+                }
+            } catch (InterruptedException ignore) {
+            }
+
+            if (!isRunning()) {
+                return false;
+            }
+        }
     }
 
     private DequeueResult pullMessage() {
@@ -93,5 +115,9 @@ public class TimerQueueConsumer extends ServiceThread {
             .build();
 
         return mqStore.get(request);
+    }
+
+    private boolean isRunning() {
+        return timerState.isRunning();
     }
 }

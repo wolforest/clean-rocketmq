@@ -5,7 +5,7 @@ import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.domain.timer.TimerEvent;
 
 public class TimerConverter {
-    public static TimerEvent convert(MessageBO messageBO, long enqueueTime) {
+    public static TimerEvent convert(MessageBO messageBO, long enqueueTime, int magic) {
         return TimerEvent.builder()
                 .messageBO(messageBO)
                 .build();
