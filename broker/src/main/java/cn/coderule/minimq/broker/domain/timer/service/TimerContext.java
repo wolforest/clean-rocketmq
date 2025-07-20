@@ -1,5 +1,6 @@
 package cn.coderule.minimq.broker.domain.timer.service;
 
+import cn.coderule.common.util.lang.ThreadUtil;
 import cn.coderule.minimq.broker.infra.store.MQStore;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.domain.cluster.task.QueueTask;
@@ -16,6 +17,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TimerContext implements Serializable {
+    private static final int MAX_WAIT_TIMES = 100;
     private QueueTask queueTask;
 
     private BrokerConfig brokerConfig;
@@ -30,5 +32,18 @@ public class TimerContext implements Serializable {
         }
 
         this.queueTask = task;
+    }
+
+    public QueueTask getOrWaitQueueTask() throws InterruptedException {
+        int i = 0;
+        while (i < MAX_WAIT_TIMES) {
+            i++;
+
+            if (null != queueTask) {
+                return queueTask;
+            }
+
+            Thread.sleep(100);
+        }
     }
 }
