@@ -40,7 +40,6 @@ public class TimerQueueConsumer extends ServiceThread {
     @Override
     public void run() {
         log.info("{} service started", this.getServiceName());
-
         long interval = 100L * timerConfig.getPrecision() / 1_000;
 
         while (!this.isStopped()) {
@@ -57,7 +56,7 @@ public class TimerQueueConsumer extends ServiceThread {
     }
 
     private boolean consume() {
-        if (timerConfig.isStopConsume()) {
+        if (isStopConsume()) {
             return false;
         }
 
@@ -99,7 +98,7 @@ public class TimerQueueConsumer extends ServiceThread {
             } catch (InterruptedException ignore) {
             }
 
-            if (!isRunning()) {
+            if (isStopConsume()) {
                 return false;
             }
         }
@@ -119,7 +118,11 @@ public class TimerQueueConsumer extends ServiceThread {
         return mqStore.get(request);
     }
 
-    private boolean isRunning() {
-        return timerState.isRunning();
+    private boolean isStopConsume() {
+        if (timerConfig.isStopConsume()) {
+            return true;
+        }
+
+        return !timerState.isRunning();
     }
 }
