@@ -9,7 +9,7 @@ import cn.coderule.minimq.domain.domain.producer.EnqueueRequest;
 import cn.coderule.minimq.domain.domain.producer.EnqueueResult;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueResult;
-import cn.coderule.minimq.domain.service.broker.infra.MQFacade;
+import cn.coderule.minimq.rpc.store.facade.MQFacade;
 import cn.coderule.minimq.domain.service.store.api.MQStore;
 import java.util.concurrent.CompletableFuture;
 

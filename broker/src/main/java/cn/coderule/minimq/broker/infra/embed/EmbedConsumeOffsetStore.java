@@ -5,7 +5,7 @@ import cn.coderule.minimq.domain.domain.meta.offset.OffsetFilter;
 import cn.coderule.minimq.domain.domain.meta.offset.OffsetRequest;
 import cn.coderule.minimq.domain.domain.meta.offset.OffsetResult;
 import cn.coderule.minimq.domain.domain.meta.offset.TopicResult;
-import cn.coderule.minimq.domain.service.broker.infra.meta.ConsumeOffsetFacade;
+import cn.coderule.minimq.rpc.store.facade.ConsumeOffsetFacade;
 import cn.coderule.minimq.domain.service.store.api.meta.ConsumeOffsetStore;
 
 public class EmbedConsumeOffsetStore extends AbstractEmbedStore implements ConsumeOffsetFacade {

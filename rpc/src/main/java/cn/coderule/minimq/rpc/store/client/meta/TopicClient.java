@@ -2,11 +2,10 @@ package cn.coderule.minimq.rpc.store.client.meta;
 
 import cn.coderule.minimq.domain.domain.meta.topic.Topic;
 import cn.coderule.minimq.domain.domain.meta.topic.TopicRequest;
-import cn.coderule.minimq.domain.service.broker.infra.meta.TopicFacade;
-import cn.coderule.minimq.domain.service.store.api.meta.TopicStore;
 import cn.coderule.minimq.rpc.common.rpc.RpcClient;
 import cn.coderule.minimq.rpc.store.StoreClient;
 import cn.coderule.minimq.rpc.store.client.AbstractStoreClient;
+import cn.coderule.minimq.rpc.store.facade.TopicFacade;
 import java.util.concurrent.CompletableFuture;
 import lombok.Setter;
 

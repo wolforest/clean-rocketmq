@@ -1,4 +1,4 @@
-package cn.coderule.minimq.domain.service.broker.infra.meta;
+package cn.coderule.minimq.rpc.store.facade;
 
 import cn.coderule.minimq.domain.domain.meta.subscription.SubscriptionGroup;
 import cn.coderule.minimq.domain.domain.meta.subscription.SubscriptionRequest;

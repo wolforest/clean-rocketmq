@@ -8,7 +8,7 @@ import cn.coderule.minimq.domain.domain.meta.offset.OffsetFilter;
 import cn.coderule.minimq.domain.domain.meta.offset.OffsetRequest;
 import cn.coderule.minimq.domain.domain.meta.offset.OffsetResult;
 import cn.coderule.minimq.domain.domain.meta.offset.TopicResult;
-import cn.coderule.minimq.domain.service.broker.infra.meta.ConsumeOffsetFacade;
+import cn.coderule.minimq.rpc.store.facade.ConsumeOffsetFacade;
 
 public class ConsumeOffsetStore implements ConsumeOffsetFacade {
     private final BrokerConfig brokerConfig;

@@ -45,5 +45,7 @@ public class TimerContext implements Serializable {
 
             Thread.sleep(100);
         }
+
+        throw new InterruptedException("wait queue task timeout");
     }
 }

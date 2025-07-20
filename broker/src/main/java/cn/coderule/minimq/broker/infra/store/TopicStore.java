@@ -5,7 +5,7 @@ import cn.coderule.minimq.broker.infra.remote.RemoteTopicStore;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.domain.meta.topic.Topic;
 import cn.coderule.minimq.domain.domain.meta.topic.TopicRequest;
-import cn.coderule.minimq.domain.service.broker.infra.meta.TopicFacade;
+import cn.coderule.minimq.rpc.store.facade.TopicFacade;
 import java.util.concurrent.CompletableFuture;
 
 public class TopicStore implements TopicFacade {

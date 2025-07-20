@@ -1,4 +1,4 @@
-package cn.coderule.minimq.domain.service.broker.infra;
+package cn.coderule.minimq.rpc.store.facade;
 
 import cn.coderule.minimq.domain.domain.consumer.ack.store.AckRequest;
 import cn.coderule.minimq.domain.domain.consumer.ack.store.CheckPointRequest;

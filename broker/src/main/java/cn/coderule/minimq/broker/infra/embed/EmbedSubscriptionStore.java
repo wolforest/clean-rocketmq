@@ -2,7 +2,7 @@ package cn.coderule.minimq.broker.infra.embed;
 
 import cn.coderule.minimq.domain.domain.meta.subscription.SubscriptionGroup;
 import cn.coderule.minimq.domain.domain.meta.subscription.SubscriptionRequest;
-import cn.coderule.minimq.domain.service.broker.infra.meta.SubscriptionFacade;
+import cn.coderule.minimq.rpc.store.facade.SubscriptionFacade;
 import cn.coderule.minimq.domain.service.store.api.meta.SubscriptionStore;
 import java.util.concurrent.CompletableFuture;
 

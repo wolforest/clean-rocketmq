@@ -12,7 +12,7 @@ import cn.coderule.minimq.domain.domain.consumer.consume.pop.PopRequest;
 import cn.coderule.minimq.domain.domain.consumer.running.ConsumerGroupInfo;
 import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import cn.coderule.minimq.domain.domain.meta.subscription.SubscriptionGroup;
-import cn.coderule.minimq.domain.service.broker.infra.meta.SubscriptionFacade;
+import cn.coderule.minimq.rpc.store.facade.SubscriptionFacade;
 import java.util.concurrent.CompletableFuture;
 
 public class Consumer  {

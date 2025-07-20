@@ -2,7 +2,7 @@ package cn.coderule.minimq.broker.infra.remote;
 
 import cn.coderule.minimq.domain.domain.meta.subscription.SubscriptionGroup;
 import cn.coderule.minimq.domain.domain.meta.subscription.SubscriptionRequest;
-import cn.coderule.minimq.domain.service.broker.infra.meta.SubscriptionFacade;
+import cn.coderule.minimq.rpc.store.facade.SubscriptionFacade;
 import java.util.concurrent.CompletableFuture;
 
 public class RemoteSubscriptionStore extends AbstractRemoteStore implements SubscriptionFacade {

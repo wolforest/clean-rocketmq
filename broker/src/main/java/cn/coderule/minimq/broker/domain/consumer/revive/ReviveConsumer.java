@@ -14,7 +14,7 @@ import cn.coderule.minimq.domain.domain.consumer.consume.pop.helper.PopConverter
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.helper.PopKeyBuilder;
 import cn.coderule.minimq.domain.domain.consumer.revive.ReviveBuffer;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
-import cn.coderule.minimq.domain.service.broker.infra.MQFacade;
+import cn.coderule.minimq.rpc.store.facade.MQFacade;
 import java.util.List;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
