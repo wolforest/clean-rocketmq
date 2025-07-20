@@ -93,7 +93,7 @@ public class TaskScheduler {
             .magic(magic)
             .currWriteTime(event.getBatchTime())
             .delayedTime(realDelayTime)
-            .offsetPy(event.getConsumeQueueOffset())
+            .offsetPy(event.getCommitLogOffset())
             .sizePy(event.getMessageSize())
             .hashCodeOfRealTopic(getTopicHashCode(realTopic))
             .reservedValue(0)

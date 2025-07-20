@@ -103,7 +103,7 @@ public class WheelScanner {
             .deleteList(deleteKeys)
             .delayTime(delayedTime)
             .enqueueTime(enqueueTime)
-            .consumeQueueOffset(committedOffset)
+            .commitLogOffset(committedOffset)
             .build();
     }
 

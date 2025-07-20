@@ -4,9 +4,11 @@ import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 import cn.coderule.minimq.broker.domain.timer.service.TimerContext;
 import cn.coderule.minimq.broker.infra.store.MQStore;
 import cn.coderule.minimq.domain.config.TimerConfig;
+import cn.coderule.minimq.domain.core.constant.MessageConst;
 import cn.coderule.minimq.domain.domain.cluster.task.QueueTask;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueResult;
+import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.domain.timer.TimerConstants;
 import cn.coderule.minimq.domain.domain.timer.state.TimerState;
 import lombok.extern.slf4j.Slf4j;
@@ -55,22 +57,29 @@ public class TimerQueueConsumer extends ServiceThread {
             return false;
         }
 
-        DequeueRequest request = createDequeueRequest();
-        DequeueResult result = mqStore.get(request);
+        DequeueResult result = pullMessage();
         if (result.isEmpty()) {
             return false;
         }
 
-        parseResult(result);
+        parseMessage(result);
+        timerState.setTimerQueueOffset(result.getNextOffset());
         return true;
     }
 
-    private void parseResult(DequeueResult result) {
-
+    private void parseMessage(DequeueResult result) {
+        for (MessageBO messageBO : result.getMessageList()) {
+            long delayTime = getDelayTime(messageBO);
+        }
     }
 
-    private DequeueRequest createDequeueRequest() {
-        return DequeueRequest.builder()
+    private long getDelayTime(MessageBO messageBO) {
+        String delayString = messageBO.getProperty(MessageConst.PROPERTY_TIMER_OUT_MS);
+        return Long.parseLong(delayString);
+    }
+
+    private DequeueResult pullMessage() {
+        DequeueRequest request = DequeueRequest.builder()
             .storeGroup(task.getStoreGroup())
             .group(TimerConstants.TIMER_GROUP)
             .topic(TimerConstants.TIMER_TOPIC)
@@ -79,5 +88,7 @@ public class TimerQueueConsumer extends ServiceThread {
             .num(timerConfig.getConsumeBatchNum())
             .maxNum(timerConfig.getConsumeMaxNum())
             .build();
+
+        return mqStore.get(request);
     }
 }

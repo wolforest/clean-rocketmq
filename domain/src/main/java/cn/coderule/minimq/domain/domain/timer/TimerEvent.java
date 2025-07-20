@@ -19,9 +19,9 @@ import lombok.NoArgsConstructor;
 public class TimerEvent implements Serializable {
 
     /**
-     * consume queue offset
+     * commitLog offset
      */
-    private long consumeQueueOffset;
+    private long commitLogOffset;
     /**
      * size of message in the commitLog
      */
@@ -68,7 +68,7 @@ public class TimerEvent implements Serializable {
     @Override
     public String toString() {
         return "TimerRequest{" +
-            "offsetPy=" + consumeQueueOffset +
+            "offsetPy=" + commitLogOffset +
             ", sizePy=" + messageSize +
             ", delayTime=" + delayTime +
             ", enqueueTime=" + enqueueTime +
