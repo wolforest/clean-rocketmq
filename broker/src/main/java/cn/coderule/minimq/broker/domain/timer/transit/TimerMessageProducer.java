@@ -25,15 +25,17 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class TimerMessageProducer extends ServiceThread {
+    private final TimerContext timerContext;
     private final BrokerConfig brokerConfig;
-    private final QueueTask queueTask;
     private final TimerConfig timerConfig;
     private final TimerQueue timerQueue;
     private final TimerState timerState;
-
     private final MQStore mqStore;
 
+    private QueueTask queueTask;
+
     public TimerMessageProducer(TimerContext context) {
+        this.timerContext = context;
         this.brokerConfig = context.getBrokerConfig();
         this.timerConfig = context.getBrokerConfig().getTimerConfig();
         this.timerQueue = context.getTimerQueue();
@@ -51,6 +53,8 @@ public class TimerMessageProducer extends ServiceThread {
     public void run() {
         log.info("{} service started", this.getServiceName());
 
+        waitQueueTask();
+
         while (!this.isStopped() || !timerQueue.isProduceQueueEmpty()) {
             try {
                 produce();
@@ -60,6 +64,21 @@ public class TimerMessageProducer extends ServiceThread {
         }
 
         log.info("{} service end", this.getServiceName());
+    }
+
+    private void waitQueueTask() {
+        while (true) {
+            if (null != queueTask) {
+                return;
+            }
+
+            if (null != timerContext.getQueueTask()) {
+                this.queueTask = timerContext.getQueueTask();
+                return;
+            }
+
+            ThreadUtil.sleep(100);
+        }
     }
 
     private void produce() throws InterruptedException {

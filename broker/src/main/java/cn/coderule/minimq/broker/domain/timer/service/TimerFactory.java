@@ -20,6 +20,8 @@ public class TimerFactory implements TaskFactory, Lifecycle {
 
     @Override
     public void create(QueueTask task) {
+        context.initQueueTask(task);
+
         workerMap.computeIfAbsent(task.getQueueId(), queueId -> {
             TimerQueueConsumer consumer = new TimerQueueConsumer(context, task);
             log.info("create timer consumer: storeGroup={}, queueId={}",

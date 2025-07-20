@@ -23,4 +23,12 @@ public class TimerContext implements Serializable {
     private TimerState timerState;
 
     private MQStore mqStore;
+
+    public void initQueueTask(QueueTask task) {
+        if (null != queueTask) {
+            return;
+        }
+
+        this.queueTask = task;
+    }
 }
