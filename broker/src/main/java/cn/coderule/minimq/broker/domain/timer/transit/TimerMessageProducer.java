@@ -117,7 +117,7 @@ public class TimerMessageProducer extends ServiceThread {
             int status = storeMessage(messageBO, event);
             success = status != TimerConstants.PUT_NEED_RETRY;
             long waitTime = 500L * timerConfig.getPrecision() / 1000;
-            Thread.sleep(waitTime);
+            ThreadUtil.sleep(waitTime);
         }
         return dequeueException;
     }
@@ -128,12 +128,32 @@ public class TimerMessageProducer extends ServiceThread {
             log.warn("trying to put deleted timer msg: message={}", messageBO);
             return TimerConstants.PUT_NO_RETRY;
         }
-        EnqueueRequest request = EnqueueRequest.builder()
+
+        EnqueueRequest request = createEnqueueRequest(messageBO);
+        EnqueueResult result = mqStore.enqueue(request);
+
+        int retryTimes = 0;
+        while (retryTimes < 3) {
+            if (result.isSuccess()) {
+                return TimerConstants.PUT_OK;
+            }
+
+            retryTimes++;
+            ThreadUtil.sleep(50);
+
+            result = mqStore.enqueue(request);
+            log.warn("retrying to enqueue timer message: retryTimes:{}, message={}, result={}",
+                retryTimes, messageBO, result);
+        }
+
+        return TimerConstants.PUT_NO_RETRY;
+    }
+
+    private EnqueueRequest createEnqueueRequest(MessageBO messageBO) {
+        return EnqueueRequest.builder()
             .storeGroup(queueTask.getStoreGroup())
             .messageBO(messageBO)
             .build();
-        EnqueueResult result = mqStore.enqueue(request);
-        return 0;
     }
 
     private boolean handleHandleException(Throwable t, boolean stopping) {
