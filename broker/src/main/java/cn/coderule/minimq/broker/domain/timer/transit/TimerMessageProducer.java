@@ -4,13 +4,19 @@ import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 import cn.coderule.common.util.lang.ThreadUtil;
 import cn.coderule.minimq.broker.domain.timer.service.TimerContext;
 import cn.coderule.minimq.broker.domain.timer.service.TimerConverter;
+import cn.coderule.minimq.broker.infra.store.MQStore;
 import cn.coderule.minimq.domain.config.TimerConfig;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
+import cn.coderule.minimq.domain.core.constant.MessageConst;
+import cn.coderule.minimq.domain.domain.cluster.task.QueueTask;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
+import cn.coderule.minimq.domain.domain.producer.EnqueueRequest;
+import cn.coderule.minimq.domain.domain.producer.EnqueueResult;
 import cn.coderule.minimq.domain.domain.timer.TimerConstants;
 import cn.coderule.minimq.domain.domain.timer.TimerEvent;
 import cn.coderule.minimq.domain.domain.timer.TimerQueue;
 import cn.coderule.minimq.domain.domain.timer.state.TimerState;
+import cn.coderule.minimq.domain.utils.TimerUtils;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -20,15 +26,20 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class TimerMessageProducer extends ServiceThread {
     private final BrokerConfig brokerConfig;
+    private final QueueTask queueTask;
     private final TimerConfig timerConfig;
     private final TimerQueue timerQueue;
     private final TimerState timerState;
+
+    private final MQStore mqStore;
 
     public TimerMessageProducer(TimerContext context) {
         this.brokerConfig = context.getBrokerConfig();
         this.timerConfig = context.getBrokerConfig().getTimerConfig();
         this.timerQueue = context.getTimerQueue();
         this.timerState = context.getTimerState();
+        this.mqStore = context.getMqStore();
+        this.queueTask = context.getQueueTask();
     }
 
     @Override
@@ -112,6 +123,16 @@ public class TimerMessageProducer extends ServiceThread {
     }
 
     private int storeMessage(MessageBO messageBO, TimerEvent event) {
+        boolean needRoll = TimerUtils.needRoll(event.getMagic());
+        if (!needRoll && null != messageBO.getProperty(MessageConst.PROPERTY_TIMER_DEL_UNIQKEY)) {
+            log.warn("trying to put deleted timer msg: message={}", messageBO);
+            return TimerConstants.PUT_NO_RETRY;
+        }
+        EnqueueRequest request = EnqueueRequest.builder()
+            .storeGroup(queueTask.getStoreGroup())
+            .messageBO(messageBO)
+            .build();
+        EnqueueResult result = mqStore.enqueue(request);
         return 0;
     }
 
