@@ -1,6 +1,7 @@
 package cn.coderule.minimq.broker.infra.remote;
 
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
+import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import cn.coderule.minimq.domain.domain.timer.ScanResult;
 import cn.coderule.minimq.domain.domain.timer.TimerEvent;
 import cn.coderule.minimq.domain.domain.timer.state.TimerCheckpoint;
@@ -29,7 +30,7 @@ public class RemoteTimerStore extends AbstractRemoteStore implements TimerFacade
     }
 
     @Override
-    public TimerCheckpoint loadCheckpoint() {
+    public TimerCheckpoint loadCheckpoint(RequestContext context) {
         return null;
     }
 
@@ -39,7 +40,7 @@ public class RemoteTimerStore extends AbstractRemoteStore implements TimerFacade
     }
 
     @Override
-    public ScanResult scan(long delayTime) {
+    public ScanResult scan(RequestContext context, long delayTime) {
         return null;
     }
 }

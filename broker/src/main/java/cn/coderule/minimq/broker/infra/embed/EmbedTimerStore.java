@@ -1,5 +1,6 @@
 package cn.coderule.minimq.broker.infra.embed;
 
+import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import cn.coderule.minimq.domain.domain.timer.ScanResult;
 import cn.coderule.minimq.domain.domain.timer.TimerEvent;
 import cn.coderule.minimq.domain.domain.timer.state.TimerCheckpoint;
@@ -20,7 +21,7 @@ public class EmbedTimerStore extends AbstractEmbedStore implements TimerFacade {
     }
 
     @Override
-    public TimerCheckpoint loadCheckpoint() {
+    public TimerCheckpoint loadCheckpoint(RequestContext context) {
         return timerStore.loadCheckpoint();
     }
 
@@ -30,7 +31,7 @@ public class EmbedTimerStore extends AbstractEmbedStore implements TimerFacade {
     }
 
     @Override
-    public ScanResult scan(long delayTime) {
+    public ScanResult scan(RequestContext context, long delayTime) {
         return timerStore.scan(delayTime);
     }
 }

@@ -1,5 +1,6 @@
 package cn.coderule.minimq.rpc.store.client;
 
+import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import cn.coderule.minimq.domain.domain.timer.ScanResult;
 import cn.coderule.minimq.domain.domain.timer.TimerEvent;
 import cn.coderule.minimq.domain.domain.timer.state.TimerCheckpoint;
@@ -18,7 +19,7 @@ public class TimerClient extends AbstractStoreClient implements StoreClient, Tim
     }
 
     @Override
-    public TimerCheckpoint loadCheckpoint() {
+    public TimerCheckpoint loadCheckpoint(RequestContext context) {
         return null;
     }
 
@@ -28,7 +29,7 @@ public class TimerClient extends AbstractStoreClient implements StoreClient, Tim
     }
 
     @Override
-    public ScanResult scan(long delayTime) {
+    public ScanResult scan(RequestContext context, long delayTime) {
         return null;
     }
 }
