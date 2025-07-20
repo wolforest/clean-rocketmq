@@ -57,20 +57,28 @@ public class TimerConverter {
             .build();
 
         newMessage.setWaitStore(false);
-
-        if (needRoll) {
-            newMessage.setTopic(message.getTopic());
-            newMessage.setQueueId(message.getQueueId());
-        } else {
-            newMessage.setTopic(message.getProperty(MessageConst.PROPERTY_REAL_TOPIC));
-            newMessage.setQueueId(Integer.parseInt(message.getProperty(MessageConst.PROPERTY_REAL_QUEUE_ID)));
-            newMessage.removeProperty(MessageConst.PROPERTY_REAL_TOPIC);
-            newMessage.removeProperty(MessageConst.PROPERTY_REAL_QUEUE_ID);
-        }
+        setTopicAndQueueId(message, newMessage,needRoll);
 
         return newMessage;
     }
 
+    private static void setTopicAndQueueId(MessageBO message, MessageBO newMessage, boolean needRoll) {
+        if (needRoll) {
+            newMessage.setTopic(message.getTopic());
+            newMessage.setQueueId(message.getQueueId());
+            return;
+        }
+
+        String topic = message.getProperty(MessageConst.PROPERTY_REAL_TOPIC);
+        String queueIdStr = message.getProperty(MessageConst.PROPERTY_REAL_QUEUE_ID);
+        int queueId = Integer.parseInt(queueIdStr);
+
+        newMessage.setTopic(topic);
+        newMessage.setQueueId(queueId);
+
+        newMessage.removeProperty(MessageConst.PROPERTY_REAL_TOPIC);
+        newMessage.removeProperty(MessageConst.PROPERTY_REAL_QUEUE_ID);
+    }
     private static long getDelayTime(MessageBO messageBO) {
         String delayString = messageBO.getProperty(MessageConst.PROPERTY_TIMER_OUT_MS);
         return Long.parseLong(delayString);
