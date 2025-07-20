@@ -69,10 +69,10 @@ public class TimerMessageProducer extends ServiceThread {
     }
 
     private boolean handleEvent(TimerEvent event) {
-        boolean stopping = false;
+        boolean success = false;
         boolean dequeueException = false;
 
-        while (!isStopped() && !stopping) {
+        while (!isStopped() && !success) {
             if (isStopProduce()) {
                 timerState.setDequeueExceptionFlag(true);
                 dequeueException = true;
@@ -81,13 +81,26 @@ public class TimerMessageProducer extends ServiceThread {
 
             try {
                 MessageBO messageBO = TimerConverter.toMessage(event);
+                int status = storeMessage(messageBO, event);
+                success = status != TimerConstants.PUT_NEED_RETRY;
+
+                if (!success) {
+                    success = restoreMessage(messageBO, event);
+                }
 
             } catch (Throwable t) {
-                stopping = handleHandleException(t, stopping);
+                success = handleHandleException(t, success);
             }
         }
 
         return dequeueException;
+    }
+
+    private boolean restoreMessage(MessageBO messageBO, TimerEvent event) {
+        return false;
+    }
+    private int storeMessage(MessageBO messageBO, TimerEvent event) {
+        return 0;
     }
 
     private boolean handleHandleException(Throwable t, boolean stopping) {
