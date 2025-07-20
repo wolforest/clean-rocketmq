@@ -33,6 +33,14 @@ public class TimerTaskSaver extends ServiceThread {
             return;
         }
 
+        while (!this.isStopped() || !timerQueue.isConsumeQueueEmpty()) {
+            try {
+                save();
+            } catch (Throwable t) {
+                log.error("{} service has exception. ", this.getServiceName(), t);
+            }
+        }
+
         log.info("{} service end", this.getServiceName());
     }
 
