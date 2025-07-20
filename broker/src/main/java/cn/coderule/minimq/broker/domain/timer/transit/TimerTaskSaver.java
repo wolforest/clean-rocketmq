@@ -4,11 +4,16 @@ import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 import cn.coderule.minimq.broker.domain.timer.service.TimerContext;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.domain.cluster.task.QueueTask;
+import cn.coderule.minimq.domain.domain.timer.TimerEvent;
 import cn.coderule.minimq.domain.domain.timer.TimerQueue;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class TimerTaskSaver extends ServiceThread {
+    private static final int BATCH_SIZE = 10;
+
     private final TimerContext timerContext;
     private final BrokerConfig brokerConfig;
     private final TimerQueue timerQueue;
@@ -59,5 +64,33 @@ public class TimerTaskSaver extends ServiceThread {
 
     private void save() {
 
+    }
+
+    private List<TimerEvent> pullTimerEvent() throws InterruptedException {
+        TimerEvent firstReq = timerQueue.pollConsumeEvent(10);
+        if (null == firstReq) {
+            return null;
+        }
+
+        List<TimerEvent> eventList = new ArrayList<>(16);
+        eventList.add(firstReq);
+        pullMoreEvents(eventList);
+
+        return eventList;
+    }
+
+    private void pullMoreEvents(List<TimerEvent> timerEventList) throws InterruptedException {
+        while (true) {
+            TimerEvent tmpReq = timerQueue.pollConsumeEvent(3);
+            if (null == tmpReq) {
+                break;
+            }
+
+            timerEventList.add(tmpReq);
+
+            if (timerEventList.size() > BATCH_SIZE) {
+                break;
+            }
+        }
     }
 }
