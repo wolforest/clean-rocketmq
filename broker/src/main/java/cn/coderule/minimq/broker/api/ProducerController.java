@@ -105,6 +105,6 @@ public class ProducerController {
     }
 
     public void cleanReservedProperty(MessageBO messageBO) {
-        messageBO.deleteProperty(MessageConst.PROPERTY_POP_CK);
+        messageBO.removeProperty(MessageConst.PROPERTY_POP_CK);
     }
 }

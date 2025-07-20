@@ -28,7 +28,8 @@ public class TimerConverter {
             messageBO.putProperty(TimerConstants.TIMER_ENQUEUE_MS, event.getEnqueueTime() + "");
         }
 
-        if (TimerUtils.needRoll(event.getMagic())) {
+        boolean needRoll = TimerUtils.needRoll(event.getMagic());
+        if (needRoll) {
             if (null != messageBO.getProperty(TimerConstants.TIMER_ROLL_TIMES)) {
                 int times = Integer.parseInt(messageBO.getProperty(TimerConstants.TIMER_ROLL_TIMES)) + 1;
                 messageBO.putProperty(TimerConstants.TIMER_ROLL_TIMES, times + "");
@@ -39,6 +40,22 @@ public class TimerConverter {
 
         messageBO.putProperty(TimerConstants.TIMER_ENQUEUE_MS, System.currentTimeMillis() + "");
         return messageBO;
+    }
+
+    private static MessageBO recreateMessage(MessageBO message, boolean needRoll) {
+        MessageBO newMessage = MessageBO.builder()
+            .build();
+
+        if (needRoll) {
+            newMessage.setTopic(message.getTopic());
+            newMessage.setQueueId(message.getQueueId());
+        } else {
+            newMessage.setTopic(message.getProperty(MessageConst.PROPERTY_REAL_TOPIC));
+            newMessage.setQueueId(Integer.parseInt(message.getProperty(MessageConst.PROPERTY_REAL_QUEUE_ID)));
+
+        }
+
+        return newMessage;
     }
 
     private static long getDelayTime(MessageBO messageBO) {

@@ -56,8 +56,8 @@ public class MessageFactory {
 
         newMsg.setProperties( prepareMessage.getProperties());
         newMsg.putProperty(MessageConst.PROPERTY_TRANSACTION_PREPARED, "true");
-        newMsg.deleteProperty(MessageConst.PROPERTY_TRANSACTION_PREPARED_QUEUE_OFFSET);
-        newMsg.deleteProperty(MessageConst.PROPERTY_REAL_QUEUE_ID);
+        newMsg.removeProperty(MessageConst.PROPERTY_TRANSACTION_PREPARED_QUEUE_OFFSET);
+        newMsg.removeProperty(MessageConst.PROPERTY_REAL_QUEUE_ID);
 
         newMsg.setPropertiesString(MessageUtils.propertiesToString(newMsg.getProperties()));
 
