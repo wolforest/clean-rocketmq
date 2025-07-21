@@ -42,6 +42,10 @@ public class TimerTaskScheduler extends ServiceThread {
         log.info("{} service end", this.getServiceName());
     }
 
+    private void schedule() {
+
+    }
+
     private boolean loadQueueTask() {
         log.debug("load queue task");
 
