@@ -1,5 +1,6 @@
 package cn.coderule.minimq.domain.domain.timer.state;
 
+import cn.coderule.minimq.domain.config.TimerConfig;
 import cn.coderule.minimq.domain.domain.timer.TimerConstants;
 import java.io.Serializable;
 import lombok.Data;
@@ -7,6 +8,10 @@ import lombok.Data;
 @Data
 public class TimerState implements Serializable {
     private volatile int state = TimerConstants.INITIAL;
+
+    private final int precision;
+    private final int totalSlots;
+    private final int wheelSlots;
 
     /**
      * True if current store is master
@@ -42,7 +47,24 @@ public class TimerState implements Serializable {
 
     private boolean dequeueFlag;
 
+    public TimerState(TimerConfig timerConfig) {
+        this.precision = timerConfig.getPrecision();
+        this.totalSlots = timerConfig.getTotalSlots();
+
+        int wheelSlots = timerConfig.getWheelSlots();
+        if (wheelSlots > totalSlots - TimerConstants.TIMER_BLANK_SLOTS
+            || wheelSlots < 2) {
+            this.wheelSlots = totalSlots - TimerConstants.TIMER_BLANK_SLOTS;
+        } else {
+            this.wheelSlots = wheelSlots;
+        }
+    }
+
     public boolean isRunning() {
         return TimerConstants.RUNNING == state;
+    }
+
+    private long formatTime(long time) {
+        return time / precision * precision;
     }
 }

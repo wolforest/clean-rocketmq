@@ -1,6 +1,7 @@
 package cn.coderule.minimq.broker.domain.timer.transit;
 
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
+import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.minimq.broker.domain.timer.service.TimerContext;
 import cn.coderule.minimq.broker.infra.store.TimerStore;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
@@ -68,8 +69,11 @@ public class TimerTaskSaver extends ServiceThread {
         return true;
     }
 
-    private void save() {
-
+    private void save() throws Exception {
+        List<TimerEvent> eventList = pullTimerEvent();
+        if (CollectionUtil.isEmpty(eventList)) {
+            return;
+        }
     }
 
     private List<TimerEvent> pullTimerEvent() throws InterruptedException {
