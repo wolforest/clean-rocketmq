@@ -39,6 +39,14 @@ public class TimerTaskScheduler extends ServiceThread {
             return;
         }
 
+        while (!this.isStopped()) {
+            try {
+                schedule();
+            } catch (Throwable t) {
+                log.error("{} service has exception. ", this.getServiceName(), t);
+            }
+        }
+
         log.info("{} service end", this.getServiceName());
     }
 
