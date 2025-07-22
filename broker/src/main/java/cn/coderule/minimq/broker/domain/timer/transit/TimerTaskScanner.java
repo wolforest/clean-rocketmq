@@ -107,16 +107,19 @@ public class TimerTaskScanner extends ServiceThread {
         }
         parse(result);
 
+        if (!shouldContinue()) {
+            return false;
+        }
+        timerState.moveScanTime();
+        return true;
+    }
+
+    private boolean shouldContinue() {
         if (timerState.isHasDequeueException()) {
             return false;
         }
 
-        if (!timerState.isEnableScan()) {
-            return false;
-        }
-
-        timerState.moveScanTime();
-        return true;
+        return timerState.isEnableScan();
     }
 
     private boolean shouldParse(ScanResult result) {
