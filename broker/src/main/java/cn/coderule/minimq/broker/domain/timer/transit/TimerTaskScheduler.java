@@ -101,7 +101,7 @@ public class TimerTaskScheduler extends ServiceThread {
             if (TimerUtils.needDelete(magic) && !TimerUtils.needRoll(magic)) {
                 success = deleteTimerEvent(event, message);
             } else {
-                success = enqueueTimerEvent(event, message, success);
+                success = processTimerEvent(event, message, success);
             }
 
         } catch (Throwable t) {
@@ -124,6 +124,15 @@ public class TimerTaskScheduler extends ServiceThread {
     }
 
     private boolean enqueueTimerEvent(TimerEvent event, MessageBO message, boolean success) throws InterruptedException {
+        event.setMessageBO(message);
+        while (!isStopped() && !success) {
+            success = timerQueue.offerProduceEvent(event, 3_000);
+        }
+
+        return success;
+    }
+
+    private boolean processTimerEvent(TimerEvent event, MessageBO message, boolean success) throws InterruptedException {
         String messageId = message.getMessageId();
         if (messageId == null) {
             log.warn("enqueueTimerEvent messageId is null: {}",  message);
@@ -133,16 +142,11 @@ public class TimerTaskScheduler extends ServiceThread {
             && null != event.getDeleteList()
             && !event.getDeleteList().isEmpty()
             && event.getDeleteList().contains(messageId)) {
-            success = true;
             event.idempotentRelease();
-        } else {
-            event.setMessageBO(message);
-            while (!isStopped() && !success) {
-                success = timerQueue.offerProduceEvent(event, 3_000);
-            }
+            return true;
         }
 
-        return success;
+        return enqueueTimerEvent(event, message, success);
     }
 
 
