@@ -123,7 +123,24 @@ public class TimerTaskScheduler extends ServiceThread {
         return true;
     }
 
-    private boolean enqueueTimerEvent(TimerEvent event, MessageBO message, boolean success) {
+    private boolean enqueueTimerEvent(TimerEvent event, MessageBO message, boolean success) throws InterruptedException {
+        String messageId = message.getMessageId();
+        if (messageId == null) {
+            log.warn("enqueueTimerEvent messageId is null: {}",  message);
+        }
+
+        if (null != messageId
+            && null != event.getDeleteList()
+            && !event.getDeleteList().isEmpty()
+            && event.getDeleteList().contains(messageId)) {
+            success = true;
+            event.idempotentRelease();
+        } else {
+            event.setMessageBO(message);
+            while (!isStopped() && !success) {
+                success = timerQueue.offerProduceEvent(event, 3_000);
+            }
+        }
 
         return success;
     }
