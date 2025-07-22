@@ -21,6 +21,10 @@ public class MessageResult implements Serializable {
         this.status = MessageStatus.NO_MATCHED_MESSAGE;
     }
 
+    public boolean isSuccess() {
+        return null != message;
+    }
+
     public boolean isOffsetIllegal() {
         return MessageStatus.OFFSET_FOUND_NULL.equals(status)
             || MessageStatus.OFFSET_OVERFLOW_BADLY.equals(status)
@@ -39,6 +43,7 @@ public class MessageResult implements Serializable {
     public static MessageResult notFound() {
         return MessageResult.builder()
             .status(MessageStatus.NO_MATCHED_MESSAGE)
+            .message(null)
             .build();
     }
 

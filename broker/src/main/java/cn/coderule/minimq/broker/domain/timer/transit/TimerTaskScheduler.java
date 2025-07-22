@@ -4,13 +4,18 @@ import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 import cn.coderule.common.util.lang.ThreadUtil;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.minimq.broker.domain.timer.context.TimerContext;
+import cn.coderule.minimq.broker.infra.store.MQStore;
 import cn.coderule.minimq.broker.infra.store.TimerStore;
 import cn.coderule.minimq.domain.config.TimerConfig;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.domain.cluster.task.QueueTask;
+import cn.coderule.minimq.domain.domain.consumer.consume.mq.MessageRequest;
+import cn.coderule.minimq.domain.domain.consumer.consume.mq.MessageResult;
+import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.domain.timer.TimerEvent;
 import cn.coderule.minimq.domain.domain.timer.TimerQueue;
 import cn.coderule.minimq.domain.domain.timer.state.TimerState;
+import cn.coderule.minimq.domain.utils.TimerUtils;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 
@@ -22,6 +27,7 @@ public class TimerTaskScheduler extends ServiceThread {
     private final TimerState timerState;
     private final TimerStore timerStore;
 
+    private final MQStore mqStore;
     private QueueTask queueTask;
 
     public TimerTaskScheduler(TimerContext context) {
@@ -31,6 +37,7 @@ public class TimerTaskScheduler extends ServiceThread {
         this.timerQueue = context.getTimerQueue();
         this.timerState = context.getTimerState();
         this.timerStore = context.getTimerStore();
+        this.mqStore = context.getMqStore();
     }
 
     @Override
@@ -83,7 +90,18 @@ public class TimerTaskScheduler extends ServiceThread {
         boolean success = false;
 
         try {
-            long start = System.currentTimeMillis();
+            MessageBO message = getMessage(event);
+            if (message == null) {
+                success = handleNoMessage(event);
+                return i;
+            }
+
+            int magic = event.getMagic();
+            if (TimerUtils.needDelete(magic) && !TimerUtils.needRoll(magic)) {
+                success = deleteTimerEvent(event, message, success);
+            } else {
+                success = enqueueTimerEvent(event, message, success);
+            }
 
         } catch (Throwable t) {
             success = handleException(t, event, success);
@@ -92,6 +110,39 @@ public class TimerTaskScheduler extends ServiceThread {
         }
 
         return i;
+    }
+
+    private boolean deleteTimerEvent(TimerEvent event, MessageBO message, boolean success) {
+
+        return success;
+    }
+
+    private boolean enqueueTimerEvent(TimerEvent event, MessageBO message, boolean success) {
+
+        return success;
+    }
+
+
+    private boolean handleNoMessage(TimerEvent timerEvent) {
+        //the timerRequest will never be processed afterward, so idempotentRelease it
+        timerEvent.idempotentRelease();
+
+        return true;
+    }
+
+    private MessageBO getMessage(TimerEvent event) {
+        MessageRequest request = MessageRequest.builder()
+                .storeGroup(event.getStoreGroup())
+                .offset(event.getCommitLogOffset())
+                .size(event.getMessageSize())
+                .build();
+
+        MessageResult result = mqStore.getMessage(request);
+        if (result.isSuccess()) {
+            return result.getMessage();
+        }
+
+        return null;
     }
 
     private boolean handleException(Throwable e, TimerEvent timerEvent, boolean success) {
