@@ -1,5 +1,6 @@
 package cn.coderule.minimq.domain.domain.timer;
 
+import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
 import java.io.Serializable;
 import java.util.Set;
@@ -17,6 +18,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TimerEvent implements Serializable {
+    private RequestContext requestContext;
+    private String storeGroup;
 
     /**
      * commitLog offset

@@ -123,7 +123,9 @@ public class TimerTaskSaver extends ServiceThread {
                 return;
             }
 
+            event.setStoreGroup(queueTask.getStoreGroup());
             boolean success = timerStore.addTimer(event);
+
             boolean status = success || timerConfig.isSkipUnknownError();
             event.idempotentRelease(status);
         } catch (Throwable t) {
