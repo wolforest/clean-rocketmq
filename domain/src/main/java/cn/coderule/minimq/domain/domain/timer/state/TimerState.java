@@ -14,22 +14,34 @@ public class TimerState implements Serializable {
     private final int wheelSlots;
 
     /**
+     * last timer task scan time
+     * @rocketmq original name currReadTimeMs
+     */
+    private volatile long lastScanTime;
+    /**
+     * last timer task save time
+     * @rocketmq original name currWriteTimeMs
+     */
+    private volatile long lastSaveTime;
+
+    /**
+     * @rocketmq original name shouldRunningDequeue
      * True if current store is master
      *  or current brokerId is equal to the minimum brokerId
      *  of the replica group in slaveActingMaster mode.
      */
-    private volatile boolean shouldDequeue;
+    private volatile boolean enableDequeue;
     /**
+     * @rocketmq original name dequeueStatusChangeFlag
      * the dequeue is an asynchronous process,
      * use this flag to track if the status has changed
      */
-    private volatile boolean dequeueExceptionFlag = false;
+    private volatile boolean hasDequeueException = false;
 
     private volatile long timerQueueOffset;
     private volatile long committedQueueOffset;
 
-    private volatile long lastScanTime;
-    private volatile long lastTaskTime;
+
 
     private volatile long preloadTime;
     private volatile long commitTime;
@@ -38,14 +50,14 @@ public class TimerState implements Serializable {
 
     /**
      * the latest time when pull message from message queue
+     * @rocketmq original name lastEnqueueButExpiredTime
      */
     public long latestTimerMessageTime;
     /**
      * the time of the latest messageExt.storeTimeStamp
+     * @rocketmq original name lastEnqueueButExpiredStoreTime
      */
     public long latestTimerMessageStoreTime;
-
-    private boolean dequeueFlag;
 
     public TimerState(TimerConfig timerConfig) {
         this.precision = timerConfig.getPrecision();

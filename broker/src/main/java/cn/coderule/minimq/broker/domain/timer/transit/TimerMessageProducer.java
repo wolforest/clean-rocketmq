@@ -6,7 +6,6 @@ import cn.coderule.minimq.broker.domain.timer.service.TimerContext;
 import cn.coderule.minimq.broker.domain.timer.service.TimerConverter;
 import cn.coderule.minimq.broker.infra.store.MQStore;
 import cn.coderule.minimq.domain.config.TimerConfig;
-import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.core.constant.MessageConst;
 import cn.coderule.minimq.domain.domain.cluster.task.QueueTask;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
@@ -102,7 +101,7 @@ public class TimerMessageProducer extends ServiceThread {
 
         while (!isStopped() && !success) {
             if (isStopProduce()) {
-                timerState.setDequeueExceptionFlag(true);
+                timerState.setHasDequeueException(true);
                 dequeueException = true;
                 break;
             }
@@ -127,7 +126,7 @@ public class TimerMessageProducer extends ServiceThread {
         boolean success = false;
         while (!success && !isStopped()) {
             if (isStopProduce()) {
-                timerState.setDequeueExceptionFlag(true);
+                timerState.setHasDequeueException(true);
                 dequeueException = true;
             }
 
