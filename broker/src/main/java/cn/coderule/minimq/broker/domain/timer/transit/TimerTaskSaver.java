@@ -123,7 +123,7 @@ public class TimerTaskSaver extends ServiceThread {
 
         int successCount = 0;
         while (true) {
-            if (isFinished()) {
+            if (timerContext.isScheduleDone()) {
                 successCount++;
                 if (successCount >= 2) {
                     break;
@@ -138,38 +138,6 @@ public class TimerTaskSaver extends ServiceThread {
         if (!latch.await(1, TimeUnit.SECONDS)) {
             log.warn("CountDownLatch await timeout: {}", this.getServiceName());
         }
-    }
-
-    private boolean isFinished() {
-        if (timerQueue.isScheduleQueueEmpty()) {
-            return true;
-        }
-
-        if (isAllWaiting(timerContext.getTimerMessageProducers())) {
-            return true;
-        }
-
-        return isAllWaiting(timerContext.getTimerTaskSchedulers());
-    }
-
-    private boolean isAllWaiting(TimerMessageProducer[] timerMessageProducers) {
-        for (TimerMessageProducer producer : timerMessageProducers) {
-            if (!producer.isWaiting()) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    private boolean isAllWaiting(TimerTaskScheduler[] timerTaskSchedulers) {
-        for (TimerTaskScheduler scheduler : timerTaskSchedulers) {
-            if (scheduler.isWaiting()) {
-                return false;
-            }
-        }
-
-        return true;
     }
 
     private List<TimerEvent> pullTimerEvent() throws InterruptedException {

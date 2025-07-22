@@ -1,6 +1,5 @@
 package cn.coderule.minimq.broker.domain.timer.service;
 
-import cn.coderule.common.util.lang.ThreadUtil;
 import cn.coderule.minimq.broker.domain.timer.transit.TimerMessageProducer;
 import cn.coderule.minimq.broker.domain.timer.transit.TimerTaskScheduler;
 import cn.coderule.minimq.broker.infra.store.MQStore;
@@ -56,4 +55,37 @@ public class TimerContext implements Serializable {
 
         throw new TimeoutException("wait queue task timeout");
     }
+
+    public boolean isScheduleDone() {
+        if (timerQueue.isScheduleQueueEmpty()) {
+            return true;
+        }
+
+        if (isAllWaiting(timerMessageProducers)) {
+            return true;
+        }
+
+        return isAllWaiting(timerTaskSchedulers);
+    }
+
+    private boolean isAllWaiting(TimerMessageProducer[] timerMessageProducers) {
+        for (TimerMessageProducer producer : timerMessageProducers) {
+            if (!producer.isWaiting()) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private boolean isAllWaiting(TimerTaskScheduler[] timerTaskSchedulers) {
+        for (TimerTaskScheduler scheduler : timerTaskSchedulers) {
+            if (scheduler.isWaiting()) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
 }
