@@ -1,11 +1,14 @@
 package cn.coderule.minimq.broker.infra.store;
 
+import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.minimq.broker.infra.embed.EmbedMQStore;
 import cn.coderule.minimq.broker.infra.remote.RemoteMQStore;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.domain.consumer.ack.store.AckRequest;
 import cn.coderule.minimq.domain.domain.consumer.ack.store.CheckPointRequest;
 import cn.coderule.minimq.domain.domain.consumer.ack.store.OffsetRequest;
+import cn.coderule.minimq.domain.domain.consumer.consume.mq.MessageRequest;
+import cn.coderule.minimq.domain.domain.consumer.consume.mq.MessageResult;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.QueueRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.QueueResult;
 import cn.coderule.minimq.domain.domain.producer.EnqueueRequest;
@@ -99,6 +102,19 @@ public class MQStore implements MQFacade {
         }
 
         return remoteMQStore.get(request);
+    }
+
+    @Override
+    public MessageResult getMessage(MessageRequest request) {
+        if (StringUtil.isBlank(request.getStoreGroup())) {
+            return embedMQStore.getMessage(request);
+        }
+
+        if (!brokerConfig.isEnableRemoteStore()) {
+            return MessageResult.notFound();
+        }
+
+        return embedMQStore.getMessage(request);
     }
 
     @Override

@@ -3,6 +3,8 @@ package cn.coderule.minimq.rpc.store.client;
 import cn.coderule.minimq.domain.domain.consumer.ack.store.AckRequest;
 import cn.coderule.minimq.domain.domain.consumer.ack.store.CheckPointRequest;
 import cn.coderule.minimq.domain.domain.consumer.ack.store.OffsetRequest;
+import cn.coderule.minimq.domain.domain.consumer.consume.mq.MessageRequest;
+import cn.coderule.minimq.domain.domain.consumer.consume.mq.MessageResult;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.QueueRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.QueueResult;
 import cn.coderule.minimq.domain.domain.producer.EnqueueRequest;
@@ -43,6 +45,11 @@ public class MQClient extends AbstractStoreClient implements StoreClient, MQFaca
     @Override
     public DequeueResult get(DequeueRequest request) {
 
+        return null;
+    }
+
+    @Override
+    public MessageResult getMessage(MessageRequest request) {
         return null;
     }
 

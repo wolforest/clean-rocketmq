@@ -1,10 +1,11 @@
 package cn.coderule.minimq.broker.infra.remote;
 
-import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.domain.consumer.ack.store.AckRequest;
 import cn.coderule.minimq.domain.domain.consumer.ack.store.CheckPointRequest;
 import cn.coderule.minimq.domain.domain.consumer.ack.store.OffsetRequest;
+import cn.coderule.minimq.domain.domain.consumer.consume.mq.MessageRequest;
+import cn.coderule.minimq.domain.domain.consumer.consume.mq.MessageResult;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.QueueRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.QueueResult;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
@@ -14,8 +15,6 @@ import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueResult;
 import cn.coderule.minimq.rpc.store.facade.MQFacade;
 import cn.coderule.minimq.rpc.common.rpc.RpcClient;
-import cn.coderule.minimq.rpc.common.rpc.config.RpcClientConfig;
-import cn.coderule.minimq.rpc.common.rpc.netty.NettyClient;
 import cn.coderule.minimq.rpc.store.client.MQClient;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
@@ -67,6 +66,12 @@ public class RemoteMQStore extends AbstractRemoteStore implements MQFacade {
     public DequeueResult get(DequeueRequest request) {
         String address = loadBalance.findByTopic(request.getTopic());
         return getClient(address).get(request);
+    }
+
+    @Override
+    public MessageResult getMessage(MessageRequest request) {
+        String address = loadBalance.findByStoreGroup(request.getStoreGroup());
+        return getClient(address).getMessage(request);
     }
 
     @Override

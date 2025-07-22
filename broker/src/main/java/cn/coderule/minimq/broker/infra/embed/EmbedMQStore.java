@@ -3,6 +3,8 @@ package cn.coderule.minimq.broker.infra.embed;
 import cn.coderule.minimq.domain.domain.consumer.ack.store.AckRequest;
 import cn.coderule.minimq.domain.domain.consumer.ack.store.CheckPointRequest;
 import cn.coderule.minimq.domain.domain.consumer.ack.store.OffsetRequest;
+import cn.coderule.minimq.domain.domain.consumer.consume.mq.MessageRequest;
+import cn.coderule.minimq.domain.domain.consumer.consume.mq.MessageResult;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.QueueRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.QueueResult;
 import cn.coderule.minimq.domain.domain.producer.EnqueueRequest;
@@ -44,6 +46,11 @@ public class EmbedMQStore extends AbstractEmbedStore implements MQFacade {
     @Override
     public DequeueResult get(DequeueRequest request) {
         return mqStore.get(request);
+    }
+
+    @Override
+    public MessageResult getMessage(MessageRequest request) {
+        return mqStore.getMessage(request);
     }
 
     @Override
