@@ -13,6 +13,7 @@ import cn.coderule.minimq.domain.domain.timer.state.TimerState;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -92,7 +93,7 @@ public class TimerTaskSaver extends ServiceThread {
         timerState.tryMoveSaveTime();
     }
 
-    private boolean save(List<TimerEvent> eventList) {
+    private boolean save(List<TimerEvent> eventList) throws InterruptedException {
         CountDownLatch latch = new CountDownLatch(eventList.size());
         for (TimerEvent event : eventList) {
             event.setLatch(latch);
@@ -115,8 +116,60 @@ public class TimerTaskSaver extends ServiceThread {
 
     }
 
-    private void awaitLatch(CountDownLatch latch) {
+    private void awaitLatch(CountDownLatch latch) throws InterruptedException {
+        if (latch.await(1, TimeUnit.SECONDS)) {
+            return;
+        }
 
+        int successCount = 0;
+        while (true) {
+            if (isFinished()) {
+                successCount++;
+                if (successCount >= 2) {
+                    break;
+                }
+            }
+
+            if (latch.await(1, TimeUnit.SECONDS)) {
+                break;
+            }
+        }
+
+        if (!latch.await(1, TimeUnit.SECONDS)) {
+            log.warn("CountDownLatch await timeout: {}", this.getServiceName());
+        }
+    }
+
+    private boolean isFinished() {
+        if (timerQueue.isScheduleQueueEmpty()) {
+            return true;
+        }
+
+        if (isAllWaiting(timerContext.getTimerMessageProducers())) {
+            return true;
+        }
+
+        return isAllWaiting(timerContext.getTimerTaskSchedulers());
+    }
+
+    private boolean isAllWaiting(TimerMessageProducer[] timerMessageProducers) {
+        for (TimerMessageProducer producer : timerMessageProducers) {
+            if (!producer.isWaiting()) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private boolean isAllWaiting(TimerTaskScheduler[] timerTaskSchedulers) {
+        for (TimerTaskScheduler scheduler : timerTaskSchedulers) {
+            if (scheduler.isWaiting()) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     private List<TimerEvent> pullTimerEvent() throws InterruptedException {
