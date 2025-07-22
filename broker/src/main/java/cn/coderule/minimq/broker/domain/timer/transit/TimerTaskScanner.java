@@ -91,6 +91,21 @@ public class TimerTaskScanner extends ServiceThread {
     }
 
     private boolean scan() {
+        if (!isEnableScan()) {
+            return false;
+        }
         return true;
+    }
+
+    private boolean isEnableScan() {
+        if (timerConfig.isStopConsume()) {
+            return false;
+        }
+
+        if (!timerState.isEnableScan()) {
+            return false;
+        }
+
+        return timerState.getLastScanTime() < timerState.getLastSaveTime();
     }
 }

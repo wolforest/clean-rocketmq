@@ -27,7 +27,7 @@ public class TimerState implements Serializable {
      *  or current brokerId is equal to the minimum brokerId
      *  of the replica group in slaveActingMaster mode.
      */
-    private volatile boolean enableDequeue;
+    private volatile boolean enableScan;
     /**
      * @rocketmq original name dequeueStatusChangeFlag
      * the dequeue is an asynchronous process,

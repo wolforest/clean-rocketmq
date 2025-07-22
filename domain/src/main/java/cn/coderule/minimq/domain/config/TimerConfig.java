@@ -12,6 +12,8 @@ public class TimerConfig implements Serializable {
     private boolean enableDisruptor = false;
 
     private boolean stopConsume = false;
+    private boolean stopScan = false;
+
     private int consumeBatchNum = 32;
     private int consumeMaxNum = 32;
 
