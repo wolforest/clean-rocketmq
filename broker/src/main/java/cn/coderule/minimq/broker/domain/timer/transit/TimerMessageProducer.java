@@ -49,7 +49,7 @@ public class TimerMessageProducer extends ServiceThread {
     @Override
     public void run() {
         log.info("{} service started", this.getServiceName());
-
+        setState(State.STARTING);
         waitQueueTask();
 
         while (!this.isStopped() || !timerQueue.isProduceQueueEmpty()) {
@@ -61,6 +61,7 @@ public class TimerMessageProducer extends ServiceThread {
         }
 
         log.info("{} service end", this.getServiceName());
+        setState(State.ENDING);
     }
 
     private void waitQueueTask() {
@@ -79,6 +80,7 @@ public class TimerMessageProducer extends ServiceThread {
     }
 
     private void produce() throws InterruptedException {
+        setState(State.WAITING);
         TimerEvent event = timerQueue.pollProduceEvent(10);
         if (event == null) {
             return;
@@ -86,6 +88,7 @@ public class TimerMessageProducer extends ServiceThread {
 
         boolean dequeueFlag = false;
         try {
+            setState(State.RUNNING);
             dequeueFlag = handleEvent(event);
         } catch (Throwable t) {
             log.error("{} service has exception. ", this.getServiceName(), t);
