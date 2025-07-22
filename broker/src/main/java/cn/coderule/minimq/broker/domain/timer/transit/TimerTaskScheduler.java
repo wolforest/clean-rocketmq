@@ -5,7 +5,6 @@ import cn.coderule.common.util.lang.ThreadUtil;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.minimq.broker.domain.timer.context.TimerContext;
 import cn.coderule.minimq.broker.infra.store.MQStore;
-import cn.coderule.minimq.broker.infra.store.TimerStore;
 import cn.coderule.minimq.domain.config.TimerConfig;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.core.constant.MessageConst;
@@ -15,7 +14,6 @@ import cn.coderule.minimq.domain.domain.consumer.consume.mq.MessageResult;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.domain.timer.TimerEvent;
 import cn.coderule.minimq.domain.domain.timer.TimerQueue;
-import cn.coderule.minimq.domain.domain.timer.state.TimerState;
 import cn.coderule.minimq.domain.utils.TimerUtils;
 import java.util.List;
 import java.util.Set;
@@ -26,8 +24,6 @@ public class TimerTaskScheduler extends ServiceThread {
     private final TimerContext timerContext;
     private final TimerConfig timerConfig;
     private final TimerQueue timerQueue;
-    private final TimerState timerState;
-    private final TimerStore timerStore;
 
     private final MQStore mqStore;
     private QueueTask queueTask;
@@ -37,8 +33,6 @@ public class TimerTaskScheduler extends ServiceThread {
         BrokerConfig brokerConfig = context.getBrokerConfig();
         this.timerConfig = brokerConfig.getTimerConfig();
         this.timerQueue = context.getTimerQueue();
-        this.timerState = context.getTimerState();
-        this.timerStore = context.getTimerStore();
         this.mqStore = context.getMqStore();
     }
 
@@ -168,7 +162,7 @@ public class TimerTaskScheduler extends ServiceThread {
 
     private MessageBO getMessage(TimerEvent event) {
         MessageRequest request = MessageRequest.builder()
-                .storeGroup(event.getStoreGroup())
+                .storeGroup(queueTask.getStoreGroup())
                 .offset(event.getCommitLogOffset())
                 .size(event.getMessageSize())
                 .build();
