@@ -18,6 +18,7 @@ import cn.coderule.minimq.domain.domain.timer.TimerQueue;
 import cn.coderule.minimq.domain.domain.timer.state.TimerState;
 import cn.coderule.minimq.domain.utils.TimerUtils;
 import java.util.List;
+import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -138,10 +139,7 @@ public class TimerTaskScheduler extends ServiceThread {
             log.warn("enqueueTimerEvent messageId is null: {}",  message);
         }
 
-        if (null != messageId
-            && null != event.getDeleteList()
-            && !event.getDeleteList().isEmpty()
-            && event.getDeleteList().contains(messageId)) {
+        if (isInDeleteList(event, messageId)) {
             event.idempotentRelease();
             return true;
         }
@@ -149,6 +147,17 @@ public class TimerTaskScheduler extends ServiceThread {
         return enqueueTimerEvent(event, message, success);
     }
 
+    private boolean isInDeleteList(TimerEvent event, String messageId) {
+        if (null == messageId) {
+            return false;
+        }
+        Set<String> deleteList = event.getDeleteList();
+        if (CollectionUtil.isEmpty(deleteList)) {
+            return false;
+        }
+
+        return deleteList.contains(messageId);
+    }
 
     private boolean handleNoMessage(TimerEvent timerEvent) {
         //the timerRequest will never be processed afterward, so idempotentRelease it
