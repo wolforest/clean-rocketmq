@@ -1,6 +1,7 @@
 package cn.coderule.minimq.broker.domain.timer.transit;
 
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
+import cn.coderule.common.util.lang.ThreadUtil;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.minimq.broker.domain.timer.service.TimerContext;
 import cn.coderule.minimq.broker.infra.store.TimerStore;
@@ -11,6 +12,7 @@ import cn.coderule.minimq.domain.domain.timer.TimerQueue;
 import cn.coderule.minimq.domain.domain.timer.state.TimerState;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -79,7 +81,10 @@ public class TimerTaskSaver extends ServiceThread {
         }
 
         while (!timerState.isRunning()) {
-            save(eventList);
+            boolean success = save(eventList);
+            if (success) {
+                break;
+            }
         }
 
         TimerEvent last = eventList.get(eventList.size() - 1);
@@ -87,7 +92,30 @@ public class TimerTaskSaver extends ServiceThread {
         timerState.tryMoveSaveTime();
     }
 
-    private void save(List<TimerEvent> eventList) {
+    private boolean save(List<TimerEvent> eventList) {
+        CountDownLatch latch = new CountDownLatch(eventList.size());
+        for (TimerEvent event : eventList) {
+            event.setLatch(latch);
+            save(event);
+        }
+
+        awaitLatch(latch);
+        boolean success = eventList.stream()
+            .allMatch(TimerEvent::isSuccess);
+
+        if (success) {
+            return true;
+        }
+
+        ThreadUtil.sleep(50);
+        return false;
+    }
+
+    private void save(TimerEvent event) {
+
+    }
+
+    private void awaitLatch(CountDownLatch latch) {
 
     }
 
