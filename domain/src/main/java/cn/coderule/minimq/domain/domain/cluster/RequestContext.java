@@ -31,6 +31,12 @@ public class RequestContext implements Serializable {
 
     private String storeGroup;
 
+    public static RequestContext create(String storeGroup) {
+        RequestContext context = new RequestContext();
+        context.setStoreGroup(storeGroup);
+        return context;
+    }
+
     public static RequestContext create() {
         return new RequestContext();
     }

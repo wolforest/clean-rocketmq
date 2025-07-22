@@ -5,7 +5,9 @@ import cn.coderule.minimq.broker.domain.timer.service.TimerContext;
 import cn.coderule.minimq.broker.infra.store.TimerStore;
 import cn.coderule.minimq.domain.config.TimerConfig;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
+import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import cn.coderule.minimq.domain.domain.cluster.task.QueueTask;
+import cn.coderule.minimq.domain.domain.timer.ScanResult;
 import cn.coderule.minimq.domain.domain.timer.TimerQueue;
 import cn.coderule.minimq.domain.domain.timer.state.TimerState;
 import lombok.extern.slf4j.Slf4j;
@@ -94,7 +96,39 @@ public class TimerTaskScanner extends ServiceThread {
         if (!isEnableScan()) {
             return false;
         }
+
+        ScanResult result = timerStore.scan(
+            RequestContext.create(queueTask.getStoreGroup()),
+            timerState.getLastScanTime()
+        );
+
+        if (!shouldParse(result)) {
+            return false;
+        }
+        parse(result);
+
+        if (timerState.isHasDequeueException()) {
+            return false;
+        }
+
+        if (!timerState.isEnableScan()) {
+            return false;
+        }
+
+        timerState.moveScanTime();
         return true;
+    }
+
+    private boolean shouldParse(ScanResult result) {
+        if (!result.isSuccess()) {
+            return false;
+        }
+
+        return timerState.isEnableScan();
+    }
+
+    private void parse(ScanResult result) {
+
     }
 
     private boolean isEnableScan() {

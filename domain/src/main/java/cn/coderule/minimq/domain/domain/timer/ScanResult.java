@@ -29,4 +29,8 @@ public class ScanResult implements Serializable {
     public boolean isEmpty() {
         return normalMsgStack.isEmpty() && deleteMsgStack.isEmpty();
     }
+
+    public boolean isSuccess() {
+        return 1 == code;
+    }
 }
