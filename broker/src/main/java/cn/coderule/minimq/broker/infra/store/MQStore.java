@@ -33,7 +33,7 @@ public class MQStore implements MQFacade {
     @Override
     public EnqueueResult enqueue(EnqueueRequest request) {
         MessageBO messageBO = request.getMessageBO();
-        if (embedMQStore.isEmbed(messageBO.getTopic())) {
+        if (embedMQStore.containsTopic(messageBO.getTopic())) {
             return embedMQStore.enqueue(request);
         }
 
@@ -47,7 +47,7 @@ public class MQStore implements MQFacade {
     @Override
     public CompletableFuture<EnqueueResult> enqueueAsync(EnqueueRequest request) {
         MessageBO messageBO = request.getMessageBO();
-        if (embedMQStore.isEmbed(messageBO.getTopic())) {
+        if (embedMQStore.containsTopic(messageBO.getTopic())) {
             return embedMQStore.enqueueAsync(request);
         }
 
@@ -64,7 +64,7 @@ public class MQStore implements MQFacade {
     @Override
     public CompletableFuture<DequeueResult> dequeueAsync(DequeueRequest request) {
         String topic = request.getTopic();
-        if (embedMQStore.isEmbed(topic)) {
+        if (embedMQStore.containsTopic(topic)) {
             return embedMQStore.dequeueAsync(request);
         }
 
@@ -80,7 +80,7 @@ public class MQStore implements MQFacade {
     @Override
     public DequeueResult dequeue(DequeueRequest request) {
         String topic = request.getTopic();
-        if (embedMQStore.isEmbed(topic)) {
+        if (embedMQStore.containsTopic(topic)) {
             return embedMQStore.dequeue(request);
         }
 
@@ -93,7 +93,7 @@ public class MQStore implements MQFacade {
 
     @Override
     public DequeueResult get(DequeueRequest request) {
-        if (embedMQStore.isEmbed(request.getTopic())) {
+        if (embedMQStore.containsTopic(request.getTopic())) {
             return embedMQStore.get(request);
         }
 
@@ -120,7 +120,7 @@ public class MQStore implements MQFacade {
     @Override
     public void addCheckPoint(CheckPointRequest request) {
         String topic = request.getCheckPoint().getTopic();
-        if (embedMQStore.isEmbed(topic)) {
+        if (embedMQStore.containsTopic(topic)) {
             embedMQStore.addCheckPoint(request);
             return;
         }
@@ -135,7 +135,7 @@ public class MQStore implements MQFacade {
     @Override
     public void ack(AckRequest request) {
         String topic = request.getAckMsg().getTopic();
-        if (embedMQStore.isEmbed(topic)) {
+        if (embedMQStore.containsTopic(topic)) {
             embedMQStore.ack(request);
             return;
         }
@@ -150,7 +150,7 @@ public class MQStore implements MQFacade {
     @Override
     public long getBufferedOffset(OffsetRequest request) {
         String topic = request.getTopicName();
-        if (embedMQStore.isEmbed(topic)) {
+        if (embedMQStore.containsTopic(topic)) {
             return embedMQStore.getBufferedOffset(request);
         }
 
@@ -163,7 +163,7 @@ public class MQStore implements MQFacade {
     @Override
     public QueueResult getMinOffset(QueueRequest request) {
         String topic = request.getTopic();
-        if (embedMQStore.isEmbed(topic)) {
+        if (embedMQStore.containsTopic(topic)) {
             return embedMQStore.getMinOffset(request);
         }
 
@@ -177,7 +177,7 @@ public class MQStore implements MQFacade {
     @Override
     public QueueResult getMaxOffset(QueueRequest request) {
         String topic = request.getTopic();
-        if (embedMQStore.isEmbed(topic)) {
+        if (embedMQStore.containsTopic(topic)) {
             return embedMQStore.getMaxOffset(request);
         }
 

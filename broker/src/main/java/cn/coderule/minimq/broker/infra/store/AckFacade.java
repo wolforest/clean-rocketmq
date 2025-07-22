@@ -21,7 +21,7 @@ public class AckFacade implements AckStore {
 
     @Override
     public void addCheckPoint(PopCheckPoint point, int reviveQueueId, long reviveQueueOffset, long nextBeginOffset) {
-        if (embedAckStore.isEmbed(point.getTopic())) {
+        if (embedAckStore.containsTopic(point.getTopic())) {
             embedAckStore.addCheckPoint(point, reviveQueueId, reviveQueueOffset, nextBeginOffset);
             return;
         }
@@ -35,7 +35,7 @@ public class AckFacade implements AckStore {
 
     @Override
     public void ack(AckMsg ackMsg, int reviveQueueId, long invisibleTime) {
-        if (embedAckStore.isEmbed(ackMsg.getTopic())) {
+        if (embedAckStore.containsTopic(ackMsg.getTopic())) {
             embedAckStore.ack(ackMsg, reviveQueueId, invisibleTime);
             return;
         }
@@ -49,7 +49,7 @@ public class AckFacade implements AckStore {
 
     @Override
     public long getLatestOffset(String topic, String group, int queueId) {
-        if (embedAckStore.isEmbed(topic)) {
+        if (embedAckStore.containsTopic(topic)) {
             return embedAckStore.getLatestOffset(topic, group, queueId);
         }
 

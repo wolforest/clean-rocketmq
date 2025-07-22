@@ -27,7 +27,7 @@ public class ConsumeOffsetStore implements ConsumeOffsetFacade {
     @Override
     public OffsetResult getOffset(OffsetRequest request) {
         String topicName = request.getTopicName();
-        if (embedConsumeOffsetStore.isEmbed(topicName)) {
+        if (embedConsumeOffsetStore.containsTopic(topicName)) {
             return embedConsumeOffsetStore.getOffset(request);
         }
 
@@ -40,7 +40,7 @@ public class ConsumeOffsetStore implements ConsumeOffsetFacade {
     @Override
     public OffsetResult getAndRemove(OffsetRequest request) {
         String topicName = request.getTopicName();
-        if (embedConsumeOffsetStore.isEmbed(topicName)) {
+        if (embedConsumeOffsetStore.containsTopic(topicName)) {
             return embedConsumeOffsetStore.getAndRemove(request);
         }
 
@@ -54,7 +54,7 @@ public class ConsumeOffsetStore implements ConsumeOffsetFacade {
     @Override
     public void putOffset(OffsetRequest request) {
         String topicName = request.getTopicName();
-        if (embedConsumeOffsetStore.isEmbed(topicName)) {
+        if (embedConsumeOffsetStore.containsTopic(topicName)) {
             embedConsumeOffsetStore.putOffset(request);
             return;
         }
@@ -69,7 +69,7 @@ public class ConsumeOffsetStore implements ConsumeOffsetFacade {
     @Override
     public void deleteByTopic(OffsetFilter filter) {
         String topicName = filter.getTopic();
-        if (embedConsumeOffsetStore.isEmbed(topicName)) {
+        if (embedConsumeOffsetStore.containsTopic(topicName)) {
             embedConsumeOffsetStore.deleteByTopic(filter);
             return;
         }
@@ -84,7 +84,7 @@ public class ConsumeOffsetStore implements ConsumeOffsetFacade {
     @Override
     public void deleteByGroup(OffsetFilter filter) {
         String topicName = filter.getTopic();
-        if (embedConsumeOffsetStore.isEmbed(topicName)) {
+        if (embedConsumeOffsetStore.containsTopic(topicName)) {
             embedConsumeOffsetStore.deleteByGroup(filter);
             return;
         }
@@ -99,7 +99,7 @@ public class ConsumeOffsetStore implements ConsumeOffsetFacade {
     @Override
     public TopicResult findTopicByGroup(OffsetFilter filter) {
         String topicName = filter.getTopic();
-        if (embedConsumeOffsetStore.isEmbed(topicName)) {
+        if (embedConsumeOffsetStore.containsTopic(topicName)) {
             return embedConsumeOffsetStore.findTopicByGroup(filter);
         }
 
@@ -113,7 +113,7 @@ public class ConsumeOffsetStore implements ConsumeOffsetFacade {
     @Override
     public GroupResult findGroupByTopic(OffsetFilter filter) {
         String topicName = filter.getTopic();
-        if (embedConsumeOffsetStore.isEmbed(topicName)) {
+        if (embedConsumeOffsetStore.containsTopic(topicName)) {
             return embedConsumeOffsetStore.findGroupByTopic(filter);
         }
 

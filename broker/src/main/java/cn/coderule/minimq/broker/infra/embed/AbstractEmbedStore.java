@@ -7,7 +7,15 @@ public abstract class AbstractEmbedStore {
         this.loadBalance = loadBalance;
     }
 
-    public boolean isEmbed(String topicName) {
+    public boolean containsTopic(String topicName) {
         return loadBalance.containsTopic(topicName);
+    }
+
+    public boolean containsSubscription(String groupName) {
+        return loadBalance.containsSubscription(groupName);
+    }
+
+    public boolean isEmbed(String storeGroup) {
+        return loadBalance.isEmbed(storeGroup);
     }
 }

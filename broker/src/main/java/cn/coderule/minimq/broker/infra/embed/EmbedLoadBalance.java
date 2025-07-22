@@ -25,6 +25,11 @@ public class EmbedLoadBalance {
         if (!brokerConfig.isEnableEmbedStore()) {
             return false;
         }
+
         return subscriptionStore.existsGroup(null, groupName);
+    }
+
+    public boolean isEmbed(String storeGroup) {
+        return brokerConfig.getGroup().equals(storeGroup);
     }
 }
