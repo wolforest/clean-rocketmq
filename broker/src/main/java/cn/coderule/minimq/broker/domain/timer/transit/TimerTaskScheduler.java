@@ -1,6 +1,7 @@
 package cn.coderule.minimq.broker.domain.timer.transit;
 
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
+import cn.coderule.common.util.lang.ThreadUtil;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.minimq.broker.domain.timer.context.TimerContext;
 import cn.coderule.minimq.broker.infra.store.TimerStore;
@@ -72,13 +73,37 @@ public class TimerTaskScheduler extends ServiceThread {
     }
 
     private void process(List<TimerEvent> eventList) {
-        for (TimerEvent event : eventList) {
-            process(event);
+        int size = eventList.size();
+        for (int i = 0; i < size; i++) {
+            i = process(eventList.get(i), i);
         }
     }
 
-    private void process(TimerEvent event) {
+    private int process(TimerEvent event, int i) {
+        boolean success = false;
 
+        try {
+            long start = System.currentTimeMillis();
+
+        } catch (Throwable t) {
+            success = handleException(t, event, success);
+        } finally {
+            if (success) i++;
+        }
+
+        return i;
+    }
+
+    private boolean handleException(Throwable e, TimerEvent timerEvent, boolean success) {
+        log.error("Unknown exception", e);
+        if (timerConfig.isSkipUnknownError()) {
+            timerEvent.idempotentRelease();
+            success = true;
+        } else {
+            ThreadUtil.sleep(50);
+        }
+
+        return success;
     }
 
     private boolean loadQueueTask() {

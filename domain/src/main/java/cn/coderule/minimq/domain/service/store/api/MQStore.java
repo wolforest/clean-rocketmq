@@ -24,13 +24,10 @@ public interface MQStore {
     CompletableFuture<DequeueResult> dequeueAsync(DequeueRequest request);
 
     DequeueResult get(DequeueRequest request);
-    MessageBO getMessage(String topic, int queueId, long offset);
-    List<MessageBO> getMessage(String topic, int queueId, long offset, int num);
 
     void addCheckPoint(CheckPointRequest request);
     void ack(AckRequest request);
-    long getBufferedOffset(OffsetRequest request);
-
+    QueueResult getBufferedOffset(OffsetRequest request);
     QueueResult getMinOffset(QueueRequest request);
     QueueResult getMaxOffset(QueueRequest request);
 }

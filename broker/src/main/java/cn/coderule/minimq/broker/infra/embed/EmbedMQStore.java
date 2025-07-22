@@ -58,7 +58,7 @@ public class EmbedMQStore extends AbstractEmbedStore implements MQFacade {
 
     @Override
     public long getBufferedOffset(OffsetRequest request) {
-        return mqStore.getBufferedOffset(request);
+        return mqStore.getBufferedOffset(request).getOffset();
     }
 
     @Override

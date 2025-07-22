@@ -54,16 +54,6 @@ public class MQStoreImpl implements MQStore {
     }
 
     @Override
-    public MessageBO getMessage(String topic, int queueId, long offset) {
-        return mqService.getMessage(topic, queueId, offset);
-    }
-
-    @Override
-    public List<MessageBO> getMessage(String topic, int queueId, long offset, int num) {
-        return mqService.getMessage(topic, queueId, offset, num);
-    }
-
-    @Override
     public void addCheckPoint(CheckPointRequest request) {
         ackService.addCheckPoint(
             request.getCheckPoint(),
@@ -83,12 +73,14 @@ public class MQStoreImpl implements MQStore {
     }
 
     @Override
-    public long getBufferedOffset(OffsetRequest request) {
-        return ackService.getBufferedOffset(
+    public QueueResult getBufferedOffset(OffsetRequest request) {
+        long offset = ackService.getBufferedOffset(
             request.getTopicName(),
             request.getGroupName(),
             request.getQueueId()
         );
+
+        return QueueResult.offset(offset);
     }
 
     @Override
