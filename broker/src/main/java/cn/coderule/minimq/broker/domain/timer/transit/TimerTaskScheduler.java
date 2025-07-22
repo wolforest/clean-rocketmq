@@ -72,6 +72,12 @@ public class TimerTaskScheduler extends ServiceThread {
     }
 
     private void process(List<TimerEvent> eventList) {
+        for (TimerEvent event : eventList) {
+            process(event);
+        }
+    }
+
+    private void process(TimerEvent event) {
 
     }
 
