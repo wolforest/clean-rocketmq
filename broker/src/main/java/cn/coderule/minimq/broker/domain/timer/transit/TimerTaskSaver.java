@@ -5,6 +5,7 @@ import cn.coderule.common.util.lang.ThreadUtil;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.minimq.broker.domain.timer.service.TimerContext;
 import cn.coderule.minimq.broker.infra.store.TimerStore;
+import cn.coderule.minimq.domain.config.TimerConfig;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.domain.cluster.task.QueueTask;
 import cn.coderule.minimq.domain.domain.timer.TimerEvent;
@@ -21,7 +22,7 @@ public class TimerTaskSaver extends ServiceThread {
     private static final int BATCH_SIZE = 10;
 
     private final TimerContext timerContext;
-    private final BrokerConfig brokerConfig;
+    private final TimerConfig timerConfig;
     private final TimerQueue timerQueue;
     private final TimerState timerState;
     private final TimerStore timerStore;
@@ -30,7 +31,8 @@ public class TimerTaskSaver extends ServiceThread {
 
     public TimerTaskSaver(TimerContext context) {
         this.timerContext = context;
-        this.brokerConfig = context.getBrokerConfig();
+        BrokerConfig brokerConfig = context.getBrokerConfig();
+        this.timerConfig = brokerConfig.getTimerConfig();
         this.timerQueue = context.getTimerQueue();
         this.timerState = context.getTimerState();
         this.timerStore = context.getTimerStore();
@@ -113,7 +115,19 @@ public class TimerTaskSaver extends ServiceThread {
     }
 
     private void save(TimerEvent event) {
+        try {
+        } catch (Throwable t) {
+            handleSaveException(t, event);
+        }
+    }
 
+    private void handleSaveException(Throwable t, TimerEvent timerEvent) {
+        log.error("Unknown error", t);
+        if (timerConfig.isSkipUnknownError()) {
+            timerEvent.idempotentRelease(true);
+        } else {
+            ThreadUtil.sleep(50);
+        }
     }
 
     private void awaitLatch(CountDownLatch latch) throws InterruptedException {
