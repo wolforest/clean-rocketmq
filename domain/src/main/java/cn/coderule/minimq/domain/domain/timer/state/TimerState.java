@@ -119,6 +119,13 @@ public class TimerState implements Serializable {
         this.commitSaveTime = lastScanTime;
     }
 
+    public void tryMoveSaveTime() {
+        long now = formatTime(System.currentTimeMillis());
+        if (lastSaveTime < now) {
+            lastSaveTime = now;
+        }
+    }
+
     private long formatTime(long time) {
         return time / precision * precision;
     }
