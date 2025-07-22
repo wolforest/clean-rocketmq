@@ -1,6 +1,8 @@
 package cn.coderule.minimq.broker.domain.timer.service;
 
 import cn.coderule.common.util.lang.ThreadUtil;
+import cn.coderule.minimq.broker.domain.timer.transit.TimerMessageProducer;
+import cn.coderule.minimq.broker.domain.timer.transit.TimerTaskScheduler;
 import cn.coderule.minimq.broker.infra.store.MQStore;
 import cn.coderule.minimq.broker.infra.store.TimerStore;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
@@ -28,6 +30,9 @@ public class TimerContext implements Serializable {
 
     private MQStore mqStore;
     private TimerStore timerStore;
+
+    private TimerMessageProducer[] timerMessageProducers;
+    private TimerTaskScheduler[] timerTaskSchedulers;
 
     public void initQueueTask(QueueTask task) {
         if (null != queueTask) {
