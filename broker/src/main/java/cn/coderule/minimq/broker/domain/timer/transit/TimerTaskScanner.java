@@ -1,6 +1,7 @@
 package cn.coderule.minimq.broker.domain.timer.transit;
 
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
+import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.minimq.broker.domain.timer.service.TimerContext;
 import cn.coderule.minimq.broker.infra.store.TimerStore;
 import cn.coderule.minimq.domain.config.TimerConfig;
@@ -8,8 +9,12 @@ import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import cn.coderule.minimq.domain.domain.cluster.task.QueueTask;
 import cn.coderule.minimq.domain.domain.timer.ScanResult;
+import cn.coderule.minimq.domain.domain.timer.TimerEvent;
 import cn.coderule.minimq.domain.domain.timer.TimerQueue;
 import cn.coderule.minimq.domain.domain.timer.state.TimerState;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -144,5 +149,55 @@ public class TimerTaskScanner extends ServiceThread {
         }
 
         return timerState.getLastScanTime() < timerState.getLastSaveTime();
+    }
+
+    private List<TimerEvent> initList(
+        List<List<TimerEvent>> lists,
+        List<TimerEvent> list,
+        TimerEvent event
+    ) {
+        if (!CollectionUtil.isEmpty(list)) {
+            lists.add(list);
+        }
+        list = new LinkedList<>();
+        list.add(event);
+
+        return list;
+    }
+
+    private List<List<TimerEvent>> splitIntoLists(List<TimerEvent> origin) {
+        //this method assume that the origin is not null;
+        List<List<TimerEvent>> lists = new LinkedList<>();
+        if (origin.size() < 100) {
+            lists.add(origin);
+            return lists;
+        }
+
+        int msgIndex = 0;
+        int fileIndex = -1;
+        List<TimerEvent> list = null;
+
+        for (TimerEvent event : origin) {
+            int index = (int) (event.getCommitLogOffset() / timerConfig.getCommitLogFileSize());
+            if (fileIndex != index) {
+                msgIndex = 0;
+                fileIndex = index;
+                list = initList(lists, list, event);
+                continue;
+            }
+
+            assert list != null;
+            list.add(event);
+            if (++msgIndex % 2000 == 0) {
+                lists.add(list);
+                list = new ArrayList<>();
+            }
+        }
+
+        if (!CollectionUtil.isEmpty(list)) {
+            lists.add(list);
+        }
+
+        return lists;
     }
 }
