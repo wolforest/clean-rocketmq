@@ -6,6 +6,8 @@ import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueResult;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueRequest;
 import cn.coderule.minimq.domain.domain.cluster.store.QueueUnit;
+import cn.coderule.minimq.domain.domain.consumer.consume.mq.MessageRequest;
+import cn.coderule.minimq.domain.domain.consumer.consume.mq.MessageResult;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.service.store.domain.commitlog.CommitLog;
 import cn.coderule.minimq.domain.service.store.domain.consumequeue.ConsumeQueueGateway;
@@ -27,6 +29,15 @@ public class MessageService {
 
         this.commitLog = commitLog;
         this.consumeQueueGateway = consumeQueueGateway;
+    }
+
+    public MessageResult getMessage(MessageRequest request) {
+        MessageBO message = commitLog.select(request.getOffset(), request.getSize());
+        if (message == null) {
+            return MessageResult.notFound();
+        }
+
+        return MessageResult.success(message);
     }
 
     public DequeueResult get(String topic, int queueId, long offset, int num) {

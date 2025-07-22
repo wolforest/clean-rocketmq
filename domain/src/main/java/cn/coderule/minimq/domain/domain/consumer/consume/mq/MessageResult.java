@@ -17,10 +17,6 @@ public class MessageResult implements Serializable {
     private MessageStatus status;
     private MessageBO message;
 
-    private long minOffset;
-    private long maxOffset;
-    private long nextOffset;
-
     public MessageResult() {
         this.status = MessageStatus.NO_MATCHED_MESSAGE;
     }
@@ -39,7 +35,6 @@ public class MessageResult implements Serializable {
             .message(message)
             .build();
     }
-
 
     public static MessageResult notFound() {
         return MessageResult.builder()

@@ -3,6 +3,8 @@ package cn.coderule.minimq.store.domain.mq;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueResult;
+import cn.coderule.minimq.domain.domain.consumer.consume.mq.MessageRequest;
+import cn.coderule.minimq.domain.domain.consumer.consume.mq.MessageResult;
 import cn.coderule.minimq.domain.service.store.domain.mq.MQService;
 import cn.coderule.minimq.domain.domain.producer.EnqueueResult;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
@@ -58,6 +60,11 @@ public class DefaultMQService implements MQService {
     @Override
     public DequeueResult get(DequeueRequest request) {
         return messageService.get(request);
+    }
+
+    @Override
+    public MessageResult getMessage(MessageRequest request) {
+        return messageService.getMessage(request);
     }
 
     @Override
