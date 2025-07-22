@@ -70,10 +70,25 @@ public class TimerTaskSaver extends ServiceThread {
     }
 
     private void save() throws Exception {
+        long tmpOffset = timerState.getTimerQueueOffset();
         List<TimerEvent> eventList = pullTimerEvent();
         if (CollectionUtil.isEmpty(eventList)) {
+            timerState.setCommitSaveTime(tmpOffset);
+            timerState.tryMoveSaveTime();
             return;
         }
+
+        while (!timerState.isRunning()) {
+            save(eventList);
+        }
+
+        TimerEvent last = eventList.get(eventList.size() - 1);
+        timerState.setCommitSaveTime(last.getMessageBO().getQueueOffset());
+        timerState.tryMoveSaveTime();
+    }
+
+    private void save(List<TimerEvent> eventList) {
+
     }
 
     private List<TimerEvent> pullTimerEvent() throws InterruptedException {
