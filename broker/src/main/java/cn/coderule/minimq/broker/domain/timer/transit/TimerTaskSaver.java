@@ -116,6 +116,16 @@ public class TimerTaskSaver extends ServiceThread {
 
     private void save(TimerEvent event) {
         try {
+            boolean shouldFire = event.getDelayTime() < timerState.getLastSaveTime();
+            if (timerState.isEnableDequeue() && shouldFire) {
+                event.setEnqueueTime(Long.MAX_VALUE);
+                timerQueue.putProduceEvent(event);
+                return;
+            }
+
+            boolean success = timerStore.addTimer(event);
+            boolean status = success || timerConfig.isSkipUnknownError();
+            event.idempotentRelease(status);
         } catch (Throwable t) {
             handleSaveException(t, event);
         }
