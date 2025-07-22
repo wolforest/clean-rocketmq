@@ -3,6 +3,7 @@ package cn.coderule.minimq.broker.domain.timer.transit;
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 import cn.coderule.minimq.broker.domain.timer.service.TimerContext;
 import cn.coderule.minimq.broker.infra.store.TimerStore;
+import cn.coderule.minimq.domain.config.TimerConfig;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.domain.cluster.task.QueueTask;
 import cn.coderule.minimq.domain.domain.timer.TimerQueue;
@@ -12,16 +13,18 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class TimerTaskScanner extends ServiceThread {
     private final TimerContext timerContext;
-    private final BrokerConfig brokerConfig;
+    private final TimerConfig timerConfig;
     private final TimerQueue timerQueue;
     private final TimerState timerState;
     private final TimerStore timerStore;
 
     private QueueTask queueTask;
+    private long startTime;
 
     public TimerTaskScanner(TimerContext context) {
         this.timerContext = context;
-        this.brokerConfig = context.getBrokerConfig();
+        BrokerConfig brokerConfig = context.getBrokerConfig();
+        this.timerConfig = brokerConfig.getTimerConfig();
         this.timerQueue = context.getTimerQueue();
         this.timerState = context.getTimerState();
         this.timerStore = context.getTimerStore();
@@ -32,6 +35,11 @@ public class TimerTaskScanner extends ServiceThread {
         return TimerTaskScanner.class.getSimpleName();
     }
 
+    public void start(long startTime) throws Exception {
+        this.startTime = startTime;
+        super.start();
+    }
+
     @Override
     public void run() {
         log.info("{} service started", this.getServiceName());
@@ -39,9 +47,20 @@ public class TimerTaskScanner extends ServiceThread {
             return;
         }
 
+        long interval = 100L * timerConfig.getPrecision() / 1_000;
         while (!this.isStopped()) {
             try {
-                scan();
+                long now = System.currentTimeMillis();
+                if (now < startTime) {
+                    log.info("{} wait to run at: {}", this.getServiceName(), startTime);
+                    await(1_000);
+                    continue;
+                }
+
+                boolean status = scan();
+                if (!status) {
+                    await(interval);
+                }
             } catch (Throwable t) {
                 log.error("{} service has exception. ", this.getServiceName(), t);
             }
@@ -63,7 +82,7 @@ public class TimerTaskScanner extends ServiceThread {
         return true;
     }
 
-    private void scan() {
-
+    private boolean scan() {
+        return true;
     }
 }
