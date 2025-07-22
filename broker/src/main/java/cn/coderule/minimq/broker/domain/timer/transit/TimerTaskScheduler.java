@@ -8,6 +8,7 @@ import cn.coderule.minimq.broker.infra.store.MQStore;
 import cn.coderule.minimq.broker.infra.store.TimerStore;
 import cn.coderule.minimq.domain.config.TimerConfig;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
+import cn.coderule.minimq.domain.core.constant.MessageConst;
 import cn.coderule.minimq.domain.domain.cluster.task.QueueTask;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.MessageRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.MessageResult;
@@ -98,7 +99,7 @@ public class TimerTaskScheduler extends ServiceThread {
 
             int magic = event.getMagic();
             if (TimerUtils.needDelete(magic) && !TimerUtils.needRoll(magic)) {
-                success = deleteTimerEvent(event, message, success);
+                success = deleteTimerEvent(event, message);
             } else {
                 success = enqueueTimerEvent(event, message, success);
             }
@@ -112,9 +113,14 @@ public class TimerTaskScheduler extends ServiceThread {
         return i;
     }
 
-    private boolean deleteTimerEvent(TimerEvent event, MessageBO message, boolean success) {
+    private boolean deleteTimerEvent(TimerEvent event, MessageBO message) {
+        String key = message.getProperty(MessageConst.PROPERTY_TIMER_DEL_UNIQKEY);
+        if (null != key && null != event.getDeleteList()) {
+            event.getDeleteList().add(key);
+        }
 
-        return success;
+        event.idempotentRelease();
+        return true;
     }
 
     private boolean enqueueTimerEvent(TimerEvent event, MessageBO message, boolean success) {
