@@ -9,12 +9,16 @@ import cn.coderule.minimq.domain.domain.cluster.task.QueueTask;
 import cn.coderule.minimq.domain.domain.timer.TimerQueue;
 import cn.coderule.minimq.domain.domain.timer.state.TimerState;
 import java.io.Serializable;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Data
 @Builder
 @NoArgsConstructor
@@ -54,6 +58,30 @@ public class TimerContext implements Serializable {
         }
 
         throw new TimeoutException("wait queue task timeout");
+    }
+
+    public void awaitLatch(CountDownLatch latch) throws InterruptedException {
+        if (latch.await(1, TimeUnit.SECONDS)) {
+            return;
+        }
+
+        int successCount = 0;
+        while (true) {
+            if (isScheduleDone()) {
+                successCount++;
+                if (successCount >= 2) {
+                    break;
+                }
+            }
+
+            if (latch.await(1, TimeUnit.SECONDS)) {
+                break;
+            }
+        }
+
+        if (!latch.await(1, TimeUnit.SECONDS)) {
+            log.warn("CountDownLatch await timeout");
+        }
     }
 
     public boolean isScheduleDone() {

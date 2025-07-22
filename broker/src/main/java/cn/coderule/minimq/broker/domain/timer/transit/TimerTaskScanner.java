@@ -12,7 +12,9 @@ import cn.coderule.minimq.domain.domain.timer.ScanResult;
 import cn.coderule.minimq.domain.domain.timer.TimerEvent;
 import cn.coderule.minimq.domain.domain.timer.TimerQueue;
 import cn.coderule.minimq.domain.domain.timer.state.TimerState;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -95,7 +97,7 @@ public class TimerTaskScanner extends ServiceThread {
         return true;
     }
 
-    private boolean scan() {
+    private boolean scan() throws Exception {
         if (!isEnableScan()) {
             return false;
         }
@@ -108,7 +110,9 @@ public class TimerTaskScanner extends ServiceThread {
         if (!shouldParse(result)) {
             return false;
         }
-        parse(result);
+
+        enqueue(result.getDeleteMsgStack());
+        enqueue(result.getNormalMsgStack());
 
         if (!shouldContinue()) {
             return false;
@@ -133,8 +137,20 @@ public class TimerTaskScanner extends ServiceThread {
         return timerState.isEnableScan();
     }
 
-    private void parse(ScanResult result) {
+    private void enqueue(LinkedList<TimerEvent> msgStack) throws Exception {
+        List<List<TimerEvent>> eventGroup = split(msgStack);
+        CountDownLatch latch = new CountDownLatch(msgStack.size());
 
+        //read the deleted msg: the msg used to mark another msg is deleted
+        for (List<TimerEvent> timerEvents : eventGroup) {
+            for (TimerEvent timerEvent : timerEvents) {
+                timerEvent.setLatch(latch);
+            }
+            timerQueue.putScheduleEvent(timerEvents);
+        }
+
+        //do we need to use loop with tryAcquire
+        timerContext.awaitLatch(latch);
     }
 
     private boolean isEnableScan() {
@@ -149,7 +165,7 @@ public class TimerTaskScanner extends ServiceThread {
         return timerState.getLastScanTime() < timerState.getLastSaveTime();
     }
 
-    private List<List<TimerEvent>> splitIntoLists(List<TimerEvent> origin) {
+    private List<List<TimerEvent>> split(List<TimerEvent> origin) {
         SplitService splitService = new SplitService(timerConfig.getCommitLogFileSize());
         return splitService.split(origin);
     }

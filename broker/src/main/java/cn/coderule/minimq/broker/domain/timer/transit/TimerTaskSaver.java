@@ -14,7 +14,6 @@ import cn.coderule.minimq.domain.domain.timer.state.TimerState;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -102,7 +101,7 @@ public class TimerTaskSaver extends ServiceThread {
             save(event);
         }
 
-        awaitLatch(latch);
+        timerContext.awaitLatch(latch);
         boolean success = eventList.stream()
             .allMatch(TimerEvent::isSuccess);
 
@@ -139,30 +138,6 @@ public class TimerTaskSaver extends ServiceThread {
             timerEvent.idempotentRelease(true);
         } else {
             ThreadUtil.sleep(50);
-        }
-    }
-
-    private void awaitLatch(CountDownLatch latch) throws InterruptedException {
-        if (latch.await(1, TimeUnit.SECONDS)) {
-            return;
-        }
-
-        int successCount = 0;
-        while (true) {
-            if (timerContext.isScheduleDone()) {
-                successCount++;
-                if (successCount >= 2) {
-                    break;
-                }
-            }
-
-            if (latch.await(1, TimeUnit.SECONDS)) {
-                break;
-            }
-        }
-
-        if (!latch.await(1, TimeUnit.SECONDS)) {
-            log.warn("CountDownLatch await timeout: {}", this.getServiceName());
         }
     }
 
