@@ -5,6 +5,14 @@ import cn.coderule.minimq.domain.domain.timer.TimerConstants;
 import java.io.Serializable;
 import lombok.Data;
 
+/**
+ * concepts of timer:
+ *  - timer queue: system topic for timer task
+ *  - timer message: message in timer queue
+ *  - save: save timer task to persistent storage
+ *  - scan: scan timer task from persistent storage
+ *  - commit: saved or passed to checkpoint service
+ */
 @Data
 public class TimerState implements Serializable {
     private volatile int state = TimerConstants.INITIAL;
@@ -12,17 +20,6 @@ public class TimerState implements Serializable {
     private final int precision;
     private final int totalSlots;
     private final int wheelSlots;
-
-    /**
-     * last timer task scan time
-     * @rocketmq original name currReadTimeMs
-     */
-    private volatile long lastScanTime;
-    /**
-     * last timer task save time
-     * @rocketmq original name currWriteTimeMs
-     */
-    private volatile long lastSaveTime;
 
     /**
      * @rocketmq original name shouldRunningDequeue
@@ -38,16 +35,6 @@ public class TimerState implements Serializable {
      */
     private volatile boolean hasDequeueException = false;
 
-    private volatile long timerQueueOffset;
-    private volatile long committedQueueOffset;
-
-
-
-    private volatile long preloadTime;
-    private volatile long commitTime;
-    private volatile long lastCommitTime;
-    private volatile long lastCommittedQueueOffset;
-
     /**
      * the latest time when pull message from message queue
      * @rocketmq original name lastEnqueueButExpiredTime
@@ -58,6 +45,57 @@ public class TimerState implements Serializable {
      * @rocketmq original name lastEnqueueButExpiredStoreTime
      */
     public long latestTimerMessageStoreTime;
+
+    /**
+     * last timer task scan time
+     * @rocketmq original name currReadTimeMs
+     */
+    private volatile long lastScanTime;
+    /**
+     * last timer task save time
+     * @rocketmq original name currWriteTimeMs
+     */
+    private volatile long lastSaveTime;
+
+    /**
+     * timer task preload time
+     * @rocketmq original name preReadTimeMs
+     */
+    private volatile long preloadTime;
+
+
+    /**
+     * timer queue offset
+     * @rocketmq original name currQueueOffset
+     */
+    private volatile long timerQueueOffset;
+
+    /**
+     * saved timer queue offset(not flushed)
+     * @rocketmq original name commitQueueOffset
+     */
+    private volatile long savedQueueOffset;
+
+    /**
+     * timer task commit time, for checkpoint
+     * equals currReadTimeMs in all code base,
+     *      maybe useful in commercial version.
+     * @rocketmq original name commitReadTime
+     */
+    private volatile long commitSaveTime;
+
+    /**
+     * last timer task committed save time, for checkpoint
+     * @rocketmq original name lastCommitReadTimeMs
+     */
+    private volatile long lastCommitSaveTime;
+
+    /**
+     * last committed queue offset, for checkpoint
+     * @rocketmq original name lastCommitQueueOffset
+     */
+    private volatile long lastCommitQueueOffset;
+
 
     public TimerState(TimerConfig timerConfig) {
         this.precision = timerConfig.getPrecision();
