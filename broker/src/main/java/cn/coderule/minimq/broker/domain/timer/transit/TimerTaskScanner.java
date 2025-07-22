@@ -50,10 +50,7 @@ public class TimerTaskScanner extends ServiceThread {
         long interval = 100L * timerConfig.getPrecision() / 1_000;
         while (!this.isStopped()) {
             try {
-                long now = System.currentTimeMillis();
-                if (now < startTime) {
-                    log.info("{} wait to run at: {}", this.getServiceName(), startTime);
-                    await(1_000);
+                if (!isTimeToStart()) {
                     continue;
                 }
 
@@ -67,6 +64,17 @@ public class TimerTaskScanner extends ServiceThread {
         }
 
         log.info("{} service end", this.getServiceName());
+    }
+
+    private boolean isTimeToStart() {
+        long now = System.currentTimeMillis();
+        if (now < startTime) {
+            log.info("{} wait to run at: {}", this.getServiceName(), startTime);
+            await(1_000);
+            return false;
+        }
+
+        return true;
     }
 
     private boolean loadQueueTask() {
