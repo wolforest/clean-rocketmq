@@ -114,6 +114,11 @@ public class TimerState implements Serializable {
         return TimerConstants.RUNNING == state;
     }
 
+    public void moveScanTime() {
+        this.lastScanTime = lastScanTime + precision;
+        this.commitSaveTime = lastScanTime;
+    }
+
     private long formatTime(long time) {
         return time / precision * precision;
     }
