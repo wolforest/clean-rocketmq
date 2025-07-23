@@ -14,16 +14,31 @@
     <version>1.0.0-SNAPSHOT</version>
 
     <properties>
+        <project.root>${basedir}/..</project.root>
     </properties>
 
     <dependencies>
         <dependency>
-            <groupId>cn.coderule.minimq</groupId>
-            <artifactId>domain</artifactId>
+            <groupId>org.apache.rocketmq</groupId>
+            <artifactId>rocketmq-client-java</artifactId>
+            <version>5.0.5</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.rocketmq</groupId>
+            <artifactId>rocketmq-common</artifactId>
+            <version>5.2.1-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.rocketmq</groupId>
+            <artifactId>rocketmq-remoting</artifactId>
+            <version>5.2.1-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>cn.coderule.minimq</groupId>
-            <artifactId>rpc</artifactId>
+            <groupId>io.github.aliyunmq</groupId>
+            <artifactId>rocketmq-logback-classic</artifactId>
+            <version>1.0.1</version>
         </dependency>
         <dependency>
             <groupId>org.testng</groupId>
