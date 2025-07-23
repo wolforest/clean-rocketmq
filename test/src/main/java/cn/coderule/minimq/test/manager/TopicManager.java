@@ -16,12 +16,12 @@
  */
 package cn.coderule.minimq.test.manager;
 
+import cn.coderule.common.util.lang.string.StringUtil;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.rocketmq.common.domain.topic.TopicAttributes;
 import org.apache.rocketmq.common.domain.topic.TopicConfig;
 import org.apache.rocketmq.common.domain.topic.TopicMessageType;
-import org.apache.rocketmq.common.utils.StringUtils;
 import org.apache.rocketmq.remoting.protocol.body.ClusterInfo;
 
 public class TopicManager {
@@ -112,6 +112,6 @@ public class TopicManager {
     }
 
     public static String createUniqueTopic() {
-        return TOPIC_PREFIX + StringUtils.UUID();
+        return TOPIC_PREFIX + StringUtil.uuid();
     }
 }

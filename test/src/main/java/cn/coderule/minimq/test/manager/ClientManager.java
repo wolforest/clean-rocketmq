@@ -19,8 +19,6 @@ package cn.coderule.minimq.test.manager;
 import org.apache.rocketmq.client.apis.ClientServiceProvider;
 import org.apache.rocketmq.remoting.client.DefaultRPCClient;
 
-import static org.apache.rocketmq.common.utils.NameServerAddressUtils.NAMESRV_ADDR_PROPERTY;
-
 public class ClientManager {
     private static DefaultRPCClient client = null;
 
@@ -39,7 +37,7 @@ public class ClientManager {
             return;
         }
 
-        System.setProperty(NAMESRV_ADDR_PROPERTY, ConfigManager.getConfig().getString("nameAddr"));
+        System.setProperty("rocketmq.namesrv.addr", ConfigManager.getConfig().getString("nameAddr"));
         client = new DefaultRPCClient();
         client.start();
     }

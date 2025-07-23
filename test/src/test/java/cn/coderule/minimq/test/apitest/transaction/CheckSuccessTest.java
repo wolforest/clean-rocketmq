@@ -16,6 +16,7 @@
  */
 package cn.coderule.minimq.test.apitest.transaction;
 
+import cn.coderule.common.util.lang.ThreadUtil;
 import cn.coderule.minimq.test.apitest.ApiBaseTest;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -38,7 +39,6 @@ import org.apache.rocketmq.client.apis.producer.SendReceipt;
 import org.apache.rocketmq.client.apis.producer.Transaction;
 import org.apache.rocketmq.client.apis.producer.TransactionChecker;
 import org.apache.rocketmq.client.apis.producer.TransactionResolution;
-import org.apache.rocketmq.common.utils.ThreadUtils;
 import org.apache.rocketmq.logging.org.slf4j.Logger;
 import org.apache.rocketmq.logging.org.slf4j.LoggerFactory;
 import org.testng.Assert;
@@ -128,7 +128,7 @@ public class CheckSuccessTest extends ApiBaseTest {
             return;
         }
 
-        ThreadUtils.sleep(30000);
+        ThreadUtil.sleep(30000);
         LOG.info("stop consumer");
 
         consumer.close();

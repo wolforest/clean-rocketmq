@@ -16,7 +16,7 @@
  */
 package cn.coderule.minimq.test.manager;
 
-import org.apache.rocketmq.common.utils.StringUtils;
+import cn.coderule.common.util.lang.string.StringUtil;
 import org.apache.rocketmq.remoting.protocol.body.ClusterInfo;
 import org.apache.rocketmq.remoting.protocol.subscription.SubscriptionGroupConfig;
 
@@ -103,7 +103,7 @@ public class GroupManager {
     }
 
     public static String createUniqueGroup() {
-        return GROUP_PREFIX + StringUtils.UUID();
+        return GROUP_PREFIX + StringUtil.uuid();
     }
 
 }

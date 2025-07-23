@@ -16,6 +16,7 @@
  */
 package cn.coderule.minimq.test.manager;
 
+import cn.coderule.common.util.lang.string.StringUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Charsets;
@@ -24,7 +25,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import org.apache.rocketmq.client.apis.ClientConfiguration;
-import org.apache.rocketmq.common.utils.StringUtils;
 
 public class ConfigManager {
     public static final String BASE_CONFIG = "api-test.json";
@@ -71,7 +71,7 @@ public class ConfigManager {
     }
 
     public static JSONObject loadConfig(String fileName) throws Exception {
-        if (StringUtils.isBlank(fileName)) {
+        if (StringUtil.isBlank(fileName)) {
             throw new IllegalArgumentException("fileName can't be blank");
         }
 
