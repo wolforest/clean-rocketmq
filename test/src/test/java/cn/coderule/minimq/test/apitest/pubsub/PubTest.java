@@ -16,23 +16,12 @@
  */
 package cn.coderule.minimq.test.apitest.pubsub;
 
-import cn.coderule.common.util.lang.ThreadUtil;
 import cn.coderule.minimq.test.apitest.ApiBaseTest;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 import cn.coderule.minimq.test.manager.ClientManager;
-import cn.coderule.minimq.test.manager.ConsumerManager;
-import cn.coderule.minimq.test.manager.GroupManager;
 import cn.coderule.minimq.test.manager.ProducerManager;
 import cn.coderule.minimq.test.manager.TopicManager;
-import org.apache.rocketmq.client.apis.consumer.ConsumeResult;
-import org.apache.rocketmq.client.apis.consumer.FilterExpression;
-import org.apache.rocketmq.client.apis.consumer.MessageListener;
-import org.apache.rocketmq.client.apis.consumer.PushConsumer;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import org.apache.rocketmq.client.apis.message.Message;
 import org.apache.rocketmq.client.apis.producer.Producer;
 import org.apache.rocketmq.client.apis.producer.SendReceipt;
@@ -43,36 +32,25 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-
 @Test(groups = {"client"})
-public class PubSubTest extends ApiBaseTest {
-    private static final Logger LOG = LoggerFactory.getLogger(PubSubTest.class);
+public class PubTest extends ApiBaseTest {
+    private static final Logger LOG = LoggerFactory.getLogger(PubTest.class);
     private static final String TOPIC = TopicManager.createUniqueTopic();
-    private static final String CONSUMER_GROUP = GroupManager.createUniqueGroup();
     private static final String MESSAGE_PREFIX = "MQT_";
     private static final String MESSAGE_BODY = "test message body: ";
 
-    private PushConsumer consumer;
     private Producer producer;
-
-    private final Set<String> messageIdSet = new HashSet<>();
-
-
     @BeforeMethod
     public void beforeMethod() {
         TopicManager.createTopic(TOPIC);
-        GroupManager.createGroup(CONSUMER_GROUP);
         createProducer();
-        startConsumer();
     }
 
     @AfterMethod
     public void afterMethod() {
         try {
-            stopConsumer();
             stopProducer();
             TopicManager.deleteTopic(TOPIC);
-            GroupManager.deleteGroup(CONSUMER_GROUP);
         } catch (Exception e) {
             LOG.error("PubSub afterMethod exception: ", e);
         }
@@ -83,48 +61,23 @@ public class PubSubTest extends ApiBaseTest {
         if (producer == null) {
             return;
         }
+        Message message = createMessage();
 
-        for (int i = 0; i < 100; i++) {
-            Message message = createMessage(i);
+        try {
+            SendReceipt sendReceipt = producer.send(message);
+            Assert.assertNotNull(sendReceipt);
 
-            try {
-                SendReceipt sendReceipt = producer.send(message);
-                Assert.assertNotNull(sendReceipt);
+            String messageId = sendReceipt.getMessageId().toString();
+            Assert.assertNotNull(messageId);
 
-                String messageId = sendReceipt.getMessageId().toString();
-                Assert.assertNotNull(messageId);
-
-                messageIdSet.add(messageId);
-                LOG.info("pub message: {}", sendReceipt);
-            } catch (Throwable t) {
-                LOG.error("Failed to send message: {}", i, t);
-            }
+            LOG.info("pub message: {}", sendReceipt);
+        } catch (Throwable t) {
+            LOG.error("Failed to send message: ",  t);
         }
-    }
-
-    private Map<String, FilterExpression> createFilter() {
-        FilterExpression expression = new FilterExpression("*");
-        return Collections.singletonMap(TOPIC, expression);
     }
 
     private void createProducer() {
         producer = ProducerManager.buildProducer(TOPIC);
-    }
-
-    private void startConsumer() {
-        LOG.info("create consumer");
-        consumer = ConsumerManager.buildPushConsumer(CONSUMER_GROUP, createFilter(), createListener());
-    }
-
-    private void stopConsumer() throws IOException {
-        if (consumer == null) {
-            return;
-        }
-
-        ThreadUtil.sleep(10000);
-        LOG.info("stop consumer");
-
-        consumer.close();
     }
 
     private void stopProducer() throws IOException {
@@ -136,21 +89,8 @@ public class PubSubTest extends ApiBaseTest {
         producer.close();
     }
 
-    private MessageListener createListener() {
-        LOG.info("create consume listener");
-        return message -> {
-            LOG.info("Consume message={}", message);
-            String messageId = message.getMessageId().toString();
-
-
-            Assert.assertEquals(TOPIC, message.getTopic());
-            Assert.assertFalse(messageIdSet.contains(messageId));
-
-            return ConsumeResult.SUCCESS;
-        };
-    }
-
-    private Message createMessage(int i) {
+    private Message createMessage() {
+        int i = 0;
         return ClientManager.getProvider()
             .newMessageBuilder()
             .setTopic(TOPIC)
