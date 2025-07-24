@@ -17,7 +17,6 @@
 package cn.coderule.minimq.test.manager;
 
 import org.apache.rocketmq.client.apis.ClientServiceProvider;
-import org.apache.rocketmq.remoting.client.DefaultRPCClient;
 
 public class ClientManager {
     private static DefaultRPCClient client = null;
