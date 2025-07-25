@@ -1,6 +1,5 @@
 package cn.coderule.minimq.store.server.ha.client;
 
-import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 import cn.coderule.common.util.net.NetworkUtil;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
@@ -31,7 +30,7 @@ import lombok.extern.slf4j.Slf4j;
  * <p>
  */
 @Slf4j
-public class DefaultHAClient extends ServiceThread implements HAClient, Lifecycle {
+public class DefaultHAClient extends ServiceThread implements HAClient {
     public static final int REPORT_HEADER_SIZE = 8;
 
     @Getter
@@ -76,11 +75,6 @@ public class DefaultHAClient extends ServiceThread implements HAClient, Lifecycl
         closeSelector();
 
         super.shutdown();
-    }
-
-    @Override
-    public void initialize() throws Exception {
-        Lifecycle.super.initialize();
     }
 
     @Override
