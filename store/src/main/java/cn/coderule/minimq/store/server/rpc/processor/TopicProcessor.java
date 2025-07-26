@@ -35,7 +35,8 @@ public class TopicProcessor implements RpcProcessor {
         RequestCode.GET_TOPIC_CONFIG,
         RequestCode.DELETE_TOPIC_IN_BROKER,
         RequestCode.GET_TOPIC_STATS_INFO,
-        RequestCode.UPDATE_AND_CREATE_TOPIC
+        RequestCode.UPDATE_AND_CREATE_TOPIC,
+        RequestCode.GET_ALL_TOPIC_CONFIG
     );
 
     public TopicProcessor(TopicConfig topicConfig, TopicStore topicStore, ExecutorService executor) {
