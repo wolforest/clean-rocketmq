@@ -11,4 +11,6 @@ public interface TopicStore {
 
     void saveTopic(TopicRequest request);
     void deleteTopic(TopicRequest request);
+
+    String getAllTopicJson();
 }

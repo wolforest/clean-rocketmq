@@ -17,6 +17,7 @@ import cn.coderule.minimq.rpc.common.rpc.protocol.codec.RpcSerializable;
 import cn.coderule.minimq.domain.domain.meta.statictopic.TopicConfigAndQueueMapping;
 import cn.coderule.minimq.rpc.store.protocol.header.CreateTopicRequestHeader;
 import cn.coderule.minimq.rpc.store.protocol.header.DeleteTopicRequestHeader;
+import cn.coderule.minimq.rpc.store.protocol.header.GetAllTopicConfigResponseHeader;
 import cn.coderule.minimq.rpc.store.protocol.header.GetTopicConfigRequestHeader;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
@@ -52,6 +53,7 @@ public class TopicProcessor implements RpcProcessor {
             case RequestCode.GET_TOPIC_CONFIG -> this.getTopic(ctx, request);
             case RequestCode.DELETE_TOPIC_IN_BROKER -> this.deleteTopic(ctx, request);
             case RequestCode.GET_TOPIC_STATS_INFO -> this.getTopicStats(ctx, request);
+            case RequestCode.GET_ALL_TOPIC_CONFIG -> this.getAllTopic(ctx, request);
             default -> this.unsupportedCode(ctx, request);
         };
     }
@@ -132,6 +134,11 @@ public class TopicProcessor implements RpcProcessor {
         return response.success();
     }
 
+    private RpcCommand getAllTopic(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
+        RpcCommand response = RpcCommand.createResponseCommand(GetAllTopicConfigResponseHeader.class);
+
+        return response.success();
+    }
     private RpcCommand getTopicStats(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
         RpcCommand response = RpcCommand.createResponseCommand(null);
 

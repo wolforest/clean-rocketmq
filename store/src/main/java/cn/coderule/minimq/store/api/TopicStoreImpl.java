@@ -41,4 +41,9 @@ public class TopicStoreImpl implements TopicStore {
     public void deleteTopic(TopicRequest request) {
         topicService.deleteTopic(request.getTopicName());
     }
+
+    @Override
+    public String getAllTopicJson() {
+        return "";
+    }
 }
