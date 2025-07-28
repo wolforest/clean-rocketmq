@@ -17,4 +17,6 @@ public interface ConsumeOffsetStore {
 
     TopicResult findTopicByGroup(OffsetFilter filter);
     GroupResult findGroupByTopic(OffsetFilter filter);
+
+    String getAllOffsetJson();
 }

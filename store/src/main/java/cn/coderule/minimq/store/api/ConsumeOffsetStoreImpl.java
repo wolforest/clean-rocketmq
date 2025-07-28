@@ -67,4 +67,9 @@ public class ConsumeOffsetStoreImpl implements ConsumeOffsetStore {
         Set<String> groupSet = offsetService.findGroupByTopic(filter.getTopic());
         return GroupResult.build(groupSet);
     }
+
+    @Override
+    public String getAllOffsetJson() {
+        return "";
+    }
 }

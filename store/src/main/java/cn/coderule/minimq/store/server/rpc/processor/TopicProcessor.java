@@ -20,7 +20,6 @@ import cn.coderule.minimq.rpc.store.protocol.header.CreateTopicRequestHeader;
 import cn.coderule.minimq.rpc.store.protocol.header.DeleteTopicRequestHeader;
 import cn.coderule.minimq.rpc.store.protocol.header.GetAllTopicConfigResponseHeader;
 import cn.coderule.minimq.rpc.store.protocol.header.GetTopicConfigRequestHeader;
-import java.io.UnsupportedEncodingException;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import lombok.Getter;
