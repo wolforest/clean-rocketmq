@@ -1,9 +1,13 @@
 package cn.coderule.minimq.domain.core.constant;
 
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+
 /**
  * @renamed from MixAll to MQConstants
  */
 public class MQConstants {
+    public static final Charset MQ_CHARSET = StandardCharsets.UTF_8;
     public static final String RETRY_GROUP_TOPIC_PREFIX = "%RETRY%";
     public static final String DLQ_GROUP_TOPIC_PREFIX = "%DLQ%";
     public static final String REPLY_TOPIC_POSTFIX = "REPLY_TOPIC";

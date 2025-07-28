@@ -2,6 +2,7 @@ package cn.coderule.minimq.store.server.rpc.processor;
 
 import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.minimq.domain.config.message.TopicConfig;
+import cn.coderule.minimq.domain.core.constant.MQConstants;
 import cn.coderule.minimq.domain.core.enums.message.MessageType;
 import cn.coderule.minimq.domain.domain.meta.topic.Topic;
 import cn.coderule.minimq.domain.service.store.api.meta.TopicStore;
@@ -19,6 +20,7 @@ import cn.coderule.minimq.rpc.store.protocol.header.CreateTopicRequestHeader;
 import cn.coderule.minimq.rpc.store.protocol.header.DeleteTopicRequestHeader;
 import cn.coderule.minimq.rpc.store.protocol.header.GetAllTopicConfigResponseHeader;
 import cn.coderule.minimq.rpc.store.protocol.header.GetTopicConfigRequestHeader;
+import java.io.UnsupportedEncodingException;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import lombok.Getter;
@@ -138,6 +140,23 @@ public class TopicProcessor implements RpcProcessor {
         RpcCommand response = RpcCommand.createResponseCommand(GetAllTopicConfigResponseHeader.class);
 
         String data = topicStore.getAllTopicJson();
+        if (StringUtil.isBlank(data)) {
+            log.error("No topic in this server, client: {}", ctx.channel().remoteAddress());
+            return response.failure(
+                ResponseCode.SYSTEM_ERROR,
+                "No topic in this server"
+            );
+        }
+
+        try {
+            response.setBody(data.getBytes(MQConstants.MQ_CHARSET));
+        } catch (Exception e) {
+            log.error("getAllTopicConfig error", e);
+            return response.failure(
+                ResponseCode.SYSTEM_ERROR,
+                "UnsupportedEncodingException " + e.getMessage()
+            );
+        }
 
 
         return response.success();
