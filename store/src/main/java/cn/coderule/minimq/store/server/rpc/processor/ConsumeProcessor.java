@@ -30,11 +30,28 @@ public class ConsumeProcessor implements RpcProcessor {
 
     @Override
     public RpcCommand process(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
-        return null;
+        return switch (request.getCode()) {
+            case RequestCode.UPDATE_CONSUMER_OFFSET -> this.updateConsumeOffset(ctx, request);
+            case RequestCode.QUERY_CONSUMER_OFFSET -> this.getConsumeOffset(ctx, request);
+            case RequestCode.GET_ALL_CONSUMER_OFFSET -> this.getAllConsumeOffset(ctx, request);
+            default -> this.unsupportedCode(ctx, request);
+        };
     }
 
     @Override
     public boolean reject() {
         return false;
+    }
+
+    private RpcCommand getConsumeOffset(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
+        return null;
+    }
+
+    private RpcCommand updateConsumeOffset(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
+        return null;
+    }
+
+    private RpcCommand getAllConsumeOffset(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
+        return null;
     }
 }
