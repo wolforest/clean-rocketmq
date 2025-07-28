@@ -252,6 +252,10 @@ public class RpcCommand implements Serializable {
         return getCode() == ResponseCode.SUCCESS;
     }
 
+    public RpcCommand failure(int code, String remark) {
+        return setCodeAndRemark(code, remark);
+    }
+
     public RpcCommand setCodeAndRemark(int code, String remark) {
         setCode(code);
         setRemark(remark);

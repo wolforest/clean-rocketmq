@@ -137,6 +137,9 @@ public class TopicProcessor implements RpcProcessor {
     private RpcCommand getAllTopic(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
         RpcCommand response = RpcCommand.createResponseCommand(GetAllTopicConfigResponseHeader.class);
 
+        String data = topicStore.getAllTopicJson();
+
+
         return response.success();
     }
     private RpcCommand getTopicStats(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
