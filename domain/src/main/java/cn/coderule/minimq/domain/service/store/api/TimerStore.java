@@ -13,4 +13,6 @@ public interface TimerStore {
 
     boolean addTimer(TimerEvent event);
     ScanResult scan(long delayTime);
+
+    String getMetricJson();
 }

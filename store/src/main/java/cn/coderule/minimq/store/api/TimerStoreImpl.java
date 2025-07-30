@@ -32,4 +32,9 @@ public class TimerStoreImpl implements TimerStore {
     public ScanResult scan(long delayTime) {
         return timerService.scan(delayTime);
     }
+
+    @Override
+    public String getMetricJson() {
+        return "";
+    }
 }
