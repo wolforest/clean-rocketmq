@@ -1,5 +1,7 @@
 package cn.coderule.minimq.store.server.rpc.processor;
 
+import cn.coderule.common.util.lang.string.StringUtil;
+import cn.coderule.minimq.domain.core.constant.MQConstants;
 import cn.coderule.minimq.domain.domain.timer.state.TimerCheckpoint;
 import cn.coderule.minimq.domain.service.store.api.TimerStore;
 import cn.coderule.minimq.rpc.common.rpc.RpcProcessor;
@@ -8,6 +10,7 @@ import cn.coderule.minimq.rpc.common.rpc.core.invoke.RpcCommand;
 import cn.coderule.minimq.rpc.common.rpc.core.invoke.RpcContext;
 import cn.coderule.minimq.rpc.common.rpc.protocol.code.RequestCode;
 import cn.coderule.minimq.rpc.common.rpc.protocol.code.ResponseCode;
+import java.nio.charset.StandardCharsets;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import lombok.Getter;
@@ -49,11 +52,7 @@ public class TimerProcessor implements RpcProcessor {
         TimerCheckpoint checkpoint = timerStore.getCheckpoint();
 
         if (checkpoint == null) {
-            log.error("timer checkpoint is null, caller={}", ctx.channel().remoteAddress());
-            return response.failure(
-                ResponseCode.SYSTEM_ERROR,
-                "timer checkpoint is null"
-            );
+            return failure(ctx, response, "timer checkpoint is null");
         }
 
         response.setBody(checkpoint.toBytes());
@@ -61,6 +60,22 @@ public class TimerProcessor implements RpcProcessor {
     }
 
     private RpcCommand getMetrics(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
-        return null;
+        RpcCommand response = RpcCommand.createResponseCommand(null);
+        String metrics = timerStore.getMetricJson();
+
+        if (StringUtil.isBlank(metrics)) {
+            return failure(ctx, response, "timer metrics is blank");
+        }
+
+        response.setBody(metrics.getBytes(MQConstants.MQ_CHARSET));
+        return response.success();
+    }
+
+    private RpcCommand failure(RpcContext ctx, RpcCommand response, String message) {
+        log.error("{}, caller={}", message, ctx.channel().remoteAddress());
+        return response.failure(
+            ResponseCode.SYSTEM_ERROR,
+            message
+        );
     }
 }
