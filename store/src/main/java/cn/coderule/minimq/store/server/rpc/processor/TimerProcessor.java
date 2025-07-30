@@ -10,6 +10,7 @@ import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.context.event.SpringApplicationEvent;
 
 @Slf4j
 public class TimerProcessor implements RpcProcessor {
@@ -29,11 +30,23 @@ public class TimerProcessor implements RpcProcessor {
 
     @Override
     public RpcCommand process(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
-        return null;
+        return switch (request.getCode()) {
+            case RequestCode.GET_TIMER_METRICS -> this.getMetrics(ctx, request);
+            case RequestCode.GET_TIMER_CHECK_POINT -> this.getCheckpoint(ctx, request);
+            default -> this.unsupportedCode(ctx, request);
+        };
     }
 
     @Override
     public boolean reject() {
         return false;
+    }
+
+    private RpcCommand getCheckpoint(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
+        return null;
+    }
+
+    private RpcCommand getMetrics(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
+        return null;
     }
 }
