@@ -149,6 +149,7 @@ public class TopicProcessor implements RpcProcessor {
 
         try {
             response.setBody(data.getBytes(MQConstants.MQ_CHARSET));
+            return response.success();
         } catch (Exception e) {
             log.error("getAllTopicConfig error", e);
             return response.failure(
@@ -156,9 +157,6 @@ public class TopicProcessor implements RpcProcessor {
                 "UnsupportedEncodingException " + e.getMessage()
             );
         }
-
-
-        return response.success();
     }
     private RpcCommand getTopicStats(RpcContext ctx, RpcCommand request) throws RemotingCommandException {
         RpcCommand response = RpcCommand.createResponseCommand(null);
