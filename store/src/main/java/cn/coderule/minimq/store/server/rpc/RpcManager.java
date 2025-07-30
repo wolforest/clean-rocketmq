@@ -3,6 +3,7 @@ package cn.coderule.minimq.store.server.rpc;
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.domain.config.message.TopicConfig;
+import cn.coderule.minimq.domain.service.store.api.TimerStore;
 import cn.coderule.minimq.domain.service.store.api.meta.ConsumeOffsetStore;
 import cn.coderule.minimq.domain.service.store.api.meta.SubscriptionStore;
 import cn.coderule.minimq.domain.service.store.api.meta.TopicStore;
@@ -10,6 +11,7 @@ import cn.coderule.minimq.rpc.common.rpc.config.RpcServerConfig;
 import cn.coderule.minimq.store.server.bootstrap.StoreContext;
 import cn.coderule.minimq.store.server.rpc.processor.ConsumeProcessor;
 import cn.coderule.minimq.store.server.rpc.processor.SubscriptionProcessor;
+import cn.coderule.minimq.store.server.rpc.processor.TimerProcessor;
 import cn.coderule.minimq.store.server.rpc.processor.TopicProcessor;
 import cn.coderule.minimq.store.server.rpc.server.ConfigConverter;
 import cn.coderule.minimq.store.server.rpc.server.ConnectionManager;
@@ -63,6 +65,8 @@ public class RpcManager implements Lifecycle {
         initTopicProcessor();
         initSubscriptionProcessor();
         initConsumeProcessor();
+
+        initTimerProcessor();
     }
 
     private void initTopicProcessor() {
@@ -80,6 +84,14 @@ public class RpcManager implements Lifecycle {
 
         ConsumeProcessor consumeProcessor = new ConsumeProcessor(offsetStore, executor);
         storeServer.registerProcessor(consumeProcessor);
+    }
+
+    private void initTimerProcessor() {
+        ExecutorService executor = executorManager.getAdminExecutor();
+        TimerStore timerStore = StoreContext.getBean(TimerStore.class);
+
+        TimerProcessor timerProcessor = new TimerProcessor(timerStore, executor);
+        storeServer.registerProcessor(timerProcessor);
     }
 
     private void initSubscriptionProcessor() {
