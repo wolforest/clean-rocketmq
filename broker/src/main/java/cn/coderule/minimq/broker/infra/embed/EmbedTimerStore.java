@@ -22,7 +22,7 @@ public class EmbedTimerStore extends AbstractEmbedStore implements TimerFacade {
 
     @Override
     public TimerCheckpoint loadCheckpoint(RequestContext context) {
-        return timerStore.loadCheckpoint();
+        return timerStore.getCheckpoint();
     }
 
     @Override

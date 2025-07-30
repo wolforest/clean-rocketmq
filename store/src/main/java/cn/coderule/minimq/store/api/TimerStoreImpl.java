@@ -19,7 +19,7 @@ public class TimerStoreImpl implements TimerStore {
     }
 
     @Override
-    public TimerCheckpoint loadCheckpoint() {
+    public TimerCheckpoint getCheckpoint() {
         return timerService.loadCheckpoint();
     }
 

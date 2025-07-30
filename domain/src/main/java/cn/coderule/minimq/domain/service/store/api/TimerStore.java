@@ -9,7 +9,7 @@ import cn.coderule.minimq.domain.domain.timer.state.TimerCheckpoint;
  */
 public interface TimerStore {
     void storeCheckpoint(TimerCheckpoint checkpoint);
-    TimerCheckpoint loadCheckpoint();
+    TimerCheckpoint getCheckpoint();
 
     boolean addTimer(TimerEvent event);
     ScanResult scan(long delayTime);
