@@ -3,10 +3,12 @@ package cn.coderule.minimq.store.server.rpc;
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.domain.config.message.TopicConfig;
+import cn.coderule.minimq.domain.service.store.api.meta.ConsumeOffsetStore;
 import cn.coderule.minimq.domain.service.store.api.meta.SubscriptionStore;
 import cn.coderule.minimq.domain.service.store.api.meta.TopicStore;
 import cn.coderule.minimq.rpc.common.rpc.config.RpcServerConfig;
 import cn.coderule.minimq.store.server.bootstrap.StoreContext;
+import cn.coderule.minimq.store.server.rpc.processor.ConsumeProcessor;
 import cn.coderule.minimq.store.server.rpc.processor.SubscriptionProcessor;
 import cn.coderule.minimq.store.server.rpc.processor.TopicProcessor;
 import cn.coderule.minimq.store.server.rpc.server.ConfigConverter;
@@ -60,6 +62,7 @@ public class RpcManager implements Lifecycle {
     private void initProcessor() {
         initTopicProcessor();
         initSubscriptionProcessor();
+        initConsumeProcessor();
     }
 
     private void initTopicProcessor() {
@@ -69,6 +72,14 @@ public class RpcManager implements Lifecycle {
 
         TopicProcessor topicProcessor = new TopicProcessor(topicConfig, topicStore, executor);
         storeServer.registerProcessor(topicProcessor);
+    }
+
+    private void initConsumeProcessor() {
+        ExecutorService executor = executorManager.getAdminExecutor();
+        ConsumeOffsetStore offsetStore = StoreContext.getBean(ConsumeOffsetStore.class);
+
+        ConsumeProcessor consumeProcessor = new ConsumeProcessor(offsetStore, executor);
+        storeServer.registerProcessor(consumeProcessor);
     }
 
     private void initSubscriptionProcessor() {
