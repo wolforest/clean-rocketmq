@@ -59,16 +59,8 @@ public class RpcCommand implements Serializable {
     private static final AtomicInteger REQUEST_ID = new AtomicInteger(0);
 
     private static SerializeType serializeTypeConfigInThisServer = SerializeType.JSON;
-
     static {
-        final String protocol = System.getProperty(SERIALIZE_TYPE_PROPERTY, System.getenv(SERIALIZE_TYPE_ENV));
-        if (!StringUtil.isBlank(protocol)) {
-            try {
-                serializeTypeConfigInThisServer = SerializeType.valueOf(protocol);
-            } catch (IllegalArgumentException e) {
-                throw new RuntimeException("parser specified protocol error. protocol=" + protocol, e);
-            }
-        }
+        initSerializeTypeConfigInThisServer();
     }
 
     private int code;
@@ -591,6 +583,19 @@ public class RpcCommand implements Serializable {
 
     public void addExtFieldIfNotExist(String key, String value) {
         extFields.putIfAbsent(key, value);
+    }
+
+    private static void initSerializeTypeConfigInThisServer() {
+        String protocol = System.getProperty(SERIALIZE_TYPE_PROPERTY, System.getenv(SERIALIZE_TYPE_ENV));
+        if (StringUtil.isBlank(protocol)) {
+            return;
+        }
+
+        try {
+            serializeTypeConfigInThisServer = SerializeType.valueOf(protocol);
+        } catch (IllegalArgumentException e) {
+            throw new RuntimeException("parser specified protocol error. protocol=" + protocol, e);
+        }
     }
 
     @Override
