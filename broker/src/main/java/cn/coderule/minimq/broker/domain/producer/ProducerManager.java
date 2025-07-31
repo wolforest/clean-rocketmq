@@ -20,7 +20,7 @@ public class ProducerManager implements Lifecycle {
         this.messageSender = new MessageSender(brokerConfig, messageStore);
         this.producer = new Producer(messageSender);
 
-        MessageConfig messageConfig = BrokerContext.getBean(MessageConfig.class);
+        MessageConfig messageConfig = brokerConfig.getMessageConfig();
         ProducerController controller = new ProducerController(brokerConfig, messageConfig, producer);
         BrokerContext.registerAPI(controller);
     }

@@ -64,8 +64,8 @@ public class DefaultCommitLogManager implements CommitLogManager {
 
     private void initConfig() {
         storeConfig = StoreContext.getBean(StoreConfig.class);
-        commitConfig = StoreContext.getBean(CommitConfig.class);
-        messageConfig = StoreContext.getBean(MessageConfig.class);
+        commitConfig = storeConfig.getCommitConfig();
+        messageConfig = storeConfig.getMessageConfig();
     }
 
     private void initMappedFileQueue() {

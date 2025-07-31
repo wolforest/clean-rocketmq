@@ -70,7 +70,7 @@ public class RpcManager implements Lifecycle {
     }
 
     private void initTopicProcessor() {
-        TopicConfig topicConfig = StoreContext.getBean(TopicConfig.class);
+        TopicConfig topicConfig = storeConfig.getTopicConfig();
         TopicStore topicStore = StoreContext.getBean(TopicStore.class);
         ExecutorService executor = executorManager.getAdminExecutor();
 

@@ -23,10 +23,6 @@ public class ConfigLoader {
         brokerConfig.setRpcServerConfig(new RpcServerConfig());
         brokerConfig.setRpcClientConfig(new RpcClientConfig());
 
-
-        BrokerContext.register(new MessageConfig());
-        BrokerContext.register(new TopicConfig());
-        BrokerContext.register(new GrpcConfig());
         BrokerContext.register(brokerConfig);
     }
 }

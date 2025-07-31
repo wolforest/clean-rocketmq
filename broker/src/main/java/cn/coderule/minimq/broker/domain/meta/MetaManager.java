@@ -19,7 +19,7 @@ public class MetaManager implements Lifecycle {
         RouteService routeService = initRouteService();
         BrokerContext.register(routeService);
 
-        TopicConfig topicConfig = BrokerContext.getBean(TopicConfig.class);
+        TopicConfig topicConfig = brokerConfig.getTopicConfig();
         RouteController routeController = new RouteController(topicConfig, routeService);
         BrokerContext.register(routeController);
     }
@@ -43,7 +43,7 @@ public class MetaManager implements Lifecycle {
         RouteMocker routeMocker = null;
         if (brokerConfig.isEnableEmbedStore()) {
             EmbedTopicStore embedTopicStore = BrokerContext.getBean(EmbedTopicStore.class);
-            TopicConfig topicConfig = BrokerContext.getBean(TopicConfig.class);
+            TopicConfig topicConfig = brokerConfig.getTopicConfig();
             routeMocker = new RouteMocker(brokerConfig, topicConfig, embedTopicStore);
         }
 
