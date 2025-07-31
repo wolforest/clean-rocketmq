@@ -1,6 +1,7 @@
 package cn.coderule.minimq.domain.config.server;
 
 import cn.coderule.common.util.lang.SystemUtil;
+import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.common.util.net.NetworkUtil;
 import cn.coderule.minimq.domain.config.message.MessageConfig;
 import cn.coderule.minimq.domain.config.TimerConfig;
@@ -9,8 +10,10 @@ import cn.coderule.minimq.domain.config.TransactionConfig;
 import java.io.Serializable;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.extern.slf4j.Slf4j;
 
 @Data
+@Slf4j
 @EqualsAndHashCode(callSuper = true)
 public class BrokerConfig extends ServerIdentity implements Serializable {
     private String host = NetworkUtil.getLocalAddress();
@@ -55,4 +58,17 @@ public class BrokerConfig extends ServerIdentity implements Serializable {
     private TimerConfig timerConfig;
     private TransactionConfig transactionConfig;
     private TaskConfig taskConfig;
+
+    public boolean isEnableRegister() {
+        if (!enableBrokerRegister) {
+            return false;
+        }
+
+        if (StringUtil.notBlank(registryAddress)) {
+            return true;
+        }
+
+        log.error("registryAddress for broker can't be blank");
+        return false;
+    }
 }
