@@ -85,5 +85,6 @@ public class DefaultConsumeOffsetService implements ConsumeOffsetService {
         }
 
         this.consumeOffset = JSONUtil.parse(data, ConsumeOffset.class);
+        this.consumeOffset.setStoreConfig(storeConfig);
     }
 }

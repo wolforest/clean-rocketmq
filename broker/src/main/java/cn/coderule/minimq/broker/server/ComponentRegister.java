@@ -88,11 +88,6 @@ public class ComponentRegister {
     }
 
     private void registerBrokerRegister() {
-        if (!brokerConfig.isEnableRegister()) {
-            return;
-        }
-
-
         NettyClient nettyClient = BrokerContext.getBean(NettyClient.class);
         BrokerRegister component = new BrokerRegister(brokerConfig, nettyClient);
         manager.register(component);

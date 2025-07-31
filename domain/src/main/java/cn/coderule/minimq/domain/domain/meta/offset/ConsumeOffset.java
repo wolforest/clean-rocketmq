@@ -21,9 +21,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ConsumeOffset implements Serializable {
     public static final String TOPIC_GROUP_SEPARATOR = "@";
-
-    private final StoreConfig storeConfig;
-    private final MetaConfig metaConfig;
+    private StoreConfig storeConfig;
+    private MetaConfig metaConfig;
 
     /**
      * topic@group -> queueId -> offset
@@ -35,16 +34,25 @@ public class ConsumeOffset implements Serializable {
     private DataVersion dataVersion;
     private final transient AtomicLong versionCounter;
 
-    public ConsumeOffset(StoreConfig storeConfig) {
-        this.storeConfig = storeConfig;
-        this.metaConfig = storeConfig.getMetaConfig();
 
+    public ConsumeOffset() {
         offsetTable = new ConcurrentHashMap<>(512);
         pullOffsetTable = new ConcurrentHashMap<>(512);
         resetOffsetTable = new ConcurrentHashMap<>(512);
 
         dataVersion = new DataVersion();
         versionCounter = new AtomicLong(0);
+    }
+
+    public ConsumeOffset(StoreConfig storeConfig) {
+        this();
+
+        setStoreConfig(storeConfig);
+    }
+
+    public void setStoreConfig(StoreConfig storeConfig) {
+        this.storeConfig = storeConfig;
+        this.metaConfig = storeConfig.getMetaConfig();
     }
 
     @JSONField(serialize = false)
