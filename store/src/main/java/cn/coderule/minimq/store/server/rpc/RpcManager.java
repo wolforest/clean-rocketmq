@@ -7,7 +7,7 @@ import cn.coderule.minimq.domain.service.store.api.TimerStore;
 import cn.coderule.minimq.domain.service.store.api.meta.ConsumeOffsetStore;
 import cn.coderule.minimq.domain.service.store.api.meta.SubscriptionStore;
 import cn.coderule.minimq.domain.service.store.api.meta.TopicStore;
-import cn.coderule.minimq.rpc.common.rpc.config.RpcServerConfig;
+import cn.coderule.minimq.domain.config.network.RpcServerConfig;
 import cn.coderule.minimq.store.server.bootstrap.StoreContext;
 import cn.coderule.minimq.store.server.rpc.processor.ConsumeProcessor;
 import cn.coderule.minimq.store.server.rpc.processor.SubscriptionProcessor;

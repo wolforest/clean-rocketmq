@@ -2,7 +2,7 @@ package cn.coderule.minimq.rpc.common.rpc.netty;
 
 import cn.coderule.common.lang.concurrent.thread.DefaultThreadFactory;
 import cn.coderule.minimq.rpc.common.rpc.RpcClient;
-import cn.coderule.minimq.rpc.common.rpc.config.RpcClientConfig;
+import cn.coderule.minimq.domain.config.network.RpcClientConfig;
 import cn.coderule.minimq.rpc.common.rpc.netty.codec.NettyDecoder;
 import cn.coderule.minimq.rpc.common.rpc.netty.codec.NettyEncoder;
 import cn.coderule.minimq.rpc.common.rpc.netty.service.NettyService;

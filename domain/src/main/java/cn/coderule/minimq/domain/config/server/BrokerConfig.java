@@ -7,6 +7,9 @@ import cn.coderule.minimq.domain.config.message.MessageConfig;
 import cn.coderule.minimq.domain.config.TimerConfig;
 import cn.coderule.minimq.domain.config.message.TopicConfig;
 import cn.coderule.minimq.domain.config.TransactionConfig;
+import cn.coderule.minimq.domain.config.network.GrpcConfig;
+import cn.coderule.minimq.domain.config.network.RpcClientConfig;
+import cn.coderule.minimq.domain.config.network.RpcServerConfig;
 import java.io.Serializable;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -54,10 +57,13 @@ public class BrokerConfig extends ServerIdentity implements Serializable {
 
     private MessageConfig messageConfig;
     private TopicConfig topicConfig;
-    private GrpcConfig grpcConfig;
     private TimerConfig timerConfig;
     private TransactionConfig transactionConfig;
     private TaskConfig taskConfig;
+
+    private GrpcConfig grpcConfig;
+    private RpcClientConfig rpcClientConfig;
+    private RpcServerConfig rpcServerConfig;
 
     public boolean isEnableRegister() {
         if (!enableBrokerRegister) {

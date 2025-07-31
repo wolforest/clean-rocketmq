@@ -15,6 +15,7 @@ import cn.coderule.minimq.broker.server.bootstrap.BrokerContext;
 import cn.coderule.minimq.broker.server.grpc.GrpcManager;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.service.common.ServerEventBus;
+import cn.coderule.minimq.rpc.common.rpc.netty.NettyClient;
 import cn.coderule.minimq.rpc.registry.route.RouteLoader;
 import cn.coderule.minimq.store.server.bootstrap.StoreContext;
 
@@ -48,6 +49,7 @@ public class ComponentRegister {
     }
 
     private void registerInfra() {
+        registerNettyClient();
         registerBrokerRegister();
         registerRouteLoader();
 
@@ -80,12 +82,13 @@ public class ComponentRegister {
 
     }
 
-    private void registerBrokerRegister() {
-        if (!brokerConfig.isEnableBrokerRegister()) {
-            return;
-        }
+    private void registerNettyClient() {
+        NettyClient component = new NettyClient(brokerConfig.getRpcClientConfig());
+        BrokerContext.register(component);
+    }
 
-        if (StringUtil.isBlank(brokerConfig.getRegistryAddress())) {
+    private void registerBrokerRegister() {
+        if (!brokerConfig.isEnableRegister()) {
             return;
         }
 

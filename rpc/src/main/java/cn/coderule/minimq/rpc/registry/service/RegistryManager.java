@@ -5,7 +5,7 @@ import cn.coderule.common.lang.concurrent.thread.DefaultThreadFactory;
 import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.common.util.lang.ThreadUtil;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
-import cn.coderule.minimq.rpc.common.rpc.config.RpcClientConfig;
+import cn.coderule.minimq.domain.config.network.RpcClientConfig;
 import cn.coderule.minimq.rpc.common.rpc.netty.NettyClient;
 import io.netty.channel.Channel;
 import io.netty.util.HashedWheelTimer;

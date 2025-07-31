@@ -1,5 +1,5 @@
 
-package cn.coderule.minimq.rpc.common.rpc.config;
+package cn.coderule.minimq.domain.config.network;
 
 public class RpcSystemConfig {
     public static final String COM_ROCKETMQ_REMOTING_NETTY_POOLED_BYTE_BUF_ALLOCATOR_ENABLE =

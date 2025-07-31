@@ -2,7 +2,7 @@ package cn.coderule.minimq.rpc.common.rpc.netty.service.helper;
 
 import cn.coderule.common.util.lang.ThreadUtil;
 import cn.coderule.common.util.net.NetworkUtil;
-import cn.coderule.minimq.rpc.common.rpc.config.RpcSystemConfig;
+import cn.coderule.minimq.domain.config.network.RpcSystemConfig;
 import cn.coderule.minimq.rpc.common.rpc.core.constant.AttributeKeys;
 import cn.coderule.minimq.rpc.common.rpc.core.invoke.RpcCommand;
 import cn.coderule.minimq.rpc.common.rpc.core.exception.RemotingCommandException;

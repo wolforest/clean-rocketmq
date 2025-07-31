@@ -3,7 +3,7 @@ package cn.coderule.minimq.rpc.common.rpc.netty.service.invoker;
 import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.common.util.net.NetworkUtil;
-import cn.coderule.minimq.rpc.common.rpc.config.RpcClientConfig;
+import cn.coderule.minimq.domain.config.network.RpcClientConfig;
 import cn.coderule.minimq.rpc.common.rpc.core.exception.RemotingConnectException;
 import cn.coderule.minimq.rpc.common.rpc.core.exception.RemotingTimeoutException;
 import cn.coderule.minimq.rpc.common.rpc.core.exception.RemotingTooMuchRequestException;

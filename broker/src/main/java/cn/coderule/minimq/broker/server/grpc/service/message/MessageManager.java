@@ -16,7 +16,7 @@ import cn.coderule.minimq.broker.server.grpc.activity.ConsumerActivity;
 import cn.coderule.minimq.broker.server.grpc.activity.ProducerActivity;
 import cn.coderule.minimq.broker.server.grpc.activity.RouteActivity;
 import cn.coderule.minimq.broker.server.bootstrap.BrokerContext;
-import cn.coderule.minimq.domain.config.server.GrpcConfig;
+import cn.coderule.minimq.domain.config.network.GrpcConfig;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import lombok.Getter;

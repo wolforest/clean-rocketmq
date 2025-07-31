@@ -4,7 +4,7 @@ import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.lang.concurrent.thread.pool.ThreadPoolFactory;
 import cn.coderule.common.lang.exception.SystemException;
 import cn.coderule.minimq.broker.server.grpc.service.message.MessageService;
-import cn.coderule.minimq.domain.config.server.GrpcConfig;
+import cn.coderule.minimq.domain.config.network.GrpcConfig;
 import io.grpc.Server;
 import io.grpc.netty.shaded.io.grpc.netty.NettyServerBuilder;
 import io.grpc.netty.shaded.io.netty.channel.epoll.EpollEventLoopGroup;

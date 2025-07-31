@@ -13,7 +13,7 @@ import cn.coderule.minimq.rpc.common.rpc.netty.handler.NettyServerHandler;
 import cn.coderule.minimq.rpc.common.rpc.netty.handler.RequestCodeCounter;
 import cn.coderule.minimq.rpc.common.rpc.netty.handler.ServerConnectionHandler;
 import cn.coderule.minimq.rpc.common.rpc.netty.service.NettyService;
-import cn.coderule.minimq.rpc.common.rpc.config.RpcServerConfig;
+import cn.coderule.minimq.domain.config.network.RpcServerConfig;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.ChannelFuture;

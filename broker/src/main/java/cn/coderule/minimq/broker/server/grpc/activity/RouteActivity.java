@@ -10,7 +10,7 @@ import apache.rocketmq.v2.Status;
 import cn.coderule.common.util.net.Address;
 import cn.coderule.minimq.broker.api.RouteController;
 import cn.coderule.minimq.broker.server.grpc.converter.RouteConverter;
-import cn.coderule.minimq.domain.config.server.GrpcConfig;
+import cn.coderule.minimq.domain.config.network.GrpcConfig;
 import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import cn.coderule.minimq.rpc.common.grpc.activity.ActivityHelper;
 import io.grpc.stub.StreamObserver;

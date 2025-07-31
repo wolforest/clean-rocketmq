@@ -1,4 +1,4 @@
-package cn.coderule.minimq.rpc.common.rpc.config;
+package cn.coderule.minimq.domain.config.network;
 
 import java.io.Serializable;
 import lombok.Data;

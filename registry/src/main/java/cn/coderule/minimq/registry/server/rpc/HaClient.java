@@ -6,7 +6,7 @@ import cn.coderule.minimq.domain.config.server.RegistryConfig;
 import cn.coderule.minimq.registry.domain.store.model.Route;
 import cn.coderule.minimq.registry.domain.store.model.StoreStatusInfo;
 import cn.coderule.minimq.rpc.common.rpc.RpcClient;
-import cn.coderule.minimq.rpc.common.rpc.config.RpcClientConfig;
+import cn.coderule.minimq.domain.config.network.RpcClientConfig;
 import cn.coderule.minimq.rpc.common.rpc.core.invoke.RpcCommand;
 import cn.coderule.minimq.rpc.common.rpc.netty.NettyClient;
 import cn.coderule.minimq.rpc.common.rpc.protocol.code.RequestCode;

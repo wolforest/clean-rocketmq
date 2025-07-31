@@ -3,7 +3,7 @@ package cn.coderule.minimq.store.server.ha.core;
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.util.net.NetworkUtil;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
-import cn.coderule.minimq.rpc.common.rpc.config.RpcSystemConfig;
+import cn.coderule.minimq.domain.config.network.RpcSystemConfig;
 import cn.coderule.minimq.store.server.ha.core.monitor.FlowMonitor;
 import cn.coderule.minimq.store.server.ha.server.ConnectionContext;
 import cn.coderule.minimq.store.server.ha.server.processor.SlaveOffsetReceiver;

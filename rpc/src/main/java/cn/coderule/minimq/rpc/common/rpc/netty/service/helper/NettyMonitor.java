@@ -2,7 +2,7 @@ package cn.coderule.minimq.rpc.common.rpc.netty.service.helper;
 
 import cn.coderule.common.lang.concurrent.thread.DefaultThreadFactory;
 import cn.coderule.common.util.lang.ThreadUtil;
-import cn.coderule.minimq.rpc.common.rpc.config.RpcServerConfig;
+import cn.coderule.minimq.domain.config.network.RpcServerConfig;
 import cn.coderule.minimq.rpc.common.rpc.netty.handler.RequestCodeCounter;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
