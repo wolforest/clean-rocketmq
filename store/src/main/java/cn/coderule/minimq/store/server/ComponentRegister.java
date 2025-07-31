@@ -51,6 +51,7 @@ public class ComponentRegister {
     }
 
     private void registerInfra() {
+        registerNettyClient();
         registerScheduler();
         registerMappedFileService();
         registerRegistry();
@@ -71,6 +72,12 @@ public class ComponentRegister {
     private void registerServer() {
         registerRpc();
         registerHA();
+    }
+
+    private void registerNettyClient() {
+        StoreConfig storeConfig = StoreContext.getBean(StoreConfig.class);
+        NettyClient component = new NettyClient(storeConfig.getRpcClientConfig());
+        StoreContext.register(component);
     }
 
     private void registerScheduler() {
@@ -129,6 +136,8 @@ public class ComponentRegister {
         manager.register(component);
         StoreContext.register(component);
     }
+
+
 
     private void registerRegistry() {
         StoreConfig storeConfig = StoreContext.getBean(StoreConfig.class);
