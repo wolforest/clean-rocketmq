@@ -81,6 +81,10 @@ public class ComponentRegister {
     }
 
     private void registerBrokerRegister() {
+        if (!brokerConfig.isEnableBrokerRegister()) {
+            return;
+        }
+
         if (StringUtil.isBlank(brokerConfig.getRegistryAddress())) {
             return;
         }

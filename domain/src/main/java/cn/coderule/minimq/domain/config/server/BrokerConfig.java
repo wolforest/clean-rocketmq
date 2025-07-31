@@ -33,6 +33,7 @@ public class BrokerConfig extends ServerIdentity implements Serializable {
     private int consumerThreadNum = SystemUtil.getProcessorNumber();
     private int consumerQueueCapacity = 10000;
 
+    private boolean enableBrokerRegister = false;
     private String registryAddress = "127.0.0.1:9876";
     // private String registryAddress = System.getProperty(RegistryUtils.NAMESRV_ADDR_PROPERTY, System.getenv(RegistryUtils.NAMESRV_ADDR_ENV));
     private boolean fetchRegistryAddressByDns = false;
