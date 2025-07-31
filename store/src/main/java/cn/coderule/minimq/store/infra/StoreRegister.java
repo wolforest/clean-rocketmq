@@ -11,6 +11,7 @@ import cn.coderule.minimq.domain.domain.meta.topic.TopicMap;
 import cn.coderule.minimq.domain.service.store.domain.meta.TopicService;
 import cn.coderule.minimq.domain.config.network.RpcClientConfig;
 import cn.coderule.minimq.domain.core.enums.RequestType;
+import cn.coderule.minimq.rpc.common.rpc.netty.NettyClient;
 import cn.coderule.minimq.rpc.registry.RegistryClient;
 import cn.coderule.minimq.rpc.registry.client.DefaultRegistryClient;
 import cn.coderule.minimq.rpc.registry.protocol.body.RegisterStoreResult;
@@ -29,10 +30,11 @@ public class StoreRegister implements Lifecycle {
     private final StoreConfig storeConfig;
     private final RegistryClient registryClient;
 
-    public StoreRegister(StoreConfig storeConfig) {
+    public StoreRegister(StoreConfig storeConfig, NettyClient nettyClient) {
         this.registryClient = new DefaultRegistryClient(
-            new RpcClientConfig(),
-            storeConfig.getRegistryAddress()
+            storeConfig.getRpcClientConfig(),
+            storeConfig.getRegistryAddress(),
+            nettyClient
         );
         this.storeConfig = storeConfig;
     }

@@ -2,6 +2,7 @@ package cn.coderule.minimq.rpc.registry.client;
 
 import cn.coderule.common.lang.concurrent.thread.DefaultThreadFactory;
 import cn.coderule.common.util.lang.ThreadUtil;
+import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.core.exception.RpcException;
 import cn.coderule.minimq.domain.config.network.RpcClientConfig;
 import cn.coderule.minimq.rpc.common.rpc.core.invoke.RpcCommand;
@@ -38,10 +39,15 @@ public class DefaultRegistryClient implements RegistryClient {
 
     private final StoreRegistryClient storeRegister;
 
-    public DefaultRegistryClient(RpcClientConfig config, String addressConfig) {
-        this.nettyClient = new NettyClient(config);
+    public DefaultRegistryClient(RpcClientConfig rpcClientConfig, String registryAddress, NettyClient nettyClient) {
+        this.nettyClient = nettyClient;
 
-        registryManager = new RegistryManager(config, addressConfig, nettyClient);
+        registryManager = new RegistryManager(
+            rpcClientConfig,
+            registryAddress,
+            nettyClient
+        );
+
         registerExecutor = initRegisterExecutor();
 
         storeRegister = new StoreRegistryClient(registryManager, nettyClient, registerExecutor);

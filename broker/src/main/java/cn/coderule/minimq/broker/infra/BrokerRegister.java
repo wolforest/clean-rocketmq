@@ -3,6 +3,7 @@ package cn.coderule.minimq.broker.infra;
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.config.network.RpcClientConfig;
+import cn.coderule.minimq.rpc.common.rpc.netty.NettyClient;
 import cn.coderule.minimq.rpc.registry.RegistryClient;
 import cn.coderule.minimq.rpc.registry.client.DefaultRegistryClient;
 import cn.coderule.minimq.domain.domain.cluster.cluster.BrokerInfo;
@@ -18,12 +19,9 @@ public class BrokerRegister implements Lifecycle {
     @Getter
     private final RegistryClient registryClient;
 
-    public BrokerRegister(BrokerConfig brokerConfig) {
+    public BrokerRegister(BrokerConfig brokerConfig, NettyClient nettyClient) {
         this.brokerConfig = brokerConfig;
-        this.registryClient = new DefaultRegistryClient(
-            new RpcClientConfig(),
-            brokerConfig.getRegistryAddress()
-        );
+        this.registryClient = new DefaultRegistryClient(brokerConfig, nettyClient);
     }
 
     @Override

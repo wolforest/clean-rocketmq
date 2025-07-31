@@ -10,6 +10,7 @@ import cn.coderule.minimq.domain.service.store.domain.index.IndexManager;
 import cn.coderule.minimq.domain.service.store.domain.mq.MQManager;
 import cn.coderule.minimq.domain.service.store.domain.meta.MetaManager;
 import cn.coderule.minimq.domain.service.store.domain.timer.TimerManager;
+import cn.coderule.minimq.rpc.common.rpc.netty.NettyClient;
 import cn.coderule.minimq.store.domain.commitlog.DefaultCommitLogManager;
 import cn.coderule.minimq.store.domain.consumequeue.DefaultConsumeQueueManager;
 import cn.coderule.minimq.store.domain.dispatcher.DefaultCommitLogDispatcherManager;
@@ -131,7 +132,8 @@ public class ComponentRegister {
 
     private void registerRegistry() {
         StoreConfig storeConfig = StoreContext.getBean(StoreConfig.class);
-        StoreRegister component = new StoreRegister(storeConfig);
+        NettyClient nettyClient = StoreContext.getBean(NettyClient.class);
+        StoreRegister component = new StoreRegister(storeConfig, nettyClient);
 
         manager.register(component);
         StoreContext.register(component);

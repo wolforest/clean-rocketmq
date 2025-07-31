@@ -92,7 +92,9 @@ public class ComponentRegister {
             return;
         }
 
-        BrokerRegister component = new BrokerRegister(brokerConfig);
+
+        NettyClient nettyClient = BrokerContext.getBean(NettyClient.class);
+        BrokerRegister component = new BrokerRegister(brokerConfig, nettyClient);
         manager.register(component);
         BrokerContext.register(component);
     }
