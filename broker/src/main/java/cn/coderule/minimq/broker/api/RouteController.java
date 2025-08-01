@@ -4,7 +4,6 @@ import cn.coderule.common.util.net.Address;
 import cn.coderule.minimq.broker.domain.meta.RouteService;
 import cn.coderule.minimq.broker.domain.meta.SubscriptionService;
 import cn.coderule.minimq.broker.domain.meta.TopicService;
-import cn.coderule.minimq.domain.config.message.TopicConfig;
 import cn.coderule.minimq.domain.core.enums.message.MessageType;
 import cn.coderule.minimq.domain.domain.meta.subscription.SubscriptionGroup;
 import cn.coderule.minimq.domain.domain.meta.topic.Topic;
@@ -17,14 +16,13 @@ import java.util.concurrent.ExecutionException;
 
 public class RouteController {
     private final RouteService routeService;
-    private final TopicConfig topicConfig;
+    private final TopicService topicService;
+    private final SubscriptionService subscriptionService;
 
-    private TopicService topicService;
-    private SubscriptionService subscriptionService;
-
-    public RouteController(TopicConfig topicConfig, RouteService routeService) {
+    public RouteController(RouteService routeService, TopicService topicService, SubscriptionService subscriptionService) {
         this.routeService = routeService;
-        this.topicConfig = topicConfig;
+        this.topicService = topicService;
+        this.subscriptionService = subscriptionService;
     }
 
     public Topic getTopic(String topicName) {

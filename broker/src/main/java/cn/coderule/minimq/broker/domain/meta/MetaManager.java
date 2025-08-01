@@ -8,6 +8,7 @@ import cn.coderule.minimq.broker.server.bootstrap.BrokerContext;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.config.message.TopicConfig;
 import cn.coderule.minimq.domain.core.exception.InvalidConfigException;
+import cn.coderule.minimq.domain.domain.meta.topic.TopicMap;
 import cn.coderule.minimq.rpc.registry.route.RouteLoader;
 
 public class MetaManager implements Lifecycle {
@@ -17,10 +18,10 @@ public class MetaManager implements Lifecycle {
         brokerConfig = BrokerContext.getBean(BrokerConfig.class);
 
         RouteService routeService = initRouteService();
-        BrokerContext.register(routeService);
+        TopicService topicService = initTopicService();
+        SubscriptionService subscriptionService = initSubscriptionService();
 
-        TopicConfig topicConfig = brokerConfig.getTopicConfig();
-        RouteController routeController = new RouteController(topicConfig, routeService);
+        RouteController routeController = new RouteController(routeService, topicService, subscriptionService);
         BrokerContext.register(routeController);
     }
 
@@ -32,6 +33,14 @@ public class MetaManager implements Lifecycle {
     @Override
     public void shutdown() throws Exception {
 
+    }
+
+    private TopicService initTopicService() {
+        return null;
+    }
+
+    private SubscriptionService initSubscriptionService() {
+        return null;
     }
 
     private RouteService initRouteService() {
@@ -51,7 +60,9 @@ public class MetaManager implements Lifecycle {
             throw new InvalidConfigException("invalid config: registryAddress and enableEmbedStore");
         }
 
-        return new RouteService(brokerConfig, routeLoader, routeMocker);
+        RouteService routeService = new RouteService(brokerConfig, routeLoader, routeMocker);
+        BrokerContext.register(routeService);
+        return routeService;
     }
 
 }
