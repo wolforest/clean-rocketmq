@@ -4,13 +4,17 @@ import cn.coderule.common.convention.container.ApplicationContext;
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.minimq.broker.server.bootstrap.BrokerContext;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
+import cn.coderule.minimq.domain.service.store.api.meta.SubscriptionStore;
+import cn.coderule.minimq.domain.service.store.api.meta.TopicStore;
 import cn.coderule.minimq.store.Store;
 import cn.coderule.minimq.store.server.bootstrap.StoreContext;
 import cn.coderule.minimq.store.server.bootstrap.StoreArgument;
 
 public class EmbedStoreManager implements Lifecycle {
     private BrokerConfig brokerConfig;
+
     private Store store;
+    private EmbedLoadBalance loadBalance;
 
     @Override
     public void initialize() throws Exception {
@@ -20,6 +24,7 @@ public class EmbedStoreManager implements Lifecycle {
         }
 
         initStore();
+        initLoadBalance();
     }
 
     @Override
@@ -54,6 +59,14 @@ public class EmbedStoreManager implements Lifecycle {
 
         ApplicationContext storeApi = StoreContext.API;
         BrokerContext.registerContext(storeApi);
+    }
+
+    private void initLoadBalance() {
+        TopicStore topicStore = BrokerContext.getBean(TopicStore.class);
+        SubscriptionStore subscriptionStore = BrokerContext.getBean(SubscriptionStore.class);
+
+        loadBalance = new EmbedLoadBalance(brokerConfig, topicStore, subscriptionStore);
+        BrokerContext.register(loadBalance);
     }
 
 }
