@@ -5,11 +5,13 @@ import cn.coderule.minimq.broker.infra.embed.EmbedConsumeOffsetStore;
 import cn.coderule.minimq.broker.infra.embed.EmbedMQStore;
 import cn.coderule.minimq.broker.infra.embed.EmbedStoreManager;
 import cn.coderule.minimq.broker.infra.embed.EmbedSubscriptionStore;
+import cn.coderule.minimq.broker.infra.embed.EmbedTimerStore;
 import cn.coderule.minimq.broker.infra.embed.EmbedTopicStore;
 import cn.coderule.minimq.broker.infra.remote.RemoteConsumeOffsetStore;
 import cn.coderule.minimq.broker.infra.remote.RemoteMQStore;
 import cn.coderule.minimq.broker.infra.remote.RemoteStoreManager;
 import cn.coderule.minimq.broker.infra.remote.RemoteSubscriptionStore;
+import cn.coderule.minimq.broker.infra.remote.RemoteTimerStore;
 import cn.coderule.minimq.broker.infra.remote.RemoteTopicStore;
 import cn.coderule.minimq.broker.server.bootstrap.BrokerContext;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
@@ -47,6 +49,7 @@ public class StoreManager implements Lifecycle {
 
     private void initServices() {
         initMQStore();
+        initTimerStore();
 
         initTopicStore();
         initSubscriptionStore();
@@ -79,5 +82,12 @@ public class StoreManager implements Lifecycle {
         RemoteSubscriptionStore remoteStore = BrokerContext.getBean(RemoteSubscriptionStore.class);
         SubscriptionStore subscriptionStore = new SubscriptionStore(brokerConfig, embedStore, remoteStore);
         BrokerContext.register(subscriptionStore);
+    }
+
+    private void initTimerStore() {
+        EmbedTimerStore embedStore = BrokerContext.getBean(EmbedTimerStore.class);
+        RemoteTimerStore remoteStore = BrokerContext.getBean(RemoteTimerStore.class);
+        TimerStore timerStore = new TimerStore(brokerConfig, embedStore, remoteStore);
+        BrokerContext.register(timerStore);
     }
 }
