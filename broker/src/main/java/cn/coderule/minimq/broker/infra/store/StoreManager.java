@@ -1,8 +1,10 @@
 package cn.coderule.minimq.broker.infra.store;
 
 import cn.coderule.common.convention.service.Lifecycle;
+import cn.coderule.minimq.broker.infra.embed.EmbedConsumeOffsetStore;
 import cn.coderule.minimq.broker.infra.embed.EmbedMQStore;
 import cn.coderule.minimq.broker.infra.embed.EmbedStoreManager;
+import cn.coderule.minimq.broker.infra.remote.RemoteConsumeOffsetStore;
 import cn.coderule.minimq.broker.infra.remote.RemoteMQStore;
 import cn.coderule.minimq.broker.infra.remote.RemoteStoreManager;
 import cn.coderule.minimq.broker.server.bootstrap.BrokerContext;
@@ -40,7 +42,8 @@ public class StoreManager implements Lifecycle {
     }
 
     private void initServices() {
-
+        initMQStore();
+        initConsumeOffsetStore();
     }
 
     private void initMQStore() {
@@ -48,5 +51,12 @@ public class StoreManager implements Lifecycle {
         RemoteMQStore remoteMQStore = BrokerContext.getBean(RemoteMQStore.class);
         MQStore mqStore = new MQStore(brokerConfig, embedMQStore, remoteMQStore);
         BrokerContext.register(mqStore);
+    }
+
+    private void initConsumeOffsetStore() {
+        EmbedConsumeOffsetStore embedStore = BrokerContext.getBean(EmbedConsumeOffsetStore.class);
+        RemoteConsumeOffsetStore remoteStore = BrokerContext.getBean(RemoteConsumeOffsetStore.class);
+        ConsumeOffsetStore consumeOffsetStore = new ConsumeOffsetStore(brokerConfig, embedStore, remoteStore);
+        BrokerContext.register(consumeOffsetStore);
     }
 }
