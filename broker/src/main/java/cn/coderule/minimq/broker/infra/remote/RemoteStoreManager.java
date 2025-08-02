@@ -28,32 +28,32 @@ public class RemoteStoreManager implements Lifecycle {
 
     @Override
     public void start() throws Exception {
-        if (!brokerConfig.isEnableRemoteStore()) {
-            return;
-        }
+
     }
 
     @Override
     public void shutdown() throws Exception {
-        if (!brokerConfig.isEnableRemoteStore()) {
-            return;
-        }
     }
 
     private void initServices() {
-        RemoteMQStore mqStore = new RemoteMQStore(brokerConfig, loadBalance, rpcClient);
+        RemoteMQStore mqStore =
+            new RemoteMQStore(brokerConfig, loadBalance, rpcClient);
         BrokerContext.register(mqStore);
 
-        RemoteTopicStore topicStore = new RemoteTopicStore(brokerConfig, loadBalance, rpcClient);
+        RemoteTopicStore topicStore =
+            new RemoteTopicStore(brokerConfig, loadBalance, rpcClient);
         BrokerContext.register(topicStore);
 
-        RemoteSubscriptionStore subscriptionStore = new RemoteSubscriptionStore(brokerConfig, loadBalance, rpcClient);
+        RemoteSubscriptionStore subscriptionStore =
+            new RemoteSubscriptionStore(brokerConfig, loadBalance, rpcClient);
         BrokerContext.register(subscriptionStore);
 
-        RemoteConsumeOffsetStore consumeOffsetStore = new RemoteConsumeOffsetStore(brokerConfig, loadBalance, rpcClient);
+        RemoteConsumeOffsetStore consumeOffsetStore =
+            new RemoteConsumeOffsetStore(brokerConfig, loadBalance, rpcClient);
         BrokerContext.register(consumeOffsetStore);
 
-        RemoteTimerStore timerStore = new RemoteTimerStore(brokerConfig, loadBalance, rpcClient);
+        RemoteTimerStore timerStore =
+            new RemoteTimerStore(brokerConfig, loadBalance, rpcClient);
         BrokerContext.register(timerStore);
 
     }

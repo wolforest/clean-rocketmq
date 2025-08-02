@@ -1,34 +1,52 @@
 package cn.coderule.minimq.broker.infra.store;
 
 import cn.coderule.common.convention.service.Lifecycle;
+import cn.coderule.minimq.broker.infra.embed.EmbedMQStore;
 import cn.coderule.minimq.broker.infra.embed.EmbedStoreManager;
+import cn.coderule.minimq.broker.infra.remote.RemoteMQStore;
 import cn.coderule.minimq.broker.infra.remote.RemoteStoreManager;
+import cn.coderule.minimq.broker.server.bootstrap.BrokerContext;
+import cn.coderule.minimq.domain.config.server.BrokerConfig;
 
 public class StoreManager implements Lifecycle {
-    private final EmbedStoreManager embedStoreManager;
-    private final RemoteStoreManager remoteStoreManager;
+    private BrokerConfig brokerConfig;
+    private final EmbedStoreManager embedManager;
+    private final RemoteStoreManager remoteManager;
 
     public StoreManager() {
-        this.embedStoreManager = new EmbedStoreManager();
-        this.remoteStoreManager = new RemoteStoreManager();
+        this.embedManager = new EmbedStoreManager();
+        this.remoteManager = new RemoteStoreManager();
     }
 
     @Override
     public void initialize() throws Exception {
-        embedStoreManager.initialize();
-        remoteStoreManager.initialize();
+        this.brokerConfig = BrokerContext.getBean(BrokerConfig.class);
+
+        embedManager.initialize();
+        remoteManager.initialize();
     }
 
     @Override
     public void start() throws Exception {
-        embedStoreManager.start();
-        remoteStoreManager.start();
+        embedManager.start();
+        remoteManager.start();
 
     }
 
     @Override
     public void shutdown() throws Exception {
-        embedStoreManager.shutdown();
-        remoteStoreManager.shutdown();
+        embedManager.shutdown();
+        remoteManager.shutdown();
+    }
+
+    private void initServices() {
+
+    }
+
+    private void initMQStore() {
+        EmbedMQStore embedMQStore = BrokerContext.getBean(EmbedMQStore.class);
+        RemoteMQStore remoteMQStore = BrokerContext.getBean(RemoteMQStore.class);
+        MQStore mqStore = new MQStore(brokerConfig, embedMQStore, remoteMQStore);
+        BrokerContext.register(mqStore);
     }
 }
