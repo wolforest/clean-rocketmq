@@ -8,9 +8,9 @@ public class StoreManager implements Lifecycle {
     private final EmbedStoreManager embedStoreManager;
     private final RemoteStoreManager remoteStoreManager;
 
-    public StoreManager(EmbedStoreManager embedStoreManager, RemoteStoreManager remoteStoreManager) {
-        this.embedStoreManager = embedStoreManager;
-        this.remoteStoreManager = remoteStoreManager;
+    public StoreManager() {
+        this.embedStoreManager = new EmbedStoreManager();
+        this.remoteStoreManager = new RemoteStoreManager();
     }
 
     @Override
