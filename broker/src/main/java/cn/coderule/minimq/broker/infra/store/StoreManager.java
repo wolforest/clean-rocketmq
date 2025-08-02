@@ -32,6 +32,8 @@ public class StoreManager implements Lifecycle {
 
         embedManager.initialize();
         remoteManager.initialize();
+
+        initServices();
     }
 
     @Override
