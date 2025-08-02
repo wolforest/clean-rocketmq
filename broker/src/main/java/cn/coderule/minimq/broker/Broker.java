@@ -3,7 +3,6 @@ package cn.coderule.minimq.broker;
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.convention.service.LifecycleManager;
 import cn.coderule.minimq.broker.server.ComponentRegister;
-import cn.coderule.minimq.broker.server.bootstrap.ConfigLoader;
 import cn.coderule.minimq.broker.server.bootstrap.ContextInitializer;
 import lombok.extern.slf4j.Slf4j;
 
@@ -43,7 +42,6 @@ public class Broker implements Lifecycle {
     @Override
     public void initialize() throws Exception {
         ContextInitializer.init(args);
-        ConfigLoader.load();
 
         this.componentManager = ComponentRegister.register();
         this.componentManager.initialize();

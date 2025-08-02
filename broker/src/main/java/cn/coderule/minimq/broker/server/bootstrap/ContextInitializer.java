@@ -15,6 +15,7 @@ public class ContextInitializer {
     }
 
     public void initialize() {
+        ConfigLoader.load();
     }
 
 }

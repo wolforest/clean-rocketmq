@@ -36,6 +36,7 @@ public class ComponentRegister {
 
     public LifecycleManager execute() {
         registerLib();
+
         registerInfra();
         registerDomain();
         registerServer();
