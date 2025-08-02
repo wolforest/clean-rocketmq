@@ -2,6 +2,12 @@ package cn.coderule.minimq.broker.server.bootstrap;
 
 import cn.coderule.minimq.domain.service.common.ServerEventBus;
 
+/**
+ * context initializer
+ *  - parse command line arguments
+ *  - load broker configuration
+ *  - init broker libs
+ */
 public class ContextInitializer {
     private final String[] args;
     private final BrokerArgument argument;
