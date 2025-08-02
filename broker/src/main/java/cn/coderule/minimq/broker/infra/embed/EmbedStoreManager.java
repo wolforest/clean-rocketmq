@@ -4,6 +4,9 @@ import cn.coderule.common.convention.container.ApplicationContext;
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.minimq.broker.server.bootstrap.BrokerContext;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
+import cn.coderule.minimq.domain.service.store.api.MQStore;
+import cn.coderule.minimq.domain.service.store.api.TimerStore;
+import cn.coderule.minimq.domain.service.store.api.meta.ConsumeOffsetStore;
 import cn.coderule.minimq.domain.service.store.api.meta.SubscriptionStore;
 import cn.coderule.minimq.domain.service.store.api.meta.TopicStore;
 import cn.coderule.minimq.store.Store;
@@ -25,6 +28,7 @@ public class EmbedStoreManager implements Lifecycle {
 
         initStore();
         initLoadBalance();
+        initEmbedServices();
     }
 
     @Override
@@ -34,8 +38,6 @@ public class EmbedStoreManager implements Lifecycle {
         }
 
         store.start();
-
-
     }
 
     @Override
@@ -67,6 +69,28 @@ public class EmbedStoreManager implements Lifecycle {
 
         loadBalance = new EmbedLoadBalance(brokerConfig, topicStore, subscriptionStore);
         BrokerContext.register(loadBalance);
+    }
+
+    private void initEmbedServices() {
+        MQStore mqStore = BrokerContext.getBean(MQStore.class);
+        EmbedMQStore embedMQStore = new EmbedMQStore(mqStore, loadBalance);
+        BrokerContext.register(embedMQStore);
+
+        TopicStore topicStore = BrokerContext.getBean(TopicStore.class);
+        EmbedTopicStore embedTopicStore = new EmbedTopicStore(topicStore, loadBalance);
+        BrokerContext.register(embedTopicStore);
+
+        SubscriptionStore subscriptionStore = BrokerContext.getBean(SubscriptionStore.class);
+        EmbedSubscriptionStore embedSubscriptionStore = new EmbedSubscriptionStore(subscriptionStore, loadBalance);
+        BrokerContext.register(embedSubscriptionStore);
+
+        ConsumeOffsetStore consumeOffsetStore = BrokerContext.getBean(ConsumeOffsetStore.class);
+        EmbedConsumeOffsetStore embedConsumeOffsetStore = new EmbedConsumeOffsetStore(consumeOffsetStore, loadBalance);
+        BrokerContext.register(embedConsumeOffsetStore);
+
+        TimerStore timerStore = BrokerContext.getBean(TimerStore.class);
+        EmbedTimerStore embedTimerStore = new EmbedTimerStore(timerStore, loadBalance);
+        BrokerContext.register(embedTimerStore);
     }
 
 }
