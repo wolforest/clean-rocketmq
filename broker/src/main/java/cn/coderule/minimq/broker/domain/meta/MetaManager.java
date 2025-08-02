@@ -4,14 +4,13 @@ import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.minimq.broker.api.RouteController;
 import cn.coderule.minimq.broker.infra.embed.EmbedTopicStore;
+import cn.coderule.minimq.broker.infra.store.SubscriptionStore;
 import cn.coderule.minimq.broker.infra.store.TopicStore;
 import cn.coderule.minimq.broker.server.bootstrap.BrokerContext;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.config.message.TopicConfig;
 import cn.coderule.minimq.domain.core.exception.InvalidConfigException;
-import cn.coderule.minimq.domain.domain.meta.topic.TopicMap;
 import cn.coderule.minimq.rpc.registry.route.RouteLoader;
-import cn.coderule.minimq.rpc.store.facade.TopicFacade;
 import cn.coderule.minimq.store.server.bootstrap.StoreContext;
 
 public class MetaManager implements Lifecycle {
@@ -39,12 +38,13 @@ public class MetaManager implements Lifecycle {
     }
 
     private TopicService initTopicService() {
-        TopicFacade topicFacade = StoreContext.getBean(TopicStore.class);
-        return new TopicService(topicFacade);
+        TopicStore topicStore = StoreContext.getBean(TopicStore.class);
+        return new TopicService(topicStore);
     }
 
     private SubscriptionService initSubscriptionService() {
-        return null;
+        SubscriptionStore subscriptionStore = StoreContext.getBean(SubscriptionStore.class);
+        return new SubscriptionService(subscriptionStore);
     }
 
     private RouteService initRouteService() {
