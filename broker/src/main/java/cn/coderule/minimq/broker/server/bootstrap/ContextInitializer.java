@@ -1,5 +1,7 @@
 package cn.coderule.minimq.broker.server.bootstrap;
 
+import cn.coderule.minimq.domain.service.common.ServerEventBus;
+
 public class ContextInitializer {
     private final String[] args;
     private final BrokerArgument argument;
@@ -16,6 +18,12 @@ public class ContextInitializer {
 
     public void initialize() {
         ConfigLoader.load();
+        initLibs();
+    }
+
+    private void initLibs() {
+        ServerEventBus manager = new ServerEventBus();
+        BrokerContext.register(manager);
     }
 
 }
