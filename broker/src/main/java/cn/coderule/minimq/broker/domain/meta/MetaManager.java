@@ -13,6 +13,11 @@ import cn.coderule.minimq.domain.core.exception.InvalidConfigException;
 import cn.coderule.minimq.rpc.registry.route.RouteLoader;
 import cn.coderule.minimq.store.server.bootstrap.StoreContext;
 
+/**
+ * dependency management for meta
+ *  - initialize meta servers
+ *  - nothing to start/shutdown
+ */
 public class MetaManager implements Lifecycle {
     private BrokerConfig brokerConfig;
     @Override
@@ -29,12 +34,12 @@ public class MetaManager implements Lifecycle {
 
     @Override
     public void start() throws Exception {
-
+        // nothing to do
     }
 
     @Override
     public void shutdown() throws Exception {
-
+        // nothing to do
     }
 
     private TopicService initTopicService() {
