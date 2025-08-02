@@ -9,6 +9,7 @@ import cn.coderule.minimq.broker.domain.timer.TimerManager;
 import cn.coderule.minimq.broker.domain.transaction.TransactionManager;
 import cn.coderule.minimq.broker.infra.BrokerRegister;
 import cn.coderule.minimq.broker.infra.store.StoreManager;
+import cn.coderule.minimq.broker.infra.task.TaskManager;
 import cn.coderule.minimq.broker.server.bootstrap.BrokerContext;
 import cn.coderule.minimq.broker.server.grpc.GrpcManager;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
@@ -44,6 +45,7 @@ public class ComponentRegister {
         registerBrokerRegister();
 
         registerStore();
+        registerTask();
     }
 
     private void registerDomain() {
@@ -88,6 +90,11 @@ public class ComponentRegister {
         BrokerRegister register = BrokerContext.getBean(BrokerRegister.class);
         RouteLoader loader = new RouteLoader(register.getRegistryClient());
         manager.register(loader);
+    }
+
+    private void registerTask() {
+        TaskManager component = new TaskManager();
+        manager.register(component);
     }
 
     private void registerStore() {

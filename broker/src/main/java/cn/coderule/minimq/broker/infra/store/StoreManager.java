@@ -40,7 +40,6 @@ public class StoreManager implements Lifecycle {
     public void start() throws Exception {
         embedManager.start();
         remoteManager.start();
-
     }
 
     @Override
