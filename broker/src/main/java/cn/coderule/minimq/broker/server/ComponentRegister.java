@@ -44,7 +44,6 @@ public class ComponentRegister {
     private void registerInfra() {
         registerNettyClient();
         registerBrokerRegister();
-        registerRouteLoader();
 
         registerEmbedStore();
         registerRemoteStore();
@@ -81,20 +80,24 @@ public class ComponentRegister {
     }
 
     private void registerBrokerRegister() {
-        NettyClient nettyClient = BrokerContext.getBean(NettyClient.class);
-        BrokerRegister component = new BrokerRegister(brokerConfig, nettyClient);
-        manager.register(component);
-        BrokerContext.register(component);
-    }
-
-    private void registerRouteLoader() {
         if (StringUtil.isBlank(brokerConfig.getRegistryAddress())) {
             return;
         }
 
-        BrokerRegister register = BrokerContext.getBean(BrokerRegister.class);
-        RouteLoader component = new RouteLoader(register.getRegistryClient());
+        NettyClient nettyClient = BrokerContext.getBean(NettyClient.class);
+        BrokerRegister component = new BrokerRegister(brokerConfig, nettyClient);
         manager.register(component);
+        BrokerContext.register(component);
+
+        BrokerRegister register = BrokerContext.getBean(BrokerRegister.class);
+        RouteLoader loader = new RouteLoader(register.getRegistryClient());
+        manager.register(loader);
+    }
+
+    private void registerRouteLoader() {
+
+
+
     }
 
     private void registerEmbedStore() {
