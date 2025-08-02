@@ -8,8 +8,6 @@ import cn.coderule.minimq.broker.domain.meta.MetaManager;
 import cn.coderule.minimq.broker.domain.timer.TimerManager;
 import cn.coderule.minimq.broker.domain.transaction.TransactionManager;
 import cn.coderule.minimq.broker.infra.BrokerRegister;
-import cn.coderule.minimq.broker.infra.embed.EmbedStoreManager;
-import cn.coderule.minimq.broker.infra.remote.RemoteStoreManager;
 import cn.coderule.minimq.broker.infra.store.StoreManager;
 import cn.coderule.minimq.broker.server.bootstrap.BrokerContext;
 import cn.coderule.minimq.broker.server.grpc.GrpcManager;
@@ -45,8 +43,6 @@ public class ComponentRegister {
         registerNettyClient();
         registerBrokerRegister();
 
-        registerEmbedStore();
-        registerRemoteStore();
         registerStore();
     }
 
@@ -92,22 +88,6 @@ public class ComponentRegister {
         BrokerRegister register = BrokerContext.getBean(BrokerRegister.class);
         RouteLoader loader = new RouteLoader(register.getRegistryClient());
         manager.register(loader);
-    }
-
-    private void registerRouteLoader() {
-
-
-
-    }
-
-    private void registerEmbedStore() {
-        EmbedStoreManager component = new EmbedStoreManager();
-        manager.register(component);
-    }
-
-    private void registerRemoteStore() {
-        RemoteStoreManager component = new RemoteStoreManager();
-        manager.register(component);
     }
 
     private void registerStore() {
