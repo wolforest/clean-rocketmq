@@ -10,7 +10,7 @@ import cn.coderule.minimq.domain.core.constant.flag.MessageSysFlag;
 import cn.coderule.minimq.domain.core.enums.code.InvalidCode;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.domain.cluster.RequestContext;
-import cn.coderule.minimq.rpc.common.grpc.core.exception.GrpcException;
+import cn.coderule.minimq.rpc.common.core.exception.RequestException;
 import com.google.protobuf.Timestamp;
 import com.google.protobuf.util.Durations;
 import com.google.protobuf.util.Timestamps;
@@ -72,7 +72,7 @@ public class MessageConverter {
     private static void setMessageId(Map<String, String> properties, Message message) {
         String messageId = message.getSystemProperties().getMessageId();
         if (StringUtil.isBlank(messageId)) {
-            throw new GrpcException(InvalidCode.ILLEGAL_MESSAGE_ID, "message id can not be blank");
+            throw new RequestException(InvalidCode.ILLEGAL_MESSAGE_ID, "message id can not be blank");
         }
         properties.put(MessageConst.PROPERTY_UNIQ_CLIENT_MESSAGE_ID_KEYIDX, messageId);
     }

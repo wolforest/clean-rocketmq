@@ -16,7 +16,7 @@ import cn.coderule.minimq.rpc.broker.rpc.protocol.body.ConsumeMessageDirectlyRes
 import cn.coderule.minimq.rpc.broker.rpc.protocol.body.ConsumerRunningInfo;
 import cn.coderule.minimq.rpc.common.core.relay.RelayService;
 import cn.coderule.minimq.rpc.common.core.relay.response.Result;
-import cn.coderule.minimq.rpc.common.grpc.core.exception.GrpcException;
+import cn.coderule.minimq.rpc.common.core.exception.RequestException;
 import cn.coderule.minimq.rpc.common.grpc.response.ResponseBuilder;
 import cn.coderule.minimq.rpc.common.rpc.protocol.code.ResponseCode;
 import io.grpc.Status;
@@ -261,11 +261,11 @@ public class TelemetryService {
     }
 
     private StatusRuntimeException initGrpcException(Throwable t) {
-        if (!(t instanceof GrpcException grpcException)) {
+        if (!(t instanceof RequestException requestException)) {
             return null;
         }
 
-        int code = grpcException.getInvalidCode().getCode();
+        int code = requestException.getInvalidCode().getCode();
         if (code >= Code.INTERNAL_ERROR_VALUE || code < Code.BAD_REQUEST_VALUE) {
             return null;
         }

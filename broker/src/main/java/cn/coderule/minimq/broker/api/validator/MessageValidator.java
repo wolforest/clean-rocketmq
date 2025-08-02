@@ -5,7 +5,7 @@ import cn.coderule.minimq.domain.config.message.MessageConfig;
 import cn.coderule.minimq.domain.core.enums.code.InvalidCode;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.domain.meta.topic.TopicValidator;
-import cn.coderule.minimq.rpc.common.grpc.core.exception.GrpcException;
+import cn.coderule.minimq.rpc.common.core.exception.RequestException;
 import com.google.common.base.CharMatcher;
 
 public class MessageValidator {
@@ -37,11 +37,11 @@ public class MessageValidator {
         }
 
         if (StringUtil.isBlank(key)) {
-            throw new GrpcException(InvalidCode.ILLEGAL_MESSAGE_KEY, "message can't be blank");
+            throw new RequestException(InvalidCode.ILLEGAL_MESSAGE_KEY, "message can't be blank");
         }
 
         if (containControlCharacter(key)) {
-            throw new GrpcException(InvalidCode.ILLEGAL_MESSAGE_KEY, "message key can't contain control character");
+            throw new RequestException(InvalidCode.ILLEGAL_MESSAGE_KEY, "message key can't contain control character");
         }
     }
 
@@ -60,13 +60,13 @@ public class MessageValidator {
         }
 
         if (StringUtil.isBlank(tag)) {
-            throw new GrpcException(InvalidCode.ILLEGAL_MESSAGE_TAG, "tag cannot be the char sequence of whitespace");
+            throw new RequestException(InvalidCode.ILLEGAL_MESSAGE_TAG, "tag cannot be the char sequence of whitespace");
         }
         if (tag.contains("|")) {
-            throw new GrpcException(InvalidCode.ILLEGAL_MESSAGE_TAG, "tag cannot contain '|'");
+            throw new RequestException(InvalidCode.ILLEGAL_MESSAGE_TAG, "tag cannot contain '|'");
         }
         if (containControlCharacter(tag)) {
-            throw new GrpcException(InvalidCode.ILLEGAL_MESSAGE_TAG, "tag cannot contain control character");
+            throw new RequestException(InvalidCode.ILLEGAL_MESSAGE_TAG, "tag cannot contain control character");
         }
     }
 
