@@ -4,9 +4,11 @@ import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.minimq.broker.infra.embed.EmbedConsumeOffsetStore;
 import cn.coderule.minimq.broker.infra.embed.EmbedMQStore;
 import cn.coderule.minimq.broker.infra.embed.EmbedStoreManager;
+import cn.coderule.minimq.broker.infra.embed.EmbedSubscriptionStore;
 import cn.coderule.minimq.broker.infra.remote.RemoteConsumeOffsetStore;
 import cn.coderule.minimq.broker.infra.remote.RemoteMQStore;
 import cn.coderule.minimq.broker.infra.remote.RemoteStoreManager;
+import cn.coderule.minimq.broker.infra.remote.RemoteSubscriptionStore;
 import cn.coderule.minimq.broker.server.bootstrap.BrokerContext;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 
@@ -43,6 +45,8 @@ public class StoreManager implements Lifecycle {
 
     private void initServices() {
         initMQStore();
+
+        initSubscriptionStore();
         initConsumeOffsetStore();
     }
 
@@ -58,5 +62,12 @@ public class StoreManager implements Lifecycle {
         RemoteConsumeOffsetStore remoteStore = BrokerContext.getBean(RemoteConsumeOffsetStore.class);
         ConsumeOffsetStore consumeOffsetStore = new ConsumeOffsetStore(brokerConfig, embedStore, remoteStore);
         BrokerContext.register(consumeOffsetStore);
+    }
+
+    private void initSubscriptionStore() {
+        EmbedSubscriptionStore embedStore = BrokerContext.getBean(EmbedSubscriptionStore.class);
+        RemoteSubscriptionStore remoteStore = BrokerContext.getBean(RemoteSubscriptionStore.class);
+        SubscriptionStore subscriptionStore = new SubscriptionStore(brokerConfig, embedStore, remoteStore);
+        BrokerContext.register(subscriptionStore);
     }
 }
