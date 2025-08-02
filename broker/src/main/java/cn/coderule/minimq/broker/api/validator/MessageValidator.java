@@ -31,8 +31,18 @@ public class MessageValidator {
 
     }
 
-    private void validateMessageKey() {
+    private void validateMessageKey(String key) {
+        if (StringUtil.isEmpty(key)) {
+            return;
+        }
 
+        if (StringUtil.isBlank(key)) {
+            throw new GrpcException(InvalidCode.ILLEGAL_MESSAGE_KEY, "message can't be blank");
+        }
+
+        if (containControlCharacter(key)) {
+            throw new GrpcException(InvalidCode.ILLEGAL_MESSAGE_KEY, "message key can't contain control character");
+        }
     }
 
     private void validateDelayTime() {
