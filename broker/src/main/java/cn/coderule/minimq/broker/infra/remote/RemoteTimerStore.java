@@ -6,14 +6,14 @@ import cn.coderule.minimq.domain.domain.timer.ScanResult;
 import cn.coderule.minimq.domain.domain.timer.TimerEvent;
 import cn.coderule.minimq.domain.domain.timer.state.TimerCheckpoint;
 import cn.coderule.minimq.rpc.common.rpc.RpcClient;
-import cn.coderule.minimq.rpc.store.client.MQClient;
+import cn.coderule.minimq.rpc.store.client.TimerClient;
 import cn.coderule.minimq.rpc.store.facade.TimerFacade;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 public class RemoteTimerStore extends AbstractRemoteStore implements TimerFacade {
     private final BrokerConfig brokerConfig;
-    private final ConcurrentMap<String, MQClient> clientMap;
+    private final ConcurrentMap<String, TimerClient> clientMap;
     private final RpcClient rpcClient;
 
     public RemoteTimerStore(BrokerConfig brokerConfig, RemoteLoadBalance loadBalance, RpcClient rpcClient) {

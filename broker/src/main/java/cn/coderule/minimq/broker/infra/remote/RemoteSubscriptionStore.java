@@ -1,13 +1,21 @@
 package cn.coderule.minimq.broker.infra.remote;
 
+import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.domain.meta.subscription.SubscriptionGroup;
 import cn.coderule.minimq.domain.domain.meta.subscription.SubscriptionRequest;
+import cn.coderule.minimq.rpc.common.rpc.RpcClient;
 import cn.coderule.minimq.rpc.store.facade.SubscriptionFacade;
 import java.util.concurrent.CompletableFuture;
 
 public class RemoteSubscriptionStore extends AbstractRemoteStore implements SubscriptionFacade {
-    public RemoteSubscriptionStore(RemoteLoadBalance loadBalance) {
+    private final BrokerConfig brokerConfig;
+    private final RpcClient rpcClient;
+
+    public RemoteSubscriptionStore(BrokerConfig brokerConfig, RemoteLoadBalance loadBalance, RpcClient rpcClient) {
         super(loadBalance);
+
+        this.brokerConfig = brokerConfig;
+        this.rpcClient = rpcClient;
     }
 
     @Override

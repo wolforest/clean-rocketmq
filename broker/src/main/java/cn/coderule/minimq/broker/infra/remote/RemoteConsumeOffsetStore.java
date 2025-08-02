@@ -1,15 +1,23 @@
 package cn.coderule.minimq.broker.infra.remote;
 
+import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.domain.meta.offset.GroupResult;
 import cn.coderule.minimq.domain.domain.meta.offset.OffsetFilter;
 import cn.coderule.minimq.domain.domain.meta.offset.OffsetRequest;
 import cn.coderule.minimq.domain.domain.meta.offset.OffsetResult;
 import cn.coderule.minimq.domain.domain.meta.offset.TopicResult;
+import cn.coderule.minimq.rpc.common.rpc.RpcClient;
 import cn.coderule.minimq.rpc.store.facade.ConsumeOffsetFacade;
 
 public class RemoteConsumeOffsetStore extends AbstractRemoteStore implements ConsumeOffsetFacade {
-    public RemoteConsumeOffsetStore(RemoteLoadBalance loadBalance) {
+    private final BrokerConfig brokerConfig;
+    private final RpcClient rpcClient;
+
+    public RemoteConsumeOffsetStore(BrokerConfig brokerConfig, RemoteLoadBalance loadBalance, RpcClient rpcClient) {
         super(loadBalance);
+
+        this.brokerConfig = brokerConfig;
+        this.rpcClient = rpcClient;
     }
     @Override
     public OffsetResult getOffset(OffsetRequest request) {

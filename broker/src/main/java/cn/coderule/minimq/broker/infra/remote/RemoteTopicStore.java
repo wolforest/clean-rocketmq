@@ -1,13 +1,21 @@
 package cn.coderule.minimq.broker.infra.remote;
 
+import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.domain.meta.topic.Topic;
 import cn.coderule.minimq.domain.domain.meta.topic.TopicRequest;
+import cn.coderule.minimq.rpc.common.rpc.RpcClient;
 import cn.coderule.minimq.rpc.store.facade.TopicFacade;
 import java.util.concurrent.CompletableFuture;
 
 public class RemoteTopicStore extends AbstractRemoteStore implements TopicFacade {
-    public RemoteTopicStore(RemoteLoadBalance loadBalance) {
+    private final BrokerConfig brokerConfig;
+    private final RpcClient rpcClient;
+
+    public RemoteTopicStore(BrokerConfig brokerConfig, RemoteLoadBalance loadBalance, RpcClient rpcClient) {
         super(loadBalance);
+
+        this.brokerConfig = brokerConfig;
+        this.rpcClient = rpcClient;
     }
 
     @Override
