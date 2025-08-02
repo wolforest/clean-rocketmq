@@ -16,8 +16,6 @@ public class TaskManager implements Lifecycle {
         taskLoader = new DefaultTaskLoader(taskContext);
     }
 
-
-
     @Override
     public void start() throws Exception {
         taskLoader.load();

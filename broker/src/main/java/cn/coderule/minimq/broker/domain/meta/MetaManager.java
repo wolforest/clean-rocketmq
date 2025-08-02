@@ -29,7 +29,7 @@ public class MetaManager implements Lifecycle {
         SubscriptionService subscriptionService = initSubscriptionService();
 
         RouteController routeController = new RouteController(routeService, topicService, subscriptionService);
-        BrokerContext.register(routeController);
+        BrokerContext.registerAPI(routeController);
     }
 
     @Override
