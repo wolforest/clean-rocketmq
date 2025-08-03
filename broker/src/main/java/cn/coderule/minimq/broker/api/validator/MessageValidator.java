@@ -2,6 +2,7 @@ package cn.coderule.minimq.broker.api.validator;
 
 import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.minimq.domain.config.message.MessageConfig;
+import cn.coderule.minimq.domain.core.constant.MQConstants;
 import cn.coderule.minimq.domain.core.enums.code.InvalidCode;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.domain.meta.topic.TopicValidator;
@@ -27,7 +28,28 @@ public class MessageValidator {
         // num, size
     }
 
-    private void validateMessageGroup() {
+    private void validateMessageGroup(String groupName) {
+        if (StringUtil.isEmpty(groupName)) {
+            return;
+        }
+
+        if (StringUtil.isBlank(groupName)) {
+            throw new RequestException(InvalidCode.ILLEGAL_MESSAGE_GROUP, "message groupName can't be blank");
+        }
+
+        if (containControlCharacter(groupName)) {
+            throw new RequestException(InvalidCode.ILLEGAL_MESSAGE_GROUP, "message groupName can't contain control character");
+        }
+
+        int maxLength = messageConfig.getMaxMessageGroupSize();
+        if (maxLength <= 0) {
+            return;
+        }
+
+        int groupLength = groupName.getBytes(MQConstants.MQ_CHARSET).length;
+        if (groupLength >= maxLength) {
+            throw new RequestException(InvalidCode.ILLEGAL_MESSAGE_GROUP, "message groupName can't be longer than " + maxLength);
+        }
 
     }
 
