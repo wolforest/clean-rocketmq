@@ -78,8 +78,15 @@ public class MessageValidator {
         }
     }
 
-    private void validateTransactionRecoveryTime() {
+    private void validateTransactionRecoveryTime(long recoveryTime) {
+        long maxRecoveryTime = messageConfig.getMaxTransactionRecoverySecond();
+        if (maxRecoveryTime <= 0) {
+            return;
+        }
 
+        if (recoveryTime > maxRecoveryTime) {
+            throw new RequestException(InvalidCode.BAD_REQUEST, "message transaction recovery time is too large");
+        }
     }
 
     public void validateTag(String tag) {
