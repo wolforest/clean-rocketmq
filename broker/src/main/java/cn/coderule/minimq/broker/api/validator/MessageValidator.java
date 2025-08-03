@@ -50,7 +50,6 @@ public class MessageValidator {
         if (groupLength >= maxLength) {
             throw new RequestException(InvalidCode.ILLEGAL_MESSAGE_GROUP, "message groupName can't be longer than " + maxLength);
         }
-
     }
 
     private void validateMessageKey(String key) {
@@ -67,8 +66,16 @@ public class MessageValidator {
         }
     }
 
-    private void validateDelayTime() {
+    private void validateDelayTime(long delayTime) {
+        long maxDelayTime = messageConfig.getMaxDelayTimeMills();
+        if (maxDelayTime <= 0) {
+            return;
+        }
 
+        long now = System.currentTimeMillis();
+        if (delayTime - now > maxDelayTime) {
+            throw new RequestException(InvalidCode.ILLEGAL_DELIVERY_TIME, "message delay time is too large");
+        }
     }
 
     private void validateTransactionRecoveryTime() {
