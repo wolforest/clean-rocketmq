@@ -1,4 +1,4 @@
-package cn.coderule.minimq.domain.config.message;
+package cn.coderule.minimq.domain.config.business;
 
 import java.io.Serializable;
 import java.time.Duration;

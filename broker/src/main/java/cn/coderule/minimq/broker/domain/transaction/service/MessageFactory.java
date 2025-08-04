@@ -4,7 +4,7 @@ import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.minimq.domain.domain.transaction.TransactionUtil;
 import cn.coderule.minimq.domain.domain.transaction.CommitBuffer;
 import cn.coderule.minimq.domain.domain.transaction.OffsetQueue;
-import cn.coderule.minimq.domain.config.TransactionConfig;
+import cn.coderule.minimq.domain.config.business.TransactionConfig;
 import cn.coderule.minimq.domain.core.constant.MessageConst;
 import cn.coderule.minimq.domain.core.constant.flag.MessageSysFlag;
 import cn.coderule.minimq.domain.domain.message.MessageBO;

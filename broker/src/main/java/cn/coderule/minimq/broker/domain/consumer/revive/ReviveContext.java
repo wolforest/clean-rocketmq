@@ -1,7 +1,7 @@
 package cn.coderule.minimq.broker.domain.consumer.revive;
 
-import cn.coderule.minimq.domain.config.message.MessageConfig;
-import cn.coderule.minimq.domain.config.message.TopicConfig;
+import cn.coderule.minimq.domain.config.business.MessageConfig;
+import cn.coderule.minimq.domain.config.business.TopicConfig;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.rpc.store.facade.MQFacade;
 import cn.coderule.minimq.rpc.store.facade.ConsumeOffsetFacade;

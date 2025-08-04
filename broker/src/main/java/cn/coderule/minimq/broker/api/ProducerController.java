@@ -6,7 +6,7 @@ import cn.coderule.minimq.broker.api.validator.MessageValidator;
 import cn.coderule.minimq.broker.api.validator.ServerValidator;
 import cn.coderule.minimq.broker.domain.producer.Producer;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
-import cn.coderule.minimq.domain.config.message.MessageConfig;
+import cn.coderule.minimq.domain.config.business.MessageConfig;
 import cn.coderule.minimq.domain.core.constant.MessageConst;
 import cn.coderule.minimq.domain.core.enums.code.InvalidCode;
 import cn.coderule.minimq.domain.core.exception.InvalidParameterException;

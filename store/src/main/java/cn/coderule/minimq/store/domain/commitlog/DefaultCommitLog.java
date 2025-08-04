@@ -3,7 +3,7 @@ package cn.coderule.minimq.store.domain.commitlog;
 import cn.coderule.minimq.store.domain.commitlog.vo.InsertContext;
 import cn.coderule.common.util.encrypt.HashUtil;
 import cn.coderule.minimq.domain.config.store.CommitConfig;
-import cn.coderule.minimq.domain.config.message.MessageConfig;
+import cn.coderule.minimq.domain.config.business.MessageConfig;
 import cn.coderule.minimq.domain.core.enums.store.EnqueueStatus;
 import cn.coderule.minimq.domain.core.enums.message.MessageVersion;
 import cn.coderule.minimq.domain.core.exception.EnqueueException;

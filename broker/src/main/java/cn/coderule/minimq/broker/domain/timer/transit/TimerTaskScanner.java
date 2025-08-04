@@ -4,7 +4,7 @@ import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 import cn.coderule.minimq.broker.domain.timer.service.SplitService;
 import cn.coderule.minimq.broker.domain.timer.context.TimerContext;
 import cn.coderule.minimq.broker.infra.store.TimerStore;
-import cn.coderule.minimq.domain.config.TimerConfig;
+import cn.coderule.minimq.domain.config.business.TimerConfig;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import cn.coderule.minimq.domain.domain.cluster.task.QueueTask;

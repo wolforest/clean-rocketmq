@@ -2,7 +2,7 @@ package cn.coderule.minimq.broker.infra.task.strategy;
 
 import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.minimq.broker.infra.task.TaskContext;
-import cn.coderule.minimq.domain.config.message.TopicConfig;
+import cn.coderule.minimq.domain.config.business.TopicConfig;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.domain.cluster.task.QueueTask;
 import cn.coderule.minimq.domain.domain.cluster.task.StoreTask;

@@ -5,7 +5,7 @@ import cn.coderule.common.util.lang.ThreadUtil;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.minimq.broker.domain.timer.context.TimerContext;
 import cn.coderule.minimq.broker.infra.store.TimerStore;
-import cn.coderule.minimq.domain.config.TimerConfig;
+import cn.coderule.minimq.domain.config.business.TimerConfig;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.domain.cluster.task.QueueTask;
 import cn.coderule.minimq.domain.domain.timer.TimerEvent;

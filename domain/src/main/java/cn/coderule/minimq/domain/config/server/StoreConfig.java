@@ -2,9 +2,9 @@ package cn.coderule.minimq.domain.config.server;
 
 import cn.coderule.common.util.lang.SystemUtil;
 import cn.coderule.common.util.net.NetworkUtil;
-import cn.coderule.minimq.domain.config.message.MessageConfig;
-import cn.coderule.minimq.domain.config.TimerConfig;
-import cn.coderule.minimq.domain.config.message.TopicConfig;
+import cn.coderule.minimq.domain.config.business.MessageConfig;
+import cn.coderule.minimq.domain.config.business.TimerConfig;
+import cn.coderule.minimq.domain.config.business.TopicConfig;
 import cn.coderule.minimq.domain.config.network.RpcClientConfig;
 import cn.coderule.minimq.domain.config.store.CommitConfig;
 import cn.coderule.minimq.domain.config.store.ConsumeQueueConfig;

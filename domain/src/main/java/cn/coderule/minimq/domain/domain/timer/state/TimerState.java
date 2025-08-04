@@ -1,6 +1,6 @@
 package cn.coderule.minimq.domain.domain.timer.state;
 
-import cn.coderule.minimq.domain.config.TimerConfig;
+import cn.coderule.minimq.domain.config.business.TimerConfig;
 import cn.coderule.minimq.domain.domain.timer.TimerConstants;
 import java.io.Serializable;
 import lombok.Data;

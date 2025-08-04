@@ -1,6 +1,6 @@
 package cn.coderule.minimq.broker.domain.transaction.check.context;
 
-import cn.coderule.minimq.domain.config.TransactionConfig;
+import cn.coderule.minimq.domain.config.business.TransactionConfig;
 import cn.coderule.minimq.domain.domain.MessageQueue;
 import java.io.Serializable;
 import java.util.ArrayList;

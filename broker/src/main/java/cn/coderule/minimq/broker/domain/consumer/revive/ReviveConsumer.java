@@ -3,7 +3,7 @@ package cn.coderule.minimq.broker.domain.consumer.revive;
 import cn.coderule.common.util.lang.ByteUtil;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.common.util.lang.string.JSONUtil;
-import cn.coderule.minimq.domain.config.message.MessageConfig;
+import cn.coderule.minimq.domain.config.business.MessageConfig;
 import cn.coderule.minimq.domain.core.constant.PopConstants;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueResult;

@@ -1,7 +1,7 @@
 package cn.coderule.minimq.store.server.rpc.processor;
 
 import cn.coderule.common.util.lang.string.StringUtil;
-import cn.coderule.minimq.domain.config.message.TopicConfig;
+import cn.coderule.minimq.domain.config.business.TopicConfig;
 import cn.coderule.minimq.domain.core.constant.MQConstants;
 import cn.coderule.minimq.domain.core.enums.message.MessageType;
 import cn.coderule.minimq.domain.domain.meta.topic.Topic;

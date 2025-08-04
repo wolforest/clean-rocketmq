@@ -2,7 +2,7 @@ package cn.coderule.minimq.store.server.rpc;
 
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
-import cn.coderule.minimq.domain.config.message.TopicConfig;
+import cn.coderule.minimq.domain.config.business.TopicConfig;
 import cn.coderule.minimq.domain.service.store.api.TimerStore;
 import cn.coderule.minimq.domain.service.store.api.meta.ConsumeOffsetStore;
 import cn.coderule.minimq.domain.service.store.api.meta.SubscriptionStore;

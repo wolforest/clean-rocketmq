@@ -8,7 +8,7 @@ import cn.coderule.minimq.broker.infra.store.SubscriptionStore;
 import cn.coderule.minimq.broker.infra.store.TopicStore;
 import cn.coderule.minimq.broker.server.bootstrap.BrokerContext;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
-import cn.coderule.minimq.domain.config.message.TopicConfig;
+import cn.coderule.minimq.domain.config.business.TopicConfig;
 import cn.coderule.minimq.domain.core.exception.InvalidConfigException;
 import cn.coderule.minimq.rpc.registry.route.RouteLoader;
 import cn.coderule.minimq.store.server.bootstrap.StoreContext;

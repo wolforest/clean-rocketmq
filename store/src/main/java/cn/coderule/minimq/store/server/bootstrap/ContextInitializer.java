@@ -3,10 +3,10 @@ package cn.coderule.minimq.store.server.bootstrap;
 import cn.coderule.minimq.domain.config.network.RpcClientConfig;
 import cn.coderule.minimq.domain.config.store.CommitConfig;
 import cn.coderule.minimq.domain.config.store.ConsumeQueueConfig;
-import cn.coderule.minimq.domain.config.message.MessageConfig;
+import cn.coderule.minimq.domain.config.business.MessageConfig;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
-import cn.coderule.minimq.domain.config.TimerConfig;
-import cn.coderule.minimq.domain.config.message.TopicConfig;
+import cn.coderule.minimq.domain.config.business.TimerConfig;
+import cn.coderule.minimq.domain.config.business.TopicConfig;
 import cn.coderule.minimq.domain.config.store.MetaConfig;
 
 public class ContextInitializer {

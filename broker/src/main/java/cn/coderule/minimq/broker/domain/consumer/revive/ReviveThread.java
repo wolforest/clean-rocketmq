@@ -2,7 +2,7 @@ package cn.coderule.minimq.broker.domain.consumer.revive;
 
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
-import cn.coderule.minimq.domain.config.message.MessageConfig;
+import cn.coderule.minimq.domain.config.business.MessageConfig;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.checkpoint.PopCheckPoint;
 import cn.coderule.minimq.domain.domain.consumer.revive.ReviveBuffer;
 import java.util.ArrayList;

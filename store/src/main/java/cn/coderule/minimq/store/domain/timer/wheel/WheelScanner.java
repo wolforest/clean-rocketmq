@@ -1,6 +1,6 @@
 package cn.coderule.minimq.store.domain.timer.wheel;
 
-import cn.coderule.minimq.domain.config.TimerConfig;
+import cn.coderule.minimq.domain.config.business.TimerConfig;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.domain.domain.cluster.store.SelectedMappedBuffer;
 import cn.coderule.minimq.domain.domain.timer.ScanResult;

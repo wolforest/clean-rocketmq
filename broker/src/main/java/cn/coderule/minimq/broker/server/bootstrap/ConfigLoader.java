@@ -1,13 +1,13 @@
 package cn.coderule.minimq.broker.server.bootstrap;
 
-import cn.coderule.minimq.domain.config.TimerConfig;
-import cn.coderule.minimq.domain.config.TransactionConfig;
+import cn.coderule.minimq.domain.config.business.TimerConfig;
+import cn.coderule.minimq.domain.config.business.TransactionConfig;
 import cn.coderule.minimq.domain.config.network.RpcClientConfig;
 import cn.coderule.minimq.domain.config.network.RpcServerConfig;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.config.network.GrpcConfig;
-import cn.coderule.minimq.domain.config.message.MessageConfig;
-import cn.coderule.minimq.domain.config.message.TopicConfig;
+import cn.coderule.minimq.domain.config.business.MessageConfig;
+import cn.coderule.minimq.domain.config.business.TopicConfig;
 import cn.coderule.minimq.domain.config.server.TaskConfig;
 
 public class ConfigLoader {

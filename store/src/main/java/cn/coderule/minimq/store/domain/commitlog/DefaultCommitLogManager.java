@@ -1,7 +1,7 @@
 package cn.coderule.minimq.store.domain.commitlog;
 
 import cn.coderule.minimq.domain.config.store.CommitConfig;
-import cn.coderule.minimq.domain.config.message.MessageConfig;
+import cn.coderule.minimq.domain.config.business.MessageConfig;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.domain.service.store.api.CommitLogStore;
 import cn.coderule.minimq.domain.service.store.domain.commitlog.CommitLog;
