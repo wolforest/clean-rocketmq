@@ -1,12 +1,13 @@
 package cn.coderule.minimq.domain.config.network;
 
 import cn.coderule.common.util.lang.SystemUtil;
+import cn.coderule.minimq.domain.config.ConfigAttribute;
 import java.io.Serializable;
 import lombok.Data;
 
 @Data
 public class GrpcConfig implements Serializable {
-    private int port = 8081;
+    private int port = ConfigAttribute.GRPC_PORT;
 
     private int bossThreadNum = 1;
     private int workerThreadNum = SystemUtil.getProcessorNumber() * 2;
