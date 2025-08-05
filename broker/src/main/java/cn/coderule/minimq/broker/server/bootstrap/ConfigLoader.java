@@ -8,7 +8,7 @@ import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.config.network.GrpcConfig;
 import cn.coderule.minimq.domain.config.business.MessageConfig;
 import cn.coderule.minimq.domain.config.business.TopicConfig;
-import cn.coderule.minimq.domain.config.server.TaskConfig;
+import cn.coderule.minimq.domain.config.business.TaskConfig;
 
 public class ConfigLoader {
     public static void load() {

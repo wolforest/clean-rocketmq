@@ -4,6 +4,7 @@ import cn.coderule.common.util.lang.SystemUtil;
 import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.common.util.net.NetworkUtil;
 import cn.coderule.minimq.domain.config.business.MessageConfig;
+import cn.coderule.minimq.domain.config.business.TaskConfig;
 import cn.coderule.minimq.domain.config.business.TimerConfig;
 import cn.coderule.minimq.domain.config.business.TopicConfig;
 import cn.coderule.minimq.domain.config.business.TransactionConfig;

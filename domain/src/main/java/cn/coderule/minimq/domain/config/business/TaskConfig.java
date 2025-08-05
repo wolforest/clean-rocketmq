@@ -1,4 +1,4 @@
-package cn.coderule.minimq.domain.config.server;
+package cn.coderule.minimq.domain.config.business;
 
 import java.io.Serializable;
 import lombok.Data;
