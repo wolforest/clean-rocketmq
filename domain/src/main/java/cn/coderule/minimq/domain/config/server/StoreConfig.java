@@ -2,6 +2,7 @@ package cn.coderule.minimq.domain.config.server;
 
 import cn.coderule.common.util.lang.SystemUtil;
 import cn.coderule.common.util.net.NetworkUtil;
+import cn.coderule.minimq.domain.config.ConfigAttribute;
 import cn.coderule.minimq.domain.config.business.MessageConfig;
 import cn.coderule.minimq.domain.config.business.TimerConfig;
 import cn.coderule.minimq.domain.config.business.TopicConfig;
@@ -18,7 +19,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class StoreConfig extends ServerIdentity {
     private String host = NetworkUtil.getLocalAddress();
-    private int port = 6888;
+    private int port = ConfigAttribute.STORE_PORT;
 
 
     private boolean enableMasterElection = false;
@@ -44,7 +45,6 @@ public class StoreConfig extends ServerIdentity {
     private int registryTimeout = 24_000;
     private int registryHeartbeatInterval = 1_000;
     private int registryHeartbeatTimeout = 1_000;
-
 
     private int bossThreadNum = 1;
     private int workerThreadNum = 3;
@@ -72,7 +72,7 @@ public class StoreConfig extends ServerIdentity {
     private long stateMachineVersion = 0;
 
     private String haAddress;
-    private int haPort = 10912;
+    private int haPort = ConfigAttribute.HA_PORT;
     private int haHeartbeatInterval = 5_000;
     private int haHouseKeepingInterval = 20_000;
     private int slaveTimeout = 3_000;

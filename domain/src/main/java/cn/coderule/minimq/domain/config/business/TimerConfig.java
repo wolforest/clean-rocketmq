@@ -1,5 +1,6 @@
 package cn.coderule.minimq.domain.config.business;
 
+import cn.coderule.minimq.domain.config.ConfigAttribute;
 import java.io.Serializable;
 import lombok.Data;
 
@@ -17,12 +18,12 @@ public class TimerConfig implements Serializable {
     private int consumeBatchNum = 32;
     private int consumeMaxNum = 32;
 
-    private int timerLogFileSize = 100 * 1024 * 1024;
+    private int timerLogFileSize = ConfigAttribute.MMAP_FILE_SIZE;
     /**
-     * copy from CommitLogConfig, this is ugly
-     * and because module timer were partly moved to broker
+     * sharding timer task by file(commitLog)
+     * it should be equal to commitLog file size
      */
-    private int commitLogFileSize = 100 * 1024 * 1024;
+    private int shardingFileSize = ConfigAttribute.MMAP_FILE_SIZE;
 
     private int totalSlots = 7 * 24 * 3600;
     private int wheelSlots = 2 * 24 * 3600;

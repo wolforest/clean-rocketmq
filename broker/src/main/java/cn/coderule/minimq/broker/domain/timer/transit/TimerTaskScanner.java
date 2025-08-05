@@ -166,7 +166,7 @@ public class TimerTaskScanner extends ServiceThread {
     }
 
     private List<List<TimerEvent>> split(List<TimerEvent> origin) {
-        SplitService splitService = new SplitService(timerConfig.getCommitLogFileSize());
+        SplitService splitService = new SplitService(timerConfig.getShardingFileSize());
         return splitService.split(origin);
     }
 }
