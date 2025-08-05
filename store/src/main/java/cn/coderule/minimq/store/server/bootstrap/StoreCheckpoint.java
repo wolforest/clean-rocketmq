@@ -47,10 +47,6 @@ public class StoreCheckpoint implements CheckPoint {
 
     @Override
     public Offset getMinOffset() {
-        if (!minOffsetLoaded) {
-            return null;
-        }
-
         if (minCopy != null) {
             return minCopy;
         }
@@ -125,10 +121,6 @@ public class StoreCheckpoint implements CheckPoint {
 
     @Override
     public Offset getMaxOffset() {
-        if (!maxOffsetLoaded) {
-            return null;
-        }
-
         return maxOffset;
     }
 
