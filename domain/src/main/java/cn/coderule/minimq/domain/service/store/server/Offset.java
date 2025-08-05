@@ -9,9 +9,9 @@ import lombok.Setter;
 
 @Getter
 public class Offset implements Serializable {
-    private volatile Long commitLogOffset = null;
-    private volatile Long dispatchedOffset = null;
-    private volatile Long indexOffset = null;
+    private volatile long commitLogOffset = -1;
+    private volatile long dispatchedOffset = -1;
+    private volatile long indexOffset = -1;
 
     @Setter
     private ConcurrentMap<String, ArrayList<Long>> topicOffsetMap = new ConcurrentHashMap<>(16);

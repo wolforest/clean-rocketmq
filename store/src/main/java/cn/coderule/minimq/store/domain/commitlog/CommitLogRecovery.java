@@ -37,14 +37,14 @@ public class CommitLogRecovery {
 
     private void recoverMaxOffset() {
         Offset offset = checkPoint.getMaxOffset();
-        Long maxOffset = null != offset ? offset.getCommitLogOffset() : null;
+        long maxOffset = null != offset ? offset.getCommitLogOffset() : -1;
 
-        if (null != maxOffset && checkPoint.isShutdownSuccessful()) {
+        if (-1 != maxOffset && checkPoint.isShutdownSuccessful()) {
             recoverToMaxOffset(maxOffset);
             return;
         }
 
-        if (null != maxOffset) {
+        if (-1 != maxOffset) {
             recoverFromOffset(maxOffset);
             return;
         }
