@@ -9,7 +9,6 @@ import cn.coderule.minimq.domain.domain.meta.DataVersion;
 import cn.coderule.minimq.domain.domain.meta.topic.Topic;
 import cn.coderule.minimq.domain.domain.meta.topic.TopicMap;
 import cn.coderule.minimq.domain.service.store.domain.meta.TopicService;
-import cn.coderule.minimq.domain.config.network.RpcClientConfig;
 import cn.coderule.minimq.domain.core.enums.RequestType;
 import cn.coderule.minimq.rpc.common.rpc.netty.NettyClient;
 import cn.coderule.minimq.rpc.registry.RegistryClient;

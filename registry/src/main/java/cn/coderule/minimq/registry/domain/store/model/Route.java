@@ -71,7 +71,10 @@ public class Route implements Serializable {
     }
 
     public void addGroupToCluster(String clusterName, String groupName) {
-        Set<String> groupNames =this.clusterMap.computeIfAbsent(clusterName, k -> new HashSet<>());
+        Set<String> groupNames =this.clusterMap.computeIfAbsent(
+            clusterName,
+            k -> new HashSet<>()
+        );
         groupNames.add(groupName);
     }
 
@@ -107,9 +110,8 @@ public class Route implements Serializable {
         addGroupToCluster(clusterName, groupName);
 
         groupInfo = new GroupInfo(clusterName, groupName, new HashMap<>(), enableActingMaster, zoneName);
-        GroupInfo oldInfo = this.groupMap.putIfAbsent(groupName, groupInfo);
-
-        return oldInfo == null ? groupInfo : oldInfo;
+        this.groupMap.put(groupName, groupInfo);
+        return groupInfo;
     }
 
     public StoreHealthInfo getHealthInfo(StoreInfo storeInfo) {
