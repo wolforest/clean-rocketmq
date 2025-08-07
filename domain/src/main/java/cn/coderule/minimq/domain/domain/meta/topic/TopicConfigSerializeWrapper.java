@@ -14,6 +14,18 @@ public class TopicConfigSerializeWrapper implements Serializable {
         return topicConfigTable;
     }
 
+    public boolean isEmpty() {
+        return topicConfigTable.isEmpty();
+    }
+
+    public boolean hasOne() {
+        return topicConfigTable.size() == 1;
+    }
+
+    public boolean moreThanOne() {
+        return topicConfigTable.size() > 1;
+    }
+
     public void setTopicConfigTable(ConcurrentMap<String, Topic> topicConfigTable) {
         this.topicConfigTable = topicConfigTable;
     }

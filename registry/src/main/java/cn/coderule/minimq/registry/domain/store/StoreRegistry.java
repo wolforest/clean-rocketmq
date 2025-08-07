@@ -239,7 +239,7 @@ public class StoreRegistry implements Lifecycle {
             return false;
         }
 
-        if (topicInfo.getTopicConfigTable().size() != 1) {
+        if (topicInfo.moreThanOne()) {
             return false;
         }
 
