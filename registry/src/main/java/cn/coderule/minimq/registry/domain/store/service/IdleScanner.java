@@ -48,9 +48,11 @@ public class IdleScanner {
         try {
             log.info("start scan idle nodes.");
             for (Map.Entry<StoreInfo, StoreHealthInfo> entry: route.getHealthMap().entrySet()) {
+                long now = System.currentTimeMillis();
                 long last = entry.getValue().getLastUpdateTimestamp();
                 long timeout  = entry.getValue().getHeartbeatTimeoutMillis();
-                if ( (last + timeout) >= System.currentTimeMillis()) {
+
+                if ( last + timeout >= now ) {
                     continue;
                 }
 

@@ -204,7 +204,7 @@ public class StoreRegistryClient  {
         requestHeader.setBrokerId(storeInfo.getGroupNo());
         requestHeader.setClusterName(storeInfo.getClusterName());
         requestHeader.setHaServerAddr(storeInfo.getHaAddress());
-        requestHeader.setHeartbeatTimeoutMillis(storeInfo.getHeartbeatTimeout().longValue());
+        requestHeader.setHeartbeatTimeoutMillis((long) storeInfo.getRegisterTimeout());
         requestHeader.setEnableActingMaster(storeInfo.isEnableMasterElection());
 
         return requestHeader;

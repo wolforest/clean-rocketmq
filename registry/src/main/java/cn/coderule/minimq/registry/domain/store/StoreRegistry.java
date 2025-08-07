@@ -34,7 +34,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class StoreRegistry implements Lifecycle {
-    private static final long DEFAULT_BROKER_CHANNEL_EXPIRED_TIME = 1000 * 60 * 2;
+    private static final long DEFAULT_BROKER_CHANNEL_EXPIRED_TIME = 120 * 1000;
 
     private final RegistryConfig config;
     private final Route route;

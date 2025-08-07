@@ -80,7 +80,7 @@ public class RegistryProcessor implements RpcProcessor {
 
         RegisterStoreResult result = registerStore(ctx, request, requestHeader);
         if (result == null) {
-            return response.setCodeAndRemark(SystemResponseCode.SYSTEM_ERROR, "register failed");
+            return response.failure(SystemResponseCode.SYSTEM_ERROR, "register failed");
         }
 
         formatResponseHeader(result, responseHeader);
