@@ -43,6 +43,7 @@ public class StoreConfig extends ServerIdentity {
     private boolean enableRegistryHeartbeat = false;
     private int fetchRegistryAddressInterval = 60 * 1000;
     private int registryTimeout = 24_000;
+    private int registryInterval = 30_000;
     private int registryHeartbeatInterval = 1_000;
     private int registryHeartbeatTimeout = 1_000;
 

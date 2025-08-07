@@ -22,6 +22,8 @@ import java.util.concurrent.TimeUnit;
 public class ClusterService implements Lifecycle {
     private final StoreConfig storeConfig;
     private final StoreRegister storeRegister;
+
+    private final ScheduledExecutorService registerScheduler;
     private final ScheduledExecutorService heartbeatScheduler;
 
     private boolean shouldRegister = true;
@@ -34,18 +36,24 @@ public class ClusterService implements Lifecycle {
             1,
             new DefaultThreadFactory("StoreHeartbeatThread_")
         );
+
+        registerScheduler = ThreadUtil.newScheduledThreadPool(
+            1,
+            new DefaultThreadFactory("StoreRegisterThread_")
+        );
     }
 
     @Override
     public void start() throws Exception {
         shouldRegister = storeConfig.isMaster();
-        registerStore();
+        startRegister();
         startHeartbeat();
     }
 
     @Override
     public void shutdown() throws Exception {
         heartbeatScheduler.shutdown();
+        registerScheduler.shutdown();
         unregisterStore();
     }
 
@@ -74,6 +82,22 @@ public class ClusterService implements Lifecycle {
             storeRegister::heartbeat,
             1000,
             storeConfig.getRegistryHeartbeatInterval(),
+            TimeUnit.MILLISECONDS
+        );
+    }
+
+    private void startRegister() {
+        if (!shouldRegister) {
+            return;
+        }
+
+        int interval = Math.min(storeConfig.getRegistryInterval(), 60_000);
+        interval = Math.max(interval, 10_000);
+
+        registerScheduler.scheduleAtFixedRate(
+            ClusterService.this::registerStore,
+            0,
+            interval,
             TimeUnit.MILLISECONDS
         );
     }
