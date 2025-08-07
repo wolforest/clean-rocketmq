@@ -190,6 +190,18 @@ public class StoreRegistry implements Lifecycle {
         );
     }
 
+    /**
+     * check health info
+     * If exists same brokerId in brokerAddrTable,
+     * And existing stateVersion bigger than the registering one,
+     * Then remove the brokerLiveInfo of registering one
+     * Then return false
+     *
+     * @param store store
+     * @param group group
+     * @param topicInfo topicInfo from request
+     * @return boolean
+     */
     private boolean checkHealthInfo(StoreInfo store, GroupInfo group, TopicConfigSerializeWrapper topicInfo) {
         Map<Long, String> addrMap = group.getBrokerAddrs();
         String oldAddr = addrMap.get(store.getGroupNo());

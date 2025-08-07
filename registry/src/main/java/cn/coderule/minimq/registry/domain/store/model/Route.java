@@ -102,14 +102,21 @@ public class Route implements Serializable {
      * @return groupInfo
      */
     public GroupInfo getOrCreateGroup(String zoneName, String clusterName, String groupName, boolean enableActingMaster) {
+        addGroupToCluster(clusterName, groupName);
+
         GroupInfo groupInfo = this.groupMap.get(groupName);
         if (groupInfo != null) {
             return groupInfo;
         }
 
-        addGroupToCluster(clusterName, groupName);
+        groupInfo = new GroupInfo(
+            clusterName,
+            groupName,
+            new HashMap<>(),
+            enableActingMaster,
+            zoneName
+        );
 
-        groupInfo = new GroupInfo(clusterName, groupName, new HashMap<>(), enableActingMaster, zoneName);
         this.groupMap.put(groupName, groupInfo);
         return groupInfo;
     }
