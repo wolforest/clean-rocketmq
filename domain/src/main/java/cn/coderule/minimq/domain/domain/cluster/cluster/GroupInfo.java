@@ -96,6 +96,10 @@ public class GroupInfo implements Comparable<GroupInfo> {
         return Collections.min(brokerAddrs.keySet());
     }
 
+    public boolean containsNo(long groupNo) {
+        return brokerAddrs.containsKey(groupNo);
+    }
+
     public String getMasterAddr() {
         return brokerAddrs.get(MQConstants.MASTER_ID);
     }

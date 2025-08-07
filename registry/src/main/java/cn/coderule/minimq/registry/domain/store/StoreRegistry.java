@@ -235,7 +235,7 @@ public class StoreRegistry implements Lifecycle {
     }
 
     private boolean hasRegistered(StoreInfo store, GroupInfo group, TopicConfigSerializeWrapper topicInfo) {
-        if (group.getBrokerAddrs().containsKey(store.getGroupNo())) {
+        if (group.containsNo(store.getGroupNo())) {
             return false;
         }
 
