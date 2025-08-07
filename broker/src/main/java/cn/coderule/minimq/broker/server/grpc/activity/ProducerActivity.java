@@ -78,7 +78,7 @@ public class ProducerActivity {
         CompletableFuture<SendMessageResponse> future = new CompletableFuture<>();
 
         try {
-            checkMessageSize(request);
+            assertNotEmpty(request);
             List<MessageBO> messageBOList = MessageConverter.toMessageBO(context, request);
 
             producerController.produce(context, messageBOList)
@@ -90,7 +90,7 @@ public class ProducerActivity {
         return future;
     }
 
-    private void checkMessageSize(SendMessageRequest request) {
+    private void assertNotEmpty(SendMessageRequest request) {
         int messageCount = request.getMessagesCount();
         if (messageCount > 0) {
             return;
