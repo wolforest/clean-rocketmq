@@ -86,6 +86,11 @@ public class ClusterService implements Lifecycle {
         );
     }
 
+    /**
+     * register store at a fixed interval
+     * this is the original way of opensource rocketmq
+     * It's better to use heart beat instead
+     */
     private void startRegister() {
         if (!shouldRegister) {
             return;
