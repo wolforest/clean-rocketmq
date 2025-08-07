@@ -20,8 +20,7 @@ public class StoreInfo extends ServerInfo {
     private TopicConfigSerializeWrapper topicInfo;
     private List<String> filterList;
 
-    @Builder.Default
-    private int registerTimeout = 10_000;
+    private Integer registerTimeout;
     @Builder.Default
     private RequestType registerType = RequestType.SYNC;
     @Builder.Default

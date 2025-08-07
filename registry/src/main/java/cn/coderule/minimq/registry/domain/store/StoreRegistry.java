@@ -362,8 +362,8 @@ public class StoreRegistry implements Lifecycle {
     }
 
     private void saveHealthInfo(StoreInfo store, TopicConfigSerializeWrapper topicInfo, Channel channel) {
-        long timeout = null != store.getHeartbeatTimeout()
-            ? store.getHeartbeatTimeout()
+        long timeout = null != store.getRegisterTimeout()
+            ? store.getRegisterTimeout()
             : DEFAULT_BROKER_CHANNEL_EXPIRED_TIME;
         DataVersion version = null != topicInfo
             ? topicInfo.getDataVersion()

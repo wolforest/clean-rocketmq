@@ -183,6 +183,7 @@ public class RegistryProcessor implements RpcProcessor {
             ? requestHeader.getHeartbeatTimeoutMillis().intValue()
             : null;
         storeInfo.setHeartbeatTimeout(timeout);
+        storeInfo.setRegisterTimeout(timeout);
         storeInfo.setEnableMasterElection(requestHeader.getEnableActingMaster());
 
         storeInfo.setTopicInfo(body.getTopicConfigSerializeWrapper());
