@@ -72,7 +72,7 @@ public class StoreRegistry implements Lifecycle {
             if (!checkHealthInfo(store, group, store.getTopicInfo())) {
                 return result;
             }
-            if (hasRegistered(store, group, store.getTopicInfo())) {
+            if (!ableToRegisterTopic(store, group, store.getTopicInfo())) {
                 return null;
             }
 
@@ -234,19 +234,29 @@ public class StoreRegistry implements Lifecycle {
         return false;
     }
 
-    private boolean hasRegistered(StoreInfo store, GroupInfo group, TopicConfigSerializeWrapper topicInfo) {
+    /**
+     * able to register topic.
+     * Topic Registry must after Broker Registry
+     * Topic number must be more than one
+     *
+     * @param store store info
+     * @param group group info
+     * @param topicInfo topic info
+     * @return true if able to register topic
+     */
+    private boolean ableToRegisterTopic(StoreInfo store, GroupInfo group, TopicConfigSerializeWrapper topicInfo) {
         if (group.containsNo(store.getGroupNo())) {
-            return false;
+            return true;
         }
 
         if (topicInfo.moreThanOne()) {
-            return false;
+            return true;
         }
 
         log.warn("Can't register topicConfigWrapper={} because broker[{}]={} has not registered.",
             topicInfo.getTopicConfigTable(), store.getGroupNo(), store.getAddress());
 
-        return true;
+        return false;
     }
 
     private boolean isPrimarySlave(StoreInfo store, GroupInfo group) {
