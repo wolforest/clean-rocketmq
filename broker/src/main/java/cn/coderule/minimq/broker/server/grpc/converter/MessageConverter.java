@@ -24,13 +24,13 @@ public class MessageConverter {
     public static List<MessageBO> toMessageBO(RequestContext context, SendMessageRequest request) {
         List<MessageBO> messageList = new ArrayList<>();
 
-        for (Message message : request.getMessagesList()) {
-            String topic = message.getTopic().getName();
+        for (Message rpcMsg : request.getMessagesList()) {
+            String topic = rpcMsg.getTopic().getName();
             MessageBO messageBO = MessageBO.builder()
                 .topic(topic)
-                .body(message.getBody().toByteArray())
-                .sysFlag(buildSysFlag(message))
-                .properties(buildProperties(context, message, topic))
+                .body(rpcMsg.getBody().toByteArray())
+                .sysFlag(buildSysFlag(rpcMsg))
+                .properties(buildProperties(context, rpcMsg, topic))
                 .build();
 
             messageList.add(messageBO);

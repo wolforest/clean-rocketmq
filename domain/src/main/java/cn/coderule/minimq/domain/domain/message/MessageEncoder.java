@@ -27,7 +27,7 @@ public class MessageEncoder {
         this.messageConfig = messageConfig;
 
         ByteBufAllocator allocator = UnpooledByteBufAllocator.DEFAULT;
-        buffer = allocator.directBuffer(messageConfig.getMaxSize());
+        buffer = allocator.directBuffer(messageConfig.getMaxRequestSize());
     }
 
     public void setMessage(MessageBO messageBO) {
@@ -51,7 +51,7 @@ public class MessageEncoder {
             messageBO.getVersion(), bodyLen, topicLen, propertiesLen
         );
 
-        if (messageLength > messageConfig.getMaxSize() || bodyLen > messageConfig.getMaxBodySize()) {
+        if (messageLength > messageConfig.getMaxRequestSize() || bodyLen > messageConfig.getMaxBodySize()) {
             throw new EnqueueException(EnqueueStatus.MESSAGE_ILLEGAL);
         }
 

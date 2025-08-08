@@ -17,11 +17,25 @@ public class MessageValidator {
     }
 
     public void validate(MessageBO messageBO) {
-
+        validateBodySize(messageBO);
     }
 
     public void validateTopic(String topicName) {
         TopicValidator.validateTopic(topicName);
+    }
+
+    private void validateBodySize(MessageBO messageBO) {
+        int maxBodySize = messageConfig.getMaxBodySize();
+        if (maxBodySize <= 0) {
+            return;
+        }
+
+        if (messageBO.getBody().length > maxBodySize) {
+            throw new RequestException(
+                InvalidCode.MESSAGE_BODY_TOO_LARGE,
+                "message body size is too large"
+            );
+        }
     }
 
     private void validateProperty() {
