@@ -18,6 +18,7 @@ public class MessageValidator {
 
     public void validate(MessageBO messageBO) {
         validateBodySize(messageBO);
+        validatePropertyCount(messageBO);
     }
 
     public void validateTopic(String topicName) {
@@ -33,13 +34,28 @@ public class MessageValidator {
         if (messageBO.getBody().length > maxBodySize) {
             throw new RequestException(
                 InvalidCode.MESSAGE_BODY_TOO_LARGE,
-                "message body size is too large"
+                "message body size is larger than " + maxBodySize
             );
         }
     }
 
-    private void validateProperty() {
-        // num, size
+    private void validatePropertySize(MessageBO messageBO) {
+        int maxPropertySize = messageConfig.getMaxPropertySize();
+    }
+
+    private void validatePropertyCount(MessageBO messageBO) {
+        int maxPropertyCount = messageConfig.getMaxPropertyCount();
+        if (maxPropertyCount <= 0) {
+            return;
+        }
+
+        if (messageBO.getProperties().size() > maxPropertyCount) {
+            throw new RequestException(
+                InvalidCode.MESSAGE_PROPERTIES_TOO_LARGE,
+                "message properties number is more than " + maxPropertyCount
+            );
+        }
+
     }
 
     private void validateMessageGroup(String groupName) {
