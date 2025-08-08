@@ -22,7 +22,7 @@ import java.util.Map;
 public class MessageConverter {
 
     public static List<MessageBO> toMessageBO(RequestContext context, SendMessageRequest request) {
-        List<MessageBO> result = new ArrayList<>();
+        List<MessageBO> messageList = new ArrayList<>();
 
         for (Message message : request.getMessagesList()) {
             String topic = message.getTopic().getName();
@@ -33,10 +33,10 @@ public class MessageConverter {
                 .properties(buildProperties(context, message, topic))
                 .build();
 
-            result.add(messageBO);
+            messageList.add(messageBO);
         }
 
-        return result;
+        return messageList;
     }
 
     private static int buildSysFlag(Message message) {
@@ -46,11 +46,13 @@ public class MessageConverter {
         if (bodyEncoding.equals(Encoding.GZIP)) {
             sysFlag |= MessageSysFlag.COMPRESSED_FLAG;
         }
+
         // transaction
         MessageType messageType = message.getSystemProperties().getMessageType();
         if (messageType.equals(MessageType.TRANSACTION)) {
             sysFlag |= MessageSysFlag.TRANSACTION_PREPARED_TYPE;
         }
+
         return sysFlag;
     }
 
@@ -61,10 +63,7 @@ public class MessageConverter {
 
         setMessageId(properties, message);
         setGroup(properties, message, producerGroup);
-
         setTransactionProperty(properties, message);
-
-
 
         return properties;
     }
