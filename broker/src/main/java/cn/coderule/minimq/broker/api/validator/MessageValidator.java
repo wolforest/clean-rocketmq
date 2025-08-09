@@ -10,6 +10,8 @@ import cn.coderule.minimq.domain.domain.meta.topic.TopicValidator;
 import cn.coderule.minimq.rpc.common.core.exception.RequestException;
 import com.google.common.base.CharMatcher;
 
+import static cn.coderule.common.util.lang.string.StringUtil.containControlCharacter;
+
 public class MessageValidator {
     private final MessageConfig messageConfig;
 
@@ -95,20 +97,6 @@ public class MessageValidator {
         }
     }
 
-    private void validateMessageKey(String key) {
-        if (StringUtil.isEmpty(key)) {
-            return;
-        }
-
-        if (StringUtil.isBlank(key)) {
-            throw new RequestException(InvalidCode.ILLEGAL_MESSAGE_KEY, "message can't be blank");
-        }
-
-        if (containControlCharacter(key)) {
-            throw new RequestException(InvalidCode.ILLEGAL_MESSAGE_KEY, "message key can't contain control character");
-        }
-    }
-
     private void validateDelayTime(long delayTime) {
         long maxDelayTime = messageConfig.getMaxDelayTimeMills();
         if (maxDelayTime <= 0) {
@@ -149,12 +137,4 @@ public class MessageValidator {
         }
     }
 
-    public boolean containControlCharacter(String data) {
-        for (int i = 0; i < data.length(); i++) {
-            if (CharMatcher.javaIsoControl().matches(data.charAt(i))) {
-                return true;
-            }
-        }
-        return false;
-    }
 }

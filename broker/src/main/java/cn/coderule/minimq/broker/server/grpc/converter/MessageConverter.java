@@ -19,6 +19,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static cn.coderule.common.util.lang.string.StringUtil.containControlCharacter;
+
 public class MessageConverter {
 
     public static List<MessageBO> toMessageBO(RequestContext context, SendMessageRequest request) {
@@ -50,14 +52,14 @@ public class MessageConverter {
                 );
             }
 
-            if (StringUtil.containControlCharacter(entry.getKey())) {
+            if (containControlCharacter(entry.getKey())) {
                 throw new RequestException(
                     InvalidCode.ILLEGAL_MESSAGE_PROPERTY_KEY,
                     "property key " + entry.getKey() + " can't contain control character"
                 );
             }
 
-            if (StringUtil.containControlCharacter(entry.getValue())) {
+            if (containControlCharacter(entry.getValue())) {
                 throw new RequestException(
                     InvalidCode.ILLEGAL_MESSAGE_PROPERTY_KEY,
                     "property value " + entry.getValue() + " can't contain control character"
@@ -114,7 +116,28 @@ public class MessageConverter {
     }
 
     private static void setKeys(Map<String, String> properties, Message message) {
+        List<String> keyList = message.getSystemProperties().getKeysList();
 
+        for (String key : keyList) {
+            validateMessageKey(key);
+        }
+
+        String keys = String.join(MessageConst.KEY_SEPARATOR, keyList);
+        properties.put(MessageConst.PROPERTY_KEYS, keys);
+    }
+
+    private static void validateMessageKey(String key) {
+        if (StringUtil.isEmpty(key)) {
+            return;
+        }
+
+        if (StringUtil.isBlank(key)) {
+            throw new RequestException(InvalidCode.ILLEGAL_MESSAGE_KEY, "message can't be blank");
+        }
+
+        if (containControlCharacter(key)) {
+            throw new RequestException(InvalidCode.ILLEGAL_MESSAGE_KEY, "message key can't contain control character");
+        }
     }
 
     private static void setGroup(Map<String, String> properties, Message message, String producerGroup) {
