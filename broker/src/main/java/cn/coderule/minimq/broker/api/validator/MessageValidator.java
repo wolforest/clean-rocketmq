@@ -23,6 +23,8 @@ public class MessageValidator {
         validateBodySize(messageBO);
         validatePropertyCount(messageBO);
         validatePropertySize(messageBO);
+
+        validateDelayTime(messageBO.getDeliverTime());
     }
 
     public void validateTopic(String topicName) {
@@ -98,6 +100,10 @@ public class MessageValidator {
     }
 
     private void validateDelayTime(long delayTime) {
+        if (delayTime <= 0)  {
+            return;
+        }
+
         long maxDelayTime = messageConfig.getMaxDelayTimeMills();
         if (maxDelayTime <= 0) {
             return;

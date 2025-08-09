@@ -97,6 +97,11 @@ public class MessageConverter {
 
         setTransactionProperty(properties, rpcMsg);
         setDelayProperty(properties, rpcMsg);
+        setReconsumeTimes(properties, rpcMsg);
+
+        setTraceContext(properties, rpcMsg);
+        setBornHost(context, properties, rpcMsg);
+        setBornTime(properties, rpcMsg);
 
         return properties;
     }
@@ -204,8 +209,6 @@ public class MessageConverter {
 
         properties.put(MessageConst.PROPERTY_BORN_TIMESTAMP, String.valueOf(Timestamps.toMillis(bornTime)));
     }
-
-
 
     private static void setTraceContext(Map<String, String> properties, Message message) {
         String traceContext = message.getSystemProperties().getTraceContext();
