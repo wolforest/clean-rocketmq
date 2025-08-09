@@ -19,13 +19,18 @@ public class MessageValidator {
     }
 
     public void validate(MessageBO messageBO) {
-        validateBodySize(messageBO);
+        validateTopic(messageBO.getTopic());
+        validateTag(messageBO.getTags());
+
         validateShardingKey(messageBO.getShardingKey());
+        validateDelayTime(messageBO.getDeliverTime());
+        validateTransactionCheckTime(messageBO.getTransactionCheckTime());
+
+        validateBodySize(messageBO);
 
         validatePropertyCount(messageBO);
         validatePropertySize(messageBO);
 
-        validateDelayTime(messageBO.getDeliverTime());
     }
 
     public void validateTopic(String topicName) {
@@ -116,7 +121,11 @@ public class MessageValidator {
         }
     }
 
-    private void validateTransactionRecoveryTime(long recoveryTime) {
+    private void validateTransactionCheckTime(long recoveryTime) {
+        if (recoveryTime <= 0) {
+            return;
+        }
+
         long maxRecoveryTime = messageConfig.getMaxTransactionRecoverySecond();
         if (maxRecoveryTime <= 0) {
             return;

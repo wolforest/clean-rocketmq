@@ -1,6 +1,7 @@
 package cn.coderule.minimq.domain.domain.message;
 
 import cn.coderule.common.util.lang.collection.MapUtil;
+import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.minimq.domain.core.constant.flag.MessageSysFlag;
 import cn.coderule.minimq.domain.core.constant.MessageConst;
 import cn.coderule.minimq.domain.core.enums.message.MessageStatus;
@@ -196,9 +197,27 @@ public class MessageBO extends Message implements Serializable {
 
     public long getDeliverTime() {
         String t = this.getProperty(MessageConst.PROPERTY_TIMER_DELIVER_MS);
-        if (t != null) {
-            return Long.parseLong(t);
+        if (StringUtil.isBlank(t)) {
+            return 0;
         }
-        return 0;
+
+        try {
+            return Long.parseLong(t);
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+
+    public long getTransactionCheckTime() {
+        String t = this.getProperty(MessageConst.PROPERTY_CHECK_IMMUNITY_TIME_IN_SECONDS);
+        if (StringUtil.isBlank(t)) {
+            return 0;
+        }
+
+        try {
+            return Long.parseLong(t);
+        } catch (Exception e) {
+            return 0;
+        }
     }
 }
