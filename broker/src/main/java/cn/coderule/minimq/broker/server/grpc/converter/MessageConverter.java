@@ -93,9 +93,10 @@ public class MessageConverter {
         setMessageId(properties, rpcMsg);
         setTag(properties, rpcMsg);
         setKeys(properties, rpcMsg);
-
         setGroup(properties, rpcMsg, producerGroup);
+
         setTransactionProperty(properties, rpcMsg);
+        setDelayProperty(properties, rpcMsg);
 
         return properties;
     }
@@ -170,7 +171,13 @@ public class MessageConverter {
     }
 
     private static void setDelayProperty(Map<String, String> properties, Message message) {
+        if (!message.getSystemProperties().hasDeliveryTimestamp()) {
+            return;
+        }
 
+        Timestamp timestamp = message.getSystemProperties().getDeliveryTimestamp();
+        long delayTime = Timestamps.toMillis(timestamp);
+        properties.put(MessageConst.PROPERTY_DELAY_TIME_LEVEL, String.valueOf(delayTime));
     }
 
     private static void setReconsumeTimes(Map<String, String> properties, Message message) {
