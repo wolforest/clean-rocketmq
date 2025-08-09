@@ -25,6 +25,8 @@ public class MessageConverter {
         List<MessageBO> messageList = new ArrayList<>();
 
         for (Message rpcMsg : request.getMessagesList()) {
+            validateProperty(rpcMsg.getUserPropertiesMap());
+
             String topic = rpcMsg.getTopic().getName();
             MessageBO messageBO = MessageBO.builder()
                 .topic(topic)
@@ -37,6 +39,19 @@ public class MessageConverter {
         }
 
         return messageList;
+    }
+
+    private static void validateProperty(Map<String, String> properties) {
+        for (Map.Entry<String, String> entry : properties.entrySet()) {
+            if (!MessageConst.STRING_HASH_SET.contains(entry.getKey())) {
+                continue;
+            }
+
+            throw new RequestException(
+                InvalidCode.ILLEGAL_MESSAGE_PROPERTY_KEY,
+                "property key " + entry.getKey() + " is not allowed"
+            );
+        }
     }
 
     private static int buildSysFlag(Message message) {
@@ -56,14 +71,14 @@ public class MessageConverter {
         return sysFlag;
     }
 
-    private static Map<String, String> buildProperties(RequestContext context, Message message, String producerGroup) {
+    private static Map<String, String> buildProperties(RequestContext context, Message rpcMsg, String producerGroup) {
         Map<String, String> properties = new HashMap<>(
-            message.getUserPropertiesMap()
+            rpcMsg.getUserPropertiesMap()
         );
 
-        setMessageId(properties, message);
-        setGroup(properties, message, producerGroup);
-        setTransactionProperty(properties, message);
+        setMessageId(properties, rpcMsg);
+        setGroup(properties, rpcMsg, producerGroup);
+        setTransactionProperty(properties, rpcMsg);
 
         return properties;
     }
@@ -73,6 +88,7 @@ public class MessageConverter {
         if (StringUtil.isBlank(messageId)) {
             throw new RequestException(InvalidCode.ILLEGAL_MESSAGE_ID, "message id can not be blank");
         }
+
         properties.put(MessageConst.PROPERTY_UNIQ_CLIENT_MESSAGE_ID_KEYIDX, messageId);
     }
 
@@ -83,6 +99,7 @@ public class MessageConverter {
         if (StringUtil.isBlank(group)) {
             return;
         }
+
         properties.put(MessageConst.PROPERTY_SHARDING_KEY, group);
     }
 
