@@ -89,6 +89,9 @@ public class MessageConverter {
         );
 
         setMessageId(properties, rpcMsg);
+        setTag(properties, rpcMsg);
+        setKeys(properties, rpcMsg);
+
         setGroup(properties, rpcMsg, producerGroup);
         setTransactionProperty(properties, rpcMsg);
 
@@ -102,6 +105,16 @@ public class MessageConverter {
         }
 
         properties.put(MessageConst.PROPERTY_UNIQ_CLIENT_MESSAGE_ID_KEYIDX, messageId);
+    }
+
+    private static void setTag(Map<String, String> properties, Message message) {
+        String tag = message.getSystemProperties().getTag();
+
+        properties.put(MessageConst.PROPERTY_TAGS, tag);
+    }
+
+    private static void setKeys(Map<String, String> properties, Message message) {
+
     }
 
     private static void setGroup(Map<String, String> properties, Message message, String producerGroup) {
@@ -162,13 +175,7 @@ public class MessageConverter {
         properties.put(MessageConst.PROPERTY_BORN_TIMESTAMP, String.valueOf(Timestamps.toMillis(bornTime)));
     }
 
-    private static void setTag(Map<String, String> properties, Message message) {
 
-    }
-
-    private static void setKeys(Map<String, String> properties, Message message) {
-
-    }
 
     private static void setTraceContext(Map<String, String> properties, Message message) {
         String traceContext = message.getSystemProperties().getTraceContext();
