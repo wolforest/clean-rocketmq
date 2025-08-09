@@ -44,13 +44,25 @@ public class MessageConverter {
     private static void validateProperty(Map<String, String> properties) {
         for (Map.Entry<String, String> entry : properties.entrySet()) {
             if (!MessageConst.STRING_HASH_SET.contains(entry.getKey())) {
-                continue;
+                throw new RequestException(
+                    InvalidCode.ILLEGAL_MESSAGE_PROPERTY_KEY,
+                    "property key " + entry.getKey() + " is not allowed"
+                );
             }
 
-            throw new RequestException(
-                InvalidCode.ILLEGAL_MESSAGE_PROPERTY_KEY,
-                "property key " + entry.getKey() + " is not allowed"
-            );
+            if (StringUtil.containControlCharacter(entry.getKey())) {
+                throw new RequestException(
+                    InvalidCode.ILLEGAL_MESSAGE_PROPERTY_KEY,
+                    "property key " + entry.getKey() + " can't contain control character"
+                );
+            }
+
+            if (StringUtil.containControlCharacter(entry.getValue())) {
+                throw new RequestException(
+                    InvalidCode.ILLEGAL_MESSAGE_PROPERTY_KEY,
+                    "property value " + entry.getValue() + " can't contain control character"
+                );
+            }
         }
     }
 
