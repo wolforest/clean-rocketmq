@@ -38,7 +38,6 @@ public class MessageSender implements Lifecycle {
     private final MQFacade MQStore;
     private final ThreadPoolExecutor executor;
 
-
     private ProduceHookManager hookManager;
     private QueueSelector queueSelector;
     private TopicFacade topicStore;
@@ -63,6 +62,7 @@ public class MessageSender implements Lifecycle {
     public CompletableFuture<EnqueueResult> send(RequestContext requestContext, MessageBO messageBO) {
         ProduceContext context = createContext(requestContext, messageBO);
 
+        selectQueue(context);
         hookManager.preProduce(context);
         CompletableFuture<EnqueueResult> future = storeMessage(context);
         future.thenAcceptAsync(sendCallback(context), executor);
@@ -129,7 +129,7 @@ public class MessageSender implements Lifecycle {
     private ProduceContext createContext(RequestContext requestContext, MessageBO messageBO) {
         ProduceContext produceContext = ProduceContext.from(requestContext, messageBO);
 
-        selectQueue(produceContext);
+
         getTopic(produceContext);
         checkCleanupPolicy(produceContext);
         addMessageInfo(produceContext);
@@ -152,7 +152,6 @@ public class MessageSender implements Lifecycle {
 
     private Consumer<EnqueueResult> sendCallback(ProduceContext context) {
         return result -> {
-
             hookManager.postProduce(context);
         };
     }
