@@ -22,15 +22,13 @@ public class MessageValidator {
         validateTopic(messageBO.getTopic());
         validateTag(messageBO.getTags());
 
-        validateShardingKey(messageBO.getShardingKey());
         validateDelayTime(messageBO.getDeliverTime());
+        validateShardingKey(messageBO.getShardingKey());
         validateTransactionCheckTime(messageBO.getTransactionCheckTime());
 
         validateBodySize(messageBO);
-
         validatePropertyCount(messageBO);
         validatePropertySize(messageBO);
-
     }
 
     public void validateTopic(String topicName) {
