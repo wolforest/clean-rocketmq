@@ -8,7 +8,6 @@ import cn.coderule.minimq.domain.core.enums.code.InvalidCode;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.domain.meta.topic.TopicValidator;
 import cn.coderule.minimq.rpc.common.core.exception.RequestException;
-import com.google.common.base.CharMatcher;
 
 import static cn.coderule.common.util.lang.string.StringUtil.containControlCharacter;
 
@@ -21,6 +20,8 @@ public class MessageValidator {
 
     public void validate(MessageBO messageBO) {
         validateBodySize(messageBO);
+        validateShardingKey(messageBO.getShardingKey());
+
         validatePropertyCount(messageBO);
         validatePropertySize(messageBO);
 
@@ -75,16 +76,16 @@ public class MessageValidator {
 
     }
 
-    private void validateMessageGroup(String groupName) {
-        if (StringUtil.isEmpty(groupName)) {
+    private void validateShardingKey(String keyName) {
+        if (StringUtil.isEmpty(keyName)) {
             return;
         }
 
-        if (StringUtil.isBlank(groupName)) {
+        if (StringUtil.isBlank(keyName)) {
             throw new RequestException(InvalidCode.ILLEGAL_MESSAGE_GROUP, "message groupName can't be blank");
         }
 
-        if (containControlCharacter(groupName)) {
+        if (containControlCharacter(keyName)) {
             throw new RequestException(InvalidCode.ILLEGAL_MESSAGE_GROUP, "message groupName can't contain control character");
         }
 
@@ -93,7 +94,7 @@ public class MessageValidator {
             return;
         }
 
-        int groupLength = groupName.getBytes(MQConstants.MQ_CHARSET).length;
+        int groupLength = keyName.getBytes(MQConstants.MQ_CHARSET).length;
         if (groupLength >= maxLength) {
             throw new RequestException(InvalidCode.ILLEGAL_MESSAGE_GROUP, "message groupName can't be longer than " + maxLength);
         }
