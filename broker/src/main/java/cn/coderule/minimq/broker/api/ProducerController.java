@@ -6,7 +6,6 @@ import cn.coderule.minimq.broker.api.validator.MessageValidator;
 import cn.coderule.minimq.broker.api.validator.ServerValidator;
 import cn.coderule.minimq.broker.domain.producer.Producer;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
-import cn.coderule.minimq.domain.config.business.MessageConfig;
 import cn.coderule.minimq.domain.core.constant.MessageConst;
 import cn.coderule.minimq.domain.core.enums.code.InvalidCode;
 import cn.coderule.minimq.domain.core.exception.InvalidParameterException;
@@ -31,12 +30,12 @@ public class ProducerController {
     private final MessageValidator messageValidator;
     private final ServerValidator serverValidator;
 
-    public ProducerController(BrokerConfig brokerConfig, MessageConfig messageConfig, Producer producer) {
+    public ProducerController(BrokerConfig brokerConfig, Producer producer) {
         this.brokerConfig = brokerConfig;
         this.producer = producer;
 
         this.serverValidator = new ServerValidator(brokerConfig);
-        this.messageValidator = new MessageValidator(messageConfig);
+        this.messageValidator = new MessageValidator(brokerConfig.getMessageConfig());
     }
 
     public void register(RequestContext context, String topicName, ClientChannelInfo channelInfo) {
