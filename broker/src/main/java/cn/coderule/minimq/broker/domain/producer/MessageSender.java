@@ -39,17 +39,29 @@ public class MessageSender implements Lifecycle {
 
     private final MQFacade MQStore;
 
-    private ProduceHookManager hookManager;
-    private QueueSelector queueSelector;
-    private TopicFacade topicStore;
-    private Transaction transaction;
+    private final ProduceHookManager hookManager;
+    private final QueueSelector queueSelector;
+    private final TopicFacade topicStore;
+    private final Transaction transaction;
 
-    public MessageSender(BrokerConfig brokerConfig, MQFacade MQStore) {
+    public MessageSender(
+        BrokerConfig brokerConfig,
+        ProduceHookManager hookManager,
+        QueueSelector queueSelector,
+        MQFacade MQStore,
+        TopicFacade topicStore,
+        Transaction transaction
+    ) {
         this.brokerConfig = brokerConfig;
-        this.MQStore = MQStore;
         this.callbackExecutor = createExecutor();
-    }
 
+        this.hookManager = hookManager;
+        this.queueSelector = queueSelector;
+
+        this.MQStore = MQStore;
+        this.topicStore = topicStore;
+        this.transaction = transaction;
+    }
 
     /**
      * send message
