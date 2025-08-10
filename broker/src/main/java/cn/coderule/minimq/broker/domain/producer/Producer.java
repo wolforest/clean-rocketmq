@@ -15,10 +15,11 @@ import lombok.extern.slf4j.Slf4j;
 public class Producer {
     private final MessageSender messageSender;
 
-    private ProducerRegister producerRegister;
+    private final ProducerRegister producerRegister;
 
-    public Producer(MessageSender messageSender) {
-        this.messageSender = messageSender;
+    public Producer(MessageSender sender, ProducerRegister register) {
+        this.messageSender = sender;
+        this.producerRegister = register;
     }
 
     public void register(RequestContext context, String groupName, ClientChannelInfo channelInfo) {

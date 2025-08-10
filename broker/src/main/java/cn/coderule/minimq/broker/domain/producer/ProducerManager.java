@@ -24,11 +24,12 @@ public class ProducerManager implements Lifecycle {
         QueueSelector queueSelector = new QueueSelector(routeService);
         BrokerContext.register(queueSelector);
 
-
+        ProducerRegister producerRegister = new ProducerRegister(brokerConfig);
+        BrokerContext.register(producerRegister);
 
         MQStore messageStore = BrokerContext.getBean(MQStore.class);
         this.messageSender = new MessageSender(brokerConfig, messageStore);
-        this.producer = new Producer(messageSender);
+        this.producer = new Producer(messageSender, producerRegister);
 
         ProducerController controller = new ProducerController(brokerConfig, producer);
         BrokerContext.registerAPI(controller);
