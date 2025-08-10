@@ -16,6 +16,11 @@ public class ProducerManager implements Lifecycle {
     public void initialize() throws Exception {
         this.brokerConfig = BrokerContext.getBean(BrokerConfig.class);
 
+        ProduceHookManager hookManager = new ProduceHookManager();
+        BrokerContext.register(hookManager);
+
+
+
         MQStore messageStore = BrokerContext.getBean(MQStore.class);
         this.messageSender = new MessageSender(brokerConfig, messageStore);
         this.producer = new Producer(messageSender);
