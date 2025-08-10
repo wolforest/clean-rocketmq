@@ -28,8 +28,6 @@ public class ProducerManager implements Lifecycle {
         BrokerContext.registerAPI(controller);
     }
 
-
-
     @Override
     public void start() throws Exception {
         messageSender.start();

@@ -51,11 +51,13 @@ public class ComponentRegister {
     private void registerDomain() {
         registerRoute();
 
+        registerTransaction();
+
         registerProducer();
         registerConsumer();
 
         registerTimer();
-        registerTransaction();
+
     }
 
     private void registerServer() {
