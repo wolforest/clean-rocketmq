@@ -2,6 +2,7 @@ package cn.coderule.minimq.broker.domain.producer;
 
 import cn.coderule.minimq.broker.api.ProducerController;
 import cn.coderule.common.convention.service.Lifecycle;
+import cn.coderule.minimq.broker.domain.meta.RouteService;
 import cn.coderule.minimq.broker.infra.store.MQStore;
 import cn.coderule.minimq.broker.server.bootstrap.BrokerContext;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
@@ -18,6 +19,10 @@ public class ProducerManager implements Lifecycle {
 
         ProduceHookManager hookManager = new ProduceHookManager();
         BrokerContext.register(hookManager);
+
+        RouteService routeService = BrokerContext.getBean(RouteService.class);
+        QueueSelector queueSelector = new QueueSelector(routeService);
+        BrokerContext.register(queueSelector);
 
 
 
