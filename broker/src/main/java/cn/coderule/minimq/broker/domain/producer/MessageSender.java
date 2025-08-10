@@ -35,8 +35,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class MessageSender implements Lifecycle {
     private final BrokerConfig brokerConfig;
+    private final ThreadPoolExecutor callbackExecutor;
+
     private final MQFacade MQStore;
-    private final ThreadPoolExecutor executor;
 
     private ProduceHookManager hookManager;
     private QueueSelector queueSelector;
@@ -46,7 +47,7 @@ public class MessageSender implements Lifecycle {
     public MessageSender(BrokerConfig brokerConfig, MQFacade MQStore) {
         this.brokerConfig = brokerConfig;
         this.MQStore = MQStore;
-        this.executor = createExecutor();
+        this.callbackExecutor = createExecutor();
     }
 
 
@@ -65,7 +66,7 @@ public class MessageSender implements Lifecycle {
         selectQueue(context);
         hookManager.preProduce(context);
         CompletableFuture<EnqueueResult> future = storeMessage(context);
-        future.thenAcceptAsync(sendCallback(context), executor);
+        future.thenAcceptAsync(sendCallback(context), callbackExecutor);
 
         return future;
     }
@@ -91,7 +92,7 @@ public class MessageSender implements Lifecycle {
 
     @Override
     public void shutdown() throws Exception {
-        this.executor.shutdown();
+        this.callbackExecutor.shutdown();
     }
 
     private ThreadPoolExecutor createExecutor() {
