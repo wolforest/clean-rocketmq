@@ -13,11 +13,9 @@ import static cn.coderule.minimq.domain.domain.timer.TimerConstants.TIMER_TOPIC;
 
 @Slf4j
 public class TimerHook implements ProduceHook {
-    private final BrokerConfig brokerConfig;
     private final TimerConfig timerConfig;
 
     public TimerHook(BrokerConfig brokerConfig) {
-        this.brokerConfig = brokerConfig;
         this.timerConfig = brokerConfig.getTimerConfig();
     }
 

@@ -32,16 +32,6 @@ public class GrpcManager implements Lifecycle {
         this.grpcServer.shutdown();
     }
 
-    @Override
-    public void cleanup() throws Exception {
-
-    }
-
-    @Override
-    public State getState() {
-        return State.RUNNING;
-    }
-
     private void initConfig() {
         BrokerConfig brokerConfig = BrokerContext.getBean(BrokerConfig.class);
         this.grpcConfig = brokerConfig.getGrpcConfig();
