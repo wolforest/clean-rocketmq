@@ -209,16 +209,7 @@ public class MessageBO extends Message implements Serializable {
     }
 
     public long getDeliverTime() {
-        String t = this.getProperty(MessageConst.PROPERTY_TIMER_DELIVER_MS);
-        if (StringUtil.isBlank(t)) {
-            return -1;
-        }
-
-        try {
-            return Long.parseLong(t);
-        } catch (Exception e) {
-            return -1;
-        }
+        return getLongProperty(MessageConst.PROPERTY_TIMER_DELIVER_MS);
     }
 
     public void setDelayTime(long timeMs) {
@@ -226,16 +217,7 @@ public class MessageBO extends Message implements Serializable {
     }
 
     public long getDelayTime() {
-        String t = this.getProperty(MessageConst.PROPERTY_TIMER_DELAY_MS);
-        if (StringUtil.isBlank(t)) {
-            return -1;
-        }
-
-        try {
-            return Long.parseLong(t);
-        } catch (Exception e) {
-            return -1;
-        }
+        return getLongProperty(MessageConst.PROPERTY_TIMER_DELAY_MS);
     }
 
     public void setTimeout(long timeMs) {
@@ -243,28 +225,27 @@ public class MessageBO extends Message implements Serializable {
     }
 
     public long getTimeout() {
-        String t = this.getProperty(MessageConst.PROPERTY_TIMER_OUT_MS);
-        if (StringUtil.isBlank(t)) {
-            return -1;
-        }
-
-        try {
-            return Long.parseLong(t);
-        } catch (Exception e) {
-            return -1;
-        }
+        return getLongProperty(MessageConst.PROPERTY_TIMER_OUT_MS);
     }
 
     public long getTransactionCheckTime() {
-        String t = this.getProperty(MessageConst.PROPERTY_CHECK_IMMUNITY_TIME_IN_SECONDS);
+        return getLongProperty(MessageConst.PROPERTY_CHECK_IMMUNITY_TIME_IN_SECONDS);
+    }
+
+    private long getLongProperty(String key) {
+        return getLongProperty(key, -1);
+    }
+
+    private long getLongProperty(String key, long defaultValue) {
+        String t = this.getProperty(key);
         if (StringUtil.isBlank(t)) {
-            return -1;
+            return defaultValue;
         }
 
         try {
             return Long.parseLong(t);
         } catch (Exception e) {
-            return -1;
+            return defaultValue;
         }
     }
 }
