@@ -33,5 +33,5 @@ public class TimerConfig implements Serializable {
     private int consumerThreadNum = 3;
     private int producerThreadNum = 3;
 
-    private int maxDelayTime = 7 * 24 * 3600;
+    private int maxDelayTime = 24 * 3600;
 }

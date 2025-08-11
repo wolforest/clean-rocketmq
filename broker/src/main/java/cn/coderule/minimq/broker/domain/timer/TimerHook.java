@@ -1,5 +1,7 @@
 package cn.coderule.minimq.broker.domain.timer;
 
+import cn.coderule.minimq.domain.config.business.TimerConfig;
+import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.core.enums.code.InvalidCode;
 import cn.coderule.minimq.domain.core.exception.InvalidRequestException;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
@@ -11,6 +13,14 @@ import static cn.coderule.minimq.domain.domain.timer.TimerConstants.TIMER_TOPIC;
 
 @Slf4j
 public class TimerHook implements ProduceHook {
+    private final BrokerConfig brokerConfig;
+    private final TimerConfig timerConfig;
+
+    public TimerHook(BrokerConfig brokerConfig) {
+        this.brokerConfig = brokerConfig;
+        this.timerConfig = brokerConfig.getTimerConfig();
+    }
+
     @Override
     public String hookName() {
         return TimerHook.class.getSimpleName();
@@ -53,6 +63,27 @@ public class TimerHook implements ProduceHook {
 
     private void transformMessage(ProduceContext context) {
         MessageBO messageBO = context.getMessageBO();
+        long deliverTime = getDeliverTime(messageBO);
+
+        int precision = timerConfig.getPrecision();
+        long maxDelayTime = (long) timerConfig.getMaxDelayTime() * precision;
+        long delayTime = deliverTime - System.currentTimeMillis();
+        if (delayTime > maxDelayTime) {
+            log.error("message delay time is too large {}", delayTime);
+            throw new InvalidRequestException(
+                InvalidCode.ILLEGAL_DELIVERY_TIME,
+                "message delay time is too large"
+            );
+        }
+
+        if (delayTime % precision == 0) {
+            deliverTime -= precision;
+        } else {
+            deliverTime = (delayTime / precision) * precision;
+        }
+
+        messageBO.setTimeout(deliverTime);
+        messageBO.setSystemQueue(TIMER_TOPIC, 0);
     }
 
     private long getDeliverTime(MessageBO messageBO) {

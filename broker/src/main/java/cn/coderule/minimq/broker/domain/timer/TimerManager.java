@@ -3,13 +3,16 @@ package cn.coderule.minimq.broker.domain.timer;
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.minimq.broker.domain.producer.ProduceHookManager;
 import cn.coderule.minimq.broker.server.bootstrap.BrokerContext;
+import cn.coderule.minimq.domain.config.server.BrokerConfig;
 
 public class TimerManager implements Lifecycle {
     @Override
     public void initialize() throws Exception {
         // inject timer produce hook
         ProduceHookManager hookManager = BrokerContext.getBean(ProduceHookManager.class);
-        TimerHook hook = new TimerHook();
+
+        BrokerConfig brokerConfig = BrokerContext.getBean(BrokerConfig.class);
+        TimerHook hook = new TimerHook(brokerConfig);
         hookManager.registerHook(hook);
     }
 

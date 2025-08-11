@@ -3,6 +3,7 @@ package cn.coderule.minimq.broker.api.validator;
 import cn.coderule.common.util.lang.collection.MapUtil;
 import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.minimq.domain.config.business.MessageConfig;
+import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.core.constant.MQConstants;
 import cn.coderule.minimq.domain.core.enums.code.InvalidCode;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
@@ -12,10 +13,12 @@ import cn.coderule.minimq.domain.core.exception.InvalidRequestException;
 import static cn.coderule.common.util.lang.string.StringUtil.containControlCharacter;
 
 public class MessageValidator {
+    private final BrokerConfig brokerConfig;
     private final MessageConfig messageConfig;
 
-    public MessageValidator(MessageConfig messageConfig) {
-        this.messageConfig = messageConfig;
+    public MessageValidator(BrokerConfig brokerConfig) {
+        this.brokerConfig = brokerConfig;
+        this.messageConfig = brokerConfig.getMessageConfig();
     }
 
     public void validate(MessageBO messageBO) {
@@ -108,7 +111,7 @@ public class MessageValidator {
             return;
         }
 
-        long maxDelayTime = messageConfig.getMaxDelayTimeMills();
+        long maxDelayTime = brokerConfig.getTimerConfig().getMaxDelayTime();
         if (maxDelayTime <= 0) {
             return;
         }

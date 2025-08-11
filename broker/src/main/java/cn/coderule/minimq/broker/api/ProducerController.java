@@ -35,7 +35,7 @@ public class ProducerController {
         this.producer = producer;
 
         this.serverValidator = new ServerValidator(brokerConfig);
-        this.messageValidator = new MessageValidator(brokerConfig.getMessageConfig());
+        this.messageValidator = new MessageValidator(brokerConfig);
     }
 
     public void register(RequestContext context, String topicName, ClientChannelInfo channelInfo) {
