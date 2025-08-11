@@ -12,6 +12,10 @@ import cn.coderule.minimq.domain.domain.producer.ProduceContext;
 public interface ProduceHook {
     String hookName();
 
+    /**
+     * execute before produce
+     * throw @InvalidRequestException to reject produce
+     */
     void preProduce(final ProduceContext context);
 
     void postProduce(final ProduceContext context);
