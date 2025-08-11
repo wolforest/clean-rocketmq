@@ -1,6 +1,5 @@
 package cn.coderule.minimq.broker.domain.timer;
 
-import cn.coderule.minimq.domain.core.constant.flag.MessageSysFlag;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.domain.producer.ProduceContext;
 import cn.coderule.minimq.domain.service.broker.produce.ProduceHook;
@@ -20,8 +19,15 @@ public class TimerHook implements ProduceHook {
             return;
         }
 
+        if (isTimerTopic(messageBO)) {
+            return;
+        }
 
+        if (!hasTimerProperty(messageBO)) {
+            return;
+        }
 
+        transformMessage(context);
     }
 
     @Override
@@ -39,5 +45,9 @@ public class TimerHook implements ProduceHook {
         }
 
         return msg.getDeliverTime() > 0 || msg.getDelayTime() > 0;
+    }
+
+    private void transformMessage(ProduceContext context) {
+        MessageBO messageBO = context.getMessageBO();
     }
 }
