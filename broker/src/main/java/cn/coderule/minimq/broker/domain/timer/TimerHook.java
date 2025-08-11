@@ -16,9 +16,11 @@ public class TimerHook implements ProduceHook {
     @Override
     public void preProduce(ProduceContext context) {
         MessageBO messageBO = context.getMessageBO();
+        if (!messageBO.isNormalOrCommitMessage()) {
+            return;
+        }
 
-        int sysFlag = messageBO.getSysFlag();
-        int transactionType = MessageSysFlag.getMessageType(sysFlag);
+
 
     }
 

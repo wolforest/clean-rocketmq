@@ -70,6 +70,12 @@ public class MessageBO extends Message implements Serializable {
         this.queueId = systemQueueId;
     }
 
+    public boolean isNormalOrCommitMessage(){
+        int type = MessageSysFlag.getMessageType(this.sysFlag);
+        return MessageSysFlag.NORMAL_MESSAGE == type
+            || MessageSysFlag.COMMIT_MESSAGE == type;
+    }
+
     public String getBodyString() {
         if (body == null) {
             return "";
