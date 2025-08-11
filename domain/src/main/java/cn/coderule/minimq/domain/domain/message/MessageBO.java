@@ -220,6 +220,10 @@ public class MessageBO extends Message implements Serializable {
         return getLongProperty(MessageConst.PROPERTY_TIMER_DELAY_MS);
     }
 
+    public long getDelaySecond() {
+        return getLongProperty(MessageConst.PROPERTY_TIMER_DELAY_SEC);
+    }
+
     public void setTimeout(long timeMs) {
         this.putProperty(MessageConst.PROPERTY_TIMER_OUT_MS, String.valueOf(timeMs));
     }
