@@ -10,6 +10,9 @@ import cn.coderule.minimq.domain.domain.producer.ProduceContext;
  *  - timer hook, to change timer message topic
  */
 public interface ProduceHook {
+    /**
+     * hook name, for hook management
+     */
     String hookName();
 
     /**

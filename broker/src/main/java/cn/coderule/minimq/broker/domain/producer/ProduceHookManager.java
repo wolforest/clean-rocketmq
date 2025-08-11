@@ -2,6 +2,7 @@ package cn.coderule.minimq.broker.domain.producer;
 
 import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.minimq.domain.domain.producer.ProduceContext;
+import cn.coderule.minimq.domain.service.broker.consume.ConsumeHook;
 import cn.coderule.minimq.domain.service.broker.produce.ProduceHook;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,4 +39,13 @@ public class ProduceHookManager implements ProduceHook {
             hook.postProduce(context);
         }
     }
+
+    public List<String> getHookNameList() {
+        List<String> hookNames = new ArrayList<>();
+        for (ProduceHook hook : hooks) {
+            hookNames.add(hook.hookName());
+        }
+        return hookNames;
+    }
+
 }

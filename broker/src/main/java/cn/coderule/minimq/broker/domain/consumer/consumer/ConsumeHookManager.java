@@ -39,4 +39,12 @@ public class ConsumeHookManager implements ConsumeHook {
             hook.PostConsume(context);
         }
     }
+
+    public List<String> getHookNameList() {
+        List<String> hookNames = new ArrayList<>();
+        for (ConsumeHook hook : hooks) {
+            hookNames.add(hook.hookName());
+        }
+        return hookNames;
+    }
 }
