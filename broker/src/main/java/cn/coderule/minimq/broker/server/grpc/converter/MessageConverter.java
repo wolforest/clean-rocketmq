@@ -10,7 +10,7 @@ import cn.coderule.minimq.domain.core.constant.flag.MessageSysFlag;
 import cn.coderule.minimq.domain.core.enums.code.InvalidCode;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.domain.cluster.RequestContext;
-import cn.coderule.minimq.rpc.common.core.exception.InvalidRequestException;
+import cn.coderule.minimq.domain.core.exception.InvalidRequestException;
 import com.google.protobuf.Timestamp;
 import com.google.protobuf.util.Durations;
 import com.google.protobuf.util.Timestamps;

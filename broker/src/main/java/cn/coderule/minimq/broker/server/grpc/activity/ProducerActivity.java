@@ -12,7 +12,7 @@ import cn.coderule.minimq.domain.core.enums.code.InvalidCode;
 import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.rpc.common.grpc.activity.ActivityHelper;
-import cn.coderule.minimq.rpc.common.core.exception.InvalidRequestException;
+import cn.coderule.minimq.domain.core.exception.InvalidRequestException;
 import io.grpc.stub.StreamObserver;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;

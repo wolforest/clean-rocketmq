@@ -7,7 +7,7 @@ import cn.coderule.minimq.domain.core.constant.MQConstants;
 import cn.coderule.minimq.domain.core.enums.code.InvalidCode;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.domain.meta.topic.TopicValidator;
-import cn.coderule.minimq.rpc.common.core.exception.InvalidRequestException;
+import cn.coderule.minimq.domain.core.exception.InvalidRequestException;
 
 import static cn.coderule.common.util.lang.string.StringUtil.containControlCharacter;
 

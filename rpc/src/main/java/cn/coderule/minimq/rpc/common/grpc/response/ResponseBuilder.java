@@ -5,7 +5,7 @@ import apache.rocketmq.v2.Code;
 import apache.rocketmq.v2.Status;
 import cn.coderule.common.util.lang.bean.ExceptionUtil;
 import cn.coderule.minimq.domain.core.exception.InvalidParameterException;
-import cn.coderule.minimq.rpc.common.core.exception.InvalidRequestException;
+import cn.coderule.minimq.domain.core.exception.InvalidRequestException;
 import cn.coderule.minimq.rpc.common.rpc.core.exception.RemotingTimeoutException;
 import cn.coderule.minimq.rpc.common.rpc.protocol.code.ResponseCode;
 import java.util.Map;

@@ -1,4 +1,4 @@
-package cn.coderule.minimq.rpc.common.core.exception;
+package cn.coderule.minimq.domain.core.exception;
 
 import cn.coderule.common.lang.exception.BusinessException;
 import cn.coderule.minimq.domain.core.enums.code.InvalidCode;
