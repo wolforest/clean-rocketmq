@@ -1,5 +1,6 @@
 package cn.coderule.minimq.domain.domain.message;
 
+import cn.coderule.common.util.lang.string.StringUtil;
 import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
@@ -19,7 +20,6 @@ public class Message implements Serializable {
     protected Map<String, String> properties;
     protected byte[] body;
     protected String transactionId;
-
 
     public String getStringBody() {
         return new String(this.body, StandardCharsets.UTF_8);
@@ -47,5 +47,22 @@ public class Message implements Serializable {
         }
 
         this.properties.remove(name);
+    }
+
+    public long getLongProperty(String key) {
+        return getLongProperty(key, -1);
+    }
+
+    public long getLongProperty(String key, long defaultValue) {
+        String t = this.getProperty(key);
+        if (StringUtil.isBlank(t)) {
+            return defaultValue;
+        }
+
+        try {
+            return Long.parseLong(t);
+        } catch (Exception e) {
+            return defaultValue;
+        }
     }
 }

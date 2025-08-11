@@ -232,20 +232,5 @@ public class MessageBO extends Message implements Serializable {
         return getLongProperty(MessageConst.PROPERTY_CHECK_IMMUNITY_TIME_IN_SECONDS);
     }
 
-    private long getLongProperty(String key) {
-        return getLongProperty(key, -1);
-    }
 
-    private long getLongProperty(String key, long defaultValue) {
-        String t = this.getProperty(key);
-        if (StringUtil.isBlank(t)) {
-            return defaultValue;
-        }
-
-        try {
-            return Long.parseLong(t);
-        } catch (Exception e) {
-            return defaultValue;
-        }
-    }
 }
