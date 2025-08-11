@@ -198,13 +198,13 @@ public class MessageBO extends Message implements Serializable {
     public long getDeliverTime() {
         String t = this.getProperty(MessageConst.PROPERTY_TIMER_DELIVER_MS);
         if (StringUtil.isBlank(t)) {
-            return 0;
+            return -1;
         }
 
         try {
             return Long.parseLong(t);
         } catch (Exception e) {
-            return 0;
+            return -1;
         }
     }
 
@@ -215,26 +215,43 @@ public class MessageBO extends Message implements Serializable {
     public long getDelayTime() {
         String t = this.getProperty(MessageConst.PROPERTY_TIMER_DELAY_MS);
         if (StringUtil.isBlank(t)) {
-            return 0;
+            return -1;
         }
 
         try {
             return Long.parseLong(t);
         } catch (Exception e) {
-            return 0;
+            return -1;
+        }
+    }
+
+    public void setTimeout(long timeMs) {
+        this.putProperty(MessageConst.PROPERTY_TIMER_OUT_MS, String.valueOf(timeMs));
+    }
+
+    public long getTimeout() {
+        String t = this.getProperty(MessageConst.PROPERTY_TIMER_OUT_MS);
+        if (StringUtil.isBlank(t)) {
+            return -1;
+        }
+
+        try {
+            return Long.parseLong(t);
+        } catch (Exception e) {
+            return -1;
         }
     }
 
     public long getTransactionCheckTime() {
         String t = this.getProperty(MessageConst.PROPERTY_CHECK_IMMUNITY_TIME_IN_SECONDS);
         if (StringUtil.isBlank(t)) {
-            return 0;
+            return -1;
         }
 
         try {
             return Long.parseLong(t);
         } catch (Exception e) {
-            return 0;
+            return -1;
         }
     }
 }

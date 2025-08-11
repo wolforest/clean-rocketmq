@@ -22,7 +22,7 @@ public class MessageValidator {
         validateTopic(messageBO.getTopic());
         validateTag(messageBO.getTags());
 
-        validateDelayTime(messageBO.getDeliverTime());
+        validateDeliverTime(messageBO.getDeliverTime());
         validateShardingKey(messageBO.getShardingKey());
         validateTransactionCheckTime(messageBO.getTransactionCheckTime());
 
@@ -103,7 +103,7 @@ public class MessageValidator {
         }
     }
 
-    private void validateDelayTime(long delayTime) {
+    private void validateDeliverTime(long delayTime) {
         if (delayTime <= 0)  {
             return;
         }
