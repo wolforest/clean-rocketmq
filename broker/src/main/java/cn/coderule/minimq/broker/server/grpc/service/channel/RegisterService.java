@@ -22,7 +22,7 @@ import cn.coderule.minimq.domain.domain.cluster.ClientChannelInfo;
 import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import cn.coderule.minimq.domain.domain.cluster.heartbeat.SubscriptionData;
 import cn.coderule.minimq.rpc.broker.core.FilterAPI;
-import cn.coderule.minimq.rpc.common.core.exception.RequestException;
+import cn.coderule.minimq.rpc.common.core.exception.InvalidRequestException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -140,7 +140,7 @@ public class RegisterService {
         try {
             return FilterAPI.build(topicName, expression, expressionType);
         } catch (Exception e) {
-            throw new RequestException(InvalidCode.ILLEGAL_FILTER_EXPRESSION, "expression format is not correct", e);
+            throw new InvalidRequestException(InvalidCode.ILLEGAL_FILTER_EXPRESSION, "expression format is not correct", e);
         }
     }
 

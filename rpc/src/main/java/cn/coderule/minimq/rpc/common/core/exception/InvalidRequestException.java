@@ -5,19 +5,19 @@ import cn.coderule.minimq.domain.core.enums.code.InvalidCode;
 import lombok.Getter;
 
 @Getter
-public class RequestException extends BusinessException {
+public class InvalidRequestException extends BusinessException {
     private static final String DEFAULT_MESSAGE = "Invalid parameter";
     private final InvalidCode invalidCode;
 
-    public RequestException(InvalidCode code) {
+    public InvalidRequestException(InvalidCode code) {
         this(code, DEFAULT_MESSAGE);
     }
 
-    public RequestException(InvalidCode code, String message) {
+    public InvalidRequestException(InvalidCode code, String message) {
         this(code, message, null);
     }
 
-    public RequestException(InvalidCode code, String message, Throwable t) {
+    public InvalidRequestException(InvalidCode code, String message, Throwable t) {
         super(500, message, t);
         this.invalidCode = code;
     }

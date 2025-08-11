@@ -12,7 +12,7 @@ import cn.coderule.minimq.domain.core.enums.code.InvalidCode;
 import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.rpc.common.grpc.activity.ActivityHelper;
-import cn.coderule.minimq.rpc.common.core.exception.RequestException;
+import cn.coderule.minimq.rpc.common.core.exception.InvalidRequestException;
 import io.grpc.stub.StreamObserver;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -96,7 +96,7 @@ public class ProducerActivity {
             return;
         }
 
-        throw new RequestException(InvalidCode.MESSAGE_CORRUPTED, "no message to send");
+        throw new InvalidRequestException(InvalidCode.MESSAGE_CORRUPTED, "no message to send");
     }
 
     private Function<Status, ForwardMessageToDeadLetterQueueResponse> moveToDLQStatusToResponse() {

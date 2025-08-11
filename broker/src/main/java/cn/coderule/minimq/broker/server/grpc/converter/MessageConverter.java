@@ -10,7 +10,7 @@ import cn.coderule.minimq.domain.core.constant.flag.MessageSysFlag;
 import cn.coderule.minimq.domain.core.enums.code.InvalidCode;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.domain.cluster.RequestContext;
-import cn.coderule.minimq.rpc.common.core.exception.RequestException;
+import cn.coderule.minimq.rpc.common.core.exception.InvalidRequestException;
 import com.google.protobuf.Timestamp;
 import com.google.protobuf.util.Durations;
 import com.google.protobuf.util.Timestamps;
@@ -46,21 +46,21 @@ public class MessageConverter {
     private static void validateProperty(Map<String, String> properties) {
         for (Map.Entry<String, String> entry : properties.entrySet()) {
             if (!MessageConst.STRING_HASH_SET.contains(entry.getKey())) {
-                throw new RequestException(
+                throw new InvalidRequestException(
                     InvalidCode.ILLEGAL_MESSAGE_PROPERTY_KEY,
                     "property key " + entry.getKey() + " is not allowed"
                 );
             }
 
             if (containControlCharacter(entry.getKey())) {
-                throw new RequestException(
+                throw new InvalidRequestException(
                     InvalidCode.ILLEGAL_MESSAGE_PROPERTY_KEY,
                     "property key " + entry.getKey() + " can't contain control character"
                 );
             }
 
             if (containControlCharacter(entry.getValue())) {
-                throw new RequestException(
+                throw new InvalidRequestException(
                     InvalidCode.ILLEGAL_MESSAGE_PROPERTY_KEY,
                     "property value " + entry.getValue() + " can't contain control character"
                 );
@@ -109,7 +109,7 @@ public class MessageConverter {
     private static void setMessageId(Map<String, String> properties, Message message) {
         String messageId = message.getSystemProperties().getMessageId();
         if (StringUtil.isBlank(messageId)) {
-            throw new RequestException(InvalidCode.ILLEGAL_MESSAGE_ID, "message id can not be blank");
+            throw new InvalidRequestException(InvalidCode.ILLEGAL_MESSAGE_ID, "message id can not be blank");
         }
 
         properties.put(MessageConst.PROPERTY_UNIQ_CLIENT_MESSAGE_ID_KEYIDX, messageId);
@@ -138,11 +138,11 @@ public class MessageConverter {
         }
 
         if (StringUtil.isBlank(key)) {
-            throw new RequestException(InvalidCode.ILLEGAL_MESSAGE_KEY, "message can't be blank");
+            throw new InvalidRequestException(InvalidCode.ILLEGAL_MESSAGE_KEY, "message can't be blank");
         }
 
         if (containControlCharacter(key)) {
-            throw new RequestException(InvalidCode.ILLEGAL_MESSAGE_KEY, "message key can't contain control character");
+            throw new InvalidRequestException(InvalidCode.ILLEGAL_MESSAGE_KEY, "message key can't contain control character");
         }
     }
 

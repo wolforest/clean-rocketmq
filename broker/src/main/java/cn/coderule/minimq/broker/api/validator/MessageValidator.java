@@ -7,7 +7,7 @@ import cn.coderule.minimq.domain.core.constant.MQConstants;
 import cn.coderule.minimq.domain.core.enums.code.InvalidCode;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.domain.meta.topic.TopicValidator;
-import cn.coderule.minimq.rpc.common.core.exception.RequestException;
+import cn.coderule.minimq.rpc.common.core.exception.InvalidRequestException;
 
 import static cn.coderule.common.util.lang.string.StringUtil.containControlCharacter;
 
@@ -42,7 +42,7 @@ public class MessageValidator {
         }
 
         if (messageBO.getBody().length > maxBodySize) {
-            throw new RequestException(
+            throw new InvalidRequestException(
                 InvalidCode.MESSAGE_BODY_TOO_LARGE,
                 "message body size is larger than " + maxBodySize
             );
@@ -57,7 +57,7 @@ public class MessageValidator {
 
         int propertySize = MapUtil.calculateLength(messageBO.getProperties());
         if (propertySize > maxPropertySize) {
-            throw new RequestException(
+            throw new InvalidRequestException(
                 InvalidCode.MESSAGE_PROPERTIES_TOO_LARGE,
                 "message properties size is larger than " + maxPropertySize
             );
@@ -71,7 +71,7 @@ public class MessageValidator {
         }
 
         if (messageBO.getProperties().size() > maxPropertyCount) {
-            throw new RequestException(
+            throw new InvalidRequestException(
                 InvalidCode.MESSAGE_PROPERTIES_TOO_LARGE,
                 "message properties number is more than " + maxPropertyCount
             );
@@ -85,11 +85,11 @@ public class MessageValidator {
         }
 
         if (StringUtil.isBlank(keyName)) {
-            throw new RequestException(InvalidCode.ILLEGAL_MESSAGE_GROUP, "message groupName can't be blank");
+            throw new InvalidRequestException(InvalidCode.ILLEGAL_MESSAGE_GROUP, "message groupName can't be blank");
         }
 
         if (containControlCharacter(keyName)) {
-            throw new RequestException(InvalidCode.ILLEGAL_MESSAGE_GROUP, "message groupName can't contain control character");
+            throw new InvalidRequestException(InvalidCode.ILLEGAL_MESSAGE_GROUP, "message groupName can't contain control character");
         }
 
         int maxLength = messageConfig.getMaxMessageGroupSize();
@@ -99,7 +99,7 @@ public class MessageValidator {
 
         int groupLength = keyName.getBytes(MQConstants.MQ_CHARSET).length;
         if (groupLength >= maxLength) {
-            throw new RequestException(InvalidCode.ILLEGAL_MESSAGE_GROUP, "message groupName can't be longer than " + maxLength);
+            throw new InvalidRequestException(InvalidCode.ILLEGAL_MESSAGE_GROUP, "message groupName can't be longer than " + maxLength);
         }
     }
 
@@ -115,7 +115,7 @@ public class MessageValidator {
 
         long now = System.currentTimeMillis();
         if (delayTime - now > maxDelayTime) {
-            throw new RequestException(InvalidCode.ILLEGAL_DELIVERY_TIME, "message delay time is too large");
+            throw new InvalidRequestException(InvalidCode.ILLEGAL_DELIVERY_TIME, "message delay time is too large");
         }
     }
 
@@ -130,7 +130,7 @@ public class MessageValidator {
         }
 
         if (recoveryTime > maxRecoveryTime) {
-            throw new RequestException(InvalidCode.BAD_REQUEST, "message transaction recovery time is too large");
+            throw new InvalidRequestException(InvalidCode.BAD_REQUEST, "message transaction recovery time is too large");
         }
     }
 
@@ -141,13 +141,13 @@ public class MessageValidator {
         }
 
         if (StringUtil.isBlank(tag)) {
-            throw new RequestException(InvalidCode.ILLEGAL_MESSAGE_TAG, "tag cannot be the char sequence of whitespace");
+            throw new InvalidRequestException(InvalidCode.ILLEGAL_MESSAGE_TAG, "tag cannot be the char sequence of whitespace");
         }
         if (tag.contains("|")) {
-            throw new RequestException(InvalidCode.ILLEGAL_MESSAGE_TAG, "tag cannot contain '|'");
+            throw new InvalidRequestException(InvalidCode.ILLEGAL_MESSAGE_TAG, "tag cannot contain '|'");
         }
         if (containControlCharacter(tag)) {
-            throw new RequestException(InvalidCode.ILLEGAL_MESSAGE_TAG, "tag cannot contain control character");
+            throw new InvalidRequestException(InvalidCode.ILLEGAL_MESSAGE_TAG, "tag cannot contain control character");
         }
     }
 
