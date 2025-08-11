@@ -32,7 +32,11 @@ public class TimerHook implements ProduceHook {
         return TIMER_TOPIC.equals(msg.getTopic());
     }
 
-    private boolean isTimerMessage(MessageBO msg) {
-        return false;
+    private boolean hasTimerProperty(MessageBO msg) {
+        if (isTimerTopic(msg) || msg.getTimeout() > 0) {
+            return false;
+        }
+
+        return msg.getDeliverTime() > 0 || msg.getDelayTime() > 0;
     }
 }
