@@ -64,26 +64,31 @@ public class TimerHook implements ProduceHook {
     private void transformMessage(ProduceContext context) {
         MessageBO messageBO = context.getMessageBO();
         long deliverTime = getDeliverTime(messageBO);
+        validateDeliverTime(deliverTime);
 
         int precision = timerConfig.getPrecision();
-        long maxDelayTime = (long) timerConfig.getMaxDelayTime() * precision;
-        long delayTime = deliverTime - System.currentTimeMillis();
-        if (delayTime > maxDelayTime) {
-            log.error("message delay time is too large {}", delayTime);
-            throw new InvalidRequestException(
-                InvalidCode.ILLEGAL_DELIVERY_TIME,
-                "message delay time is too large"
-            );
-        }
-
-        if (delayTime % precision == 0) {
+        if (deliverTime % precision == 0) {
             deliverTime -= precision;
         } else {
-            deliverTime = (delayTime / precision) * precision;
+            deliverTime = (deliverTime / precision) * precision;
         }
 
         messageBO.setTimeout(deliverTime);
         messageBO.setSystemQueue(TIMER_TOPIC, 0);
+    }
+
+    private void validateDeliverTime(long deliverTime) {
+        long maxDelayTime = (long) timerConfig.getMaxDelayTime() * timerConfig.getPrecision();
+        long delayTime = deliverTime - System.currentTimeMillis();
+        if (delayTime <= maxDelayTime) {
+            return;
+        }
+
+        log.error("message delay time is too large {}", delayTime);
+        throw new InvalidRequestException(
+            InvalidCode.ILLEGAL_DELIVERY_TIME,
+            "message delay time is too large"
+        );
     }
 
     private long getDeliverTime(MessageBO messageBO) {
