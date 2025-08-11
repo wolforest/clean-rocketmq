@@ -62,6 +62,14 @@ public class MessageBO extends Message implements Serializable {
 
     private MessageVersion version = MessageVersion.V1;
 
+    public void setSystemQueue(String systemTopic, int systemQueueId) {
+        putProperty(MessageConst.PROPERTY_REAL_TOPIC, topic);
+        putProperty(MessageConst.PROPERTY_REAL_QUEUE_ID, String.valueOf(queueId));
+
+        this.topic = systemTopic;
+        this.queueId = systemQueueId;
+    }
+
     public String getBodyString() {
         if (body == null) {
             return "";
@@ -115,7 +123,6 @@ public class MessageBO extends Message implements Serializable {
     public void setKeys(String keys) {
         this.putProperty(MessageConst.PROPERTY_KEYS, keys);
     }
-
 
     public String getShardingKey() {
         return this.getProperty(MessageConst.PROPERTY_SHARDING_KEY);
