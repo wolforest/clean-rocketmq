@@ -79,7 +79,7 @@ public class MessageConverter {
         // transaction
         MessageType messageType = message.getSystemProperties().getMessageType();
         if (messageType.equals(MessageType.TRANSACTION)) {
-            sysFlag |= MessageSysFlag.TRANSACTION_PREPARED_TYPE;
+            sysFlag |= MessageSysFlag.PREPARE_MESSAGE;
         }
 
         return sysFlag;

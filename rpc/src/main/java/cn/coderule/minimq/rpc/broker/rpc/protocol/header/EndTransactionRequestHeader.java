@@ -39,15 +39,15 @@ public class EndTransactionRequestHeader extends RpcRequestHeader {
 
     @Override
     public void checkFields() throws RemotingCommandException {
-        if (MessageSysFlag.TRANSACTION_NOT_TYPE == this.commitOrRollback) {
+        if (MessageSysFlag.NORMAL_MESSAGE == this.commitOrRollback) {
             return;
         }
 
-        if (MessageSysFlag.TRANSACTION_COMMIT_TYPE == this.commitOrRollback) {
+        if (MessageSysFlag.COMMIT_MESSAGE == this.commitOrRollback) {
             return;
         }
 
-        if (MessageSysFlag.TRANSACTION_ROLLBACK_TYPE == this.commitOrRollback) {
+        if (MessageSysFlag.ROLLBACK_MESSAGE == this.commitOrRollback) {
             return;
         }
 

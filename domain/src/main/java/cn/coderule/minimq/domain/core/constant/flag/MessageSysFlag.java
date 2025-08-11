@@ -17,21 +17,21 @@ public class MessageSysFlag {
     public final static int MULTI_TAGS_FLAG = 0x1 << 1;
 
     /**
-     * transaction type
+     * message type
      *  not type: 0000-0000-0000-00-00
      *  prepare:  0000-0000-0000-01-00
      *  commit:   0000-0000-0000-10-00
      *  rollback: 0000-0000-0000-11-00
      *
-     * not transaction message flag, include below:
+     * NORMAL_MESSAGE flag, include below:
      *  1. normal message
      *  2. message with DelayLevel
      *  3. message with Timer
      */
-    public final static int TRANSACTION_NOT_TYPE = 0;
-    public final static int TRANSACTION_PREPARED_TYPE = 0x1 << 2;
-    public final static int TRANSACTION_COMMIT_TYPE = 0x2 << 2;
-    public final static int TRANSACTION_ROLLBACK_TYPE = 0x3 << 2;
+    public final static int NORMAL_MESSAGE = 0;
+    public final static int PREPARE_MESSAGE = 0x1 << 2;
+    public final static int COMMIT_MESSAGE = 0x2 << 2;
+    public final static int ROLLBACK_MESSAGE = 0x3 << 2;
 
     public final static int BORNHOST_V6_FLAG = 0x1 << 4;
     public final static int STOREHOSTADDRESS_V6_FLAG = 0x1 << 5;
@@ -57,8 +57,8 @@ public class MessageSysFlag {
      * @param flag message flag
      * @return transaction type
      */
-    public static int getTransactionValue(final int flag) {
-        return flag & TRANSACTION_ROLLBACK_TYPE;
+    public static int getMessageType(final int flag) {
+        return flag & ROLLBACK_MESSAGE;
     }
 
     /**
@@ -68,7 +68,7 @@ public class MessageSysFlag {
      * @return new transaction type
      */
     public static int resetTransactionValue(final int flag, final int type) {
-        return (flag & (~TRANSACTION_ROLLBACK_TYPE)) | type;
+        return (flag & (~ROLLBACK_MESSAGE)) | type;
     }
 
     public static boolean check(int flag, int expectedFlag) {

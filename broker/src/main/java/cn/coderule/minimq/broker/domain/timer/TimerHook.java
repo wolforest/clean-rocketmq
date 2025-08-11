@@ -18,7 +18,7 @@ public class TimerHook implements ProduceHook {
         MessageBO messageBO = context.getMessageBO();
 
         int sysFlag = messageBO.getSysFlag();
-        int transactionType = MessageSysFlag.getTransactionValue(sysFlag);
+        int transactionType = MessageSysFlag.getMessageType(sysFlag);
 
     }
 

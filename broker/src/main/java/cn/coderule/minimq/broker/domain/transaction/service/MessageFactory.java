@@ -31,7 +31,7 @@ public class MessageFactory {
         msg.putProperty(MessageConst.PROPERTY_REAL_QUEUE_ID, String.valueOf(msg.getQueueId()));
 
         //reset msg transaction type and set topic = TopicValidator.RMQ_SYS_TRANS_HALF_TOPIC
-        msg.setSysFlag(MessageSysFlag.resetTransactionValue(msg.getSysFlag(), MessageSysFlag.TRANSACTION_NOT_TYPE));
+        msg.setSysFlag(MessageSysFlag.resetTransactionValue(msg.getSysFlag(), MessageSysFlag.NORMAL_MESSAGE));
         msg.setTopic(TransactionUtil.buildPrepareTopic());
         msg.setQueueId(0);
         msg.setPropertiesString(MessageUtils.propertiesToString(msg.getProperties()));
@@ -62,7 +62,7 @@ public class MessageFactory {
         newMsg.setPropertiesString(MessageUtils.propertiesToString(newMsg.getProperties()));
 
         int sysFlag =  prepareMessage.getSysFlag();
-        sysFlag |= MessageSysFlag.TRANSACTION_PREPARED_TYPE;
+        sysFlag |= MessageSysFlag.PREPARE_MESSAGE;
         newMsg.setSysFlag(sysFlag);
 
         return newMsg;
