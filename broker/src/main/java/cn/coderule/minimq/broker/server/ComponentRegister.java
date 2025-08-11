@@ -52,12 +52,10 @@ public class ComponentRegister {
         registerRoute();
 
         registerTransaction();
-
         registerProducer();
-        registerConsumer();
-
         registerTimer();
 
+        registerConsumer();
     }
 
     private void registerServer() {

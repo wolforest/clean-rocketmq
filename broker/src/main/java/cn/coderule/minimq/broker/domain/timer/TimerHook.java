@@ -3,6 +3,7 @@ package cn.coderule.minimq.broker.domain.timer;
 import cn.coderule.minimq.domain.core.constant.flag.MessageSysFlag;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.domain.producer.ProduceContext;
+import cn.coderule.minimq.domain.domain.timer.TimerConstants;
 import cn.coderule.minimq.domain.service.broker.produce.ProduceHook;
 
 import static cn.coderule.minimq.domain.domain.timer.TimerConstants.TIMER_TOPIC;
@@ -27,7 +28,11 @@ public class TimerHook implements ProduceHook {
 
     }
 
-    private boolean isRolledTimerMessage(MessageBO msg) {
+    private boolean isTimerTopic(MessageBO msg) {
         return TIMER_TOPIC.equals(msg.getTopic());
+    }
+
+    private boolean isTimerMessage(MessageBO msg) {
+        return false;
     }
 }
