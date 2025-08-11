@@ -3,7 +3,7 @@ package cn.coderule.minimq.rpc.common.rpc.netty.handler;
 import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.minimq.rpc.common.core.constants.HAProxyConstants;
-import cn.coderule.minimq.rpc.common.rpc.core.constant.AttributeKeys;
+import cn.coderule.minimq.rpc.common.rpc.core.constant.RpcKeys;
 import io.netty.buffer.ByteBufUtil;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
@@ -36,16 +36,16 @@ public class HAProxyMessageHandler extends ChannelInboundHandlerAdapter {
     private void handleWithMessage(HAProxyMessage msg, Channel channel) {
         try {
             if (StringUtil.notBlank(msg.sourceAddress())) {
-                channel.attr(AttributeKeys.PROXY_PROTOCOL_ADDR).set(msg.sourceAddress());
+                channel.attr(RpcKeys.PROXY_PROTOCOL_ADDR).set(msg.sourceAddress());
             }
             if (msg.sourcePort() > 0) {
-                channel.attr(AttributeKeys.PROXY_PROTOCOL_PORT).set(String.valueOf(msg.sourcePort()));
+                channel.attr(RpcKeys.PROXY_PROTOCOL_PORT).set(String.valueOf(msg.sourcePort()));
             }
             if (StringUtil.notBlank(msg.destinationAddress())) {
-                channel.attr(AttributeKeys.PROXY_PROTOCOL_SERVER_ADDR).set(msg.destinationAddress());
+                channel.attr(RpcKeys.PROXY_PROTOCOL_SERVER_ADDR).set(msg.destinationAddress());
             }
             if (msg.destinationPort() > 0) {
-                channel.attr(AttributeKeys.PROXY_PROTOCOL_SERVER_PORT).set(String.valueOf(msg.destinationPort()));
+                channel.attr(RpcKeys.PROXY_PROTOCOL_SERVER_PORT).set(String.valueOf(msg.destinationPort()));
             }
             if (CollectionUtil.notEmpty(msg.tlvs())) {
                 msg.tlvs().forEach(tlv -> {
@@ -53,7 +53,7 @@ public class HAProxyMessageHandler extends ChannelInboundHandlerAdapter {
                     if (!StringUtil.isAscii(valueBytes)) {
                         return;
                     }
-                    AttributeKey<String> key = AttributeKeys.valueOf(
+                    AttributeKey<String> key = RpcKeys.valueOf(
                         HAProxyConstants.PROXY_PROTOCOL_TLV_PREFIX + String.format("%02x", tlv.typeByteValue()));
                     channel.attr(key).set(new String(valueBytes, CharsetUtil.UTF_8));
                 });

@@ -3,6 +3,7 @@ package cn.coderule.minimq.domain.config.server;
 import cn.coderule.common.util.lang.SystemUtil;
 import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.common.util.net.NetworkUtil;
+import cn.coderule.minimq.domain.config.ConfigAttribute;
 import cn.coderule.minimq.domain.config.business.MessageConfig;
 import cn.coderule.minimq.domain.config.business.TaskConfig;
 import cn.coderule.minimq.domain.config.business.TimerConfig;
@@ -21,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 @EqualsAndHashCode(callSuper = true)
 public class BrokerConfig extends ServerIdentity implements Serializable {
     private String host = NetworkUtil.getLocalAddress();
-    private Integer port = 8080;
+    private Integer port = ConfigAttribute.GRPC_PORT;
 
     private boolean enableTrace = false;
     private boolean enableEmbedStore = true;

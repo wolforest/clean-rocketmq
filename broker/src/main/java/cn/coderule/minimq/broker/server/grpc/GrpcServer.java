@@ -5,6 +5,9 @@ import cn.coderule.common.lang.concurrent.thread.pool.ThreadPoolFactory;
 import cn.coderule.common.lang.exception.SystemException;
 import cn.coderule.minimq.broker.server.grpc.service.message.MessageService;
 import cn.coderule.minimq.domain.config.network.GrpcConfig;
+import cn.coderule.minimq.rpc.common.grpc.interceptor.ContextInterceptor;
+import cn.coderule.minimq.rpc.common.grpc.interceptor.GlobalExceptionInterceptor;
+import cn.coderule.minimq.rpc.common.grpc.interceptor.HeaderInterceptor;
 import io.grpc.Server;
 import io.grpc.netty.shaded.io.grpc.netty.NettyServerBuilder;
 import io.grpc.netty.shaded.io.netty.channel.epoll.EpollEventLoopGroup;
@@ -42,6 +45,7 @@ public class GrpcServer implements Lifecycle {
             .addService(ProtoReflectionServiceV1.newInstance())
         ;
 
+        initInterceptors();
         initEventLoopGroup();
 
         this.server = serverBuilder.build();
@@ -51,6 +55,7 @@ public class GrpcServer implements Lifecycle {
     public void start() throws Exception {
         try {
             this.server.start();
+            log.info("start grpc server at port: {}", config.getPort());
         } catch (Exception e) {
             log.error("start grpc server error", e);
             throw new SystemException("start grpc server error");
@@ -68,16 +73,6 @@ public class GrpcServer implements Lifecycle {
         } catch (Exception e) {
             log.error("shutdown grpc server error", e);
         }
-    }
-
-    @Override
-    public void cleanup() throws Exception {
-
-    }
-
-    @Override
-    public State getState() {
-        return State.RUNNING;
     }
 
     private void initBusinessThreadPool() {
@@ -110,5 +105,14 @@ public class GrpcServer implements Lifecycle {
             .executor(businessThreadPool)
         ;
     }
+
+    private void initInterceptors() {
+        this.serverBuilder
+            .intercept(new GlobalExceptionInterceptor())
+            .intercept(new ContextInterceptor())
+            .intercept(new HeaderInterceptor())
+            ;
+    }
+
 
 }

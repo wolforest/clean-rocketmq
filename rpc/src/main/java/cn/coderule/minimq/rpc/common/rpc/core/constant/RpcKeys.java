@@ -6,7 +6,7 @@ import io.netty.util.AttributeKey;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class AttributeKeys {
+public class RpcKeys {
 
     public static final AttributeKey<String> REMOTE_ADDR_KEY = AttributeKey.valueOf("RemoteAddr");
 
@@ -17,16 +17,16 @@ public class AttributeKeys {
     public static final AttributeKey<LanguageCode> LANGUAGE_CODE_KEY = AttributeKey.valueOf("LanguageCode");
 
     public static final AttributeKey<String> PROXY_PROTOCOL_ADDR =
-            AttributeKey.valueOf(HAProxyConstants.PROXY_PROTOCOL_ADDR);
+        AttributeKey.valueOf(HAProxyConstants.PROXY_PROTOCOL_ADDR);
 
     public static final AttributeKey<String> PROXY_PROTOCOL_PORT =
-            AttributeKey.valueOf(HAProxyConstants.PROXY_PROTOCOL_PORT);
+        AttributeKey.valueOf(HAProxyConstants.PROXY_PROTOCOL_PORT);
 
     public static final AttributeKey<String> PROXY_PROTOCOL_SERVER_ADDR =
-            AttributeKey.valueOf(HAProxyConstants.PROXY_PROTOCOL_SERVER_ADDR);
+        AttributeKey.valueOf(HAProxyConstants.PROXY_PROTOCOL_SERVER_ADDR);
 
     public static final AttributeKey<String> PROXY_PROTOCOL_SERVER_PORT =
-            AttributeKey.valueOf(HAProxyConstants.PROXY_PROTOCOL_SERVER_PORT);
+        AttributeKey.valueOf(HAProxyConstants.PROXY_PROTOCOL_SERVER_PORT);
 
     private static final Map<String, AttributeKey<String>> ATTRIBUTE_KEY_MAP = new ConcurrentHashMap<>();
 

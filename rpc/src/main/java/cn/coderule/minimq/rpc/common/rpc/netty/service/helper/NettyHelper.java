@@ -3,7 +3,7 @@ package cn.coderule.minimq.rpc.common.rpc.netty.service.helper;
 import cn.coderule.common.util.lang.ThreadUtil;
 import cn.coderule.common.util.net.NetworkUtil;
 import cn.coderule.minimq.domain.config.network.RpcSystemConfig;
-import cn.coderule.minimq.rpc.common.rpc.core.constant.AttributeKeys;
+import cn.coderule.minimq.rpc.common.rpc.core.constant.RpcKeys;
 import cn.coderule.minimq.rpc.common.rpc.core.invoke.RpcCommand;
 import cn.coderule.minimq.rpc.common.rpc.core.exception.RemotingCommandException;
 import cn.coderule.minimq.rpc.common.rpc.core.exception.RemotingConnectException;
@@ -166,7 +166,7 @@ public class NettyHelper {
         if (StringUtils.isNotBlank(addr)) {
             return addr;
         }
-        Attribute<String> att = channel.attr(AttributeKeys.REMOTE_ADDR_KEY);
+        Attribute<String> att = channel.attr(RpcKeys.REMOTE_ADDR_KEY);
         if (att == null) {
             // mocked in unit test
             return parseRemoteAddr(channel);
@@ -299,12 +299,12 @@ public class NettyHelper {
     }
 
     private static String getProxyAddress(Channel channel) {
-        if (!channel.hasAttr(AttributeKeys.PROXY_PROTOCOL_ADDR)) {
+        if (!channel.hasAttr(RpcKeys.PROXY_PROTOCOL_ADDR)) {
             return null;
         }
 
-        String proxyProtocolAddr = getAttribute(AttributeKeys.PROXY_PROTOCOL_ADDR, channel);
-        String proxyProtocolPort = getAttribute(AttributeKeys.PROXY_PROTOCOL_PORT, channel);
+        String proxyProtocolAddr = getAttribute(RpcKeys.PROXY_PROTOCOL_ADDR, channel);
+        String proxyProtocolPort = getAttribute(RpcKeys.PROXY_PROTOCOL_PORT, channel);
         if (StringUtils.isBlank(proxyProtocolAddr) || proxyProtocolPort == null) {
             return null;
         }
