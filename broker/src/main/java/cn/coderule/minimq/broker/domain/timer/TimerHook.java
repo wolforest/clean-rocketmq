@@ -64,8 +64,15 @@ public class TimerHook implements ProduceHook {
     private void transformMessage(ProduceContext context) {
         MessageBO messageBO = context.getMessageBO();
         long deliverTime = getDeliverTime(messageBO);
-        validateDeliverTime(deliverTime);
 
+        validateDeliverTime(deliverTime);
+        deliverTime = formatDeliverTime(deliverTime);
+
+        messageBO.setTimeout(deliverTime);
+        messageBO.setSystemQueue(TIMER_TOPIC, 0);
+    }
+
+    private long formatDeliverTime(long deliverTime) {
         int precision = timerConfig.getPrecision();
         if (deliverTime % precision == 0) {
             deliverTime -= precision;
@@ -73,8 +80,7 @@ public class TimerHook implements ProduceHook {
             deliverTime = (deliverTime / precision) * precision;
         }
 
-        messageBO.setTimeout(deliverTime);
-        messageBO.setSystemQueue(TIMER_TOPIC, 0);
+        return deliverTime;
     }
 
     private void validateDeliverTime(long deliverTime) {
