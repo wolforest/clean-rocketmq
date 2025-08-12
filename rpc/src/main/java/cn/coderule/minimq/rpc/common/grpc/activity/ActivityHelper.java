@@ -5,6 +5,7 @@ import apache.rocketmq.v2.Status;
 import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import cn.coderule.minimq.rpc.common.grpc.core.GrpcTask;
 import cn.coderule.minimq.rpc.common.grpc.response.ResponseBuilder;
+import cn.coderule.minimq.rpc.common.grpc.response.ResponseWriter;
 import io.grpc.stub.StreamObserver;
 import java.util.function.Function;
 
@@ -42,8 +43,15 @@ public class ActivityHelper<REQ, RESP> {
         );
     }
 
-    public void writeResponse(Object response, Throwable t) {
+    public void writeResponse(RESP response, Throwable t) {
+        if (t == null) {
+            ResponseWriter.getInstance().writeResponse(responseObserver, response);
+            return;
+        }
 
+        Status errorStatus = exceptionToStatus(t);
+        RESP errorResponse = statusToResponse.apply(errorStatus);
+        ResponseWriter.getInstance().write(responseObserver, errorResponse);
     }
 
     private Status getFlowControlStatus() {
