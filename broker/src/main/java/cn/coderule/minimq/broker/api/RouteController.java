@@ -1,6 +1,8 @@
 package cn.coderule.minimq.broker.api;
 
+import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.common.util.net.Address;
+import cn.coderule.minimq.broker.api.validator.GroupValidator;
 import cn.coderule.minimq.broker.domain.meta.RouteService;
 import cn.coderule.minimq.broker.domain.meta.SubscriptionService;
 import cn.coderule.minimq.broker.domain.meta.TopicService;
@@ -54,6 +56,10 @@ public class RouteController {
 
     public CompletableFuture<RouteInfo> getRoute(RequestContext context, String topicName, List<Address> addressList) {
         TopicValidator.validateTopic(topicName);
+
+        if (StringUtil.notBlank(context.getConsumeGroup())) {
+            GroupValidator.validate(context.getConsumeGroup());
+        }
 
         RouteInfo routeInfo = routeService.get(context, topicName, addressList);
         return CompletableFuture.completedFuture(routeInfo);

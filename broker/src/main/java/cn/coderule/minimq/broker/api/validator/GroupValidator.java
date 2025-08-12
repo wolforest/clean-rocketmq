@@ -1,6 +1,7 @@
 package cn.coderule.minimq.broker.api.validator;
 
 import cn.coderule.common.util.lang.string.StringUtil;
+import cn.coderule.minimq.domain.core.constant.MQConstants;
 import cn.coderule.minimq.domain.core.enums.code.InvalidCode;
 import cn.coderule.minimq.domain.core.exception.InvalidParameterException;
 
@@ -32,6 +33,13 @@ public class GroupValidator {
                     "the specified group[%s] contains illegal characters, allowing only %s",
                     group, "^[%|a-zA-Z0-9_-]+$"
                 )
+            );
+        }
+
+        if (MQConstants.isSysConsumerGroup(group)) {
+            throw new InvalidParameterException(
+                InvalidCode.ILLEGAL_CONSUMER_GROUP,
+                "the specified group is a system group."
             );
         }
     }
