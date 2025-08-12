@@ -42,7 +42,7 @@ public class RouteConverter {
         cn.coderule.minimq.domain.core.enums.message.MessageType messageType,
         QueryRouteRequest request
     ) {
-        Map<String, Map<Long, Broker>> brokerMap = RouteConverter.buildBrokerMap(routeInfo);
+        Map<String, Map<Long, Broker>> brokerMap = buildBrokerMap(routeInfo);
         List<MessageQueue> queueList = generateQueueList(routeInfo, messageType, request, brokerMap);
         return buildRouteResponse(queueList);
     }
@@ -52,7 +52,24 @@ public class RouteConverter {
         boolean fifo,
         QueryAssignmentRequest request
     ) {
+        Map<String, Map<Long, Broker>> brokerMap = buildBrokerMap(routeInfo);
+
         return null;
+    }
+
+    private Permission toPermission(int perm) {
+        boolean isReadable = PermName.isReadable(perm);
+        boolean isWriteable = PermName.isWriteable(perm);
+        if (isReadable && isWriteable) {
+            return Permission.READ_WRITE;
+        }
+        if (isReadable) {
+            return Permission.READ;
+        }
+        if (isWriteable) {
+            return Permission.WRITE;
+        }
+        return Permission.NONE;
     }
 
     private static QueryAssignmentResponse buildAssignmentResponse(List<Assignment> assignmentList) {
