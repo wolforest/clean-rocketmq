@@ -41,7 +41,39 @@ public class RouteConverter {
         return brokerMap;
     }
 
-    private static List<MessageQueue> generateMessageQueue(
+    public static List<MessageQueue> generateQueueList(
+        RouteInfo routeInfo,
+        cn.coderule.minimq.domain.core.enums.message.MessageType topicMessageType,
+        QueryRouteRequest request,
+        Map<String, Map<Long, Broker>> brokerMap
+    ) {
+        List<MessageQueue> messageQueueList = new ArrayList<>();
+        for (QueueInfo queueData : routeInfo.getQueueDatas()) {
+            parseQueueData(queueData, topicMessageType, request, brokerMap, messageQueueList);
+        }
+
+        return messageQueueList;
+    }
+
+    private static void parseQueueData(
+        QueueInfo queueData,
+        cn.coderule.minimq.domain.core.enums.message.MessageType topicMessageType,
+        QueryRouteRequest request,
+        Map<String, Map<Long, Broker>> brokerMap,
+        List<MessageQueue> queueList
+    ) {
+        String brokerName = queueData.getBrokerName();
+        Map<Long, Broker> brokerIdMap = brokerMap.get(brokerName);
+        if (brokerIdMap == null) {
+            return;
+        }
+
+        for (Broker broker : brokerIdMap.values()) {
+            queueList.addAll(generateQueue(queueData, request.getTopic(), topicMessageType, broker));
+        }
+    }
+
+    private static List<MessageQueue> generateQueue(
         QueueInfo queueData,
         Resource topic,
         cn.coderule.minimq.domain.core.enums.message.MessageType messageType,
