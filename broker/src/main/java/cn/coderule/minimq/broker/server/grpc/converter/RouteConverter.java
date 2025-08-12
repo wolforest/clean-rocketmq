@@ -3,9 +3,12 @@ package cn.coderule.minimq.broker.server.grpc.converter;
 import apache.rocketmq.v2.AddressScheme;
 import apache.rocketmq.v2.Broker;
 import apache.rocketmq.v2.Endpoints;
+import apache.rocketmq.v2.MessageQueue;
 import apache.rocketmq.v2.MessageType;
+import apache.rocketmq.v2.Permission;
 import apache.rocketmq.v2.QueryRouteRequest;
 import apache.rocketmq.v2.QueryRouteResponse;
+import apache.rocketmq.v2.Resource;
 import cn.coderule.common.util.net.Address;
 import cn.coderule.minimq.domain.domain.cluster.cluster.GroupInfo;
 import cn.coderule.minimq.domain.domain.cluster.route.RouteInfo;
@@ -34,6 +37,63 @@ public class RouteConverter {
         }
 
         return brokerMap;
+    }
+
+    private static void addReadOnlyQueue(
+        List<MessageQueue> messageQueueList,
+        Resource topic,
+        cn.coderule.minimq.domain.core.enums.message.MessageType messageType,
+        Broker broker,
+        int num
+    ) {
+        int counter = 0;
+        for (int i = 0; i < num; i++) {
+            MessageQueue messageQueue = MessageQueue.newBuilder()
+                .setBroker(broker)
+                .setTopic(topic)
+                .setId(counter++)
+                .setPermission(Permission.READ)
+                .addAllAcceptMessageTypes(toTypeList(messageType))
+                .build();
+            messageQueueList.add(messageQueue);
+        }
+
+    }
+
+    private static void addWriteOnlyQueue(
+        List<MessageQueue> messageQueueList,
+        Resource topic,
+        cn.coderule.minimq.domain.core.enums.message.MessageType messageType,
+        Broker broker,
+        int num
+    ) {
+        int counter = 0;
+        for (int i = 0; i < num; i++) {
+            MessageQueue messageQueue = MessageQueue.newBuilder().setBroker(broker).setTopic(topic)
+                .setId(counter++)
+                .setPermission(Permission.WRITE)
+                .addAllAcceptMessageTypes(toTypeList(messageType))
+                .build();
+            messageQueueList.add(messageQueue);
+        }
+    }
+
+    private static void addReadWriteQueue(
+        List<MessageQueue> messageQueueList,
+        Resource topic,
+        cn.coderule.minimq.domain.core.enums.message.MessageType messageType,
+        Broker broker,
+        int num
+    ) {
+        int counter = 0;
+        for (int i = 0; i < num; i++) {
+            MessageQueue messageQueue = MessageQueue.newBuilder().setBroker(broker).setTopic(topic)
+                .setId(counter++)
+                .setPermission(Permission.READ_WRITE)
+                .addAllAcceptMessageTypes(toTypeList(messageType))
+                .build();
+            messageQueueList.add(messageQueue);
+        }
     }
 
     public static List<MessageType> toTypeList(cn.coderule.minimq.domain.core.enums.message.MessageType type) {
