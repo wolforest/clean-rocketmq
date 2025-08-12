@@ -3,12 +3,15 @@ package cn.coderule.minimq.broker.server.grpc.converter;
 import apache.rocketmq.v2.AddressScheme;
 import apache.rocketmq.v2.Broker;
 import apache.rocketmq.v2.Endpoints;
+import apache.rocketmq.v2.MessageType;
 import apache.rocketmq.v2.QueryRouteRequest;
 import apache.rocketmq.v2.QueryRouteResponse;
 import cn.coderule.common.util.net.Address;
 import cn.coderule.minimq.domain.domain.cluster.cluster.GroupInfo;
 import cn.coderule.minimq.domain.domain.cluster.route.RouteInfo;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +34,22 @@ public class RouteConverter {
         }
 
         return brokerMap;
+    }
+
+    public static List<MessageType> toTypeList(cn.coderule.minimq.domain.core.enums.message.MessageType type) {
+        return switch (type) {
+            case NORMAL -> Collections.singletonList(MessageType.NORMAL);
+            case ORDER -> Collections.singletonList(MessageType.FIFO);
+            case TRANSACTION -> Collections.singletonList(MessageType.TRANSACTION);
+            case DELAY -> Collections.singletonList(MessageType.DELAY);
+            case MIXED -> Arrays.asList(
+                MessageType.NORMAL,
+                MessageType.FIFO,
+                MessageType.DELAY,
+                MessageType.TRANSACTION
+            );
+            default -> Collections.singletonList(MessageType.MESSAGE_TYPE_UNSPECIFIED);
+        };
     }
 
     private static Map<Long, Broker> getBrokerIdMap(Map<String, Map<Long, Broker>> brokerMap, String groupName) {
@@ -95,6 +114,7 @@ public class RouteConverter {
             .setPort(address.getPort())
             .build();
     }
+
 
 
 }
