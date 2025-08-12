@@ -91,10 +91,16 @@ public class RouteActivity {
     }
 
     private CompletableFuture<QueryRouteResponse> getAssignmentAsync(RequestContext context, QueryAssignmentRequest request) {
-        //routeController.getRoute(context, request.getTopic().getName());
-        return CompletableFuture.completedFuture(null);
-    }
+        context.setServerPort(grpcConfig.getPort());
+        context.setConsumeGroup(request.getGroup().getName());
 
+        List<Address> addressList = toAddressList(request.getEndpoints());
+
+        return routeController.getRoute(context, request.getTopic().getName(), addressList)
+            .thenApply(routeInfo -> {
+                return null;
+            });
+    }
 
     private CompletableFuture<QueryRouteResponse> getRouteAsync(RequestContext context, QueryRouteRequest request) {
         String topicName = request.getTopic().getName();

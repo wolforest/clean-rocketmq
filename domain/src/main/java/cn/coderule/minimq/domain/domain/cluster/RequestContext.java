@@ -30,6 +30,7 @@ public class RequestContext implements Serializable {
     private final Map<String, Object> map = new HashMap<>();
 
     private String storeGroup;
+    private String consumeGroup;
 
     public static RequestContext create(String storeGroup) {
         RequestContext context = new RequestContext();
