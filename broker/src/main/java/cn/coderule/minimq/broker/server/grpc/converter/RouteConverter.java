@@ -10,7 +10,9 @@ import apache.rocketmq.v2.QueryRouteRequest;
 import apache.rocketmq.v2.QueryRouteResponse;
 import apache.rocketmq.v2.Resource;
 import cn.coderule.common.util.net.Address;
+import cn.coderule.minimq.domain.core.constant.PermName;
 import cn.coderule.minimq.domain.domain.cluster.cluster.GroupInfo;
+import cn.coderule.minimq.domain.domain.cluster.route.QueueInfo;
 import cn.coderule.minimq.domain.domain.cluster.route.RouteInfo;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,6 +39,35 @@ public class RouteConverter {
         }
 
         return brokerMap;
+    }
+
+    private static List<MessageQueue> generateMessageQueue(
+        QueueInfo queueData,
+        Resource topic,
+        cn.coderule.minimq.domain.core.enums.message.MessageType messageType,
+        Broker broker
+    ) {
+        List<MessageQueue> messageQueueList = new ArrayList<>();
+
+        int r = 0;
+        int w = 0;
+        int rw = 0;
+        if (PermName.isWriteable(queueData.getPerm()) && PermName.isReadable(queueData.getPerm())) {
+            rw = Math.min(queueData.getWriteQueueNums(), queueData.getReadQueueNums());
+            r = queueData.getReadQueueNums() - rw;
+            w = queueData.getWriteQueueNums() - rw;
+        } else if (PermName.isWriteable(queueData.getPerm())) {
+            w = queueData.getWriteQueueNums();
+        } else if (PermName.isReadable(queueData.getPerm())) {
+            r = queueData.getReadQueueNums();
+        }
+
+        // r here means readOnly queue nums, w means writeOnly queue nums, while rw means both readable and writable queue nums.
+        addReadOnlyQueue(messageQueueList, topic, messageType, broker, r);
+        addWriteOnlyQueue(messageQueueList, topic, messageType, broker, w);
+        addReadWriteQueue(messageQueueList, topic, messageType, broker, rw);
+
+        return messageQueueList;
     }
 
     private static void addReadOnlyQueue(
