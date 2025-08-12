@@ -2,6 +2,7 @@ package cn.coderule.minimq.broker.server.grpc.converter;
 
 import apache.rocketmq.v2.AddressScheme;
 import apache.rocketmq.v2.Broker;
+import apache.rocketmq.v2.Code;
 import apache.rocketmq.v2.Endpoints;
 import apache.rocketmq.v2.MessageQueue;
 import apache.rocketmq.v2.MessageType;
@@ -9,11 +10,13 @@ import apache.rocketmq.v2.Permission;
 import apache.rocketmq.v2.QueryRouteRequest;
 import apache.rocketmq.v2.QueryRouteResponse;
 import apache.rocketmq.v2.Resource;
+import apache.rocketmq.v2.Status;
 import cn.coderule.common.util.net.Address;
 import cn.coderule.minimq.domain.core.constant.PermName;
 import cn.coderule.minimq.domain.domain.cluster.cluster.GroupInfo;
 import cn.coderule.minimq.domain.domain.cluster.route.QueueInfo;
 import cn.coderule.minimq.domain.domain.cluster.route.RouteInfo;
+import cn.coderule.minimq.rpc.common.grpc.response.ResponseBuilder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -23,7 +26,13 @@ import java.util.Map;
 
 public class RouteConverter {
     public static QueryRouteResponse buildRouteResponse(List<MessageQueue> queueList) {
-        return null;
+        Status status = ResponseBuilder.getInstance()
+            .buildStatus(Code.OK, Code.OK.name());
+
+        return QueryRouteResponse.newBuilder()
+            .setStatus(status)
+            .addAllMessageQueues(queueList)
+            .build();
     }
 
     // brokerName -> brokerId -> Broker
