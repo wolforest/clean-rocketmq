@@ -15,6 +15,7 @@ import apache.rocketmq.v2.QueryRouteResponse;
 import apache.rocketmq.v2.Resource;
 import apache.rocketmq.v2.Status;
 import cn.coderule.common.util.net.Address;
+import cn.coderule.minimq.domain.core.constant.MQConstants;
 import cn.coderule.minimq.domain.core.constant.PermName;
 import cn.coderule.minimq.domain.domain.cluster.cluster.GroupInfo;
 import cn.coderule.minimq.domain.domain.cluster.route.QueueInfo;
@@ -57,7 +58,39 @@ public class RouteConverter {
         return null;
     }
 
-    private Permission toPermission(int perm) {
+    private static void addAssignments(
+        List<Assignment> assignments,
+        QueryAssignmentRequest request,
+        Map<Long, Broker> brokerIdMap,
+        QueueInfo queueData,
+        boolean fifo
+    ) {
+        Broker broker = brokerIdMap.get(MQConstants.MASTER_ID);
+        Permission permission = toPermission(queueData.getPerm());
+        if (!fifo) {
+            addAssignment(assignments, request, -1, permission, broker);
+            return;
+        }
+
+        for (int i = 0; i < queueData.getReadQueueNums(); i++) {
+            addAssignment(assignments, request, i, permission, broker);
+        }
+    }
+
+    private static void addAssignment(List<Assignment> assignments, QueryAssignmentRequest request, int id, Permission permission, Broker broker) {
+        MessageQueue defaultMessageQueue = MessageQueue.newBuilder()
+            .setTopic(request.getTopic())
+            .setId(id)
+            .setPermission(permission)
+            .setBroker(broker)
+            .build();
+
+        assignments.add(Assignment.newBuilder()
+            .setMessageQueue(defaultMessageQueue)
+            .build());
+    }
+
+    private static Permission toPermission(int perm) {
         boolean isReadable = PermName.isReadable(perm);
         boolean isWriteable = PermName.isWriteable(perm);
         if (isReadable && isWriteable) {
