@@ -39,6 +39,10 @@ public class TopicTest extends ApiBaseTest {
     public void afterMethod() {
     }
 
+    public void testCreateTopic() {
+        TopicManager.createTopic("testMQ");
+    }
+
     @Test
     public void testNormalTopic() {
         String topic = TopicManager.createUniqueTopic();

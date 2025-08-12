@@ -45,7 +45,7 @@ public class ActivityHelper<REQ, RESP> {
 
     public void writeResponse(RESP response, Throwable t) {
         if (t == null) {
-            ResponseWriter.getInstance().writeResponse(responseObserver, response);
+            ResponseWriter.getInstance().write(responseObserver, response);
             return;
         }
 

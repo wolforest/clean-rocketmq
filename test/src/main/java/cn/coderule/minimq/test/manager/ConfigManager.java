@@ -24,6 +24,7 @@ import com.google.common.io.CharStreams;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.time.Duration;
 import org.apache.rocketmq.client.apis.ClientConfiguration;
 
 public class ConfigManager {
@@ -66,6 +67,7 @@ public class ConfigManager {
         return ClientConfiguration.newBuilder()
             .setEndpoints(config.getString("proxyAddr"))
             .enableSsl(false)
+            .setRequestTimeout(Duration.ofSeconds(30))
             //.setCredentialProvider(sessionCredentialsProvider)
             .build();
     }
