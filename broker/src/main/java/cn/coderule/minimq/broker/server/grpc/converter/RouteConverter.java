@@ -55,7 +55,22 @@ public class RouteConverter {
     ) {
         Map<String, Map<Long, Broker>> brokerMap = buildBrokerMap(routeInfo);
 
-        return null;
+        List<Assignment> assignments = new ArrayList<>();
+        for (QueueInfo queueData : routeInfo.getQueueDatas()) {
+            if (!PermName.isReadable(queueData.getPerm())
+                || queueData.getReadQueueNums() <= 0) {
+                continue;
+            }
+
+            Map<Long, Broker> brokerIdMap = brokerMap.get(queueData.getBrokerName());
+            if (brokerIdMap == null) {
+                continue;
+            }
+
+            addAssignments(assignments, request, brokerIdMap, queueData, fifo);
+        }
+
+        return assignments;
     }
 
     private static void addAssignments(
