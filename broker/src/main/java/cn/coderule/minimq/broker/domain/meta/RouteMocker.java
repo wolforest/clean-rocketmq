@@ -75,7 +75,7 @@ public class RouteMocker {
     }
 
     private GroupInfo createGroupInfo() {
-        GroupInfo groupInfo = new GroupInfo(brokerConfig.getCluster(), brokerConfig.getName());
+        GroupInfo groupInfo = new GroupInfo(brokerConfig.getCluster(), brokerConfig.getGroup());
 
         Map<Long, String> addressMap = new HashMap<>();
         String address = brokerConfig.getHost() + ":" + brokerConfig.getPort();
