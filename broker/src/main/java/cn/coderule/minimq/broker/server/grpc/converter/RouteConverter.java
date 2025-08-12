@@ -56,7 +56,22 @@ public class RouteConverter {
     }
 
     private static QueryAssignmentResponse buildAssignmentResponse(List<Assignment> assignmentList) {
-        return null;
+        if (assignmentList.isEmpty()) {
+            Status forbidden = ResponseBuilder.getInstance()
+                .buildStatus(Code.FORBIDDEN, "no readable queue");
+
+            return QueryAssignmentResponse.newBuilder()
+                .setStatus(forbidden)
+                .build();
+        }
+
+        Status ok = ResponseBuilder.getInstance()
+            .buildStatus(Code.OK, "ok");
+
+        return QueryAssignmentResponse.newBuilder()
+            .addAllAssignments(assignmentList)
+            .setStatus(ok)
+            .build();
     }
 
     private static QueryRouteResponse buildRouteResponse(List<MessageQueue> queueList) {
