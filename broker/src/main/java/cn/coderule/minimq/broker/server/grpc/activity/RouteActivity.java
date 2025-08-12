@@ -90,15 +90,19 @@ public class RouteActivity {
         );
     }
 
-    private CompletableFuture<QueryRouteResponse> getAssignmentAsync(RequestContext context, QueryAssignmentRequest request) {
+    private CompletableFuture<QueryAssignmentResponse> getAssignmentAsync(RequestContext context, QueryAssignmentRequest request) {
+        String topicName = request.getTopic().getName();
+        String consumeGroup = request.getGroup().getName();
+
         context.setServerPort(grpcConfig.getPort());
-        context.setConsumeGroup(request.getGroup().getName());
+        context.setConsumeGroup(consumeGroup);
 
         List<Address> addressList = toAddressList(request.getEndpoints());
 
-        return routeController.getRoute(context, request.getTopic().getName(), addressList)
+        return routeController.getRoute(context, topicName, addressList)
             .thenApply(routeInfo -> {
-                return null;
+                boolean fifo = routeController.isConsumeOrderly(topicName, consumeGroup);
+                return RouteConverter.toAssignmentResponse(routeInfo, fifo, request);
             });
     }
 

@@ -1,12 +1,15 @@
 package cn.coderule.minimq.broker.server.grpc.converter;
 
 import apache.rocketmq.v2.AddressScheme;
+import apache.rocketmq.v2.Assignment;
 import apache.rocketmq.v2.Broker;
 import apache.rocketmq.v2.Code;
 import apache.rocketmq.v2.Endpoints;
 import apache.rocketmq.v2.MessageQueue;
 import apache.rocketmq.v2.MessageType;
 import apache.rocketmq.v2.Permission;
+import apache.rocketmq.v2.QueryAssignmentRequest;
+import apache.rocketmq.v2.QueryAssignmentResponse;
 import apache.rocketmq.v2.QueryRouteRequest;
 import apache.rocketmq.v2.QueryRouteResponse;
 import apache.rocketmq.v2.Resource;
@@ -25,6 +28,15 @@ import java.util.List;
 import java.util.Map;
 
 public class RouteConverter {
+    public static QueryAssignmentResponse toAssignmentResponse(
+        RouteInfo routeInfo,
+        boolean fifo,
+        QueryAssignmentRequest request
+    ) {
+        List<Assignment> assignmentList = getAssignmentList(routeInfo, fifo, request);
+        return buildAssignmentResponse(assignmentList);
+    }
+
     public static QueryRouteResponse toRouteResponse(
         RouteInfo routeInfo,
         cn.coderule.minimq.domain.core.enums.message.MessageType messageType,
@@ -35,7 +47,19 @@ public class RouteConverter {
         return buildRouteResponse(queueList);
     }
 
-    public static QueryRouteResponse buildRouteResponse(List<MessageQueue> queueList) {
+    private static List<Assignment> getAssignmentList(
+        RouteInfo routeInfo,
+        boolean fifo,
+        QueryAssignmentRequest request
+    ) {
+        return null;
+    }
+
+    private static QueryAssignmentResponse buildAssignmentResponse(List<Assignment> assignmentList) {
+        return null;
+    }
+
+    private static QueryRouteResponse buildRouteResponse(List<MessageQueue> queueList) {
         Status status = ResponseBuilder.getInstance()
             .buildStatus(Code.OK, Code.OK.name());
 
@@ -46,7 +70,7 @@ public class RouteConverter {
     }
 
     // brokerName -> brokerId -> Broker
-    public static Map<String, Map<Long, Broker>> buildBrokerMap(RouteInfo routeInfo) {
+    private static Map<String, Map<Long, Broker>> buildBrokerMap(RouteInfo routeInfo) {
         Map<String, Map<Long, Broker>> brokerMap = new HashMap<>();
         if (routeInfo == null) {
             return brokerMap;
@@ -60,7 +84,7 @@ public class RouteConverter {
         return brokerMap;
     }
 
-    public static List<MessageQueue> generateQueueList(
+    private static List<MessageQueue> generateQueueList(
         RouteInfo routeInfo,
         cn.coderule.minimq.domain.core.enums.message.MessageType topicMessageType,
         QueryRouteRequest request,
