@@ -11,7 +11,6 @@ import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.config.business.TopicConfig;
 import cn.coderule.minimq.domain.core.exception.InvalidConfigException;
 import cn.coderule.minimq.rpc.registry.route.RouteLoader;
-import cn.coderule.minimq.store.server.bootstrap.StoreContext;
 
 /**
  * dependency management for meta
@@ -43,12 +42,12 @@ public class MetaManager implements Lifecycle {
     }
 
     private TopicService initTopicService() {
-        TopicStore topicStore = StoreContext.getBean(TopicStore.class);
+        TopicStore topicStore = BrokerContext.getBean(TopicStore.class);
         return new TopicService(topicStore);
     }
 
     private SubscriptionService initSubscriptionService() {
-        SubscriptionStore subscriptionStore = StoreContext.getBean(SubscriptionStore.class);
+        SubscriptionStore subscriptionStore = BrokerContext.getBean(SubscriptionStore.class);
         return new SubscriptionService(subscriptionStore);
     }
 

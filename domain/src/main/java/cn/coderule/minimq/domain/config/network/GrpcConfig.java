@@ -10,8 +10,10 @@ public class GrpcConfig implements Serializable {
     private int port = ConfigAttribute.GRPC_PORT;
 
     private int bossThreadNum = 1;
-    private int workerThreadNum = SystemUtil.getProcessorNumber() * 2;
-    private int businessThreadNum = 16 + SystemUtil.getProcessorNumber() * 2;
+//    private int workerThreadNum = SystemUtil.getProcessorNumber() * 2;
+//    private int businessThreadNum = 16 + SystemUtil.getProcessorNumber() * 2;
+    private int workerThreadNum = 1;
+    private int businessThreadNum = 1;
     private int businessQueueCapacity = 100000;
     private long shutdownTimeout = 30;
 
@@ -28,15 +30,20 @@ public class GrpcConfig implements Serializable {
     private int maxMessageSize = 4 * 1024 * 1024;
     private int maxInboundMessageSize = 130 * 1024 * 1024;
 
-    private int routeThreadNum = SystemUtil.getProcessorNumber();
+//    private int routeThreadNum = SystemUtil.getProcessorNumber();
+    private int routeThreadNum = 1;
     private int routeQueueCapacity = 10000;
-    private int producerThreadNum = SystemUtil.getProcessorNumber();
+//    private int producerThreadNum = SystemUtil.getProcessorNumber();
+    private int producerThreadNum = 1;
     private int producerQueueCapacity = 10000;
-    private int consumerThreadNum = SystemUtil.getProcessorNumber();
+//    private int consumerThreadNum = SystemUtil.getProcessorNumber();
+    private int consumerThreadNum = 1;
     private int consumerQueueCapacity = 10000;
-    private int clientThreadNum = SystemUtil.getProcessorNumber();
+//    private int clientThreadNum = SystemUtil.getProcessorNumber();
+    private int clientThreadNum = 1;
     private int clientQueueCapacity = 10000;
-    private int transactionThreadNum = SystemUtil.getProcessorNumber();
+    private int transactionThreadNum = 1;
+//    private int transactionThreadNum = SystemUtil.getProcessorNumber();
     private int transactionQueueCapacity = 10000;
 
     private boolean enableMessageTypeCheck = true;
