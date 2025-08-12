@@ -25,6 +25,16 @@ import java.util.List;
 import java.util.Map;
 
 public class RouteConverter {
+    public static QueryRouteResponse toRouteResponse(
+        RouteInfo routeInfo,
+        cn.coderule.minimq.domain.core.enums.message.MessageType messageType,
+        QueryRouteRequest request
+    ) {
+        Map<String, Map<Long, Broker>> brokerMap = RouteConverter.buildBrokerMap(routeInfo);
+        List<MessageQueue> queueList = generateQueueList(routeInfo, messageType, request, brokerMap);
+        return buildRouteResponse(queueList);
+    }
+
     public static QueryRouteResponse buildRouteResponse(List<MessageQueue> queueList) {
         Status status = ResponseBuilder.getInstance()
             .buildStatus(Code.OK, Code.OK.name());

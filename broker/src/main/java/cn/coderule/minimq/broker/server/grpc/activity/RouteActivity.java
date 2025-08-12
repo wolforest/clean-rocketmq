@@ -103,10 +103,8 @@ public class RouteActivity {
 
         return routeController.getRoute(context, topicName, addressList)
             .thenApply(routeInfo -> {
-                Map<String, Map<Long, Broker>> brokerMap = RouteConverter.buildBrokerMap(routeInfo);
                 MessageType messageType = routeController.getTopicType(topicName);
-                List<MessageQueue> queueList = RouteConverter.generateQueueList(routeInfo, messageType, request, brokerMap);
-                return RouteConverter.buildRouteResponse(queueList);
+                return RouteConverter.toRouteResponse(routeInfo, messageType, request);
             });
     }
 
