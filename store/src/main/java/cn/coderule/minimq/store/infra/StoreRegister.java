@@ -60,7 +60,7 @@ public class StoreRegister implements Lifecycle {
         List<RegisterStoreResult> results = registryClient.registerStore(storeInfo);
         updateClusterInfo(results, updateOrderConfig);
 
-        log.info("register store, request: {}; response: {}", storeInfo, results);
+        log.debug("register store, request: {}; response: {}", storeInfo, results);
     }
 
     public void unregisterStore() {

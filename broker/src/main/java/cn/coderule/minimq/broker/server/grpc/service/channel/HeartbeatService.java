@@ -11,7 +11,6 @@ import cn.coderule.minimq.broker.api.ProducerController;
 import cn.coderule.minimq.broker.api.RouteController;
 import cn.coderule.minimq.broker.api.TransactionController;
 import cn.coderule.minimq.domain.domain.cluster.RequestContext;
-import cn.coderule.minimq.rpc.common.core.relay.RelayService;
 import cn.coderule.minimq.rpc.common.grpc.response.ResponseBuilder;
 import java.util.concurrent.CompletableFuture;
 import lombok.extern.slf4j.Slf4j;
@@ -19,15 +18,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class HeartbeatService {
     private final SettingManager settingManager;
-    private final ChannelManager channelManager;
-
     private final RegisterService registerService;
 
-    public HeartbeatService(SettingManager settingManager, ChannelManager channelManager, RelayService relayService) {
+    public HeartbeatService(SettingManager settingManager, RegisterService registerService) {
         this.settingManager = settingManager;
-        this.channelManager = channelManager;
-
-        registerService = new RegisterService(channelManager);
+        this.registerService = registerService;
     }
 
     public void inject(

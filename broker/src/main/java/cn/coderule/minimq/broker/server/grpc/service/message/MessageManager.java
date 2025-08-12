@@ -2,6 +2,13 @@ package cn.coderule.minimq.broker.server.grpc.service.message;
 
 import cn.coderule.minimq.broker.api.RouteController;
 import cn.coderule.minimq.broker.server.grpc.service.ContextInitPipeline;
+import cn.coderule.minimq.broker.server.grpc.service.channel.ChannelManager;
+import cn.coderule.minimq.broker.server.grpc.service.channel.HeartbeatService;
+import cn.coderule.minimq.broker.server.grpc.service.channel.RegisterService;
+import cn.coderule.minimq.broker.server.grpc.service.channel.SettingManager;
+import cn.coderule.minimq.broker.server.grpc.service.channel.TelemetryService;
+import cn.coderule.minimq.broker.server.grpc.service.channel.TerminationService;
+import cn.coderule.minimq.rpc.common.core.relay.RelayService;
 import cn.coderule.minimq.rpc.common.grpc.RequestPipeline;
 import cn.coderule.minimq.rpc.common.grpc.activity.RejectActivity;
 import cn.coderule.minimq.broker.server.grpc.activity.TransactionActivity;
@@ -17,6 +24,7 @@ import cn.coderule.minimq.broker.server.grpc.activity.ProducerActivity;
 import cn.coderule.minimq.broker.server.grpc.activity.RouteActivity;
 import cn.coderule.minimq.broker.server.bootstrap.BrokerContext;
 import cn.coderule.minimq.domain.config.network.GrpcConfig;
+import cn.coderule.minimq.rpc.common.grpc.core.GrpcRelayService;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import lombok.Getter;
@@ -39,6 +47,14 @@ public class MessageManager implements Lifecycle {
 
     @Getter
     private MessageService messageService;
+
+    private RelayService relayService;
+    private SettingManager settingManager;
+    private ChannelManager channelManager;
+    private RegisterService registerService;
+    private HeartbeatService heartbeatService;
+    private TelemetryService telemetryService;
+    private TerminationService terminationService;
 
     protected ThreadPoolExecutor routeThreadPoolExecutor;
     protected ThreadPoolExecutor producerThreadPoolExecutor;
@@ -67,6 +83,11 @@ public class MessageManager implements Lifecycle {
         injectProducerController();
         injectConsumerController();
         injectTransactionController();
+
+        injectControllerToService();
+
+        this.settingManager.start();
+        this.channelManager.start();
     }
 
     @Override
@@ -76,6 +97,9 @@ public class MessageManager implements Lifecycle {
         this.producerThreadPoolExecutor.shutdown();
         this.consumerThreadPoolExecutor.shutdown();
         this.transactionThreadPoolExecutor.shutdown();
+
+        this.settingManager.shutdown();
+        this.channelManager.shutdown();
     }
 
     private void initClientActivity() {
@@ -90,9 +114,52 @@ public class MessageManager implements Lifecycle {
 
         this.clientThreadPoolExecutor.setRejectedExecutionHandler(rejectActivity);
 
+        this.settingManager = new SettingManager(grpcConfig);
+        this.relayService = new GrpcRelayService();
+        this.channelManager = new ChannelManager(grpcConfig, relayService, settingManager);
+
+        this.registerService = new RegisterService(channelManager);
+        this.heartbeatService = new HeartbeatService(settingManager, registerService);
+        this.telemetryService = new TelemetryService(settingManager, channelManager, relayService);
+        this.terminationService = new TerminationService(settingManager, channelManager);
+
         this.clientActivity = new ClientActivity(
-            this.clientThreadPoolExecutor
+            this.clientThreadPoolExecutor,
+            heartbeatService,
+            telemetryService,
+            terminationService
         );
+    }
+
+    private void injectControllerToService() {
+        this.settingManager.inject(BrokerContext.getAPI(ConsumerController.class));
+        this.registerService.inject(
+            BrokerContext.getAPI(RouteController.class),
+            BrokerContext.getAPI(ProducerController.class),
+            BrokerContext.getAPI(ConsumerController.class),
+            BrokerContext.getAPI(TransactionController.class)
+        );
+
+        this.heartbeatService.inject(
+            BrokerContext.getAPI(RouteController.class),
+            BrokerContext.getAPI(ProducerController.class),
+            BrokerContext.getAPI(ConsumerController.class),
+            BrokerContext.getAPI(TransactionController.class)
+        );
+
+        this.telemetryService.inject(
+            BrokerContext.getAPI(RouteController.class),
+            BrokerContext.getAPI(ProducerController.class),
+            BrokerContext.getAPI(ConsumerController.class),
+            BrokerContext.getAPI(TransactionController.class)
+        );
+
+        this.terminationService.inject(
+            BrokerContext.getAPI(ProducerController.class),
+            BrokerContext.getAPI(ConsumerController.class)
+        );
+
+
     }
 
     private void initRouteActivity() {

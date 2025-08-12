@@ -6,10 +6,7 @@ import apache.rocketmq.v2.NotifyClientTerminationRequest;
 import apache.rocketmq.v2.NotifyClientTerminationResponse;
 import apache.rocketmq.v2.Status;
 import apache.rocketmq.v2.TelemetryCommand;
-import cn.coderule.minimq.broker.api.ConsumerController;
-import cn.coderule.minimq.broker.server.grpc.service.channel.ChannelManager;
 import cn.coderule.minimq.broker.server.grpc.service.channel.HeartbeatService;
-import cn.coderule.minimq.broker.server.grpc.service.channel.SettingManager;
 import cn.coderule.minimq.broker.server.grpc.service.channel.TelemetryService;
 import cn.coderule.minimq.broker.server.grpc.service.channel.TerminationService;
 import cn.coderule.minimq.domain.domain.cluster.RequestContext;
@@ -27,16 +24,21 @@ import lombok.extern.slf4j.Slf4j;
 public class ClientActivity {
     private final ThreadPoolExecutor executor;
 
-    private ChannelManager channelManager;
-    private SettingManager settingManager;
-    private ConsumerController consumerController;
+    private final HeartbeatService heartbeatService;
+    private final TelemetryService telemetryService;
+    private final TerminationService terminationService;
 
-    private HeartbeatService heartbeatService;
-    private TelemetryService telemetryService;
-    private TerminationService terminationService;
-
-    public ClientActivity(ThreadPoolExecutor executor) {
+    public ClientActivity(
+        ThreadPoolExecutor executor,
+        HeartbeatService heartbeatService,
+        TelemetryService telemetryService,
+        TerminationService terminationService
+    ) {
         this.executor = executor;
+
+        this.heartbeatService = heartbeatService;
+        this.telemetryService = telemetryService;
+        this.terminationService = terminationService;
     }
 
     public void heartbeat(RequestContext context, HeartbeatRequest request, StreamObserver<HeartbeatResponse> responseObserver) {

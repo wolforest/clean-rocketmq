@@ -67,7 +67,7 @@ public class ConfigManager {
         return ClientConfiguration.newBuilder()
             .setEndpoints(config.getString("proxyAddr"))
             .enableSsl(false)
-            .setRequestTimeout(Duration.ofSeconds(30))
+//            .setRequestTimeout(Duration.ofSeconds(30))
             //.setCredentialProvider(sessionCredentialsProvider)
             .build();
     }
