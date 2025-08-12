@@ -2,6 +2,7 @@ package cn.coderule.minimq.broker.server.grpc.activity;
 
 import apache.rocketmq.v2.Broker;
 import apache.rocketmq.v2.Endpoints;
+import apache.rocketmq.v2.MessageQueue;
 import apache.rocketmq.v2.QueryAssignmentRequest;
 import apache.rocketmq.v2.QueryAssignmentResponse;
 import apache.rocketmq.v2.QueryRouteRequest;
@@ -104,7 +105,8 @@ public class RouteActivity {
             .thenApply(routeInfo -> {
                 Map<String, Map<Long, Broker>> brokerMap = RouteConverter.buildBrokerMap(routeInfo);
                 MessageType messageType = routeController.getTopicType(topicName);
-                return null;
+                List<MessageQueue> queueList = RouteConverter.generateQueueList(routeInfo, messageType, request, brokerMap);
+                return RouteConverter.buildRouteResponse(queueList);
             });
     }
 

@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 public class RouteConverter {
-    public static QueryRouteResponse of(QueryRouteRequest request, RouteInfo routeInfo) {
+    public static QueryRouteResponse buildRouteResponse(List<MessageQueue> queueList) {
         return null;
     }
 
