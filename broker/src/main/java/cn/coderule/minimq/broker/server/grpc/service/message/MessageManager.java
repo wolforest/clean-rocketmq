@@ -33,20 +33,14 @@ public class MessageManager implements Lifecycle {
     private final GrpcConfig grpcConfig;
 
     @Getter
-    private ClientActivity clientActivity;
-    @Getter
-    private RouteActivity routeActivity;
-    @Getter
-    private ProducerActivity producerActivity;
-    @Getter
-    private ConsumerActivity consumerActivity;
-    @Getter
-    private TransactionActivity transactionActivity;
-
-    private final RejectActivity rejectActivity = new RejectActivity();
-
-    @Getter
     private MessageService messageService;
+
+    private ClientActivity clientActivity;
+    private RouteActivity routeActivity;
+    private ProducerActivity producerActivity;
+    private ConsumerActivity consumerActivity;
+    private TransactionActivity transactionActivity;
+    private final RejectActivity rejectActivity = new RejectActivity();
 
     private RelayService relayService;
     private SettingManager settingManager;
@@ -111,9 +105,18 @@ public class MessageManager implements Lifecycle {
             "client-activity-thread-pool",
             grpcConfig.getClientQueueCapacity()
         );
-
         this.clientThreadPoolExecutor.setRejectedExecutionHandler(rejectActivity);
 
+        initClientService();
+        this.clientActivity = new ClientActivity(
+            this.clientThreadPoolExecutor,
+            heartbeatService,
+            telemetryService,
+            terminationService
+        );
+    }
+
+    private void initClientService() {
         this.settingManager = new SettingManager(grpcConfig);
         this.relayService = new GrpcRelayService();
         this.channelManager = new ChannelManager(grpcConfig, relayService, settingManager);
@@ -122,13 +125,6 @@ public class MessageManager implements Lifecycle {
         this.heartbeatService = new HeartbeatService(settingManager, registerService);
         this.telemetryService = new TelemetryService(settingManager, channelManager, relayService);
         this.terminationService = new TerminationService(settingManager, channelManager);
-
-        this.clientActivity = new ClientActivity(
-            this.clientThreadPoolExecutor,
-            heartbeatService,
-            telemetryService,
-            terminationService
-        );
     }
 
     private void injectControllerToService() {
@@ -158,8 +154,6 @@ public class MessageManager implements Lifecycle {
             BrokerContext.getAPI(ProducerController.class),
             BrokerContext.getAPI(ConsumerController.class)
         );
-
-
     }
 
     private void initRouteActivity() {
