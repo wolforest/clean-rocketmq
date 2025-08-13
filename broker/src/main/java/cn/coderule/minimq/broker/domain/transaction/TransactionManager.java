@@ -10,6 +10,7 @@ public class TransactionManager implements Lifecycle {
     @Override
     public void initialize() throws Exception {
         transaction = new Transaction();
+        BrokerContext.register(transaction);
 
         TransactionController controller = new TransactionController(transaction);
         BrokerContext.registerAPI(controller);
@@ -22,12 +23,4 @@ public class TransactionManager implements Lifecycle {
     public void shutdown() throws Exception {
     }
 
-    @Override
-    public void cleanup() throws Exception {
-    }
-
-    @Override
-    public State getState() {
-        return State.RUNNING;
-    }
 }

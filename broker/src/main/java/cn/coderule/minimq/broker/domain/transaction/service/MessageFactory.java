@@ -20,7 +20,6 @@ public class MessageFactory {
         this.commitBuffer = commitBuffer;
     }
 
-
     private MessageBO createPrepareMessage(MessageBO msg) {
         String uniqId = msg.getMessageId();
         if (uniqId != null && !uniqId.isEmpty()) {

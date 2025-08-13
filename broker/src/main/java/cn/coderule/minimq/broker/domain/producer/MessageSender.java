@@ -227,7 +227,7 @@ public class MessageSender implements Lifecycle {
     private void initTransactionInfo(ProduceContext produceContext) {
         MessageBO message = produceContext.getMessageBO();
         String flag = message.getProperty(MessageConst.PROPERTY_TRANSACTION_PREPARED);
-        boolean isPrepared = StringUtil.isBlank(flag) || Boolean.parseBoolean(flag);
+        boolean isPrepared = Boolean.parseBoolean(flag);
 
         if (isPrepared) {
             produceContext.setMsgType(MessageType.PREPARE);
