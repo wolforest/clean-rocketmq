@@ -185,6 +185,8 @@ public class MessageSender implements Lifecycle {
         if (topic == null) {
             throw new InvalidParameterException(InvalidCode.ILLEGAL_TOPIC, "Topic not exists");
         }
+
+        produceContext.setTopic(topic);
     }
 
     private void checkCleanupPolicy(ProduceContext produceContext) {
