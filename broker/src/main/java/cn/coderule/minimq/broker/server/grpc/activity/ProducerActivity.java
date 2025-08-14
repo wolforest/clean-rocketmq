@@ -81,7 +81,7 @@ public class ProducerActivity {
             assertNotEmpty(request);
             List<MessageBO> messageBOList = MessageConverter.toMessageBO(context, request);
 
-            producerController.produce(context, messageBOList)
+            return producerController.produce(context, messageBOList)
                 .thenApply(result -> ProducerConverter.toSendMessageResponse(context, request, result));
         } catch (Throwable t) {
             future.completeExceptionally(t);
