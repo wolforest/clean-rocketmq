@@ -22,7 +22,7 @@ public class StoreConfig extends ServerIdentity {
     private int port = ConfigAttribute.STORE_PORT;
 
 
-    private boolean enableMasterElection = false;
+
 
     /**
      * broker permission
@@ -30,10 +30,8 @@ public class StoreConfig extends ServerIdentity {
      */
     private int permission = PermName.PERM_READ | PermName.PERM_WRITE;
 
-    private boolean refreshMasterAddress = false;
-    private boolean refreshHaAddress = false;
 
-    private String masterAddress;
+
 
     private String registryAddress = "127.0.0.1:9876";
     // private String registryAddress = System.getProperty(RegistryUtils.NAMESRV_ADDR_PROPERTY, System.getenv(RegistryUtils.NAMESRV_ADDR_ENV));
@@ -71,6 +69,13 @@ public class StoreConfig extends ServerIdentity {
     private boolean fastFailIfNotExistInTransientPool = true;
 
     private long stateMachineVersion = 0;
+
+    private boolean enableHA = false;
+    private String masterAddress;
+    private boolean enableMasterElection = false;
+
+    private boolean refreshMasterAddress = false;
+    private boolean refreshHaAddress = false;
 
     private String haAddress;
     private int haPort = ConfigAttribute.HA_PORT;

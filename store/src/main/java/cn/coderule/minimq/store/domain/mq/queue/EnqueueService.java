@@ -16,21 +16,23 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class EnqueueService {
     private final ConsumeQueueGateway consumeQueueGateway;
-    private final CommitLogSynchronizer commitLogSynchronizer;
     private final CommitLog commitLog;
 
+    private CommitLogSynchronizer commitLogSynchronizer;
     private final EnqueueLock enqueueLock;
 
     public EnqueueService(
         CommitLog commitLog,
-        ConsumeQueueGateway consumeQueueGateway,
-        CommitLogSynchronizer commitLogSynchronizer) {
+        ConsumeQueueGateway consumeQueueGateway) {
 
         this.consumeQueueGateway = consumeQueueGateway;
-        this.commitLogSynchronizer = commitLogSynchronizer;
         this.commitLog = commitLog;
 
         this.enqueueLock = new EnqueueLock();
+    }
+
+    public void inject(CommitLogSynchronizer commitLogSynchronizer) {
+        this.commitLogSynchronizer = commitLogSynchronizer;
     }
 
     /**

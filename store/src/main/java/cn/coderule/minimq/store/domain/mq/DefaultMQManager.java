@@ -22,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 public class DefaultMQManager implements MQManager {
     private DequeueLock dequeueLock;
     private AckManager ackManager;
+    private EnqueueService enqueueService;
 
     @Override
     public void initialize() throws Exception {
@@ -33,6 +34,10 @@ public class DefaultMQManager implements MQManager {
 
     @Override
     public void start() throws Exception {
+        StoreConfig storeConfig  = StoreContext.getBean(StoreConfig.class);
+        CommitLogSynchronizer commitLogSynchronizer = new CommitLogSynchronizer(storeConfig);
+        this.enqueueService.inject(commitLogSynchronizer);
+
         dequeueLock.start();
         ackManager.start();
     }
@@ -66,10 +71,9 @@ public class DefaultMQManager implements MQManager {
         StoreConfig storeConfig  = StoreContext.getBean(StoreConfig.class);
         CommitLog commitLog = StoreContext.getBean(CommitLog.class);
         ConsumeQueueGateway consumeQueueGateway = StoreContext.getBean(ConsumeQueueGateway.class);
-        CommitLogSynchronizer commitLogSynchronizer = StoreContext.getBean(CommitLogSynchronizer.class);
         ConsumeOffsetService consumeOffsetService = StoreContext.getBean(ConsumeOffsetService.class);
 
-        EnqueueService enqueueService = new EnqueueService(commitLog, consumeQueueGateway, commitLogSynchronizer);
+        this.enqueueService = new EnqueueService(commitLog, consumeQueueGateway);
         MessageService messageService = new MessageService(storeConfig, commitLog, consumeQueueGateway);
         DequeueService dequeueService = new DequeueService(dequeueLock, messageService, consumeOffsetService);
 

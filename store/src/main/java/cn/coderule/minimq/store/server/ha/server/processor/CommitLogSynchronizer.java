@@ -23,7 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class CommitLogSynchronizer extends ServiceThread implements Lifecycle {
-    private StoreConfig storeConfig;
+    private final StoreConfig storeConfig;
     private CommitLogStore commitLogStore;
     private WakeupCoordinator wakeupCoordinator;
     private ConnectionPool connectionPool;
@@ -35,10 +35,12 @@ public class CommitLogSynchronizer extends ServiceThread implements Lifecycle {
     private volatile List<GroupCommitEvent> readRequests;
 
 
-    public CommitLogSynchronizer() {
+    public CommitLogSynchronizer(StoreConfig storeConfig) {
         this.lock = new CommitLogSpinLock();
         this.readRequests = new LinkedList<>();
         this.writeRequests = new LinkedList<>();
+
+        this.storeConfig = storeConfig;
     }
 
     @Override
@@ -64,6 +66,10 @@ public class CommitLogSynchronizer extends ServiceThread implements Lifecycle {
     }
 
     public CompletableFuture<EnqueueResult> sync(InsertFuture request) {
+        if (!storeConfig.isEnableHA()) {
+            return request.getFuture();
+        }
+
         long timeout = storeConfig.getSlaveTimeout();
         GroupCommitEvent event = new GroupCommitEvent(request, timeout);
 
