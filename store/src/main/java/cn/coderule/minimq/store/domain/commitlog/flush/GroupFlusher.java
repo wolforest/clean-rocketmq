@@ -92,7 +92,7 @@ public class GroupFlusher extends Flusher {
 
         long tmpOffset = this.maxOffset;
         for (GroupCommitRequest req : this.requestsRead) {
-            boolean flushOK = flush(req);
+            boolean flushOK = flushFileQueue(req);
             wakeupRequest(req, flushOK);
 
             if (flushOK && req.getOffset() > tmpOffset) {
@@ -105,7 +105,12 @@ public class GroupFlusher extends Flusher {
         this.requestsRead = new LinkedList<>();
     }
 
-    private boolean flush(GroupCommitRequest request) {
+    /**
+     * @renamed from flush to flushFileQueue
+     * @param request group commit request
+     * @return flush status
+     */
+    private boolean flushFileQueue(GroupCommitRequest request) {
         boolean flushOK = mappedFileQueue.getFlushPosition() >= request.getNextOffset();
 
         // There may be a message in the next file, so a maximum of
