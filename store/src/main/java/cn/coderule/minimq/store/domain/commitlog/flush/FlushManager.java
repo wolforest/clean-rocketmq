@@ -1,5 +1,6 @@
 package cn.coderule.minimq.store.domain.commitlog.flush;
 
+import cn.coderule.minimq.domain.core.enums.store.EnqueueStatus;
 import cn.coderule.minimq.domain.service.store.server.CheckPoint;
 import cn.coderule.minimq.store.domain.commitlog.vo.GroupCommitRequest;
 import cn.coderule.common.convention.service.Lifecycle;
@@ -20,7 +21,6 @@ import java.util.concurrent.CompletableFuture;
  */
 public class FlushManager implements Lifecycle {
     private State state = State.RUNNING;
-
     private final CommitConfig commitConfig;
 
     private final Flusher commitService;
@@ -42,6 +42,36 @@ public class FlushManager implements Lifecycle {
         }
 
         this.commitService = new IntervalCommitter(commitConfig, mappedFileQueue, flusher);
+    }
+
+    @Override
+    public void start() throws Exception {
+        this.state = State.STARTING;
+
+        this.flusher.start();
+
+        this.flushWatcher.setDaemon(true);
+        this.flushWatcher.start();
+
+        if (commitConfig.isEnableWriteCache()) {
+            this.commitService.start();
+        }
+
+        this.state = State.RUNNING;
+    }
+
+    @Override
+    public void shutdown() throws Exception {
+        this.state = State.SHUTTING_DOWN;
+
+        this.flusher.shutdown();
+        this.flushWatcher.shutdown();
+
+        if (commitConfig.isEnableWriteCache()) {
+            this.commitService.shutdown();
+        }
+
+        this.state = State.TERMINATED;
     }
 
     public InsertFuture flush(InsertResult insertResult, MessageBO messageBO) {
@@ -81,11 +111,8 @@ public class FlushManager implements Lifecycle {
 
     private InsertFuture formatResult(InsertResult insertResult, GroupCommitRequest request) {
         CompletableFuture<EnqueueResult> result = request.future()
-            .thenApplyAsync(
-                flushStatus -> EnqueueResult.builder()
-                    .status(flushStatus)
-                    .insertResult(insertResult)
-                    .build()
+            .thenApply(
+                flushStatus -> buildEnqueueResult(flushStatus, insertResult)
             );
 
         return InsertFuture.builder()
@@ -94,58 +121,21 @@ public class FlushManager implements Lifecycle {
             .build();
     }
 
+    private EnqueueResult buildEnqueueResult(EnqueueStatus status, InsertResult insertResult) {
+        return EnqueueResult.builder()
+            .status(status)
+            .insertResult(insertResult)
+            .build();
+    }
+
     private GroupCommitRequest createGroupCommitRequest(InsertResult insertResult) {
         long nextOffset = insertResult.getWroteOffset() + insertResult.getWroteBytes();
-        long deadLine = System.nanoTime() + commitConfig.getFlushTimeout();
+        long deadLine = System.nanoTime() + commitConfig.getFlushTimeout() * 1_000_000L;
 
         return GroupCommitRequest.builder()
             .offset(insertResult.getWroteOffset())
             .nextOffset(nextOffset)
             .deadLine(deadLine)
             .build();
-    }
-
-    @Override
-    public void initialize() throws Exception {
-    }
-
-    @Override
-    public void start() throws Exception {
-        this.state = State.STARTING;
-
-        this.flusher.start();
-
-        this.flushWatcher.setDaemon(true);
-        this.flushWatcher.start();
-
-        if (commitConfig.isEnableWriteCache()) {
-            this.commitService.start();
-        }
-
-        this.state = State.RUNNING;
-    }
-
-    @Override
-    public void shutdown() throws Exception {
-        this.state = State.SHUTTING_DOWN;
-
-        this.flusher.shutdown();
-        this.flushWatcher.shutdown();
-
-        if (commitConfig.isEnableWriteCache()) {
-            this.commitService.shutdown();
-        }
-
-        this.state = State.TERMINATED;
-    }
-
-    @Override
-    public void cleanup() throws Exception {
-
-    }
-
-    @Override
-    public State getState() {
-        return state;
     }
 }

@@ -93,7 +93,8 @@ public class PubTest extends ApiBaseTest {
         int i = 0;
         return ClientManager.getProvider()
             .newMessageBuilder()
-            .setTopic(TOPIC)
+            .setTopic("testMQ")
+            //.setTopic(TOPIC)
             .setKeys(MESSAGE_PREFIX + i)
             .setBody((MESSAGE_BODY + i).getBytes(StandardCharsets.UTF_8))
             .build();

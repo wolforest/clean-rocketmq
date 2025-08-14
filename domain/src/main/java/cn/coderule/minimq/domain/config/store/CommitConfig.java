@@ -18,8 +18,8 @@ public class CommitConfig implements Serializable {
     private boolean enableFlushSleep = true;
     private int minFlushPages = 4;
     private int flushInterval = 500;
-    private int flushTimeout = 1000 * 5;
-    private int ThroughFlushInterval = 1000 * 10;
+    private int flushTimeout = 5_000;
+    private int ThroughFlushInterval = 10_000;
 
     private int minCommitPages = 4;
     private int commitInterval = 200;

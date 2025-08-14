@@ -41,7 +41,7 @@ public class GroupFlusher extends Flusher {
     public void addRequest(GroupCommitRequest request) {
         lock.lock();
         try {
-            this.requestsWrite.addLast(request);
+            this.requestsWrite.add(request);
         } finally {
             lock.unlock();
         }
