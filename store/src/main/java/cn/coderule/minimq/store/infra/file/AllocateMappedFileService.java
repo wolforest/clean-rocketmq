@@ -24,6 +24,10 @@ public class AllocateMappedFileService extends ServiceThread implements Lifecycl
     private final TransientPool transientPool;
     private volatile boolean hasException = false;
 
+    public AllocateMappedFileService(StoreConfig storeConfig) {
+        this(storeConfig, null);
+    }
+
     public AllocateMappedFileService(StoreConfig storeConfig, TransientPool transientPool) {
         this.storeConfig = storeConfig;
         this.transientPool = transientPool;
@@ -59,7 +63,7 @@ public class AllocateMappedFileService extends ServiceThread implements Lifecycl
             return null;
         }
 
-        return waitAndReturnMappedFile(path);
+        return waitAndReturnMappedFile(nextPath);
     }
 
     @Override
@@ -78,15 +82,7 @@ public class AllocateMappedFileService extends ServiceThread implements Lifecycl
 
     @Override
     public void initialize() throws Exception {
-    }
-
-    @Override
-    public void cleanup() throws Exception {
-    }
-
-    @Override
-    public State getState() {
-        return State.RUNNING;
+        super.initialize();
     }
 
     private MappedFile waitAndReturnMappedFile(String path) {
@@ -208,7 +204,7 @@ public class AllocateMappedFileService extends ServiceThread implements Lifecycl
             return;
         }
 
-        if (isSuccess) {
+        if (!isSuccess) {
             return;
         }
 

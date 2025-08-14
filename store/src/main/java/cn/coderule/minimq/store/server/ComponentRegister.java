@@ -137,8 +137,6 @@ public class ComponentRegister {
         StoreContext.register(component);
     }
 
-
-
     private void registerRegistry() {
         StoreConfig storeConfig = StoreContext.getBean(StoreConfig.class);
         NettyClient nettyClient = StoreContext.getBean(NettyClient.class);
