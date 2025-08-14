@@ -358,6 +358,8 @@ public class DefaultMappedFileQueue implements MappedFileQueue {
     private MappedFile getByOffsetOrReturnFirst(long offset) {
         if (isEmpty()) return null;
 
+        if (0 == offset) return getFirstMappedFile();
+
         MappedFile mappedFile = getMappedFileByOffset(offset);
         if (mappedFile == null) {
             mappedFile = getFirstMappedFile();
