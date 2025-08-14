@@ -207,6 +207,7 @@ public class DefaultCommitLog implements CommitLog {
 
     private void handleInsertError(InsertResult insertResult) {
         switch (insertResult.getStatus()) {
+            case PUT_OK -> {}
             case END_OF_FILE -> throw new EnqueueException(EnqueueStatus.END_OF_FILE);
             case MESSAGE_SIZE_EXCEEDED, PROPERTIES_SIZE_EXCEEDED -> throw new EnqueueException(EnqueueStatus.MESSAGE_ILLEGAL);
             default -> throw new EnqueueException(EnqueueStatus.UNKNOWN_ERROR);
