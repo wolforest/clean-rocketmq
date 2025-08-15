@@ -422,13 +422,13 @@ public class DefaultMappedFileQueue implements MappedFileQueue {
         MappedFile first = this.mappedFiles.get(0);
         MappedFile last = this.mappedFiles.get(this.mappedFiles.size() - 1);
 
-        if (offset < first.getMinOffset()
-            || offset > last.getMinOffset() + this.fileSize) {
-
-            log.error("Offset not matched. Request offset: {}, firstOffset: {}, lastOffset: {}, mappedFileSize: {}, mappedFiles count: {}",
+        long maxOffset = last.getMinOffset() + this.fileSize;
+        if (offset < first.getMinOffset() || offset > maxOffset) {
+            log.error("Offset not matched. Request offset: {}, firstOffset: {}, "
+                    + "lastOffset: {}, mappedFileSize: {}, mappedFiles count: {}",
                 offset,
                 first.getMinOffset(),
-                last.getMinOffset() + this.fileSize,
+                maxOffset,
                 this.fileSize,
                 this.mappedFiles.size()
             );
