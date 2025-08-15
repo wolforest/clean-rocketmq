@@ -1,7 +1,11 @@
 package cn.coderule.minimq.broker.api;
 
 import cn.coderule.minimq.broker.api.validator.GroupValidator;
+import cn.coderule.minimq.broker.api.validator.MessageValidator;
+import cn.coderule.minimq.broker.api.validator.PopValidator;
 import cn.coderule.minimq.broker.domain.consumer.consumer.Consumer;
+import cn.coderule.minimq.domain.config.business.MessageConfig;
+import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.domain.consumer.ack.broker.AckRequest;
 import cn.coderule.minimq.domain.domain.consumer.ConsumerInfo;
 import cn.coderule.minimq.domain.domain.consumer.ack.broker.InvisibleRequest;
@@ -14,10 +18,18 @@ import cn.coderule.minimq.domain.domain.meta.subscription.SubscriptionGroup;
 import java.util.concurrent.CompletableFuture;
 
 public class ConsumerController {
-    private final Consumer consumer;
+    private final BrokerConfig brokerConfig;
+    private final MessageConfig messageConfig;
 
-    public ConsumerController(Consumer consumer) {
+    private final Consumer consumer;
+    private final PopValidator popValidator;
+
+    public ConsumerController(BrokerConfig brokerConfig, Consumer consumer) {
+        this.brokerConfig = brokerConfig;
+        this.messageConfig = brokerConfig.getMessageConfig();
+
         this.consumer = consumer;
+        this.popValidator = new PopValidator(brokerConfig);
     }
 
     public boolean register(RequestContext context, ConsumerInfo consumerInfo) {
@@ -42,6 +54,8 @@ public class ConsumerController {
     }
 
     public CompletableFuture<PopResult> popMessage(RequestContext context, PopRequest request) {
+        formatInvisibleTime(request);
+        popValidator.validate(request);
         return consumer.popMessage(context, request);
     }
 
@@ -51,5 +65,13 @@ public class ConsumerController {
 
     public CompletableFuture<AckResult> changeInvisible(RequestContext context, InvisibleRequest request) {
         return consumer.changeInvisible(context, request);
+    }
+
+    private void formatInvisibleTime(PopRequest request) {
+        if (messageConfig.isEnableAutoRenew() && request.isAutoRenew()) {
+            request.setInvisibleTime(messageConfig.getDefaultInvisibleTime());
+        } else {
+            popValidator.validateInvisibleTime(request.getInvisibleTime());
+        }
     }
 }
