@@ -58,7 +58,7 @@ public class PopService {
 
         SubscriptionData subscriptionData = buildFilter(request);
         if (subscriptionData == null) {
-
+            return consumeResponse.illegalFilter();
         }
 
 
@@ -85,6 +85,7 @@ public class PopService {
                 expressionType
             );
         } catch (Exception e) {
+            log.error("build subscription data error", e);
             return null;
         }
     }

@@ -56,6 +56,18 @@ public class ConsumeResponse {
         return CompletableFuture.completedFuture(response);
     }
 
+    public CompletableFuture<ReceiveMessageResponse> illegalFilter() {
+        Status status = Status.newBuilder()
+            .setCode(Code.ILLEGAL_FILTER_EXPRESSION)
+            .setMessage(Code.ILLEGAL_FILTER_EXPRESSION.name())
+            .build();
+
+        ReceiveMessageResponse response = ReceiveMessageResponse.newBuilder()
+            .setStatus(status)
+            .build();
+        return CompletableFuture.completedFuture(response);
+    }
+
     public void writeResponse(RequestContext context, ReceiveMessageRequest request, PopResult popResult) {
         try {
             writeByStatus(context, request, popResult);
