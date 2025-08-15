@@ -1,15 +1,19 @@
 package cn.coderule.minimq.broker.server.grpc.service.consume;
 
+import apache.rocketmq.v2.FilterExpression;
 import apache.rocketmq.v2.ReceiveMessageRequest;
 import apache.rocketmq.v2.ReceiveMessageResponse;
 import apache.rocketmq.v2.Settings;
 import cn.coderule.minimq.broker.api.ConsumerController;
+import cn.coderule.minimq.broker.server.grpc.converter.GrpcConverter;
 import cn.coderule.minimq.broker.server.grpc.service.channel.ChannelManager;
 import cn.coderule.minimq.broker.server.grpc.service.channel.SettingManager;
 import cn.coderule.minimq.domain.config.network.GrpcConfig;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.domain.cluster.RequestContext;
+import cn.coderule.minimq.domain.domain.cluster.heartbeat.SubscriptionData;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.PopRequest;
+import cn.coderule.minimq.rpc.broker.core.FilterAPI;
 import com.google.protobuf.util.Durations;
 import io.grpc.stub.StreamObserver;
 import java.util.concurrent.CompletableFuture;
@@ -52,6 +56,11 @@ public class PopService {
             return consumeResponse.notEnoughTime();
         }
 
+        SubscriptionData subscriptionData = buildFilter(request);
+        if (subscriptionData == null) {
+
+        }
+
 
         long invisibleTime = Durations.toMillis(request.getInvisibleDuration());
         PopRequest popRequest = PopRequest.builder()
@@ -60,6 +69,24 @@ public class PopService {
             .build();
 
         return null;
+    }
+
+    private SubscriptionData buildFilter(ReceiveMessageRequest request) {
+        String topic = request.getMessageQueue().getTopic().getName();
+        FilterExpression expression = request.getFilterExpression();
+
+        try {
+            String expressionType = GrpcConverter.getInstance()
+                .buildExpressionType(expression.getType());
+
+            return FilterAPI.build(
+                topic,
+                expression.getExpression(),
+                expressionType
+            );
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     private Long getPollTime(RequestContext context, ReceiveMessageRequest request, Settings settings) {
