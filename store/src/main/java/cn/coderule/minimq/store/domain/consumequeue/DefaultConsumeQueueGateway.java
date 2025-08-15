@@ -34,12 +34,12 @@ public class DefaultConsumeQueueGateway implements ConsumeQueueGateway {
 
     @Override
     public long assignOffset(String topic, int queueId) {
-        return 0L;
+        return increaseOffset(topic, queueId);
     }
 
     @Override
-    public void increaseOffset(String topic, int queueId) {
-
+    public long increaseOffset(String topic, int queueId) {
+        return getQueueStore(topic, queueId).increaseOffset();
     }
 
     @Override
