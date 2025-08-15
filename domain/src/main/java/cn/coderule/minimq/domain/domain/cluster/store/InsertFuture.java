@@ -1,5 +1,6 @@
 package cn.coderule.minimq.domain.domain.cluster.store;
 
+import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.domain.producer.EnqueueResult;
 import cn.coderule.minimq.domain.core.enums.store.EnqueueStatus;
 import java.io.Serializable;
@@ -31,10 +32,11 @@ public class InsertFuture implements Serializable {
         return insertResult.isSuccess();
     }
 
-    public static InsertFuture success(InsertResult insertResult) {
+    public static InsertFuture success(InsertResult insertResult, MessageBO messageBO) {
+        EnqueueResult result = EnqueueResult.success(insertResult, messageBO);
         return InsertFuture.builder()
             .insertResult(insertResult)
-            .future(CompletableFuture.completedFuture(EnqueueResult.success(insertResult)))
+            .future(CompletableFuture.completedFuture(result))
             .build();
     }
 

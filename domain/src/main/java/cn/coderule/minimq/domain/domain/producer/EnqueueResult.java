@@ -2,6 +2,7 @@ package cn.coderule.minimq.domain.domain.producer;
 
 import cn.coderule.minimq.domain.core.enums.store.EnqueueStatus;
 import cn.coderule.minimq.domain.domain.cluster.store.InsertResult;
+import cn.coderule.minimq.domain.domain.message.MessageBO;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,6 +22,7 @@ public class EnqueueResult implements Serializable {
     private String region;
 
     private long queueOffset;
+    private long commitOffset;
     private boolean enableTrace = false;
 
     public EnqueueResult(EnqueueStatus status) {
@@ -43,8 +45,15 @@ public class EnqueueResult implements Serializable {
             && status != EnqueueStatus.SLAVE_NOT_AVAILABLE;
     }
 
-    public static EnqueueResult success(InsertResult insertResult) {
-        return new EnqueueResult(EnqueueStatus.PUT_OK, insertResult);
+    public static EnqueueResult success(InsertResult insertResult, MessageBO messageBO) {
+        EnqueueResult result = new EnqueueResult(EnqueueStatus.PUT_OK, insertResult);
+
+        result.setMessageId(messageBO.getMessageId());
+        result.setTransactionId(messageBO.getTransactionId());
+        result.setCommitOffset(messageBO.getCommitOffset());
+        result.setQueueOffset(messageBO.getQueueOffset());
+
+        return result;
     }
 
     public static EnqueueResult failure() {

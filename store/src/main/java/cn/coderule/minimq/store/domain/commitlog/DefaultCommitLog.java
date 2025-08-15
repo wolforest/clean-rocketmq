@@ -202,7 +202,7 @@ public class DefaultCommitLog implements CommitLog {
      */
     private void assignCommitOffset(MessageBO messageBO, MappedFile mappedFile) {
         long commitLogOffset = mappedFile.getMinOffset() + mappedFile.getInsertPosition();
-        messageBO.setCommitLogOffset(commitLogOffset);
+        messageBO.setCommitOffset(commitLogOffset);
     }
 
     private void handleInsertError(InsertResult insertResult) {

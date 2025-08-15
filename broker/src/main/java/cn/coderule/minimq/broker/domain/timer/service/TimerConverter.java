@@ -11,7 +11,7 @@ public class TimerConverter {
         long delayTime = getDelayTime(messageBO);
 
         return TimerEvent.builder()
-            .commitLogOffset(messageBO.getCommitLogOffset())
+            .commitLogOffset(messageBO.getCommitOffset())
             .messageSize(messageBO.getMessageSize())
             .delayTime(delayTime)
             .magic(magic)

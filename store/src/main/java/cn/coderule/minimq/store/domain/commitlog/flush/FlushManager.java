@@ -79,7 +79,7 @@ public class FlushManager implements Lifecycle {
             return syncFlush(insertResult, messageBO);
         }
 
-        return asyncFlush(insertResult);
+        return asyncFlush(insertResult, messageBO);
     }
 
     private InsertFuture syncFlush(InsertResult insertResult, MessageBO messageBO) {
@@ -87,17 +87,17 @@ public class FlushManager implements Lifecycle {
 
         if (!messageBO.isWaitStore()) {
             flusher.wakeup();
-            return InsertFuture.success(insertResult);
+            return InsertFuture.success(insertResult, messageBO);
         }
 
         GroupCommitRequest request = createGroupCommitRequest(insertResult);
         flusher.addRequest(request);
         flushWatcher.addRequest(request);
 
-        return formatResult(insertResult, request);
+        return formatResult(insertResult, request, messageBO);
     }
 
-    private InsertFuture asyncFlush(InsertResult insertResult) {
+    private InsertFuture asyncFlush(InsertResult insertResult, MessageBO messageBO) {
         flusher.setMaxOffset(insertResult.getWroteOffset());
 
         if (commitConfig.isEnableWriteCache()) {
@@ -106,13 +106,13 @@ public class FlushManager implements Lifecycle {
             flusher.wakeup();
         }
 
-        return InsertFuture.success(insertResult);
+        return InsertFuture.success(insertResult, messageBO);
     }
 
-    private InsertFuture formatResult(InsertResult insertResult, GroupCommitRequest request) {
+    private InsertFuture formatResult(InsertResult insertResult, GroupCommitRequest request, MessageBO messageBO) {
         CompletableFuture<EnqueueResult> result = request.future()
             .thenApply(
-                flushStatus -> buildEnqueueResult(flushStatus, insertResult)
+                flushStatus -> buildEnqueueResult(flushStatus, insertResult, messageBO)
             );
 
         return InsertFuture.builder()
@@ -121,10 +121,14 @@ public class FlushManager implements Lifecycle {
             .build();
     }
 
-    private EnqueueResult buildEnqueueResult(EnqueueStatus status, InsertResult insertResult) {
+    private EnqueueResult buildEnqueueResult(EnqueueStatus status, InsertResult insertResult, MessageBO messageBO) {
         return EnqueueResult.builder()
             .status(status)
             .insertResult(insertResult)
+            .messageId(messageBO.getMessageId())
+            .transactionId(messageBO.getTransactionId())
+            .commitOffset(messageBO.getCommitOffset())
+            .queueOffset(messageBO.getQueueOffset())
             .build();
     }
 

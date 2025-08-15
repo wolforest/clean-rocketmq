@@ -40,27 +40,27 @@ public class MessageFactory {
     public MessageBO recreatePrepareMessage(MessageBO prepareMessage) {
         MessageBO newMsg = new MessageBO();
         newMsg.setWaitStore(false);
-        newMsg.setMsgId( prepareMessage.getMsgId());
-        newMsg.setTopic( prepareMessage.getProperty(MessageConst.PROPERTY_REAL_TOPIC));
-        newMsg.setBody( prepareMessage.getBody());
-        String realQueueIdStr =  prepareMessage.getProperty(MessageConst.PROPERTY_REAL_QUEUE_ID);
+        newMsg.setMsgId(prepareMessage.getMsgId());
+        newMsg.setTopic(prepareMessage.getProperty(MessageConst.PROPERTY_REAL_TOPIC));
+        newMsg.setBody(prepareMessage.getBody());
+        String realQueueIdStr = prepareMessage.getProperty(MessageConst.PROPERTY_REAL_QUEUE_ID);
         if (StringUtil.isNumeric(realQueueIdStr)) {
             newMsg.setQueueId(Integer.parseInt(realQueueIdStr));
         }
-        newMsg.setFlag( prepareMessage.getFlag());
-        newMsg.setTagsCode( prepareMessage.getTagsCode());
-        newMsg.setBornTimestamp( prepareMessage.getBornTimestamp());
-        newMsg.setBornHost( prepareMessage.getBornHost());
-        newMsg.setTransactionId( prepareMessage.getProperty(MessageConst.PROPERTY_UNIQ_CLIENT_MESSAGE_ID_KEYIDX));
+        newMsg.setFlag(prepareMessage.getFlag());
+        newMsg.setTagsCode(prepareMessage.getTagsCode());
+        newMsg.setBornTimestamp(prepareMessage.getBornTimestamp());
+        newMsg.setBornHost(prepareMessage.getBornHost());
+        newMsg.setTransactionId(prepareMessage.getProperty(MessageConst.PROPERTY_UNIQ_CLIENT_MESSAGE_ID_KEYIDX));
 
-        newMsg.setProperties( prepareMessage.getProperties());
+        newMsg.setProperties(prepareMessage.getProperties());
         newMsg.putProperty(MessageConst.PROPERTY_TRANSACTION_PREPARED, "true");
         newMsg.removeProperty(MessageConst.PROPERTY_TRANSACTION_PREPARED_QUEUE_OFFSET);
         newMsg.removeProperty(MessageConst.PROPERTY_REAL_QUEUE_ID);
 
         newMsg.setPropertiesString(MessageUtils.propertiesToString(newMsg.getProperties()));
 
-        int sysFlag =  prepareMessage.getSysFlag();
+        int sysFlag = prepareMessage.getSysFlag();
         sysFlag |= MessageSysFlag.PREPARE_MESSAGE;
         newMsg.setSysFlag(sysFlag);
 

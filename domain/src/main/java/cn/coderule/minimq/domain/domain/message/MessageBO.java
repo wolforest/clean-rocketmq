@@ -1,7 +1,6 @@
 package cn.coderule.minimq.domain.domain.message;
 
 import cn.coderule.common.util.lang.collection.MapUtil;
-import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.minimq.domain.core.constant.flag.MessageSysFlag;
 import cn.coderule.minimq.domain.core.constant.MessageConst;
 import cn.coderule.minimq.domain.core.enums.message.MessageStatus;
@@ -33,18 +32,20 @@ public class MessageBO extends Message implements Serializable {
     private String topicKey;
     private int messageSize;
 
+    private long commitOffset;
     /**
      * set by consumeQueue while putting process of CommitLog
      */
     private long queueOffset;
+
     private int sysFlag;
     private long bornTimestamp;
     private SocketAddress bornHost;
 
     private long storeTimestamp;
     private SocketAddress storeHost;
+    @Deprecated
     private String msgId;
-    private long commitLogOffset;
     private int bodyCRC;
 
     private Long tagsCode;

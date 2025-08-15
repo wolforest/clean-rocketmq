@@ -50,7 +50,7 @@ public class ProducerConverter {
                 .build();
             case PUT_OK -> SendResultEntry.newBuilder()
                 .setStatus(ResponseBuilder.getInstance().buildStatus(Code.OK, Code.OK.name()))
-                .setOffset(result.getQueueOffset())
+                .setOffset(result.getCommitOffset())
                 .setMessageId(StringUtil.defaultString(result.getMessageId()))
                 .setTransactionId(StringUtil.defaultString(result.getTransactionId()))
                 .build();

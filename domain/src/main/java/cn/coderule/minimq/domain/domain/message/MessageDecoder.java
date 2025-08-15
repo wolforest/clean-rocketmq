@@ -55,7 +55,7 @@ public class MessageDecoder {
 
             // 7 PHYSICALOFFSET
             long physicOffset = byteBuffer.getLong();
-            msgExt.setCommitLogOffset(physicOffset);
+            msgExt.setCommitOffset(physicOffset);
 
             // 8 SYSFLAG
             int sysFlag = byteBuffer.getInt();
