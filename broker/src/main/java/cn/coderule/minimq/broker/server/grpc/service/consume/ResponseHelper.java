@@ -22,11 +22,11 @@ import java.util.Iterator;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class ConsumeService {
+public class ResponseHelper {
     private final ConsumerController consumerController;
     private final StreamObserver<ReceiveMessageResponse> streamObserver;
 
-    public ConsumeService(ConsumerController consumerController, StreamObserver<ReceiveMessageResponse> streamObserver) {
+    public ResponseHelper(ConsumerController consumerController, StreamObserver<ReceiveMessageResponse> streamObserver) {
         this.consumerController = consumerController;
         this.streamObserver = streamObserver;
     }
@@ -145,7 +145,7 @@ public class ConsumeService {
         InvisibleRequest invisibleRequest = InvisibleRequest.builder()
             .requestContext(context)
             .receiptHandle(ReceiptHandle.decode(handle))
-            .messageId(messageBO.getMsgId())
+            .messageId(messageBO.getMessageId())
             .topicName(messageBO.getTopic())
             .build();
         consumerController.changeInvisible(context, invisibleRequest);

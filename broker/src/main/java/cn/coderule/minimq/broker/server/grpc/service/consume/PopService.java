@@ -28,8 +28,11 @@ public class PopService {
     }
 
     public CompletableFuture<ReceiveMessageResponse> receive(
-        RequestContext context, ReceiveMessageRequest request, StreamObserver<ReceiveMessageResponse> responseObserver) {
-        ConsumeService consumeService = new ConsumeService(consumerController, responseObserver);
+        RequestContext context,
+        ReceiveMessageRequest request,
+        StreamObserver<ReceiveMessageResponse> responseObserver
+    ) {
+        ResponseHelper responseHelper = new ResponseHelper(consumerController, responseObserver);
         Settings settings = settingManager.getSettings(context);
 
         return null;

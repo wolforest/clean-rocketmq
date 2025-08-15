@@ -10,13 +10,12 @@ import apache.rocketmq.v2.QueryOffsetRequest;
 import apache.rocketmq.v2.QueryOffsetResponse;
 import apache.rocketmq.v2.ReceiveMessageRequest;
 import apache.rocketmq.v2.ReceiveMessageResponse;
-import apache.rocketmq.v2.Settings;
 import apache.rocketmq.v2.Status;
 import apache.rocketmq.v2.UpdateOffsetRequest;
 import apache.rocketmq.v2.UpdateOffsetResponse;
-import cn.coderule.minimq.broker.api.ConsumerController;
-import cn.coderule.minimq.broker.server.grpc.service.channel.ChannelManager;
-import cn.coderule.minimq.broker.server.grpc.service.channel.SettingManager;
+import cn.coderule.minimq.broker.server.grpc.service.consume.AckService;
+import cn.coderule.minimq.broker.server.grpc.service.consume.InvisibleService;
+import cn.coderule.minimq.broker.server.grpc.service.consume.OffsetService;
 import cn.coderule.minimq.broker.server.grpc.service.consume.PopService;
 import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import cn.coderule.minimq.rpc.common.grpc.activity.ActivityHelper;
@@ -24,19 +23,29 @@ import io.grpc.stub.StreamObserver;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.function.Function;
-import lombok.Setter;
 
 public class ConsumerActivity {
     private final ThreadPoolExecutor executor;
 
-    @Setter
-    private ConsumerController consumerController;
-    private SettingManager settingManager;
-    private ChannelManager channelManager;
-
+    private PopService popService;
+    private AckService ackService;
+    private InvisibleService invisibleService;
+    private OffsetService offsetService;
 
     public ConsumerActivity(ThreadPoolExecutor executor) {
         this.executor = executor;
+    }
+
+    public void inject(
+        PopService popService,
+        AckService ackService,
+        InvisibleService invisibleService,
+        OffsetService offsetService
+    ) {
+        this.popService = popService;
+        this.ackService = ackService;
+        this.invisibleService = invisibleService;
+        this.offsetService = offsetService;
     }
 
     public void receiveMessage(RequestContext context, ReceiveMessageRequest request, StreamObserver<ReceiveMessageResponse> responseObserver) {
@@ -121,11 +130,9 @@ public class ConsumerActivity {
         } catch (Throwable t) {
             helper.writeResponse(null, t);
         }
-
     }
 
     public CompletableFuture<ReceiveMessageResponse> receiveMessageAsync(RequestContext context, ReceiveMessageRequest request, StreamObserver<ReceiveMessageResponse> responseObserver) {
-        PopService popService = new PopService(consumerController, settingManager, channelManager);
         return popService.receive(context, request, responseObserver);
     }
 
@@ -150,7 +157,6 @@ public class ConsumerActivity {
     }
 
     public CompletableFuture<AckMessageResponse> ackMessageAsync(RequestContext context, AckMessageRequest request) {
-        Settings settings = settingManager.getSettings(context);
         return null;
     }
 

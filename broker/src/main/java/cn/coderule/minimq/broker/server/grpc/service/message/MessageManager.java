@@ -8,6 +8,11 @@ import cn.coderule.minimq.broker.server.grpc.service.channel.RegisterService;
 import cn.coderule.minimq.broker.server.grpc.service.channel.SettingManager;
 import cn.coderule.minimq.broker.server.grpc.service.channel.TelemetryService;
 import cn.coderule.minimq.broker.server.grpc.service.channel.TerminationService;
+import cn.coderule.minimq.broker.server.grpc.service.consume.AckService;
+import cn.coderule.minimq.broker.server.grpc.service.consume.InvisibleService;
+import cn.coderule.minimq.broker.server.grpc.service.consume.OffsetService;
+import cn.coderule.minimq.broker.server.grpc.service.consume.PopService;
+import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.rpc.common.core.relay.RelayService;
 import cn.coderule.minimq.rpc.common.grpc.RequestPipeline;
 import cn.coderule.minimq.rpc.common.grpc.activity.RejectActivity;
@@ -30,6 +35,7 @@ import java.util.concurrent.TimeUnit;
 import lombok.Getter;
 
 public class MessageManager implements Lifecycle {
+    private final BrokerConfig brokerConfig;
     private final GrpcConfig grpcConfig;
 
     @Getter
@@ -56,12 +62,15 @@ public class MessageManager implements Lifecycle {
     protected ThreadPoolExecutor clientThreadPoolExecutor;
     protected ThreadPoolExecutor transactionThreadPoolExecutor;
 
-    public MessageManager(GrpcConfig grpcConfig) {
-        this.grpcConfig = grpcConfig;
+    public MessageManager(BrokerConfig brokerConfig) {
+        this.brokerConfig = brokerConfig;
+        this.grpcConfig = brokerConfig.getGrpcConfig();
     }
 
     @Override
     public void initialize() throws Exception {
+        initChannelService();
+
         initClientActivity();
         initRouteActivity();
         initProducerActivity();
@@ -73,12 +82,12 @@ public class MessageManager implements Lifecycle {
 
     @Override
     public void start() throws Exception {
+        injectControllerToService();
+
         injectRouteController();
         injectProducerController();
         injectConsumerController();
         injectTransactionController();
-
-        injectControllerToService();
 
         this.settingManager.start();
         this.channelManager.start();
@@ -107,7 +116,7 @@ public class MessageManager implements Lifecycle {
         );
         this.clientThreadPoolExecutor.setRejectedExecutionHandler(rejectActivity);
 
-        initClientService();
+
         this.clientActivity = new ClientActivity(
             this.clientThreadPoolExecutor,
             heartbeatService,
@@ -116,7 +125,7 @@ public class MessageManager implements Lifecycle {
         );
     }
 
-    private void initClientService() {
+    private void initChannelService() {
         this.settingManager = new SettingManager(grpcConfig);
         this.relayService = new GrpcRelayService();
         this.channelManager = new ChannelManager(grpcConfig, relayService, settingManager);
@@ -262,7 +271,30 @@ public class MessageManager implements Lifecycle {
         if (consumerController == null) {
             throw new StartupException("consumer controller is null");
         }
-        this.consumerActivity.setConsumerController(consumerController);
+
+        PopService popService = new PopService(
+            consumerController,
+            settingManager,
+            channelManager
+        );
+        AckService ackService = new AckService(
+            consumerController,
+            settingManager,
+            channelManager
+        );
+        InvisibleService invisibleService = new InvisibleService(
+            consumerController,
+            settingManager,
+            channelManager
+        );
+        OffsetService offsetService = new OffsetService();
+
+        consumerActivity.inject(
+            popService,
+            ackService,
+            invisibleService,
+            offsetService
+        );
     }
 
     private void injectTransactionController() {

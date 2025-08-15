@@ -8,6 +8,7 @@ import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.config.network.GrpcConfig;
 
 public class GrpcManager implements Lifecycle {
+    private BrokerConfig brokerConfig;
     private GrpcConfig grpcConfig;
     private MessageManager messageManager;
     private MessageService messageService;
@@ -33,14 +34,14 @@ public class GrpcManager implements Lifecycle {
     }
 
     private void initConfig() {
-        BrokerConfig brokerConfig = BrokerContext.getBean(BrokerConfig.class);
+        this.brokerConfig = BrokerContext.getBean(BrokerConfig.class);
         this.grpcConfig = brokerConfig.getGrpcConfig();
 
         this.grpcConfig.setPort(brokerConfig.getPort());
     }
 
     private void initMessageService() {
-        this.messageManager = new MessageManager(grpcConfig);
+        this.messageManager = new MessageManager(brokerConfig);
         try {
             messageManager.initialize();
         } catch (Exception e) {
