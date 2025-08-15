@@ -5,18 +5,18 @@ import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.core.enums.code.InvalidCode;
 import cn.coderule.minimq.domain.core.exception.InvalidRequestException;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.PopRequest;
+import cn.coderule.minimq.domain.domain.meta.topic.TopicValidator;
 
 public class PopValidator {
-    private final BrokerConfig brokerConfig;
     private final MessageConfig messageConfig;
 
     public PopValidator(BrokerConfig brokerConfig) {
-        this.brokerConfig = brokerConfig;
         this.messageConfig = brokerConfig.getMessageConfig();
     }
 
     public void validate(PopRequest request) {
-
+        GroupValidator.validate(request.getConsumerGroup());
+        TopicValidator.validateTopic(request.getTopicName());
     }
 
     public void validateInvisibleTime(long invisibleTime) {
