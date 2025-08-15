@@ -128,6 +128,7 @@ public class FlushManager implements Lifecycle {
             .messageId(messageBO.getMessageId())
             .transactionId(messageBO.getTransactionId())
             .commitOffset(messageBO.getCommitOffset())
+            .queueId(messageBO.getQueueId())
             .queueOffset(messageBO.getQueueOffset())
             .build();
     }

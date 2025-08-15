@@ -21,6 +21,7 @@ public class EnqueueResult implements Serializable {
     private String transactionId;
     private String region;
 
+    private int queueId;
     private long queueOffset;
     private long commitOffset;
     private boolean enableTrace = false;
@@ -46,14 +47,15 @@ public class EnqueueResult implements Serializable {
     }
 
     public static EnqueueResult success(InsertResult insertResult, MessageBO messageBO) {
-        EnqueueResult result = new EnqueueResult(EnqueueStatus.PUT_OK, insertResult);
-
-        result.setMessageId(messageBO.getMessageId());
-        result.setTransactionId(messageBO.getTransactionId());
-        result.setCommitOffset(messageBO.getCommitOffset());
-        result.setQueueOffset(messageBO.getQueueOffset());
-
-        return result;
+        return EnqueueResult.builder()
+            .status(EnqueueStatus.PUT_OK)
+            .insertResult(insertResult)
+            .messageId(messageBO.getMessageId())
+            .transactionId(messageBO.getTransactionId())
+            .commitOffset(messageBO.getCommitOffset())
+            .queueOffset(messageBO.getQueueOffset())
+            .queueId(messageBO.getQueueId())
+            .build();
     }
 
     public static EnqueueResult failure() {
