@@ -65,7 +65,9 @@ public class PopService {
         long invisibleTime = Durations.toMillis(request.getInvisibleDuration());
         PopRequest popRequest = PopRequest.builder()
             .autoRenew(request.getAutoRenew())
+            .pollTime(pollTime)
             .invisibleTime(invisibleTime)
+            .subscriptionData(subscriptionData)
             .build();
 
         return null;
