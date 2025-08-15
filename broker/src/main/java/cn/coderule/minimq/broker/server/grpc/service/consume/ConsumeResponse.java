@@ -19,6 +19,7 @@ import com.google.protobuf.Timestamp;
 import com.google.protobuf.util.Timestamps;
 import io.grpc.stub.StreamObserver;
 import java.util.Iterator;
+import java.util.concurrent.CompletableFuture;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -29,6 +30,18 @@ public class ConsumeResponse {
     public ConsumeResponse(ConsumerController consumerController, StreamObserver<ReceiveMessageResponse> streamObserver) {
         this.consumerController = consumerController;
         this.streamObserver = streamObserver;
+    }
+
+    public CompletableFuture<ReceiveMessageResponse> notEnoughTime() {
+        Status status = Status.newBuilder()
+            .setCode(Code.ILLEGAL_POLLING_TIME)
+            .setMessage("Polling time is not enough.")
+            .build();
+
+        ReceiveMessageResponse response = ReceiveMessageResponse.newBuilder()
+            .setStatus(status)
+            .build();
+        return CompletableFuture.completedFuture(response);
     }
 
     public void writeResponse(RequestContext context, ReceiveMessageRequest request, PopResult popResult) {
