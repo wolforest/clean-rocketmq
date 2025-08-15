@@ -196,8 +196,8 @@ public class SettingManager extends ServiceThread implements Lifecycle {
         Settings.Builder builder = settings.toBuilder();
 
         builder.getSubscriptionBuilder()
-            .setReceiveBatchSize(config.getConsumerPollBatchSize())
-            .setLongPollingTimeout(Durations.fromMillis(config.getConsumerMaxPollTime()))
+            .setReceiveBatchSize(config.getBatchConsumerPollSize())
+            .setLongPollingTimeout(Durations.fromMillis(config.getMaxConsumerPollTime()))
             .setFifo(groupConfig.isConsumeMessageOrderly());
 
         builder.getBackoffPolicyBuilder()

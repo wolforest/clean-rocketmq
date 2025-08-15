@@ -6,7 +6,6 @@ import apache.rocketmq.v2.Settings;
 import cn.coderule.minimq.broker.api.ConsumerController;
 import cn.coderule.minimq.broker.server.grpc.service.channel.ChannelManager;
 import cn.coderule.minimq.broker.server.grpc.service.channel.SettingManager;
-import cn.coderule.minimq.domain.config.business.MessageConfig;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.PopRequest;
@@ -39,7 +38,7 @@ public class PopService {
         ReceiveMessageRequest request,
         StreamObserver<ReceiveMessageResponse> responseObserver
     ) {
-        ResponseHelper responseHelper = new ResponseHelper(consumerController, responseObserver);
+        ConsumeResponse consumeResponse = new ConsumeResponse(consumerController, responseObserver);
         Settings settings = settingManager.getSettings(context);
 
         long invisibleTime = Durations.toMillis(request.getInvisibleDuration());
@@ -49,16 +48,5 @@ public class PopService {
             .build();
 
         return null;
-    }
-
-    private long getInvisibleTime(ReceiveMessageRequest request) {
-        long invisibleTime = Durations.toMillis(request.getInvisibleDuration());
-        MessageConfig messageConfig = brokerConfig.getMessageConfig();
-
-        if (messageConfig.isEnableAutoRenew() && request.getAutoRenew()) {
-            return messageConfig.getDefaultInvisibleTime();
-        }
-
-        return invisibleTime;
     }
 }

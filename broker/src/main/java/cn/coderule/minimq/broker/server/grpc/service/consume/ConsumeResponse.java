@@ -22,11 +22,11 @@ import java.util.Iterator;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class ResponseHelper {
+public class ConsumeResponse {
     private final ConsumerController consumerController;
     private final StreamObserver<ReceiveMessageResponse> streamObserver;
 
-    public ResponseHelper(ConsumerController consumerController, StreamObserver<ReceiveMessageResponse> streamObserver) {
+    public ConsumeResponse(ConsumerController consumerController, StreamObserver<ReceiveMessageResponse> streamObserver) {
         this.consumerController = consumerController;
         this.streamObserver = streamObserver;
     }

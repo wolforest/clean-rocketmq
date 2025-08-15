@@ -1,6 +1,5 @@
 package cn.coderule.minimq.domain.config.network;
 
-import cn.coderule.common.util.lang.SystemUtil;
 import cn.coderule.minimq.domain.config.ConfigAttribute;
 import java.io.Serializable;
 import lombok.Data;
@@ -53,9 +52,9 @@ public class GrpcConfig implements Serializable {
     private int producerMaxBackoffMillis = 1000;
     private int producerBackoffMultiplier = 2;
 
-    private int consumerMinPollTime = 5_000;
-    private int consumerMaxPollTime = 20_000;
-    private int consumerPollBatchSize = 32;
+    private int minConsumerPollTime = 5_000;
+    private int maxConsumerPollTime = 20_000;
+    private int batchConsumerPollSize = 32;
 
 
 
