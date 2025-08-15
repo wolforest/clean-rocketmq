@@ -90,7 +90,7 @@ public class ConsumeQueueFactory implements ConsumeQueueRegistry {
     }
 
     private ConsumeQueue createConsumeQueue(String topic, int queueId) {
-        return null;
+        return new DefaultConsumeQueue(topic, queueId, config, checkpoint);
     }
 
     private ConcurrentMap<Integer, ConsumeQueue> initQueueMap(String topic) {
