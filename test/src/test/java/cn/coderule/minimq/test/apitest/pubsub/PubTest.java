@@ -69,6 +69,7 @@ public class PubTest extends ApiBaseTest {
 
             String messageId = sendReceipt.getMessageId().toString();
             Assert.assertNotNull(messageId);
+            Assert.assertFalse(messageId.isEmpty());
 
             LOG.info("pub message: {}", sendReceipt);
         } catch (Throwable t) {
