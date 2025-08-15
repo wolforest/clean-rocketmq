@@ -43,6 +43,10 @@ public class PopService {
     ) {
         ConsumeResponse consumeResponse = new ConsumeResponse(consumerController, responseObserver);
         Settings settings = settingManager.getSettings(context);
+        if (settings == null) {
+            return consumeResponse.noSettings();
+        }
+
         Long pollTime = getPollTime(context, request, settings);
         if (pollTime == null) {
             return consumeResponse.notEnoughTime();

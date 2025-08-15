@@ -32,6 +32,18 @@ public class ConsumeResponse {
         this.streamObserver = streamObserver;
     }
 
+    public CompletableFuture<ReceiveMessageResponse> noSettings() {
+        Status status = Status.newBuilder()
+            .setCode(Code.INTERNAL_ERROR)
+            .setMessage("Settings of grpc can not be null")
+            .build();
+
+        ReceiveMessageResponse response = ReceiveMessageResponse.newBuilder()
+            .setStatus(status)
+            .build();
+        return CompletableFuture.completedFuture(response);
+    }
+
     public CompletableFuture<ReceiveMessageResponse> notEnoughTime() {
         Status status = Status.newBuilder()
             .setCode(Code.ILLEGAL_POLLING_TIME)
