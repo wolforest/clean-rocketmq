@@ -5,6 +5,7 @@ import cn.coderule.minimq.domain.core.constant.PermName;
 import cn.coderule.minimq.domain.core.enums.code.InvalidCode;
 import cn.coderule.minimq.domain.core.exception.InvalidRequestException;
 import cn.coderule.minimq.domain.domain.MessageQueue;
+import cn.coderule.minimq.domain.domain.consumer.consume.pop.PopContext;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.PopRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.PopResult;
 import cn.coderule.minimq.domain.domain.meta.subscription.SubscriptionGroup;
@@ -28,14 +29,16 @@ public class PopService {
 
     public CompletableFuture<PopResult> pop(PopRequest request) {
         MessageQueue messageQueue = queueSelector.select(request);
-        checkConfig(request, messageQueue);
+        PopContext context = new PopContext(request, messageQueue);
+
+        checkConfig(context);
 
         return null;
     }
 
-    private void checkConfig(PopRequest request, MessageQueue messageQueue) {
-        checkTopic(request, messageQueue);
-        checkSubscriptionGroup(request);
+    private void checkConfig(PopContext context) {
+        checkTopic(context.getPopRequest(), context.getMessageQueue());
+        checkSubscriptionGroup(context.getPopRequest());
     }
 
     private void checkTopic(PopRequest request, MessageQueue messageQueue) {

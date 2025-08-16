@@ -1,9 +1,10 @@
 package cn.coderule.minimq.domain.domain.consumer.consume;
 
 import cn.coderule.minimq.domain.domain.meta.topic.Topic;
+import java.io.Serializable;
 import java.util.Map;
 
-public class ConsumeContext {
+public class ConsumeContext implements Serializable {
     private String consumerGroup;
     private String topicName;
     private Integer queueId;
