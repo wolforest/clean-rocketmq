@@ -2,7 +2,6 @@ package cn.coderule.minimq.broker.server.grpc.service.consume;
 
 import apache.rocketmq.v2.Code;
 import apache.rocketmq.v2.Message;
-import apache.rocketmq.v2.ReceiveMessageRequest;
 import apache.rocketmq.v2.ReceiveMessageResponse;
 import apache.rocketmq.v2.Status;
 import cn.coderule.minimq.broker.api.ConsumerController;
@@ -19,7 +18,6 @@ import com.google.protobuf.Timestamp;
 import com.google.protobuf.util.Timestamps;
 import io.grpc.stub.StreamObserver;
 import java.util.Iterator;
-import java.util.concurrent.CompletableFuture;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -27,13 +25,12 @@ public class ConsumeResponse {
     private final ConsumerController consumerController;
     private final StreamObserver<ReceiveMessageResponse> streamObserver;
 
-
     public ConsumeResponse(ConsumerController consumerController, StreamObserver<ReceiveMessageResponse> streamObserver) {
         this.consumerController = consumerController;
         this.streamObserver = streamObserver;
     }
 
-    public CompletableFuture<ReceiveMessageResponse> noSettings() {
+    public void noSettings() {
         Status status = Status.newBuilder()
             .setCode(Code.INTERNAL_ERROR)
             .setMessage("Settings of grpc can not be null")
@@ -42,10 +39,12 @@ public class ConsumeResponse {
         ReceiveMessageResponse response = ReceiveMessageResponse.newBuilder()
             .setStatus(status)
             .build();
-        return CompletableFuture.completedFuture(response);
+
+        writeResponse(response);
+        onComplete();
     }
 
-    public CompletableFuture<ReceiveMessageResponse> notEnoughTime() {
+    public void notEnoughTime() {
         Status status = Status.newBuilder()
             .setCode(Code.ILLEGAL_POLLING_TIME)
             .setMessage("Polling time is not enough.")
@@ -54,10 +53,12 @@ public class ConsumeResponse {
         ReceiveMessageResponse response = ReceiveMessageResponse.newBuilder()
             .setStatus(status)
             .build();
-        return CompletableFuture.completedFuture(response);
+
+        writeResponse(response);
+        onComplete();
     }
 
-    public CompletableFuture<ReceiveMessageResponse> illegalFilter() {
+    public void illegalFilter() {
         Status status = Status.newBuilder()
             .setCode(Code.ILLEGAL_FILTER_EXPRESSION)
             .setMessage(Code.ILLEGAL_FILTER_EXPRESSION.name())
@@ -66,12 +67,14 @@ public class ConsumeResponse {
         ReceiveMessageResponse response = ReceiveMessageResponse.newBuilder()
             .setStatus(status)
             .build();
-        return CompletableFuture.completedFuture(response);
+
+        writeResponse(response);
+        onComplete();
     }
 
-    public void writeResponse(RequestContext context, ReceiveMessageRequest request, PopResult popResult) {
+    public void writeResponse(RequestContext context, PopResult popResult) {
         try {
-            writeByStatus(context, request, popResult);
+            writeByStatus(context, popResult);
         } catch (Throwable t) {
             writeResponse(context, t);
         } finally {
@@ -90,10 +93,6 @@ public class ConsumeResponse {
     }
 
     public void writeResponse(RequestContext context, Throwable t) {
-        writeResponse(context, t, null);
-    }
-
-    public void writeResponse(RequestContext context, Throwable t, ReceiveMessageRequest request) {
         Status status = ResponseBuilder.getInstance().buildStatus(t);
         ReceiveMessageResponse response = ReceiveMessageResponse.newBuilder()
             .setStatus(status)
@@ -125,40 +124,40 @@ public class ConsumeResponse {
         }
     }
 
-    private void writeByStatus(RequestContext context, ReceiveMessageRequest request, PopResult popResult) {
+    private void writeByStatus(RequestContext context, PopResult popResult) {
         switch (popResult.getPopStatus()) {
-            case FOUND -> writeFoundResult(context, request, popResult);
+            case FOUND -> writeFoundResult(context, popResult);
             case POLLING_FULL -> writeFullStatus();
             default -> writeEmptyStatus();
         }
     }
 
-    private void writeFoundResult(RequestContext context, ReceiveMessageRequest request, PopResult popResult) {
+    private void writeFoundResult(RequestContext context, PopResult popResult) {
         if (popResult.isEmpty()) {
             writeEmptyStatus();
             return;
         }
 
         writeOkStatus();
-        writeMessageList(context, request, popResult);
+        writeMessageList(context, popResult);
     }
 
-    private void writeMessageList(RequestContext context, ReceiveMessageRequest request, PopResult popResult) {
+    private void writeMessageList(RequestContext context, PopResult popResult) {
         Iterator<MessageBO> iterator = popResult.getMsgFoundList().iterator();
         while (iterator.hasNext()) {
-            Throwable t = writeMessage(context, request, iterator.next());
+            Throwable t = writeMessage(context, iterator.next());
             if (t == null) {
                 continue;
             }
 
             iterator.forEachRemaining(messageBO -> {
-                changeInvisible(context, messageBO, t);
+                changeInvisible(context, messageBO);
             });
             break;
         }
     }
 
-    private Throwable writeMessage(RequestContext context, ReceiveMessageRequest request, MessageBO messageBO) {
+    private Throwable writeMessage(RequestContext context, MessageBO messageBO) {
         Message message = GrpcConverter.getInstance().buildMessage(messageBO);
         ReceiveMessageResponse response = ReceiveMessageResponse.newBuilder()
             .setMessage(message)
@@ -167,14 +166,14 @@ public class ConsumeResponse {
         try {
             streamObserver.onNext(response);
         } catch (Throwable t) {
-            changeInvisible(context, messageBO, t);
+            changeInvisible(context, messageBO);
             return t;
         }
 
         return null;
     }
 
-    private void changeInvisible(RequestContext context, MessageBO messageBO, Throwable t) {
+    private void changeInvisible(RequestContext context, MessageBO messageBO) {
         String handle = messageBO.getProperty(MessageConst.PROPERTY_POP_CK);
         if (handle == null) {
             return;

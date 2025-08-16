@@ -82,7 +82,7 @@ public class ProducerActivity {
             List<MessageBO> messageBOList = MessageConverter.toMessageBO(context, request);
 
             return producerController.produce(context, messageBOList)
-                .thenApply(result -> ProducerConverter.toSendMessageResponse(context, request, result));
+                .thenApply(result -> ProducerConverter.toSendMessageResponse(result));
         } catch (Throwable t) {
             future.completeExceptionally(t);
         }

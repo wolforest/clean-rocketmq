@@ -15,6 +15,7 @@ import cn.coderule.minimq.domain.core.enums.consume.ConsumeInitMode;
 import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import cn.coderule.minimq.domain.domain.cluster.heartbeat.SubscriptionData;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.PopRequest;
+import cn.coderule.minimq.domain.domain.consumer.consume.pop.PopResult;
 import cn.coderule.minimq.domain.domain.meta.subscription.SubscriptionGroup;
 import cn.coderule.minimq.rpc.broker.core.FilterAPI;
 import com.google.protobuf.util.Durations;
@@ -43,7 +44,7 @@ public class PopService {
         this.channelManager = channelManager;
     }
 
-    public CompletableFuture<ReceiveMessageResponse> receive(
+    public void receive(
         RequestContext context,
         ReceiveMessageRequest request,
         StreamObserver<ReceiveMessageResponse> responseObserver
@@ -51,23 +52,30 @@ public class PopService {
         ConsumeResponse response = new ConsumeResponse(consumerController, responseObserver);
         Settings settings = settingManager.getSettings(context);
         if (settings == null) {
-            return response.noSettings();
+            response.noSettings();
+            return;
         }
 
         Long pollTime = getPollTime(context, request, settings);
         if (pollTime == null) {
-            return response.notEnoughTime();
+            response.notEnoughTime();
+            return;
         }
 
         SubscriptionData subscriptionData = buildFilter(request);
         if (subscriptionData == null) {
-            return response.illegalFilter();
+            response.illegalFilter();
+            return;
         }
 
         PopRequest popRequest = buildPopRequest(context, request, settings, pollTime, subscriptionData);
-        //return consumerController.popMessage(popRequest);
+        consumerController.popMessage(popRequest)
+            .thenAccept(result -> receiveMessage(result, popRequest));
 
-        return null;
+    }
+
+    private void receiveMessage(PopResult result, PopRequest request) {
+
     }
 
     private PopRequest buildPopRequest(

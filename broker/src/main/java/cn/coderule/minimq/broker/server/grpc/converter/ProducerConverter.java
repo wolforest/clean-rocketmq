@@ -1,20 +1,17 @@
 package cn.coderule.minimq.broker.server.grpc.converter;
 
 import apache.rocketmq.v2.Code;
-import apache.rocketmq.v2.SendMessageRequest;
 import apache.rocketmq.v2.SendMessageResponse;
 import apache.rocketmq.v2.SendResultEntry;
 import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.minimq.domain.domain.producer.EnqueueResult;
-import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import cn.coderule.minimq.rpc.common.grpc.response.ResponseBuilder;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 public class ProducerConverter {
-    public static SendMessageResponse toSendMessageResponse(
-        RequestContext ctx, SendMessageRequest request, List<EnqueueResult> resultList) {
+    public static SendMessageResponse toSendMessageResponse(List<EnqueueResult> resultList) {
         SendMessageResponse.Builder builder = SendMessageResponse.newBuilder();
 
         Set<Code> responseCodes = new HashSet<>();

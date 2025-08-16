@@ -53,8 +53,7 @@ public class ConsumerActivity {
 
         try {
             Runnable task = ()
-                -> receiveMessageAsync(context, request, responseObserver)
-                .whenComplete(helper::writeResponse);
+                -> popService.receive(context, request, responseObserver);
 
             this.executor.submit(helper.createTask(task));
         } catch (Throwable t) {
@@ -130,10 +129,6 @@ public class ConsumerActivity {
         } catch (Throwable t) {
             helper.writeResponse(null, t);
         }
-    }
-
-    public CompletableFuture<ReceiveMessageResponse> receiveMessageAsync(RequestContext context, ReceiveMessageRequest request, StreamObserver<ReceiveMessageResponse> responseObserver) {
-        return popService.receive(context, request, responseObserver);
     }
 
     private ActivityHelper<ReceiveMessageRequest, ReceiveMessageResponse> getReceiveHelper(
