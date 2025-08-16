@@ -17,6 +17,7 @@ public class PopValidator {
     public void validate(PopRequest request) {
         GroupValidator.validate(request.getConsumerGroup());
         TopicValidator.validateTopic(request.getTopicName());
+        validateMaxNum(request);
     }
 
     public void validateInvisibleTime(long invisibleTime) {
@@ -37,4 +38,15 @@ public class PopValidator {
                 "Invisible time is larger than: " + messageConfig.getMaxInvisibleTime());
         }
     }
+
+    private void validateMaxNum(PopRequest request) {
+        if (request.getMaxNum() <= messageConfig.getMaxPopSize()) {
+            return;
+        }
+        throw new InvalidRequestException(
+            InvalidCode.BAD_REQUEST,
+            "Max pop num is larger than: " + messageConfig.getMaxPopSize());
+    }
+
+
 }

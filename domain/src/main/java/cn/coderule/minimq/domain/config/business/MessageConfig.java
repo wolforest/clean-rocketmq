@@ -30,6 +30,7 @@ public class MessageConfig implements Serializable {
 
     private boolean enableMessageTypeCheck = true;
     private int maxGetSize;
+    private int maxPopSize = 32;
 
     private long longPollingReserveTimeInMillis = 100;
 
