@@ -44,8 +44,8 @@ public class Consumer  {
         return subscriptionStore.getGroupAsync(topicName, groupName);
     }
 
-    public CompletableFuture<PopResult> popMessage(RequestContext context, PopRequest request) {
-        return popService.pop(context, request);
+    public CompletableFuture<PopResult> popMessage(PopRequest request) {
+        return popService.pop(request);
     }
 
     public CompletableFuture<AckResult> ack(RequestContext context, AckRequest request) {

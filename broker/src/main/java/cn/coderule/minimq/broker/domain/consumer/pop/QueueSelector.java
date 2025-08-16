@@ -28,11 +28,20 @@ public class QueueSelector {
             );
         }
 
+        MessageQueue queue = null;
         MessageQueueSelector selector = queueView.getReadSelector();
         if (StringUtil.notBlank(request.getStoreGroup())) {
-            return selector.getQueueByBrokerName(request.getStoreGroup());
+            queue = selector.getQueueByBrokerName(request.getStoreGroup());
+        } else {
+            queue = selector.selectOne(true);
         }
 
-        return selector.selectOne(true);
+        if (queue == null) {
+            throw new BrokerException(
+                BrokerExceptionCode.FORBIDDEN, "No readable queue"
+            );
+        }
+
+        return queue;
     }
 }

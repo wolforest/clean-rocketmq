@@ -55,7 +55,7 @@ public class ConsumerController {
     public CompletableFuture<PopResult> popMessage(PopRequest request) {
         formatInvisibleTime(request);
         popValidator.validate(request);
-        return consumer.popMessage(request.getRequestContext(), request);
+        return consumer.popMessage(request);
     }
 
     public CompletableFuture<AckResult> ack(RequestContext context, AckRequest request) {
