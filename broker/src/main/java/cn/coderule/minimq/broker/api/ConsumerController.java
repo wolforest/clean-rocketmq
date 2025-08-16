@@ -1,7 +1,6 @@
 package cn.coderule.minimq.broker.api;
 
 import cn.coderule.minimq.broker.api.validator.GroupValidator;
-import cn.coderule.minimq.broker.api.validator.MessageValidator;
 import cn.coderule.minimq.broker.api.validator.PopValidator;
 import cn.coderule.minimq.broker.domain.consumer.consumer.Consumer;
 import cn.coderule.minimq.domain.config.business.MessageConfig;
@@ -53,10 +52,10 @@ public class ConsumerController {
         return consumer.getSubscription(context, topicName, groupName);
     }
 
-    public CompletableFuture<PopResult> popMessage(RequestContext context, PopRequest request) {
+    public CompletableFuture<PopResult> popMessage(PopRequest request) {
         formatInvisibleTime(request);
         popValidator.validate(request);
-        return consumer.popMessage(context, request);
+        return consumer.popMessage(request.getRequestContext(), request);
     }
 
     public CompletableFuture<AckResult> ack(RequestContext context, AckRequest request) {

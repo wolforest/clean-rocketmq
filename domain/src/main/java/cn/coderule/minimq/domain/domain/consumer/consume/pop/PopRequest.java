@@ -25,6 +25,7 @@ public class PopRequest implements Serializable {
     private int maxNum;
     private long invisibleTime;
     private long pollTime;
+    private long remainTime;
     private int initMode;
 
     private boolean autoRenew;
