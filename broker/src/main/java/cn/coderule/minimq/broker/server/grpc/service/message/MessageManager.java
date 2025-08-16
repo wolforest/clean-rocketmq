@@ -275,8 +275,7 @@ public class MessageManager implements Lifecycle {
         PopService popService = new PopService(
             brokerConfig,
             consumerController,
-            settingManager,
-            channelManager
+            settingManager
         );
         AckService ackService = new AckService(
             consumerController,

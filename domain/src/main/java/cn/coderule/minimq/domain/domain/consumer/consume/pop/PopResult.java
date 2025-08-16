@@ -23,4 +23,8 @@ public class PopResult implements Serializable {
     public boolean isEmpty() {
         return msgFoundList == null || msgFoundList.isEmpty();
     }
+
+    public boolean hasFound() {
+        return popStatus == PopStatus.FOUND;
+    }
 }

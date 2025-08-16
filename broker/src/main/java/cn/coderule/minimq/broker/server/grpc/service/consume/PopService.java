@@ -7,7 +7,6 @@ import apache.rocketmq.v2.ReceiveMessageResponse;
 import apache.rocketmq.v2.Settings;
 import cn.coderule.minimq.broker.api.ConsumerController;
 import cn.coderule.minimq.broker.server.grpc.converter.GrpcConverter;
-import cn.coderule.minimq.broker.server.grpc.service.channel.ChannelManager;
 import cn.coderule.minimq.broker.server.grpc.service.channel.SettingManager;
 import cn.coderule.minimq.domain.config.network.GrpcConfig;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
@@ -16,11 +15,9 @@ import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import cn.coderule.minimq.domain.domain.cluster.heartbeat.SubscriptionData;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.PopRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.PopResult;
-import cn.coderule.minimq.domain.domain.meta.subscription.SubscriptionGroup;
 import cn.coderule.minimq.rpc.broker.core.FilterAPI;
 import com.google.protobuf.util.Durations;
 import io.grpc.stub.StreamObserver;
-import java.util.concurrent.CompletableFuture;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -29,19 +26,16 @@ public class PopService {
     private final GrpcConfig grpcConfig;
     private final ConsumerController consumerController;
     private final SettingManager settingManager;
-    private final ChannelManager channelManager;
 
     public PopService(
         BrokerConfig brokerConfig,
         ConsumerController consumerController,
-        SettingManager settingManager,
-        ChannelManager channelManager
+        SettingManager settingManager
     ) {
         this.brokerConfig = brokerConfig;
         this.grpcConfig = brokerConfig.getGrpcConfig();
         this.consumerController = consumerController;
         this.settingManager = settingManager;
-        this.channelManager = channelManager;
     }
 
     public void receive(
@@ -70,12 +64,23 @@ public class PopService {
 
         PopRequest popRequest = buildPopRequest(context, request, settings, pollTime, subscriptionData);
         consumerController.popMessage(popRequest)
-            .thenAccept(result -> receiveMessage(result, popRequest));
-
+            .thenAccept(result -> response.writeResponse(context, result));
     }
 
-    private void receiveMessage(PopResult result, PopRequest request) {
+    private void receiveMessage(PopResult result, PopRequest request, ConsumeResponse response) {
+        RequestContext context = request.getRequestContext();
 
+        if (!brokerConfig.getMessageConfig().isEnableAutoRenew() || !request.isAutoRenew()) {
+            response.writeResponse(context, result);
+            return;
+        }
+
+        if (!result.hasFound()) {
+            response.writeResponse(context, result);
+            return;
+        }
+
+        response.writeResponse(context, result);
     }
 
     private PopRequest buildPopRequest(
