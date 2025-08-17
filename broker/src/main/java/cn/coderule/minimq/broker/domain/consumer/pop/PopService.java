@@ -1,6 +1,7 @@
 package cn.coderule.minimq.broker.domain.consumer.pop;
 
 import cn.coderule.minimq.broker.domain.consumer.consumer.ConsumerRegister;
+import cn.coderule.minimq.domain.config.business.TopicConfig;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.core.constant.PermName;
 import cn.coderule.minimq.domain.core.enums.code.InvalidCode;
@@ -18,6 +19,7 @@ import cn.coderule.minimq.rpc.store.facade.MQFacade;
 import cn.coderule.minimq.rpc.store.facade.SubscriptionFacade;
 import cn.coderule.minimq.rpc.store.facade.TopicFacade;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicLong;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -32,14 +34,28 @@ public class PopService {
     private TopicFacade topicFacade;
     private SubscriptionFacade subscriptionFacade;
 
+    private final AtomicLong reviveCount = new AtomicLong(0);
+
     public CompletableFuture<PopResult> pop(PopRequest request) {
         MessageQueue messageQueue = queueSelector.select(request);
         PopContext context = new PopContext(request, messageQueue);
 
         checkConfig(context);
         compensateSubscription(context);
+        selectReviveQueue(context);
 
         return null;
+    }
+
+    private void selectReviveQueue(PopContext context) {
+        if (context.getPopRequest().isFifo()) {
+            context.setReviveQueueId(KeyBuilder.POP_ORDER_REVIVE_QUEUE);
+            return;
+        }
+
+        int queueNum = brokerConfig.getTopicConfig().getReviveQueueNum();
+        int queueId = (int) Math.abs(reviveCount.getAndIncrement() % queueNum);
+        context.setReviveQueueId(queueId);
     }
 
     private void  compensateSubscription(PopContext context) {
