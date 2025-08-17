@@ -78,6 +78,8 @@ public class DequeueService {
     }
 
     private void addCheckpoint(DequeueRequest request, DequeueResult result) {
-
+        if (request.isFifo()) {
+            return;
+        }
     }
 }

@@ -22,6 +22,8 @@ public class DequeueRequest implements Serializable {
     @Builder.Default
     private int num = 1;
     private int maxNum;
+    @Builder.Default
+    private boolean fifo = false;
 
     @Builder.Default
     private MessageFilter filter = null;
