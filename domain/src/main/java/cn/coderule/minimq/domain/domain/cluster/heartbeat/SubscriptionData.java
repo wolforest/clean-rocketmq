@@ -1,8 +1,4 @@
-
-
-/**
- * $Id: SubscriptionData.java 1835 2013-05-16 02:00:50Z vintagewang@apache.org $
- */package cn.coderule.minimq.domain.domain.cluster.heartbeat;
+package cn.coderule.minimq.domain.domain.cluster.heartbeat;
 
 import cn.coderule.minimq.domain.core.enums.consume.ExpressionType;
 import com.alibaba.fastjson2.annotation.JSONField;

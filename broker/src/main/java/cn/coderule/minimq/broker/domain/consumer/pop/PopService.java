@@ -1,15 +1,19 @@
 package cn.coderule.minimq.broker.domain.consumer.pop;
 
+import cn.coderule.minimq.broker.domain.consumer.consumer.ConsumerRegister;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.core.constant.PermName;
 import cn.coderule.minimq.domain.core.enums.code.InvalidCode;
 import cn.coderule.minimq.domain.core.exception.InvalidRequestException;
 import cn.coderule.minimq.domain.domain.MessageQueue;
+import cn.coderule.minimq.domain.domain.cluster.heartbeat.SubscriptionData;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.PopContext;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.PopRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.PopResult;
 import cn.coderule.minimq.domain.domain.meta.subscription.SubscriptionGroup;
+import cn.coderule.minimq.domain.domain.meta.topic.KeyBuilder;
 import cn.coderule.minimq.domain.domain.meta.topic.Topic;
+import cn.coderule.minimq.rpc.broker.core.FilterAPI;
 import cn.coderule.minimq.rpc.store.facade.MQFacade;
 import cn.coderule.minimq.rpc.store.facade.SubscriptionFacade;
 import cn.coderule.minimq.rpc.store.facade.TopicFacade;
@@ -22,6 +26,7 @@ public class PopService {
     private BrokerConfig brokerConfig;
     private InflightCounter inflightCounter;
     private QueueSelector queueSelector;
+    private ConsumerRegister consumerRegister;
 
     private MQFacade mqFacade;
     private TopicFacade topicFacade;
@@ -32,8 +37,42 @@ public class PopService {
         PopContext context = new PopContext(request, messageQueue);
 
         checkConfig(context);
+        compensateSubscription(context);
 
         return null;
+    }
+
+    private void  compensateSubscription(PopContext context) {
+        PopRequest request = context.getPopRequest();
+        consumerRegister.compensateSubscription(
+            request.getConsumerGroup(),
+            request.getTopicName(),
+            request.getSubscriptionData()
+        );
+
+        compensateRetrySubscription(request);
+    }
+
+    private void  compensateRetrySubscription(PopRequest request) {
+        String retryTopic = KeyBuilder.buildPopRetryTopic(
+            request.getTopicName(), request.getConsumerGroup()
+        );
+
+        try {
+            SubscriptionData retrySubscription = FilterAPI.build(
+                retryTopic,
+                "*",
+                request.getSubscriptionData().getExpressionType()
+            );
+
+            consumerRegister.compensateSubscription(
+                request.getConsumerGroup(),
+                retryTopic,
+                retrySubscription
+            );
+        } catch (Exception e) {
+            log.warn("build retry subscription failed", e);
+        }
     }
 
     private void checkConfig(PopContext context) {
