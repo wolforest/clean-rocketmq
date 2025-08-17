@@ -9,8 +9,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 
 @Data
+@Slf4j
 @Builder
 @AllArgsConstructor
 public class DequeueResult implements Serializable {
@@ -73,6 +75,14 @@ public class DequeueResult implements Serializable {
     public static DequeueResult notFound() {
         return DequeueResult.builder()
             .status(MessageStatus.NO_MATCHED_MESSAGE)
+            .messageList(List.of())
+            .build();
+    }
+
+    public static DequeueResult unknownError(Throwable t) {
+        log.error("dequeue error", t);
+        return DequeueResult.builder()
+            .status(MessageStatus.UNKNOWN_ERROR)
             .messageList(List.of())
             .build();
     }

@@ -1,5 +1,6 @@
 package cn.coderule.minimq.store.domain.mq.queue;
 
+import cn.coderule.minimq.domain.core.exception.DequeueException;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueResult;
 import cn.coderule.minimq.domain.core.lock.queue.DequeueLock;
@@ -46,13 +47,13 @@ public class DequeueService {
             addCheckpoint(request, result);
 
             return result;
+        } catch (DequeueException e) {
+            return e.toResult();
         } catch (Throwable t) {
-            log.error("dequeue error", t);
+            return DequeueResult.unknownError(t);
         } finally {
             dequeueLock.unlock(group, topic, queueId);
         }
-
-        return DequeueResult.notFound();
     }
 
     private long getOffset(DequeueRequest request) {

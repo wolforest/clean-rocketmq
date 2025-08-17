@@ -1,8 +1,9 @@
 package cn.coderule.minimq.domain.core.enums.message;
 
 public enum MessageStatus {
-
     FOUND,
+
+    UNKNOWN_ERROR,
 
     NO_MATCHED_MESSAGE,
 
