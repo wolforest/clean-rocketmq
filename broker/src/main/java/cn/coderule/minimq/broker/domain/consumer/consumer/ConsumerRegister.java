@@ -116,6 +116,13 @@ public class ConsumerRegister {
         return groupInfo;
     }
 
+    public void compensateSubscription(String group, String topic, SubscriptionData subscription) {
+        ConsumerGroupInfo groupInfo = compensationMap.computeIfAbsent(
+            group, k -> new ConsumerGroupInfo(group)
+        );
+        groupInfo.getSubscriptionTable().put(topic, subscription);
+    }
+
     public SubscriptionData findSubscription(String group, String topic) {
         return findSubscription(group, topic, true);
     }
