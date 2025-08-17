@@ -37,12 +37,16 @@ public class PopService {
     }
 
     private void checkConfig(PopContext context) {
-        checkTopic(context.getPopRequest(), context.getMessageQueue());
+        checkTopic(context);
         checkSubscriptionGroup(context.getPopRequest());
     }
 
-    private void checkTopic(PopRequest request, MessageQueue messageQueue) {
+    private void checkTopic(PopContext context) {
+        PopRequest request = context.getPopRequest();
+        MessageQueue messageQueue = context.getMessageQueue();
         Topic topic = topicFacade.getTopic(request.getTopicName());
+        context.setTopic(topic);
+
         if (topic == null) {
             log.error("Topic not exists: {}", request.getTopicName());
             throw new InvalidRequestException(

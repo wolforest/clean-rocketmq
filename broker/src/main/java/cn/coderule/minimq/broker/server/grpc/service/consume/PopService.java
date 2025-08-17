@@ -56,7 +56,7 @@ public class PopService {
             return;
         }
 
-        SubscriptionData subscriptionData = buildFilter(request);
+        SubscriptionData subscriptionData = buildSubscriptionData(request);
         if (subscriptionData == null) {
             response.illegalFilter();
             return;
@@ -111,7 +111,7 @@ public class PopService {
             .build();
     }
 
-    private SubscriptionData buildFilter(ReceiveMessageRequest request) {
+    private SubscriptionData buildSubscriptionData(ReceiveMessageRequest request) {
         String topic = request.getMessageQueue().getTopic().getName();
         FilterExpression expression = request.getFilterExpression();
 

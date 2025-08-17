@@ -1,6 +1,8 @@
 package cn.coderule.minimq.domain.domain.consumer.consume.pop;
 
 import cn.coderule.minimq.domain.domain.MessageQueue;
+import cn.coderule.minimq.domain.domain.cluster.heartbeat.SubscriptionData;
+import cn.coderule.minimq.domain.domain.meta.topic.Topic;
 import java.io.Serializable;
 import lombok.Data;
 
@@ -10,11 +12,15 @@ public class PopContext implements Serializable {
     private final PopRequest popRequest;
     private final MessageQueue messageQueue;
 
+    private Topic topic;
+    private SubscriptionData subscriptionData;
+
     private int reviveQueueId;
 
     public PopContext(PopRequest popRequest, MessageQueue messageQueue) {
         this.popRequest = popRequest;
         this.messageQueue = messageQueue;
+        this.subscriptionData = popRequest.getSubscriptionData();
 
         this.popTime = System.currentTimeMillis();
     }
