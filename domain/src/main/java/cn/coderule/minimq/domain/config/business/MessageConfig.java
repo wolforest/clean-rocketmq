@@ -30,7 +30,7 @@ public class MessageConfig implements Serializable {
 
     private boolean enableMessageTypeCheck = true;
     private int maxGetSize;
-    private int maxPopSize = 32;
+
 
     private long longPollingReserveTimeInMillis = 100;
 
@@ -48,18 +48,21 @@ public class MessageConfig implements Serializable {
     private long renewMaxTimeMillis = TimeUnit.HOURS.toMillis(3);
     private long renewSchedulePeriodMillis = TimeUnit.SECONDS.toMillis(5);
 
-    private int reviveThreadNum = 8;
-    private int popPollingSize = 1024;
-    private int popPollingMapSize = 100000;
-    // 20w cost 200M heap memory.
-    private long maxPopPollingSize = 100000;
-
     private long reviveInterval = 1000;
     private long reviveMaxSlow = 3;
     private long reviveScanTime = 10000;
     private boolean enableSkipLongAwaitingAck = false;
     private long reviveAckWaitMs = TimeUnit.MINUTES.toMillis(3);
+
+
+    private int maxPopSize = 32;
     private boolean enablePopLog = false;
+    private int popRetryProbability = 20;
+
+    private int popPollingSize = 1024;
+    private int popPollingMapSize = 100000;
+    // 20w cost 200M heap memory.
+    private long maxPopPollingSize = 100000;
 
     private boolean enablePopBufferMerge = false;
     private int popCkStayBufferTime = 10 * 1000;
@@ -72,6 +75,5 @@ public class MessageConfig implements Serializable {
     private boolean enablePopBatchAck = false;
     private boolean enableNotifyAfterPopOrderLockRelease = true;
     private boolean initPopOffsetByCheckMsgInMem = true;
-
 
 }

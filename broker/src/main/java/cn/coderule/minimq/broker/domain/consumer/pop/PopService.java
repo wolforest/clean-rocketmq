@@ -38,7 +38,7 @@ public class PopService {
 
     public CompletableFuture<PopResult> pop(PopRequest request) {
         MessageQueue messageQueue = queueSelector.select(request);
-        PopContext context = new PopContext(request, messageQueue);
+        PopContext context = new PopContext(brokerConfig, request, messageQueue);
 
         checkConfig(context);
         compensateSubscription(context);
@@ -66,13 +66,15 @@ public class PopService {
             request.getSubscriptionData()
         );
 
-        compensateRetrySubscription(request);
+        compensateRetrySubscription(context);
     }
 
-    private void  compensateRetrySubscription(PopRequest request) {
+    private void  compensateRetrySubscription(PopContext context) {
+        PopRequest request = context.getPopRequest();
         String retryTopic = KeyBuilder.buildPopRetryTopic(
             request.getTopicName(), request.getConsumerGroup()
         );
+        context.setRetryTopicName(retryTopic);
 
         try {
             SubscriptionData retrySubscription = FilterAPI.build(
