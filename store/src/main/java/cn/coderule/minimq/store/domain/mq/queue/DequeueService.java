@@ -3,7 +3,6 @@ package cn.coderule.minimq.store.domain.mq.queue;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueResult;
 import cn.coderule.minimq.domain.core.lock.queue.DequeueLock;
-import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.service.store.domain.meta.ConsumeOffsetService;
 import java.util.concurrent.CompletableFuture;
 import lombok.extern.slf4j.Slf4j;
@@ -25,38 +24,26 @@ public class DequeueService {
         this.consumeOffsetService = consumeOffsetService;
     }
 
-    public DequeueResult dequeue(DequeueRequest request) {
-        return dequeue(
-            request.getGroup(),
-            request.getTopic(),
-            request.getQueueId(),
-            request.getNum()
-        );
-    }
-
     public CompletableFuture<DequeueResult> dequeueAsync(DequeueRequest request) {
-        return dequeueAsync(
-            request.getGroup(),
-            request.getTopic(),
-            request.getQueueId(),
-            request.getNum()
-        );
-    }
-
-    public CompletableFuture<DequeueResult> dequeueAsync(String group, String topic, int queueId, int num) {
-        DequeueResult result = dequeue(group, topic, queueId, num);
+        DequeueResult result = dequeue(request);
         return CompletableFuture.supplyAsync(() -> result);
     }
 
-    public DequeueResult dequeue(String group, String topic, int queueId, int num) {
+    public DequeueResult dequeue(DequeueRequest request) {
+        String group = request.getGroup();
+        String topic = request.getTopic();
+        int queueId = request.getQueueId();
+        int num = request.getNum();
+
         if (!dequeueLock.tryLock(group, topic, queueId)) {
             return DequeueResult.lockFailed();
         }
 
         try {
-            long offset = consumeOffsetService.getOffset(group, topic, queueId);
+            long offset = getOffset(request);
             DequeueResult result = messageService.get(topic, queueId, offset, num);
-            updateOffset(group, topic, queueId, result);
+            updateOffset(request, result);
+            addCheckpoint(request, result);
 
             return result;
         } catch (Throwable t) {
@@ -68,16 +55,29 @@ public class DequeueService {
         return DequeueResult.notFound();
     }
 
-    private void updateOffset(String group, String topic, int queueId, DequeueResult result) {
-        long newOffset = result.getMessageList().stream()
-            .map(MessageBO::getQueueOffset)
-            .max(Long::compareTo)
-            .orElse(0L);
+    private long getOffset(DequeueRequest request) {
+        return consumeOffsetService.getOffset(
+            request.getGroup(),
+            request.getTopic(),
+            request.getQueueId()
+        );
+    }
 
-        if (newOffset == 0L) {
+    private void updateOffset(DequeueRequest request, DequeueResult result) {
+        long newOffset = result.getNextOffset();
+        if (newOffset <= 0L) {
             return;
         }
 
-        consumeOffsetService.putOffset(group, topic, queueId, newOffset);
+        consumeOffsetService.putOffset(
+            request.getGroup(),
+            request.getTopic(),
+            request.getQueueId(),
+            newOffset
+        );
+    }
+
+    private void addCheckpoint(DequeueRequest request, DequeueResult result) {
+
     }
 }

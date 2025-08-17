@@ -66,6 +66,8 @@ public class MessageService {
     private DequeueResult getByUnitList(@NonNull List<QueueUnit> unitList) {
         DequeueResult result = new DequeueResult();
         MessageBO messageBO;
+        long maxOffset = 0;
+
         for (QueueUnit unit : unitList) {
             messageBO = commitLog.select(unit.getCommitLogOffset(), unit.getUnitSize());
             if (messageBO == null) {
@@ -73,8 +75,12 @@ public class MessageService {
             }
 
             result.addMessage(messageBO);
+            if (messageBO.getQueueOffset() > maxOffset) {
+                maxOffset = messageBO.getQueueOffset();
+            }
         }
 
+        result.setNextOffset(maxOffset + 1);
         return result;
     }
 

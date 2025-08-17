@@ -17,9 +17,9 @@ public class DequeueResult implements Serializable {
     private MessageStatus status;
     private List<MessageBO> messageList;
 
-    private long minOffset;
-    private long maxOffset;
     private long nextOffset;
+    //private long minOffset;
+    //private long maxOffset;
 
     public DequeueResult() {
         this.status = MessageStatus.NO_MATCHED_MESSAGE;
@@ -46,8 +46,8 @@ public class DequeueResult implements Serializable {
             : messageList.get(messageList.size() - 1);
     }
 
-    public boolean hasNewMessage() {
-        return !MessageStatus.OFFSET_OVERFLOW_ONE.equals(status);
+    public boolean noNewMessage() {
+        return MessageStatus.OFFSET_OVERFLOW_ONE.equals(status);
     }
 
     public boolean isOffsetIllegal() {

@@ -73,7 +73,7 @@ public class PrepareMessageLoader {
             return false;
         }
 
-        if (!result.hasNewMessage()) {
+        if (result.noNewMessage()) {
             log.debug("No new prepare message, context={}", context);
             return false;
         }
@@ -155,7 +155,7 @@ public class PrepareMessageLoader {
         DequeueResult result = commitMessageLoader.load(context);
 
         if (result == null
-            || !result.hasNewMessage()
+            || result.noNewMessage()
             || result.isEmpty()
             || result.isOffsetIllegal()
         ) {
