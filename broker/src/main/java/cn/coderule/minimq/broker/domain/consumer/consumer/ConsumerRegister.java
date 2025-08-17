@@ -121,12 +121,22 @@ public class ConsumerRegister {
     }
 
     public SubscriptionData findSubscription(String group, String topic, boolean fromCompensation) {
-        ConsumerGroupInfo groupInfo = getGroupInfo(group, fromCompensation);
-        if (groupInfo == null) {
-            return null;
+        ConsumerGroupInfo groupInfo = groupMap.get(group);
+        if (groupInfo != null) {
+            SubscriptionData subscriptionData = groupInfo.findSubscriptionData(topic);
+            if (subscriptionData != null) {
+                return subscriptionData;
+            }
         }
 
-        return groupInfo.findSubscriptionData(topic);
+        if (fromCompensation) {
+            groupInfo = compensationMap.get(group);
+            if (groupInfo != null) {
+                return groupInfo.findSubscriptionData(topic);
+            }
+        }
+
+        return null;
     }
 
     public void scanIdleChannels() {

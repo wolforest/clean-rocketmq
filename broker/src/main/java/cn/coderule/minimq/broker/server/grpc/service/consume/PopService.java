@@ -5,6 +5,7 @@ import apache.rocketmq.v2.MessageQueue;
 import apache.rocketmq.v2.ReceiveMessageRequest;
 import apache.rocketmq.v2.ReceiveMessageResponse;
 import apache.rocketmq.v2.Settings;
+import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.minimq.broker.api.ConsumerController;
 import cn.coderule.minimq.broker.server.grpc.converter.GrpcConverter;
 import cn.coderule.minimq.broker.server.grpc.service.channel.SettingManager;
@@ -113,15 +114,18 @@ public class PopService {
 
     private SubscriptionData buildSubscriptionData(ReceiveMessageRequest request) {
         String topic = request.getMessageQueue().getTopic().getName();
-        FilterExpression expression = request.getFilterExpression();
+        FilterExpression filter = request.getFilterExpression();
 
         try {
             String expressionType = GrpcConverter.getInstance()
-                .buildExpressionType(expression.getType());
+                .buildExpressionType(filter.getType());
+            String expression = StringUtil.notBlank(filter.getExpression())
+                ? filter.getExpression()
+                : "*";
 
             return FilterAPI.build(
                 topic,
-                expression.getExpression(),
+                expression,
                 expressionType
             );
         } catch (Exception e) {
