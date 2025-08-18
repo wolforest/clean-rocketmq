@@ -80,7 +80,20 @@ public class PopService {
     }
 
     private CompletableFuture<PopResult> dequeue(PopContext context, String topicName, int queueId, PopResult lastResult) {
+        if (shouldStopPop(context, topicName, queueId, lastResult)) {
+            return stopPop(context, topicName, queueId, lastResult);
+        }
+
         return null;
+    }
+    private CompletableFuture<PopResult> stopPop(PopContext context, String topicName, int queueId, PopResult lastResult) {
+        CompletableFuture<PopResult> result = new CompletableFuture<>();
+        result.complete(lastResult);
+        return result;
+    }
+
+    private boolean shouldStopPop(PopContext context, String topicName, int queueId, PopResult lastResult) {
+        return false;
     }
 
     private void addReceipt(PopContext context, CompletableFuture<PopResult> result) {
