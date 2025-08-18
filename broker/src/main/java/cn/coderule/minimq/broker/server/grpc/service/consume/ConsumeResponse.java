@@ -143,7 +143,7 @@ public class ConsumeResponse {
     }
 
     private void writeMessageList(RequestContext context, PopResult popResult) {
-        Iterator<MessageBO> iterator = popResult.getMsgFoundList().iterator();
+        Iterator<MessageBO> iterator = popResult.getMessageList().iterator();
         while (iterator.hasNext()) {
             Throwable t = writeMessage(context, iterator.next());
             if (t == null) {

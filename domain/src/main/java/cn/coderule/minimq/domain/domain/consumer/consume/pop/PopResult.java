@@ -9,7 +9,7 @@ import lombok.Data;
 
 @Data
 public class PopResult implements Serializable {
-    private List<MessageBO> msgFoundList;
+    private List<MessageBO> messageList;
     private PopStatus popStatus;
     private long popTime;
     private long invisibleTime;
@@ -21,16 +21,20 @@ public class PopResult implements Serializable {
         );
     }
 
-    public PopResult(PopStatus popStatus, List<MessageBO> msgFoundList) {
+    public PopResult(PopStatus popStatus, List<MessageBO> messageList) {
         this.popStatus = popStatus;
-        this.msgFoundList = msgFoundList;
+        this.messageList = messageList;
     }
 
     public boolean isEmpty() {
-        return msgFoundList == null || msgFoundList.isEmpty();
+        return messageList == null || messageList.isEmpty();
     }
 
     public boolean hasFound() {
         return popStatus == PopStatus.FOUND;
+    }
+
+    public int countMessage() {
+        return messageList == null ? 0 : messageList.size();
     }
 }
