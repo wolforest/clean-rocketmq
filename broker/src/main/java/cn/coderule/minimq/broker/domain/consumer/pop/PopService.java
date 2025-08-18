@@ -1,7 +1,6 @@
 package cn.coderule.minimq.broker.domain.consumer.pop;
 
 import cn.coderule.minimq.broker.domain.consumer.consumer.ConsumerRegister;
-import cn.coderule.minimq.domain.config.business.TopicConfig;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.core.constant.PermName;
 import cn.coderule.minimq.domain.core.enums.code.InvalidCode;
@@ -52,7 +51,7 @@ public class PopService {
     }
 
     private void selectReviveQueue(PopContext context) {
-        if (context.getPopRequest().isFifo()) {
+        if (context.getRequest().isFifo()) {
             context.setReviveQueueId(KeyBuilder.POP_ORDER_REVIVE_QUEUE);
             return;
         }
@@ -63,7 +62,7 @@ public class PopService {
     }
 
     private void  compensateSubscription(PopContext context) {
-        PopRequest request = context.getPopRequest();
+        PopRequest request = context.getRequest();
         consumerRegister.compensateSubscription(
             request.getConsumerGroup(),
             request.getTopicName(),
@@ -74,7 +73,7 @@ public class PopService {
     }
 
     private void  compensateRetrySubscription(PopContext context) {
-        PopRequest request = context.getPopRequest();
+        PopRequest request = context.getRequest();
         String retryTopic = KeyBuilder.buildPopRetryTopic(
             request.getTopicName(), request.getConsumerGroup()
         );
@@ -99,11 +98,11 @@ public class PopService {
 
     private void checkConfig(PopContext context) {
         checkTopic(context);
-        checkSubscriptionGroup(context.getPopRequest());
+        checkSubscriptionGroup(context.getRequest());
     }
 
     private void checkTopic(PopContext context) {
-        PopRequest request = context.getPopRequest();
+        PopRequest request = context.getRequest();
         MessageQueue messageQueue = context.getMessageQueue();
         Topic topic = topicFacade.getTopic(request.getTopicName());
         context.setTopic(topic);
