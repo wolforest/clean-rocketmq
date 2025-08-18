@@ -14,24 +14,23 @@ public class PopContext implements Serializable {
     private final MessageConfig messageConfig;
     private final long popTime;
     private final PopRequest request;
-    private final MessageQueue messageQueue;
 
     private Topic topic;
     private Topic retryTopic;
 
     private int reviveQueueId;
     private int retryRandom;
+    private MessageQueue messageQueue = null;
 
     private StringBuilder startOffsetBuilder;
     private StringBuilder messageOffsetBuilder;
     private StringBuilder orderInfoBuilder;
 
-    public PopContext(BrokerConfig brokerConfig, PopRequest request, MessageQueue messageQueue) {
+    public PopContext(BrokerConfig brokerConfig, PopRequest request) {
         this.brokerConfig = brokerConfig;
         this.messageConfig = brokerConfig.getMessageConfig();
 
         this.request = request;
-        this.messageQueue = messageQueue;
 
         this.popTime = System.currentTimeMillis();
         this.retryRandom = ThreadLocalRandom.current().nextInt(100);

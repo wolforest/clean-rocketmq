@@ -37,13 +37,13 @@ public class PopService {
     private final AtomicLong reviveCount = new AtomicLong(0);
 
     public CompletableFuture<PopResult> pop(PopRequest request) {
-        MessageQueue messageQueue = queueSelector.select(request);
-        PopContext context = new PopContext(brokerConfig, request, messageQueue);
+        PopContext context = createContext(request);
 
-        checkConfig(context);
-        selectReviveQueue(context);
+        selectQueue(context);
+        CompletableFuture<PopResult> result = fetchMessage(context);
+        addReceipt(context, result);
 
-        return fetchMessage(context);
+        return result;
     }
 
     private CompletableFuture<PopResult> fetchMessage(PopContext context) {
@@ -68,6 +68,15 @@ public class PopService {
 
     private CompletableFuture<PopResult> popRetryMessage(PopContext context, CompletableFuture<PopResult> result) {
         return null;
+    }
+
+    private void addReceipt(PopContext context, CompletableFuture<PopResult> result) {
+    }
+
+    private void selectQueue(PopContext context) {
+        MessageQueue messageQueue = queueSelector.select(context.getRequest());
+        context.setMessageQueue(messageQueue);
+        selectReviveQueue(context);
     }
 
     private void selectReviveQueue(PopContext context) {
@@ -111,16 +120,20 @@ public class PopService {
         }
     }
 
-    private void checkConfig(PopContext context) {
-        checkTopic(context);
-        checkRetryTopic(context);
-        checkSubscriptionGroup(context.getRequest());
+    private PopContext createContext(PopRequest request) {
+        PopContext context = new PopContext(brokerConfig, request);
+
+        loadTopic(context);
+        loadRetryTopic(context);
+        loadSubscriptionGroup(context.getRequest());
 
         compensateSubscription(context);
         compensateRetrySubscription(context);
+
+        return context;
     }
 
-    private void checkTopic(PopContext context) {
+    private void loadTopic(PopContext context) {
         PopRequest request = context.getRequest();
         MessageQueue messageQueue = context.getMessageQueue();
         Topic topic = topicFacade.getTopic(request.getTopicName());
@@ -149,7 +162,7 @@ public class PopService {
         }
     }
 
-    private void checkRetryTopic(PopContext context) {
+    private void loadRetryTopic(PopContext context) {
         if (!context.shouldRetry()) {
             return;
         }
@@ -164,7 +177,7 @@ public class PopService {
         context.setRetryTopic(retryTopic);
     }
 
-    private void checkSubscriptionGroup(PopRequest request) {
+    private void loadSubscriptionGroup(PopRequest request) {
         SubscriptionGroup subscriptionGroup = subscriptionFacade.getGroup(
             request.getTopicName(), request.getConsumerGroup());
         if (subscriptionGroup == null) {
