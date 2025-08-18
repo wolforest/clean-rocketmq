@@ -44,6 +44,10 @@ public class PopService {
         compensateSubscription(context);
         selectReviveQueue(context);
 
+        return popMessage(context);
+    }
+
+    private CompletableFuture<PopResult> popMessage(PopContext context) {
         return null;
     }
 
