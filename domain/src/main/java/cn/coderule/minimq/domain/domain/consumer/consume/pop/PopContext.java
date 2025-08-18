@@ -48,10 +48,9 @@ public class PopContext implements Serializable {
             && retryRandom < messageConfig.getPopRetryProbability();
     }
 
-    public boolean shouldRetry(int num) {
+    public boolean shouldRetryAgain() {
         return !request.isFifo()
-            && num < request.getMaxNum()
-            && num >= messageConfig.getPopRetryProbability()
+            && retryRandom >= messageConfig.getPopRetryProbability()
             ;
     }
 

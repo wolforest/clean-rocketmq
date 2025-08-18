@@ -43,11 +43,30 @@ public class PopService {
         checkConfig(context);
         selectReviveQueue(context);
 
-        return popMessage(context);
+        return fetchMessage(context);
     }
 
-    private CompletableFuture<PopResult> popMessage(PopContext context) {
+    private CompletableFuture<PopResult> fetchMessage(PopContext context) {
         CompletableFuture<PopResult> result = PopResult.future();
+
+        if (context.shouldRetry()) {
+            result = popRetryMessage(context, result);
+        }
+
+        result = popMessage(context, result);
+
+        if (context.shouldRetryAgain()) {
+            result = popRetryMessage(context, result);
+        }
+
+        return result;
+    }
+
+    private CompletableFuture<PopResult> popMessage(PopContext context, CompletableFuture<PopResult> result) {
+        return null;
+    }
+
+    private CompletableFuture<PopResult> popRetryMessage(PopContext context, CompletableFuture<PopResult> result) {
         return null;
     }
 
