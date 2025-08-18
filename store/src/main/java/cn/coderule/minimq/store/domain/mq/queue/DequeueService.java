@@ -34,15 +34,14 @@ public class DequeueService {
         String group = request.getGroup();
         String topic = request.getTopic();
         int queueId = request.getQueueId();
-        int num = request.getNum();
 
         if (!dequeueLock.tryLock(group, topic, queueId)) {
             return DequeueResult.lockFailed();
         }
 
         try {
-            long offset = getOffset(request);
-            DequeueResult result = messageService.get(topic, queueId, offset, num);
+            getOffset(request);
+            DequeueResult result = getMessage(request);
             updateOffset(request, result);
             addCheckpoint(request, result);
 
@@ -56,12 +55,29 @@ public class DequeueService {
         }
     }
 
-    private long getOffset(DequeueRequest request) {
-        return consumeOffsetService.getOffset(
+    private void getOffset(DequeueRequest request) {
+        long offset = consumeOffsetService.getOffset(
             request.getGroup(),
             request.getTopic(),
             request.getQueueId()
         );
+
+        request.setOffset(offset);
+    }
+
+    private DequeueResult getMessage(DequeueRequest request) {
+        DequeueResult result = messageService.get(request);
+
+        if (result.isOffsetIllegal()) {
+            return regetMessage(request, result);
+        }
+
+        return result;
+    }
+
+    private DequeueResult regetMessage(DequeueRequest request, DequeueResult result) {
+        // todo retry
+        return result;
     }
 
     private void updateOffset(DequeueRequest request, DequeueResult result) {

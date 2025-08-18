@@ -53,15 +53,16 @@ public class PopService {
 
     private CompletableFuture<PopResult> popMessage(PopContext context, CompletableFuture<PopResult> result) {
         Topic topic = context.getTopic();
-        int requestQueueId = context.getMessageQueue().getQueueId();
+        String topicName = topic.getTopicName();
 
+        int requestQueueId = context.getMessageQueue().getQueueId();
         if (requestQueueId >= 0) {
-            return result.thenCompose(popResult -> dequeue(context, topic.getTopicName(), requestQueueId));
+            return result.thenCompose(popResult -> dequeue(context, topicName, requestQueueId, popResult));
         }
 
         for (int i = 0; i < topic.getReadQueueNums(); i++) {
             int queueId = context.selectRandomQueue(topic.getReadQueueNums(), i);
-            result = result.thenCompose(popResult -> dequeue(context, topic.getTopicName(), queueId));
+            result = result.thenCompose(popResult -> dequeue(context, topicName, queueId, popResult));
         }
 
         return result;
@@ -72,13 +73,13 @@ public class PopService {
 
         for (int i = 0; i < topic.getReadQueueNums(); i++) {
             int queueId = context.selectRandomQueue(topic.getReadQueueNums(), i);
-            result = result.thenCompose(popResult -> dequeue(context, topic.getTopicName(), queueId));
+            result = result.thenCompose(popResult -> dequeue(context, topic.getTopicName(), queueId, popResult));
         }
 
         return result;
     }
 
-    private CompletableFuture<PopResult> dequeue(PopContext context, String topicName, int queueId) {
+    private CompletableFuture<PopResult> dequeue(PopContext context, String topicName, int queueId, PopResult lastResult) {
         return null;
     }
 

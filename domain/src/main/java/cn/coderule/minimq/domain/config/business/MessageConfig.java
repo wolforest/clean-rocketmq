@@ -59,6 +59,9 @@ public class MessageConfig implements Serializable {
     private boolean enablePopLog = false;
     private int popRetryProbability = 20;
 
+    private boolean enablePopThreshold = false;
+    private long popInflightThreshold = 10_000;
+
     private int popPollingSize = 1024;
     private int popPollingMapSize = 100000;
     // 20w cost 200M heap memory.
