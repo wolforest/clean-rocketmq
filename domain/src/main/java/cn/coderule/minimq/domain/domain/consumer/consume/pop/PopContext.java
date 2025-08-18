@@ -20,6 +20,10 @@ public class PopContext implements Serializable {
     private int reviveQueueId;
     private int retryRandom;
 
+    private StringBuilder startOffsetBuilder;
+    private StringBuilder messageOffsetBuilder;
+    private StringBuilder orderInfoBuilder;
+
     public PopContext(BrokerConfig brokerConfig, PopRequest popRequest, MessageQueue messageQueue) {
         this.brokerConfig = brokerConfig;
         this.popRequest = popRequest;
@@ -27,6 +31,12 @@ public class PopContext implements Serializable {
 
         this.popTime = System.currentTimeMillis();
         this.retryRandom = ThreadLocalRandom.current().nextInt(100);
+
+        this.startOffsetBuilder = new StringBuilder(64);
+        this.messageOffsetBuilder = new StringBuilder(64);
+        this.orderInfoBuilder = popRequest.isFifo()
+            ? new StringBuilder(64)
+            : null;
     }
 
     public boolean shouldRetry() {
