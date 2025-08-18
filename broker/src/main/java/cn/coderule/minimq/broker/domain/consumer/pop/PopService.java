@@ -98,6 +98,7 @@ public class PopService {
 
     private void checkConfig(PopContext context) {
         checkTopic(context);
+        checkRetryTopic(context);
         checkSubscriptionGroup(context.getRequest());
     }
 
@@ -128,6 +129,21 @@ public class PopService {
                     + ":" + messageQueue.getQueueId()
             );
         }
+    }
+
+    private void checkRetryTopic(PopContext context) {
+        if (!context.shouldRetry()) {
+            return;
+        }
+
+        PopRequest request = context.getRequest();
+        String retryTopicName = KeyBuilder.buildPopRetryTopic(
+            request.getTopicName(),
+            request.getConsumerGroup()
+        );
+
+        Topic retryTopic = topicFacade.getTopic(retryTopicName);
+        context.setRetryTopic(retryTopic);
     }
 
     private void checkSubscriptionGroup(PopRequest request) {

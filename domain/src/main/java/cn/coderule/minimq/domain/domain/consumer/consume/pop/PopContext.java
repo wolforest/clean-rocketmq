@@ -17,7 +17,7 @@ public class PopContext implements Serializable {
     private final MessageQueue messageQueue;
 
     private Topic topic;
-    private String retryTopicName;
+    private Topic retryTopic;
 
     private int reviveQueueId;
     private int retryRandom;
