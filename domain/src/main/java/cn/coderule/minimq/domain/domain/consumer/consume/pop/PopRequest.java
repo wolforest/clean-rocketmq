@@ -21,6 +21,7 @@ public class PopRequest implements Serializable {
     private String topicName;
     private String consumerGroup;
     private String storeGroup;
+    private int queueId;
 
     private int maxNum;
     private long invisibleTime;

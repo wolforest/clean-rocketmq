@@ -1,6 +1,7 @@
 package cn.coderule.minimq.broker.domain.consumer.pop;
 
 import cn.coderule.minimq.broker.domain.consumer.consumer.ConsumerRegister;
+import cn.coderule.minimq.broker.domain.consumer.consumer.InflightCounter;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.core.constant.PermName;
 import cn.coderule.minimq.domain.core.enums.code.InvalidCode;
@@ -40,13 +41,13 @@ public class PopService {
         PopContext context = new PopContext(brokerConfig, request, messageQueue);
 
         checkConfig(context);
-        compensateSubscription(context);
         selectReviveQueue(context);
 
         return popMessage(context);
     }
 
     private CompletableFuture<PopResult> popMessage(PopContext context) {
+        CompletableFuture<PopResult> result = PopResult.future();
         return null;
     }
 
@@ -68,16 +69,11 @@ public class PopService {
             request.getTopicName(),
             request.getSubscriptionData()
         );
-
-        compensateRetrySubscription(context);
     }
 
     private void  compensateRetrySubscription(PopContext context) {
         PopRequest request = context.getRequest();
-        String retryTopic = KeyBuilder.buildPopRetryTopic(
-            request.getTopicName(), request.getConsumerGroup()
-        );
-        context.setRetryTopicName(retryTopic);
+        String retryTopic = context.getRetryTopic().getTopicName();
 
         try {
             SubscriptionData retrySubscription = FilterAPI.build(
@@ -100,6 +96,9 @@ public class PopService {
         checkTopic(context);
         checkRetryTopic(context);
         checkSubscriptionGroup(context.getRequest());
+
+        compensateSubscription(context);
+        compensateRetrySubscription(context);
     }
 
     private void checkTopic(PopContext context) {
