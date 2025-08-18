@@ -14,12 +14,12 @@ public class PopContext implements Serializable {
     private final MessageConfig messageConfig;
     private final long popTime;
     private final PopRequest request;
+    private final int random;
 
     private Topic topic;
     private Topic retryTopic;
 
     private int reviveQueueId;
-    private int retryRandom;
     private MessageQueue messageQueue = null;
 
     private StringBuilder startOffsetBuilder;
@@ -33,7 +33,7 @@ public class PopContext implements Serializable {
         this.request = request;
 
         this.popTime = System.currentTimeMillis();
-        this.retryRandom = ThreadLocalRandom.current().nextInt(100);
+        this.random = ThreadLocalRandom.current().nextInt(100);
 
         this.startOffsetBuilder = new StringBuilder(64);
         this.messageOffsetBuilder = new StringBuilder(64);
@@ -44,13 +44,17 @@ public class PopContext implements Serializable {
 
     public boolean shouldRetry() {
         return !request.isFifo()
-            && retryRandom < messageConfig.getPopRetryProbability();
+            && random < messageConfig.getPopRetryProbability();
     }
 
     public boolean shouldRetryAgain() {
         return !request.isFifo()
-            && retryRandom >= messageConfig.getPopRetryProbability()
+            && random >= messageConfig.getPopRetryProbability()
             ;
+    }
+
+    public int selectRandomQueue(int queueNum, int count) {
+        return (random + count) % queueNum;
     }
 
 }

@@ -63,10 +63,33 @@ public class PopService {
     }
 
     private CompletableFuture<PopResult> popMessage(PopContext context, CompletableFuture<PopResult> result) {
-        return null;
+        Topic topic = context.getTopic();
+        int requestQueueId = context.getMessageQueue().getQueueId();
+
+        if (requestQueueId >= 0) {
+            return result.thenCompose(popResult -> dequeue(context, topic.getTopicName(), requestQueueId));
+        }
+
+        for (int i = 0; i < topic.getReadQueueNums(); i++) {
+            int queueId = context.selectRandomQueue(topic.getReadQueueNums(), i);
+            result = result.thenCompose(popResult -> dequeue(context, topic.getTopicName(), queueId));
+        }
+
+        return result;
     }
 
     private CompletableFuture<PopResult> popRetryMessage(PopContext context, CompletableFuture<PopResult> result) {
+        Topic topic = context.getRetryTopic();
+
+        for (int i = 0; i < topic.getReadQueueNums(); i++) {
+            int queueId = context.selectRandomQueue(topic.getReadQueueNums(), i);
+            result = result.thenCompose(popResult -> dequeue(context, topic.getTopicName(), queueId));
+        }
+
+        return result;
+    }
+
+    private CompletableFuture<PopResult> dequeue(PopContext context, String topicName, int queueId) {
         return null;
     }
 
