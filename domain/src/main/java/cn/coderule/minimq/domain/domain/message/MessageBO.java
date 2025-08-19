@@ -237,5 +237,9 @@ public class MessageBO extends Message implements Serializable {
         return getLongProperty(MessageConst.PROPERTY_CHECK_IMMUNITY_TIME_IN_SECONDS);
     }
 
+    public String getReceipt() {
+        return this.getProperty(MessageConst.PROPERTY_POP_CK);
+    }
+
 
 }

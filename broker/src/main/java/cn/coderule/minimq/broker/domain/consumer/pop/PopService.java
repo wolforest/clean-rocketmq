@@ -8,8 +8,10 @@ import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.PopContext;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.PopRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.PopResult;
+import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.domain.meta.topic.KeyBuilder;
 import cn.coderule.minimq.domain.domain.meta.topic.Topic;
+import cn.coderule.minimq.domain.service.broker.consume.ReceiptHandler;
 import cn.coderule.minimq.rpc.store.facade.MQFacade;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicLong;
@@ -24,6 +26,7 @@ public class PopService {
 
     private MQFacade mqFacade;
     private PopContextBuilder popContextBuilder;
+    private ReceiptHandler receiptHandler;
 
     private final AtomicLong reviveCount = new AtomicLong(0);
 
@@ -32,7 +35,7 @@ public class PopService {
 
         selectQueue(context);
         CompletableFuture<PopResult> result = fetchMessage(context);
-        addReceipt(context, result);
+        result.thenAccept(popResult -> addReceipt(context, popResult));
 
         return result;
     }
@@ -150,7 +153,18 @@ public class PopService {
         return status;
     }
 
-    private void addReceipt(PopContext context, CompletableFuture<PopResult> result) {
+    private void addReceipt(PopContext context, PopResult result) {
+        if (result.isEmpty()) {
+            return;
+        }
+
+        for (MessageBO message : result.getMessageList()) {
+            String receipt = message.getReceipt();
+            if (null == receipt) {
+                continue;
+            }
+
+        }
     }
 
     private void selectQueue(PopContext context) {

@@ -63,8 +63,6 @@ public class DequeueService {
         );
 
         request.setOffset(offset);
-
-        // @todo: sequential queue process
     }
 
     private DequeueResult getMessage(DequeueRequest request) {
