@@ -109,9 +109,11 @@ public class PopService {
             .group(request.getConsumerGroup())
             .topic(topicName)
             .queueId(queueId)
+            .reviveQueueId(context.getReviveQueueId())
             .num(request.getMaxNum())
             .maxNum(request.getMaxNum())
             .fifo(request.isFifo())
+            .dequeueTime(context.getPopTime())
             .build();
     }
 

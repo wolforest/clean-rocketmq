@@ -7,6 +7,7 @@ import cn.coderule.minimq.domain.core.enums.consume.PopStatus;
 import cn.coderule.minimq.domain.core.enums.message.MessageStatus;
 import cn.coderule.minimq.domain.domain.consumer.ack.AckMsg;
 import cn.coderule.minimq.domain.domain.consumer.ack.BatchAckMsg;
+import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueResult;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.PopContext;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.PopResult;
@@ -74,6 +75,10 @@ public class PopConverter {
         newCk.addDiff(0);
 
         return newCk;
+    }
+
+    public static PopCheckPoint toCheckPoint(DequeueRequest request, DequeueResult result) {
+        return null;
     }
 
     public static PopCheckPoint toCheckPoint(AckMsg ackMsg, long offset) {

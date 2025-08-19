@@ -4,7 +4,10 @@ import cn.coderule.minimq.domain.core.exception.DequeueException;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueResult;
 import cn.coderule.minimq.domain.core.lock.queue.DequeueLock;
+import cn.coderule.minimq.domain.domain.consumer.consume.pop.checkpoint.PopCheckPoint;
+import cn.coderule.minimq.domain.domain.consumer.consume.pop.helper.PopConverter;
 import cn.coderule.minimq.domain.service.store.domain.meta.ConsumeOffsetService;
+import cn.coderule.minimq.store.domain.mq.ack.AckService;
 import java.util.concurrent.CompletableFuture;
 import lombok.extern.slf4j.Slf4j;
 
@@ -13,6 +16,8 @@ public class DequeueService {
     private final DequeueLock dequeueLock;
     private final MessageService messageService;
     private final ConsumeOffsetService consumeOffsetService;
+
+    private AckService ackService;
 
     public DequeueService(
         DequeueLock dequeueLock,
@@ -98,5 +103,13 @@ public class DequeueService {
         if (request.isFifo()) {
             return;
         }
+
+        PopCheckPoint checkPoint = PopConverter.toCheckPoint(request, result);
+        ackService.addCheckPoint(
+            checkPoint,
+            request.getReviveQueueId(),
+            -1,
+            result.getNextOffset()
+        );
     }
 }

@@ -17,7 +17,10 @@ public class DequeueRequest implements Serializable {
     private String group;
     private String topic;
     private int queueId;
+    private int reviveQueueId;
     private long offset;
+
+    private long dequeueTime;
 
     @Builder.Default
     private int num = 1;
