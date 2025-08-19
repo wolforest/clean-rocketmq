@@ -10,9 +10,9 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class DequeueService {
+    private final DequeueLock dequeueLock;
     private final MessageService messageService;
     private final ConsumeOffsetService consumeOffsetService;
-    private final DequeueLock dequeueLock;
 
     public DequeueService(
         DequeueLock dequeueLock,
@@ -63,6 +63,8 @@ public class DequeueService {
         );
 
         request.setOffset(offset);
+
+        // @todo: sequential queue process
     }
 
     private DequeueResult getMessage(DequeueRequest request) {

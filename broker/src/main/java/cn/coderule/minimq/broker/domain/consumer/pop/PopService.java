@@ -1,6 +1,7 @@
 package cn.coderule.minimq.broker.domain.consumer.pop;
 
 import cn.coderule.minimq.broker.domain.consumer.consumer.InflightCounter;
+import cn.coderule.minimq.domain.config.business.MessageConfig;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.domain.MessageQueue;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.PopContext;
@@ -80,20 +81,39 @@ public class PopService {
     }
 
     private CompletableFuture<PopResult> dequeue(PopContext context, String topicName, int queueId, PopResult lastResult) {
-        if (shouldStopPop(context, topicName, queueId, lastResult)) {
-            return stopPop(context, topicName, queueId, lastResult);
+        if (shouldStop(context, topicName, queueId, lastResult)) {
+            return stopDequeue(lastResult);
         }
 
         return null;
     }
-    private CompletableFuture<PopResult> stopPop(PopContext context, String topicName, int queueId, PopResult lastResult) {
+    private CompletableFuture<PopResult> stopDequeue(PopResult lastResult) {
         CompletableFuture<PopResult> result = new CompletableFuture<>();
         result.complete(lastResult);
         return result;
     }
 
-    private boolean shouldStopPop(PopContext context, String topicName, int queueId, PopResult lastResult) {
-        return false;
+    private boolean shouldStop(PopContext context, String topicName, int queueId, PopResult lastResult) {
+        PopRequest request = context.getRequest();
+        if (lastResult.countMessage() >= request.getMaxNum()) {
+            return true;
+        }
+
+        MessageConfig messageConfig = brokerConfig.getMessageConfig();
+        if (!messageConfig.isEnablePopThreshold()) {
+            return false;
+        }
+
+        long inflight = inflightCounter.get(topicName, request.getConsumerGroup(), queueId);
+        boolean status = inflight > messageConfig.getPopInflightThreshold();
+        if (status) {
+            log.warn("Stop pop because too much message inflight,"
+                + "topic={}; group={}, queueId={}",
+                topicName, request.getConsumerGroup(), queueId
+            );
+        }
+
+        return status;
     }
 
     private void addReceipt(PopContext context, CompletableFuture<PopResult> result) {
