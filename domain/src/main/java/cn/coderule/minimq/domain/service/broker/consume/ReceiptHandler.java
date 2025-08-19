@@ -7,7 +7,7 @@ import io.netty.channel.Channel;
 
 
 public interface ReceiptHandler {
-    void addReceiptHandle(RequestContext context, Channel channel, MessageReceipt messageReceipt);
+    void addReceiptHandle(RequestContext context, MessageReceipt messageReceipt);
 
-    MessageReceipt removeReceiptHandle(RequestContext context, Channel channel, MessageReceipt messageReceipt);
+    MessageReceipt removeReceiptHandle(RequestContext context, MessageReceipt messageReceipt);
 }

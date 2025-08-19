@@ -5,10 +5,16 @@ import cn.coderule.minimq.domain.core.enums.message.MessageStatus;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueResult;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.PopContext;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.PopResult;
+import cn.coderule.minimq.domain.domain.consumer.receipt.MessageReceipt;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
 import java.util.List;
 
 public class PopConverter {
+
+    public static MessageReceipt toReceipt(PopContext context, MessageBO messageBO) {
+        return null;
+    }
+
     public static PopResult toPopResult(PopContext context, DequeueResult dequeueResult,  PopResult lastResult) {
         if (dequeueResult.isEmpty()) {
             return lastResult;

@@ -4,10 +4,12 @@ import cn.coderule.minimq.broker.domain.consumer.consumer.InflightCounter;
 import cn.coderule.minimq.domain.config.business.MessageConfig;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.domain.MessageQueue;
+import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.PopContext;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.PopRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.PopResult;
+import cn.coderule.minimq.domain.domain.consumer.receipt.MessageReceipt;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.domain.meta.topic.KeyBuilder;
 import cn.coderule.minimq.domain.domain.meta.topic.Topic;
@@ -159,11 +161,14 @@ public class PopService {
         }
 
         for (MessageBO message : result.getMessageList()) {
-            String receipt = message.getReceipt();
-            if (null == receipt) {
+            String handle = message.getReceipt();
+            if (null == handle) {
                 continue;
             }
 
+            MessageReceipt receipt = PopConverter.toReceipt(context, message);
+            RequestContext requestContext = context.getRequest().getRequestContext();
+            receiptHandler.addReceiptHandle(requestContext, receipt);
         }
     }
 
