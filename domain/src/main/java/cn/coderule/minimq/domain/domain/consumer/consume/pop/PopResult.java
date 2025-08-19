@@ -3,13 +3,21 @@ package cn.coderule.minimq.domain.domain.consumer.consume.pop;
 import cn.coderule.minimq.domain.core.enums.consume.PopStatus;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class PopResult implements Serializable {
-    private List<MessageBO> messageList;
+    @Builder.Default
+    private List<MessageBO> messageList = new ArrayList<>();
     private PopStatus popStatus;
     private long popTime;
     private long invisibleTime;

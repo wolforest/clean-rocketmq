@@ -5,7 +5,6 @@ import cn.coderule.minimq.domain.config.business.MessageConfig;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.domain.MessageQueue;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueRequest;
-import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueResult;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.PopContext;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.PopRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.PopResult;
@@ -76,7 +75,9 @@ public class PopService {
 
         for (int i = 0; i < topic.getReadQueueNums(); i++) {
             int queueId = context.selectRandomQueue(topic.getReadQueueNums(), i);
-            result = result.thenCompose(popResult -> dequeue(context, topic.getTopicName(), queueId, popResult));
+            result = result.thenCompose(
+                popResult -> dequeue(context, topic.getTopicName(), queueId, popResult)
+            );
         }
 
         return result;
@@ -89,11 +90,7 @@ public class PopService {
 
         DequeueRequest request = buildDequeueRequest(context, topicName, queueId);
         return mqFacade.dequeueAsync(request)
-            .thenApply(this::toPopResult);
-    }
-
-    private PopResult toPopResult(DequeueResult dequeueResult) {
-        return null;
+            .thenApply(result -> PopConverter.toPopResult(context, result, lastResult));
     }
 
     private DequeueRequest buildDequeueRequest(PopContext context, String topicName, int queueId) {
