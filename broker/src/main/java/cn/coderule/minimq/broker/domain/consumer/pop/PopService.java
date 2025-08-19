@@ -4,6 +4,8 @@ import cn.coderule.minimq.broker.domain.consumer.consumer.InflightCounter;
 import cn.coderule.minimq.domain.config.business.MessageConfig;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.domain.MessageQueue;
+import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueRequest;
+import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueResult;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.PopContext;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.PopRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.PopResult;
@@ -85,8 +87,27 @@ public class PopService {
             return stopDequeue(lastResult);
         }
 
+        DequeueRequest request = buildDequeueRequest(context, topicName, queueId);
+        return mqFacade.dequeueAsync(request)
+            .thenApply(this::toPopResult);
+    }
+
+    private PopResult toPopResult(DequeueResult dequeueResult) {
         return null;
     }
+
+    private DequeueRequest buildDequeueRequest(PopContext context, String topicName, int queueId) {
+        PopRequest request = context.getRequest();
+        return DequeueRequest.builder()
+            .group(request.getConsumerGroup())
+            .topic(topicName)
+            .queueId(queueId)
+            .num(request.getMaxNum())
+            .maxNum(request.getMaxNum())
+            .fifo(request.isFifo())
+            .build();
+    }
+
     private CompletableFuture<PopResult> stopDequeue(PopResult lastResult) {
         CompletableFuture<PopResult> result = new CompletableFuture<>();
         result.complete(lastResult);
