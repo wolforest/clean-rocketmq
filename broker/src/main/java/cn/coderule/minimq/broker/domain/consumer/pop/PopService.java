@@ -88,6 +88,10 @@ public class PopService {
             return stopDequeue(lastResult);
         }
 
+        if (prepareOrderMessage(context, topicName, queueId)) {
+            return stopDequeue(lastResult);
+        }
+
         DequeueRequest request = buildDequeueRequest(context, topicName, queueId);
         return mqFacade.dequeueAsync(request)
             .thenApply(result -> PopConverter.toPopResult(context, result, lastResult));
@@ -109,6 +113,18 @@ public class PopService {
         CompletableFuture<PopResult> result = new CompletableFuture<>();
         result.complete(lastResult);
         return result;
+    }
+
+    private boolean prepareOrderMessage(PopContext context, String topicName, int queueId) {
+        PopRequest request = context.getRequest();
+        if (!request.isFifo()) {
+            return false;
+        }
+
+        // consumerOrderStore.checkBlockStatus
+
+        inflightCounter.clear(topicName, request.getConsumerGroup(), queueId);
+        return true;
     }
 
     private boolean shouldStop(PopContext context, String topicName, int queueId, PopResult lastResult) {
