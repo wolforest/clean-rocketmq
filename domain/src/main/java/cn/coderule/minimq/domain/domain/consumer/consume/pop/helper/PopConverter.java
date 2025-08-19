@@ -3,9 +3,15 @@ package cn.coderule.minimq.domain.domain.consumer.consume.pop.helper;
 import cn.coderule.minimq.domain.core.constant.MQConstants;
 import cn.coderule.minimq.domain.core.constant.MessageConst;
 import cn.coderule.minimq.domain.core.constant.PopConstants;
+import cn.coderule.minimq.domain.core.enums.consume.PopStatus;
+import cn.coderule.minimq.domain.core.enums.message.MessageStatus;
 import cn.coderule.minimq.domain.domain.consumer.ack.AckMsg;
 import cn.coderule.minimq.domain.domain.consumer.ack.BatchAckMsg;
+import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueResult;
+import cn.coderule.minimq.domain.domain.consumer.consume.pop.PopContext;
+import cn.coderule.minimq.domain.domain.consumer.consume.pop.PopResult;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.checkpoint.PopCheckPoint;
+import cn.coderule.minimq.domain.domain.consumer.receipt.MessageReceipt;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.domain.meta.topic.KeyBuilder;
 import cn.coderule.minimq.domain.utils.MessageUtils;
@@ -13,6 +19,7 @@ import com.alibaba.fastjson2.JSON;
 import java.net.SocketAddress;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+import java.util.List;
 
 public class PopConverter {
 
@@ -128,6 +135,50 @@ public class PopConverter {
             msgInner.getProperties().put(MessageConst.PROPERTY_FIRST_POP_TIME, String.valueOf(popCheckPoint.getPopTime()));
         }
         msgInner.setPropertiesString(MessageUtils.propertiesToString(msgInner.getProperties()));
+    }
+
+    public static MessageReceipt toReceipt(PopContext context, MessageBO messageBO) {
+        return null;
+    }
+
+    public static PopResult toPopResult(PopContext context, DequeueResult dequeueResult,  PopResult lastResult) {
+        if (dequeueResult.isEmpty()) {
+            return lastResult;
+        }
+
+        List<MessageBO> messageList = lastResult.getMessageList();
+        messageList.addAll(dequeueResult.getMessageList());
+
+        return PopResult.builder()
+            .restNum(1)
+            .popStatus(toPopStatus(dequeueResult.getStatus(), lastResult.getPopStatus()))
+            .messageList(messageList)
+            .popTime(context.getPopTime())
+            .invisibleTime(context.getRequest().getInvisibleTime())
+            .build();
+    }
+
+    public static PopStatus toPopStatus(MessageStatus status, PopStatus lastStatus) {
+        PopStatus newStatus = switch (status) {
+            case FOUND:
+                yield PopStatus.FOUND;
+            case OFFSET_TOO_SMALL:
+            case OFFSET_OVERFLOW_ONE:
+            case OFFSET_OVERFLOW_BADLY:
+                yield PopStatus.NO_NEW_MSG;
+            case OFFSET_FOUND_NULL:
+            case NO_MATCHED_MESSAGE:
+            case OFFSET_RESET:
+            case MESSAGE_WAS_REMOVING:
+            default:
+                yield PopStatus.POLLING_NOT_FOUND;
+        };
+
+        if (newStatus != PopStatus.FOUND) {
+            return lastStatus;
+        }
+
+        return newStatus;
     }
 
 }
