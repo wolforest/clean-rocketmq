@@ -27,6 +27,15 @@ public class ConsumeOrder implements Serializable {
         );
     }
 
+    public OrderInfo getOrderInfo(OrderRequest request) {
+        ConcurrentMap<Integer, OrderInfo> map = orderTree.get(request.getKey());
+        if (map == null) {
+            return null;
+        }
+
+        return map.get(request.getQueueId());
+    }
+
     public boolean isLocked(OrderRequest request) {
         ConcurrentMap<Integer, OrderInfo> map = getOrderMap(request.getKey());
 
@@ -90,7 +99,7 @@ public class ConsumeOrder implements Serializable {
         return commit(request, orderInfo);
     }
 
-    public void updateVisibleTime(OrderRequest request) {
+    public void updateVisible(OrderRequest request) {
         String key = request.getKey();
         ConcurrentMap<Integer, OrderInfo> map = getOrderMap(key);
         if (map == null) {

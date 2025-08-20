@@ -6,8 +6,8 @@ public interface ConsumeOrderService extends MetaService {
     void update(OrderRequest request);
     long commit(OrderRequest request);
 
-    boolean checkBlock(OrderRequest request);
-    void clearBlock(OrderRequest request);
+    boolean isLocked(OrderRequest request);
+    void clearLock(OrderRequest request);
 
     void updateInvisible(OrderRequest request);
 }
