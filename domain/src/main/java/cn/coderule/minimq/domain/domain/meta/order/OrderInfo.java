@@ -5,8 +5,10 @@ import com.alibaba.fastjson2.annotation.JSONField;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -150,6 +152,37 @@ public class OrderInfo implements Serializable {
             return getQueueOffset(num - 1) + 1;
         }
         return getQueueOffset(i);
+    }
+
+    @JSONField(serialize = false, deserialize = false)
+    public void mergeOffsetConsumedCount(String preAttemptId, List<Long> preOffsetList, Map<Long, Integer> prevOffsetConsumedCount) {
+        Map<Long, Integer> offsetConsumedCount = new HashMap<>();
+        if (prevOffsetConsumedCount == null) {
+            prevOffsetConsumedCount = new HashMap<>();
+        }
+        if (preAttemptId != null && preAttemptId.equals(this.attemptId)) {
+            this.offsetConsumedCount = prevOffsetConsumedCount;
+            return;
+        }
+        Set<Long> preQueueOffsetSet = new HashSet<>();
+        for (int i = 0; i < preOffsetList.size(); i++) {
+            preQueueOffsetSet.add(getQueueOffset(preOffsetList, i));
+        }
+
+        for (int i = 0; i < offsetList.size(); i++) {
+            long queueOffset = this.getQueueOffset(i);
+            if (!preQueueOffsetSet.contains(queueOffset)) {
+                continue;
+            }
+
+            int count = 1;
+            Integer preCount = prevOffsetConsumedCount.get(queueOffset);
+            if (preCount != null) {
+                count = preCount + 1;
+            }
+            offsetConsumedCount.put(queueOffset, count);
+        }
+        this.offsetConsumedCount = offsetConsumedCount;
     }
 
     private static long getQueueOffset(List<Long> offsetList, int offsetIndex) {
