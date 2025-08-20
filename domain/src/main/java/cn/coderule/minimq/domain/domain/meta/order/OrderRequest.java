@@ -23,6 +23,7 @@ public class OrderRequest implements Serializable {
     private long popTime;
     private long invisibleTime;
 
+    private long queueOffset;
     private List<Long> offsetList;
     StringBuilder orderInfoBuilder;
 

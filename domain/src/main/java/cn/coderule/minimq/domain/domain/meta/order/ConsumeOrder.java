@@ -1,13 +1,17 @@
 package cn.coderule.minimq.domain.domain.meta.order;
 
+import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.minimq.domain.utils.ExtraInfoUtils;
 import java.io.Serializable;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import lombok.extern.slf4j.Slf4j;
 
 import static cn.coderule.minimq.domain.domain.meta.order.OrderUtils.buildKey;
 
+@Slf4j
 public class ConsumeOrder implements Serializable {
     private static final long CLEAN_SPAN_FROM_LAST = 24 * 3600 * 1000;
 
@@ -55,6 +59,72 @@ public class ConsumeOrder implements Serializable {
         );
 
         updateLockFreeTimestamp(orderInfo, request);
+    }
+
+    public long commit(OrderRequest request) {
+        String key = request.getKey();
+        ConcurrentMap<Integer, OrderInfo> map = getOrderMap(key);
+        if (map == null) {
+            return request.getQueueOffset() + 1;
+        }
+
+        OrderInfo orderInfo = map.get(request.getQueueId());
+        if (orderInfo == null) {
+            log.warn("OrderInfo is null, key={}; offset={};",
+                key, request.getQueueOffset());
+            return request.getQueueOffset() + 1;
+        }
+
+        if (CollectionUtil.isEmpty(orderInfo.getOffsetList())) {
+            log.warn("OrderInfo is empty, key={}, offset={}",
+                key, request.getQueueOffset());
+            return -1;
+        }
+
+        if (request.getPopTime() != orderInfo.getPopTime()) {
+            log.warn("OrderInfo popTime is not equal, key={}, offset={}, popTime={}, orderInfo={}",
+                key, request.getQueueOffset(), request.getPopTime(), orderInfo);
+            return -2;
+        }
+
+        return commit(request, orderInfo);
+    }
+
+    private long commit(OrderRequest request, OrderInfo orderInfo) {
+        int i = matchOffset(orderInfo, request);
+        if (i >= orderInfo.countOffsetList()) {
+            log.warn("can not find commit offset, request: {}, orderInfo: {}"
+                , request, orderInfo);
+            return -1;
+        }
+
+        long newBit = orderInfo.getCommitOffsetBit() | (1L << i);
+        orderInfo.setCommitOffsetBit(newBit);
+        long nextOffset = orderInfo.getNextOffset();
+
+        updateLockFreeTimestamp(orderInfo, request);
+        return nextOffset;
+    }
+
+    private int matchOffset(OrderInfo orderInfo, OrderRequest request) {
+        List<Long> offsetList = orderInfo.getOffsetList();
+        Long first = offsetList.get(0);
+        int i = 0, size = offsetList.size();
+
+        for (; i < size; i++) {
+            long tmp;
+            if (0 == i) {
+                tmp = first;
+            } else {
+                tmp = first + offsetList.get(i);
+            }
+
+            if (request.getQueueOffset() == tmp) {
+                break;
+            }
+        }
+
+        return i;
     }
 
     private int updateOffsetCount(OrderInfo orderInfo,  OrderRequest request) {
