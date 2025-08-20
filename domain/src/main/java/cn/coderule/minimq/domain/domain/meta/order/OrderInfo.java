@@ -4,6 +4,7 @@ import cn.coderule.common.util.lang.collection.CollectionUtil;
 import com.alibaba.fastjson2.annotation.JSONField;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import lombok.AllArgsConstructor;
@@ -122,6 +123,33 @@ public class OrderInfo implements Serializable {
             }
         }
         return currentTime;
+    }
+
+    @JSONField(serialize = false, deserialize = false)
+    public void updateOffsetNextVisibleTime(long queueOffset, long nextVisibleTime) {
+        if (this.offsetNextVisibleTime == null) {
+            this.offsetNextVisibleTime = new HashMap<>();
+        }
+        this.offsetNextVisibleTime.put(queueOffset, nextVisibleTime);
+    }
+
+    @JSONField(serialize = false, deserialize = false)
+    public long getNextOffset() {
+        if (offsetList == null || offsetList.isEmpty()) {
+            return -2;
+        }
+        int num = offsetList.size();
+        int i = 0;
+        for (; i < num; i++) {
+            if (hasNotAck(i)) {
+                break;
+            }
+        }
+        if (i == num) {
+            // all ack
+            return getQueueOffset(num - 1) + 1;
+        }
+        return getQueueOffset(i);
     }
 
     private static long getQueueOffset(List<Long> offsetList, int offsetIndex) {
