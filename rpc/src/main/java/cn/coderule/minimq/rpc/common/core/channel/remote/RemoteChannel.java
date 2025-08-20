@@ -3,7 +3,7 @@ package cn.coderule.minimq.rpc.common.core.channel.remote;
 
 import cn.coderule.minimq.rpc.common.core.channel.ChannelExtendAttributeGetter;
 import cn.coderule.minimq.rpc.common.core.channel.mock.MockChannel;
-import cn.coderule.minimq.rpc.common.core.enums.ChannelProtocolType;
+import cn.coderule.minimq.rpc.common.core.channel.ChannelProtocolType;
 import com.google.common.base.MoreObjects;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelId;

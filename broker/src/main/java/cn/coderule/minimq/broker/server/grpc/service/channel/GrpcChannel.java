@@ -6,7 +6,7 @@ import cn.coderule.minimq.broker.server.core.ChannelHelper;
 import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import cn.coderule.minimq.broker.server.core.ClientChannel;
 import cn.coderule.minimq.rpc.common.core.channel.ChannelExtendAttributeGetter;
-import cn.coderule.minimq.rpc.common.core.enums.ChannelProtocolType;
+import cn.coderule.minimq.rpc.common.core.channel.ChannelProtocolType;
 import cn.coderule.minimq.rpc.common.core.relay.RelayService;
 import cn.coderule.minimq.rpc.common.grpc.core.GrpcChannelId;
 import com.google.common.base.MoreObjects;

@@ -1,5 +1,5 @@
 
-package cn.coderule.minimq.rpc.common.core.enums;
+package cn.coderule.minimq.rpc.common.core.channel;
 
 public enum ChannelProtocolType {
     UNKNOWN("unknown"),

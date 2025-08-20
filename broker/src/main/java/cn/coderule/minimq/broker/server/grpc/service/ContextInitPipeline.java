@@ -1,7 +1,7 @@
 package cn.coderule.minimq.broker.server.grpc.service;
 
 import cn.coderule.common.util.lang.string.StringUtil;
-import cn.coderule.minimq.rpc.common.core.enums.ChannelProtocolType;
+import cn.coderule.minimq.rpc.common.core.channel.ChannelProtocolType;
 import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import cn.coderule.minimq.rpc.common.grpc.RequestPipeline;
 import cn.coderule.minimq.rpc.common.grpc.core.constants.GrpcConstants;

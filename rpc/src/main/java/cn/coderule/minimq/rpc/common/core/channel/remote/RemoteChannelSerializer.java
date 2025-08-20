@@ -2,7 +2,7 @@
 package cn.coderule.minimq.rpc.common.core.channel.remote;
 
 import cn.coderule.common.util.lang.string.StringUtil;
-import cn.coderule.minimq.rpc.common.core.enums.ChannelProtocolType;
+import cn.coderule.minimq.rpc.common.core.channel.ChannelProtocolType;
 
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;

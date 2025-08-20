@@ -1,6 +1,7 @@
 package cn.coderule.minimq.domain.domain.meta.order;
 
 import java.io.Serializable;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -47,6 +48,9 @@ public class ConsumeOrder implements Serializable {
         ConcurrentMap<Integer, OrderInfo> map = getOrderMap(request.getKey());
 
         OrderInfo orderInfo = updateOrderInfo(map, request);
+        Map<Long, Integer> offsetCountMap = orderInfo.getOffsetConsumedCount();
+        int minCount = Integer.MAX_VALUE;
+
     }
 
     private OrderInfo updateOrderInfo(ConcurrentMap<Integer, OrderInfo> map, OrderRequest request) {
