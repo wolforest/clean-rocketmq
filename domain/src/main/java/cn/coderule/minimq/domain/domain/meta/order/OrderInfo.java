@@ -52,4 +52,7 @@ public class OrderInfo implements Serializable {
     @JSONField(name = "a")
     private String attemptId;
 
+    public boolean isLocked(String attemptId, long invisibleTime) {
+        return false;
+    }
 }

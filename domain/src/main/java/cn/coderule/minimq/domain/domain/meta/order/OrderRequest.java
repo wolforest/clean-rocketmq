@@ -26,7 +26,7 @@ public class OrderRequest implements Serializable {
     private List<Long> offsetList;
     StringBuilder orderInfoBuilder;
 
-    private String getKey() {
+    public String getKey() {
         return KeyUtils.buildKey(topicName, consumerGroup);
     }
 
