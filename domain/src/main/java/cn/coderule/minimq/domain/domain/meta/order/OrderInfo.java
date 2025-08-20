@@ -3,6 +3,7 @@ package cn.coderule.minimq.domain.domain.meta.order;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
 import com.alibaba.fastjson2.annotation.JSONField;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import lombok.AllArgsConstructor;

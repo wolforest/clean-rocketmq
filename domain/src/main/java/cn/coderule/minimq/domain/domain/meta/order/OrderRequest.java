@@ -27,7 +27,7 @@ public class OrderRequest implements Serializable {
     StringBuilder orderInfoBuilder;
 
     public String getKey() {
-        return KeyUtils.buildKey(topicName, consumerGroup);
+        return OrderUtils.buildKey(topicName, consumerGroup);
     }
 
 }

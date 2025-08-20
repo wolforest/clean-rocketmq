@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-import static cn.coderule.minimq.domain.domain.meta.order.KeyUtils.buildKey;
+import static cn.coderule.minimq.domain.domain.meta.order.OrderUtils.buildKey;
 
 public class ConsumeOrder implements Serializable {
     private static final long CLEAN_SPAN_FROM_LAST = 24 * 3600 * 1000;
