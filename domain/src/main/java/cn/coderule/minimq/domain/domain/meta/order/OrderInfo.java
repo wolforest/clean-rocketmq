@@ -94,6 +94,36 @@ public class OrderInfo implements Serializable {
         return getQueueOffset(this.offsetList, offsetIndex);
     }
 
+    @JSONField(serialize = false, deserialize = false)
+    public Long getLockFreeTime() {
+        if (offsetList == null || offsetList.isEmpty()) {
+            return null;
+        }
+        int num = offsetList.size();
+        int i = 0;
+        long currentTime = System.currentTimeMillis();
+        for (; i < num; i++) {
+            if (!hasNotAck(i)) {
+                continue;
+            }
+
+            if (invisibleTime == null || invisibleTime <= 0) {
+                return null;
+            }
+            long nextVisibleTime = popTime + invisibleTime;
+            if (offsetNextVisibleTime != null) {
+                Long time = offsetNextVisibleTime.get(this.getQueueOffset(i));
+                if (time != null) {
+                    nextVisibleTime = time;
+                }
+            }
+            if (currentTime < nextVisibleTime) {
+                return nextVisibleTime;
+            }
+        }
+        return currentTime;
+    }
+
     private static long getQueueOffset(List<Long> offsetList, int offsetIndex) {
         if (offsetIndex == 0) {
             return offsetList.get(0);
