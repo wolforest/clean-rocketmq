@@ -50,7 +50,11 @@ public class ConsumeOrder implements Serializable {
 
         OrderInfo orderInfo = updateOrderInfo(map, request);
         int minConsumeTimes = updateOffsetCount(orderInfo, request);
+        ExtraInfoUtils.buildQueueIdOrderCountInfo(
+            request.getOrderInfoBuilder(), request.getTopicName(), request.getQueueId(), minConsumeTimes
+        );
 
+        updateLockFreeTimestamp(orderInfo, request);
     }
 
     private int updateOffsetCount(OrderInfo orderInfo,  OrderRequest request) {
@@ -92,7 +96,7 @@ public class ConsumeOrder implements Serializable {
         return orderInfo;
     }
 
-    private void updateLockFreeTimestamp(String topic, String group, int queueId, OrderInfo orderInfo) {
+    private void updateLockFreeTimestamp(OrderInfo orderInfo, OrderRequest request) {
 
     }
 }
