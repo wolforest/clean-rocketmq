@@ -78,7 +78,7 @@ public class PopConverter {
     }
 
     public static PopCheckPoint toCheckPoint(DequeueRequest request, DequeueResult result) {
-        return null;
+        return new PopCheckPoint();
     }
 
     public static PopCheckPoint toCheckPoint(AckMsg ackMsg, long offset) {

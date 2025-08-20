@@ -1,5 +1,6 @@
 package cn.coderule.minimq.store.domain.mq.queue;
 
+import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.domain.core.exception.DequeueException;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueResult;
@@ -18,6 +19,7 @@ public class DequeueService {
     private final ConsumeOffsetService consumeOffsetService;
 
     private AckService ackService;
+    private StoreConfig storeConfig;
 
     public DequeueService(
         DequeueLock dequeueLock,
@@ -74,8 +76,11 @@ public class DequeueService {
         DequeueResult result = messageService.get(request);
 
         if (result.isOffsetIllegal()) {
+            // add checkpoint
             return regetMessage(request, result);
         }
+
+        // empty result process
 
         return result;
     }
@@ -105,6 +110,8 @@ public class DequeueService {
         }
 
         PopCheckPoint checkPoint = PopConverter.toCheckPoint(request, result);
+        checkPoint.setBrokerName(storeConfig.getGroup());
+
         ackService.addCheckPoint(
             checkPoint,
             request.getReviveQueueId(),
