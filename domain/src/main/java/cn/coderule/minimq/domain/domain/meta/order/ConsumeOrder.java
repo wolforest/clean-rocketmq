@@ -44,5 +44,29 @@ public class ConsumeOrder implements Serializable {
     }
 
     public void update(OrderRequest request) {
+        ConcurrentMap<Integer, OrderInfo> map = getOrderMap(request.getKey());
+
+        OrderInfo orderInfo = updateOrderInfo(map, request);
+    }
+
+    private OrderInfo updateOrderInfo(ConcurrentMap<Integer, OrderInfo> map, OrderRequest request) {
+        OrderInfo orderInfo = map.get(request.getQueueId());
+        OrderInfo newOrderInfo = OrderConverter.toOrderInfo(request);
+        if (orderInfo != null) {
+            newOrderInfo.mergeOffsetConsumedCount(
+                orderInfo.getAttemptId(),
+                orderInfo.getOffsetList(),
+                orderInfo.getOffsetConsumedCount()
+            );
+        }
+
+        orderInfo = newOrderInfo;
+        map.put(request.getQueueId(), orderInfo);
+
+        return orderInfo;
+    }
+
+    private void updateLockFreeTimestamp(String topic, String group, int queueId, OrderInfo orderInfo) {
+
     }
 }
