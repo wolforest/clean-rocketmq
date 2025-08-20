@@ -1,4 +1,4 @@
-package cn.coderule.minimq.rpc.common.core.utils;
+package cn.coderule.minimq.domain.utils;
 
 import cn.coderule.minimq.domain.core.constant.MQConstants;
 import cn.coderule.minimq.domain.core.constant.MessageConst;
@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public class ExtraInfoUtil {
+public class ExtraInfoUtils {
     private static final String NORMAL_TOPIC = "0";
     private static final String RETRY_TOPIC = "1";
     private static final String RETRY_TOPIC_V2 = "2";
@@ -285,7 +285,7 @@ public class ExtraInfoUtil {
     }
 
     public static boolean isOrder(String[] extraInfo) {
-        return ExtraInfoUtil.getReviveQid(extraInfo) == KeyBuilder.POP_ORDER_REVIVE_QUEUE;
+        return ExtraInfoUtils.getReviveQid(extraInfo) == KeyBuilder.POP_ORDER_REVIVE_QUEUE;
     }
 
     private static String getRetry(String topic) {

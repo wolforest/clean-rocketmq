@@ -87,6 +87,11 @@ public class OrderInfo implements Serializable {
     }
 
     @JSONField(serialize = false, deserialize = false)
+    public int countOffsetList() {
+        return offsetList.size();
+    }
+
+    @JSONField(serialize = false, deserialize = false)
     public boolean hasNotAck(int offsetIndex) {
         return (commitOffsetBit & (1L << offsetIndex)) == 0;
     }
