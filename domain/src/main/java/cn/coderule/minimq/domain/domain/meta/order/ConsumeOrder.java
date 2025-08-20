@@ -90,6 +90,30 @@ public class ConsumeOrder implements Serializable {
         return commit(request, orderInfo);
     }
 
+    public void updateVisibleTime(OrderRequest request) {
+        String key = request.getKey();
+        ConcurrentMap<Integer, OrderInfo> map = getOrderMap(key);
+        if (map == null) {
+            log.warn("OrderInfo not exist, request={}", request);
+            return;
+        }
+
+        OrderInfo orderInfo = map.get(request.getQueueId());
+        if (orderInfo == null) {
+            log.warn("OrderInfo is null, request={};", request);
+            return;
+        }
+
+        if (request.getPopTime() != orderInfo.getPopTime()) {
+            log.warn("OrderInfo popTime is not equal, request={}, orderInfo={}",
+                request, orderInfo);
+            return;
+        }
+
+        orderInfo.updateOffsetNextVisibleTime(request.getQueueOffset(), request.getInvisibleTime());
+        updateLockFreeTimestamp(orderInfo, request);
+    }
+
     private long commit(OrderRequest request, OrderInfo orderInfo) {
         int i = matchOffset(orderInfo, request);
         if (i >= orderInfo.countOffsetList()) {
