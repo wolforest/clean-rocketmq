@@ -9,13 +9,14 @@ import cn.coderule.minimq.domain.service.store.domain.meta.ConsumeOffsetService;
 import java.util.Set;
 
 public class DefaultConsumeOffsetService implements ConsumeOffsetService {
-    private final StoreConfig storeConfig;
     private final String storePath;
+    private final StoreConfig storeConfig;
+
     private ConsumeOffset consumeOffset;
 
     public DefaultConsumeOffsetService(StoreConfig storeConfig, String storePath) {
-        this.storeConfig = storeConfig;
         this.storePath = storePath;
+        this.storeConfig = storeConfig;
     }
 
     @Override
