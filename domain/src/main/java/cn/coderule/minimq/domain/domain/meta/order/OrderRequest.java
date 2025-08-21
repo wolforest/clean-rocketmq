@@ -1,5 +1,6 @@
 package cn.coderule.minimq.domain.domain.meta.order;
 
+import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import java.io.Serializable;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -13,6 +14,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderRequest implements Serializable {
+    private RequestContext requestContext;
+    private String storeGroup;
+
     String attemptId;
     private boolean isRetry;
 
