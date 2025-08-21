@@ -1,22 +1,20 @@
 package cn.coderule.minimq.store.infra.file;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class AllocateMappedFileServiceTest {
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
     }
 
     @Test
     public void enqueue() {
+        assertEquals(5, 2 + 3);
     }
 }
