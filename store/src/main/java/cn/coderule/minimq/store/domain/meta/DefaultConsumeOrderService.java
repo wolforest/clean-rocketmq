@@ -18,8 +18,8 @@ public class DefaultConsumeOrderService implements ConsumeOrderService {
     private TopicService topicService;
 
     @Override
-    public void update(OrderRequest request) {
-        consumeOrder.update(request);
+    public void lock(OrderRequest request) {
+        consumeOrder.lock(request);
     }
 
     @Override
@@ -33,8 +33,8 @@ public class DefaultConsumeOrderService implements ConsumeOrderService {
     }
 
     @Override
-    public void clearLock(OrderRequest request) {
-        consumeOrder.clearLock(
+    public void unlock(OrderRequest request) {
+        consumeOrder.unlock(
             request.getTopicName(),
             request.getConsumerGroup(),
             request.getQueueId()

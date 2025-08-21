@@ -53,7 +53,7 @@ public class ConsumeOrder implements Serializable {
         );
     }
 
-    public void clearLock(String topicName, String consumerGroup, int queueId) {
+    public void unlock(String topicName, String consumerGroup, int queueId) {
         String key = buildKey(topicName, consumerGroup);
         orderTree.computeIfPresent(key, (k, v) -> {
            v.remove(queueId);
@@ -61,7 +61,7 @@ public class ConsumeOrder implements Serializable {
         });
     }
 
-    public void update(OrderRequest request) {
+    public void lock(OrderRequest request) {
         ConcurrentMap<Integer, OrderInfo> map = getOrderMap(request.getKey());
 
         OrderInfo orderInfo = updateOrderInfo(map, request);

@@ -3,11 +3,10 @@ package cn.coderule.minimq.domain.service.store.domain.meta;
 import cn.coderule.minimq.domain.domain.meta.order.OrderRequest;
 
 public interface ConsumeOrderService extends MetaService {
-    void update(OrderRequest request);
-    long commit(OrderRequest request);
-
     boolean isLocked(OrderRequest request);
-    void clearLock(OrderRequest request);
+    void lock(OrderRequest request);
+    void unlock(OrderRequest request);
 
+    long commit(OrderRequest request);
     void updateInvisible(OrderRequest request);
 }
