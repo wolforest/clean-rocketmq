@@ -1,21 +1,28 @@
 package cn.coderule.minimq.store.domain.meta;
 
+import cn.coderule.common.util.lang.collection.MapUtil;
 import cn.coderule.minimq.domain.domain.meta.order.ConsumeOrder;
 import cn.coderule.minimq.domain.domain.meta.order.OrderInfo;
 import cn.coderule.minimq.domain.domain.meta.order.OrderRequest;
 import cn.coderule.minimq.domain.domain.meta.order.OrderUtils;
+import cn.coderule.minimq.domain.domain.meta.subscription.SubscriptionGroup;
 import cn.coderule.minimq.domain.domain.meta.topic.Topic;
 import cn.coderule.minimq.domain.service.store.domain.meta.ConsumeOrderService;
+import cn.coderule.minimq.domain.service.store.domain.meta.SubscriptionService;
 import cn.coderule.minimq.domain.service.store.domain.meta.TopicService;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DefaultConsumeOrderService implements ConsumeOrderService {
     private static final long CLEAN_SPAN_FROM_LAST = 24 * 3600 * 1000;
+    private static final Logger log = LoggerFactory.getLogger(DefaultConsumeOrderService.class);
 
     private ConsumeOrder consumeOrder;
     private TopicService topicService;
+    private SubscriptionService subscriptionService;
 
     @Override
     public void lock(OrderRequest request) {
@@ -56,16 +63,18 @@ public class DefaultConsumeOrderService implements ConsumeOrderService {
 
     }
 
-    private void autoClean() {
+    private void cleanExpiredLock() {
         Iterator<
             Map.Entry<
                 String, ConcurrentMap<Integer, OrderInfo>
             >
         > iterator = consumeOrder.getIterator();
 
+        long now = System.currentTimeMillis();
         while (iterator.hasNext()) {
-            Map.Entry<String, ConcurrentMap<Integer, OrderInfo>> entry
-                = iterator.next();
+            Map.Entry<
+                String, ConcurrentMap<Integer, OrderInfo>
+            > entry = iterator.next();
 
             String[] arr = OrderUtils.decodeKey(entry.getKey());
             if (arr.length != 2) continue;
@@ -76,40 +85,75 @@ public class DefaultConsumeOrderService implements ConsumeOrderService {
             if (!validateGroup(arr[1], iterator)) continue;
             if (!validateOrderMap(entry.getValue(), iterator)) continue;
 
-            Iterator<Map.Entry<Integer, OrderInfo>> mapIterator
-                = entry.getValue().entrySet().iterator();
-            cleanMap(mapIterator, topic);
+            Iterator<
+                Map.Entry<Integer, OrderInfo>
+            > mapIterator = entry.getValue()
+                .entrySet()
+                .iterator();
+
+            cleanOrderMap(mapIterator, topic, now);
         }
     }
 
-    private void cleanMap(Iterator<Map.Entry<Integer, OrderInfo>> mapIterator, Topic topic) {
+    private void cleanOrderMap(Iterator<Map.Entry<Integer, OrderInfo>> mapIterator, Topic topic, long now) {
         while (mapIterator.hasNext()) {
             Map.Entry<Integer, OrderInfo> mapEntry = mapIterator.next();
 
             if (!validateQueue(topic, mapEntry.getKey(), mapIterator)) continue;
 
-            validateConsumeTime(mapEntry.getValue(), mapIterator);
+            validateConsumeTime(mapEntry.getValue(), now, mapIterator);
         }
     }
 
-    private boolean validateQueue(Topic topic, int queueId, Iterator<Map.Entry<Integer, OrderInfo>> mapIterator) {
-        return true;
-    }
-
     private boolean validateTopic(Topic topic, Iterator<Map.Entry<String, ConcurrentMap<Integer, OrderInfo>>> iterator) {
-        return true;
+        if (topic != null) {
+            return true;
+        }
+
+        log.info("Topic is null, remove topic while cleanExpiredLock");
+        iterator.remove();
+        return false;
     }
 
     private boolean validateGroup(String groupName, Iterator<Map.Entry<String, ConcurrentMap<Integer, OrderInfo>>> iterator) {
-        return true;
+        SubscriptionGroup group = subscriptionService.getGroup(groupName);
+        if (group != null) {
+            return true;
+        }
+
+        log.info("Group is null, remove group while cleanExpiredLock");
+        iterator.remove();
+        return false;
     }
 
     private boolean validateOrderMap(ConcurrentMap<Integer, OrderInfo> map, Iterator<Map.Entry<String, ConcurrentMap<Integer, OrderInfo>>> iterator) {
-        return true;
+        if (MapUtil.notEmpty(map)) {
+            return true;
+        }
+
+        log.info("OrderMap is empty, remove group while cleanExpiredLock");
+        iterator.remove();
+        return false;
     }
 
-    private void validateConsumeTime(OrderInfo orderInfo, Iterator<Map.Entry<Integer, OrderInfo>> mapIterator) {
+    private boolean validateQueue(Topic topic, int queueId, Iterator<Map.Entry<Integer, OrderInfo>> mapIterator) {
+        if (queueId < topic.getReadQueueNums()) {
+            return true;
+        }
 
+        log.info("QueueId is invalid, remove queue while cleanExpiredLock");
+        mapIterator.remove();
+        return false;
+    }
+
+    private void validateConsumeTime(OrderInfo orderInfo, long now, Iterator<Map.Entry<Integer, OrderInfo>> mapIterator) {
+        if (now - orderInfo.getLastConsumeTimestamp() <= CLEAN_SPAN_FROM_LAST) {
+            return;
+        }
+
+        log.info("last consume time greater than {}ms while cleanExpiredLock, orderInfo={}",
+            CLEAN_SPAN_FROM_LAST, orderInfo);
+        mapIterator.remove();
     }
 
 }
