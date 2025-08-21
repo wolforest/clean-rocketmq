@@ -3,6 +3,7 @@ package cn.coderule.minimq.domain.domain.meta.order;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.minimq.domain.utils.ExtraInfoUtils;
 import java.io.Serializable;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -13,12 +14,14 @@ import static cn.coderule.minimq.domain.domain.meta.order.OrderUtils.buildKey;
 
 @Slf4j
 public class ConsumeOrder implements Serializable {
-    private static final long CLEAN_SPAN_FROM_LAST = 24 * 3600 * 1000;
-
     private final ConcurrentMap<String, ConcurrentMap<Integer, OrderInfo>> orderTree;
 
     public ConsumeOrder() {
         this.orderTree = new ConcurrentHashMap<>();
+    }
+
+    public Iterator<Map.Entry<String, ConcurrentMap<Integer, OrderInfo>>> getIterator() {
+        return orderTree.entrySet().iterator();
     }
 
     public ConcurrentMap<Integer, OrderInfo> getOrderMap(String key) {
