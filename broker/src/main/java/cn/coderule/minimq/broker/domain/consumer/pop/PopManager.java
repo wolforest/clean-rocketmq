@@ -3,6 +3,7 @@ package cn.coderule.minimq.broker.domain.consumer.pop;
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.minimq.broker.domain.consumer.consumer.ConsumerRegister;
 import cn.coderule.minimq.broker.domain.consumer.consumer.InflightCounter;
+import cn.coderule.minimq.broker.domain.consumer.renew.DefaultReceiptHandler;
 import cn.coderule.minimq.broker.domain.meta.RouteService;
 import cn.coderule.minimq.broker.infra.store.ConsumeOrderStore;
 import cn.coderule.minimq.broker.infra.store.MQStore;

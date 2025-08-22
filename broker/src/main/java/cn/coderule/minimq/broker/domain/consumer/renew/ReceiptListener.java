@@ -1,4 +1,4 @@
-package cn.coderule.minimq.broker.domain.consumer.pop;
+package cn.coderule.minimq.broker.domain.consumer.renew;
 
 import cn.coderule.minimq.broker.server.core.ChannelHelper;
 import cn.coderule.minimq.domain.core.enums.consume.ConsumerEvent;

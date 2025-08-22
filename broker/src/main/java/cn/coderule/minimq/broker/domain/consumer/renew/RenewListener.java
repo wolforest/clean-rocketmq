@@ -1,4 +1,4 @@
-package cn.coderule.minimq.broker.domain.consumer.pop;
+package cn.coderule.minimq.broker.domain.consumer.renew;
 
 import cn.coderule.minimq.broker.domain.consumer.ack.InvisibleService;
 import cn.coderule.minimq.domain.core.EventListener;
