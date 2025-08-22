@@ -22,16 +22,31 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class PopService {
-
-    private BrokerConfig brokerConfig;
-    private InflightCounter inflightCounter;
-    private QueueSelector queueSelector;
-
-    private MQFacade mqFacade;
-    private PopContextBuilder popContextBuilder;
-    private ReceiptHandler receiptHandler;
+    private final BrokerConfig brokerConfig;
+    private final InflightCounter inflightCounter;
+    private final QueueSelector queueSelector;
+    private final MQFacade mqFacade;
+    private final PopContextBuilder popContextBuilder;
+    private final ReceiptHandler receiptHandler;
 
     private final AtomicLong reviveCount = new AtomicLong(0);
+
+    public PopService(
+        BrokerConfig brokerConfig,
+        InflightCounter inflightCounter,
+        QueueSelector queueSelector,
+        MQFacade mqFacade,
+        PopContextBuilder popContextBuilder,
+        ReceiptHandler receiptHandler
+    ) {
+        this.brokerConfig = brokerConfig;
+        this.inflightCounter = inflightCounter;
+        this.queueSelector = queueSelector;
+        this.mqFacade = mqFacade;
+        this.popContextBuilder = popContextBuilder;
+        this.receiptHandler = receiptHandler;
+    }
+
 
     public CompletableFuture<PopResult> pop(PopRequest request) {
         PopContext context = popContextBuilder.create(request);
