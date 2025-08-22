@@ -28,6 +28,8 @@ public class DefaultReceiptHandler implements ReceiptHandler, Lifecycle {
     private static final RetryPolicy RENEW_POLICY = new RenewStrategyPolicy();
 
     private BrokerConfig brokerConfig;
+    private MessageConfig messageConfig;
+
     private ConsumeHookManager hookManager;
     private SubscriptionStore subscriptionStore;
     private ConsumerRegister consumerRegister;
@@ -37,34 +39,19 @@ public class DefaultReceiptHandler implements ReceiptHandler, Lifecycle {
         = new ConcurrentHashMap<>();
 
     private ScheduledExecutorService scheduler;
-    private ThreadPoolExecutor renewExecutor;
+    private ThreadPoolExecutor executor;
 
-    private ScheduledExecutorService initScheduler() {
-        return ThreadUtil.newSingleScheduledThreadExecutor(
-            new DefaultThreadFactory("RenewSchedulerThread_")
-        );
-    }
 
-    private ThreadPoolExecutor initExecutor() {
-        MessageConfig messageConfig = brokerConfig.getMessageConfig();
-        return ThreadPoolFactory.create(
-            messageConfig.getMinRenewThreadNum(),
-            messageConfig.getMaxRenewThreadNum(),
-            1,
-            TimeUnit.MINUTES,
-            "RenewWorkerThread",
-             messageConfig.getRenewQueueCapacity()
-        );
-    }
 
     @Override
     public void start() throws Exception {
-
+        startScheduler();
     }
 
     @Override
     public void shutdown() throws Exception {
-
+        executor.shutdown();
+        scheduler.shutdown();
     }
 
     @Override
@@ -81,4 +68,41 @@ public class DefaultReceiptHandler implements ReceiptHandler, Lifecycle {
     public void clearGroup(ReceiptHandleGroupKey key) {
 
     }
+
+    private ScheduledExecutorService initScheduler() {
+        return ThreadUtil.newSingleScheduledThreadExecutor(
+            new DefaultThreadFactory("RenewSchedulerThread_")
+        );
+    }
+
+    private ThreadPoolExecutor initExecutor() {
+        ThreadPoolExecutor executor = ThreadPoolFactory.create(
+            messageConfig.getMinRenewThreadNum(),
+            messageConfig.getMaxRenewThreadNum(),
+            1,
+            TimeUnit.MINUTES,
+            "RenewWorkerThread",
+            messageConfig.getRenewQueueCapacity()
+        );
+
+        executor.setRejectedExecutionHandler((r, e) -> {
+            log.warn("add renew task failed. queueSize={}", executor.getQueue().size());
+        });
+
+        return executor;
+    }
+
+    private void startScheduler() {
+        scheduler.scheduleWithFixedDelay(
+            this::startRenew,
+            0,
+            messageConfig.getRenewInterval(),
+            TimeUnit.MILLISECONDS
+        );
+    }
+
+    private void startRenew() {
+
+    }
+
 }
