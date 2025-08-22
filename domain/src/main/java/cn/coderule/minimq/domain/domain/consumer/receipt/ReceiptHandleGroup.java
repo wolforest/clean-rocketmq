@@ -23,7 +23,7 @@ public class ReceiptHandleGroup {
     }
 
     public void put(String msgID, MessageReceipt value) {
-        long timeout = this.messageConfig.getLockTimeoutMsInHandleGroup();
+        long timeout = this.messageConfig.getRenewLockTimeout();
 
         Map<HandleKey, HandleData> handleMap = this.receiptHandleMap.computeIfAbsent(msgID, msgIDKey -> new ConcurrentHashMap<>());
         handleMap.compute(new HandleKey(value.getOriginalReceiptHandle()), (handleKey, handleData) -> {
@@ -54,7 +54,7 @@ public class ReceiptHandleGroup {
         if (handleMap == null) {
             return null;
         }
-        long timeout = this.messageConfig.getLockTimeoutMsInHandleGroup();
+        long timeout = this.messageConfig.getRenewLockTimeout();
         AtomicReference<MessageReceipt> res = new AtomicReference<>();
         handleMap.computeIfPresent(new HandleKey(handle), (handleKey, handleData) -> {
             if (!handleData.lock(timeout)) {
@@ -78,7 +78,7 @@ public class ReceiptHandleGroup {
         if (handleMap == null) {
             return null;
         }
-        long timeout = this.messageConfig.getLockTimeoutMsInHandleGroup();
+        long timeout = this.messageConfig.getRenewLockTimeout();
         AtomicReference<MessageReceipt> res = new AtomicReference<>();
         handleMap.computeIfPresent(new HandleKey(handle), (handleKey, handleData) -> {
             if (!handleData.lock(timeout)) {
@@ -119,7 +119,7 @@ public class ReceiptHandleGroup {
         if (handleMap == null) {
             return;
         }
-        long timeout = this.messageConfig.getLockTimeoutMsInHandleGroup();
+        long timeout = this.messageConfig.getRenewLockTimeout();
         handleMap.computeIfPresent(new HandleKey(handle), (handleKey, handleData) -> {
             if (!handleData.lock(timeout)) {
                 throw new BrokerException(BrokerExceptionCode.INTERNAL_SERVER_ERROR, "try to compute failed");

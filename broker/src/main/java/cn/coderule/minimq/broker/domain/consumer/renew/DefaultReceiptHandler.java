@@ -66,6 +66,26 @@ public class DefaultReceiptHandler implements ReceiptHandler, Lifecycle {
 
     @Override
     public void removeGroup(ReceiptHandleGroupKey key) {
+        if (key == null) {
+            return;
+        }
+
+        ReceiptHandleGroup group = groupMap.remove(key);
+        if (group == null) {
+            return;
+        }
+
+        group.scan(((msgID, handle, v) -> {
+            scanGroup(key, group, msgID, handle);
+        }));
+    }
+
+    private void scanGroup(
+        ReceiptHandleGroupKey key,
+        ReceiptHandleGroup group,
+        String msgID,
+        String handle
+    ) {
 
     }
 
