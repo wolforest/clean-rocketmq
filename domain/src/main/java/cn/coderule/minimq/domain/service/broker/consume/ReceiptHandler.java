@@ -3,11 +3,11 @@ package cn.coderule.minimq.domain.service.broker.consume;
 
 import cn.coderule.minimq.domain.domain.consumer.receipt.MessageReceipt;
 import cn.coderule.minimq.domain.domain.cluster.RequestContext;
-import io.netty.channel.Channel;
-
+import cn.coderule.minimq.domain.domain.consumer.receipt.ReceiptHandleGroupKey;
 
 public interface ReceiptHandler {
-    void addReceiptHandle(RequestContext context, MessageReceipt messageReceipt);
+    void addReceipt(RequestContext context, MessageReceipt messageReceipt);
+    MessageReceipt removeReceipt(RequestContext context, MessageReceipt messageReceipt);
 
-    MessageReceipt removeReceiptHandle(RequestContext context, MessageReceipt messageReceipt);
+    void clearGroup(ReceiptHandleGroupKey key);
 }
