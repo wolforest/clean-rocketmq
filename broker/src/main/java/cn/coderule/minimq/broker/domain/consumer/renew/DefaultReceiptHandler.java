@@ -58,7 +58,15 @@ public class DefaultReceiptHandler implements ReceiptHandler, Lifecycle {
 
     @Override
     public void addReceipt(MessageReceipt messageReceipt) {
+        ReceiptHandleGroupKey key = new ReceiptHandleGroupKey(
+            messageReceipt.getChannel(),
+            messageReceipt.getGroup()
+        );
 
+        ReceiptHandleGroup group = groupMap.computeIfAbsent(
+            key, k -> new ReceiptHandleGroup(messageConfig)
+        );
+        group.put(messageReceipt.getMessageId(), messageReceipt);
     }
 
     @Override

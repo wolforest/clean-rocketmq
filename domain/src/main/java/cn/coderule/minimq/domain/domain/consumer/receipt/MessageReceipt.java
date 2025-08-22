@@ -4,6 +4,7 @@ package cn.coderule.minimq.domain.domain.consumer.receipt;
 import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
+import io.netty.channel.Channel;
 import java.io.Serializable;
 import java.util.concurrent.atomic.AtomicInteger;
 import lombok.AllArgsConstructor;
@@ -16,7 +17,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MessageReceipt implements Serializable {
-    RequestContext requestContext;
+    private RequestContext requestContext;
+    private Channel channel;
 
     private String group;
     private String topic;
