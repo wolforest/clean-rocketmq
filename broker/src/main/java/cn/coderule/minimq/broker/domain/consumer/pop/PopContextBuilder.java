@@ -19,11 +19,23 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class PopContextBuilder {
-    private BrokerConfig brokerConfig;
-    private ConsumerRegister consumerRegister;
+    private final BrokerConfig brokerConfig;
+    private final ConsumerRegister consumerRegister;
 
-    private TopicFacade topicFacade;
-    private SubscriptionFacade subscriptionFacade;
+    private final TopicFacade topicFacade;
+    private final SubscriptionFacade subscriptionFacade;
+
+    public PopContextBuilder(
+        BrokerConfig brokerConfig,
+        ConsumerRegister consumerRegister,
+        TopicFacade topicFacade,
+        SubscriptionFacade subscriptionFacade
+    ) {
+        this.brokerConfig = brokerConfig;
+        this.consumerRegister = consumerRegister;
+        this.topicFacade = topicFacade;
+        this.subscriptionFacade = subscriptionFacade;
+    }
 
     public PopContext create(PopRequest request) {
         PopContext context = new PopContext(brokerConfig, request);
