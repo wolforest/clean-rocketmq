@@ -3,11 +3,15 @@ package cn.coderule.minimq.broker.domain.consumer;
 import cn.coderule.minimq.broker.api.ConsumerController;
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.minimq.broker.domain.consumer.ack.AckManager;
+import cn.coderule.minimq.broker.domain.consumer.ack.AckService;
+import cn.coderule.minimq.broker.domain.consumer.ack.InvisibleService;
 import cn.coderule.minimq.broker.domain.consumer.consumer.ConsumeHookManager;
 import cn.coderule.minimq.broker.domain.consumer.consumer.ConsumerRegister;
 import cn.coderule.minimq.broker.domain.consumer.consumer.InflightCounter;
 import cn.coderule.minimq.broker.domain.consumer.pop.PopManager;
+import cn.coderule.minimq.broker.domain.consumer.pop.PopService;
 import cn.coderule.minimq.broker.domain.consumer.revive.ReviveManager;
+import cn.coderule.minimq.broker.infra.store.SubscriptionStore;
 import cn.coderule.minimq.broker.server.bootstrap.BrokerContext;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 
@@ -17,6 +21,7 @@ public class ConsumerManager implements Lifecycle {
     private ConsumerRegister register;
     private ConsumeHookManager hookManager;
     private InflightCounter inflightCounter;
+    private Consumer consumer;
 
     private PopManager popManager;
     private AckManager ackManager;
@@ -27,15 +32,11 @@ public class ConsumerManager implements Lifecycle {
         brokerConfig = BrokerContext.getBean(BrokerConfig.class);
 
         initTools();
+
         initAck();
         initPop();
         initRevive();
-
-
-        Consumer consumer = new Consumer();
-
-        ConsumerController controller = new ConsumerController(brokerConfig, consumer);
-        BrokerContext.registerAPI(controller);
+        initConsumer();
     }
 
     @Override
@@ -59,6 +60,20 @@ public class ConsumerManager implements Lifecycle {
     private void initRevive() throws Exception {
         reviveManager = new ReviveManager();
         reviveManager.initialize();
+    }
+
+    private void initConsumer() {
+        consumer = new Consumer(
+            BrokerContext.getBean(PopService.class),
+            BrokerContext.getBean(AckService.class),
+            BrokerContext.getBean(ConsumerRegister.class),
+            BrokerContext.getBean(InvisibleService.class),
+            BrokerContext.getBean(SubscriptionStore.class)
+        );
+        BrokerContext.register(consumer);
+
+        ConsumerController controller = new ConsumerController(brokerConfig, consumer);
+        BrokerContext.registerAPI(controller);
     }
 
     private void initTools() {
