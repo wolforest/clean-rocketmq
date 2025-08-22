@@ -4,9 +4,18 @@ package cn.coderule.minimq.domain.domain.consumer.revive;
 import cn.coderule.minimq.domain.domain.consumer.ack.broker.AckResult;
 import cn.coderule.minimq.domain.domain.consumer.receipt.MessageReceipt;
 import cn.coderule.minimq.domain.domain.consumer.receipt.ReceiptHandleGroupKey;
+import java.io.Serializable;
 import java.util.concurrent.CompletableFuture;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-public class RenewEvent {
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class RenewEvent implements Serializable {
     protected ReceiptHandleGroupKey key;
     protected MessageReceipt messageReceipt;
     protected long renewTime;
@@ -19,32 +28,8 @@ public class RenewEvent {
         CLEAR_GROUP
     }
 
-    public RenewEvent(ReceiptHandleGroupKey key, MessageReceipt messageReceipt, long renewTime,
-        EventType eventType, CompletableFuture<AckResult> future) {
-        this.key = key;
-        this.messageReceipt = messageReceipt;
-        this.renewTime = renewTime;
-        this.eventType = eventType;
-        this.future = future;
-    }
-
-    public ReceiptHandleGroupKey getKey() {
-        return key;
-    }
-
     public MessageReceipt getMessageReceiptHandle() {
         return messageReceipt;
     }
 
-    public long getRenewTime() {
-        return renewTime;
-    }
-
-    public EventType getEventType() {
-        return eventType;
-    }
-
-    public CompletableFuture<AckResult> getFuture() {
-        return future;
-    }
 }

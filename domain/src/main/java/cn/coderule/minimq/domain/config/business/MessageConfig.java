@@ -47,6 +47,7 @@ public class MessageConfig implements Serializable {
     private long renewAheadTime = TimeUnit.SECONDS.toMillis(10);
     private long maxRenewTime = TimeUnit.HOURS.toMillis(3);
     private long renewInterval = TimeUnit.SECONDS.toMillis(5);
+    private long invisibleTimeOfClear = 1_000L;
 
     private long reviveInterval = 1000;
     private long reviveMaxSlow = 3;
