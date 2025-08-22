@@ -1,24 +1,38 @@
 
 package cn.coderule.minimq.domain.domain.consumer.receipt;
 
+import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
+import java.io.Serializable;
 import java.util.concurrent.atomic.AtomicInteger;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-public class MessageReceipt {
-    private final String group;
-    private final String topic;
-    private final int queueId;
-    private final String messageId;
-    private final long queueOffset;
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class MessageReceipt implements Serializable {
+    RequestContext requestContext;
+
+    private String group;
+    private String topic;
+    private int queueId;
+    private String messageId;
+    private long queueOffset;
     // this original means where the MessageReceiptHandle property data from
-    private final String originalReceiptHandleStr;
-    private final ReceiptHandle originalReceiptHandle;
-    private final int reconsumeTimes;
+    private String originalReceiptHandleStr;
+    private ReceiptHandle originalReceiptHandle;
+    private int reconsumeTimes;
 
-    private final AtomicInteger renewRetryTimes = new AtomicInteger(0);
-    private final AtomicInteger renewTimes = new AtomicInteger(0);
-    private final long consumeTimestamp;
+    @Builder.Default
+    private AtomicInteger renewRetryTimes = new AtomicInteger(0);
+    @Builder.Default
+    private AtomicInteger renewTimes = new AtomicInteger(0);
+    private long consumeTimestamp;
     private volatile String receiptHandleStr;
 
     public MessageReceipt(String group, String topic, int queueId, String receiptHandleStr, String messageId,

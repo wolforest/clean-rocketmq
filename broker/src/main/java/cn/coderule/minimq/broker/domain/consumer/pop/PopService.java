@@ -207,7 +207,7 @@ public class PopService {
 
             MessageReceipt receipt = PopConverter.toReceipt(context, message);
             RequestContext requestContext = context.getRequest().getRequestContext();
-            receiptHandler.addReceipt(requestContext, receipt);
+            receiptHandler.addReceipt(receipt);
         }
     }
 

@@ -37,7 +37,7 @@ public class ReceiptListener implements ConsumerListener {
             channelInfo.getChannel(),
             group
         );
-        receiptHandler.clearGroup(key);
+        receiptHandler.removeGroup(key);
 
         log.info("clear receipt handle when client unregister, group:{}, ClientChannelInfo:{}",
             group, channelInfo);

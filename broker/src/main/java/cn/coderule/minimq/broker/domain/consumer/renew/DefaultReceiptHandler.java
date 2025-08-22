@@ -10,7 +10,6 @@ import cn.coderule.minimq.broker.infra.store.SubscriptionStore;
 import cn.coderule.minimq.domain.config.business.MessageConfig;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.domain.consumer.receipt.MessageReceipt;
-import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import cn.coderule.minimq.domain.domain.consumer.receipt.ReceiptHandleGroup;
 import cn.coderule.minimq.domain.domain.consumer.receipt.ReceiptHandleGroupKey;
 import cn.coderule.minimq.domain.domain.consumer.receipt.RenewStrategyPolicy;
@@ -52,21 +51,32 @@ public class DefaultReceiptHandler implements ReceiptHandler, Lifecycle {
     public void shutdown() throws Exception {
         executor.shutdown();
         scheduler.shutdown();
+        clearGroup();
     }
 
     @Override
-    public void addReceipt(RequestContext context, MessageReceipt messageReceipt) {
+    public void addReceipt(MessageReceipt messageReceipt) {
 
     }
 
     @Override
-    public MessageReceipt removeReceipt(RequestContext context, MessageReceipt messageReceipt) {
+    public MessageReceipt removeReceipt(MessageReceipt messageReceipt) {
         return null;
     }
 
     @Override
-    public void clearGroup(ReceiptHandleGroupKey key) {
+    public void removeGroup(ReceiptHandleGroupKey key) {
 
+    }
+
+    private void clearGroup() {
+        log.info("start clear receipt handle in {}", this.getClass().getSimpleName());
+
+        for (ReceiptHandleGroupKey key : groupMap.keySet()) {
+            removeGroup(key);
+        }
+
+        log.info("finish clear receipt handle in {}", this.getClass().getSimpleName());
     }
 
     private ScheduledExecutorService initScheduler() {
