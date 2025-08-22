@@ -11,12 +11,15 @@ import cn.coderule.minimq.domain.config.business.MessageConfig;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.domain.cluster.ClientChannelInfo;
 import cn.coderule.minimq.domain.domain.consumer.receipt.MessageReceipt;
+import cn.coderule.minimq.domain.domain.consumer.receipt.ReceiptHandle;
 import cn.coderule.minimq.domain.domain.consumer.receipt.ReceiptHandleGroup;
 import cn.coderule.minimq.domain.domain.consumer.receipt.ReceiptHandleGroupKey;
 import cn.coderule.minimq.domain.domain.consumer.receipt.RenewStrategyPolicy;
 import cn.coderule.minimq.domain.domain.consumer.revive.RenewEvent;
 import cn.coderule.minimq.domain.service.broker.consume.ReceiptHandler;
 import cn.coderule.minimq.domain.service.broker.consume.RetryPolicy;
+import com.google.common.base.Stopwatch;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -164,7 +167,7 @@ public class DefaultReceiptHandler implements ReceiptHandler, Lifecycle {
 
     private void startScheduler() {
         scheduler.scheduleWithFixedDelay(
-            this::startRenew,
+            this::renew,
             0,
             messageConfig.getRenewInterval(),
             TimeUnit.MILLISECONDS
@@ -179,7 +182,39 @@ public class DefaultReceiptHandler implements ReceiptHandler, Lifecycle {
         return null == channelInfo;
     }
 
-    private void startRenew() {
+    private void renew() {
+        Stopwatch stopwatch = Stopwatch.createStarted();
+
+        try {
+            for (Map.Entry<ReceiptHandleGroupKey, ReceiptHandleGroup> entry : groupMap.entrySet()) {
+                if (isClientOffline(entry.getKey())) {
+                    removeGroup(entry.getKey());
+                    continue;
+                }
+
+
+                entry.getValue().scan((msgID, handleStr, v) -> {
+                    long now = System.currentTimeMillis();
+                    ReceiptHandle handle = ReceiptHandle.decode(handleStr);
+
+                    if (handle.getNextVisibleTime() - now > messageConfig.getRenewAheadTime()) {
+                        return;
+                    }
+
+                    executor.submit(
+                        () -> renewMessage(entry.getKey(), entry.getValue(), msgID, handleStr)
+                    );
+                });
+            }
+        } catch (Exception e) {
+            log.error("renew error in {}", this.getClass().getSimpleName(), e);
+        }
+
+        log.info("renew finished in {}, cost: {}ms",
+            this.getClass().getSimpleName(), stopwatch.elapsed().toMillis());
+    }
+
+    private void renewMessage(ReceiptHandleGroupKey key, ReceiptHandleGroup group, String msgID, String handleStr) {
 
     }
 
