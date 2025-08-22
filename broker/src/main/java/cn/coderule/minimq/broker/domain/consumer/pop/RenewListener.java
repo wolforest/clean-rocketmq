@@ -15,6 +15,16 @@ public class RenewListener implements EventListener<RenewEvent> {
     public void fire(RenewEvent event) {
         RequestContext context = createContext(event);
         InvisibleRequest request = createInvisibleRequest(event, context);
+
+        invisibleService.changeInvisible(request)
+            .whenComplete((ackResult, throwable) -> {
+                if (throwable != null) {
+                    event.getFuture().completeExceptionally(throwable);
+                    return;
+                }
+
+                event.getFuture().complete(ackResult);
+            });
     }
 
     private InvisibleRequest createInvisibleRequest(RenewEvent event, RequestContext context) {

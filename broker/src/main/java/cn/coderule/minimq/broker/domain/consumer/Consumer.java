@@ -71,7 +71,7 @@ public class Consumer  {
     }
 
     public CompletableFuture<AckResult> changeInvisible(InvisibleRequest request) {
-        return invisibleService.changeInvisible(request.getRequestContext(), request);
+        return invisibleService.changeInvisible(request);
     }
 
 }
