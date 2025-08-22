@@ -17,10 +17,6 @@ import cn.coderule.minimq.domain.config.server.BrokerConfig;
 
 public class ConsumerManager implements Lifecycle {
     private BrokerConfig brokerConfig;
-
-    private ConsumerRegister register;
-    private ConsumeHookManager hookManager;
-    private InflightCounter inflightCounter;
     private Consumer consumer;
 
     private PopManager popManager;
@@ -43,10 +39,16 @@ public class ConsumerManager implements Lifecycle {
 
     @Override
     public void start() throws Exception {
+        ackManager.start();
+        popManager.start();
+        reviveManager.start();
     }
 
     @Override
     public void shutdown() throws Exception {
+        ackManager.shutdown();
+        popManager.shutdown();
+        reviveManager.shutdown();
     }
 
     private void initAck() throws Exception {
@@ -81,13 +83,13 @@ public class ConsumerManager implements Lifecycle {
     }
 
     private void initTools() {
-        register = new ConsumerRegister(brokerConfig);
+        ConsumerRegister register = new ConsumerRegister(brokerConfig);
         BrokerContext.register(register);
 
-        inflightCounter = new InflightCounter();
+        InflightCounter inflightCounter = new InflightCounter();
         BrokerContext.register(inflightCounter);
 
-        hookManager = new ConsumeHookManager();
+        ConsumeHookManager hookManager = new ConsumeHookManager();
         BrokerContext.register(hookManager);
     }
 
