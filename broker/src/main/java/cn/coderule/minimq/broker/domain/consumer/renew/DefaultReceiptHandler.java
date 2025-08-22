@@ -71,7 +71,16 @@ public class DefaultReceiptHandler implements ReceiptHandler, Lifecycle {
 
     @Override
     public MessageReceipt removeReceipt(MessageReceipt messageReceipt) {
-        return null;
+        ReceiptHandleGroupKey key = new ReceiptHandleGroupKey(
+            messageReceipt.getChannel(),
+            messageReceipt.getGroup()
+        );
+
+        ReceiptHandleGroup group = groupMap.get(key);
+        if (group == null) {
+            return null;
+        }
+        return group.remove(messageReceipt.getMessageId(), messageReceipt.getReceiptHandleStr());
     }
 
     @Override
