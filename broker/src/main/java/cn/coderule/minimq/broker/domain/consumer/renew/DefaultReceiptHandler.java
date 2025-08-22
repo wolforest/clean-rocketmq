@@ -215,7 +215,20 @@ public class DefaultReceiptHandler implements ReceiptHandler, Lifecycle {
     }
 
     private void renewMessage(ReceiptHandleGroupKey key, ReceiptHandleGroup group, String msgID, String handleStr) {
+        try {
+            group.computeIfPresent(
+                msgID,
+                handleStr,
+                messageReceipt -> renewMessage(key, messageReceipt)
+            );
+        } catch (Exception e) {
+            log.error("renew error in {}, msgId={}; handleStr={};",
+                this.getClass().getSimpleName(), msgID, handleStr, e);
+        }
+    }
 
+    private CompletableFuture<MessageReceipt> renewMessage(ReceiptHandleGroupKey key, MessageReceipt messageReceipt) {
+        return null;
     }
 
 }
