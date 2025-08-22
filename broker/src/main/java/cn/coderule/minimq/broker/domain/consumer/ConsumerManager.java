@@ -36,7 +36,9 @@ public class ConsumerManager implements Lifecycle {
         initAck();
         initPop();
         initRevive();
+
         initConsumer();
+        initController();
     }
 
     @Override
@@ -71,7 +73,9 @@ public class ConsumerManager implements Lifecycle {
             BrokerContext.getBean(SubscriptionStore.class)
         );
         BrokerContext.register(consumer);
+    }
 
+    private void initController() {
         ConsumerController controller = new ConsumerController(brokerConfig, consumer);
         BrokerContext.registerAPI(controller);
     }
