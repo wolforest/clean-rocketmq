@@ -12,23 +12,32 @@ import cn.coderule.minimq.broker.server.bootstrap.BrokerContext;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 
 public class PopManager implements Lifecycle {
+    private BrokerConfig brokerConfig;
+    private DefaultReceiptHandler receiptHandler;
+    private QueueSelector queueSelector;
+    private PopContextBuilder contextBuilder;
 
     @Override
     public void initialize() throws Exception {
-        BrokerConfig brokerConfig = BrokerContext.getBean(BrokerConfig.class);
+        brokerConfig = BrokerContext.getBean(BrokerConfig.class);
 
-        DefaultReceiptHandler receiptHandler = new DefaultReceiptHandler();
-        QueueSelector queueSelector = new QueueSelector(
-            BrokerContext.getBean(RouteService.class)
-        );
+        initContextBuilder();
+        initQueueSelector();
+        initReceiptHandler();
+        initPopService();
+    }
 
-        PopContextBuilder contextBuilder = new PopContextBuilder(
-            brokerConfig,
-            BrokerContext.getBean(ConsumerRegister.class),
-            BrokerContext.getBean(TopicStore.class),
-            BrokerContext.getBean(SubscriptionStore.class)
-        );
+    @Override
+    public void start() throws Exception {
+        receiptHandler.start();
+    }
 
+    @Override
+    public void shutdown() throws Exception {
+        receiptHandler.shutdown();
+    }
+
+    private void initPopService() {
         PopService popService = new PopService(
             brokerConfig,
             BrokerContext.getBean(InflightCounter.class),
@@ -42,14 +51,23 @@ public class PopManager implements Lifecycle {
         BrokerContext.register(popService);
     }
 
-    @Override
-    public void start() throws Exception {
-
+    private void initContextBuilder() {
+        contextBuilder = new PopContextBuilder(
+            brokerConfig,
+            BrokerContext.getBean(ConsumerRegister.class),
+            BrokerContext.getBean(TopicStore.class),
+            BrokerContext.getBean(SubscriptionStore.class)
+        );
     }
 
-    @Override
-    public void shutdown() throws Exception {
+    private void initQueueSelector() {
+        queueSelector = new QueueSelector(
+            BrokerContext.getBean(RouteService.class)
+        );
+    }
 
+    private void initReceiptHandler() {
+        receiptHandler = new DefaultReceiptHandler();
     }
 
 

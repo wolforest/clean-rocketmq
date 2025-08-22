@@ -56,7 +56,6 @@ public class PopService {
         this.orderFacade = orderFacade;
     }
 
-
     public CompletableFuture<PopResult> pop(PopRequest request) {
         PopContext context = popContextBuilder.create(request);
 
@@ -213,8 +212,11 @@ public class PopService {
     }
 
     private void selectQueue(PopContext context) {
-        MessageQueue messageQueue = queueSelector.select(context.getRequest());
+        MessageQueue messageQueue = queueSelector.select(
+            context.getRequest()
+        );
         context.setMessageQueue(messageQueue);
+
         selectReviveQueue(context);
     }
 
