@@ -1,45 +1,21 @@
 package cn.coderule.minimq.broker.domain.consumer.pop;
 
-import cn.coderule.minimq.broker.server.core.ChannelHelper;
-import cn.coderule.minimq.domain.core.enums.consume.ConsumerEvent;
-import cn.coderule.minimq.domain.domain.cluster.ClientChannelInfo;
-import cn.coderule.minimq.domain.domain.consumer.receipt.ReceiptHandleGroupKey;
-import cn.coderule.minimq.domain.service.broker.consume.ConsumerListener;
-import lombok.extern.slf4j.Slf4j;
+import cn.coderule.minimq.domain.core.EventListener;
+import cn.coderule.minimq.domain.domain.cluster.RequestContext;
+import cn.coderule.minimq.domain.domain.consumer.revive.RenewEvent;
 
-@Slf4j
-public class RenewListener implements ConsumerListener {
-    private final DefaultReceiptHandler receiptHandler;
-
-    public RenewListener(DefaultReceiptHandler receiptHandler) {
-        this.receiptHandler = receiptHandler;
+public class RenewListener implements EventListener<RenewEvent> {
+    @Override
+    public void fire(RenewEvent event) {
+        RequestContext context = createContext(event);
     }
 
-    @Override
-    public void handle(ConsumerEvent event, String group, Object... args) {
-        if (!ConsumerEvent.CLIENT_UNREGISTER.equals(event)) {
-            return;
-        }
-
-        if (null == args ||  args.length < 1) {
-            return;
-        }
-
-        if (!(args[0] instanceof ClientChannelInfo channelInfo)) {
-            return;
-        }
-
-        if (ChannelHelper.isRemote(channelInfo.getChannel())) {
-            return;
-        }
-
-        ReceiptHandleGroupKey key = new ReceiptHandleGroupKey(
-            channelInfo.getChannel(),
-            group
+    private RequestContext createContext(RenewEvent event) {
+        RequestContext context = RequestContext.create(
+            event.getEventType().name()
         );
-        receiptHandler.clearGroup(key);
+        context.setChannel(event.getKey().getChannel());
 
-        log.info("clear receipt handle when client unregister, group:{}, ClientChannelInfo:{}",
-            group, channelInfo);
+        return context;
     }
 }
