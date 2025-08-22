@@ -39,14 +39,14 @@ public class MessageConfig implements Serializable {
      * message invisibleTime related config
      */
     private boolean enableAutoRenew = true;
-    private int maxRenewRetryTimes = 3;
-    private int renewThreadPoolNums = 2;
-    private int renewMaxThreadPoolNums = 4;
-    private int renewThreadPoolQueueCapacity = 300;
-    private long lockTimeoutMsInHandleGroup = TimeUnit.SECONDS.toMillis(3);
-    private long renewAheadTimeMillis = TimeUnit.SECONDS.toMillis(10);
-    private long renewMaxTimeMillis = TimeUnit.HOURS.toMillis(3);
-    private long renewSchedulePeriodMillis = TimeUnit.SECONDS.toMillis(5);
+    private int maxRenewRetryTime = 3;
+    private int minRenewThreadNum = 2;
+    private int maxRenewThreadNum = 4;
+    private int renewQueueCapacity = 300;
+    private long renewLockTimeout = TimeUnit.SECONDS.toMillis(3);
+    private long renewAheadTime = TimeUnit.SECONDS.toMillis(10);
+    private long maxRenewTime = TimeUnit.HOURS.toMillis(3);
+    private long renewInterval = TimeUnit.SECONDS.toMillis(5);
 
     private long reviveInterval = 1000;
     private long reviveMaxSlow = 3;

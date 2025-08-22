@@ -58,17 +58,6 @@ public class BrokerConfig extends ServerIdentity implements Serializable {
 
     private long serverReadyTime = 0L;
 
-
-    private int maxRenewRetryTime = 3;
-    private int minRenewThreadNum = 2;
-    private int maxRenewThreadNum = 4;
-    private int renewQueueCapacity = 300;
-    private long renewLockTimeout = TimeUnit.SECONDS.toMillis(3);
-    private long renewAheadTime = TimeUnit.SECONDS.toMillis(10);
-    private long maxRenewTime = TimeUnit.HOURS.toMillis(3);
-    private long renewInterval = TimeUnit.SECONDS.toMillis(5);
-
-
     private MessageConfig messageConfig;
     private TopicConfig topicConfig;
     private TimerConfig timerConfig;
