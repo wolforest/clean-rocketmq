@@ -9,6 +9,7 @@ import cn.coderule.minimq.broker.domain.consumer.consumer.ConsumerRegister;
 import cn.coderule.minimq.broker.infra.store.SubscriptionStore;
 import cn.coderule.minimq.domain.config.business.MessageConfig;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
+import cn.coderule.minimq.domain.domain.cluster.ClientChannelInfo;
 import cn.coderule.minimq.domain.domain.consumer.receipt.MessageReceipt;
 import cn.coderule.minimq.domain.domain.consumer.receipt.ReceiptHandleGroup;
 import cn.coderule.minimq.domain.domain.consumer.receipt.ReceiptHandleGroupKey;
@@ -41,8 +42,6 @@ public class DefaultReceiptHandler implements ReceiptHandler, Lifecycle {
 
     private ScheduledExecutorService scheduler;
     private ThreadPoolExecutor executor;
-
-
 
     @Override
     public void start() throws Exception {
@@ -170,6 +169,14 @@ public class DefaultReceiptHandler implements ReceiptHandler, Lifecycle {
             messageConfig.getRenewInterval(),
             TimeUnit.MILLISECONDS
         );
+    }
+
+    private boolean isClientOffline(ReceiptHandleGroupKey key) {
+        ClientChannelInfo channelInfo = consumerRegister.findChannel(
+            key.getGroup(), key.getChannel()
+        );
+
+        return null == channelInfo;
     }
 
     private void startRenew() {
