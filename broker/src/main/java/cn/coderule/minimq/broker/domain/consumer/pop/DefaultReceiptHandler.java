@@ -1,6 +1,7 @@
 package cn.coderule.minimq.broker.domain.consumer.pop;
 
 import cn.coderule.common.convention.service.Lifecycle;
+import cn.coderule.minimq.broker.domain.consumer.consumer.ConsumeHookManager;
 import cn.coderule.minimq.domain.domain.consumer.receipt.MessageReceipt;
 import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import cn.coderule.minimq.domain.service.broker.consume.ReceiptHandler;
@@ -9,6 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class DefaultReceiptHandler implements ReceiptHandler, Lifecycle {
+    private ConsumeHookManager hookManager;
+
     @Override
     public void start() throws Exception {
 

@@ -13,6 +13,7 @@ import cn.coderule.minimq.domain.config.network.GrpcConfig;
 import cn.coderule.minimq.domain.config.network.RpcClientConfig;
 import cn.coderule.minimq.domain.config.network.RpcServerConfig;
 import java.io.Serializable;
+import java.util.concurrent.TimeUnit;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
@@ -56,6 +57,17 @@ public class BrokerConfig extends ServerIdentity implements Serializable {
     private int syncRouteInterval = 30_000;
 
     private long serverReadyTime = 0L;
+
+
+    private int maxRenewRetryTime = 3;
+    private int minRenewThreadNum = 2;
+    private int maxRenewThreadNum = 4;
+    private int renewQueueCapacity = 300;
+    private long renewLockTimeout = TimeUnit.SECONDS.toMillis(3);
+    private long renewAheadTime = TimeUnit.SECONDS.toMillis(10);
+    private long maxRenewTime = TimeUnit.HOURS.toMillis(3);
+    private long renewInterval = TimeUnit.SECONDS.toMillis(5);
+
 
     private MessageConfig messageConfig;
     private TopicConfig topicConfig;
