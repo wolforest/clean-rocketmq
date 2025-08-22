@@ -4,6 +4,7 @@ import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.minimq.broker.domain.consumer.consumer.ConsumerRegister;
 import cn.coderule.minimq.broker.domain.consumer.consumer.InflightCounter;
 import cn.coderule.minimq.broker.domain.meta.RouteService;
+import cn.coderule.minimq.broker.infra.store.ConsumeOrderStore;
 import cn.coderule.minimq.broker.infra.store.MQStore;
 import cn.coderule.minimq.broker.infra.store.SubscriptionStore;
 import cn.coderule.minimq.broker.infra.store.TopicStore;
@@ -34,7 +35,8 @@ public class PopManager implements Lifecycle {
             queueSelector,
             BrokerContext.getBean(MQStore.class),
             contextBuilder,
-            receiptHandler
+            receiptHandler,
+            BrokerContext.getBean(ConsumeOrderStore.class)
         );
 
         BrokerContext.register(popService);

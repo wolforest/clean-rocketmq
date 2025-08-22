@@ -28,7 +28,7 @@ public class QueueSelector {
             );
         }
 
-        MessageQueue queue = null;
+        MessageQueue queue;
         MessageQueueSelector selector = queueView.getReadSelector();
         if (StringUtil.notBlank(request.getStoreGroup())) {
             queue = selector.getQueueByBrokerName(request.getStoreGroup());

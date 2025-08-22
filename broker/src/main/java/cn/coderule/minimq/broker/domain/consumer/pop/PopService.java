@@ -12,9 +12,11 @@ import cn.coderule.minimq.domain.domain.consumer.consume.pop.PopResult;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.helper.PopConverter;
 import cn.coderule.minimq.domain.domain.consumer.receipt.MessageReceipt;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
+import cn.coderule.minimq.domain.domain.meta.order.OrderRequest;
 import cn.coderule.minimq.domain.domain.meta.topic.KeyBuilder;
 import cn.coderule.minimq.domain.domain.meta.topic.Topic;
 import cn.coderule.minimq.domain.service.broker.consume.ReceiptHandler;
+import cn.coderule.minimq.rpc.store.facade.ConsumeOrderFacade;
 import cn.coderule.minimq.rpc.store.facade.MQFacade;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicLong;
@@ -23,11 +25,14 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class PopService {
     private final BrokerConfig brokerConfig;
+
     private final InflightCounter inflightCounter;
     private final QueueSelector queueSelector;
-    private final MQFacade mqFacade;
     private final PopContextBuilder popContextBuilder;
     private final ReceiptHandler receiptHandler;
+
+    private final MQFacade mqFacade;
+    private final ConsumeOrderFacade orderFacade;
 
     private final AtomicLong reviveCount = new AtomicLong(0);
 
@@ -37,14 +42,18 @@ public class PopService {
         QueueSelector queueSelector,
         MQFacade mqFacade,
         PopContextBuilder popContextBuilder,
-        ReceiptHandler receiptHandler
+        ReceiptHandler receiptHandler,
+        ConsumeOrderFacade orderFacade
     ) {
         this.brokerConfig = brokerConfig;
+
         this.inflightCounter = inflightCounter;
         this.queueSelector = queueSelector;
-        this.mqFacade = mqFacade;
         this.popContextBuilder = popContextBuilder;
         this.receiptHandler = receiptHandler;
+
+        this.mqFacade = mqFacade;
+        this.orderFacade = orderFacade;
     }
 
 
@@ -109,7 +118,7 @@ public class PopService {
             return stopDequeue(lastResult);
         }
 
-        if (prepareOrderMessage(context, topicName, queueId)) {
+        if (!validateOrderMessage(context, topicName, queueId)) {
             return stopDequeue(lastResult);
         }
 
@@ -138,13 +147,26 @@ public class PopService {
         return result;
     }
 
-    private boolean prepareOrderMessage(PopContext context, String topicName, int queueId) {
+    private OrderRequest createOrderRequest(PopRequest request, String topicName, int queueId) {
+        return OrderRequest.builder()
+            .topicName(topicName)
+            .consumerGroup(request.getConsumerGroup())
+            .queueId(queueId)
+            .attemptId(request.getAttemptId())
+            .invisibleTime(request.getInvisibleTime())
+            .build();
+    }
+
+    private boolean validateOrderMessage(PopContext context, String topicName, int queueId) {
         PopRequest request = context.getRequest();
         if (!request.isFifo()) {
-            return false;
+            return true;
         }
 
-        // consumerOrderStore.checkBlockStatus
+        OrderRequest orderRequest = createOrderRequest(request, topicName, queueId);
+        if (!orderFacade.isLocked(orderRequest)) {
+            return false;
+        }
 
         inflightCounter.clear(topicName, request.getConsumerGroup(), queueId);
         return true;
