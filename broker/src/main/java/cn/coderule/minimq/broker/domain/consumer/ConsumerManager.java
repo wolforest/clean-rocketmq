@@ -26,7 +26,6 @@ public class ConsumerManager implements Lifecycle {
     @Override
     public void initialize() throws Exception {
         brokerConfig = BrokerContext.getBean(BrokerConfig.class);
-
         initTools();
 
         initAck();
@@ -49,6 +48,17 @@ public class ConsumerManager implements Lifecycle {
         ackManager.shutdown();
         popManager.shutdown();
         reviveManager.shutdown();
+    }
+
+    private void initTools() {
+        ConsumerRegister register = new ConsumerRegister(brokerConfig);
+        BrokerContext.register(register);
+
+        InflightCounter inflightCounter = new InflightCounter();
+        BrokerContext.register(inflightCounter);
+
+        ConsumeHookManager hookManager = new ConsumeHookManager();
+        BrokerContext.register(hookManager);
     }
 
     private void initAck() throws Exception {
@@ -81,18 +91,5 @@ public class ConsumerManager implements Lifecycle {
         ConsumerController controller = new ConsumerController(brokerConfig, consumer);
         BrokerContext.registerAPI(controller);
     }
-
-    private void initTools() {
-        ConsumerRegister register = new ConsumerRegister(brokerConfig);
-        BrokerContext.register(register);
-
-        InflightCounter inflightCounter = new InflightCounter();
-        BrokerContext.register(inflightCounter);
-
-        ConsumeHookManager hookManager = new ConsumeHookManager();
-        BrokerContext.register(hookManager);
-    }
-
-
 
 }

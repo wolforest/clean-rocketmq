@@ -16,6 +16,11 @@ import cn.coderule.minimq.domain.domain.meta.subscription.SubscriptionGroup;
 import cn.coderule.minimq.rpc.store.facade.SubscriptionFacade;
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * gateway of package consumer
+ *  - support ConsumerController
+ *  - support other packages
+ */
 public class Consumer  {
     private final PopService popService;
     private final AckService ackService;
