@@ -1,6 +1,7 @@
 package cn.coderule.minimq.broker.domain.consumer.revive;
 
 import cn.coderule.common.convention.service.Lifecycle;
+import cn.coderule.minimq.broker.server.bootstrap.BrokerContext;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.domain.meta.topic.KeyBuilder;
 import cn.coderule.minimq.rpc.store.facade.MQFacade;
@@ -48,7 +49,7 @@ public class ReviveManager implements Lifecycle {
     }
 
     private ReviveContext initContext() {
-        BrokerConfig brokerConfig = StoreContext.getBean(BrokerConfig.class);
+        BrokerConfig brokerConfig = BrokerContext.getBean(BrokerConfig.class);
         String reviveTopic = KeyBuilder.buildClusterReviveTopic(brokerConfig.getCluster());
 
         return ReviveContext.builder()
@@ -57,20 +58,11 @@ public class ReviveManager implements Lifecycle {
             .messageConfig(brokerConfig.getMessageConfig())
             .topicConfig(brokerConfig.getTopicConfig())
 
-            .mqFacade(StoreContext.getBean(MQFacade.class))
+            .mqFacade(BrokerContext.getBean(MQFacade.class))
 
-            .topicFacade(StoreContext.getBean(TopicFacade.class))
-            .subscriptionFacade(StoreContext.getBean(SubscriptionFacade.class))
-            .consumeOffsetFacade(StoreContext.getBean(ConsumeOffsetFacade.class))
-
-            /* to be deleted */
-            .mqService(StoreContext.getBean(MQService.class))
-            .consumeQueueGateway(StoreContext.getBean(ConsumeQueueGateway.class))
-
-            .topicService(StoreContext.getBean(TopicService.class))
-            .subscriptionService(StoreContext.getBean(SubscriptionService.class))
-            .consumeOffsetService(StoreContext.getBean(ConsumeOffsetService.class))
-            /* to be deleted */
+            .topicFacade(BrokerContext.getBean(TopicFacade.class))
+            .subscriptionFacade(BrokerContext.getBean(SubscriptionFacade.class))
+            .consumeOffsetFacade(BrokerContext.getBean(ConsumeOffsetFacade.class))
 
             .build();
     }

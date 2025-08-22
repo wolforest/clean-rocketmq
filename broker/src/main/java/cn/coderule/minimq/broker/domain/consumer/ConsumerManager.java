@@ -25,7 +25,11 @@ public class ConsumerManager implements Lifecycle {
     @Override
     public void initialize() throws Exception {
         brokerConfig = BrokerContext.getBean(BrokerConfig.class);
+
         initTools();
+        initAck();
+        initPop();
+        initRevive();
 
 
         Consumer consumer = new Consumer();
@@ -40,6 +44,21 @@ public class ConsumerManager implements Lifecycle {
 
     @Override
     public void shutdown() throws Exception {
+    }
+
+    private void initAck() throws Exception {
+        ackManager = new AckManager();
+        ackManager.initialize();
+    }
+
+    private void initPop() throws Exception {
+        popManager = new PopManager();
+        popManager.initialize();
+    }
+
+    private void initRevive() throws Exception {
+        reviveManager = new ReviveManager();
+        reviveManager.initialize();
     }
 
     private void initTools() {
