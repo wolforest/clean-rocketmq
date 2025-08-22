@@ -185,7 +185,7 @@ public class ConsumeResponse {
             .messageId(messageBO.getMessageId())
             .topicName(messageBO.getTopic())
             .build();
-        consumerController.changeInvisible(context, invisibleRequest);
+        consumerController.changeInvisible(invisibleRequest);
     }
 
     private void writeOkStatus() {

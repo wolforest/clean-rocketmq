@@ -70,8 +70,8 @@ public class Consumer  {
         return ackService.ack(context, request);
     }
 
-    public CompletableFuture<AckResult> changeInvisible(RequestContext context, InvisibleRequest request) {
-        return invisibleService.changeInvisible(context, request);
+    public CompletableFuture<AckResult> changeInvisible(InvisibleRequest request) {
+        return invisibleService.changeInvisible(request.getRequestContext(), request);
     }
 
 }

@@ -62,8 +62,8 @@ public class ConsumerController {
         return consumer.ack(context, request);
     }
 
-    public CompletableFuture<AckResult> changeInvisible(RequestContext context, InvisibleRequest request) {
-        return consumer.changeInvisible(context, request);
+    public CompletableFuture<AckResult> changeInvisible(InvisibleRequest request) {
+        return consumer.changeInvisible(request);
     }
 
     private void formatInvisibleTime(PopRequest request) {
