@@ -72,6 +72,23 @@ public class RenewListener implements EventListener<RenewEvent> {
         this.fire(event);
     }
 
+    public void fireStopRenewEvent(
+        long renewTime,
+        MessageReceipt receipt,
+        ReceiptHandleGroupKey key,
+        CompletableFuture<AckResult> future
+    ) {
+        RenewEvent event = RenewEvent.builder()
+            .key(key)
+            .future(future)
+            .renewTime(renewTime)
+            .messageReceipt(receipt)
+            .eventType(RenewEvent.EventType.STOP_RENEW)
+            .build();
+
+        this.fire(event);
+    }
+
     private InvisibleRequest createInvisibleRequest(RenewEvent event, RequestContext context) {
         MessageReceipt receipt = event.getMessageReceiptHandle();
         ReceiptHandle handle = ReceiptHandle.decode(receipt.getReceiptHandleStr());

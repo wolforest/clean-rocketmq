@@ -13,6 +13,7 @@ import cn.coderule.minimq.domain.core.enums.code.BrokerExceptionCode;
 import cn.coderule.minimq.domain.core.enums.consume.AckStatus;
 import cn.coderule.minimq.domain.core.exception.BrokerException;
 import cn.coderule.minimq.domain.domain.cluster.ClientChannelInfo;
+import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import cn.coderule.minimq.domain.domain.consumer.ack.broker.AckResult;
 import cn.coderule.minimq.domain.domain.consumer.receipt.MessageReceipt;
 import cn.coderule.minimq.domain.domain.consumer.receipt.ReceiptHandle;
@@ -20,6 +21,7 @@ import cn.coderule.minimq.domain.domain.consumer.receipt.ReceiptHandleGroup;
 import cn.coderule.minimq.domain.domain.consumer.receipt.ReceiptHandleGroupKey;
 import cn.coderule.minimq.domain.domain.consumer.receipt.RenewStrategyPolicy;
 import cn.coderule.minimq.domain.domain.consumer.revive.RenewEvent;
+import cn.coderule.minimq.domain.domain.meta.subscription.SubscriptionGroup;
 import cn.coderule.minimq.domain.service.broker.consume.ReceiptHandler;
 import cn.coderule.minimq.domain.service.broker.consume.RetryPolicy;
 import com.google.common.base.Stopwatch;
@@ -219,7 +221,25 @@ public class RenewService implements Lifecycle {
             && !BrokerExceptionCode.INVALID_RECEIPT_HANDLE.equals(brokerException.getCode());
     }
 
-    private void processExpiredMessage(CompletableFuture<MessageReceipt> future, ReceiptHandleGroupKey key, MessageReceipt receipt) {
+    private void processExpiredMessage(
+        CompletableFuture<MessageReceipt> future,
+        ReceiptHandleGroupKey key,
+        MessageReceipt receipt
+    ) {
+        RequestContext context = RequestContext.createForInner(
+            this.getClass().getSimpleName() + "RenewMessage"
+        );
+        SubscriptionGroup group = subscriptionStore.getGroup(
+            receipt.getTopic(), receipt.getGroup()
+        );
+        if (group == null) {
+            log.error("subscription group not found while renew, receipt={}", receipt);
+            future.complete(null);
+            return;
+        }
+
+        RetryPolicy retryPolicy = group.getGroupRetryPolicy().getRetryPolicy();
+        long retryTime = retryPolicy.nextDelayDuration(receipt.getReconsumeTimes());
     }
 
     private ThreadPoolExecutor initExecutor() {
