@@ -1,15 +1,20 @@
 package cn.coderule.minimq.broker.domain.consumer.renew;
 
 import cn.coderule.minimq.broker.domain.consumer.ack.InvisibleService;
+import cn.coderule.minimq.domain.config.business.MessageConfig;
 import cn.coderule.minimq.domain.core.EventListener;
 import cn.coderule.minimq.domain.domain.cluster.RequestContext;
+import cn.coderule.minimq.domain.domain.consumer.ack.broker.AckResult;
 import cn.coderule.minimq.domain.domain.consumer.ack.broker.InvisibleRequest;
 import cn.coderule.minimq.domain.domain.consumer.receipt.MessageReceipt;
 import cn.coderule.minimq.domain.domain.consumer.receipt.ReceiptHandle;
+import cn.coderule.minimq.domain.domain.consumer.receipt.ReceiptHandleGroupKey;
 import cn.coderule.minimq.domain.domain.consumer.revive.RenewEvent;
+import java.util.concurrent.CompletableFuture;
 
 public class RenewListener implements EventListener<RenewEvent> {
     private InvisibleService invisibleService;
+    private MessageConfig messageConfig;
 
     @Override
     public void fire(RenewEvent event) {
@@ -25,6 +30,48 @@ public class RenewListener implements EventListener<RenewEvent> {
 
                 event.getFuture().complete(ackResult);
             });
+    }
+
+    public void fireClearEvent(
+        long renewTime,
+        MessageReceipt receipt,
+        ReceiptHandleGroupKey key
+    ) {
+        fireClearEvent(renewTime, receipt, key, new CompletableFuture<>());
+    }
+
+    public void fireClearEvent(
+        long renewTime,
+        MessageReceipt receipt,
+        ReceiptHandleGroupKey key,
+        CompletableFuture<AckResult> future
+    ) {
+        RenewEvent event = RenewEvent.builder()
+            .key(key)
+            .messageReceipt(receipt)
+            .future(new CompletableFuture<>())
+            .eventType(RenewEvent.EventType.CLEAR_GROUP)
+            .renewTime(renewTime)
+            .build();
+
+        this.fire(event);
+    }
+
+    public void fireRenewEvent(
+        long renewTime,
+        MessageReceipt receipt,
+        ReceiptHandleGroupKey key,
+        CompletableFuture<AckResult> future
+    ) {
+        RenewEvent event = RenewEvent.builder()
+            .key(key)
+            .future(future)
+            .renewTime(renewTime)
+            .messageReceipt(receipt)
+            .eventType(RenewEvent.EventType.RENEW)
+            .build();
+
+        this.fire(event);
     }
 
     private InvisibleRequest createInvisibleRequest(RenewEvent event, RequestContext context) {

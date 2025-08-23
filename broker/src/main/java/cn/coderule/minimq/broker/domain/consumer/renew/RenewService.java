@@ -9,11 +9,15 @@ import cn.coderule.minimq.broker.infra.store.SubscriptionStore;
 import cn.coderule.minimq.domain.config.business.MessageConfig;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.domain.cluster.ClientChannelInfo;
+import cn.coderule.minimq.domain.domain.consumer.ack.broker.AckResult;
 import cn.coderule.minimq.domain.domain.consumer.receipt.MessageReceipt;
 import cn.coderule.minimq.domain.domain.consumer.receipt.ReceiptHandle;
 import cn.coderule.minimq.domain.domain.consumer.receipt.ReceiptHandleGroup;
 import cn.coderule.minimq.domain.domain.consumer.receipt.ReceiptHandleGroupKey;
+import cn.coderule.minimq.domain.domain.consumer.receipt.RenewStrategyPolicy;
+import cn.coderule.minimq.domain.domain.consumer.revive.RenewEvent;
 import cn.coderule.minimq.domain.service.broker.consume.ReceiptHandler;
+import cn.coderule.minimq.domain.service.broker.consume.RetryPolicy;
 import com.google.common.base.Stopwatch;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -24,14 +28,18 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class RenewService implements Lifecycle {
+    private static final RetryPolicy RENEW_POLICY = new RenewStrategyPolicy();
+
     private final MessageConfig messageConfig;
 
     private final ThreadPoolExecutor executor;
     private final ScheduledExecutorService scheduler;
 
     private final ConsumerRegister consumerRegister;
-    private SubscriptionStore subscriptionStore;
     private final ReceiptHandler receiptHandler;
+
+    private SubscriptionStore subscriptionStore;
+    private RenewListener renewListener;
 
     public RenewService(
         BrokerConfig brokerConfig,
@@ -153,6 +161,11 @@ public class RenewService implements Lifecycle {
     }
 
     private void renewUnexpiredMessage(CompletableFuture<MessageReceipt> future, ReceiptHandleGroupKey key, MessageReceipt receipt) {
+        CompletableFuture<AckResult> ackFuture = new CompletableFuture<>();
+
+        long renewTime = RENEW_POLICY.nextDelayDuration(receipt.getRenewTimes());
+        renewListener.fireRenewEvent(renewTime, receipt, key, ackFuture);
+
     }
 
     private void processExpiredMessage(CompletableFuture<MessageReceipt> future, ReceiptHandleGroupKey key, MessageReceipt receipt) {
