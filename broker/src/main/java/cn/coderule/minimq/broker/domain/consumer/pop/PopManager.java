@@ -42,6 +42,7 @@ public class PopManager implements Lifecycle {
             BrokerContext.getBean(MQStore.class),
             contextBuilder,
             BrokerContext.getBean(DefaultReceiptHandler.class),
+            BrokerContext.getBean(ConsumerRegister.class),
             BrokerContext.getBean(ConsumeOrderStore.class)
         );
 
