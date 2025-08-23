@@ -226,9 +226,6 @@ public class RenewService implements Lifecycle {
         ReceiptHandleGroupKey key,
         MessageReceipt receipt
     ) {
-        RequestContext context = RequestContext.createForInner(
-            this.getClass().getSimpleName() + "RenewMessage"
-        );
         SubscriptionGroup group = subscriptionStore.getGroup(
             receipt.getTopic(), receipt.getGroup()
         );
@@ -238,8 +235,31 @@ public class RenewService implements Lifecycle {
             return;
         }
 
+        CompletableFuture<AckResult> ackFuture = createStopAckFuture(future, receipt);
+
+        long retryTime = getRetryTime(group, receipt);
+        renewListener.fireStopRenewEvent(retryTime, receipt, key, ackFuture);
+    }
+
+    private long getRetryTime(SubscriptionGroup group, MessageReceipt receipt) {
         RetryPolicy retryPolicy = group.getGroupRetryPolicy().getRetryPolicy();
-        long retryTime = retryPolicy.nextDelayDuration(receipt.getReconsumeTimes());
+
+        return retryPolicy.nextDelayDuration(receipt.getReconsumeTimes());
+    }
+
+    private CompletableFuture<AckResult> createStopAckFuture(
+        CompletableFuture<MessageReceipt> future,
+        MessageReceipt receipt
+    ) {
+        CompletableFuture<AckResult> ackFuture = new CompletableFuture<>();
+        ackFuture.whenComplete((ackResult, t) -> {
+            if (null != t) {
+                log.error("stop ack error while renew, receipt={}", receipt);
+            }
+            future.complete(null);
+        });
+
+        return ackFuture;
     }
 
     private ThreadPoolExecutor initExecutor() {
