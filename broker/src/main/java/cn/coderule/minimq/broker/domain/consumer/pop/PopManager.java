@@ -14,7 +14,6 @@ import cn.coderule.minimq.domain.config.server.BrokerConfig;
 
 public class PopManager implements Lifecycle {
     private BrokerConfig brokerConfig;
-    private DefaultReceiptHandler receiptHandler;
     private QueueSelector queueSelector;
     private PopContextBuilder contextBuilder;
 
@@ -24,18 +23,15 @@ public class PopManager implements Lifecycle {
 
         initContextBuilder();
         initQueueSelector();
-        initReceiptHandler();
         initPopService();
     }
 
     @Override
     public void start() throws Exception {
-        receiptHandler.start();
     }
 
     @Override
     public void shutdown() throws Exception {
-        receiptHandler.shutdown();
     }
 
     private void initPopService() {
@@ -45,7 +41,7 @@ public class PopManager implements Lifecycle {
             queueSelector,
             BrokerContext.getBean(MQStore.class),
             contextBuilder,
-            receiptHandler,
+            BrokerContext.getBean(DefaultReceiptHandler.class),
             BrokerContext.getBean(ConsumeOrderStore.class)
         );
 
@@ -66,10 +62,5 @@ public class PopManager implements Lifecycle {
             BrokerContext.getBean(RouteService.class)
         );
     }
-
-    private void initReceiptHandler() {
-        receiptHandler = new DefaultReceiptHandler();
-    }
-
 
 }
