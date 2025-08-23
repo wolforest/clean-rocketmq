@@ -109,6 +109,7 @@ public class DequeueService {
             return;
         }
 
+        request.setStoreGroup(storeConfig.getGroup());
         PopCheckPoint checkPoint = PopConverter.toCheckPoint(request, result);
         checkPoint.setBrokerName(storeConfig.getGroup());
 

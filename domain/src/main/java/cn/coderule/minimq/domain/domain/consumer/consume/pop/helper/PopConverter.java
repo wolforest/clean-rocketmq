@@ -81,7 +81,25 @@ public class PopConverter {
     }
 
     public static PopCheckPoint toCheckPoint(DequeueRequest request, DequeueResult result) {
-        return new PopCheckPoint();
+        long firstOffset = result.getFirstMessage().getQueueOffset();
+
+        PopCheckPoint checkPoint = PopCheckPoint.builder()
+            .bitMap(0)
+            .num((byte) result.countMessage())
+            .popTime(request.getDequeueTime())
+            .invisibleTime(request.getInvisibleTime())
+            .startOffset(firstOffset)
+            .topic(request.getTopic())
+            .cid(request.getGroup())
+            .queueId(request.getQueueId())
+            .brokerName(request.getStoreGroup())
+            .build();
+
+        for (Long offset : result.getOffsetList()) {
+            checkPoint.addDiff((int)(offset - firstOffset));
+        }
+
+        return checkPoint;
     }
 
     public static PopCheckPoint toCheckPoint(AckMsg ackMsg, long offset) {

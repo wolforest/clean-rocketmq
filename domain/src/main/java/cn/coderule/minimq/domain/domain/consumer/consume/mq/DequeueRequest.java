@@ -21,6 +21,7 @@ public class DequeueRequest implements Serializable {
     private long offset;
 
     private long dequeueTime;
+    private long invisibleTime;
 
     @Builder.Default
     private int num = 1;

@@ -1,13 +1,22 @@
 package cn.coderule.minimq.domain.domain.consumer.consume.pop.checkpoint;
 
 import com.alibaba.fastjson2.annotation.JSONField;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * state check info for multi-messages pop from consume queue
  */
-public class PopCheckPoint implements Comparable<PopCheckPoint> {
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class PopCheckPoint implements Comparable<PopCheckPoint>, Serializable {
     @JSONField(name = "so")
     private long startOffset;
 

@@ -5,6 +5,7 @@ import cn.coderule.minimq.domain.domain.message.MessageBO;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -32,6 +33,10 @@ public class DequeueResult implements Serializable {
         return messageList.isEmpty();
     }
 
+    public int countMessage() {
+        return messageList.size();
+    }
+
     public MessageBO getMessage() {
         return getFirstMessage();
     }
@@ -50,6 +55,12 @@ public class DequeueResult implements Serializable {
 
     public boolean noNewMessage() {
         return MessageStatus.OFFSET_OVERFLOW_ONE.equals(status);
+    }
+
+    public List<Long> getOffsetList() {
+        return messageList.stream()
+            .map(MessageBO::getQueueOffset)
+            .collect(Collectors.toList());
     }
 
     public boolean isOffsetIllegal() {

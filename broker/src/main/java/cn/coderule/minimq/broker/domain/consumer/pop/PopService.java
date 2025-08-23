@@ -142,6 +142,7 @@ public class PopService {
             .maxNum(request.getMaxNum())
             .fifo(request.isFifo())
             .dequeueTime(context.getPopTime())
+            .invisibleTime(request.getInvisibleTime())
             .build();
     }
 
