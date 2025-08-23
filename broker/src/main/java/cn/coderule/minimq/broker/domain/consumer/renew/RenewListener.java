@@ -12,7 +12,11 @@ import cn.coderule.minimq.domain.domain.consumer.revive.RenewEvent;
 import java.util.concurrent.CompletableFuture;
 
 public class RenewListener implements EventListener<RenewEvent> {
-    private InvisibleService invisibleService;
+    private final InvisibleService invisibleService;
+
+    public RenewListener(InvisibleService invisibleService) {
+        this.invisibleService = invisibleService;
+    }
 
     @Override
     public void fire(RenewEvent event) {

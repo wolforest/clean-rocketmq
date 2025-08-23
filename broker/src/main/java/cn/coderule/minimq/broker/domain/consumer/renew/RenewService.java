@@ -41,18 +41,23 @@ public class RenewService implements Lifecycle {
     private final ConsumerRegister consumerRegister;
     private final ReceiptHandler receiptHandler;
 
-    private SubscriptionStore subscriptionStore;
-    private RenewListener renewListener;
+    private final SubscriptionStore subscriptionStore;
+    private final RenewListener renewListener;
 
     public RenewService(
         BrokerConfig brokerConfig,
         ConsumerRegister consumerRegister,
-        ReceiptHandler receiptHandler
+        ReceiptHandler receiptHandler,
+        SubscriptionStore subscriptionStore,
+        RenewListener renewListener
     ) {
         this.messageConfig = brokerConfig.getMessageConfig();
 
         this.consumerRegister = consumerRegister;
+        this.subscriptionStore = subscriptionStore;
+
         this.receiptHandler = receiptHandler;
+        this.renewListener = renewListener;
 
         this.executor = initExecutor();
         this.scheduler = initScheduler();
