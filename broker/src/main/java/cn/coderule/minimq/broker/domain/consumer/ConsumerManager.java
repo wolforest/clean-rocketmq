@@ -10,6 +10,7 @@ import cn.coderule.minimq.broker.domain.consumer.consumer.ConsumerRegister;
 import cn.coderule.minimq.broker.domain.consumer.consumer.InflightCounter;
 import cn.coderule.minimq.broker.domain.consumer.pop.PopManager;
 import cn.coderule.minimq.broker.domain.consumer.pop.PopService;
+import cn.coderule.minimq.broker.domain.consumer.renew.RenewManager;
 import cn.coderule.minimq.broker.domain.consumer.revive.ReviveManager;
 import cn.coderule.minimq.broker.infra.store.SubscriptionStore;
 import cn.coderule.minimq.broker.server.bootstrap.BrokerContext;
@@ -21,6 +22,7 @@ public class ConsumerManager implements Lifecycle {
 
     private PopManager popManager;
     private AckManager ackManager;
+    private RenewManager renewManager;
     private ReviveManager reviveManager;
 
     @Override
@@ -28,6 +30,7 @@ public class ConsumerManager implements Lifecycle {
         brokerConfig = BrokerContext.getBean(BrokerConfig.class);
         initTools();
 
+        initRenew();
         initAck();
         initPop();
         initRevive();
@@ -38,6 +41,7 @@ public class ConsumerManager implements Lifecycle {
 
     @Override
     public void start() throws Exception {
+        renewManager.start();
         ackManager.start();
         popManager.start();
         reviveManager.start();
@@ -45,9 +49,10 @@ public class ConsumerManager implements Lifecycle {
 
     @Override
     public void shutdown() throws Exception {
-        ackManager.shutdown();
         popManager.shutdown();
+        ackManager.shutdown();
         reviveManager.shutdown();
+        renewManager.shutdown();
     }
 
     private void initTools() {
@@ -59,6 +64,11 @@ public class ConsumerManager implements Lifecycle {
 
         ConsumeHookManager hookManager = new ConsumeHookManager();
         BrokerContext.register(hookManager);
+    }
+
+    private void initRenew() throws Exception {
+        renewManager = new RenewManager();
+        renewManager.initialize();
     }
 
     private void initAck() throws Exception {
