@@ -76,7 +76,7 @@ public class RenewService implements Lifecycle {
 
         try {
             for (Map.Entry<ReceiptHandleGroupKey, ReceiptHandleGroup> entry : receiptHandler.getEntrySet()) {
-                renew(entry);
+                renewByEntry(entry);
             }
         } catch (Exception e) {
             log.error("renew error in {}", this.getClass().getSimpleName(), e);
@@ -86,15 +86,9 @@ public class RenewService implements Lifecycle {
             this.getClass().getSimpleName(), stopwatch.elapsed().toMillis());
     }
 
-    private boolean isClientOffline(ReceiptHandleGroupKey key) {
-        ClientChannelInfo channelInfo = consumerRegister.findChannel(
-            key.getGroup(), key.getChannel()
-        );
 
-        return null == channelInfo;
-    }
 
-    private void renew(Map.Entry<ReceiptHandleGroupKey, ReceiptHandleGroup> entry) {
+    private void renewByEntry(Map.Entry<ReceiptHandleGroupKey, ReceiptHandleGroup> entry) {
         if (isClientOffline(entry.getKey())) {
             receiptHandler.removeGroup(entry.getKey());
             return;
@@ -104,11 +98,11 @@ public class RenewService implements Lifecycle {
         ReceiptHandleGroup group = entry.getValue();
 
         entry.getValue().scan((msgID, handleStr, v) ->
-            renew(key, group, msgID, handleStr)
+            submitRenewTask(key, group, msgID, handleStr)
         );
     }
 
-    private void renew(ReceiptHandleGroupKey key, ReceiptHandleGroup group, String msgID, String handleStr) {
+    private void submitRenewTask(ReceiptHandleGroupKey key, ReceiptHandleGroup group, String msgID, String handleStr) {
         long now = System.currentTimeMillis();
         ReceiptHandle handle = ReceiptHandle.decode(handleStr);
 
@@ -117,11 +111,11 @@ public class RenewService implements Lifecycle {
         }
 
         executor.submit(
-            () -> renewMessage(key, group, msgID, handleStr)
+            () -> renewByMsgID(key, group, msgID, handleStr)
         );
     }
 
-    private void renewMessage(ReceiptHandleGroupKey key, ReceiptHandleGroup group, String msgID, String handleStr) {
+    private void renewByMsgID(ReceiptHandleGroupKey key, ReceiptHandleGroup group, String msgID, String handleStr) {
         try {
             group.computeIfPresent(
                 msgID,
@@ -153,5 +147,13 @@ public class RenewService implements Lifecycle {
         });
 
         return executor;
+    }
+
+    private boolean isClientOffline(ReceiptHandleGroupKey key) {
+        ClientChannelInfo channelInfo = consumerRegister.findChannel(
+            key.getGroup(), key.getChannel()
+        );
+
+        return null == channelInfo;
     }
 }
