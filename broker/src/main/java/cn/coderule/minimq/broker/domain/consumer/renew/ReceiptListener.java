@@ -5,13 +5,14 @@ import cn.coderule.minimq.domain.core.enums.consume.ConsumerEvent;
 import cn.coderule.minimq.domain.domain.cluster.ClientChannelInfo;
 import cn.coderule.minimq.domain.domain.consumer.receipt.ReceiptHandleGroupKey;
 import cn.coderule.minimq.domain.service.broker.consume.ConsumerListener;
+import cn.coderule.minimq.domain.service.broker.consume.ReceiptHandler;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class ReceiptListener implements ConsumerListener {
-    private final DefaultReceiptHandler receiptHandler;
+    private final ReceiptHandler receiptHandler;
 
-    public ReceiptListener(DefaultReceiptHandler receiptHandler) {
+    public ReceiptListener(ReceiptHandler receiptHandler) {
         this.receiptHandler = receiptHandler;
     }
 

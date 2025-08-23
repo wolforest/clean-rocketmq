@@ -22,6 +22,7 @@ public class RenewManager implements Lifecycle {
         initRenewListener();
         initReceiptHandler();
         initRenewService();
+        initReceiptListener();
     }
 
     @Override
@@ -55,7 +56,11 @@ public class RenewManager implements Lifecycle {
         renewService.initialize();
     }
 
+    private void initReceiptListener() {
+        ReceiptListener receiptListener = new ReceiptListener(receiptHandler);
 
-
+        ConsumerRegister register = BrokerContext.getBean(ConsumerRegister.class);
+        register.addListener(receiptListener);
+    }
 
 }
