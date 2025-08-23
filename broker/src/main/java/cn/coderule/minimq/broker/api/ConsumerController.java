@@ -2,7 +2,7 @@ package cn.coderule.minimq.broker.api;
 
 import cn.coderule.minimq.broker.api.validator.GroupValidator;
 import cn.coderule.minimq.broker.api.validator.PopValidator;
-import cn.coderule.minimq.broker.domain.consumer.Consumer;
+import cn.coderule.minimq.broker.domain.consumer.consumer.Consumer;
 import cn.coderule.minimq.domain.config.business.MessageConfig;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.domain.consumer.ack.broker.AckRequest;

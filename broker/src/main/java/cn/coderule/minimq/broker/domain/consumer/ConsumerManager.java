@@ -6,6 +6,7 @@ import cn.coderule.minimq.broker.domain.consumer.ack.AckManager;
 import cn.coderule.minimq.broker.domain.consumer.ack.AckService;
 import cn.coderule.minimq.broker.domain.consumer.ack.InvisibleService;
 import cn.coderule.minimq.broker.domain.consumer.consumer.ConsumeHookManager;
+import cn.coderule.minimq.broker.domain.consumer.consumer.Consumer;
 import cn.coderule.minimq.broker.domain.consumer.consumer.ConsumerRegister;
 import cn.coderule.minimq.broker.domain.consumer.consumer.InflightCounter;
 import cn.coderule.minimq.broker.domain.consumer.pop.PopManager;
