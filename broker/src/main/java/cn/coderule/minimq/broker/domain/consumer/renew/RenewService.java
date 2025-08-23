@@ -4,10 +4,13 @@ import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.lang.concurrent.thread.DefaultThreadFactory;
 import cn.coderule.common.lang.concurrent.thread.pool.ThreadPoolFactory;
 import cn.coderule.common.util.lang.ThreadUtil;
+import cn.coderule.common.util.lang.bean.ExceptionUtil;
 import cn.coderule.minimq.broker.domain.consumer.consumer.ConsumerRegister;
 import cn.coderule.minimq.broker.infra.store.SubscriptionStore;
 import cn.coderule.minimq.domain.config.business.MessageConfig;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
+import cn.coderule.minimq.domain.core.enums.code.BrokerExceptionCode;
+import cn.coderule.minimq.domain.core.exception.BrokerException;
 import cn.coderule.minimq.domain.domain.cluster.ClientChannelInfo;
 import cn.coderule.minimq.domain.domain.consumer.ack.broker.AckResult;
 import cn.coderule.minimq.domain.domain.consumer.receipt.MessageReceipt;
@@ -172,7 +175,20 @@ public class RenewService implements Lifecycle {
     }
 
     private void renewCallback(CompletableFuture<MessageReceipt> future, AckResult ackResult, Throwable t, MessageReceipt receipt) {
+        if (null != t) {
+            log.error("Renew message error, receipt: {}", receipt, t);
+        }
+    }
 
+    private boolean isRetryException(Throwable t) {
+        t = ExceptionUtil.getRealException(t);
+
+        if (!(t instanceof BrokerException brokerException)) {
+            return true;
+        }
+
+        return !BrokerExceptionCode.INVALID_BROKER_NAME.equals(brokerException.getCode())
+            && !BrokerExceptionCode.INVALID_RECEIPT_HANDLE.equals(brokerException.getCode());
     }
 
     private void processExpiredMessage(CompletableFuture<MessageReceipt> future, ReceiptHandleGroupKey key, MessageReceipt receipt) {

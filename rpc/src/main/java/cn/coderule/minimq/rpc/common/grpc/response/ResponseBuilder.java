@@ -75,7 +75,7 @@ public class ResponseBuilder {
         }
 
         log.error("internal server error", t);
-        return buildStatus(Code.INTERNAL_SERVER_ERROR, ExceptionUtil.getErrorDetailMessage(t));
+        return buildStatus(Code.INTERNAL_SERVER_ERROR, ExceptionUtil.getErrorMessage(t));
     }
 
     public Status buildStatus(int code, String remark) {
