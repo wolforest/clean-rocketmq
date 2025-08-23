@@ -10,9 +10,11 @@ import cn.coderule.minimq.domain.domain.consumer.ack.BatchAckMsg;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueResult;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.PopContext;
+import cn.coderule.minimq.domain.domain.consumer.consume.pop.PopRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.PopResult;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.checkpoint.PopCheckPoint;
 import cn.coderule.minimq.domain.domain.consumer.receipt.MessageReceipt;
+import cn.coderule.minimq.domain.domain.consumer.receipt.ReceiptHandle;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.domain.meta.topic.KeyBuilder;
 import cn.coderule.minimq.domain.utils.MessageUtils;
@@ -144,7 +146,24 @@ public class PopConverter {
     }
 
     public static MessageReceipt toReceipt(PopContext context, MessageBO messageBO, Channel channel) {
-        return null;
+        String receiptStr = messageBO.getReceipt();
+        ReceiptHandle receiptHandle = ReceiptHandle.decode(receiptStr);
+
+        PopRequest request = context.getRequest();
+        return MessageReceipt.builder()
+            .requestContext(request.getRequestContext())
+            .channel(channel)
+            .group(request.getConsumerGroup())
+            .topic(request.getTopicName())
+            .queueId(request.getQueueId())
+            .receiptHandleStr(receiptStr)
+            .originalReceiptHandleStr(receiptStr)
+            .messageId(messageBO.getMessageId())
+            .queueOffset(messageBO.getQueueOffset())
+            .reconsumeTimes(messageBO.getReconsumeTimes())
+            .originalReceiptHandle(receiptHandle)
+            .consumeTimestamp(receiptHandle.getRetrieveTime())
+            .build();
     }
 
     public static PopResult toPopResult(PopContext context, DequeueResult dequeueResult,  PopResult lastResult) {
