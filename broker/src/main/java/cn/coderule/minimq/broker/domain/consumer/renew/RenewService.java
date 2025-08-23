@@ -176,8 +176,24 @@ public class RenewService implements Lifecycle {
 
     private void renewCallback(CompletableFuture<MessageReceipt> future, AckResult ackResult, Throwable t, MessageReceipt receipt) {
         if (null != t) {
-            log.error("Renew message error, receipt: {}", receipt, t);
+            handleRenewException(t, receipt, future);
+            return;
         }
+    }
+
+    private void handleRenewException(
+        Throwable t,
+        MessageReceipt receipt,
+        CompletableFuture<MessageReceipt> future
+    ) {
+        log.error("Renew message error, receipt: {}", receipt, t);
+        if (!isRetryException(t)) {
+            future.completeExceptionally(null);
+            return;
+        }
+
+        receipt.incrementAndGetRenewRetryTimes();
+        future.complete(receipt);
     }
 
     private boolean isRetryException(Throwable t) {
