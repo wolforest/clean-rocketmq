@@ -46,10 +46,10 @@ public class RenewService implements Lifecycle {
 
     public RenewService(
         BrokerConfig brokerConfig,
-        ConsumerRegister consumerRegister,
         ReceiptHandler receiptHandler,
-        SubscriptionStore subscriptionStore,
-        RenewListener renewListener
+        RenewListener renewListener,
+        ConsumerRegister consumerRegister,
+        SubscriptionStore subscriptionStore
     ) {
         this.messageConfig = brokerConfig.getMessageConfig();
 

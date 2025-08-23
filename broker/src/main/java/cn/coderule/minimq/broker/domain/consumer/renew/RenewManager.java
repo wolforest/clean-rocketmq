@@ -2,6 +2,8 @@ package cn.coderule.minimq.broker.domain.consumer.renew;
 
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.minimq.broker.domain.consumer.ack.InvisibleService;
+import cn.coderule.minimq.broker.domain.consumer.consumer.ConsumerRegister;
+import cn.coderule.minimq.broker.infra.store.SubscriptionStore;
 import cn.coderule.minimq.broker.server.bootstrap.BrokerContext;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.service.broker.consume.ReceiptHandler;
@@ -11,6 +13,7 @@ public class RenewManager implements Lifecycle {
 
     private RenewListener renewListener;
     private ReceiptHandler receiptHandler;
+    private RenewService renewService;
 
     @Override
     public void initialize() throws Exception {
@@ -18,16 +21,17 @@ public class RenewManager implements Lifecycle {
 
         initRenewListener();
         initReceiptHandler();
+        initRenewService();
     }
 
     @Override
     public void start() throws Exception {
-
+        renewService.start();
     }
 
     @Override
     public void shutdown() throws Exception {
-
+        renewService.shutdown();
     }
 
     private void initRenewListener() {
@@ -37,6 +41,18 @@ public class RenewManager implements Lifecycle {
 
     private void initReceiptHandler() {
         receiptHandler = new DefaultReceiptHandler(brokerConfig, renewListener);
+    }
+
+    private void initRenewService() throws Exception {
+        renewService = new RenewService(
+            brokerConfig,
+            receiptHandler,
+            renewListener,
+            BrokerContext.getBean(ConsumerRegister.class),
+            BrokerContext.getBean(SubscriptionStore.class)
+        );
+
+        renewService.initialize();
     }
 
 
