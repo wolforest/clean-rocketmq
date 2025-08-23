@@ -10,6 +10,7 @@ import cn.coderule.minimq.broker.infra.store.SubscriptionStore;
 import cn.coderule.minimq.domain.config.business.MessageConfig;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.core.enums.code.BrokerExceptionCode;
+import cn.coderule.minimq.domain.core.enums.consume.AckStatus;
 import cn.coderule.minimq.domain.core.exception.BrokerException;
 import cn.coderule.minimq.domain.domain.cluster.ClientChannelInfo;
 import cn.coderule.minimq.domain.domain.consumer.ack.broker.AckResult;
@@ -179,6 +180,17 @@ public class RenewService implements Lifecycle {
             handleRenewException(t, receipt, future);
             return;
         }
+
+        if (!ackResult.isSuccess()) {
+            log.error("Renew failed, receipt: {}, result: {}", receipt, ackResult);
+            future.complete(null);
+            return;
+        }
+
+        receipt.updateReceiptHandle(ackResult.getExtraInfo());
+        receipt.resetRenewRetryTimes();
+        receipt.incrementRenewTimes();
+        future.complete(receipt);
     }
 
     private void handleRenewException(
