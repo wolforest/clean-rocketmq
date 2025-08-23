@@ -2,7 +2,6 @@ package cn.coderule.minimq.broker.domain.consumer.renew;
 
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.minimq.broker.domain.consumer.consumer.ConsumeHookManager;
-import cn.coderule.minimq.broker.infra.store.SubscriptionStore;
 import cn.coderule.minimq.domain.config.business.MessageConfig;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.domain.consumer.receipt.MessageReceipt;
@@ -25,9 +24,8 @@ public class DefaultReceiptHandler implements ReceiptHandler, Lifecycle {
 
     private BrokerConfig brokerConfig;
     private MessageConfig messageConfig;
-
     private ConsumeHookManager hookManager;
-    private SubscriptionStore subscriptionStore;
+
     private RenewListener renewListener;
 
     private final ConcurrentMap<ReceiptHandleGroupKey, ReceiptHandleGroup> groupMap

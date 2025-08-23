@@ -39,7 +39,7 @@ public class MessageConfig implements Serializable {
      * message invisibleTime related config
      */
     private boolean enableAutoRenew = true;
-    private int maxRenewRetryTime = 3;
+    private int maxRenewRetryTimes = 3;
     private int minRenewThreadNum = 2;
     private int maxRenewThreadNum = 4;
     private int renewQueueCapacity = 300;

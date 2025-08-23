@@ -5,6 +5,7 @@ import cn.coderule.common.lang.concurrent.thread.DefaultThreadFactory;
 import cn.coderule.common.lang.concurrent.thread.pool.ThreadPoolFactory;
 import cn.coderule.common.util.lang.ThreadUtil;
 import cn.coderule.minimq.broker.domain.consumer.consumer.ConsumerRegister;
+import cn.coderule.minimq.broker.infra.store.SubscriptionStore;
 import cn.coderule.minimq.domain.config.business.MessageConfig;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.domain.cluster.ClientChannelInfo;
@@ -29,6 +30,7 @@ public class RenewService implements Lifecycle {
     private final ScheduledExecutorService scheduler;
 
     private final ConsumerRegister consumerRegister;
+    private SubscriptionStore subscriptionStore;
     private final ReceiptHandler receiptHandler;
 
     public RenewService(
@@ -128,8 +130,32 @@ public class RenewService implements Lifecycle {
         }
     }
 
-    private CompletableFuture<MessageReceipt> renewMessage(ReceiptHandleGroupKey key, MessageReceipt messageReceipt) {
-        return null;
+    private CompletableFuture<MessageReceipt> renewMessage(ReceiptHandleGroupKey key, MessageReceipt receipt) {
+        CompletableFuture<MessageReceipt> future = new CompletableFuture<>();
+        long now = System.currentTimeMillis();
+
+        try {
+            if (receipt.getRenewRetryTimes() > messageConfig.getMaxRenewRetryTimes()) {
+                log.warn("Renew message failed, retry times exceed max retry times, receipt={};", receipt);
+                return CompletableFuture.completedFuture(null);
+            }
+
+            if (now - receipt.getConsumeTimestamp() < messageConfig.getMaxRenewTime()) {
+                renewUnexpiredMessage(future, key, receipt);
+            } else {
+                processExpiredMessage(future, key, receipt);
+            }
+        } catch (Exception e) {
+            log.error("renewMessage error, receipt: {}", receipt, e);
+        }
+
+        return future;
+    }
+
+    private void renewUnexpiredMessage(CompletableFuture<MessageReceipt> future, ReceiptHandleGroupKey key, MessageReceipt receipt) {
+    }
+
+    private void processExpiredMessage(CompletableFuture<MessageReceipt> future, ReceiptHandleGroupKey key, MessageReceipt receipt) {
     }
 
     private ThreadPoolExecutor initExecutor() {
