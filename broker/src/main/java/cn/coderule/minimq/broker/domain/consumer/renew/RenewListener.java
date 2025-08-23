@@ -1,7 +1,6 @@
 package cn.coderule.minimq.broker.domain.consumer.renew;
 
 import cn.coderule.minimq.broker.domain.consumer.ack.InvisibleService;
-import cn.coderule.minimq.domain.config.business.MessageConfig;
 import cn.coderule.minimq.domain.core.EventListener;
 import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import cn.coderule.minimq.domain.domain.consumer.ack.broker.AckResult;
@@ -14,7 +13,6 @@ import java.util.concurrent.CompletableFuture;
 
 public class RenewListener implements EventListener<RenewEvent> {
     private InvisibleService invisibleService;
-    private MessageConfig messageConfig;
 
     @Override
     public void fire(RenewEvent event) {

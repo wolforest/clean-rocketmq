@@ -166,6 +166,13 @@ public class RenewService implements Lifecycle {
         long renewTime = RENEW_POLICY.nextDelayDuration(receipt.getRenewTimes());
         renewListener.fireRenewEvent(renewTime, receipt, key, ackFuture);
 
+        ackFuture.whenComplete((ackResult, throwable) -> {
+            renewCallback(future, ackResult, throwable, receipt);
+        });
+    }
+
+    private void renewCallback(CompletableFuture<MessageReceipt> future, AckResult ackResult, Throwable t, MessageReceipt receipt) {
+
     }
 
     private void processExpiredMessage(CompletableFuture<MessageReceipt> future, ReceiptHandleGroupKey key, MessageReceipt receipt) {
