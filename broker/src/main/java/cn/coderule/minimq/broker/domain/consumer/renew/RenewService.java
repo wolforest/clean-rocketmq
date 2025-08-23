@@ -23,14 +23,27 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class RenewService implements Lifecycle {
-    private BrokerConfig brokerConfig;
-    private MessageConfig messageConfig;
+    private final MessageConfig messageConfig;
 
-    private ThreadPoolExecutor executor;
-    private ScheduledExecutorService scheduler;
+    private final ThreadPoolExecutor executor;
+    private final ScheduledExecutorService scheduler;
 
-    private ConsumerRegister consumerRegister;
-    private ReceiptHandler receiptHandler;
+    private final ConsumerRegister consumerRegister;
+    private final ReceiptHandler receiptHandler;
+
+    public RenewService(
+        BrokerConfig brokerConfig,
+        ConsumerRegister consumerRegister,
+        ReceiptHandler receiptHandler
+    ) {
+        this.messageConfig = brokerConfig.getMessageConfig();
+
+        this.consumerRegister = consumerRegister;
+        this.receiptHandler = receiptHandler;
+
+        this.executor = initExecutor();
+        this.scheduler = initScheduler();
+    }
 
     @Override
     public void start() throws Exception {
