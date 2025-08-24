@@ -4,6 +4,7 @@ import cn.coderule.minimq.broker.domain.consumer.consumer.InflightCounter;
 import cn.coderule.minimq.domain.config.business.MessageConfig;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueRequest;
+import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueResult;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.PopContext;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.PopRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.PopResult;
@@ -45,7 +46,20 @@ public class DequeueService {
 
         DequeueRequest request = buildDequeueRequest(context, topicName, queueId);
         return mqStore.dequeueAsync(request)
-            .thenApply(result -> PopConverter.toPopResult(context, result, lastResult));
+            .thenApply(result -> processResult(context, result, topicName, queueId, lastResult));
+    }
+
+    private PopResult processResult(
+        PopContext context,
+        DequeueResult dequeueResult,
+        String topicName,
+        int queueId,
+        PopResult lastResult)
+    {
+        String consumerGroup = context.getRequest().getConsumerGroup();
+        inflightCounter.increment(topicName, consumerGroup, queueId, dequeueResult.countMessage());
+
+        return PopConverter.toPopResult(context, dequeueResult, lastResult);
     }
 
     private DequeueRequest buildDequeueRequest(PopContext context, String topicName, int queueId) {
