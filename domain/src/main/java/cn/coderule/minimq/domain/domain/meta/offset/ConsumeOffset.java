@@ -60,7 +60,7 @@ public class ConsumeOffset implements Serializable {
         String key = buildKey(topic, group);
         ConcurrentMap<Integer, Long> map = offsetTable.get(key);
         if (map == null) {
-            return 0;
+            return -1;
         }
 
         return map.get(queueId);
@@ -71,12 +71,12 @@ public class ConsumeOffset implements Serializable {
         String key = buildKey(topic, group);
         ConcurrentMap<Integer, Long> map = offsetTable.get(key);
         if (map == null) {
-            return 0;
+            return -1;
         }
 
         Long old = map.remove(queueId);
 
-        return old == null ? 0L : old;
+        return old == null ? -1 : old;
     }
 
     @JSONField(serialize = false)
