@@ -1,11 +1,9 @@
 package cn.coderule.minimq.broker.domain.consumer.pop;
 
-import cn.coderule.minimq.broker.domain.consumer.consumer.ConsumerRegister;
 import cn.coderule.minimq.broker.domain.consumer.consumer.InflightCounter;
 import cn.coderule.minimq.domain.config.business.MessageConfig;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.domain.MessageQueue;
-import cn.coderule.minimq.domain.domain.cluster.ClientChannelInfo;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.PopContext;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.PopRequest;
@@ -19,7 +17,6 @@ import cn.coderule.minimq.domain.domain.meta.topic.Topic;
 import cn.coderule.minimq.domain.service.broker.consume.ReceiptHandler;
 import cn.coderule.minimq.rpc.store.facade.ConsumeOrderFacade;
 import cn.coderule.minimq.rpc.store.facade.MQFacade;
-import io.netty.channel.Channel;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicLong;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +29,6 @@ public class PopService {
     private final QueueSelector queueSelector;
     private final PopContextBuilder popContextBuilder;
     private final ReceiptHandler receiptHandler;
-    private final ConsumerRegister consumerRegister;
 
     private final MQFacade mqStore;
     private final ConsumeOrderFacade orderStore;
@@ -46,7 +42,6 @@ public class PopService {
         MQFacade mqStore,
         PopContextBuilder popContextBuilder,
         ReceiptHandler receiptHandler,
-        ConsumerRegister consumerRegister,
         ConsumeOrderFacade orderStore
     ) {
         this.brokerConfig = brokerConfig;
@@ -54,7 +49,6 @@ public class PopService {
         this.queueSelector = queueSelector;
         this.receiptHandler = receiptHandler;
         this.inflightCounter = inflightCounter;
-        this.consumerRegister = consumerRegister;
         this.popContextBuilder = popContextBuilder;
 
         this.mqStore = mqStore;
@@ -211,23 +205,9 @@ public class PopService {
                 continue;
             }
 
-            Channel channel = findChannel(context);
-            MessageReceipt receipt = PopConverter.toReceipt(context, message, channel);
+            MessageReceipt receipt = PopConverter.toReceipt(context, message);
             receiptHandler.addReceipt(receipt);
         }
-    }
-
-    private Channel findChannel(PopContext context) {
-        ClientChannelInfo channelInfo = consumerRegister.findChannel(
-            context.getRequest().getConsumerGroup(),
-            context.getRequest().getRequestContext().getClientID()
-        );
-
-        if (channelInfo == null) {
-            return null;
-        }
-
-        return channelInfo.getChannel();
     }
 
     private void selectQueue(PopContext context) {

@@ -6,6 +6,7 @@ import cn.coderule.minimq.domain.core.constant.PermName;
 import cn.coderule.minimq.domain.core.enums.code.InvalidCode;
 import cn.coderule.minimq.domain.core.exception.InvalidRequestException;
 import cn.coderule.minimq.domain.domain.MessageQueue;
+import cn.coderule.minimq.domain.domain.cluster.ClientChannelInfo;
 import cn.coderule.minimq.domain.domain.cluster.heartbeat.SubscriptionData;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.PopContext;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.PopRequest;
@@ -15,6 +16,7 @@ import cn.coderule.minimq.domain.domain.meta.topic.Topic;
 import cn.coderule.minimq.rpc.broker.core.FilterAPI;
 import cn.coderule.minimq.rpc.store.facade.SubscriptionFacade;
 import cn.coderule.minimq.rpc.store.facade.TopicFacade;
+import io.netty.channel.Channel;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -46,6 +48,8 @@ public class PopContextBuilder {
 
         compensateSubscription(context);
         compensateRetrySubscription(context);
+
+        findChannel(context);
 
         return context;
     }
@@ -145,6 +149,21 @@ public class PopContextBuilder {
         } catch (Exception e) {
             log.warn("build retry subscription failed", e);
         }
+    }
+
+    private void findChannel(PopContext context) {
+        ClientChannelInfo channelInfo = consumerRegister.findChannel(
+            context.getRequest().getConsumerGroup(),
+            context.getRequest().getRequestContext().getClientID()
+        );
+
+        if (channelInfo == null) {
+            context.setChannel(null);
+            return;
+        }
+
+        Channel channel = channelInfo.getChannel();
+        context.setChannel(channel);
     }
 
 }

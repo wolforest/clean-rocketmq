@@ -4,6 +4,7 @@ import cn.coderule.minimq.domain.config.business.MessageConfig;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.domain.MessageQueue;
 import cn.coderule.minimq.domain.domain.meta.topic.Topic;
+import io.netty.channel.Channel;
 import java.io.Serializable;
 import java.util.concurrent.ThreadLocalRandom;
 import lombok.Data;
@@ -21,6 +22,8 @@ public class PopContext implements Serializable {
 
     private int reviveQueueId;
     private MessageQueue messageQueue = null;
+
+    private Channel channel;
 
     private StringBuilder startOffsetBuilder;
     private StringBuilder messageOffsetBuilder;

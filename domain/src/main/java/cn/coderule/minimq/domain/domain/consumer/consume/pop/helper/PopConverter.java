@@ -19,7 +19,6 @@ import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.domain.meta.topic.KeyBuilder;
 import cn.coderule.minimq.domain.utils.MessageUtils;
 import com.alibaba.fastjson2.JSON;
-import io.netty.channel.Channel;
 import java.net.SocketAddress;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
@@ -163,14 +162,14 @@ public class PopConverter {
         msgInner.setPropertiesString(MessageUtils.propertiesToString(msgInner.getProperties()));
     }
 
-    public static MessageReceipt toReceipt(PopContext context, MessageBO messageBO, Channel channel) {
+    public static MessageReceipt toReceipt(PopContext context, MessageBO messageBO) {
         String receiptStr = messageBO.getReceipt();
         ReceiptHandle receiptHandle = ReceiptHandle.decode(receiptStr);
 
         PopRequest request = context.getRequest();
         return MessageReceipt.builder()
             .requestContext(request.getRequestContext())
-            .channel(channel)
+            .channel(context.getChannel())
             .group(request.getConsumerGroup())
             .topic(request.getTopicName())
             .queueId(request.getQueueId())
