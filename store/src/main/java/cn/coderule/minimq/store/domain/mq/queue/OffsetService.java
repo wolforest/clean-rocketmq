@@ -1,6 +1,8 @@
 package cn.coderule.minimq.store.domain.mq.queue;
 
 import cn.coderule.minimq.domain.config.server.StoreConfig;
+import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueRequest;
+import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueResult;
 import cn.coderule.minimq.domain.service.store.domain.consumequeue.ConsumeQueueGateway;
 import cn.coderule.minimq.domain.service.store.domain.meta.ConsumeOffsetService;
 import cn.coderule.minimq.domain.service.store.domain.meta.ConsumeOrderService;
@@ -27,6 +29,20 @@ public class OffsetService {
 
     public long getOffset(String group, String topic, int queueId) {
         return consumeOffsetService.getOffset(group, topic, queueId);
+    }
+
+    public void updateOffset(DequeueRequest request, DequeueResult result) {
+        long newOffset = result.getNextOffset();
+        if (newOffset <= 0L) {
+            return;
+        }
+
+        consumeOffsetService.putOffset(
+            request.getGroup(),
+            request.getTopic(),
+            request.getQueueId(),
+            newOffset
+        );
     }
 
 }
