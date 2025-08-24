@@ -1,53 +1,33 @@
 package cn.coderule.minimq.broker.domain.consumer.pop;
 
-import cn.coderule.minimq.broker.domain.consumer.consumer.InflightCounter;
-import cn.coderule.minimq.domain.config.business.MessageConfig;
-import cn.coderule.minimq.domain.config.server.BrokerConfig;
-import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.PopContext;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.PopRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.PopResult;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.helper.PopConverter;
 import cn.coderule.minimq.domain.domain.consumer.receipt.MessageReceipt;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
-import cn.coderule.minimq.domain.domain.meta.order.OrderRequest;
 import cn.coderule.minimq.domain.domain.meta.topic.Topic;
 import cn.coderule.minimq.domain.service.broker.consume.ReceiptHandler;
-import cn.coderule.minimq.rpc.store.facade.ConsumeOrderFacade;
-import cn.coderule.minimq.rpc.store.facade.MQFacade;
 import java.util.concurrent.CompletableFuture;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class PopService {
-    private final BrokerConfig brokerConfig;
-
-    private final InflightCounter inflightCounter;
     private final QueueSelector queueSelector;
     private final ContextBuilder contextBuilder;
     private final ReceiptHandler receiptHandler;
-
-    private final MQFacade mqStore;
-    private final ConsumeOrderFacade orderStore;
+    private final DequeueService dequeueService;
 
     public PopService(
-        BrokerConfig brokerConfig,
-        InflightCounter inflightCounter,
-        QueueSelector queueSelector,
-        MQFacade mqStore,
         ContextBuilder contextBuilder,
-        ReceiptHandler receiptHandler,
-        ConsumeOrderFacade orderStore
+        QueueSelector queueSelector,
+        DequeueService dequeueService,
+        ReceiptHandler receiptHandler
     ) {
-        this.brokerConfig = brokerConfig;
-
         this.queueSelector = queueSelector;
         this.receiptHandler = receiptHandler;
-        this.inflightCounter = inflightCounter;
         this.contextBuilder = contextBuilder;
-
-        this.mqStore = mqStore;
-        this.orderStore = orderStore;
+        this.dequeueService = dequeueService;
     }
 
     public CompletableFuture<PopResult> pop(PopRequest request) {
@@ -83,14 +63,14 @@ public class PopService {
         int requestQueueId = context.getMessageQueue().getQueueId();
         if (requestQueueId >= 0) {
             return result.thenCompose(
-                popResult -> dequeue(context, topicName, requestQueueId, popResult)
+                popResult -> dequeueService.dequeue(context, topicName, requestQueueId, popResult)
             );
         }
 
         for (int i = 0; i < topic.getReadQueueNums(); i++) {
             int queueId = context.selectRandomQueue(topic.getReadQueueNums(), i);
             result = result.thenCompose(
-                popResult -> dequeue(context, topicName, queueId, popResult)
+                popResult -> dequeueService.dequeue(context, topicName, queueId, popResult)
             );
         }
 
@@ -99,98 +79,16 @@ public class PopService {
 
     private CompletableFuture<PopResult> popRetryMessage(PopContext context, CompletableFuture<PopResult> result) {
         Topic topic = context.getRetryTopic();
+        String topicName = topic.getTopicName();
 
         for (int i = 0; i < topic.getReadQueueNums(); i++) {
             int queueId = context.selectRandomQueue(topic.getReadQueueNums(), i);
             result = result.thenCompose(
-                popResult -> dequeue(context, topic.getTopicName(), queueId, popResult)
+                popResult -> dequeueService.dequeue(context, topicName, queueId, popResult)
             );
         }
 
         return result;
-    }
-
-    private CompletableFuture<PopResult> dequeue(PopContext context, String topicName, int queueId, PopResult lastResult) {
-        if (shouldStop(context, topicName, queueId, lastResult)) {
-            return stopDequeue(lastResult);
-        }
-
-        if (!validateOrderMessage(context, topicName, queueId)) {
-            return stopDequeue(lastResult);
-        }
-
-        DequeueRequest request = buildDequeueRequest(context, topicName, queueId);
-        return mqStore.dequeueAsync(request)
-            .thenApply(result -> PopConverter.toPopResult(context, result, lastResult));
-    }
-
-    private DequeueRequest buildDequeueRequest(PopContext context, String topicName, int queueId) {
-        PopRequest request = context.getRequest();
-        return DequeueRequest.builder()
-            .group(request.getConsumerGroup())
-            .topic(topicName)
-            .queueId(queueId)
-            .reviveQueueId(context.getReviveQueueId())
-            .num(request.getMaxNum())
-            .maxNum(request.getMaxNum())
-            .fifo(request.isFifo())
-            .dequeueTime(context.getPopTime())
-            .invisibleTime(request.getInvisibleTime())
-            .build();
-    }
-
-    private CompletableFuture<PopResult> stopDequeue(PopResult lastResult) {
-        CompletableFuture<PopResult> result = new CompletableFuture<>();
-        result.complete(lastResult);
-        return result;
-    }
-
-    private OrderRequest createOrderRequest(PopRequest request, String topicName, int queueId) {
-        return OrderRequest.builder()
-            .topicName(topicName)
-            .consumerGroup(request.getConsumerGroup())
-            .queueId(queueId)
-            .attemptId(request.getAttemptId())
-            .invisibleTime(request.getInvisibleTime())
-            .build();
-    }
-
-    private boolean validateOrderMessage(PopContext context, String topicName, int queueId) {
-        PopRequest request = context.getRequest();
-        if (!request.isFifo()) {
-            return true;
-        }
-
-        OrderRequest orderRequest = createOrderRequest(request, topicName, queueId);
-        if (!orderStore.isLocked(orderRequest)) {
-            return false;
-        }
-
-        inflightCounter.clear(topicName, request.getConsumerGroup(), queueId);
-        return true;
-    }
-
-    private boolean shouldStop(PopContext context, String topicName, int queueId, PopResult lastResult) {
-        PopRequest request = context.getRequest();
-        if (lastResult.countMessage() >= request.getMaxNum()) {
-            return true;
-        }
-
-        MessageConfig messageConfig = brokerConfig.getMessageConfig();
-        if (!messageConfig.isEnablePopThreshold()) {
-            return false;
-        }
-
-        long inflight = inflightCounter.get(topicName, request.getConsumerGroup(), queueId);
-        boolean status = inflight > messageConfig.getPopInflightThreshold();
-        if (status) {
-            log.warn("Stop pop because too much message inflight,"
-                + "topic={}; group={}, queueId={}",
-                topicName, request.getConsumerGroup(), queueId
-            );
-        }
-
-        return status;
     }
 
     private void addReceipt(PopContext context, PopResult result) {

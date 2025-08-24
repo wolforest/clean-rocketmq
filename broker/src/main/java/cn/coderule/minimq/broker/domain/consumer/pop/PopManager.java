@@ -11,10 +11,12 @@ import cn.coderule.minimq.broker.infra.store.SubscriptionStore;
 import cn.coderule.minimq.broker.infra.store.TopicStore;
 import cn.coderule.minimq.broker.server.bootstrap.BrokerContext;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
+import cn.coderule.minimq.domain.service.broker.consume.ReceiptHandler;
 
 public class PopManager implements Lifecycle {
     private BrokerConfig brokerConfig;
     private QueueSelector queueSelector;
+    private DequeueService dequeueService;
     private ContextBuilder contextBuilder;
 
     @Override
@@ -23,6 +25,7 @@ public class PopManager implements Lifecycle {
 
         initContextBuilder();
         initQueueSelector();
+        initDequeueService();
         initPopService();
     }
 
@@ -32,20 +35,6 @@ public class PopManager implements Lifecycle {
 
     @Override
     public void shutdown() throws Exception {
-    }
-
-    private void initPopService() {
-        PopService popService = new PopService(
-            brokerConfig,
-            BrokerContext.getBean(InflightCounter.class),
-            queueSelector,
-            BrokerContext.getBean(MQStore.class),
-            contextBuilder,
-            BrokerContext.getBean(DefaultReceiptHandler.class),
-            BrokerContext.getBean(ConsumeOrderStore.class)
-        );
-
-        BrokerContext.register(popService);
     }
 
     private void initContextBuilder() {
@@ -62,6 +51,25 @@ public class PopManager implements Lifecycle {
             brokerConfig,
             BrokerContext.getBean(RouteService.class)
         );
+    }
+
+    private void initDequeueService() {
+        dequeueService = new DequeueService(
+            brokerConfig,
+            BrokerContext.getBean(InflightCounter.class),
+            BrokerContext.getBean(MQStore.class),
+            BrokerContext.getBean(ConsumeOrderStore.class)
+        );
+    }
+
+    private void initPopService() {
+        ReceiptHandler receiptHandler = BrokerContext.getBean(DefaultReceiptHandler.class);
+        PopService popService = new PopService(
+            contextBuilder, queueSelector,
+            dequeueService, receiptHandler
+        );
+
+        BrokerContext.register(popService);
     }
 
 }
