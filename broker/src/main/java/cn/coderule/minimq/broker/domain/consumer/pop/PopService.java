@@ -3,7 +3,6 @@ package cn.coderule.minimq.broker.domain.consumer.pop;
 import cn.coderule.minimq.broker.domain.consumer.consumer.InflightCounter;
 import cn.coderule.minimq.domain.config.business.MessageConfig;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
-import cn.coderule.minimq.domain.domain.MessageQueue;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.PopContext;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.PopRequest;
@@ -12,13 +11,11 @@ import cn.coderule.minimq.domain.domain.consumer.consume.pop.helper.PopConverter
 import cn.coderule.minimq.domain.domain.consumer.receipt.MessageReceipt;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.domain.meta.order.OrderRequest;
-import cn.coderule.minimq.domain.domain.meta.topic.KeyBuilder;
 import cn.coderule.minimq.domain.domain.meta.topic.Topic;
 import cn.coderule.minimq.domain.service.broker.consume.ReceiptHandler;
 import cn.coderule.minimq.rpc.store.facade.ConsumeOrderFacade;
 import cn.coderule.minimq.rpc.store.facade.MQFacade;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.atomic.AtomicLong;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -32,8 +29,6 @@ public class PopService {
 
     private final MQFacade mqStore;
     private final ConsumeOrderFacade orderStore;
-
-    private final AtomicLong reviveCount = new AtomicLong(0);
 
     public PopService(
         BrokerConfig brokerConfig,
@@ -58,7 +53,7 @@ public class PopService {
     public CompletableFuture<PopResult> pop(PopRequest request) {
         PopContext context = contextBuilder.build(request);
 
-        selectQueue(context);
+        queueSelector.select(context);
         CompletableFuture<PopResult> result = fetchMessage(context);
         result.thenAccept(popResult -> addReceipt(context, popResult));
 
@@ -214,23 +209,4 @@ public class PopService {
         }
     }
 
-    private void selectQueue(PopContext context) {
-        MessageQueue messageQueue = queueSelector.select(
-            context.getRequest()
-        );
-        context.setMessageQueue(messageQueue);
-
-        selectReviveQueue(context);
-    }
-
-    private void selectReviveQueue(PopContext context) {
-        if (context.getRequest().isFifo()) {
-            context.setReviveQueueId(KeyBuilder.POP_ORDER_REVIVE_QUEUE);
-            return;
-        }
-
-        int queueNum = brokerConfig.getTopicConfig().getReviveQueueNum();
-        int queueId = (int) Math.abs(reviveCount.getAndIncrement() % queueNum);
-        context.setReviveQueueId(queueId);
-    }
 }

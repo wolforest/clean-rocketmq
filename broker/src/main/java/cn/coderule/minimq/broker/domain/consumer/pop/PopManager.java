@@ -59,6 +59,7 @@ public class PopManager implements Lifecycle {
 
     private void initQueueSelector() {
         queueSelector = new QueueSelector(
+            brokerConfig,
             BrokerContext.getBean(RouteService.class)
         );
     }
