@@ -15,7 +15,6 @@ import java.util.List;
 import lombok.NonNull;
 
 public class MessageService {
-    private final StoreConfig storeConfig;
     private final MessageConfig messageConfig;
     private final CommitLog commitLog;
     private final ConsumeQueueGateway consumeQueueGateway;
@@ -23,8 +22,8 @@ public class MessageService {
     public MessageService(
         StoreConfig storeConfig,
         CommitLog commitLog,
-        ConsumeQueueGateway consumeQueueGateway) {
-        this.storeConfig = storeConfig;
+        ConsumeQueueGateway consumeQueueGateway
+    ) {
         this.messageConfig = storeConfig.getMessageConfig();
 
         this.commitLog = commitLog;

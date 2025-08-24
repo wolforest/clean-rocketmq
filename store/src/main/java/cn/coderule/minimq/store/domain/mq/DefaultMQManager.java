@@ -6,6 +6,7 @@ import cn.coderule.minimq.domain.service.store.api.MQStore;
 import cn.coderule.minimq.domain.service.store.domain.commitlog.CommitLog;
 import cn.coderule.minimq.domain.service.store.domain.consumequeue.ConsumeQueueGateway;
 import cn.coderule.minimq.domain.service.store.domain.meta.ConsumeOffsetService;
+import cn.coderule.minimq.domain.service.store.domain.meta.ConsumeOrderService;
 import cn.coderule.minimq.domain.service.store.domain.mq.MQManager;
 import cn.coderule.minimq.domain.service.store.domain.mq.MQService;
 import cn.coderule.minimq.store.api.MQStoreImpl;
@@ -28,8 +29,8 @@ public class DefaultMQManager implements MQManager {
     public void initialize() throws Exception {
         dequeueLock = new DequeueLock();
 
-        initMQManager();
         initAckManager();
+        initMQManager();
     }
 
     @Override
@@ -57,25 +58,26 @@ public class DefaultMQManager implements MQManager {
         StoreContext.registerAPI(MQStore, MQStore.class);
     }
 
-
-    private void initAckManager() {
+    private void initAckManager() throws Exception {
         ackManager = new AckManager();
-        try {
-            ackManager.initialize();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        ackManager.initialize();
     }
 
     private MQService initMQService() {
         StoreConfig storeConfig  = StoreContext.getBean(StoreConfig.class);
-        CommitLog commitLog = StoreContext.getBean(CommitLog.class);
-        ConsumeQueueGateway consumeQueueGateway = StoreContext.getBean(ConsumeQueueGateway.class);
-        ConsumeOffsetService consumeOffsetService = StoreContext.getBean(ConsumeOffsetService.class);
 
-        this.enqueueService = new EnqueueService(commitLog, consumeQueueGateway);
-        MessageService messageService = new MessageService(storeConfig, commitLog, consumeQueueGateway);
-        DequeueService dequeueService = new DequeueService(dequeueLock, messageService, consumeOffsetService);
+        CommitLog commitLog = StoreContext.getBean(CommitLog.class);
+        AckService ackService = StoreContext.getBean(AckService.class);
+        ConsumeQueueGateway consumeQueue = StoreContext.getBean(ConsumeQueueGateway.class);
+        ConsumeOffsetService offsetService = StoreContext.getBean(ConsumeOffsetService.class);
+        ConsumeOrderService orderService = StoreContext.getBean(ConsumeOrderService.class);
+
+        this.enqueueService = new EnqueueService(commitLog, consumeQueue);
+        MessageService messageService = new MessageService(storeConfig, commitLog, consumeQueue);
+
+        DequeueService dequeueService = new DequeueService(
+            storeConfig, dequeueLock, messageService, ackService, offsetService, orderService
+        );
 
         MQService MQService = new DefaultMQService(enqueueService, dequeueService, messageService);
         StoreContext.register(MQService, MQService.class);

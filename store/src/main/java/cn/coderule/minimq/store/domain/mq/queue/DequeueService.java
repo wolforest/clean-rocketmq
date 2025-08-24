@@ -8,28 +8,36 @@ import cn.coderule.minimq.domain.core.lock.queue.DequeueLock;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.checkpoint.PopCheckPoint;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.helper.PopConverter;
 import cn.coderule.minimq.domain.service.store.domain.meta.ConsumeOffsetService;
+import cn.coderule.minimq.domain.service.store.domain.meta.ConsumeOrderService;
 import cn.coderule.minimq.store.domain.mq.ack.AckService;
 import java.util.concurrent.CompletableFuture;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class DequeueService {
+    private final StoreConfig storeConfig;
     private final DequeueLock dequeueLock;
+
+    private final AckService ackService;
     private final MessageService messageService;
     private final ConsumeOffsetService consumeOffsetService;
-
-    private AckService ackService;
-    private StoreConfig storeConfig;
+    private final ConsumeOrderService consumeOrderService;
 
     public DequeueService(
+        StoreConfig storeConfig,
         DequeueLock dequeueLock,
         MessageService messageService,
-        ConsumeOffsetService consumeOffsetService
+        AckService ackService,
+        ConsumeOffsetService consumeOffsetService,
+        ConsumeOrderService consumeOrderService
     ) {
+        this.storeConfig = storeConfig;
         this.dequeueLock = dequeueLock;
 
+        this.ackService = ackService;
         this.messageService = messageService;
         this.consumeOffsetService = consumeOffsetService;
+        this.consumeOrderService = consumeOrderService;
     }
 
     public CompletableFuture<DequeueResult> dequeueAsync(DequeueRequest request) {
