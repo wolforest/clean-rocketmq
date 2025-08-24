@@ -20,14 +20,14 @@ import io.netty.channel.Channel;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class PopContextBuilder {
+public class ContextBuilder {
     private final BrokerConfig brokerConfig;
     private final ConsumerRegister consumerRegister;
 
     private final TopicFacade topicFacade;
     private final SubscriptionFacade subscriptionFacade;
 
-    public PopContextBuilder(
+    public ContextBuilder(
         BrokerConfig brokerConfig,
         ConsumerRegister consumerRegister,
         TopicFacade topicFacade,
@@ -39,7 +39,7 @@ public class PopContextBuilder {
         this.subscriptionFacade = subscriptionFacade;
     }
 
-    public PopContext create(PopRequest request) {
+    public PopContext build(PopRequest request) {
         PopContext context = new PopContext(brokerConfig, request);
 
         loadTopic(context);

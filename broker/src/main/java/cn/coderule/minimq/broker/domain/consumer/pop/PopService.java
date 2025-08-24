@@ -27,7 +27,7 @@ public class PopService {
 
     private final InflightCounter inflightCounter;
     private final QueueSelector queueSelector;
-    private final PopContextBuilder popContextBuilder;
+    private final ContextBuilder contextBuilder;
     private final ReceiptHandler receiptHandler;
 
     private final MQFacade mqStore;
@@ -40,7 +40,7 @@ public class PopService {
         InflightCounter inflightCounter,
         QueueSelector queueSelector,
         MQFacade mqStore,
-        PopContextBuilder popContextBuilder,
+        ContextBuilder contextBuilder,
         ReceiptHandler receiptHandler,
         ConsumeOrderFacade orderStore
     ) {
@@ -49,14 +49,14 @@ public class PopService {
         this.queueSelector = queueSelector;
         this.receiptHandler = receiptHandler;
         this.inflightCounter = inflightCounter;
-        this.popContextBuilder = popContextBuilder;
+        this.contextBuilder = contextBuilder;
 
         this.mqStore = mqStore;
         this.orderStore = orderStore;
     }
 
     public CompletableFuture<PopResult> pop(PopRequest request) {
-        PopContext context = popContextBuilder.create(request);
+        PopContext context = contextBuilder.build(request);
 
         selectQueue(context);
         CompletableFuture<PopResult> result = fetchMessage(context);
@@ -87,12 +87,16 @@ public class PopService {
 
         int requestQueueId = context.getMessageQueue().getQueueId();
         if (requestQueueId >= 0) {
-            return result.thenCompose(popResult -> dequeue(context, topicName, requestQueueId, popResult));
+            return result.thenCompose(
+                popResult -> dequeue(context, topicName, requestQueueId, popResult)
+            );
         }
 
         for (int i = 0; i < topic.getReadQueueNums(); i++) {
             int queueId = context.selectRandomQueue(topic.getReadQueueNums(), i);
-            result = result.thenCompose(popResult -> dequeue(context, topicName, queueId, popResult));
+            result = result.thenCompose(
+                popResult -> dequeue(context, topicName, queueId, popResult)
+            );
         }
 
         return result;

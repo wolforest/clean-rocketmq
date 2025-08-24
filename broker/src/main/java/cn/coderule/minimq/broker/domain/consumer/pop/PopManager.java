@@ -15,7 +15,7 @@ import cn.coderule.minimq.domain.config.server.BrokerConfig;
 public class PopManager implements Lifecycle {
     private BrokerConfig brokerConfig;
     private QueueSelector queueSelector;
-    private PopContextBuilder contextBuilder;
+    private ContextBuilder contextBuilder;
 
     @Override
     public void initialize() throws Exception {
@@ -49,7 +49,7 @@ public class PopManager implements Lifecycle {
     }
 
     private void initContextBuilder() {
-        contextBuilder = new PopContextBuilder(
+        contextBuilder = new ContextBuilder(
             brokerConfig,
             BrokerContext.getBean(ConsumerRegister.class),
             BrokerContext.getBean(TopicStore.class),
