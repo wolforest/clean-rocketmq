@@ -73,6 +73,9 @@ public class DequeueService {
             request.getQueueId()
         );
 
+        // TODO: if offset less than 0, init offset
+        // TODO: get resetOffset if
+
         request.setOffset(offset);
     }
 

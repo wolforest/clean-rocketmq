@@ -69,14 +69,14 @@ public class DefaultMQManager implements MQManager {
         CommitLog commitLog = StoreContext.getBean(CommitLog.class);
         AckService ackService = StoreContext.getBean(AckService.class);
         ConsumeQueueGateway consumeQueue = StoreContext.getBean(ConsumeQueueGateway.class);
-        ConsumeOffsetService offsetService = StoreContext.getBean(ConsumeOffsetService.class);
+        ConsumeOffsetService consumeOffsetService = StoreContext.getBean(ConsumeOffsetService.class);
         ConsumeOrderService orderService = StoreContext.getBean(ConsumeOrderService.class);
 
         this.enqueueService = new EnqueueService(commitLog, consumeQueue);
         MessageService messageService = new MessageService(storeConfig, commitLog, consumeQueue);
 
         DequeueService dequeueService = new DequeueService(
-            storeConfig, dequeueLock, messageService, ackService, offsetService, orderService
+            storeConfig, dequeueLock, messageService, ackService, consumeOffsetService, orderService
         );
 
         MQService MQService = new DefaultMQService(enqueueService, dequeueService, messageService);
