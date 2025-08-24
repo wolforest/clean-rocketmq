@@ -2,6 +2,7 @@ package cn.coderule.minimq.domain.core.lock.queue;
 
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 import cn.coderule.minimq.domain.core.lock.TimedLock;
+import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueRequest;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -40,6 +41,10 @@ public class DequeueLock extends ServiceThread {
         }
     }
 
+    public boolean tryLock(DequeueRequest request) {
+        return tryLock(request.getGroup(), request.getTopic(), request.getQueueId());
+    }
+
     public boolean tryLock(String group, String topic, int queueId) {
         String key = createKey(group, topic, queueId);
         TimedLock lock = getLock(key);
@@ -48,6 +53,10 @@ public class DequeueLock extends ServiceThread {
         }
 
         return lock.tryLock();
+    }
+
+    public void unlock(DequeueRequest request) {
+        unlock(request.getGroup(), request.getTopic(), request.getQueueId());
     }
 
     public void unlock(String group, String topic, int queueId) {

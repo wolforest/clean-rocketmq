@@ -38,11 +38,7 @@ public class DequeueService {
     }
 
     public DequeueResult dequeue(DequeueRequest request) {
-        String group = request.getGroup();
-        String topic = request.getTopic();
-        int queueId = request.getQueueId();
-
-        if (!dequeueLock.tryLock(group, topic, queueId)) {
+        if (!dequeueLock.tryLock(request)) {
             return DequeueResult.lockFailed();
         }
 
@@ -58,7 +54,7 @@ public class DequeueService {
         } catch (Throwable t) {
             return DequeueResult.unknownError(t);
         } finally {
-            dequeueLock.unlock(group, topic, queueId);
+            dequeueLock.unlock(request);
         }
     }
 
