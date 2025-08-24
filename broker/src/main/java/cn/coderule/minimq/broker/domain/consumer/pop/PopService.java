@@ -67,8 +67,9 @@ public class PopService {
             );
         }
 
-        for (int i = 0; i < topic.getReadQueueNums(); i++) {
-            int queueId = context.selectRandomQueue(topic.getReadQueueNums(), i);
+        int queueNum = topic.getReadQueueNums();
+        for (int i = 0; i < queueNum; i++) {
+            int queueId = context.selectRandomQueue(queueNum, i);
             result = result.thenCompose(
                 popResult -> dequeueService.dequeue(context, topicName, queueId, popResult)
             );
@@ -81,8 +82,9 @@ public class PopService {
         Topic topic = context.getRetryTopic();
         String topicName = topic.getTopicName();
 
-        for (int i = 0; i < topic.getReadQueueNums(); i++) {
-            int queueId = context.selectRandomQueue(topic.getReadQueueNums(), i);
+        int queueNum = topic.getReadQueueNums();
+        for (int i = 0; i < queueNum; i++) {
+            int queueId = context.selectRandomQueue(queueNum, i);
             result = result.thenCompose(
                 popResult -> dequeueService.dequeue(context, topicName, queueId, popResult)
             );
