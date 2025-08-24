@@ -35,7 +35,12 @@ public class DequeueService {
         this.orderStore = orderStore;
     }
 
-    public CompletableFuture<PopResult> dequeue(PopContext context, String topicName, int queueId, PopResult lastResult) {
+    public CompletableFuture<PopResult> dequeue(
+        PopContext context,
+        String topicName,
+        int queueId,
+        PopResult lastResult
+    ) {
         if (shouldStop(context, topicName, queueId, lastResult)) {
             return stopDequeue(lastResult);
         }
@@ -54,8 +59,8 @@ public class DequeueService {
         DequeueResult dequeueResult,
         String topicName,
         int queueId,
-        PopResult lastResult)
-    {
+        PopResult lastResult
+    ) {
         String consumerGroup = context.getRequest().getConsumerGroup();
         inflightCounter.increment(topicName, consumerGroup, queueId, dequeueResult.countMessage());
 
