@@ -60,4 +60,12 @@ public class PopContext implements Serializable {
         return (random + count) % queueNum;
     }
 
+    public boolean hasRequestQueueId() {
+        return request.getQueueId() >= 0;
+    }
+
+    public int getRequestQueueId() {
+        return request.getQueueId();
+    }
+
 }
