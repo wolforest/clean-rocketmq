@@ -13,8 +13,13 @@ import lombok.extern.slf4j.Slf4j;
 public class DequeueLock extends ServiceThread {
     private static final int CLEAN_INTERVAL = 1000 * 60;
     private static final int CLEAN_TIMEOUT = 1000 * 60;
+    private static final int LOCK_CAPACITY = 100_000;
 
-    private final ConcurrentMap<String, TimedLock> lockMap = new ConcurrentHashMap<>(100_000);
+    private final ConcurrentMap<String, TimedLock> lockMap;
+
+    public DequeueLock() {
+        this.lockMap = new ConcurrentHashMap<>(LOCK_CAPACITY);
+    }
 
     @Override
     public String getServiceName() {
@@ -23,6 +28,8 @@ public class DequeueLock extends ServiceThread {
 
     @Override
     public void run() {
+        log.info("dequeue lock start running...");
+
         while (!this.isStopped()) {
             try {
                 this.await(CLEAN_INTERVAL);
@@ -31,6 +38,8 @@ public class DequeueLock extends ServiceThread {
                 log.error("{} service has exception. ", this.getServiceName(), e);
             }
         }
+
+        log.info("dequeue lock stop running");
     }
 
     public void lock(String group, String topic, int queueId) {
