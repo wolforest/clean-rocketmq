@@ -448,6 +448,11 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
     }
 
     @Override
+    public boolean isInMemory(long position, int size) {
+        return false;
+    }
+
+    @Override
     public int getFlushPosition() {
         return FLUSH_POSITION_UPDATER.get(this);
     }

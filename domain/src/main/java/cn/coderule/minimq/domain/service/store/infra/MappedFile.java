@@ -196,4 +196,7 @@ public interface MappedFile {
     int getFlushPosition();
     int getCommitPosition();
     long getStoreTimestamp();
+
+    boolean isInMemory(long position, int size);
+
 }
