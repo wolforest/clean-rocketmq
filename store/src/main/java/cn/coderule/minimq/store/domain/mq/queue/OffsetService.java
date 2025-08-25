@@ -90,6 +90,10 @@ public class OffsetService {
      * @return offset
      */
     private long initOffset(DequeueRequest request) {
+        if (request.isConsumeFromStart()) {
+            return consumeQueue.getMinOffset(request.getTopic(), request.getQueueId());
+        }
+
         return 0;
     }
 

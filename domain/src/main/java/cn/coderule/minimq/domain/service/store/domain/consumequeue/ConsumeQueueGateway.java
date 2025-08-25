@@ -16,4 +16,6 @@ public interface ConsumeQueueGateway {
     long getMaxOffset(String topic, int queueId);
 
     void deleteByTopic(String topicName);
+
+    boolean isOffsetInCache(String topic, int queueId, long offset, int size);
 }

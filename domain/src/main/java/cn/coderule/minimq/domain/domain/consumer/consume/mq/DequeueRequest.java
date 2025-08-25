@@ -31,10 +31,15 @@ public class DequeueRequest implements Serializable {
     private boolean fifo = false;
     @Builder.Default
     private boolean checkResetOffset = false;
+    @Builder.Default
     private boolean commitInitOffset = false;
 
     @Builder.Default
     private MessageFilter filter = null;
     private ConsumeStrategy consumeStrategy;
+
+    public boolean isConsumeFromStart() {
+        return consumeStrategy == ConsumeStrategy.CONSUME_FROM_START;
+    }
 }
 
