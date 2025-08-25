@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class DequeueRequest implements Serializable {
     private String storeGroup;
+    private String attemptId;
 
     private String group;
     private String topic;
@@ -32,7 +33,7 @@ public class DequeueRequest implements Serializable {
     @Builder.Default
     private boolean checkResetOffset = false;
     @Builder.Default
-    private boolean commitInitOffset = false;
+    private boolean commitInitOffset = true;
 
     @Builder.Default
     private MessageFilter filter = null;

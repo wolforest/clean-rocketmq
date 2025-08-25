@@ -16,6 +16,7 @@ import cn.coderule.minimq.domain.domain.consumer.consume.pop.checkpoint.PopCheck
 import cn.coderule.minimq.domain.domain.consumer.receipt.MessageReceipt;
 import cn.coderule.minimq.domain.domain.consumer.receipt.ReceiptHandle;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
+import cn.coderule.minimq.domain.domain.meta.order.OrderRequest;
 import cn.coderule.minimq.domain.domain.meta.topic.KeyBuilder;
 import cn.coderule.minimq.domain.utils.MessageUtils;
 import com.alibaba.fastjson2.JSON;
@@ -221,6 +222,10 @@ public class PopConverter {
         }
 
         return newStatus;
+    }
+
+    public static OrderRequest toOrderRequest(DequeueRequest request, DequeueResult result) {
+        return null;
     }
 
 }

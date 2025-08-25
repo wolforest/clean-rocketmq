@@ -6,6 +6,8 @@ import cn.coderule.minimq.domain.domain.cluster.store.QueueUnit;
 import cn.coderule.minimq.domain.domain.cluster.store.SelectedMappedBuffer;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueResult;
+import cn.coderule.minimq.domain.domain.consumer.consume.pop.helper.PopConverter;
+import cn.coderule.minimq.domain.domain.meta.order.OrderRequest;
 import cn.coderule.minimq.domain.service.store.domain.commitlog.CommitLog;
 import cn.coderule.minimq.domain.service.store.domain.consumequeue.ConsumeQueueGateway;
 import cn.coderule.minimq.domain.service.store.domain.meta.ConsumeOffsetService;
@@ -15,7 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class OffsetService {
-    private final StoreConfig storeConfig;
     private final MessageConfig messageConfig;
 
     private final CommitLog commitLog;
@@ -33,7 +34,6 @@ public class OffsetService {
         ConsumeOffsetService consumeOffsetService,
         ConsumeOrderService consumeOrderService
     ) {
-        this.storeConfig = storeConfig;
         this.messageConfig = storeConfig.getMessageConfig();
 
         this.commitLog = commitLog;
@@ -74,10 +74,20 @@ public class OffsetService {
     }
 
     public void updateOffset(DequeueRequest request, DequeueResult result) {
-        updateOffset(request, result.getNextOffset());
+        updateOrderInfo(request, result);
+        updateConsumeOffset(request, result.getNextOffset());
     }
 
-    public void updateOffset(DequeueRequest request, long newOffset) {
+    private void updateOrderInfo(DequeueRequest request, DequeueResult result) {
+        if (!request.isFifo()) {
+            return;
+        }
+
+        OrderRequest orderRequest = PopConverter.toOrderRequest(request, result);
+        consumeOrderService.lock(orderRequest);
+    }
+
+    private void updateConsumeOffset(DequeueRequest request, long newOffset) {
         if (newOffset <= 0L) {
             return;
         }
@@ -117,7 +127,7 @@ public class OffsetService {
         long maxOffset = getMaxOffset(request);
 
         if (request.isCommitInitOffset()) {
-            updateOffset(request, maxOffset);
+            updateConsumeOffset(request, maxOffset);
         }
 
         return maxOffset;

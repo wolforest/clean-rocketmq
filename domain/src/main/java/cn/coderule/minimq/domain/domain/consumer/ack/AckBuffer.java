@@ -22,7 +22,6 @@ public class AckBuffer implements Serializable {
     private final ConcurrentMap<String, PopCheckPointWrapper> buffer;
     private final ConcurrentMap<String, QueueWithTime<PopCheckPointWrapper>> commitOffsets;
 
-
     public AckBuffer(MessageConfig messageConfig) {
         this.messageConfig = messageConfig;
 

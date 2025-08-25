@@ -70,6 +70,7 @@ public class DequeueService {
     private DequeueRequest buildDequeueRequest(PopContext context, String topicName, int queueId) {
         PopRequest request = context.getRequest();
         return DequeueRequest.builder()
+            .attemptId(request.getAttemptId())
             .group(request.getConsumerGroup())
             .topic(topicName)
             .queueId(queueId)
