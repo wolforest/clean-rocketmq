@@ -28,13 +28,25 @@ public class OffsetService {
     }
 
     public long getOffset(DequeueRequest request) {
-        long offset = consumeOffsetService.getOffset(
+        long offset;
+        if (request.isCheckResetOffset()) {
+            offset = getResetOffset(request);
+            if (offset > 0) {
+                return offset;
+            }
+        }
+
+        offset = consumeOffsetService.getOffset(
             request.getGroup(),
             request.getTopic(),
             request.getQueueId()
         );
 
-        return offset;
+        if (offset < 0) {
+            offset = initOffset(request);
+        }
+
+        return mergeBufferOffset(request, offset);
     }
 
     public void updateOffset(DequeueRequest request, DequeueResult result) {
@@ -50,5 +62,18 @@ public class OffsetService {
             newOffset
         );
     }
+
+    private long initOffset(DequeueRequest request) {
+        return 0;
+    }
+
+    private long getResetOffset(DequeueRequest request) {
+        return -1;
+    }
+
+    private long mergeBufferOffset(DequeueRequest request, long offset) {
+        return -1;
+    }
+
 
 }
