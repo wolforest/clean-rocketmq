@@ -27,6 +27,18 @@ public class OffsetService {
         this.consumeOrderService = consumeOrderService;
     }
 
+    /**
+     * get offset
+     *  - return reset offset if checkResetOffset is true
+     *      and reset offset exists
+     *  - get offset from consume offset
+     *      init consume offset if not exists
+     *  - get buffered offset
+     *      return max(buffered offset, offset)
+     *
+     * @param request dequeue request
+     * @return offset
+     */
     public long getOffset(DequeueRequest request) {
         long offset;
         if (request.isCheckResetOffset()) {
