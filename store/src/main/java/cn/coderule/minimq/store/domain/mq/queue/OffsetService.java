@@ -27,8 +27,12 @@ public class OffsetService {
         this.consumeOrderService = consumeOrderService;
     }
 
-    public long getOffset(String group, String topic, int queueId) {
-        return consumeOffsetService.getOffset(group, topic, queueId);
+    public long getOffset(DequeueRequest request) {
+        return consumeOffsetService.getOffset(
+            request.getGroup(),
+            request.getTopic(),
+            request.getQueueId()
+        );
     }
 
     public void updateOffset(DequeueRequest request, DequeueResult result) {

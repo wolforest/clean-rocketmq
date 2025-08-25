@@ -1,5 +1,6 @@
 package cn.coderule.minimq.domain.domain.consumer.consume.mq;
 
+import cn.coderule.minimq.domain.core.enums.consume.ConsumeStrategy;
 import cn.coderule.minimq.domain.service.store.domain.mq.MessageFilter;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
@@ -31,5 +32,6 @@ public class DequeueRequest implements Serializable {
 
     @Builder.Default
     private MessageFilter filter = null;
+    private ConsumeStrategy consumeStrategy;
 }
 

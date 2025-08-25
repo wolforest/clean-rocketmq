@@ -11,7 +11,7 @@ import cn.coderule.minimq.broker.server.grpc.converter.GrpcConverter;
 import cn.coderule.minimq.broker.server.grpc.service.channel.SettingManager;
 import cn.coderule.minimq.domain.config.network.GrpcConfig;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
-import cn.coderule.minimq.domain.core.enums.consume.ConsumeInitMode;
+import cn.coderule.minimq.domain.core.enums.consume.ConsumeStrategy;
 import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import cn.coderule.minimq.domain.domain.cluster.heartbeat.SubscriptionData;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.PopRequest;
@@ -102,7 +102,7 @@ public class PopService {
             .maxNum(request.getBatchSize())
             .invisibleTime(invisibleTime)
             .pollTime(pollTime)
-            .initMode(ConsumeInitMode.MAX)
+            .consumeStrategy(ConsumeStrategy.CONSUME_FROM_LATEST)
             .subscriptionData(subscriptionData)
             .fifo(settings.getSubscription().getFifo())
             .attemptId(request.hasAttemptId() ? request.getAttemptId() : null)

@@ -1,5 +1,6 @@
 package cn.coderule.minimq.domain.domain.consumer.consume.pop;
 
+import cn.coderule.minimq.domain.core.enums.consume.ConsumeStrategy;
 import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import cn.coderule.minimq.domain.domain.cluster.heartbeat.SubscriptionData;
 import cn.coderule.minimq.domain.service.broker.consume.PopFilter;
@@ -27,7 +28,8 @@ public class PopRequest implements Serializable {
     private long invisibleTime;
     private long pollTime;
     private long remainTime;
-    private int initMode;
+
+    private ConsumeStrategy consumeStrategy;
 
     private boolean autoRenew;
     private boolean fifo;

@@ -79,6 +79,7 @@ public class DequeueService {
             .fifo(request.isFifo())
             .dequeueTime(context.getPopTime())
             .invisibleTime(request.getInvisibleTime())
+            .consumeStrategy(request.getConsumeStrategy())
             .build();
     }
 
