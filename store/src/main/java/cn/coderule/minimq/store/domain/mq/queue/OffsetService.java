@@ -1,5 +1,6 @@
 package cn.coderule.minimq.store.domain.mq.queue;
 
+import cn.coderule.minimq.domain.config.business.MessageConfig;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.domain.domain.cluster.store.QueueUnit;
 import cn.coderule.minimq.domain.domain.cluster.store.SelectedMappedBuffer;
@@ -14,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class OffsetService {
     private final StoreConfig storeConfig;
+    private final MessageConfig messageConfig;
 
     private final CommitLog commitLog;
     private final ConsumeQueueGateway consumeQueue;
@@ -30,6 +32,7 @@ public class OffsetService {
         ConsumeOrderService consumeOrderService
     ) {
         this.storeConfig = storeConfig;
+        this.messageConfig = storeConfig.getMessageConfig();
 
         this.commitLog = commitLog;
         this.consumeQueue = consumeQueue;
@@ -116,8 +119,24 @@ public class OffsetService {
         return -1;
     }
 
-    private boolean isOffsetInCache(DequeueRequest request) {
-        QueueUnit firstUnit = consumeQueue.get(request.getTopic(), request.getQueueId(), request.getOffset());
+    private long getMaxOffset(DequeueRequest request) {
+        if (messageConfig.isInitOffsetByQueue()) {
+            long minOffset = consumeQueue.getMinOffset(request.getTopic(), request.getQueueId());
+            if (minOffset <= 0 && isOffsetInQueue(request.getTopic(), request.getQueueId())) {
+                return 0;
+            }
+        }
+
+        long maxOffset = consumeQueue.getMaxOffset(request.getTopic(), request.getQueueId());
+        if (maxOffset < 0) {
+            return 0;
+        }
+
+        return maxOffset;
+    }
+
+    private boolean isOffsetInQueue(String topic, int queueId) {
+        QueueUnit firstUnit = consumeQueue.get(topic, queueId, 0);
         if (firstUnit == null) {
             return false;
         }

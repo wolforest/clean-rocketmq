@@ -78,6 +78,10 @@ public class MessageConfig implements Serializable {
     private int popCkOffsetMaxQueueSize = 20000;
     private boolean enablePopBatchAck = false;
     private boolean enableNotifyAfterPopOrderLockRelease = true;
-    private boolean initPopOffsetByCheckMsgInMem = true;
+
+    /**
+     * init offset by consume queue and commitLog
+     */
+    private boolean initOffsetByQueue = true;
 
 }
