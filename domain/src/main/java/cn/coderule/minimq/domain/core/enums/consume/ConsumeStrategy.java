@@ -1,17 +1,20 @@
 package cn.coderule.minimq.domain.core.enums.consume;
 
+import lombok.Getter;
+
+@Getter
 public enum ConsumeStrategy {
-    CONSUME_FROM_START,
-    CONSUME_FROM_LATEST,
+    CONSUME_FROM_START(10),
+    CONSUME_FROM_LATEST(20),
+    CONSUME_FROM_LAST_OFFSET(30),
 
-    CONSUME_FROM_LAST_OFFSET,
+    CONSUME_FROM_FIRST_OFFSET(40),
+    CONSUME_FROM_TIMESTAMP(50),
+    ;
 
-    @Deprecated
-    CONSUME_FROM_LAST_OFFSET_AND_FROM_MIN_WHEN_BOOT_FIRST,
-    @Deprecated
-    CONSUME_FROM_MIN_OFFSET,
-    @Deprecated
-    CONSUME_FROM_MAX_OFFSET,
-    CONSUME_FROM_FIRST_OFFSET,
-    CONSUME_FROM_TIMESTAMP,
+    private final int code;
+
+    ConsumeStrategy(int code) {
+        this.code = code;
+    }
 }

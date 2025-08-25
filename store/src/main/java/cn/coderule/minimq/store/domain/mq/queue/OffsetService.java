@@ -28,11 +28,13 @@ public class OffsetService {
     }
 
     public long getOffset(DequeueRequest request) {
-        return consumeOffsetService.getOffset(
+        long offset = consumeOffsetService.getOffset(
             request.getGroup(),
             request.getTopic(),
             request.getQueueId()
         );
+
+        return offset;
     }
 
     public void updateOffset(DequeueRequest request, DequeueResult result) {
