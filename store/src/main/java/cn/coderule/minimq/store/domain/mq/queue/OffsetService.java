@@ -36,12 +36,7 @@ public class OffsetService {
             }
         }
 
-        offset = consumeOffsetService.getOffset(
-            request.getGroup(),
-            request.getTopic(),
-            request.getQueueId()
-        );
-
+        offset = getConsumeOffset(request);
         if (offset < 0) {
             offset = initOffset(request);
         }
@@ -60,6 +55,14 @@ public class OffsetService {
             request.getTopic(),
             request.getQueueId(),
             newOffset
+        );
+    }
+
+    private long getConsumeOffset(DequeueRequest request) {
+        return consumeOffsetService.getOffset(
+            request.getGroup(),
+            request.getTopic(),
+            request.getQueueId()
         );
     }
 
