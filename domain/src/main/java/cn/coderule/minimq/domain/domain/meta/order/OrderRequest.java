@@ -18,18 +18,20 @@ public class OrderRequest implements Serializable {
     private String storeGroup;
 
     String attemptId;
-    private boolean isRetry;
+    @Builder.Default
+    private boolean isRetry = false;
 
     private String topicName;
     private String consumerGroup;
     private int queueId;
 
-    private long popTime;
+    private long dequeueTime;
     private long invisibleTime;
 
     private long queueOffset;
     private List<Long> offsetList;
-    StringBuilder orderInfoBuilder;
+    @Builder.Default
+    StringBuilder orderInfoBuilder = new StringBuilder(64);
 
     public String getKey() {
         return OrderUtils.buildKey(topicName, consumerGroup);

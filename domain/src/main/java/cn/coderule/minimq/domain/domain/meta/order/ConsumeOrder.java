@@ -66,6 +66,7 @@ public class ConsumeOrder implements Serializable {
 
         OrderInfo orderInfo = updateOrderInfo(map, request);
         int minConsumeTimes = updateOffsetCount(orderInfo, request);
+
         ExtraInfoUtils.buildQueueIdOrderCountInfo(
             request.getOrderInfoBuilder(), request.getTopicName(), request.getQueueId(), minConsumeTimes
         );
@@ -93,9 +94,9 @@ public class ConsumeOrder implements Serializable {
             return -1;
         }
 
-        if (request.getPopTime() != orderInfo.getPopTime()) {
+        if (request.getDequeueTime() != orderInfo.getPopTime()) {
             log.warn("OrderInfo popTime is not equal, key={}, offset={}, popTime={}, orderInfo={}",
-                key, request.getQueueOffset(), request.getPopTime(), orderInfo);
+                key, request.getQueueOffset(), request.getDequeueTime(), orderInfo);
             return -2;
         }
 
@@ -116,7 +117,7 @@ public class ConsumeOrder implements Serializable {
             return;
         }
 
-        if (request.getPopTime() != orderInfo.getPopTime()) {
+        if (request.getDequeueTime() != orderInfo.getPopTime()) {
             log.warn("OrderInfo popTime is not equal, request={}, orderInfo={}",
                 request, orderInfo);
             return;

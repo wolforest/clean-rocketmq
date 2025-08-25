@@ -225,7 +225,18 @@ public class PopConverter {
     }
 
     public static OrderRequest toOrderRequest(DequeueRequest request, DequeueResult result) {
-        return null;
+        return OrderRequest.builder()
+            .requestContext(request.getRequestContext())
+            .storeGroup(request.getStoreGroup())
+            .attemptId(request.getAttemptId())
+            .topicName(request.getTopic())
+            .consumerGroup(request.getGroup())
+            .queueId(request.getQueueId())
+            .dequeueTime(request.getDequeueTime())
+            .invisibleTime(request.getInvisibleTime())
+            .queueOffset(request.getOffset())
+            .offsetList(result.getOffsetList())
+            .build();
     }
 
 }

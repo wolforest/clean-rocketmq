@@ -4,7 +4,7 @@ public class OrderConverter {
     public static OrderInfo toOrderInfo(OrderRequest request) {
         return OrderInfo.builder()
             .attemptId(request.getAttemptId())
-            .popTime(request.getPopTime())
+            .popTime(request.getDequeueTime())
             .invisibleTime(request.getInvisibleTime())
             .offsetList(OrderUtils.buildOffsetList(request.getOffsetList()))
             .lastConsumeTimestamp(System.currentTimeMillis())
