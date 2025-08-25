@@ -71,7 +71,7 @@ public class AckService {
         }
     }
 
-    public long getBufferedOffset(String topic, String group, int queueId) {
+    public long getBufferedOffset(String group, String topic, int queueId) {
         String lockKey = KeyBuilder.buildConsumeKey(topic, group, queueId);
         return ackBuffer.getLatestOffset(lockKey);
     }

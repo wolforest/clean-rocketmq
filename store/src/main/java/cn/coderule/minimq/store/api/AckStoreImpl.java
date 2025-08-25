@@ -24,6 +24,6 @@ public class AckStoreImpl implements AckStore {
 
     @Override
     public long getLatestOffset(String topic, String group, int queueId) {
-        return ackService.getBufferedOffset(topic, group, queueId);
+        return ackService.getBufferedOffset(group, topic, queueId);
     }
 }

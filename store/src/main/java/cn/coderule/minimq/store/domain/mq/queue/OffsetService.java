@@ -10,6 +10,7 @@ import cn.coderule.minimq.domain.service.store.domain.commitlog.CommitLog;
 import cn.coderule.minimq.domain.service.store.domain.consumequeue.ConsumeQueueGateway;
 import cn.coderule.minimq.domain.service.store.domain.meta.ConsumeOffsetService;
 import cn.coderule.minimq.domain.service.store.domain.meta.ConsumeOrderService;
+import cn.coderule.minimq.store.domain.mq.ack.AckService;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -18,15 +19,16 @@ public class OffsetService {
     private final MessageConfig messageConfig;
 
     private final CommitLog commitLog;
+    private final AckService ackService;
     private final ConsumeQueueGateway consumeQueue;
 
     private final ConsumeOffsetService consumeOffsetService;
     private final ConsumeOrderService consumeOrderService;
 
-
     public OffsetService(
         StoreConfig storeConfig,
         CommitLog commitLog,
+        AckService ackService,
         ConsumeQueueGateway consumeQueue,
         ConsumeOffsetService consumeOffsetService,
         ConsumeOrderService consumeOrderService
@@ -35,6 +37,7 @@ public class OffsetService {
         this.messageConfig = storeConfig.getMessageConfig();
 
         this.commitLog = commitLog;
+        this.ackService = ackService;
         this.consumeQueue = consumeQueue;
 
         this.consumeOffsetService = consumeOffsetService;
@@ -125,7 +128,12 @@ public class OffsetService {
     }
 
     private long mergeBufferOffset(DequeueRequest request, long offset) {
-        return -1;
+        long bufferOffset = ackService.getBufferedOffset(request.getGroup(), request.getTopic(), request.getQueueId());
+        if (bufferOffset < 0) {
+            return offset;
+        }
+
+        return Math.max(offset, bufferOffset);
     }
 
     private long getMaxOffset(DequeueRequest request) {

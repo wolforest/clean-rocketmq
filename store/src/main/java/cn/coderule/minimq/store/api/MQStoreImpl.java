@@ -12,11 +12,9 @@ import cn.coderule.minimq.domain.domain.consumer.consume.mq.QueueResult;
 import cn.coderule.minimq.domain.domain.producer.EnqueueRequest;
 import cn.coderule.minimq.domain.domain.producer.EnqueueResult;
 import cn.coderule.minimq.domain.service.store.api.MQStore;
-import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.service.store.domain.consumequeue.ConsumeQueueGateway;
 import cn.coderule.minimq.domain.service.store.domain.mq.MQService;
 import cn.coderule.minimq.store.domain.mq.ack.AckService;
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public class MQStoreImpl implements MQStore {
@@ -82,8 +80,7 @@ public class MQStoreImpl implements MQStore {
     @Override
     public QueueResult getBufferedOffset(OffsetRequest request) {
         long offset = ackService.getBufferedOffset(
-            request.getTopicName(),
-            request.getGroupName(),
+            request.getGroupName(), request.getTopicName(),
             request.getQueueId()
         );
 
