@@ -71,7 +71,10 @@ public class OffsetService {
     }
 
     public void updateOffset(DequeueRequest request, DequeueResult result) {
-        long newOffset = result.getNextOffset();
+        updateOffset(request, result.getNextOffset());
+    }
+
+    public void updateOffset(DequeueRequest request, long newOffset) {
         if (newOffset <= 0L) {
             return;
         }
@@ -108,7 +111,13 @@ public class OffsetService {
             return consumeQueue.getMinOffset(request.getTopic(), request.getQueueId());
         }
 
-        return 0;
+        long maxOffset = getMaxOffset(request);
+
+        if (request.isCommitInitOffset()) {
+            updateOffset(request, maxOffset);
+        }
+
+        return maxOffset;
     }
 
     private long getResetOffset(DequeueRequest request) {
