@@ -143,6 +143,17 @@ public class DefaultCommitLog implements CommitLog {
     }
 
     @Override
+    public SelectedMappedBuffer selectBuffer(long offset, int size) {
+        MappedFile mappedFile = mappedFileQueue.getMappedFileByOffset(offset);
+        if (mappedFile == null) {
+            return null;
+        }
+
+        int position = (int) (offset % commitConfig.getFileSize());
+        return mappedFile.select(position, size);
+    }
+
+    @Override
     public long getMinOffset() {
         return mappedFileQueue.getMinOffset();
     }

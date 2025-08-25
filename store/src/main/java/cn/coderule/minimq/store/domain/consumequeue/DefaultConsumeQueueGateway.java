@@ -57,11 +57,6 @@ public class DefaultConsumeQueueGateway implements ConsumeQueueGateway {
 
     }
 
-    @Override
-    public boolean isOffsetInCache(String topic, int queueId, long offset, int size) {
-        return false;
-    }
-
     private ConsumeQueue getQueueStore(String topic, int queueId) {
         return consumeQueueFactory.getOrCreate(topic, queueId);
     }

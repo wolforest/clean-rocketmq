@@ -1,8 +1,10 @@
 package cn.coderule.minimq.store.domain.mq.queue;
 
 import cn.coderule.minimq.domain.config.server.StoreConfig;
+import cn.coderule.minimq.domain.domain.cluster.store.QueueUnit;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueResult;
+import cn.coderule.minimq.domain.service.store.domain.commitlog.CommitLog;
 import cn.coderule.minimq.domain.service.store.domain.consumequeue.ConsumeQueueGateway;
 import cn.coderule.minimq.domain.service.store.domain.meta.ConsumeOffsetService;
 import cn.coderule.minimq.domain.service.store.domain.meta.ConsumeOrderService;
@@ -11,18 +13,26 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class OffsetService {
     private final StoreConfig storeConfig;
+
+    private final CommitLog commitLog;
+    private final ConsumeQueueGateway consumeQueue;
+
     private final ConsumeOffsetService consumeOffsetService;
     private final ConsumeOrderService consumeOrderService;
-    private final ConsumeQueueGateway consumeQueue;
+
 
     public OffsetService(
         StoreConfig storeConfig,
+        CommitLog commitLog,
+        ConsumeQueueGateway consumeQueue,
         ConsumeOffsetService consumeOffsetService,
-        ConsumeOrderService consumeOrderService,
-        ConsumeQueueGateway consumeQueue
+        ConsumeOrderService consumeOrderService
     ) {
         this.storeConfig = storeConfig;
+
+        this.commitLog = commitLog;
         this.consumeQueue = consumeQueue;
+
         this.consumeOffsetService = consumeOffsetService;
         this.consumeOrderService = consumeOrderService;
     }
@@ -103,6 +113,19 @@ public class OffsetService {
 
     private long mergeBufferOffset(DequeueRequest request, long offset) {
         return -1;
+    }
+
+    private boolean isOffsetInCache(DequeueRequest request) {
+        QueueUnit firstUnit = consumeQueue.get(request.getTopic(), request.getQueueId(), request.getOffset());
+        if (firstUnit == null) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private boolean isOffsetInCommitLog(long offset, int size) {
+        return false;
     }
 
 

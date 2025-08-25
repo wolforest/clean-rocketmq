@@ -43,6 +43,7 @@ public interface CommitLog {
 
     /**
      * Raw data insertion for M/S mode
+     *
      * @param offset commitLog offset
      * @param data data
      * @param start data start position
@@ -53,8 +54,18 @@ public interface CommitLog {
 
     /**
      * Raw data selection for M/S mode
+     *
      * @param offset commitLog offset
      * @return selected mapped buffer
      */
     SelectedMappedBuffer selectBuffer(long offset);
+
+    /**
+     * Raw data selection for M/S mode
+     *
+     * @param offset commitLog offset
+     * @param size selected size
+     * @return selected mapped buffer
+     */
+    SelectedMappedBuffer selectBuffer(long offset, int size);
 }
