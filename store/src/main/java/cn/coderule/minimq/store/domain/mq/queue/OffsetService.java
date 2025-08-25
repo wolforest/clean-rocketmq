@@ -122,7 +122,7 @@ public class OffsetService {
             return false;
         }
 
-        return true;
+        return isOffsetInCommitLog(firstUnit.getQueueOffset(), firstUnit.getMessageSize());
     }
 
     private boolean isOffsetInCommitLog(long offset, int size) {
