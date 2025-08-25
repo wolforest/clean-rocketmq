@@ -142,7 +142,6 @@ public class MessageSender implements Lifecycle {
     private ProduceContext createContext(RequestContext requestContext, MessageBO messageBO) {
         ProduceContext produceContext = ProduceContext.from(requestContext, messageBO);
 
-
         getTopic(produceContext);
         checkCleanupPolicy(produceContext);
         addMessageInfo(produceContext);
@@ -164,9 +163,7 @@ public class MessageSender implements Lifecycle {
     }
 
     private Consumer<EnqueueResult> sendCallback(ProduceContext context) {
-        return result -> {
-            hookManager.postProduce(context);
-        };
+        return result -> hookManager.postProduce(context);
     }
 
     private void selectQueue(ProduceContext produceContext) {

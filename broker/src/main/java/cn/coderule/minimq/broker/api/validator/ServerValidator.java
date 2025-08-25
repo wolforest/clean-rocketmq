@@ -5,7 +5,7 @@ import cn.coderule.minimq.domain.core.enums.code.InvalidCode;
 import cn.coderule.minimq.domain.core.exception.InvalidParameterException;
 
 public class ServerValidator {
-    private BrokerConfig brokerConfig;
+    private final BrokerConfig brokerConfig;
 
     public ServerValidator(BrokerConfig brokerConfig) {
         this.brokerConfig = brokerConfig;
