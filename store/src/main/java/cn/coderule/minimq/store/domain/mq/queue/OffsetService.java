@@ -2,6 +2,7 @@ package cn.coderule.minimq.store.domain.mq.queue;
 
 import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.domain.domain.cluster.store.QueueUnit;
+import cn.coderule.minimq.domain.domain.cluster.store.SelectedMappedBuffer;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueResult;
 import cn.coderule.minimq.domain.service.store.domain.commitlog.CommitLog;
@@ -125,7 +126,8 @@ public class OffsetService {
     }
 
     private boolean isOffsetInCommitLog(long offset, int size) {
-        return false;
+        SelectedMappedBuffer buffer = commitLog.selectBuffer(offset, size);
+        return buffer != null;
     }
 
 

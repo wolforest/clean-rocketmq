@@ -449,7 +449,7 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
 
     @Override
     public boolean isInMemory(long position, int size) {
-        return false;
+        return true;
     }
 
     @Override
