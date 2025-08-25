@@ -31,6 +31,7 @@ public class DequeueRequest implements Serializable {
     private boolean fifo = false;
     @Builder.Default
     private boolean checkResetOffset = false;
+    private boolean commitInitOffset = false;
 
     @Builder.Default
     private MessageFilter filter = null;

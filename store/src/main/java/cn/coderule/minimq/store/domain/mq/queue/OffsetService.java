@@ -29,11 +29,11 @@ public class OffsetService {
 
     /**
      * get offset
-     *  - return reset offset if checkResetOffset is true
+     *  1. return reset offset if checkResetOffset is true
      *      and reset offset exists
-     *  - get offset from consume offset
+     *  2. get offset from consume offset
      *      init consume offset if not exists
-     *  - get buffered offset
+     *  3. get buffered offset
      *      return max(buffered offset, offset)
      *
      * @param request dequeue request
@@ -78,6 +78,17 @@ public class OffsetService {
         );
     }
 
+    /**
+     * init and return consume offset
+     *  1. get min offset from consume queue
+     *          if consumeStrategy is CONSUME_FROM_START
+     *  2. get max offset from consume queue
+     *  3. commit offset if commitInitOffset is true
+     *  4. return offset
+     *
+     * @param request dequeue request
+     * @return offset
+     */
     private long initOffset(DequeueRequest request) {
         return 0;
     }
