@@ -33,4 +33,14 @@ public class SelectedMappedBuffer implements Serializable {
     public synchronized boolean hasReleased() {
         return null == this.mappedFile;
     }
+
+    public boolean isInMemory() {
+        if (mappedFile == null) {
+            return true;
+        }
+
+        long pos = startOffset - mappedFile.getMinOffset();
+        return true;
+    }
+
 }
