@@ -25,10 +25,6 @@ public class PopContext implements Serializable {
 
     private Channel channel;
 
-    private StringBuilder startOffsetBuilder;
-    private StringBuilder messageOffsetBuilder;
-    private StringBuilder orderInfoBuilder;
-
     public PopContext(BrokerConfig brokerConfig, PopRequest request) {
         this.brokerConfig = brokerConfig;
         this.messageConfig = brokerConfig.getMessageConfig();
@@ -37,12 +33,6 @@ public class PopContext implements Serializable {
 
         this.popTime = System.currentTimeMillis();
         this.random = ThreadLocalRandom.current().nextInt(100);
-
-        this.startOffsetBuilder = new StringBuilder(64);
-        this.messageOffsetBuilder = new StringBuilder(64);
-        this.orderInfoBuilder = request.isFifo()
-            ? new StringBuilder(64)
-            : null;
     }
 
     public boolean shouldRetry() {

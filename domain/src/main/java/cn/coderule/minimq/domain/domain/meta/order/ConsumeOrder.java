@@ -1,7 +1,6 @@
 package cn.coderule.minimq.domain.domain.meta.order;
 
 import cn.coderule.common.util.lang.collection.CollectionUtil;
-import cn.coderule.minimq.domain.utils.ExtraInfoUtils;
 import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
@@ -65,11 +64,7 @@ public class ConsumeOrder implements Serializable {
         ConcurrentMap<Integer, OrderInfo> map = getOrderMap(request.getKey());
 
         OrderInfo orderInfo = updateOrderInfo(map, request);
-        int minConsumeTimes = updateOffsetCount(orderInfo, request);
-
-        ExtraInfoUtils.buildQueueIdOrderCountInfo(
-            request.getOrderInfoBuilder(), request.getTopicName(), request.getQueueId(), minConsumeTimes
-        );
+        // updateOffsetCount(orderInfo, request);
 
         updateLockFreeTimestamp(orderInfo, request);
     }
@@ -177,9 +172,6 @@ public class ConsumeOrder implements Serializable {
         int minCount = Integer.MAX_VALUE;
         for (Long offset : offsetCountMap.keySet()) {
             Integer consumeTimes = offsetCountMap.getOrDefault(offset, 0);
-            ExtraInfoUtils.buildQueueOffsetOrderCountInfo(
-                request.orderInfoBuilder, request.getTopicName(), request.getQueueId(), offset, consumeTimes
-            );
             minCount = Math.min(minCount, consumeTimes);
         }
 

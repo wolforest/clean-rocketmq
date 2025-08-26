@@ -30,8 +30,6 @@ public class OrderRequest implements Serializable {
 
     private long queueOffset;
     private List<Long> offsetList;
-    @Builder.Default
-    StringBuilder orderInfoBuilder = new StringBuilder(64);
 
     public String getKey() {
         return OrderUtils.buildKey(topicName, consumerGroup);
