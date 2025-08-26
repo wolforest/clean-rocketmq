@@ -36,8 +36,7 @@ public class DefaultMQManager implements MQManager {
 
     @Override
     public void start() throws Exception {
-        StoreConfig storeConfig  = StoreContext.getBean(StoreConfig.class);
-        CommitLogSynchronizer commitLogSynchronizer = new CommitLogSynchronizer(storeConfig);
+        CommitLogSynchronizer commitLogSynchronizer = StoreContext.getBean(CommitLogSynchronizer.class);
         this.enqueueService.inject(commitLogSynchronizer);
 
         dequeueLock.start();

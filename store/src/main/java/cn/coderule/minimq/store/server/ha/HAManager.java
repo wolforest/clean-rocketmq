@@ -5,6 +5,7 @@ import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.store.infra.StoreRegister;
 import cn.coderule.minimq.store.server.bootstrap.StoreContext;
 import cn.coderule.minimq.store.server.ha.core.ClusterService;
+import cn.coderule.minimq.store.server.ha.server.processor.CommitLogSynchronizer;
 
 public class HAManager implements Lifecycle {
     private StoreConfig storeConfig;
@@ -14,6 +15,10 @@ public class HAManager implements Lifecycle {
     public void initialize() throws Exception {
         this.storeConfig = StoreContext.getBean(StoreConfig.class);
         StoreRegister storeRegister = StoreContext.getBean(StoreRegister.class);
+
+        CommitLogSynchronizer commitLogSynchronizer = new CommitLogSynchronizer(storeConfig);
+        StoreContext.register(commitLogSynchronizer);
+
 
         clusterService = new ClusterService(storeConfig, storeRegister);
     }
