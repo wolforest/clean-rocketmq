@@ -15,6 +15,7 @@ import cn.coderule.minimq.domain.domain.meta.order.OrderRequest;
 import cn.coderule.minimq.rpc.store.facade.ConsumeOrderFacade;
 import cn.coderule.minimq.rpc.store.facade.MQFacade;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicLong;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -53,7 +54,9 @@ public class DequeueService {
 
         DequeueRequest request = buildDequeueRequest(context, topicName, queueId);
         return mqStore.dequeueAsync(request)
-            .thenApply(result -> processResult(context, result, topicName, queueId, lastResult));
+            .thenApply(
+                result -> processResult(context, result, topicName, queueId, lastResult)
+            );
     }
 
     private PopResult processResult(
@@ -63,15 +66,25 @@ public class DequeueService {
         int queueId,
         PopResult lastResult
     ) {
+        PopResult newResult = PopConverter.toPopResult(context, dequeueResult, lastResult);
+
+        long restNum = calculateNextNum(context, topicName, queueId, lastResult);
+        newResult.setRestNum(restNum);
+
         String consumerGroup = context.getRequest().getConsumerGroup();
         inflightCounter.increment(topicName, consumerGroup, queueId, dequeueResult.countMessage());
 
-        PopResult newResult = PopConverter.toPopResult(context, dequeueResult, lastResult);
-
-        long maxOffset = getMaxOffset(context, topicName, queueId);
-
-
         return newResult;
+    }
+
+    private long calculateNextNum(PopContext context, String topic, int queueId, PopResult lastResult) {
+        long maxOffset = getMaxOffset(context, topic, queueId);
+        long restNum = lastResult.getRestNum();
+        if (maxOffset > lastResult.getNextOffset()) {
+            restNum += maxOffset - lastResult.getNextOffset();
+        }
+
+        return restNum;
     }
 
     private long getMaxOffset(PopContext context, String topic, int queueId) {
