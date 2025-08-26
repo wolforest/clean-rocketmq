@@ -193,6 +193,7 @@ public class PopConverter {
         messageList.addAll(dequeueResult.getMessageList());
 
         return PopResult.builder()
+            .restNum(0)
             .nextOffset(dequeueResult.getNextOffset())
             .popStatus(toPopStatus(dequeueResult.getStatus(), lastResult.getPopStatus()))
             .messageList(messageList)
