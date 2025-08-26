@@ -46,4 +46,8 @@ public class PopResult implements Serializable {
     public int countMessage() {
         return messageList == null ? 0 : messageList.size();
     }
+
+    public void increaseRestNum(long num) {
+        this.restNum += num;
+    }
 }

@@ -44,11 +44,11 @@ public class DequeueService {
         PopResult lastResult
     ) {
         if (shouldStop(context, topicName, queueId, lastResult)) {
-            return stopDequeue(lastResult);
+            return stopDequeue(context, topicName, queueId, lastResult);
         }
 
         if (!validateOrderMessage(context, topicName, queueId)) {
-            return stopDequeue(lastResult);
+            return stopDequeue(context, topicName, queueId, lastResult);
         }
 
         DequeueRequest request = buildDequeueRequest(context, topicName, queueId);
@@ -68,11 +68,15 @@ public class DequeueService {
 
         PopResult newResult = PopConverter.toPopResult(context, dequeueResult, lastResult);
 
-        RequestContext requestContext = context.getRequest().getRequestContext();
-        long maxOffset = getMaxOffset(requestContext, consumerGroup, topicName, queueId);
+        long maxOffset = getMaxOffset(context, topicName, queueId);
 
 
         return newResult;
+    }
+
+    private long getMaxOffset(PopContext context, String topic, int queueId) {
+        PopRequest request = context.getRequest();
+        return getMaxOffset(request.getRequestContext(), request.getConsumerGroup(), topic, queueId);
     }
 
     private long getMaxOffset(RequestContext context, String group, String topic, int queueId) {
@@ -104,8 +108,14 @@ public class DequeueService {
             .build();
     }
 
-    private CompletableFuture<PopResult> stopDequeue(PopResult lastResult) {
+    private CompletableFuture<PopResult> stopDequeue(PopContext context, String topicName, int queueId, PopResult lastResult) {
         CompletableFuture<PopResult> result = new CompletableFuture<>();
+
+        long maxOffset = getMaxOffset(context, topicName, queueId);
+        if (maxOffset > lastResult.getNextOffset()) {
+            lastResult.increaseRestNum(maxOffset - lastResult.getNextOffset());
+        }
+
         result.complete(lastResult);
         return result;
     }
