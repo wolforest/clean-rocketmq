@@ -41,7 +41,6 @@ public class PopService {
         result.thenAccept(
             popResult -> addReceipt(context, popResult)
         );
-
         return result;
     }
 

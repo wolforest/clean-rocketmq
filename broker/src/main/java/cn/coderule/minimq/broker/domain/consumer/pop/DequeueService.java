@@ -3,8 +3,10 @@ package cn.coderule.minimq.broker.domain.consumer.pop;
 import cn.coderule.minimq.broker.domain.consumer.consumer.InflightCounter;
 import cn.coderule.minimq.domain.config.business.MessageConfig;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
+import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueResult;
+import cn.coderule.minimq.domain.domain.consumer.consume.mq.QueueRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.PopContext;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.PopRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.PopResult;
@@ -64,7 +66,24 @@ public class DequeueService {
         String consumerGroup = context.getRequest().getConsumerGroup();
         inflightCounter.increment(topicName, consumerGroup, queueId, dequeueResult.countMessage());
 
-        return PopConverter.toPopResult(context, dequeueResult, lastResult);
+        PopResult newResult = PopConverter.toPopResult(context, dequeueResult, lastResult);
+
+        RequestContext requestContext = context.getRequest().getRequestContext();
+        long maxOffset = getMaxOffset(requestContext, consumerGroup, topicName, queueId);
+
+
+        return newResult;
+    }
+
+    private long getMaxOffset(RequestContext context, String group, String topic, int queueId) {
+        QueueRequest request = QueueRequest.builder()
+            .context(context)
+            .group(group)
+            .topic(topic)
+            .queueId(queueId)
+            .build();
+
+        return mqStore.getMaxOffset(request).getMaxOffset();
     }
 
     private DequeueRequest buildDequeueRequest(PopContext context, String topicName, int queueId) {

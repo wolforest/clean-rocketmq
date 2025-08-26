@@ -19,6 +19,7 @@ public class PopResult implements Serializable {
     @Builder.Default
     private List<MessageBO> messageList = new ArrayList<>();
     private PopStatus popStatus;
+    private long nextOffset;
     private long popTime;
     private long invisibleTime;
     private long restNum;
