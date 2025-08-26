@@ -15,6 +15,7 @@ import cn.coderule.minimq.store.domain.mq.ack.AckService;
 import cn.coderule.minimq.store.domain.mq.queue.DequeueService;
 import cn.coderule.minimq.store.domain.mq.queue.EnqueueService;
 import cn.coderule.minimq.store.domain.mq.queue.MessageService;
+import cn.coderule.minimq.store.domain.mq.queue.OffsetService;
 import cn.coderule.minimq.store.server.bootstrap.StoreContext;
 import cn.coderule.minimq.store.server.ha.server.processor.CommitLogSynchronizer;
 import lombok.extern.slf4j.Slf4j;
@@ -74,9 +75,12 @@ public class DefaultMQManager implements MQManager {
 
         this.enqueueService = new EnqueueService(commitLog, consumeQueue);
         MessageService messageService = new MessageService(storeConfig, commitLog, consumeQueue);
+        OffsetService offsetService = new OffsetService(
+            storeConfig, commitLog, ackService, consumeQueue, consumeOffsetService, orderService
+        );
 
         DequeueService dequeueService = new DequeueService(
-            storeConfig, dequeueLock, messageService, ackService, consumeOffsetService, orderService
+            storeConfig, dequeueLock, messageService, ackService, offsetService
         );
 
         MQService MQService = new DefaultMQService(enqueueService, dequeueService, messageService);

@@ -7,8 +7,6 @@ import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueResult;
 import cn.coderule.minimq.domain.core.lock.queue.DequeueLock;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.checkpoint.PopCheckPoint;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.helper.PopConverter;
-import cn.coderule.minimq.domain.service.store.domain.meta.ConsumeOffsetService;
-import cn.coderule.minimq.domain.service.store.domain.meta.ConsumeOrderService;
 import cn.coderule.minimq.store.domain.mq.ack.AckService;
 import java.util.concurrent.CompletableFuture;
 import lombok.extern.slf4j.Slf4j;
@@ -20,24 +18,21 @@ public class DequeueService {
 
     private final AckService ackService;
     private final MessageService messageService;
-    private final ConsumeOffsetService consumeOffsetService;
-    private final ConsumeOrderService consumeOrderService;
+    private final OffsetService offsetService;
 
     public DequeueService(
         StoreConfig storeConfig,
         DequeueLock dequeueLock,
         MessageService messageService,
         AckService ackService,
-        ConsumeOffsetService consumeOffsetService,
-        ConsumeOrderService consumeOrderService
+        OffsetService offsetService
     ) {
         this.storeConfig = storeConfig;
         this.dequeueLock = dequeueLock;
 
         this.ackService = ackService;
+        this.offsetService = offsetService;
         this.messageService = messageService;
-        this.consumeOffsetService = consumeOffsetService;
-        this.consumeOrderService = consumeOrderService;
     }
 
     public CompletableFuture<DequeueResult> dequeueAsync(DequeueRequest request) {
@@ -67,15 +62,7 @@ public class DequeueService {
     }
 
     private void getOffset(DequeueRequest request) {
-        long offset = consumeOffsetService.getOffset(
-            request.getGroup(),
-            request.getTopic(),
-            request.getQueueId()
-        );
-
-        // TODO: if offset less than 0, init offset
-        // TODO: get resetOffset if
-
+        long offset = offsetService.getOffset(request);
         request.setOffset(offset);
     }
 
@@ -98,17 +85,7 @@ public class DequeueService {
     }
 
     private void updateOffset(DequeueRequest request, DequeueResult result) {
-        long newOffset = result.getNextOffset();
-        if (newOffset <= 0L) {
-            return;
-        }
-
-        consumeOffsetService.putOffset(
-            request.getGroup(),
-            request.getTopic(),
-            request.getQueueId(),
-            newOffset
-        );
+        offsetService.updateOffset(request, result);
     }
 
     private void addCheckpoint(DequeueRequest request, DequeueResult result) {

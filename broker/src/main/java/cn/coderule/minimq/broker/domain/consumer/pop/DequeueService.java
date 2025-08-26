@@ -15,7 +15,6 @@ import cn.coderule.minimq.domain.domain.meta.order.OrderRequest;
 import cn.coderule.minimq.rpc.store.facade.ConsumeOrderFacade;
 import cn.coderule.minimq.rpc.store.facade.MQFacade;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.atomic.AtomicLong;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

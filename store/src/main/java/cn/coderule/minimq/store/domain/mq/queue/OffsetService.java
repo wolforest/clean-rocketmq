@@ -134,6 +134,10 @@ public class OffsetService {
     }
 
     private long getResetOffset(DequeueRequest request) {
+        if (!request.isCheckResetOffset()) {
+            return -2;
+        }
+
         return -1;
     }
 
