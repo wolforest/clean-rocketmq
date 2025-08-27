@@ -67,8 +67,11 @@ public class DequeueResult implements Serializable {
         return MessageStatus.OFFSET_FOUND_NULL.equals(status)
             || MessageStatus.OFFSET_OVERFLOW_BADLY.equals(status)
             || MessageStatus.OFFSET_TOO_SMALL.equals(status)
-            || MessageStatus.OFFSET_RESET.equals(status)
             ;
+    }
+
+    public boolean hasNextOffset() {
+        return nextOffset > 0;
     }
 
     public void addMessage(@NonNull MessageBO messageBO) {

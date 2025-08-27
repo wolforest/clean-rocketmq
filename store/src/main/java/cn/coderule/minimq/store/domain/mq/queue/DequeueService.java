@@ -70,18 +70,26 @@ public class DequeueService {
         DequeueResult result = messageService.get(request);
 
         if (result.isOffsetIllegal()) {
-            // add checkpoint
             return regetMessage(request, result);
         }
 
-        // empty result process
 
         return result;
     }
 
     private DequeueResult regetMessage(DequeueRequest request, DequeueResult result) {
-        // todo retry
-        return result;
+        if (!result.hasNextOffset()) {
+            return result;
+        }
+
+        if (request.getOffset() == result.getNextOffset()) {
+            return result;
+        }
+
+        offsetService.updateOffset(request, result);
+
+        request.setOffset(result.getNextOffset());
+        return messageService.get(request);
     }
 
     private void updateOffset(DequeueRequest request, DequeueResult result) {
