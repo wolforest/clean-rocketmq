@@ -2,6 +2,7 @@ package cn.coderule.minimq.store.domain.mq.queue;
 
 import cn.coderule.minimq.domain.config.business.MessageConfig;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
+import cn.coderule.minimq.domain.core.enums.message.MessageStatus;
 import cn.coderule.minimq.domain.domain.cluster.store.QueueUnit;
 import cn.coderule.minimq.domain.domain.cluster.store.SelectedMappedBuffer;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueRequest;
@@ -114,8 +115,10 @@ public class OffsetService {
     }
 
     private void setOffsetIfQueueNotExists(DequeueRequest request, DequeueResult result) {
-
-
+        result.setStatus(MessageStatus.NO_MATCHED_LOGIC_QUEUE);
+        result.setMinOffset(0);
+        result.setMaxOffset(0);
+        result.setNextOffset(0);
     }
 
     private void setOffsetIfQueueEmpty(DequeueRequest request, DequeueResult result) {
@@ -124,7 +127,8 @@ public class OffsetService {
     }
 
     private void setOffsetIfResultEmpty(DequeueRequest request, DequeueResult result) {
-
+        // TODO: messageStore.getConsumeQueueStore().rollNextFile()
+        //
 
     }
 
