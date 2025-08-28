@@ -2,6 +2,7 @@ package cn.coderule.minimq.store.domain.mq.queue;
 
 import cn.coderule.minimq.domain.config.business.MessageConfig;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
+import cn.coderule.minimq.domain.config.store.MetaConfig;
 import cn.coderule.minimq.domain.core.enums.message.MessageStatus;
 import cn.coderule.minimq.domain.domain.cluster.store.QueueUnit;
 import cn.coderule.minimq.domain.domain.cluster.store.SelectedMappedBuffer;
@@ -19,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class OffsetService {
+    private final StoreConfig storeConfig;
     private final MessageConfig messageConfig;
 
     private final CommitLog commitLog;
@@ -36,6 +38,7 @@ public class OffsetService {
         ConsumeOffsetService consumeOffsetService,
         ConsumeOrderService consumeOrderService
     ) {
+        this.storeConfig = storeConfig;
         this.messageConfig = storeConfig.getMessageConfig();
 
         this.commitLog = commitLog;
@@ -112,6 +115,16 @@ public class OffsetService {
         }
 
         setOffsetByMessageList(request, result);
+    }
+
+    private long correctNextOffset(long oldOffset, long newOffset) {
+        MetaConfig metaConfig = storeConfig.getMetaConfig();
+
+        if (storeConfig.isMaster() || metaConfig.isEnableOffsetCheckInSlave()) {
+            return newOffset;
+        }
+
+        return oldOffset;
     }
 
     private void setOffsetIfQueueNotExists(DequeueRequest request, DequeueResult result) {
