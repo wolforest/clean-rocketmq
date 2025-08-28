@@ -67,12 +67,11 @@ public class DequeueService {
     }
 
     private DequeueResult getMessage(DequeueRequest request) {
-        DequeueResult result = messageService.get(request);
+        DequeueResult result = getMessageAndRestNum(request);
 
         if (result.isOffsetIllegal()) {
             return regetMessage(request, result);
         }
-
 
         return result;
     }
@@ -89,7 +88,16 @@ public class DequeueService {
         offsetService.updateOffset(request, result);
 
         request.setOffset(result.getNextOffset());
-        return messageService.get(request);
+        return getMessageAndRestNum(request);
+    }
+
+    private DequeueResult getMessageAndRestNum(DequeueRequest request) {
+        DequeueResult result = messageService.get(request);
+
+        long nextOffset = offsetService.getNextOffset(request, result);
+        result.setNextOffset(nextOffset);
+
+        return result;
     }
 
     private void updateOffset(DequeueRequest request, DequeueResult result) {
