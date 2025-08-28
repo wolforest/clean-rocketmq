@@ -54,7 +54,7 @@ public class DefaultConsumeQueueGateway implements ConsumeQueueGateway {
 
     @Override
     public long rollToOffset(String topic, int queueId, long offset) {
-        return 0;
+        return getQueueStore(topic, queueId).rollToOffset(offset);
     }
 
     @Override
