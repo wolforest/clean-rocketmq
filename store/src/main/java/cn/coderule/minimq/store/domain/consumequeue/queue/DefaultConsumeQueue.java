@@ -139,8 +139,11 @@ public class DefaultConsumeQueue implements ConsumeQueue {
     }
 
     @Override
-    public long rollToOffset(String topic, int queueId, long offset) {
-        return 0;
+    public long rollToOffset(long offset) {
+        int fileSize = config.getFileSize();
+        int totalUnits = fileSize / config.getUnitSize();
+
+        return offset + totalUnits - offset % totalUnits;
     }
 
     @Override

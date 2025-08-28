@@ -73,7 +73,7 @@ public class ErrorConsumeQueue implements ConsumeQueue {
     }
 
     @Override
-    public long rollToOffset(String topic, int queueId, long offset) {
+    public long rollToOffset(long offset) {
         return 0;
     }
 

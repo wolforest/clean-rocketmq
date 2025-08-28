@@ -21,7 +21,7 @@ public interface ConsumeQueue {
     long getMaxOffset();
     void setMaxOffset(long maxOffset);
 
-    long rollToOffset(String topic, int queueId, long offset);
+    long rollToOffset(long offset);
     long getMaxCommitLogOffset();
     void setMaxCommitLogOffset(long maxCommitLogOffset);
     long increaseOffset();
