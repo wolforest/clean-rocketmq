@@ -139,6 +139,11 @@ public class DefaultConsumeQueue implements ConsumeQueue {
     }
 
     @Override
+    public long rollToOffset(String topic, int queueId, long offset) {
+        return 0;
+    }
+
+    @Override
     public long getMaxOffset() {
         return MAX_OFFSET_UPDATER.get(this);
     }
