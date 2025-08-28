@@ -114,19 +114,19 @@ public class OffsetService {
         );
     }
 
-    private long getMinOffset(DequeueRequest request) {
+    private long getMinQueueOffset(DequeueRequest request) {
         return consumeQueue.getMinOffset(
             request.getGroup(),
             request.getQueueId()
         );
     }
 
-//    private long getMaxOffset(DequeueRequest request) {
-//        return consumeQueue.getMaxOffset(
-//            request.getGroup(),
-//            request.getQueueId()
-//        );
-//    }
+    private long getMaxQueueOffset(DequeueRequest request) {
+        return consumeQueue.getMaxOffset(
+            request.getGroup(),
+            request.getQueueId()
+        );
+    }
 
     /**
      * init and return consume offset
@@ -173,7 +173,7 @@ public class OffsetService {
     private long getMaxOffset(DequeueRequest request) {
         if (messageConfig.isInitOffsetByQueue()) {
             long minOffset = consumeQueue.getMinOffset(request.getTopic(), request.getQueueId());
-            if (minOffset <= 0 && isOffsetInQueue(request.getTopic(), request.getQueueId())) {
+            if (minOffset <= 0 && isOffsetExists(request.getTopic(), request.getQueueId())) {
                 return 0;
             }
         }
@@ -186,7 +186,7 @@ public class OffsetService {
         return maxOffset;
     }
 
-    private boolean isOffsetInQueue(String topic, int queueId) {
+    private boolean isOffsetExists(String topic, int queueId) {
         QueueUnit firstUnit = consumeQueue.get(topic, queueId, 0);
         if (firstUnit == null) {
             return false;
