@@ -74,6 +74,8 @@ public class OffsetService {
     }
 
     public long getNextOffset(DequeueRequest request, DequeueResult result) {
+
+
         return result.getNextOffset();
     }
 
@@ -111,6 +113,20 @@ public class OffsetService {
             request.getQueueId()
         );
     }
+
+    private long getMinOffset(DequeueRequest request) {
+        return consumeQueue.getMinOffset(
+            request.getGroup(),
+            request.getQueueId()
+        );
+    }
+
+//    private long getMaxOffset(DequeueRequest request) {
+//        return consumeQueue.getMaxOffset(
+//            request.getGroup(),
+//            request.getQueueId()
+//        );
+//    }
 
     /**
      * init and return consume offset
