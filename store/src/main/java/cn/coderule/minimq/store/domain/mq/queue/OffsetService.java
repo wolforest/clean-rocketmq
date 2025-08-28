@@ -155,6 +155,9 @@ public class OffsetService {
     private void setOffsetIfOffsetSmall(DequeueRequest request, DequeueResult result) {
         result.setStatus(MessageStatus.OFFSET_TOO_SMALL);
 
+        result.setNextOffset(
+            correctNextOffset(request.getOffset(), result.getMinOffset())
+        );
     }
 
     private void setOffsetIfOffsetBig(DequeueRequest request, DequeueResult result) {
