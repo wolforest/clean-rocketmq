@@ -95,7 +95,7 @@ public class OffsetService {
         }
 
         if (request.getOffset() < minOffset) {
-            setOffsetIfOffsetSmaller(request, result);
+            setOffsetIfOffsetSmall(request, result);
             return;
         }
 
@@ -105,7 +105,7 @@ public class OffsetService {
         }
 
         if (request.getOffset() > maxOffset) {
-            setOffsetIfOffsetBigger(request, result);
+            setOffsetIfOffsetBig(request, result);
             return;
         }
 
@@ -131,11 +131,18 @@ public class OffsetService {
         result.setStatus(MessageStatus.NO_MATCHED_LOGIC_QUEUE);
         result.setMinOffset(0);
         result.setMaxOffset(0);
-        result.setNextOffset(0);
+
+        result.setNextOffset(
+            correctNextOffset(request.getOffset(), 0)
+        );
     }
 
     private void setOffsetIfQueueEmpty(DequeueRequest request, DequeueResult result) {
+        result.setStatus(MessageStatus.NO_MESSAGE_IN_QUEUE);
 
+        result.setNextOffset(
+            correctNextOffset(request.getOffset(), 0)
+        );
 
     }
 
@@ -145,12 +152,12 @@ public class OffsetService {
 
     }
 
-    private void setOffsetIfOffsetSmaller(DequeueRequest request, DequeueResult result) {
-
+    private void setOffsetIfOffsetSmall(DequeueRequest request, DequeueResult result) {
+        result.setStatus(MessageStatus.OFFSET_TOO_SMALL);
 
     }
 
-    private void setOffsetIfOffsetBigger(DequeueRequest request, DequeueResult result) {
+    private void setOffsetIfOffsetBig(DequeueRequest request, DequeueResult result) {
 
     }
 
