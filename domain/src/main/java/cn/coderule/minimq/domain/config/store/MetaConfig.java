@@ -9,4 +9,5 @@ public class MetaConfig implements Serializable {
    private long delayOffsetVersionUpdateStep = 200;
 
 
+   private boolean enableOffsetCheckInSlave = false;
 }
