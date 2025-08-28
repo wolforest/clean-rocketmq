@@ -161,7 +161,11 @@ public class OffsetService {
     }
 
     private void setOffsetIfOffsetBig(DequeueRequest request, DequeueResult result) {
+        result.setStatus(MessageStatus.OFFSET_OVERFLOW_BADLY);
 
+        result.setNextOffset(
+            correctNextOffset(request.getOffset(), result.getMaxOffset())
+        );
     }
 
     private void setOffsetIfOffsetEqualMax(DequeueRequest request, DequeueResult result) {
