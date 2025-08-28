@@ -149,6 +149,7 @@ public class OffsetService {
     private void setOffsetIfResultEmpty(DequeueRequest request, DequeueResult result) {
         // TODO: messageStore.getConsumeQueueStore().rollNextFile()
         //
+        result.setStatus(MessageStatus.OFFSET_FOUND_NULL);
 
     }
 

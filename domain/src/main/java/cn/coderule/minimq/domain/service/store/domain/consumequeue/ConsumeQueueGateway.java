@@ -14,6 +14,7 @@ public interface ConsumeQueueGateway {
 
     long getMinOffset(String topic, int queueId);
     long getMaxOffset(String topic, int queueId);
+    long rollToOffset(String topic, int queueId, long offset);
 
     boolean existsQueue(String topic, int queueId);
 
