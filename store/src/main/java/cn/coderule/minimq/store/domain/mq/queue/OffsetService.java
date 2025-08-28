@@ -147,10 +147,17 @@ public class OffsetService {
     }
 
     private void setOffsetIfResultEmpty(DequeueRequest request, DequeueResult result) {
-        // TODO: messageStore.getConsumeQueueStore().rollNextFile()
-        //
         result.setStatus(MessageStatus.OFFSET_FOUND_NULL);
 
+        long rolledOffset = consumeQueue.rollToOffset(
+            request.getTopic(),
+            request.getQueueId(),
+            request.getOffset()
+        );
+
+        result.setNextOffset(
+            correctNextOffset(request.getOffset(), rolledOffset)
+        );
     }
 
     private void setOffsetIfOffsetSmall(DequeueRequest request, DequeueResult result) {
