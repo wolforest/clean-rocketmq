@@ -51,6 +51,7 @@ public class DequeueService {
             return stopDequeue(context, topicName, queueId, lastResult);
         }
 
+        // @question need to add an atomic long to store restNum?
         DequeueRequest request = buildDequeueRequest(context, topicName, queueId);
         return mqStore.dequeueAsync(request)
             .thenApply(
