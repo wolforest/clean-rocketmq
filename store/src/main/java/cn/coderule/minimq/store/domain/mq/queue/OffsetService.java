@@ -7,6 +7,7 @@ import cn.coderule.minimq.domain.domain.cluster.store.SelectedMappedBuffer;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueResult;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.helper.PopConverter;
+import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.domain.meta.order.OrderRequest;
 import cn.coderule.minimq.domain.service.store.domain.commitlog.CommitLog;
 import cn.coderule.minimq.domain.service.store.domain.consumequeue.ConsumeQueueGateway;
@@ -74,6 +75,50 @@ public class OffsetService {
     }
 
     public void getNextOffset(DequeueRequest request, DequeueResult result) {
+        if (!consumeQueue.existsQueue(request.getTopic(), request.getQueueId())) {
+            setOffsetIfQueueNotExists(request, result);
+            return;
+        }
+
+        long minOffset = getMinQueueOffset(request);
+        long maxOffset = getMaxQueueOffset(request);
+        result.setMinOffset(minOffset);
+        result.setMaxOffset(maxOffset);
+
+        if (0 == maxOffset) {
+            setOffsetIfQueueEmpty(request, result);
+            return;
+        }
+
+        if (request.getOffset() < minOffset) {
+            setOffsetIfOffsetSmaller(request, result);
+            return;
+        }
+
+        if (request.getOffset() == maxOffset) {
+            setOffsetIfOffsetEqualMax(request, result);
+            return;
+        }
+
+        if (request.getOffset() > maxOffset) {
+            setOffsetIfOffsetBigger(request, result);
+            return;
+        }
+
+        if (result.isEmpty()) {
+            setOffsetIfResultEmpty(request, result);
+            return;
+        }
+
+        setOffsetByMessageList(request, result);
+    }
+
+    private void setOffsetIfQueueNotExists(DequeueRequest request, DequeueResult result) {
+
+
+    }
+
+    private void setOffsetIfQueueEmpty(DequeueRequest request, DequeueResult result) {
 
 
     }
@@ -81,6 +126,29 @@ public class OffsetService {
     private void setOffsetIfResultEmpty(DequeueRequest request, DequeueResult result) {
 
 
+    }
+
+    private void setOffsetIfOffsetSmaller(DequeueRequest request, DequeueResult result) {
+
+
+    }
+
+    private void setOffsetIfOffsetBigger(DequeueRequest request, DequeueResult result) {
+
+    }
+
+    private void setOffsetIfOffsetEqualMax(DequeueRequest request, DequeueResult result) {
+
+    }
+
+    private void setOffsetByMessageList(DequeueRequest request, DequeueResult result) {
+        long maxOffset = 0;
+
+        for (MessageBO messageBO : result.getMessageList()) {
+            maxOffset = Math.max(maxOffset, messageBO.getQueueOffset());
+        }
+
+        result.setNextOffset(maxOffset + 1);
     }
 
 
