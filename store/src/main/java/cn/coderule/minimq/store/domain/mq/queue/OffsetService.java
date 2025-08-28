@@ -73,11 +73,16 @@ public class OffsetService {
         return mergeBufferOffset(request, offset);
     }
 
-    public long getNextOffset(DequeueRequest request, DequeueResult result) {
+    public void getNextOffset(DequeueRequest request, DequeueResult result) {
 
 
-        return result.getNextOffset();
     }
+
+    private void setOffsetIfResultEmpty(DequeueRequest request, DequeueResult result) {
+
+
+    }
+
 
     public void updateOffset(DequeueRequest request, DequeueResult result) {
         updateOrderInfo(request, result);

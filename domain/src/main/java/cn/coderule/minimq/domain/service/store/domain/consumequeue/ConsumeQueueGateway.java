@@ -15,5 +15,7 @@ public interface ConsumeQueueGateway {
     long getMinOffset(String topic, int queueId);
     long getMaxOffset(String topic, int queueId);
 
+    boolean existsQueue(String topic, int queueId);
+
     void deleteByTopic(String topicName);
 }

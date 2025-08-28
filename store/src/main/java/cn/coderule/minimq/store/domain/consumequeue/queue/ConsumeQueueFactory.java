@@ -52,13 +52,22 @@ public class ConsumeQueueFactory implements ConsumeQueueRegistry {
         return create(topic, queueId);
     }
 
-    private ConsumeQueue get(String topic, int queueId) {
+    public ConsumeQueue get(String topic, int queueId) {
         Map<Integer, ConsumeQueue> queueMap = topicMap.get(topic);
         if (queueMap == null) {
             return null;
         }
 
         return queueMap.get(queueId);
+    }
+
+    public boolean exists(String topic, int queueId) {
+        Map<Integer, ConsumeQueue> queueMap = topicMap.get(topic);
+        if (queueMap == null) {
+            return false;
+        }
+
+        return queueMap.containsKey(queueId);
     }
 
     private ConsumeQueue create(String topic, int queueId) {

@@ -53,6 +53,11 @@ public class DefaultConsumeQueueGateway implements ConsumeQueueGateway {
     }
 
     @Override
+    public boolean existsQueue(String topic, int queueId) {
+        return consumeQueueFactory.exists(topic, queueId);
+    }
+
+    @Override
     public void deleteByTopic(String topicName) {
 
     }

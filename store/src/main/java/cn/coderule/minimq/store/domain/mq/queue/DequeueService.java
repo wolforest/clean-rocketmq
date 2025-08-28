@@ -94,8 +94,7 @@ public class DequeueService {
     private DequeueResult getMessageAndOffset(DequeueRequest request) {
         DequeueResult result = messageService.get(request);
 
-        long nextOffset = offsetService.getNextOffset(request, result);
-        result.setNextOffset(nextOffset);
+        offsetService.getNextOffset(request, result);
 
         return result;
     }
