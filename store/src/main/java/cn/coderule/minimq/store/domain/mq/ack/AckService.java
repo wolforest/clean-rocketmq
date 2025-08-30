@@ -26,12 +26,12 @@ public class AckService {
     private final String reviveTopic;
 
     private final AckBuffer ackBuffer;
-    private final MQService MQService;
+    private final MQService mqService;
 
-    public AckService(StoreConfig storeConfig, MQService MQService, String reviveTopic, AckBuffer ackBuffer) {
+    public AckService(StoreConfig storeConfig, MQService mqService, String reviveTopic, AckBuffer ackBuffer) {
         this.storeConfig  = storeConfig;
         this.messageConfig  = storeConfig.getMessageConfig();
-        this.MQService = MQService;
+        this.mqService = mqService;
 
         this.reviveTopic = reviveTopic;
         this.ackBuffer = ackBuffer;
@@ -196,7 +196,7 @@ public class AckService {
 
     private void enqueueReviveQueue(AckInfo ackInfo, int reviveQueueId, long invisibleTime) {
         MessageBO messageBO = buildAckMsg(ackInfo, reviveQueueId, invisibleTime);
-        EnqueueResult result = MQService.enqueue(messageBO);
+        EnqueueResult result = mqService.enqueue(messageBO);
         if (result.isFailure()) {
             log.error("Enqueue ackMsg failed, ackMsg: {}; reviveQueueId:{}; invisibleTime: {};",
                 ackInfo, reviveQueueId, invisibleTime);
@@ -223,7 +223,7 @@ public class AckService {
         }
 
         MessageBO messageBO = buildReviveMsg(pointWrapper);
-        EnqueueResult result = MQService.enqueue(messageBO);
+        EnqueueResult result = mqService.enqueue(messageBO);
         if (result.isFailure()) {
             log.error("Enqueue checkpoint failed, checkpoint: {}", pointWrapper);
         }
