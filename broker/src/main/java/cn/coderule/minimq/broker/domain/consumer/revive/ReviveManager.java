@@ -1,6 +1,10 @@
 package cn.coderule.minimq.broker.domain.consumer.revive;
 
 import cn.coderule.common.convention.service.Lifecycle;
+import cn.coderule.minimq.broker.infra.store.ConsumeOffsetStore;
+import cn.coderule.minimq.broker.infra.store.MQStore;
+import cn.coderule.minimq.broker.infra.store.SubscriptionStore;
+import cn.coderule.minimq.broker.infra.store.TopicStore;
 import cn.coderule.minimq.broker.server.bootstrap.BrokerContext;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.domain.meta.topic.KeyBuilder;
@@ -53,11 +57,11 @@ public class ReviveManager implements Lifecycle {
             .messageConfig(brokerConfig.getMessageConfig())
             .topicConfig(brokerConfig.getTopicConfig())
 
-            .mqFacade(BrokerContext.getBean(MQFacade.class))
+            .mqFacade(BrokerContext.getBean(MQStore.class))
 
-            .topicFacade(BrokerContext.getBean(TopicFacade.class))
-            .subscriptionFacade(BrokerContext.getBean(SubscriptionFacade.class))
-            .consumeOffsetFacade(BrokerContext.getBean(ConsumeOffsetFacade.class))
+            .topicFacade(BrokerContext.getBean(TopicStore.class))
+            .subscriptionFacade(BrokerContext.getBean(SubscriptionStore.class))
+            .consumeOffsetFacade(BrokerContext.getBean(ConsumeOffsetStore.class))
 
             .build();
     }
