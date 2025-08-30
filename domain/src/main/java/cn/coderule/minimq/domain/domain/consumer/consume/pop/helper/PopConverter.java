@@ -92,7 +92,6 @@ public class PopConverter {
             .topic(request.getTopic())
             .cid(request.getGroup())
             .queueId(request.getQueueId())
-            .brokerName(request.getStoreGroup())
             .build();
 
         for (Long offset : result.getOffsetList()) {

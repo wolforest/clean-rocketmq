@@ -1,6 +1,7 @@
 package cn.coderule.minimq.store.domain.mq.queue;
 
 import cn.coderule.minimq.domain.config.server.StoreConfig;
+import cn.coderule.minimq.domain.core.enums.message.MessageStatus;
 import cn.coderule.minimq.domain.core.exception.DequeueException;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueResult;
@@ -75,6 +76,26 @@ public class DequeueService {
 
         return result;
     }
+    public boolean shouldStoreCheckpoint(DequeueRequest request, DequeueResult result) {
+        if (request.isFifo()) {
+            return false;
+        }
+
+        if (!result.isEmpty()) {
+            return true;
+        }
+
+        if (result.getNextOffset() < 0) {
+            return false;
+        }
+
+        MessageStatus status = result.getStatus();
+        return MessageStatus.NO_MATCHED_MESSAGE.equals(status)
+            || MessageStatus.OFFSET_FOUND_NULL.equals(status)
+            || MessageStatus.MESSAGE_WAS_REMOVING.equals(status)
+            || MessageStatus.NO_MATCHED_LOGIC_QUEUE.equals(status)
+            ;
+    }
 
     private DequeueResult regetMessage(DequeueRequest request, DequeueResult result) {
         if (!result.hasNextOffset()) {
@@ -99,15 +120,18 @@ public class DequeueService {
     }
 
     private void updateOffset(DequeueRequest request, DequeueResult result) {
+        if (request.getOffset() == result.getNextOffset()) {
+            return;
+        }
+
         offsetService.updateOffset(request, result);
     }
 
     private void addCheckpoint(DequeueRequest request, DequeueResult result) {
-        if (request.isFifo()) {
+        if (!shouldStoreCheckpoint(request, result)) {
             return;
         }
 
-        request.setStoreGroup(storeConfig.getGroup());
         PopCheckPoint checkPoint = PopConverter.toCheckPoint(request, result);
         checkPoint.setBrokerName(storeConfig.getGroup());
 
