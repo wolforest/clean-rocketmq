@@ -9,8 +9,13 @@ import cn.coderule.minimq.rpc.store.facade.MQFacade;
 import java.util.concurrent.CompletableFuture;
 
 public class AckService {
-    private BrokerConfig brokerConfig;
-    private MQFacade mqStore;
+    private final BrokerConfig brokerConfig;
+    private final MQFacade mqStore;
+
+    public AckService(BrokerConfig brokerConfig, MQFacade mqStore) {
+        this.brokerConfig = brokerConfig;
+        this.mqStore = mqStore;
+    }
 
     public CompletableFuture<AckResult> ack(AckRequest request) {
         AckMessage ackMessage = AckConverter.toAckMessage(request);
