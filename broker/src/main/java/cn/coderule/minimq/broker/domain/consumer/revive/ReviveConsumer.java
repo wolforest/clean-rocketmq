@@ -234,7 +234,7 @@ public class ReviveConsumer {
             .topic(reviveTopic)
             .queueId(queueId)
             .offset(reviveOffset)
-            .num(32)
+            .maxNum(32)
             .build();
 
         DequeueResult result = mqFacade.get(request);

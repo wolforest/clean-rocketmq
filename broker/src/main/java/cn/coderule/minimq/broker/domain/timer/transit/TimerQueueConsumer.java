@@ -115,7 +115,6 @@ public class TimerQueueConsumer extends ServiceThread {
             .topic(TimerConstants.TIMER_TOPIC)
             .queueId(task.getQueueId())
             .offset(timerState.getTimerQueueOffset())
-            .num(timerConfig.getConsumeBatchNum())
             .maxNum(timerConfig.getConsumeMaxNum())
             .build();
 

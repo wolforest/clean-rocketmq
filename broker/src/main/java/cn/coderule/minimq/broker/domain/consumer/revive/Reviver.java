@@ -208,7 +208,7 @@ public class Reviver {
                     .topic(point.getTopic())
                     .queueId(point.getQueueId())
                     .offset(offset)
-                    .num(1)
+                    .maxNum(1)
                     .build();
 
             DequeueResult result = mqFacade.get(request);

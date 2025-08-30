@@ -44,7 +44,6 @@ public class MessageService {
             .topic(topic)
             .queueId(queueId)
             .offset(offset)
-            .num(num)
             .maxNum(messageConfig.getMaxRequestSize())
             .build();
         return get(request);
@@ -52,7 +51,7 @@ public class MessageService {
 
     public DequeueResult get(DequeueRequest request) {
         List<QueueUnit> unitList = consumeQueueGateway.get(
-            request.getTopic(), request.getQueueId(), request.getOffset(), request.getNum()
+            request.getTopic(), request.getQueueId(), request.getOffset(), request.getMaxNum()
         );
 
         if (CollectionUtil.isEmpty(unitList)) {
@@ -77,6 +76,5 @@ public class MessageService {
 
         return result;
     }
-
 
 }

@@ -28,8 +28,7 @@ public class DequeueRequest implements Serializable {
     private long invisibleTime;
 
     @Builder.Default
-    private int num = 1;
-    private int maxNum;
+    private int maxNum = 1;
     @Builder.Default
     private boolean fifo = false;
     @Builder.Default

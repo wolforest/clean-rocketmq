@@ -82,7 +82,6 @@ public class DefaultMQService implements MQService {
             .topic(topic)
             .queueId(queueId)
             .offset(offset)
-            .num(num)
             .maxNum(num)
             .build();
 
