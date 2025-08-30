@@ -1,6 +1,5 @@
 package cn.coderule.minimq.domain.domain.consumer.ack.broker;
 
-import cn.coderule.common.util.encrypt.PasswordUtil;
 import cn.coderule.minimq.domain.core.enums.consume.AckStatus;
 import cn.coderule.minimq.domain.core.exception.BrokerException;
 import cn.coderule.minimq.domain.domain.consumer.receipt.MessageIdReceipt;
