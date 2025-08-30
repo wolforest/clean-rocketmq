@@ -1,7 +1,6 @@
 package cn.coderule.minimq.domain.domain.consumer.ack.store;
 
 import cn.coderule.minimq.domain.domain.cluster.RequestContext;
-import cn.coderule.minimq.domain.domain.consumer.ack.AckMsg;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

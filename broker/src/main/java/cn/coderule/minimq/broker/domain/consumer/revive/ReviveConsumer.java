@@ -7,8 +7,8 @@ import cn.coderule.minimq.domain.config.business.MessageConfig;
 import cn.coderule.minimq.domain.core.constant.PopConstants;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueResult;
-import cn.coderule.minimq.domain.domain.consumer.ack.AckMsg;
-import cn.coderule.minimq.domain.domain.consumer.ack.BatchAckMsg;
+import cn.coderule.minimq.domain.domain.consumer.ack.AckInfo;
+import cn.coderule.minimq.domain.domain.consumer.ack.BatchAckInfo;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.checkpoint.PopCheckPoint;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.helper.PopConverter;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.helper.PopKeyBuilder;
@@ -133,24 +133,24 @@ public class ReviveConsumer {
     }
 
     private boolean parseAck(ReviveBuffer buffer, MessageBO message) {
-        AckMsg ackMsg = JSONUtil.parse(message.getStringBody(), AckMsg.class);
+        AckInfo ackInfo = JSONUtil.parse(message.getStringBody(), AckInfo.class);
         if (messageConfig.isEnablePopLog()) {
             log.info("find ack, reviveQueueId={}, offset={}, ackMsg={}",
-                message.getQueueId(), message.getQueueOffset(), ackMsg);
+                message.getQueueId(), message.getQueueOffset(), ackInfo);
         }
 
-        String mergeKey = PopKeyBuilder.buildReviveKey(ackMsg);
+        String mergeKey = PopKeyBuilder.buildReviveKey(ackInfo);
         PopCheckPoint point = buffer.getCheckPoint(mergeKey);
         if (point == null) {
-            return addAckMsg(buffer, ackMsg, message, mergeKey);
+            return addAckMsg(buffer, ackInfo, message, mergeKey);
         }
 
-        mergeAckMsg(ackMsg, point);
+        mergeAckMsg(ackInfo, point);
         return true;
     }
 
     private boolean parseBatchAck(ReviveBuffer buffer, MessageBO message) {
-        BatchAckMsg batchAckMsg = JSONUtil.parse(message.getStringBody(), BatchAckMsg.class);
+        BatchAckInfo batchAckMsg = JSONUtil.parse(message.getStringBody(), BatchAckInfo.class);
         if (messageConfig.isEnablePopLog()) {
             log.info("find batch ack, reviveQueueId={}, offset={}, batchAckMsg={}",
                 message.getQueueId(), message.getQueueOffset(), batchAckMsg);
@@ -167,7 +167,7 @@ public class ReviveConsumer {
         return true;
     }
 
-    private boolean addAckMsg(ReviveBuffer buffer, AckMsg ackMsg, MessageBO message, String mergeKey) {
+    private boolean addAckMsg(ReviveBuffer buffer, AckInfo ackInfo, MessageBO message, String mergeKey) {
         if (!messageConfig.isEnableSkipLongAwaitingAck()) {
             return false;
         }
@@ -177,10 +177,10 @@ public class ReviveConsumer {
             return true;
         }
 
-        PopCheckPoint point = PopConverter.toCheckPoint(ackMsg, message.getQueueOffset());
+        PopCheckPoint point = PopConverter.toCheckPoint(ackInfo, message.getQueueOffset());
         buffer.addAck(mergeKey, point);
         log.warn("can't find checkpoint for ack, waitTime={}ms, mergeKey={}, ack={}, mockCheckPoint={}",
-            ackWaitTime, mergeKey, ackMsg, point);
+            ackWaitTime, mergeKey, ackInfo, point);
 
         if (0 == buffer.getFirstReviveTime()) {
             buffer.setFirstReviveTime(point.getReviveTime());
@@ -189,7 +189,7 @@ public class ReviveConsumer {
         return true;
     }
 
-    private void mergeBatchAckMsg(BatchAckMsg batchAckMsg, PopCheckPoint point) {
+    private void mergeBatchAckMsg(BatchAckInfo batchAckMsg, PopCheckPoint point) {
         List<Long> offsetList = batchAckMsg.getAckOffsetList();
         for (Long offset : offsetList) {
             int index = point.indexOfAck(offset);
@@ -205,10 +205,10 @@ public class ReviveConsumer {
         }
     }
 
-    private void mergeAckMsg(AckMsg ackMsg, PopCheckPoint point) {
-        int index = point.indexOfAck(ackMsg.getAckOffset());
+    private void mergeAckMsg(AckInfo ackInfo, PopCheckPoint point) {
+        int index = point.indexOfAck(ackInfo.getAckOffset());
         if (index < 0) {
-            log.error("invalid ack index, ackMsg={}, point={}", ackMsg, point);
+            log.error("invalid ack index, ackMsg={}, point={}", ackInfo, point);
             return;
         }
 

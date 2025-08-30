@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class BatchAckMsg extends AckMsg {
+public class BatchAckInfo extends AckInfo {
     @JSONField(name = "aol", alternateNames = {"ackOffsetList"})
     private List<Long> ackOffsetList = new ArrayList<>(32);
 

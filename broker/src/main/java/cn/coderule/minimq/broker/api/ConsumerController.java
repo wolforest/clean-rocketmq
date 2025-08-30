@@ -59,7 +59,7 @@ public class ConsumerController {
     }
 
     public CompletableFuture<AckResult> ack(RequestContext context, AckRequest request) {
-        return consumer.ack(context, request);
+        return consumer.ack(request);
     }
 
     public CompletableFuture<AckResult> changeInvisible(InvisibleRequest request) {

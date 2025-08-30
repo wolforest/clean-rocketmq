@@ -3,7 +3,7 @@ package cn.coderule.minimq.broker.infra.store;
 import cn.coderule.minimq.broker.infra.embed.EmbedAckStore;
 import cn.coderule.minimq.broker.infra.remote.RemoteAckStore;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
-import cn.coderule.minimq.domain.domain.consumer.ack.AckMsg;
+import cn.coderule.minimq.domain.domain.consumer.ack.AckInfo;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.checkpoint.PopCheckPoint;
 import cn.coderule.minimq.domain.service.store.api.meta.AckStore;
 
@@ -34,9 +34,9 @@ public class AckFacade implements AckStore {
     }
 
     @Override
-    public void ack(AckMsg ackMsg, int reviveQueueId, long invisibleTime) {
-        if (embedAckStore.containsTopic(ackMsg.getTopic())) {
-            embedAckStore.ack(ackMsg, reviveQueueId, invisibleTime);
+    public void ack(AckInfo ackInfo, int reviveQueueId, long invisibleTime) {
+        if (embedAckStore.containsTopic(ackInfo.getTopic())) {
+            embedAckStore.ack(ackInfo, reviveQueueId, invisibleTime);
             return;
         }
 
@@ -44,7 +44,7 @@ public class AckFacade implements AckStore {
             return;
         }
 
-        remoteAckStore.ack(ackMsg, reviveQueueId, invisibleTime);
+        remoteAckStore.ack(ackInfo, reviveQueueId, invisibleTime);
     }
 
     @Override

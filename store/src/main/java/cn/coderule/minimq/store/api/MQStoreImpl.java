@@ -71,7 +71,7 @@ public class MQStoreImpl implements MQStore {
     @Override
     public void ack(AckRequest request) {
         ackService.ack(
-            request.getAckMsg(),
+            request.getAckInfo(),
             request.getReviveQueueId(),
             request.getInvisibleTime()
         );

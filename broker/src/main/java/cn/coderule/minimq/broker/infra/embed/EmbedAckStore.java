@@ -1,6 +1,6 @@
 package cn.coderule.minimq.broker.infra.embed;
 
-import cn.coderule.minimq.domain.domain.consumer.ack.AckMsg;
+import cn.coderule.minimq.domain.domain.consumer.ack.AckInfo;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.checkpoint.PopCheckPoint;
 import cn.coderule.minimq.domain.service.store.api.meta.AckStore;
 
@@ -19,8 +19,8 @@ public class EmbedAckStore extends AbstractEmbedStore implements AckStore {
     }
 
     @Override
-    public void ack(AckMsg ackMsg, int reviveQueueId, long invisibleTime) {
-        ackStore.ack(ackMsg, reviveQueueId, invisibleTime);
+    public void ack(AckInfo ackInfo, int reviveQueueId, long invisibleTime) {
+        ackStore.ack(ackInfo, reviveQueueId, invisibleTime);
     }
 
     @Override

@@ -1,7 +1,7 @@
 package cn.coderule.minimq.domain.domain.consumer.ack.store;
 
 import cn.coderule.minimq.domain.domain.cluster.RequestContext;
-import cn.coderule.minimq.domain.domain.consumer.ack.AckMsg;
+import cn.coderule.minimq.domain.domain.consumer.ack.AckInfo;
 import java.io.Serializable;
 import lombok.Data;
 
@@ -11,7 +11,7 @@ public class AckRequest implements Serializable {
 
     private String storeGroup;
 
-    private AckMsg ackMsg;
+    private AckInfo ackInfo;
     private int reviveQueueId;
     private long invisibleTime;
 }

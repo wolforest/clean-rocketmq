@@ -5,8 +5,8 @@ import cn.coderule.minimq.domain.core.constant.MessageConst;
 import cn.coderule.minimq.domain.core.constant.PopConstants;
 import cn.coderule.minimq.domain.core.enums.consume.PopStatus;
 import cn.coderule.minimq.domain.core.enums.message.MessageStatus;
-import cn.coderule.minimq.domain.domain.consumer.ack.AckMsg;
-import cn.coderule.minimq.domain.domain.consumer.ack.BatchAckMsg;
+import cn.coderule.minimq.domain.domain.consumer.ack.AckInfo;
+import cn.coderule.minimq.domain.domain.consumer.ack.BatchAckInfo;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueResult;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.PopContext;
@@ -102,39 +102,39 @@ public class PopConverter {
         return checkPoint;
     }
 
-    public static PopCheckPoint toCheckPoint(AckMsg ackMsg, long offset) {
+    public static PopCheckPoint toCheckPoint(AckInfo ackInfo, long offset) {
         PopCheckPoint point = new PopCheckPoint();
-        point.setStartOffset(ackMsg.getStartOffset());
-        point.setPopTime(ackMsg.getPopTime());
-        point.setQueueId(ackMsg.getQueueId());
-        point.setCId(ackMsg.getConsumerGroup());
-        point.setTopic(ackMsg.getTopic());
+        point.setStartOffset(ackInfo.getStartOffset());
+        point.setPopTime(ackInfo.getPopTime());
+        point.setQueueId(ackInfo.getQueueId());
+        point.setCId(ackInfo.getConsumerGroup());
+        point.setTopic(ackInfo.getTopic());
         point.setNum((byte) 0);
         point.setBitMap(0);
         point.setReviveOffset(offset);
-        point.setBrokerName(ackMsg.getBrokerName());
+        point.setBrokerName(ackInfo.getBrokerName());
         return point;
     }
 
-    public static MessageBO toMessageBO(AckMsg ackMsg, int reviveQid, String reviveTopic, SocketAddress storeHost, long invisibleTime) {
+    public static MessageBO toMessageBO(AckInfo ackInfo, int reviveQid, String reviveTopic, SocketAddress storeHost, long invisibleTime) {
         MessageBO msgInner = new MessageBO();
 
         msgInner.setTopic(reviveTopic);
-        msgInner.setBody(JSON.toJSONString(ackMsg).getBytes(StandardCharsets.UTF_8));
+        msgInner.setBody(JSON.toJSONString(ackInfo).getBytes(StandardCharsets.UTF_8));
         msgInner.setQueueId(reviveQid);
 
-        if (ackMsg instanceof BatchAckMsg) {
+        if (ackInfo instanceof BatchAckInfo) {
             msgInner.setTags(PopConstants.BATCH_ACK_TAG);
-            msgInner.setMessageId(PopKeyBuilder.genBatchAckUniqueId((BatchAckMsg) ackMsg));
+            msgInner.setMessageId(PopKeyBuilder.genBatchAckUniqueId((BatchAckInfo) ackInfo));
         } else {
             msgInner.setTags(PopConstants.ACK_TAG);
-            msgInner.setMessageId(PopKeyBuilder.genAckUniqueId(ackMsg));
+            msgInner.setMessageId(PopKeyBuilder.genAckUniqueId(ackInfo));
         }
 
         msgInner.setBornTimestamp(System.currentTimeMillis());
         msgInner.setBornHost(storeHost);
         msgInner.setStoreHost(storeHost);
-        msgInner.setDeliverTime(ackMsg.getPopTime() + invisibleTime);
+        msgInner.setDeliverTime(ackInfo.getPopTime() + invisibleTime);
 
         msgInner.setPropertiesString(MessageUtils.propertiesToString(msgInner.getProperties()));
         return msgInner;

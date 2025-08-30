@@ -1,8 +1,8 @@
 package cn.coderule.minimq.domain.domain.consumer.consume.pop.helper;
 
 import cn.coderule.minimq.domain.core.constant.PopConstants;
-import cn.coderule.minimq.domain.domain.consumer.ack.AckMsg;
-import cn.coderule.minimq.domain.domain.consumer.ack.BatchAckMsg;
+import cn.coderule.minimq.domain.domain.consumer.ack.AckInfo;
+import cn.coderule.minimq.domain.domain.consumer.ack.BatchAckInfo;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.checkpoint.PopCheckPoint;
 import cn.coderule.minimq.domain.domain.meta.topic.KeyBuilder;
 
@@ -12,13 +12,13 @@ public class PopKeyBuilder {
         return KeyBuilder.buildConsumeKey(point.getTopic(), point.getCId(), point.getQueueId());
     }
 
-    public static String buildKey(AckMsg ackMsg) {
-        return ackMsg.getTopic()
-            + ackMsg.getConsumerGroup()
-            + ackMsg.getQueueId()
-            + ackMsg.getStartOffset()
-            + ackMsg.getPopTime()
-            + ackMsg.getBrokerName();
+    public static String buildKey(AckInfo ackInfo) {
+        return ackInfo.getTopic()
+            + ackInfo.getConsumerGroup()
+            + ackInfo.getQueueId()
+            + ackInfo.getStartOffset()
+            + ackInfo.getPopTime()
+            + ackInfo.getBrokerName();
     }
 
     public static String buildKey(PopCheckPoint point) {
@@ -30,12 +30,12 @@ public class PopKeyBuilder {
             + point.getBrokerName();
     }
 
-    public static String buildReviveKey(AckMsg ackMsg) {
-        return ackMsg.getTopic()
-            + ackMsg.getConsumerGroup()
-            + ackMsg.getQueueId()
-            + ackMsg.getStartOffset()
-            + ackMsg.getPopTime();
+    public static String buildReviveKey(AckInfo ackInfo) {
+        return ackInfo.getTopic()
+            + ackInfo.getConsumerGroup()
+            + ackInfo.getQueueId()
+            + ackInfo.getStartOffset()
+            + ackInfo.getPopTime();
     }
 
     public static String buildReviveKey(PopCheckPoint point) {
@@ -49,20 +49,20 @@ public class PopKeyBuilder {
     /**
      * moved from org.apache.rocketmq.broker.util.PopUtils
      */
-    public static String genAckUniqueId(AckMsg ackMsg) {
-        return ackMsg.getTopic()
-            + PopConstants.SPLIT + ackMsg.getQueueId()
-            + PopConstants.SPLIT + ackMsg.getAckOffset()
-            + PopConstants.SPLIT + ackMsg.getConsumerGroup()
-            + PopConstants.SPLIT + ackMsg.getPopTime()
-            + PopConstants.SPLIT + ackMsg.getBrokerName()
+    public static String genAckUniqueId(AckInfo ackInfo) {
+        return ackInfo.getTopic()
+            + PopConstants.SPLIT + ackInfo.getQueueId()
+            + PopConstants.SPLIT + ackInfo.getAckOffset()
+            + PopConstants.SPLIT + ackInfo.getConsumerGroup()
+            + PopConstants.SPLIT + ackInfo.getPopTime()
+            + PopConstants.SPLIT + ackInfo.getBrokerName()
             + PopConstants.SPLIT + PopConstants.ACK_TAG;
     }
 
     /**
      * moved from org.apache.rocketmq.broker.util.PopUtils
      */
-    public static String genBatchAckUniqueId(BatchAckMsg batchAckMsg) {
+    public static String genBatchAckUniqueId(BatchAckInfo batchAckMsg) {
         return batchAckMsg.getTopic()
             + PopConstants.SPLIT + batchAckMsg.getQueueId()
             + PopConstants.SPLIT + batchAckMsg.getAckOffsetList().toString()

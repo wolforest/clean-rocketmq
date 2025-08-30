@@ -1,6 +1,6 @@
 package cn.coderule.minimq.broker.infra.remote;
 
-import cn.coderule.minimq.domain.domain.consumer.ack.AckMsg;
+import cn.coderule.minimq.domain.domain.consumer.ack.AckInfo;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.checkpoint.PopCheckPoint;
 import cn.coderule.minimq.domain.service.store.api.meta.AckStore;
 
@@ -16,7 +16,7 @@ public class RemoteAckStore extends AbstractRemoteStore implements AckStore {
     }
 
     @Override
-    public void ack(AckMsg ackMsg, int reviveQueueId, long invisibleTime) {
+    public void ack(AckInfo ackInfo, int reviveQueueId, long invisibleTime) {
 
     }
 

@@ -65,8 +65,8 @@ public class Consumer  {
         return popService.pop(request);
     }
 
-    public CompletableFuture<AckResult> ack(RequestContext context, AckRequest request) {
-        return ackService.ack(context, request);
+    public CompletableFuture<AckResult> ack(AckRequest request) {
+        return ackService.ack(request);
     }
 
     public CompletableFuture<AckResult> changeInvisible(InvisibleRequest request) {

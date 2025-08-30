@@ -134,7 +134,7 @@ public class MQStore implements MQFacade {
 
     @Override
     public void ack(AckRequest request) {
-        String topic = request.getAckMsg().getTopic();
+        String topic = request.getAckInfo().getTopic();
         if (embedMQStore.containsTopic(topic)) {
             embedMQStore.ack(request);
             return;

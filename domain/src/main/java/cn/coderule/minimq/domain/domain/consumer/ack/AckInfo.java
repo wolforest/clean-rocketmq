@@ -2,7 +2,7 @@ package cn.coderule.minimq.domain.domain.consumer.ack;
 
 import com.alibaba.fastjson2.annotation.JSONField;
 
-public class AckMsg {
+public class AckInfo {
 
     @JSONField(name = "ao", alternateNames = {"ackOffset"})
     private long ackOffset;

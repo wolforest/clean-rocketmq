@@ -1,6 +1,6 @@
 package cn.coderule.minimq.store.api;
 
-import cn.coderule.minimq.domain.domain.consumer.ack.AckMsg;
+import cn.coderule.minimq.domain.domain.consumer.ack.AckInfo;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.checkpoint.PopCheckPoint;
 import cn.coderule.minimq.domain.service.store.api.meta.AckStore;
 import cn.coderule.minimq.store.domain.mq.ack.AckService;
@@ -18,8 +18,8 @@ public class AckStoreImpl implements AckStore {
     }
 
     @Override
-    public void ack(AckMsg ackMsg, int reviveQueueId, long invisibleTime) {
-        ackService.ack(ackMsg, reviveQueueId, invisibleTime);
+    public void ack(AckInfo ackInfo, int reviveQueueId, long invisibleTime) {
+        ackService.ack(ackInfo, reviveQueueId, invisibleTime);
     }
 
     @Override

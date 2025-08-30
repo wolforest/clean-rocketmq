@@ -83,7 +83,7 @@ public class RemoteMQStore extends AbstractRemoteStore implements MQFacade {
 
     @Override
     public void ack(AckRequest request) {
-        String topic = request.getAckMsg().getTopic();
+        String topic = request.getAckInfo().getTopic();
         String address = loadBalance.findByTopic(topic);
         getClient(address).ack(request);
     }
