@@ -6,7 +6,7 @@ import java.io.Serializable;
 import lombok.Data;
 
 @Data
-public class AckRequest implements Serializable {
+public class AckMessage implements Serializable {
     private RequestContext requestContext;
 
     private String storeGroup;

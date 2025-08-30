@@ -4,7 +4,7 @@ import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.minimq.broker.infra.embed.EmbedMQStore;
 import cn.coderule.minimq.broker.infra.remote.RemoteMQStore;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
-import cn.coderule.minimq.domain.domain.consumer.ack.store.AckRequest;
+import cn.coderule.minimq.domain.domain.consumer.ack.store.AckMessage;
 import cn.coderule.minimq.domain.domain.consumer.ack.store.CheckPointRequest;
 import cn.coderule.minimq.domain.domain.consumer.ack.store.OffsetRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.MessageRequest;
@@ -133,7 +133,7 @@ public class MQStore implements MQFacade {
     }
 
     @Override
-    public void ack(AckRequest request) {
+    public void ack(AckMessage request) {
         String topic = request.getAckInfo().getTopic();
         if (embedMQStore.containsTopic(topic)) {
             embedMQStore.ack(request);

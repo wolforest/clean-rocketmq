@@ -1,6 +1,6 @@
 package cn.coderule.minimq.store.api;
 
-import cn.coderule.minimq.domain.domain.consumer.ack.store.AckRequest;
+import cn.coderule.minimq.domain.domain.consumer.ack.store.AckMessage;
 import cn.coderule.minimq.domain.domain.consumer.ack.store.CheckPointRequest;
 import cn.coderule.minimq.domain.domain.consumer.ack.store.OffsetRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueRequest;
@@ -69,7 +69,7 @@ public class MQStoreImpl implements MQStore {
     }
 
     @Override
-    public void ack(AckRequest request) {
+    public void ack(AckMessage request) {
         ackService.ack(
             request.getAckInfo(),
             request.getReviveQueueId(),

@@ -1,6 +1,6 @@
 package cn.coderule.minimq.rpc.store.facade;
 
-import cn.coderule.minimq.domain.domain.consumer.ack.store.AckRequest;
+import cn.coderule.minimq.domain.domain.consumer.ack.store.AckMessage;
 import cn.coderule.minimq.domain.domain.consumer.ack.store.CheckPointRequest;
 import cn.coderule.minimq.domain.domain.consumer.ack.store.OffsetRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueRequest;
@@ -24,7 +24,7 @@ public interface MQFacade {
     MessageResult getMessage(MessageRequest request);
 
     void addCheckPoint(CheckPointRequest request);
-    void ack(AckRequest request);
+    void ack(AckMessage request);
     long getBufferedOffset(OffsetRequest request);
 
     QueueResult getMinOffset(QueueRequest request);
