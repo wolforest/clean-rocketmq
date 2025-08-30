@@ -53,10 +53,18 @@ public class DequeueService {
 
         // @question need to add an atomic long to store restNum?
         DequeueRequest request = buildDequeueRequest(context, topicName, queueId);
+        request.setMaxNum(calculateMaxNum(context, lastResult));
+
         return mqStore.dequeueAsync(request)
             .thenApply(
                 result -> processResult(context, result, topicName, queueId, lastResult)
             );
+    }
+
+    private int calculateMaxNum(PopContext context, PopResult lastResult) {
+        int maxNum = context.getRequest().getMaxNum();
+
+        return maxNum - lastResult.countMessage();
     }
 
     private PopResult processResult(
