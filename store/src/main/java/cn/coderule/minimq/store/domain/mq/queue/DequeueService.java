@@ -76,26 +76,6 @@ public class DequeueService {
 
         return result;
     }
-    public boolean shouldStoreCheckpoint(DequeueRequest request, DequeueResult result) {
-        if (request.isFifo()) {
-            return false;
-        }
-
-        if (!result.isEmpty()) {
-            return true;
-        }
-
-        if (result.getNextOffset() < 0) {
-            return false;
-        }
-
-        MessageStatus status = result.getStatus();
-        return MessageStatus.NO_MATCHED_MESSAGE.equals(status)
-            || MessageStatus.OFFSET_FOUND_NULL.equals(status)
-            || MessageStatus.MESSAGE_WAS_REMOVING.equals(status)
-            || MessageStatus.NO_MATCHED_LOGIC_QUEUE.equals(status)
-            ;
-    }
 
     private DequeueResult regetMessage(DequeueRequest request, DequeueResult result) {
         if (!result.hasNextOffset()) {
@@ -114,7 +94,7 @@ public class DequeueService {
 
     private DequeueResult getMessageAndOffset(DequeueRequest request) {
         DequeueResult result = messageService.get(request);
-        offsetService.getNextOffset(request, result);
+        offsetService.setNextOffset(request, result);
 
         return result;
     }
@@ -141,5 +121,26 @@ public class DequeueService {
             -1,
             result.getNextOffset()
         );
+    }
+
+    private boolean shouldStoreCheckpoint(DequeueRequest request, DequeueResult result) {
+        if (request.isFifo()) {
+            return false;
+        }
+
+        if (!result.isEmpty()) {
+            return true;
+        }
+
+        if (result.getNextOffset() < 0) {
+            return false;
+        }
+
+        MessageStatus status = result.getStatus();
+        return MessageStatus.NO_MATCHED_MESSAGE.equals(status)
+            || MessageStatus.OFFSET_FOUND_NULL.equals(status)
+            || MessageStatus.MESSAGE_WAS_REMOVING.equals(status)
+            || MessageStatus.NO_MATCHED_LOGIC_QUEUE.equals(status)
+            ;
     }
 }

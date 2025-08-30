@@ -2,14 +2,11 @@ package cn.coderule.minimq.store.domain.mq.queue;
 
 import cn.coderule.minimq.domain.config.business.MessageConfig;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
-import cn.coderule.minimq.domain.config.store.MetaConfig;
-import cn.coderule.minimq.domain.core.enums.message.MessageStatus;
 import cn.coderule.minimq.domain.domain.cluster.store.QueueUnit;
 import cn.coderule.minimq.domain.domain.cluster.store.SelectedMappedBuffer;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueResult;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.helper.PopConverter;
-import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.domain.meta.order.OrderRequest;
 import cn.coderule.minimq.domain.service.store.domain.commitlog.CommitLog;
 import cn.coderule.minimq.domain.service.store.domain.consumequeue.ConsumeQueueGateway;
@@ -20,7 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class OffsetService {
-    private final StoreConfig storeConfig;
     private final MessageConfig messageConfig;
 
     private final CommitLog commitLog;
@@ -30,6 +26,8 @@ public class OffsetService {
     private final ConsumeOffsetService consumeOffsetService;
     private final ConsumeOrderService consumeOrderService;
 
+    private final NextOffsetSetter nextOffsetSetter;
+
     public OffsetService(
         StoreConfig storeConfig,
         CommitLog commitLog,
@@ -38,7 +36,6 @@ public class OffsetService {
         ConsumeOffsetService consumeOffsetService,
         ConsumeOrderService consumeOrderService
     ) {
-        this.storeConfig = storeConfig;
         this.messageConfig = storeConfig.getMessageConfig();
 
         this.commitLog = commitLog;
@@ -47,6 +44,8 @@ public class OffsetService {
 
         this.consumeOffsetService = consumeOffsetService;
         this.consumeOrderService = consumeOrderService;
+
+        this.nextOffsetSetter = new NextOffsetSetter(storeConfig, consumeQueue);
     }
 
     /**
@@ -78,43 +77,8 @@ public class OffsetService {
         return mergeBufferOffset(request, offset);
     }
 
-    public void getNextOffset(DequeueRequest request, DequeueResult result) {
-        if (!consumeQueue.existsQueue(request.getTopic(), request.getQueueId())) {
-            setOffsetIfQueueNotExists(request, result);
-            return;
-        }
-
-        long minOffset = getMinQueueOffset(request);
-        long maxOffset = getMaxQueueOffset(request);
-        result.setMinOffset(minOffset);
-        result.setMaxOffset(maxOffset);
-
-        if (0 == maxOffset) {
-            setOffsetIfQueueEmpty(request, result);
-            return;
-        }
-
-        if (request.getOffset() < minOffset) {
-            setOffsetIfOffsetSmall(request, result);
-            return;
-        }
-
-        if (request.getOffset() == maxOffset) {
-            setOffsetIfOffsetEqualMax(request, result);
-            return;
-        }
-
-        if (request.getOffset() > maxOffset) {
-            setOffsetIfOffsetBig(request, result);
-            return;
-        }
-
-        if (result.isEmpty()) {
-            setOffsetIfResultEmpty(request, result);
-            return;
-        }
-
-        setOffsetByMessageList(request, result);
+    public void setNextOffset(DequeueRequest request, DequeueResult result) {
+        nextOffsetSetter.set(request, result);
     }
 
     public void updateOffset(DequeueRequest request, DequeueResult result) {
@@ -148,20 +112,6 @@ public class OffsetService {
         return consumeOffsetService.getOffset(
             request.getGroup(),
             request.getTopic(),
-            request.getQueueId()
-        );
-    }
-
-    private long getMinQueueOffset(DequeueRequest request) {
-        return consumeQueue.getMinOffset(
-            request.getGroup(),
-            request.getQueueId()
-        );
-    }
-
-    private long getMaxQueueOffset(DequeueRequest request) {
-        return consumeQueue.getMaxOffset(
-            request.getGroup(),
             request.getQueueId()
         );
     }
@@ -237,81 +187,4 @@ public class OffsetService {
         SelectedMappedBuffer buffer = commitLog.selectBuffer(offset, size);
         return buffer != null;
     }
-
-    private long correctNextOffset(long oldOffset, long newOffset) {
-        MetaConfig metaConfig = storeConfig.getMetaConfig();
-
-        if (storeConfig.isMaster() || metaConfig.isEnableOffsetCheckInSlave()) {
-            return newOffset;
-        }
-
-        return oldOffset;
-    }
-
-    private void setOffsetIfQueueNotExists(DequeueRequest request, DequeueResult result) {
-        result.setStatus(MessageStatus.NO_MATCHED_LOGIC_QUEUE);
-        result.setMinOffset(0);
-        result.setMaxOffset(0);
-
-        result.setNextOffset(
-            correctNextOffset(request.getOffset(), 0)
-        );
-    }
-
-    private void setOffsetIfQueueEmpty(DequeueRequest request, DequeueResult result) {
-        result.setStatus(MessageStatus.NO_MESSAGE_IN_QUEUE);
-
-        result.setNextOffset(
-            correctNextOffset(request.getOffset(), 0)
-        );
-    }
-
-    private void setOffsetIfResultEmpty(DequeueRequest request, DequeueResult result) {
-        result.setStatus(MessageStatus.OFFSET_FOUND_NULL);
-
-        long rolledOffset = consumeQueue.rollToOffset(
-            request.getTopic(),
-            request.getQueueId(),
-            request.getOffset()
-        );
-
-        result.setNextOffset(
-            correctNextOffset(request.getOffset(), rolledOffset)
-        );
-    }
-
-    private void setOffsetIfOffsetSmall(DequeueRequest request, DequeueResult result) {
-        result.setStatus(MessageStatus.OFFSET_TOO_SMALL);
-
-        result.setNextOffset(
-            correctNextOffset(request.getOffset(), result.getMinOffset())
-        );
-    }
-
-    private void setOffsetIfOffsetBig(DequeueRequest request, DequeueResult result) {
-        result.setStatus(MessageStatus.OFFSET_OVERFLOW_BADLY);
-
-        result.setNextOffset(
-            correctNextOffset(request.getOffset(), result.getMaxOffset())
-        );
-    }
-
-    private void setOffsetIfOffsetEqualMax(DequeueRequest request, DequeueResult result) {
-        result.setStatus(MessageStatus.OFFSET_OVERFLOW_ONE);
-
-        result.setNextOffset(
-            request.getOffset()
-        );
-    }
-
-    private void setOffsetByMessageList(DequeueRequest request, DequeueResult result) {
-        long maxOffset = 0;
-
-        for (MessageBO messageBO : result.getMessageList()) {
-            maxOffset = Math.max(maxOffset, messageBO.getQueueOffset());
-        }
-
-        result.setNextOffset(maxOffset + 1);
-    }
-
 }
