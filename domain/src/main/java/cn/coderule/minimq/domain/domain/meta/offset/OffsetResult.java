@@ -12,4 +12,8 @@ public class OffsetResult implements Serializable {
         result.setOffset(offset);
         return result;
     }
+
+    public static OffsetResult notFound() {
+        return build(-1);
+    }
 }
