@@ -7,9 +7,9 @@ import lombok.Data;
 
 @Data
 public class ServerIdentity implements Serializable {
-    private static final String DEFAULT_CLUSTER_NAME = "DefaultCluster";
-    private static final String DEFAULT_GROUP_NAME = "DefaultGroup";
-    private static final String DEFAULT_CONTAINER_NAME = "DefaultContainer";
+    public static final String DEFAULT_CLUSTER_NAME = "DefaultCluster";
+    public static final String DEFAULT_GROUP_NAME = "DefaultGroup";
+    public static final String DEFAULT_CONTAINER_NAME = "DefaultContainer";
 
 
     private String region = MQConstants.DEFAULT_TRACE_REGION_ID;

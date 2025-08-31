@@ -3,6 +3,7 @@ package cn.coderule.minimq.store.domain.meta;
 import cn.coderule.common.util.io.FileUtil;
 import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.common.util.lang.string.JSONUtil;
+import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.domain.domain.meta.topic.Topic;
 import cn.coderule.minimq.domain.domain.meta.topic.TopicMap;
 import cn.coderule.minimq.domain.service.store.domain.consumequeue.ConsumeQueueGateway;
@@ -16,6 +17,7 @@ import java.util.Set;
 import lombok.Getter;
 
 public class DefaultTopicService implements TopicService {
+    private final StoreConfig storeConfig;
     private final String storePath;
     private final ConsumeOffsetService consumeOffsetService;
 
@@ -26,11 +28,15 @@ public class DefaultTopicService implements TopicService {
     @Getter
     private TopicMap topicMap;
 
-    public DefaultTopicService(String storePath,
-        ConsumeOffsetService consumeOffsetService) {
+    public DefaultTopicService(
+        StoreConfig storeConfig,
+        String storePath,
+        ConsumeOffsetService consumeOffsetService
+    ) {
         this.storePath = storePath;
-        this.consumeOffsetService = consumeOffsetService;
+        this.storeConfig = storeConfig;
 
+        this.consumeOffsetService = consumeOffsetService;
         this.topicMap = new TopicMap();
     }
 
@@ -95,7 +101,7 @@ public class DefaultTopicService implements TopicService {
     }
 
     private void registerSystemTopic() {
-        SystemTopicRegister register = new SystemTopicRegister(this);
+        SystemTopicRegister register = new SystemTopicRegister(storeConfig,this);
         register.register();
     }
 
