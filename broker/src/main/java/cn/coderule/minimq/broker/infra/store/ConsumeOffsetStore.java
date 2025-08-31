@@ -18,7 +18,8 @@ public class ConsumeOffsetStore implements ConsumeOffsetFacade {
     public ConsumeOffsetStore(
         BrokerConfig brokerConfig,
         EmbedConsumeOffsetStore embedStore,
-        RemoteConsumeOffsetStore remoteStore) {
+        RemoteConsumeOffsetStore remoteStore
+    ) {
         this.brokerConfig = brokerConfig;
         this.embedStore = embedStore;
         this.remoteStore = remoteStore;

@@ -21,7 +21,7 @@ public class RemoteConsumeOffsetStore extends AbstractRemoteStore implements Con
     }
     @Override
     public OffsetResult getOffset(OffsetRequest request) {
-        return null;
+        return OffsetResult.notFound();
     }
 
     @Override
@@ -46,11 +46,11 @@ public class RemoteConsumeOffsetStore extends AbstractRemoteStore implements Con
 
     @Override
     public TopicResult findTopicByGroup(OffsetFilter filter) {
-        return null;
+        return TopicResult.empty();
     }
 
     @Override
     public GroupResult findGroupByTopic(OffsetFilter filter) {
-        return null;
+        return GroupResult.empty();
     }
 }
