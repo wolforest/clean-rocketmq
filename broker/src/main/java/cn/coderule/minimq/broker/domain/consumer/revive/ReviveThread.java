@@ -108,6 +108,8 @@ public class ReviveThread extends ServiceThread {
     }
 
     private boolean shouldSkip() {
+        this.await(messageConfig.getRenewInterval());
+
         return skipRevive;
     }
 }
