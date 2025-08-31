@@ -13,7 +13,6 @@ import cn.coderule.minimq.domain.config.network.GrpcConfig;
 import cn.coderule.minimq.domain.config.network.RpcClientConfig;
 import cn.coderule.minimq.domain.config.network.RpcServerConfig;
 import java.io.Serializable;
-import java.util.concurrent.TimeUnit;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;

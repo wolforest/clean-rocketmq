@@ -21,7 +21,10 @@ public class StoreConfig extends ServerIdentity {
     private String host = NetworkUtil.getLocalAddress();
     private int port = ConfigAttribute.STORE_PORT;
 
-
+    /**
+     *
+     */
+    private long serverReadyTime = 0L;
 
 
     /**
