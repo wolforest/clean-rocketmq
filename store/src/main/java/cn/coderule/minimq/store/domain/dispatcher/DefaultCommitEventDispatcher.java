@@ -7,6 +7,7 @@ import cn.coderule.minimq.domain.domain.cluster.store.CommitEvent;
 import cn.coderule.minimq.domain.service.store.domain.commitlog.CommitLog;
 import cn.coderule.minimq.domain.service.store.domain.commitlog.CommitEventHandler;
 import cn.coderule.minimq.domain.service.store.domain.commitlog.CommitEventDispatcher;
+import cn.coderule.minimq.domain.service.store.server.CheckPoint;
 import java.util.ArrayList;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,16 +20,18 @@ public class DefaultCommitEventDispatcher extends ServiceThread  implements Comm
      *
      */
     @Getter @Setter
-    private volatile long dispatchedOffset = 0;
+    private volatile long dispatchedOffset = -1;
 
     private final ArrayList<CommitEventHandler> consumerList = new ArrayList<>();
 
     private final StoreConfig storeConfig;
     private final CommitLog commitLog;
+    private final CheckPoint checkPoint;
 
-    public DefaultCommitEventDispatcher(StoreConfig storeConfig, CommitLog commitLog) {
+    public DefaultCommitEventDispatcher(StoreConfig storeConfig, CommitLog commitLog, CheckPoint checkPoint) {
         this.storeConfig = storeConfig;
         this.commitLog = commitLog;
+        this.checkPoint = checkPoint;
     }
 
     @Override
@@ -70,5 +73,13 @@ public class DefaultCommitEventDispatcher extends ServiceThread  implements Comm
 
     private void loadAndDispatch() {
 
+    }
+
+    private void initDispatchedOffset() {
+        if (this.dispatchedOffset > -1) {
+            return;
+        }
+
+        this.dispatchedOffset = commitLog.getMinOffset();
     }
 }

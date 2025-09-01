@@ -4,6 +4,7 @@ import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.domain.service.store.domain.commitlog.CommitLog;
 import cn.coderule.minimq.domain.service.store.domain.commitlog.CommitEventDispatcher;
 import cn.coderule.minimq.domain.service.store.domain.commitlog.CommitLogDispatcherManager;
+import cn.coderule.minimq.domain.service.store.server.CheckPoint;
 import cn.coderule.minimq.store.server.bootstrap.StoreContext;
 
 public class DefaultCommitLogDispatcherManager implements CommitLogDispatcherManager {
@@ -13,7 +14,8 @@ public class DefaultCommitLogDispatcherManager implements CommitLogDispatcherMan
     public void initialize() throws Exception {
         StoreConfig storeConfig = StoreContext.getBean(StoreConfig.class);
         CommitLog commitLog = StoreContext.getBean(CommitLog.class);
-        dispatcher = new DefaultCommitEventDispatcher(storeConfig, commitLog);
+        CheckPoint checkPoint = StoreContext.getCheckPoint();
+        dispatcher = new DefaultCommitEventDispatcher(storeConfig, commitLog, checkPoint);
 
         StoreContext.register(dispatcher, CommitEventDispatcher.class);
     }
