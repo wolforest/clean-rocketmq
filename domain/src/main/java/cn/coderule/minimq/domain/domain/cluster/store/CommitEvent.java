@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 
 /**
  * Async CommitLog dispatching core object
- *
  * created By ReputMessageService
  * dispatch to :
  *     1. CommitLogDispatcherBuildConsumeQueue
@@ -28,4 +27,10 @@ public class CommitEvent implements Serializable {
 
     // filter info
     private byte[] bitMap;
+
+    public static CommitEvent of(MessageBO messageBO) {
+        return CommitEvent.builder()
+            .messageBO(messageBO)
+            .build();
+    }
 }
