@@ -77,18 +77,17 @@ public class DefaultCommitEventDispatcher extends ServiceThread  implements Comm
 
         while (hasNewEvent()) {
             MessageBO messageBO = commitLog.select(this.dispatchedOffset);
-            if (messageBO == null) {
-                log.error("invalid commitLog offset: {}", this.dispatchedOffset);
+            if (isOverflow(messageBO.getMessageSize())) {
                 break;
             }
 
-            boolean success = dispatch(messageBO);
-            if (!success) {
-                log.error("dispatch failed, offset: {}; message: {};", this.dispatchedOffset, messageBO);
-                break;
+            if (messageBO.isValid()) {
+                dispatch(messageBO);
             }
 
-            saveDispatchedOffset(messageBO.getMessageSize());
+            if (!messageBO.isEmpty()) {
+                saveDispatchedOffset(messageBO.getMessageSize());
+            }
         }
     }
 
@@ -97,8 +96,9 @@ public class DefaultCommitEventDispatcher extends ServiceThread  implements Comm
         checkPoint.getMaxOffset().setDispatchedOffset(dispatchedOffset);
     }
 
-    private boolean dispatch(MessageBO messageBO) {
-        return true;
+    private void dispatch(MessageBO messageBO) {
+        CommitEvent event = CommitEvent.of(messageBO);
+        dispatch(event);
     }
 
     private void initDispatchedOffset() {
@@ -113,6 +113,10 @@ public class DefaultCommitEventDispatcher extends ServiceThread  implements Comm
         }
 
         this.dispatchedOffset = commitLog.getMinOffset();
+    }
+
+    private boolean isOverflow(int size) {
+        return this.dispatchedOffset + size > commitLog.getMaxOffset();
     }
 
     private boolean hasNewEvent() {

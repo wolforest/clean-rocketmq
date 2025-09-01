@@ -11,6 +11,7 @@ import java.io.Serializable;
 import java.net.SocketAddress;
 import java.util.Collection;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -30,7 +31,8 @@ public class MessageBO extends Message implements Serializable {
      */
     private int queueId;
     private String topicKey;
-    private int messageSize;
+    @Builder.Default
+    private int messageSize = 0;
 
     private long commitOffset;
     /**

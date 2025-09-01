@@ -32,7 +32,7 @@ public class MessageService {
 
     public MessageResult getMessage(MessageRequest request) {
         MessageBO message = commitLog.select(request.getOffset(), request.getSize());
-        if (message == null) {
+        if (!message.isValid()) {
             return MessageResult.notFound();
         }
 

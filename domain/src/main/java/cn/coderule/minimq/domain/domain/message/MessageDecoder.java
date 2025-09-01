@@ -1,6 +1,7 @@
 package cn.coderule.minimq.domain.domain.message;
 
 import cn.coderule.common.util.encrypt.HashUtil;
+import cn.coderule.minimq.domain.core.enums.message.MessageStatus;
 import cn.coderule.minimq.domain.core.enums.message.MessageVersion;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -140,12 +141,13 @@ public class MessageDecoder {
 //            String msgId = createMessageId(byteBufferMsgId, msgExt.getStoreHost(), msgExt.getCommitLogOffset());
 //            msgExt.setMsgId(msgId);
 
+            msg.setStatus(MessageStatus.FOUND);
             return msg;
         } catch (Exception e) {
             byteBuffer.position(byteBuffer.limit());
         }
 
-        return null;
+        return MessageBO.notFound();
     }
 
     public static String createMessageId(final ByteBuffer input, final ByteBuffer addr, final long offset) {

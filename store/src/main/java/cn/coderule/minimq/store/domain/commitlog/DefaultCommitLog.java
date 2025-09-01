@@ -101,13 +101,13 @@ public class DefaultCommitLog implements CommitLog {
     public MessageBO select(long offset, int size) {
         MappedFile mappedFile = mappedFileQueue.getMappedFileByOffset(offset);
         if (mappedFile == null) {
-            return null;
+            return MessageBO.notFound();
         }
 
         int position = (int) (offset % commitConfig.getFileSize());
         SelectedMappedBuffer buffer = mappedFile.select(position, size);
         if (buffer == null) {
-            return null;
+            return MessageBO.notFound();
         }
 
         MessageBO messageBO = MessageDecoder.decode(buffer.getByteBuffer());
@@ -120,14 +120,13 @@ public class DefaultCommitLog implements CommitLog {
     public MessageBO select(long offset) {
         SelectedMappedBuffer buffer = selectBuffer(offset);
         if (buffer == null) {
-            return null;
+            return MessageBO.notFound();
         }
 
         int size = buffer.getByteBuffer().getInt();
         buffer.getByteBuffer().limit(size);
 
         MessageBO messageBO = MessageDecoder.decode(buffer.getByteBuffer());
-        messageBO.setStatus(MessageStatus.FOUND);
         buffer.release();
 
         return messageBO;
