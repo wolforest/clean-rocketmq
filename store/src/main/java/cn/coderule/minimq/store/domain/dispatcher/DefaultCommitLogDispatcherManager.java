@@ -1,5 +1,6 @@
 package cn.coderule.minimq.store.domain.dispatcher;
 
+import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.domain.service.store.domain.commitlog.CommitLog;
 import cn.coderule.minimq.domain.service.store.domain.commitlog.CommitEventDispatcher;
 import cn.coderule.minimq.domain.service.store.domain.commitlog.CommitLogDispatcherManager;
@@ -10,8 +11,9 @@ public class DefaultCommitLogDispatcherManager implements CommitLogDispatcherMan
 
     @Override
     public void initialize() throws Exception {
+        StoreConfig storeConfig = StoreContext.getBean(StoreConfig.class);
         CommitLog commitLog = StoreContext.getBean(CommitLog.class);
-        dispatcher = new DefaultCommitEventDispatcher(commitLog);
+        dispatcher = new DefaultCommitEventDispatcher(storeConfig, commitLog);
 
         StoreContext.register(dispatcher, CommitEventDispatcher.class);
     }
@@ -23,16 +25,7 @@ public class DefaultCommitLogDispatcherManager implements CommitLogDispatcherMan
 
     @Override
     public void shutdown() throws Exception {
-
+        dispatcher.stop();
     }
 
-    @Override
-    public void cleanup() throws Exception {
-
-    }
-
-    @Override
-    public State getState() {
-        return null;
-    }
 }

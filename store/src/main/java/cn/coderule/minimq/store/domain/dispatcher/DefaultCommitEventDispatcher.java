@@ -2,6 +2,7 @@ package cn.coderule.minimq.store.domain.dispatcher;
 
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 import cn.coderule.common.util.lang.ThreadUtil;
+import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.domain.domain.cluster.store.CommitEvent;
 import cn.coderule.minimq.domain.service.store.domain.commitlog.CommitLog;
 import cn.coderule.minimq.domain.service.store.domain.commitlog.CommitEventHandler;
@@ -18,13 +19,15 @@ public class DefaultCommitEventDispatcher extends ServiceThread  implements Comm
      *
      */
     @Getter @Setter
-    private volatile long dispatchedOffset = -1L;
+    private volatile long dispatchedOffset = 0;
 
     private final ArrayList<CommitEventHandler> consumerList = new ArrayList<>();
 
+    private final StoreConfig storeConfig;
     private final CommitLog commitLog;
 
-    public DefaultCommitEventDispatcher(CommitLog commitLog) {
+    public DefaultCommitEventDispatcher(StoreConfig storeConfig, CommitLog commitLog) {
+        this.storeConfig = storeConfig;
         this.commitLog = commitLog;
     }
 
