@@ -65,6 +65,12 @@ public class MessageBO extends Message implements Serializable {
 
     private MessageVersion version = MessageVersion.V1;
 
+    public static MessageBO notFound() {
+        MessageBO messageBO = new MessageBO();
+        messageBO.status = MessageStatus.NO_MATCHED_MESSAGE;
+        return messageBO;
+    }
+
     public void setSystemQueue(String systemTopic, int systemQueueId) {
         putProperty(MessageConst.PROPERTY_REAL_TOPIC, topic);
         putProperty(MessageConst.PROPERTY_REAL_QUEUE_ID, String.valueOf(queueId));

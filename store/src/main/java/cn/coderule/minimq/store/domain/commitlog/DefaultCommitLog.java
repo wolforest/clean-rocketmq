@@ -1,5 +1,6 @@
 package cn.coderule.minimq.store.domain.commitlog;
 
+import cn.coderule.minimq.domain.core.enums.message.MessageStatus;
 import cn.coderule.minimq.store.domain.commitlog.vo.InsertContext;
 import cn.coderule.common.util.encrypt.HashUtil;
 import cn.coderule.minimq.domain.config.store.CommitConfig;
@@ -126,6 +127,7 @@ public class DefaultCommitLog implements CommitLog {
         buffer.getByteBuffer().limit(size);
 
         MessageBO messageBO = MessageDecoder.decode(buffer.getByteBuffer());
+        messageBO.setStatus(MessageStatus.FOUND);
         buffer.release();
 
         return messageBO;
