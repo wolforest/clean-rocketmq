@@ -72,11 +72,17 @@ public class DefaultCommitEventDispatcher extends ServiceThread  implements Comm
     }
 
     private void loadAndDispatch() {
-
+        initDispatchedOffset();
     }
 
     private void initDispatchedOffset() {
         if (this.dispatchedOffset > -1) {
+            return;
+        }
+
+        long checkpointOffset = checkPoint.getMaxOffset().getDispatchedOffset();
+        if (checkpointOffset > -1) {
+            this.dispatchedOffset = checkpointOffset;
             return;
         }
 
