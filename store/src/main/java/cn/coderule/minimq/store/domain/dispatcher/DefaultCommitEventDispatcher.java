@@ -88,4 +88,8 @@ public class DefaultCommitEventDispatcher extends ServiceThread  implements Comm
 
         this.dispatchedOffset = commitLog.getMinOffset();
     }
+
+    private boolean hasNewEvent() {
+        return this.dispatchedOffset < commitLog.getMaxOffset();
+    }
 }
