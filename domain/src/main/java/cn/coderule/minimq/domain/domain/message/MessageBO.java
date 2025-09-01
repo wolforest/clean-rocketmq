@@ -46,7 +46,9 @@ public class MessageBO extends Message implements Serializable {
     private SocketAddress storeHost;
     @Deprecated
     private String msgId;
+
     private int bodyCRC;
+    private int magicCode;
 
     private Long tagsCode;
     private String propertiesString;

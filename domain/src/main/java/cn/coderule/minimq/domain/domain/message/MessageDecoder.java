@@ -27,69 +27,70 @@ public class MessageDecoder {
         final boolean isSetPropertiesString, final boolean checkCRC) {
         try {
 
-            MessageBO msgExt = new MessageBO();
+            MessageBO msg = new MessageBO();
 
             // 1 TOTALSIZE
             int storeSize = byteBuffer.getInt();
-            msgExt.setMessageSize(storeSize);
+            msg.setMessageSize(storeSize);
 
             // 2 MAGICCODE
             int magicCode = byteBuffer.getInt();
+            msg.setMagicCode(magicCode);
             MessageVersion version = MessageVersion.valueOfMagicCode(magicCode);
 
             // 3 BODYCRC
             int bodyCRC = byteBuffer.getInt();
-            msgExt.setBodyCRC(bodyCRC);
+            msg.setBodyCRC(bodyCRC);
 
             // 4 QUEUEID
             int queueId = byteBuffer.getInt();
-            msgExt.setQueueId(queueId);
+            msg.setQueueId(queueId);
 
             // 5 FLAG
             int flag = byteBuffer.getInt();
-            msgExt.setFlag(flag);
+            msg.setFlag(flag);
 
             // 6 QUEUEOFFSET
             long queueOffset = byteBuffer.getLong();
-            msgExt.setQueueOffset(queueOffset);
+            msg.setQueueOffset(queueOffset);
 
             // 7 PHYSICALOFFSET
             long physicOffset = byteBuffer.getLong();
-            msgExt.setCommitOffset(physicOffset);
+            msg.setCommitOffset(physicOffset);
 
             // 8 SYSFLAG
             int sysFlag = byteBuffer.getInt();
-            msgExt.setSysFlag(sysFlag);
+            msg.setSysFlag(sysFlag);
 
             // 9 BORNTIMESTAMP
             long bornTimeStamp = byteBuffer.getLong();
-            msgExt.setBornTimestamp(bornTimeStamp);
+            msg.setBornTimestamp(bornTimeStamp);
 
             // 10 BORNHOST
             int bornhostIPLength = 4;
             byte[] bornHost = new byte[bornhostIPLength];
             byteBuffer.get(bornHost, 0, bornhostIPLength);
             int port = byteBuffer.getInt();
-            msgExt.setBornHost(new InetSocketAddress(InetAddress.getByAddress(bornHost), port));
+            msg.setBornHost(new InetSocketAddress(InetAddress.getByAddress(bornHost), port));
 
             // 11 STORETIMESTAMP
             long storeTimestamp = byteBuffer.getLong();
-            msgExt.setStoreTimestamp(storeTimestamp);
+            msg.setStoreTimestamp(storeTimestamp);
 
             // 12 STOREHOST
             int storehostIPLength = 4;
             byte[] storeHost = new byte[storehostIPLength];
             byteBuffer.get(storeHost, 0, storehostIPLength);
             port = byteBuffer.getInt();
-            msgExt.setStoreHost(new InetSocketAddress(InetAddress.getByAddress(storeHost), port));
+            msg.setStoreHost(new InetSocketAddress(InetAddress.getByAddress(storeHost), port));
 
             // 13 RECONSUMETIMES
             int reconsumeTimes = byteBuffer.getInt();
-            msgExt.setReconsumeTimes(reconsumeTimes);
+            msg.setReconsumeTimes(reconsumeTimes);
 
             // 14 Prepared Transaction Offset
             long preparedTransactionOffset = byteBuffer.getLong();
-            msgExt.setPreparedTransactionOffset(preparedTransactionOffset);
+            msg.setPreparedTransactionOffset(preparedTransactionOffset);
 
             // 15 BODY
             int bodyLen = byteBuffer.getInt();
@@ -106,7 +107,7 @@ public class MessageDecoder {
                         }
                     }
 
-                    msgExt.setBody(body);
+                    msg.setBody(body);
                 } else {
                     byteBuffer.position(byteBuffer.position() + bodyLen);
                 }
@@ -116,7 +117,7 @@ public class MessageDecoder {
             int topicLen = version.getTopicLength(byteBuffer);
             byte[] topic = new byte[topicLen];
             byteBuffer.get(topic);
-            msgExt.setTopic(new String(topic, StandardCharsets.UTF_8));
+            msg.setTopic(new String(topic, StandardCharsets.UTF_8));
 
             // 17 properties
             short propertiesLength = byteBuffer.getShort();
@@ -139,7 +140,7 @@ public class MessageDecoder {
 //            String msgId = createMessageId(byteBufferMsgId, msgExt.getStoreHost(), msgExt.getCommitLogOffset());
 //            msgExt.setMsgId(msgId);
 
-            return msgExt;
+            return msg;
         } catch (Exception e) {
             byteBuffer.position(byteBuffer.limit());
         }
