@@ -84,7 +84,16 @@ public class DefaultCommitEventDispatcher extends ServiceThread  implements Comm
             }
 
             success = dispatch(messageBO);
+            if (success) {
+                saveDispatchedOffset(messageBO.getCommitOffset());
+            }
+
         }
+    }
+
+    private void saveDispatchedOffset(long offset) {
+        this.dispatchedOffset = offset;
+        checkPoint.getMaxOffset().setDispatchedOffset(offset);
     }
 
     private boolean dispatch(MessageBO messageBO) {
