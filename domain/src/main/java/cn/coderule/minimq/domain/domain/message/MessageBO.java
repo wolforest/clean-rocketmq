@@ -100,7 +100,7 @@ public class MessageBO extends Message implements Serializable {
     }
 
     public boolean isEmpty() {
-        return 0 == this.messageSize;
+        return this.messageSize <= 0;
     }
 
     public long getTagsCode() {

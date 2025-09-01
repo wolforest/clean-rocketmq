@@ -2,7 +2,6 @@ package cn.coderule.minimq.store.domain.dispatcher;
 
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 import cn.coderule.common.util.lang.ThreadUtil;
-import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.domain.domain.cluster.store.CommitEvent;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.service.store.domain.commitlog.CommitLog;
@@ -25,12 +24,10 @@ public class DefaultCommitEventDispatcher extends ServiceThread  implements Comm
 
     private final ArrayList<CommitEventHandler> consumerList = new ArrayList<>();
 
-    private final StoreConfig storeConfig;
     private final CommitLog commitLog;
     private final CheckPoint checkPoint;
 
-    public DefaultCommitEventDispatcher(StoreConfig storeConfig, CommitLog commitLog, CheckPoint checkPoint) {
-        this.storeConfig = storeConfig;
+    public DefaultCommitEventDispatcher(CommitLog commitLog, CheckPoint checkPoint) {
         this.commitLog = commitLog;
         this.checkPoint = checkPoint;
     }
@@ -85,7 +82,7 @@ public class DefaultCommitEventDispatcher extends ServiceThread  implements Comm
                 dispatch(messageBO);
             }
 
-            if (!messageBO.isEmpty()) {
+            if (messageBO.getMessageSize() > 0) {
                 saveDispatchedOffset(messageBO.getMessageSize());
             }
         }

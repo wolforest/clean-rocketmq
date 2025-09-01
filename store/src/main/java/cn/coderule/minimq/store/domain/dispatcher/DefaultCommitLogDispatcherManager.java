@@ -15,7 +15,7 @@ public class DefaultCommitLogDispatcherManager implements CommitLogDispatcherMan
         StoreConfig storeConfig = StoreContext.getBean(StoreConfig.class);
         CommitLog commitLog = StoreContext.getBean(CommitLog.class);
         CheckPoint checkPoint = StoreContext.getCheckPoint();
-        dispatcher = new DefaultCommitEventDispatcher(storeConfig, commitLog, checkPoint);
+        dispatcher = new DefaultCommitEventDispatcher(commitLog, checkPoint);
 
         StoreContext.register(dispatcher, CommitEventDispatcher.class);
     }
