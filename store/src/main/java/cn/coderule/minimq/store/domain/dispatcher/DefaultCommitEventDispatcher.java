@@ -88,13 +88,13 @@ public class DefaultCommitEventDispatcher extends ServiceThread  implements Comm
                 break;
             }
 
-            saveDispatchedOffset(messageBO.getCommitOffset());
+            saveDispatchedOffset(messageBO.getMessageSize());
         }
     }
 
-    private void saveDispatchedOffset(long offset) {
-        this.dispatchedOffset = offset;
-        checkPoint.getMaxOffset().setDispatchedOffset(offset);
+    private void saveDispatchedOffset(int size) {
+        this.dispatchedOffset += size;
+        checkPoint.getMaxOffset().setDispatchedOffset(dispatchedOffset);
     }
 
     private boolean dispatch(MessageBO messageBO) {
