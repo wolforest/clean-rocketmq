@@ -74,20 +74,21 @@ public class DefaultCommitEventDispatcher extends ServiceThread  implements Comm
 
     private void loadAndDispatch() {
         initDispatchedOffset();
-        boolean success = true;
 
-        while (success && hasNewEvent()) {
+        while (hasNewEvent()) {
             MessageBO messageBO = commitLog.select(this.dispatchedOffset);
             if (messageBO == null) {
                 log.error("invalid commitLog offset: {}", this.dispatchedOffset);
                 break;
             }
 
-            success = dispatch(messageBO);
-            if (success) {
-                saveDispatchedOffset(messageBO.getCommitOffset());
+            boolean success = dispatch(messageBO);
+            if (!success) {
+                log.error("dispatch failed, offset: {}; message: {};", this.dispatchedOffset, messageBO);
+                break;
             }
 
+            saveDispatchedOffset(messageBO.getCommitOffset());
         }
     }
 
