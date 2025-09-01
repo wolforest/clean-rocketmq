@@ -4,6 +4,7 @@ import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 import cn.coderule.common.util.lang.ThreadUtil;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.domain.domain.cluster.store.CommitEvent;
+import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.service.store.domain.commitlog.CommitLog;
 import cn.coderule.minimq.domain.service.store.domain.commitlog.CommitEventHandler;
 import cn.coderule.minimq.domain.service.store.domain.commitlog.CommitEventDispatcher;
@@ -73,6 +74,21 @@ public class DefaultCommitEventDispatcher extends ServiceThread  implements Comm
 
     private void loadAndDispatch() {
         initDispatchedOffset();
+        boolean success = true;
+
+        while (success && hasNewEvent()) {
+            MessageBO messageBO = commitLog.select(this.dispatchedOffset);
+            if (messageBO == null) {
+                log.error("invalid commitLog offset: {}", this.dispatchedOffset);
+                break;
+            }
+
+            success = dispatch(messageBO);
+        }
+    }
+
+    private boolean dispatch(MessageBO messageBO) {
+        return true;
     }
 
     private void initDispatchedOffset() {
