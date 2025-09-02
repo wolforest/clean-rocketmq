@@ -25,10 +25,11 @@ public class InsertResult implements Serializable {
         return InsertStatus.PUT_OK.equals(status);
     }
 
-    public static InsertResult success(long wroteOffset) {
+    public static InsertResult success(long wroteOffset, int wroteBytes) {
         return InsertResult.builder()
             .status(InsertStatus.PUT_OK)
             .wroteOffset(wroteOffset)
+            .wroteBytes(wroteBytes)
             .build();
     }
 
