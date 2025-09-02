@@ -13,5 +13,15 @@ class DefaultMappedFileQueueTest {
     void testCreateMappedFileQueue(@TempDir Path tmpDir) {
         MappedFileQueue queue = new DefaultMappedFileQueue(tmpDir.toString(), 1024);
         queue.load();
+
+        assertTrue(queue.isEmpty());
+        assertEquals(0, queue.size());
+
+        assertNull(queue.getFirstMappedFile());
+        assertNull(queue.getLastMappedFile());
+        assertNull(queue.getMappedFileByOffset(0));
+        assertNotNull(queue.getMappedFileForSize(10));
+
+        queue.destroy();
     }
 }

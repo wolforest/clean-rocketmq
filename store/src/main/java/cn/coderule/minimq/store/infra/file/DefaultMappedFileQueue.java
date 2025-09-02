@@ -138,6 +138,26 @@ public class DefaultMappedFileQueue implements MappedFileQueue {
     }
 
     @Override
+    public MappedFile getMappedFileForOffset(long offset) {
+        long fileOffset = -1;
+        MappedFile last = getLastMappedFile();
+
+        // if offset greater than max offset of last mappedFile
+        // this will cause service can't restart
+        if (null == last || !last.containsOffset(offset)) {
+            fileOffset = offset - offset % fileSize;
+            return createMappedFile(fileOffset);
+        }
+
+        if (!last.isFull()) {
+            return last;
+        }
+
+        fileOffset = last.getMinOffset() + this.fileSize;
+        return createMappedFile(fileOffset);
+    }
+
+    @Override
     public MappedFile getFirstMappedFile() {
         if (this.mappedFiles.isEmpty()) {
             return null;
@@ -168,25 +188,7 @@ public class DefaultMappedFileQueue implements MappedFileQueue {
         return null;
     }
 
-    @Override
-    public MappedFile getMappedFileForOffset(long offset) {
-        long fileOffset = -1;
-        MappedFile last = getLastMappedFile();
 
-        // if offset greater than max offset of last mappedFile
-        // this will cause service can't restart
-        if (null == last || !last.containsOffset(offset)) {
-            fileOffset = offset - offset % fileSize;
-            return createMappedFile(fileOffset);
-        }
-
-        if (!last.isFull()) {
-            return last;
-        }
-
-        fileOffset = last.getMinOffset() + this.fileSize;
-        return createMappedFile(fileOffset);
-    }
 
     @Override
     public MappedFile createMappedFile(long createOffset) {
