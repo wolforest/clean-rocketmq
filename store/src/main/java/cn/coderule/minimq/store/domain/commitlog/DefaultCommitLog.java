@@ -1,6 +1,5 @@
 package cn.coderule.minimq.store.domain.commitlog;
 
-import cn.coderule.minimq.domain.core.enums.message.MessageStatus;
 import cn.coderule.minimq.store.domain.commitlog.vo.InsertContext;
 import cn.coderule.common.util.encrypt.HashUtil;
 import cn.coderule.minimq.domain.config.store.CommitConfig;
@@ -203,7 +202,7 @@ public class DefaultCommitLog implements CommitLog {
     }
 
     private MappedFile getMappedFile(int size) {
-        MappedFile mappedFile = mappedFileQueue.getMappedFileForSize(size);
+        MappedFile mappedFile = mappedFileQueue.createMappedFileForSize(size);
         mappedFile.setFileMode(CLibrary.MADV_RANDOM);
 
         return mappedFile;

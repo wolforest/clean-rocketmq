@@ -29,14 +29,14 @@ public interface MappedFileQueue {
      * @param messageSize messageSize
      * @return mappedFile
      */
-    MappedFile getMappedFileForSize(int messageSize);
+    MappedFile createMappedFileForSize(int messageSize);
 
     /**
      * get or create mappedFile contains offset
      * @param offset offset
      * @return MappedFile
      */
-    MappedFile getMappedFileForOffset(long offset);
+    MappedFile createMappedFileForOffset(long offset);
 
     /**
      * get the mappedFile contains the offset

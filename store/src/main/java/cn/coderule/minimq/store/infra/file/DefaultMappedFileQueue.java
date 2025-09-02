@@ -107,7 +107,7 @@ public class DefaultMappedFileQueue implements MappedFileQueue {
     }
 
     @Override
-    public MappedFile getMappedFileForSize(int messageSize) {
+    public MappedFile createMappedFileForSize(int messageSize) {
         if (isEmpty()) return createMappedFile(0);
 
         MappedFile last = getLastMappedFile();
@@ -138,7 +138,7 @@ public class DefaultMappedFileQueue implements MappedFileQueue {
     }
 
     @Override
-    public MappedFile getMappedFileForOffset(long offset) {
+    public MappedFile createMappedFileForOffset(long offset) {
         long fileOffset = -1;
         MappedFile last = getLastMappedFile();
 
