@@ -5,7 +5,6 @@ import cn.coderule.minimq.domain.domain.cluster.store.InsertResult;
 import cn.coderule.minimq.domain.utils.StoreUtils;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.concurrent.atomic.AtomicLong;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -17,8 +16,6 @@ class DefaultMappedFileTest {
 
     @TempDir
     Path tmpDir;
-
-    private final AtomicLong counter = new AtomicLong(10000);
 
     @Test
     void testCreateMappedFile() {
@@ -70,12 +67,6 @@ class DefaultMappedFileTest {
             log.error("create mappedFile exception", e);
         }
 
-    }
-
-    private String createFileName() {
-        String fileName = StoreUtils.offsetToFileName(counter.getAndIncrement());
-
-        return tmpDir.resolve(fileName).toString();
     }
 
     private String createFileName(int i) {

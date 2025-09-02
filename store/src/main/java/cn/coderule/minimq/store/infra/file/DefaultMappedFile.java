@@ -347,7 +347,10 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
             this.fileChannel.close();
             log.info("close file channel {} OK", this.fileName);
 
-            this.file.delete();
+            boolean status = this.file.delete();
+            if (!status) {
+                log.error("delete file {} Failed.", this.fileName);
+            }
         } catch (Exception e) {
             log.warn("close file channel {} Failed. ", this.fileName, e);
         }

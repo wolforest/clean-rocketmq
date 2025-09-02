@@ -79,18 +79,22 @@ class DefaultMappedFileQueueTest {
         assertTrue(queue.isEmpty());
 
         MappedFile mappedFile = queue.createMappedFileForOffset(100);
+        assertNotNull(mappedFile);
 
         assertEquals(1, queue.size());
         assertNotNull(queue.getFirstMappedFile());
 
 
         mappedFile = queue.createMappedFileForOffset(100 + fileSize);
+        assertNotNull(mappedFile);
         assertEquals(2, queue.size());
 
         mappedFile = queue.createMappedFileForOffset(100 + fileSize * 2);
+        assertNotNull(mappedFile);
         assertEquals(3, queue.size());
 
         mappedFile = queue.createMappedFileForOffset(100 + fileSize * 3);
+        assertNotNull(mappedFile);
         assertEquals(4, queue.size());
 
         queue.destroy();

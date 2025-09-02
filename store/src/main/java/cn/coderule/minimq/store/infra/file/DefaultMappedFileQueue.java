@@ -139,7 +139,7 @@ public class DefaultMappedFileQueue implements MappedFileQueue {
 
     @Override
     public MappedFile createMappedFileForOffset(long offset) {
-        long fileOffset = -1;
+        long fileOffset;
         MappedFile last = getLastMappedFile();
 
         // if offset greater than max offset of last mappedFile
