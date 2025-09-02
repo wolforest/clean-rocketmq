@@ -56,8 +56,6 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
     @Getter
     protected volatile long storeTimestamp = 0;
 
-    public DefaultMappedFile() {}
-
     public DefaultMappedFile(String fileName, int fileSize, TransientPool transientPool) throws IOException {
         this(fileName, fileSize);
 
