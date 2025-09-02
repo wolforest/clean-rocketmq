@@ -188,8 +188,6 @@ public class DefaultMappedFileQueue implements MappedFileQueue {
         return null;
     }
 
-
-
     @Override
     public MappedFile createMappedFile(long createOffset) {
         String file = this.rootDir + File.separator + StoreUtils.offsetToFileName(createOffset);
