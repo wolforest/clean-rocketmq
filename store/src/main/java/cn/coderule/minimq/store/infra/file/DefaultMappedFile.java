@@ -141,6 +141,7 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
             buffer.put(data);
 
             this.storeTimestamp = System.currentTimeMillis();
+            WRITE_POSITION_UPDATER.addAndGet(this, data.capacity());
             return InsertResult.success(currentPosition);
         } catch (Throwable e) {
             log.error("Error occurred when append message to mappedFile.", e);
@@ -161,6 +162,7 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
             buffer.put(data, offset, length);
 
             this.storeTimestamp = System.currentTimeMillis();
+            WRITE_POSITION_UPDATER.addAndGet(this, length);
             return InsertResult.success(currentPosition);
         } catch (Throwable e) {
             log.error("Error occurred when append message to mappedFile.", e);

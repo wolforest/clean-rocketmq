@@ -29,6 +29,8 @@ class DefaultMappedFileTest {
             assertEquals(0, mappedFile.getMinOffset());
             assertEquals(fileSize, mappedFile.getMaxOffset());
             assertEquals(0, mappedFile.getInsertPosition());
+
+            mappedFile.destroy(1000);
         } catch (IOException e) {
             log.error("create mappedFile exception", e);
         }
