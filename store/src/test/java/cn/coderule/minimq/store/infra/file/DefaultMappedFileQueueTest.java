@@ -72,8 +72,27 @@ class DefaultMappedFileQueueTest {
     }
 
     @Test
-    void testTwoFileQueue(@TempDir Path tmpDir) {}
+    void testMultiFileQueue(@TempDir Path tmpDir) {
+        int fileSize = 1024;
+        MappedFileQueue queue = new DefaultMappedFileQueue(tmpDir.toString(), fileSize);
+        queue.load();
+        assertTrue(queue.isEmpty());
 
-    @Test
-    void testMultiFileQueue(@TempDir Path tmpDir) {}
+        MappedFile mappedFile = queue.createMappedFileForOffset(100);
+
+        assertEquals(1, queue.size());
+        assertNotNull(queue.getFirstMappedFile());
+
+
+        mappedFile = queue.createMappedFileForOffset(100 + fileSize);
+        assertEquals(2, queue.size());
+
+        mappedFile = queue.createMappedFileForOffset(100 + fileSize * 2);
+        assertEquals(3, queue.size());
+
+        mappedFile = queue.createMappedFileForOffset(100 + fileSize * 3);
+        assertEquals(4, queue.size());
+
+        queue.destroy();
+    }
 }
