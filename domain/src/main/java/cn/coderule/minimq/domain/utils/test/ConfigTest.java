@@ -8,6 +8,7 @@ import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.domain.config.store.CommitConfig;
 import cn.coderule.minimq.domain.config.store.ConsumeQueueConfig;
 import cn.coderule.minimq.domain.config.store.MetaConfig;
+import cn.coderule.minimq.domain.config.store.StorePath;
 
 public class ConfigTest {
     public static StoreConfig createStoreConfig(String rootPath) {
@@ -22,6 +23,7 @@ public class ConfigTest {
         storeConfig.setMetaConfig(new MetaConfig());
         storeConfig.setRpcClientConfig(new RpcClientConfig());
 
+        StorePath.initPath(rootPath);
         return storeConfig;
     }
 }
