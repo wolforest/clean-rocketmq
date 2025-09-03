@@ -6,7 +6,7 @@ import cn.coderule.minimq.domain.core.constant.MessageConst;
 import cn.coderule.minimq.domain.core.enums.message.MessageStatus;
 import cn.coderule.minimq.domain.core.enums.message.MessageVersion;
 import cn.coderule.minimq.domain.core.enums.message.TagType;
-import cn.coderule.minimq.domain.utils.MessageUtils;
+import cn.coderule.minimq.domain.utils.message.MessageUtils;
 import java.io.Serializable;
 import java.net.SocketAddress;
 import java.util.Collection;

@@ -8,7 +8,7 @@ import cn.coderule.minimq.domain.config.business.TransactionConfig;
 import cn.coderule.minimq.domain.core.constant.MessageConst;
 import cn.coderule.minimq.domain.core.constant.flag.MessageSysFlag;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
-import cn.coderule.minimq.domain.utils.MessageUtils;
+import cn.coderule.minimq.domain.utils.message.MessageUtils;
 import java.nio.charset.StandardCharsets;
 
 public class MessageFactory {

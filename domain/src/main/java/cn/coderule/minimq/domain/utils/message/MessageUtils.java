@@ -1,4 +1,4 @@
-package cn.coderule.minimq.domain.utils;
+package cn.coderule.minimq.domain.utils.message;
 
 import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.minimq.domain.core.enums.message.TagType;

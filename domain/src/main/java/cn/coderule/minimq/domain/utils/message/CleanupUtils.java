@@ -1,4 +1,4 @@
-package cn.coderule.minimq.domain.utils;
+package cn.coderule.minimq.domain.utils.message;
 
 import cn.coderule.minimq.domain.core.enums.message.CleanupPolicy;
 import cn.coderule.minimq.domain.domain.meta.topic.Topic;
