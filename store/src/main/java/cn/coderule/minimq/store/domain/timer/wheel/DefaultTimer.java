@@ -7,7 +7,7 @@ import cn.coderule.minimq.domain.domain.timer.state.TimerCheckpoint;
 import cn.coderule.minimq.domain.domain.timer.TimerEvent;
 import cn.coderule.minimq.domain.service.store.domain.timer.Timer;
 import cn.coderule.minimq.store.domain.timer.service.CheckpointService;
-import cn.coderule.minimq.store.server.bootstrap.StorePath;
+import cn.coderule.minimq.domain.config.store.StorePath;
 import java.io.IOException;
 
 public class DefaultTimer implements Timer {

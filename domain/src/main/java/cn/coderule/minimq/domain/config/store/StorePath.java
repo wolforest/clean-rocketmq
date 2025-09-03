@@ -1,4 +1,4 @@
-package cn.coderule.minimq.store.server.bootstrap;
+package cn.coderule.minimq.domain.config.store;
 
 import cn.coderule.common.util.io.DirUtil;
 import java.io.File;

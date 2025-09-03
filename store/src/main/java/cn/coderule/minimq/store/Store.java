@@ -9,7 +9,7 @@ import cn.coderule.minimq.store.server.ComponentRegister;
 import cn.coderule.minimq.store.server.bootstrap.StoreArgument;
 import cn.coderule.minimq.store.server.bootstrap.StoreCheckpoint;
 import cn.coderule.minimq.store.server.bootstrap.StoreContext;
-import cn.coderule.minimq.store.server.bootstrap.StorePath;
+import cn.coderule.minimq.domain.config.store.StorePath;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 

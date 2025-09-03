@@ -13,7 +13,7 @@ import cn.coderule.minimq.store.api.ConsumeOffsetStoreImpl;
 import cn.coderule.minimq.store.api.SubscriptionStoreImpl;
 import cn.coderule.minimq.store.api.TopicStoreImpl;
 import cn.coderule.minimq.store.server.bootstrap.StoreContext;
-import cn.coderule.minimq.store.server.bootstrap.StorePath;
+import cn.coderule.minimq.domain.config.store.StorePath;
 import cn.coderule.minimq.store.infra.StoreRegister;
 
 public class DefaultMetaManager implements MetaManager {

@@ -11,7 +11,7 @@ import cn.coderule.minimq.store.domain.consumequeue.service.ConsumeQueueFlusher;
 import cn.coderule.minimq.store.domain.consumequeue.service.ConsumeQueueLoader;
 import cn.coderule.minimq.store.domain.consumequeue.service.ConsumeQueueRecovery;
 import cn.coderule.minimq.store.server.bootstrap.StoreContext;
-import cn.coderule.minimq.store.server.bootstrap.StorePath;
+import cn.coderule.minimq.domain.config.store.StorePath;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

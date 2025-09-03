@@ -8,6 +8,7 @@ import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.domain.config.business.TimerConfig;
 import cn.coderule.minimq.domain.config.business.TopicConfig;
 import cn.coderule.minimq.domain.config.store.MetaConfig;
+import cn.coderule.minimq.domain.config.store.StorePath;
 
 public class ContextInitializer {
     private final StoreArgument argument;
