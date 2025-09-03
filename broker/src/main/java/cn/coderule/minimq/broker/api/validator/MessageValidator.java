@@ -1,6 +1,5 @@
 package cn.coderule.minimq.broker.api.validator;
 
-import cn.coderule.common.util.lang.collection.MapUtil;
 import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.minimq.domain.config.business.MessageConfig;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
@@ -39,7 +38,7 @@ public class MessageValidator {
 
         validateBodySize(messageBO);
         validatePropertyCount(messageBO);
-        validatePropertySize(messageBO);
+        validatePropertyLength(messageBO);
         validateMessageLength(messageBO);
     }
 
@@ -79,9 +78,11 @@ public class MessageValidator {
         }
     }
 
-    private void validatePropertySize(MessageBO messageBO) {
+    private void validatePropertyLength(MessageBO messageBO) {
         String propertiesString = MessageUtils.propertiesToString(messageBO.getProperties());
         int propertyLength = propertiesString.getBytes(MQConstants.MQ_CHARSET).length;
+
+        messageBO.setPropertiesString(propertiesString);
         messageBO.setPropertyLength(propertyLength);
 
         int maxPropertySize = messageConfig.getMaxPropertySize();

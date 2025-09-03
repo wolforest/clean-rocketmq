@@ -1,5 +1,6 @@
 package cn.coderule.minimq.domain.config.business;
 
+import cn.coderule.minimq.domain.core.constant.MessageConst;
 import java.io.Serializable;
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
@@ -15,6 +16,9 @@ public class MessageConfig implements Serializable {
     private int maxBodySize = 4 * 1024 * 1024;
     private int maxPropertySize = 16 * 1024;
     private int maxPropertyCount = 128;
+
+    private boolean enablePropertyCRC = false;
+    private int propertyCRCLength = MessageConst.PROPERTY_CRC32.length() + 1 + 10 + 1;
 
     /**
      * max message group size, 0 or negative number means no limit for proxy
