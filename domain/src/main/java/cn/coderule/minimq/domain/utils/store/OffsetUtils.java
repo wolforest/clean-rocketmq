@@ -1,8 +1,8 @@
-package cn.coderule.minimq.domain.utils;
+package cn.coderule.minimq.domain.utils.store;
 
 import java.text.NumberFormat;
 
-public class StoreUtils {
+public class OffsetUtils {
 
     public static String offsetToFileName(long offset) {
         final NumberFormat nf = NumberFormat.getInstance();

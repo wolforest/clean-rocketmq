@@ -4,7 +4,7 @@ import cn.coderule.common.util.io.FileUtil;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.minimq.domain.service.store.infra.MappedFile;
 import cn.coderule.minimq.domain.service.store.infra.MappedFileQueue;
-import cn.coderule.minimq.domain.utils.StoreUtils;
+import cn.coderule.minimq.domain.utils.store.OffsetUtils;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -190,8 +190,8 @@ public class DefaultMappedFileQueue implements MappedFileQueue {
 
     @Override
     public MappedFile createMappedFile(long createOffset) {
-        String file = this.rootDir + File.separator + StoreUtils.offsetToFileName(createOffset);
-        String nextFile = this.rootDir + File.separator + StoreUtils.offsetToFileName(createOffset + this.fileSize);
+        String file = this.rootDir + File.separator + OffsetUtils.offsetToFileName(createOffset);
+        String nextFile = this.rootDir + File.separator + OffsetUtils.offsetToFileName(createOffset + this.fileSize);
         MappedFile mappedFile;
 
         if (null != allocateMappedFileService) {

@@ -15,7 +15,7 @@ import cn.coderule.minimq.domain.domain.timer.TimerConstants;
 import cn.coderule.minimq.domain.domain.timer.TimerEvent;
 import cn.coderule.minimq.domain.domain.timer.TimerQueue;
 import cn.coderule.minimq.domain.domain.timer.state.TimerState;
-import cn.coderule.minimq.domain.utils.TimerUtils;
+import cn.coderule.minimq.domain.utils.store.TimerUtils;
 import lombok.extern.slf4j.Slf4j;
 
 /**

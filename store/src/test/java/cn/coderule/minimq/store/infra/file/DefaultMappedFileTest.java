@@ -2,7 +2,7 @@ package cn.coderule.minimq.store.infra.file;
 
 import cn.coderule.minimq.domain.core.enums.store.InsertStatus;
 import cn.coderule.minimq.domain.domain.cluster.store.InsertResult;
-import cn.coderule.minimq.domain.utils.StoreUtils;
+import cn.coderule.minimq.domain.utils.store.OffsetUtils;
 import java.io.IOException;
 import java.nio.file.Path;
 import lombok.extern.slf4j.Slf4j;
@@ -70,7 +70,7 @@ class DefaultMappedFileTest {
     }
 
     private String createFileName(int i) {
-        String fileName = StoreUtils.offsetToFileName(i);
+        String fileName = OffsetUtils.offsetToFileName(i);
 
         return tmpDir.resolve(fileName).toString();
     }

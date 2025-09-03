@@ -1,4 +1,4 @@
-package cn.coderule.minimq.domain.utils;
+package cn.coderule.minimq.domain.utils.store;
 
 import cn.coderule.minimq.domain.domain.timer.TimerConstants;
 
