@@ -36,11 +36,9 @@ public class MessageEncoder {
     }
 
     public ByteBuffer encode() {
-
         String propertiesString = MessageUtils.propertiesToString(messageBO.getProperties());
         byte[] properties = propertiesString.getBytes(StandardCharsets.UTF_8);
-        int propertiesLen = properties.length;
-        if (propertiesLen > Short.MAX_VALUE) {
+        if (properties.length > Short.MAX_VALUE) {
             throw new EnqueueException(EnqueueStatus.PROPERTIES_SIZE_EXCEEDED);
         }
 
@@ -48,7 +46,7 @@ public class MessageEncoder {
         int topicLen = topic.length;
         int bodyLen = messageBO.getBody().length;
         this.messageLength = calculateMessageLength(
-            messageBO.getVersion(), bodyLen, topicLen, propertiesLen
+            messageBO.getVersion(), bodyLen, topicLen, properties.length
         );
 
         if (messageLength > messageConfig.getMaxRequestSize() || bodyLen > messageConfig.getMaxBodySize()) {
