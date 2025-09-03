@@ -74,7 +74,7 @@ public class DefaultCommitEventDispatcher extends ServiceThread  implements Comm
 
         while (hasNewEvent()) {
             MessageBO messageBO = commitLog.select(this.dispatchedOffset);
-            if (isOverflow(messageBO.getMessageSize())) {
+            if (isOverflow(messageBO.getMessageLength())) {
                 break;
             }
 
@@ -82,8 +82,8 @@ public class DefaultCommitEventDispatcher extends ServiceThread  implements Comm
                 dispatch(messageBO);
             }
 
-            if (messageBO.getMessageSize() > 0) {
-                saveDispatchedOffset(messageBO.getMessageSize());
+            if (messageBO.getMessageLength() > 0) {
+                saveDispatchedOffset(messageBO.getMessageLength());
             }
         }
     }

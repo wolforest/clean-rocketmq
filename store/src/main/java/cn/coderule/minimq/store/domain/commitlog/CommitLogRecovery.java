@@ -143,7 +143,7 @@ public class CommitLogRecovery {
                 break;
             }
 
-            processOffset += messageBO.getMessageSize();
+            processOffset += messageBO.getMessageLength();
         }
 
         return processOffset;

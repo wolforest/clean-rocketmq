@@ -32,7 +32,7 @@ public class MessageDecoder {
 
             // 1 TOTALSIZE
             int storeSize = byteBuffer.getInt();
-            msg.setMessageSize(storeSize);
+            msg.setMessageLength(storeSize);
 
             // 2 MAGICCODE
             int magicCode = byteBuffer.getInt();

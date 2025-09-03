@@ -63,11 +63,11 @@ public class DefaultCommitLog implements CommitLog {
 
         this.commitLogLock.lock();
         try {
-            ByteBuffer messageBuffer = context.getEncoder().encode();
 
-            MappedFile mappedFile = getMappedFile(context.getEncoder().getMessageLength());
+            MappedFile mappedFile = getMappedFile(messageBO.getMessageLength());
             assignCommitOffset(messageBO, mappedFile);
 
+            ByteBuffer messageBuffer = context.getEncoder().encode();
             InsertResult insertResult = mappedFile.insert(messageBuffer);
             handleInsertError(insertResult);
 
@@ -189,7 +189,7 @@ public class DefaultCommitLog implements CommitLog {
         return InsertContext.builder()
             .now(now)
             .messageBO(messageBO)
-            .encoder(localEncoder.get().getEncoder(messageBO))
+            .encoder(localEncoder.get().getEncoder())
             .build();
     }
 

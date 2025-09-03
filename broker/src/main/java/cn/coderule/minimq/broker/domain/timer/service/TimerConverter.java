@@ -12,7 +12,7 @@ public class TimerConverter {
 
         return TimerEvent.builder()
             .commitLogOffset(messageBO.getCommitOffset())
-            .messageSize(messageBO.getMessageSize())
+            .messageSize(messageBO.getMessageLength())
             .delayTime(delayTime)
             .magic(magic)
             .enqueueTime(enqueueTime)

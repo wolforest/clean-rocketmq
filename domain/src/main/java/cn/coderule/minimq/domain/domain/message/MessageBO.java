@@ -31,8 +31,16 @@ public class MessageBO extends Message implements Serializable {
      */
     private int queueId;
     private String topicKey;
+
     @Builder.Default
-    private int messageSize = 0;
+    private int messageLength = 0;
+    @Builder.Default
+    private int topicLength = 0;
+    @Builder.Default
+    private int bodyLength = 0;
+    @Builder.Default
+    private int propertyLength = 0;
+
 
     private long commitOffset;
     /**
@@ -100,7 +108,7 @@ public class MessageBO extends Message implements Serializable {
     }
 
     public boolean isEmpty() {
-        return this.messageSize <= 0;
+        return this.messageLength <= 0;
     }
 
     public long getTagsCode() {

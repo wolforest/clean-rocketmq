@@ -7,8 +7,10 @@ import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.core.constant.MQConstants;
 import cn.coderule.minimq.domain.core.enums.code.InvalidCode;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
+import cn.coderule.minimq.domain.domain.message.MessageEncoder;
 import cn.coderule.minimq.domain.domain.meta.topic.TopicValidator;
 import cn.coderule.minimq.domain.core.exception.InvalidRequestException;
+import cn.coderule.minimq.domain.utils.message.MessageUtils;
 
 import static cn.coderule.common.util.lang.string.StringUtil.containControlCharacter;
 
@@ -16,13 +18,19 @@ public class MessageValidator {
     private final BrokerConfig brokerConfig;
     private final MessageConfig messageConfig;
 
+    private final int maxMessageLength;
+
     public MessageValidator(BrokerConfig brokerConfig) {
         this.brokerConfig = brokerConfig;
         this.messageConfig = brokerConfig.getMessageConfig();
+
+        this.maxMessageLength = Integer.MAX_VALUE - messageConfig.getMaxBodySize() >= 64 * 1023
+            ? messageConfig.getMaxBodySize() + 64 * 1024
+            : Integer.MAX_VALUE;
     }
 
     public void validate(MessageBO messageBO) {
-        validateTopic(messageBO.getTopic());
+        validateTopic(messageBO);
         validateTag(messageBO.getTags());
 
         validateDeliverTime(messageBO.getDeliverTime());
@@ -32,13 +40,32 @@ public class MessageValidator {
         validateBodySize(messageBO);
         validatePropertyCount(messageBO);
         validatePropertySize(messageBO);
+        validateMessageLength(messageBO);
     }
 
-    public void validateTopic(String topicName) {
+    public void validateTopic(MessageBO messageBO) {
+        String topicName = messageBO.getTopic();
         TopicValidator.validateTopic(topicName);
+
+        int topicLength = topicName.getBytes(MQConstants.MQ_CHARSET).length;
+        messageBO.setTopicLength(topicLength);
+    }
+
+    private void validateMessageLength(MessageBO messageBO) {
+        int messageLength = MessageEncoder.calculateLength(messageBO);
+        messageBO.setMessageLength(messageLength);
+
+        if (messageLength > maxMessageLength) {
+            throw new InvalidRequestException(
+                InvalidCode.MESSAGE_BODY_TOO_LARGE,
+                "message size is larger than " + messageConfig.getMaxRequestSize()
+            );
+        }
     }
 
     private void validateBodySize(MessageBO messageBO) {
+        messageBO.setBodyLength(messageBO.getBody().length);
+
         int maxBodySize = messageConfig.getMaxBodySize();
         if (maxBodySize <= 0) {
             return;
@@ -53,13 +80,16 @@ public class MessageValidator {
     }
 
     private void validatePropertySize(MessageBO messageBO) {
+        String propertiesString = MessageUtils.propertiesToString(messageBO.getProperties());
+        int propertyLength = propertiesString.getBytes(MQConstants.MQ_CHARSET).length;
+        messageBO.setPropertyLength(propertyLength);
+
         int maxPropertySize = messageConfig.getMaxPropertySize();
         if (maxPropertySize <= 0) {
             return;
         }
 
-        int propertySize = MapUtil.calculateLength(messageBO.getProperties());
-        if (propertySize > maxPropertySize) {
+        if (propertyLength > maxPropertySize) {
             throw new InvalidRequestException(
                 InvalidCode.MESSAGE_PROPERTIES_TOO_LARGE,
                 "message properties size is larger than " + maxPropertySize

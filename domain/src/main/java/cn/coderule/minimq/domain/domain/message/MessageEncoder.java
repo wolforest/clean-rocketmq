@@ -35,6 +35,15 @@ public class MessageEncoder {
         this.messageBO = messageBO;
     }
 
+    public static int calculateLength(MessageBO messageBO) {
+        return calculateMessageLength(
+            messageBO.getVersion(),
+            messageBO.getBodyLength(),
+            messageBO.getTopicLength(),
+            messageBO.getPropertyLength()
+        );
+    }
+
     public ByteBuffer encode() {
         String propertiesString = MessageUtils.propertiesToString(messageBO.getProperties());
         byte[] properties = propertiesString.getBytes(StandardCharsets.UTF_8);
@@ -60,7 +69,7 @@ public class MessageEncoder {
         return this.buffer.nioBuffer(0, this.messageLength);
     }
 
-    private int calculateMessageLength(MessageVersion messageVersion,
+    private static int calculateMessageLength(MessageVersion messageVersion,
         int bodyLength, int topicLength, int propertiesLength) {
 
         int bornHostLength = 8;
