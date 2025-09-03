@@ -19,20 +19,57 @@ public class MessageEncoder {
 
     private final ByteBuf buffer;
 
-    private MessageBO messageBO;
-    @Getter
-    private int messageLength = 0;
+    private final int maxMessageLength;
+    private final int propertyCRCLength;
+
 
     public MessageEncoder(MessageConfig messageConfig) {
         this.messageConfig = messageConfig;
 
         ByteBufAllocator allocator = UnpooledByteBufAllocator.DEFAULT;
         buffer = allocator.directBuffer(messageConfig.getMaxRequestSize());
+
+        this.maxMessageLength = Integer.MAX_VALUE - messageConfig.getMaxBodySize() >= 64 * 1023
+            ? messageConfig.getMaxBodySize() + 64 * 1024
+            : Integer.MAX_VALUE;
+        this.propertyCRCLength = messageConfig.isEnablePropertyCRC()
+            ? messageConfig.getPropertyCRCLength()
+            : 0;
     }
 
-    public void setMessage(MessageBO messageBO) {
+    public ByteBuffer encode(MessageBO messageBO) {
         buffer.clear();
-        this.messageBO = messageBO;
+        initMessage(messageBO);
+
+        // 1 TOTAL_SIZE
+        buffer.writeInt(messageBO.getMessageLength());
+        // 2 MAGIC_CODE
+        buffer.writeInt(messageBO.getVersion().getMagicCode());
+        // 3 BODY_CRC
+        buffer.writeInt(messageBO.getBodyCRC());
+        // 4 QUEUE_ID
+        buffer.writeInt(messageBO.getQueueId());
+        // 5 FLAG
+        buffer.writeInt(messageBO.getFlag());
+        // 6 QUEUE_OFFSET
+        buffer.writeLong(messageBO.getQueueOffset());
+        // 7 COMMIT_OFFSET
+        buffer.writeLong(messageBO.getCommitOffset());
+        // 8 SYSFLAG
+        buffer.writeInt(messageBO.getSysFlag());
+        // 9 BORN_TIMESTAMP
+        buffer.writeLong(messageBO.getBornTimestamp());
+        // 10 BORN_HOST
+
+
+        return buffer.nioBuffer(0, messageBO.getMessageLength());
+    }
+
+    private void initMessage(MessageBO messageBO) {
+        // init topic length
+        // int body length
+        // init property length
+        // init message length
     }
 
     public static int calculateLength(MessageBO messageBO) {
@@ -42,31 +79,6 @@ public class MessageEncoder {
             messageBO.getTopicLength(),
             messageBO.getPropertyLength()
         );
-    }
-
-    public ByteBuffer encode() {
-        String propertiesString = MessageUtils.propertiesToString(messageBO.getProperties());
-        byte[] properties = propertiesString.getBytes(StandardCharsets.UTF_8);
-        if (properties.length > Short.MAX_VALUE) {
-            throw new EnqueueException(EnqueueStatus.PROPERTIES_SIZE_EXCEEDED);
-        }
-
-        byte[] topic = messageBO.getTopic().getBytes(StandardCharsets.UTF_8);
-        int topicLen = topic.length;
-        int bodyLen = messageBO.getBody().length;
-        this.messageLength = calculateMessageLength(
-            messageBO.getVersion(), bodyLen, topicLen, properties.length
-        );
-
-        if (messageLength > messageConfig.getMaxRequestSize() || bodyLen > messageConfig.getMaxBodySize()) {
-            throw new EnqueueException(EnqueueStatus.MESSAGE_ILLEGAL);
-        }
-
-        return getByteBuffer();
-    }
-
-    private ByteBuffer getByteBuffer() {
-        return this.buffer.nioBuffer(0, this.messageLength);
     }
 
     private static int calculateMessageLength(MessageVersion messageVersion,

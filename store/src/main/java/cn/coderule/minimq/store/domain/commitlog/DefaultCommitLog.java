@@ -67,7 +67,7 @@ public class DefaultCommitLog implements CommitLog {
             MappedFile mappedFile = getMappedFile(messageBO.getMessageLength());
             assignCommitOffset(messageBO, mappedFile);
 
-            ByteBuffer messageBuffer = context.getEncoder().encode();
+            ByteBuffer messageBuffer = context.getEncoder().encode(messageBO);
             InsertResult insertResult = mappedFile.insert(messageBuffer);
             handleInsertError(insertResult);
 
