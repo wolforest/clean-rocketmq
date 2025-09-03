@@ -40,6 +40,8 @@ public class MessageBO extends Message implements Serializable {
     private int bodyLength = 0;
     @Builder.Default
     private int propertyLength = 0;
+    @Builder.Default
+    private boolean appendPropertyCRC = false;
 
 
     private long commitOffset;

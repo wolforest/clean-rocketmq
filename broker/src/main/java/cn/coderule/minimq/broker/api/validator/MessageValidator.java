@@ -4,6 +4,7 @@ import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.minimq.domain.config.business.MessageConfig;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.core.constant.MQConstants;
+import cn.coderule.minimq.domain.core.constant.MessageConst;
 import cn.coderule.minimq.domain.core.enums.code.InvalidCode;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.domain.message.MessageEncoder;
@@ -18,6 +19,7 @@ public class MessageValidator {
     private final MessageConfig messageConfig;
 
     private final int maxMessageLength;
+    private final int propertyCRCLength;
 
     public MessageValidator(BrokerConfig brokerConfig) {
         this.brokerConfig = brokerConfig;
@@ -26,6 +28,9 @@ public class MessageValidator {
         this.maxMessageLength = Integer.MAX_VALUE - messageConfig.getMaxBodySize() >= 64 * 1023
             ? messageConfig.getMaxBodySize() + 64 * 1024
             : Integer.MAX_VALUE;
+        this.propertyCRCLength = messageConfig.isEnablePropertyCRC()
+            ? messageConfig.getPropertyCRCLength()
+            : 0;
     }
 
     public void validate(MessageBO messageBO) {
@@ -78,19 +83,33 @@ public class MessageValidator {
         }
     }
 
+    private void calculatePropertyLength(String propertiesString, MessageBO messageBO) {
+        byte[] properties = propertiesString.getBytes(MQConstants.MQ_CHARSET);
+        int propertyLength = properties.length;
+
+        if (propertyLength > 0
+            && propertyCRCLength > 0
+            && properties[propertyLength - 1] != MessageConst.PROPERTY_SEPARATOR
+        ) {
+            propertyLength += 1;
+            messageBO.setAppendPropertyCRC(true);
+        }
+        propertyLength += propertyCRCLength;
+        messageBO.setPropertyLength(propertyLength);
+    }
+
     private void validatePropertyLength(MessageBO messageBO) {
         String propertiesString = MessageUtils.propertiesToString(messageBO.getProperties());
-        int propertyLength = propertiesString.getBytes(MQConstants.MQ_CHARSET).length;
-
         messageBO.setPropertiesString(propertiesString);
-        messageBO.setPropertyLength(propertyLength);
+
+        calculatePropertyLength(propertiesString, messageBO);
 
         int maxPropertySize = messageConfig.getMaxPropertySize();
         if (maxPropertySize <= 0) {
             return;
         }
 
-        if (propertyLength > maxPropertySize) {
+        if (messageBO.getPropertyLength() > maxPropertySize) {
             throw new InvalidRequestException(
                 InvalidCode.MESSAGE_PROPERTIES_TOO_LARGE,
                 "message properties size is larger than " + maxPropertySize

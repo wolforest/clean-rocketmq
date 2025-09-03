@@ -3,8 +3,23 @@ package cn.coderule.minimq.domain.core.constant;
 import java.util.HashSet;
 
 public class MessageConst {
+    // Set message magic code v2 if topic length > 127
+    public final static int MESSAGE_MAGIC_CODE = -626843481;
     public final static int MESSAGE_MAGIC_CODE_V1 = -626843481;
     public final static int MESSAGE_MAGIC_CODE_V2 = -626843477;
+
+    public final static int MESSAGE_MAGIC_CODE_POSITION = 4;
+    public final static int MESSAGE_FLAG_POSITION = 16;
+    public final static int MESSAGE_PHYSIC_OFFSET_POSITION = 28;
+    public final static int MESSAGE_STORE_TIMESTAMP_POSITION = 56;
+
+    // End of file empty MAGIC CODE cbd43194
+    public final static int BLANK_MAGIC_CODE = -875286124;
+    public static final char NAME_VALUE_SEPARATOR = 1;
+    public static final char PROPERTY_SEPARATOR = 2;
+    public static final int PHY_POS_POSITION = 4 + 4 + 4 + 4 + 4 + 8;
+    public static final int QUEUE_OFFSET_POSITION = 4 + 4 + 4 + 4 + 4;
+    public static final int SYSFLAG_POSITION = 4 + 4 + 4 + 4 + 4 + 8 + 8;
 
     /**
      * message keys
