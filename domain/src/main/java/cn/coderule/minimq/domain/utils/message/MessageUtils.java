@@ -2,6 +2,11 @@ package cn.coderule.minimq.domain.utils.message;
 
 import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.minimq.domain.core.enums.message.TagType;
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
+import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -82,5 +87,32 @@ public class MessageUtils {
 
         return map;
     }
+
+    public static ByteBuffer socketAddress2ByteBuffer(SocketAddress socketAddress) {
+        InetSocketAddress inetSocketAddress = (InetSocketAddress) socketAddress;
+        InetAddress address = inetSocketAddress.getAddress();
+        ByteBuffer byteBuffer;
+        if (address instanceof Inet4Address) {
+            byteBuffer = ByteBuffer.allocate(4 + 4);
+        } else {
+            byteBuffer = ByteBuffer.allocate(16 + 4);
+        }
+        return socketAddress2ByteBuffer(socketAddress, byteBuffer);
+    }
+
+    public static ByteBuffer socketAddress2ByteBuffer(final SocketAddress socketAddress, final ByteBuffer byteBuffer) {
+        InetSocketAddress inetSocketAddress = (InetSocketAddress) socketAddress;
+        InetAddress address = inetSocketAddress.getAddress();
+        if (address instanceof Inet4Address) {
+            byteBuffer.put(inetSocketAddress.getAddress().getAddress(), 0, 4);
+        } else {
+            byteBuffer.put(inetSocketAddress.getAddress().getAddress(), 0, 16);
+        }
+        byteBuffer.putInt(inetSocketAddress.getPort());
+        byteBuffer.flip();
+        return byteBuffer;
+    }
+
+
 
 }

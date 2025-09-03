@@ -9,6 +9,7 @@ import cn.coderule.minimq.domain.core.enums.message.TagType;
 import cn.coderule.minimq.domain.utils.message.MessageUtils;
 import java.io.Serializable;
 import java.net.SocketAddress;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -103,6 +104,16 @@ public class MessageBO extends Message implements Serializable {
         }
 
         return new String(body);
+    }
+
+    public byte[] getBornHostBytes() {
+        ByteBuffer buffer = MessageUtils.socketAddress2ByteBuffer(this.bornHost);
+        return buffer.array();
+    }
+
+    public byte[] getStoreHostBytes() {
+        ByteBuffer buffer = MessageUtils.socketAddress2ByteBuffer(this.storeHost);
+        return buffer.array();
     }
 
     public boolean isValid() {
