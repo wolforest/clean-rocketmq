@@ -57,11 +57,6 @@ public class DefaultCommitLogManager implements CommitLogManager {
         flushManager.cleanup();
     }
 
-    @Override
-    public State getState() {
-        return State.RUNNING;
-    }
-
     private void initConfig() {
         storeConfig = StoreContext.getBean(StoreConfig.class);
         commitConfig = storeConfig.getCommitConfig();
@@ -82,7 +77,7 @@ public class DefaultCommitLogManager implements CommitLogManager {
         checkpoint = StoreContext.getCheckPoint();
         flushManager = new FlushManager(commitConfig, mappedFileQueue, checkpoint);
 
-        commitLog = new DefaultCommitLog(commitConfig, messageConfig, mappedFileQueue, flushManager);
+        commitLog = new DefaultCommitLog(storeConfig, mappedFileQueue, flushManager);
         StoreContext.register(commitLog, CommitLog.class);
     }
 

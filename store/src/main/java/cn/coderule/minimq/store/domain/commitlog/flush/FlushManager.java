@@ -30,7 +30,8 @@ public class FlushManager implements Lifecycle {
     public FlushManager(
         CommitConfig commitConfig,
         MappedFileQueue mappedFileQueue,
-        CheckPoint checkPoint) {
+        CheckPoint checkPoint
+    ) {
         this.commitConfig = commitConfig;
 
         this.flushWatcher = new FlushWatcher();

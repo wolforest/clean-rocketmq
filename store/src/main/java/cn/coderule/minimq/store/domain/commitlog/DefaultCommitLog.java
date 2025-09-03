@@ -1,5 +1,6 @@
 package cn.coderule.minimq.store.domain.commitlog;
 
+import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.store.domain.commitlog.vo.InsertContext;
 import cn.coderule.common.util.encrypt.HashUtil;
 import cn.coderule.minimq.domain.config.store.CommitConfig;
@@ -42,13 +43,12 @@ public class DefaultCommitLog implements CommitLog {
     private ThreadLocal<EnqueueThreadLocal> localEncoder;
 
     public DefaultCommitLog(
-        CommitConfig commitConfig,
-        MessageConfig messageConfig,
+        StoreConfig storeConfig,
         MappedFileQueue mappedFileQueue,
         FlushManager flushManager
     ) {
-        this.commitConfig = commitConfig;
-        this.messageConfig = messageConfig;
+        this.commitConfig = storeConfig.getCommitConfig();
+        this.messageConfig = storeConfig.getMessageConfig();
 
         this.mappedFileQueue = mappedFileQueue;
         this.flushManager = flushManager;
