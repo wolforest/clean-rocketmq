@@ -6,11 +6,9 @@ import java.io.File;
 public class StorePath {
     private static String ROOT_PATH;
 
-    public static void setRootPath(String rootPath) {
+    public static void initPath(String rootPath) {
         ROOT_PATH = rootPath;
-    }
 
-    public static void initPath() {
         DirUtil.createIfNotExists(ROOT_PATH);
         DirUtil.createIfNotExists(getCommitLogPath());
         DirUtil.createIfNotExists(getConsumeQueuePath());

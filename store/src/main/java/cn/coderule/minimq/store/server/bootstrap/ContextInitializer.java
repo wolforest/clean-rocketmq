@@ -38,8 +38,7 @@ public class ContextInitializer {
         storeConfig.setMetaConfig(new MetaConfig());
         storeConfig.setRpcClientConfig(new RpcClientConfig());
 
-        StorePath.setRootPath(storeConfig.getRootDir());
-        StorePath.initPath();
+        StorePath.initPath(storeConfig.getRootDir());
 
         StoreContext.register(storeConfig);
     }
