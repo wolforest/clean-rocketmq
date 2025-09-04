@@ -430,6 +430,10 @@ public class StoreRegistry implements Lifecycle {
             }
 
             GroupInfo groupInfo = route.getGroup(groupName);
+            if (groupInfo == null) {
+                continue;
+            }
+
             if (!groupInfo.isEnableActingMaster()) {
                 continue;
             }
