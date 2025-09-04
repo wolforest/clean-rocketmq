@@ -33,6 +33,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class DefaultCommitLog implements CommitLog {
+    private final StoreConfig storeConfig;
     private final CommitConfig commitConfig;
     private final MessageConfig messageConfig;
     private final FlushManager flushManager;
@@ -47,6 +48,7 @@ public class DefaultCommitLog implements CommitLog {
         MappedFileQueue mappedFileQueue,
         FlushManager flushManager
     ) {
+        this.storeConfig = storeConfig;
         this.commitConfig = storeConfig.getCommitConfig();
         this.messageConfig = storeConfig.getMessageConfig();
 
@@ -181,6 +183,8 @@ public class DefaultCommitLog implements CommitLog {
     }
 
     private InsertContext initContext(MessageBO messageBO) {
+        messageBO.setStoreHost(storeConfig.getHostAddress());
+
         return InsertContext.builder()
             .now(messageBO.getStoreTimestamp())
             .messageBO(messageBO)

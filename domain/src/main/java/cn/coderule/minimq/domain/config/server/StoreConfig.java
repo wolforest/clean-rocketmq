@@ -12,6 +12,8 @@ import cn.coderule.minimq.domain.config.store.ConsumeQueueConfig;
 import cn.coderule.minimq.domain.config.store.MetaConfig;
 import cn.coderule.minimq.domain.core.constant.PermName;
 import java.io.File;
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -32,8 +34,6 @@ public class StoreConfig extends ServerIdentity {
      * default: Readable and writable
      */
     private int permission = PermName.PERM_READ | PermName.PERM_WRITE;
-
-
 
 
     private String registryAddress = "127.0.0.1:9876";
@@ -101,4 +101,8 @@ public class StoreConfig extends ServerIdentity {
     private MetaConfig metaConfig;
 
     private RpcClientConfig rpcClientConfig;
+
+    public SocketAddress getHostAddress() {
+        return new InetSocketAddress(host, port);
+    }
 }
