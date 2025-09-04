@@ -113,7 +113,6 @@ public class DefaultCommitEventDispatcher extends ServiceThread  implements Comm
     }
 
     private boolean isOverflow(int size) {
-        log.info("dispatchedOffset: {}, maxOffset: {}, size: {}", this.dispatchedOffset, commitLog.getMaxOffset(), size);
         return this.dispatchedOffset + size > commitLog.getMaxOffset();
     }
 

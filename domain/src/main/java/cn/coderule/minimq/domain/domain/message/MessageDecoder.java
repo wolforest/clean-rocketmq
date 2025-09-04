@@ -30,20 +30,20 @@ public class MessageDecoder {
 
             MessageBO msg = new MessageBO();
 
-            // 1 TOTALSIZE
+            // 1 TOTAL_SIZE
             int storeSize = byteBuffer.getInt();
             msg.setMessageLength(storeSize);
 
-            // 2 MAGICCODE
+            // 2 MAGIC_CODE
             int magicCode = byteBuffer.getInt();
             msg.setMagicCode(magicCode);
             MessageVersion version = MessageVersion.valueOfMagicCode(magicCode);
 
-            // 3 BODYCRC
+            // 3 BODY_CRC
             int bodyCRC = byteBuffer.getInt();
             msg.setBodyCRC(bodyCRC);
 
-            // 4 QUEUEID
+            // 4 QUEUE_ID
             int queueId = byteBuffer.getInt();
             msg.setQueueId(queueId);
 
@@ -51,11 +51,11 @@ public class MessageDecoder {
             int flag = byteBuffer.getInt();
             msg.setFlag(flag);
 
-            // 6 QUEUEOFFSET
+            // 6 QUEUE_OFFSET
             long queueOffset = byteBuffer.getLong();
             msg.setQueueOffset(queueOffset);
 
-            // 7 PHYSICALOFFSET
+            // 7 COMMIT_OFFSET
             long physicOffset = byteBuffer.getLong();
             msg.setCommitOffset(physicOffset);
 
@@ -63,29 +63,29 @@ public class MessageDecoder {
             int sysFlag = byteBuffer.getInt();
             msg.setSysFlag(sysFlag);
 
-            // 9 BORNTIMESTAMP
+            // 9 BORN_TIMESTAMP
             long bornTimeStamp = byteBuffer.getLong();
             msg.setBornTimestamp(bornTimeStamp);
 
-            // 10 BORNHOST
-            int bornhostIPLength = 4;
-            byte[] bornHost = new byte[bornhostIPLength];
-            byteBuffer.get(bornHost, 0, bornhostIPLength);
+            // 10 BORN_HOST
+            int bornHostIPLength = 4;
+            byte[] bornHost = new byte[bornHostIPLength];
+            byteBuffer.get(bornHost, 0, bornHostIPLength);
             int port = byteBuffer.getInt();
             msg.setBornHost(new InetSocketAddress(InetAddress.getByAddress(bornHost), port));
 
-            // 11 STORETIMESTAMP
+            // 11 STORE_TIMESTAMP
             long storeTimestamp = byteBuffer.getLong();
             msg.setStoreTimestamp(storeTimestamp);
 
-            // 12 STOREHOST
+            // 12 STORE_HOST
             int storehostIPLength = 4;
             byte[] storeHost = new byte[storehostIPLength];
             byteBuffer.get(storeHost, 0, storehostIPLength);
             port = byteBuffer.getInt();
             msg.setStoreHost(new InetSocketAddress(InetAddress.getByAddress(storeHost), port));
 
-            // 13 RECONSUMETIMES
+            // 13 RECONSUME_TIMES
             int reconsumeTimes = byteBuffer.getInt();
             msg.setReconsumeTimes(reconsumeTimes);
 
