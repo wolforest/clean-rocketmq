@@ -1,7 +1,7 @@
 package cn.coderule.minimq.store.domain.commitlog;
 
 import cn.coderule.minimq.domain.config.server.StoreConfig;
-import cn.coderule.minimq.store.domain.commitlog.flush.CommitFlusher;
+import cn.coderule.minimq.store.domain.commitlog.flush.CommitLogFlusher;
 import cn.coderule.minimq.store.domain.commitlog.vo.InsertContext;
 import cn.coderule.minimq.domain.config.store.CommitConfig;
 import cn.coderule.minimq.domain.config.business.MessageConfig;
@@ -34,7 +34,7 @@ public class DefaultCommitLog implements CommitLog {
     private final StoreConfig storeConfig;
     private final CommitConfig commitConfig;
     private final MessageConfig messageConfig;
-    private final CommitFlusher commitFlusher;
+    private final CommitLogFlusher commitLogFlusher;
 
     @Getter
     private final MappedFileQueue mappedFileQueue;
@@ -44,14 +44,14 @@ public class DefaultCommitLog implements CommitLog {
     public DefaultCommitLog(
         StoreConfig storeConfig,
         MappedFileQueue mappedFileQueue,
-        CommitFlusher commitFlusher
+        CommitLogFlusher commitLogFlusher
     ) {
         this.storeConfig = storeConfig;
         this.commitConfig = storeConfig.getCommitConfig();
         this.messageConfig = storeConfig.getMessageConfig();
 
         this.mappedFileQueue = mappedFileQueue;
-        this.commitFlusher = commitFlusher;
+        this.commitLogFlusher = commitLogFlusher;
 
         this.commitLogLock = new CommitLogReentrantLock();
         initLocalEncoder();
@@ -71,7 +71,7 @@ public class DefaultCommitLog implements CommitLog {
             InsertResult insertResult = mappedFile.insert(messageBuffer);
             handleInsertError(insertResult);
 
-            return commitFlusher.flush(insertResult, messageBO);
+            return commitLogFlusher.flush(insertResult, messageBO);
         } catch (EnqueueException messageException) {
             return InsertFuture.failure(messageException.getStatus());
         } finally {

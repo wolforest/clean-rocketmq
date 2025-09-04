@@ -9,7 +9,7 @@ import cn.coderule.minimq.domain.service.store.infra.MappedFileQueue;
 import cn.coderule.minimq.domain.service.store.domain.commitlog.CommitLogManager;
 import cn.coderule.minimq.domain.service.store.server.CheckPoint;
 import cn.coderule.minimq.store.api.CommitLogStoreImpl;
-import cn.coderule.minimq.store.domain.commitlog.flush.DefaultCommitFlusher;
+import cn.coderule.minimq.store.domain.commitlog.flush.DefaultCommitLogFlusher;
 import cn.coderule.minimq.store.infra.file.AllocateMappedFileService;
 import cn.coderule.minimq.store.infra.file.DefaultMappedFileQueue;
 import cn.coderule.minimq.store.infra.memory.CLibrary;
@@ -28,7 +28,7 @@ public class DefaultCommitLogManager implements CommitLogManager {
 
     private MappedFileQueue mappedFileQueue;
     private CommitLog commitLog;
-    private DefaultCommitFlusher defaultCommitFlusher;
+    private DefaultCommitLogFlusher defaultCommitFlusher;
     private CheckPoint checkpoint;
 
     @Override
@@ -75,7 +75,7 @@ public class DefaultCommitLogManager implements CommitLogManager {
 
     private void initCommitLog() {
         checkpoint = StoreContext.getCheckPoint();
-        defaultCommitFlusher = new DefaultCommitFlusher(commitConfig, mappedFileQueue, checkpoint);
+        defaultCommitFlusher = new DefaultCommitLogFlusher(commitConfig, mappedFileQueue, checkpoint);
 
         commitLog = new DefaultCommitLog(storeConfig, mappedFileQueue, defaultCommitFlusher);
         StoreContext.register(commitLog, CommitLog.class);

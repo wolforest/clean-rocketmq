@@ -19,14 +19,14 @@ import java.util.concurrent.CompletableFuture;
  *  - MappedFileQueue
  *  - StoreCheckPoint
  */
-public class DefaultCommitFlusher implements CommitFlusher, Lifecycle {
+public class DefaultCommitLogFlusher implements CommitLogFlusher, Lifecycle {
     private final CommitConfig commitConfig;
 
     private final Flusher commitService;
     private final Flusher flusher;
     private final FlushWatcher flushWatcher;
 
-    public DefaultCommitFlusher(
+    public DefaultCommitLogFlusher(
         CommitConfig commitConfig,
         MappedFileQueue mappedFileQueue,
         CheckPoint checkPoint
