@@ -10,9 +10,14 @@ public class StorePath {
         ROOT_PATH = rootPath;
 
         DirUtil.createIfNotExists(ROOT_PATH);
+        DirUtil.createIfNotExists(getMetaPath());
+        DirUtil.createIfNotExists(getIndexPath());
         DirUtil.createIfNotExists(getCommitLogPath());
         DirUtil.createIfNotExists(getConsumeQueuePath());
-        DirUtil.createIfNotExists(getIndexPath());
+    }
+
+    public static String getMetaPath() {
+        return ROOT_PATH + File.separator + "config";
     }
 
     public static String getCommitLogPath() {

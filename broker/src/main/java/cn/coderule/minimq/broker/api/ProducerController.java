@@ -90,6 +90,8 @@ public class ProducerController {
 
         long now = System.currentTimeMillis();
         messageBO.setStoreTimestamp(now);
+
+        // init sizes of message and properties
     }
 
     private void formatEnqueueResult(EnqueueResult result) {
