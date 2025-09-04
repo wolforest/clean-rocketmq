@@ -1,5 +1,6 @@
 package cn.coderule.minimq.domain.domain.message;
 
+import cn.coderule.common.util.encrypt.HashUtil;
 import cn.coderule.common.util.lang.collection.MapUtil;
 import cn.coderule.minimq.domain.core.constant.flag.MessageSysFlag;
 import cn.coderule.minimq.domain.core.constant.MessageConst;
@@ -60,7 +61,7 @@ public class MessageBO extends Message implements Serializable {
     @Deprecated
     private String msgId;
 
-    private int bodyCRC;
+    private int bodyCRC = -1;
     private int magicCode;
 
     private Long tagsCode;
@@ -96,6 +97,20 @@ public class MessageBO extends Message implements Serializable {
         }
 
         return this.version;
+    }
+
+    public int getBodyCRC() {
+        if (this.bodyCRC > -1) {
+            return this.bodyCRC;
+        }
+
+        if (null == body) {
+            this.bodyCRC = 0;
+        } else {
+            this.bodyCRC = HashUtil.crc32(body);
+        }
+
+        return this.bodyCRC;
     }
 
     public void setSystemQueue(String systemTopic, int systemQueueId) {

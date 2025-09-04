@@ -1,6 +1,5 @@
 package cn.coderule.minimq.broker.api;
 
-import cn.coderule.common.util.encrypt.HashUtil;
 import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.minimq.broker.api.validator.MessageValidator;
@@ -9,7 +8,6 @@ import cn.coderule.minimq.broker.domain.producer.Producer;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.core.constant.MessageConst;
 import cn.coderule.minimq.domain.core.enums.code.InvalidCode;
-import cn.coderule.minimq.domain.core.enums.message.MessageVersion;
 import cn.coderule.minimq.domain.core.exception.InvalidParameterException;
 import cn.coderule.minimq.domain.domain.cluster.ClientChannelInfo;
 import cn.coderule.minimq.domain.domain.cluster.RequestContext;
@@ -89,8 +87,6 @@ public class ProducerController {
 
     private void initMessage(MessageBO messageBO) {
         this.setMessageId(messageBO);
-        messageBO.setBodyCRC(HashUtil.crc32(messageBO.getBody()));
-
 
         long now = System.currentTimeMillis();
         messageBO.setStoreTimestamp(now);
