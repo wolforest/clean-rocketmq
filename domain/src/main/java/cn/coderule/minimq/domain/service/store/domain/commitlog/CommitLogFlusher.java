@@ -1,4 +1,4 @@
-package cn.coderule.minimq.store.domain.commitlog.flush;
+package cn.coderule.minimq.domain.service.store.domain.commitlog;
 
 import cn.coderule.minimq.domain.domain.cluster.store.InsertFuture;
 import cn.coderule.minimq.domain.domain.cluster.store.InsertResult;

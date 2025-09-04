@@ -1,6 +1,7 @@
 package cn.coderule.minimq.store.domain.commitlog.flush;
 
 import cn.coderule.minimq.domain.core.enums.store.EnqueueStatus;
+import cn.coderule.minimq.domain.service.store.domain.commitlog.CommitLogFlusher;
 import cn.coderule.minimq.domain.service.store.server.CheckPoint;
 import cn.coderule.minimq.store.domain.commitlog.vo.GroupCommitRequest;
 import cn.coderule.common.convention.service.Lifecycle;
