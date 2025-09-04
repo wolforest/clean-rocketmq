@@ -184,6 +184,7 @@ public class DefaultCommitLog implements CommitLog {
 
     private InsertContext initContext(MessageBO messageBO) {
         messageBO.setStoreHost(storeConfig.getHostAddress());
+        messageBO.setBrokerName(storeConfig.getGroup());
 
         return InsertContext.builder()
             .now(messageBO.getStoreTimestamp())
