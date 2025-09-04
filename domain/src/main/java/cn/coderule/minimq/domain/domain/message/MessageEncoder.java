@@ -3,16 +3,11 @@ package cn.coderule.minimq.domain.domain.message;
 import cn.coderule.minimq.domain.config.business.MessageConfig;
 import cn.coderule.minimq.domain.core.constant.MQConstants;
 import cn.coderule.minimq.domain.core.constant.MessageConst;
-import cn.coderule.minimq.domain.core.enums.store.EnqueueStatus;
 import cn.coderule.minimq.domain.core.enums.message.MessageVersion;
-import cn.coderule.minimq.domain.core.exception.EnqueueException;
-import cn.coderule.minimq.domain.utils.message.MessageUtils;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.buffer.UnpooledByteBufAllocator;
 import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -27,6 +22,15 @@ public class MessageEncoder {
         this.propertyCRCLength = messageConfig.isEnablePropertyCRC()
             ? messageConfig.getPropertyCRCLength()
             : 0;
+    }
+
+    public static int calculateLength(MessageBO messageBO) {
+        return calculateMessageLength(
+            messageBO.getVersion(),
+            messageBO.getBodyLength(),
+            messageBO.getTopicLength(),
+            messageBO.getPropertyLength()
+        );
     }
 
     public ByteBuffer encode(MessageBO messageBO) {
@@ -86,13 +90,18 @@ public class MessageEncoder {
         } else {
             buffer.writeByte((byte) messageBO.getTopicLength());
         }
-        buffer.writeBytes(messageBO.getTopic().getBytes(MQConstants.MQ_CHARSET));
+
+        buffer.writeBytes(
+            messageBO.getTopic().getBytes(MQConstants.MQ_CHARSET)
+        );
     }
 
     private void writeProperty(MessageBO messageBO) {
         buffer.writeShort((short) messageBO.getPropertyLength());
         if (messageBO.getPropertyLength() > propertyCRCLength) {
-            buffer.writeBytes(messageBO.getPropertiesString().getBytes(MQConstants.MQ_CHARSET));
+            buffer.writeBytes(
+                messageBO.getPropertiesString().getBytes(MQConstants.MQ_CHARSET)
+            );
         }
 
         if (messageBO.isAppendPropertyCRC()) {
@@ -143,15 +152,6 @@ public class MessageEncoder {
 
         propertyLength += propertyCRCLength;
         messageBO.setPropertyLength(propertyLength);
-    }
-
-    public static int calculateLength(MessageBO messageBO) {
-        return calculateMessageLength(
-            messageBO.getVersion(),
-            messageBO.getBodyLength(),
-            messageBO.getTopicLength(),
-            messageBO.getPropertyLength()
-        );
     }
 
     private static int calculateMessageLength(MessageVersion messageVersion,

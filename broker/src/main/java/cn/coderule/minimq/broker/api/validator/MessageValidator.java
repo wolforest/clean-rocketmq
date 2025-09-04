@@ -46,6 +46,10 @@ public class MessageValidator {
         validateMessageLength(messageBO);
     }
 
+    public void validateTopic(String topicName) {
+        TopicValidator.validateTopic(topicName);
+    }
+
     public void validateTopic(MessageBO messageBO) {
         String topicName = messageBO.getTopic();
         TopicValidator.validateTopic(topicName);
