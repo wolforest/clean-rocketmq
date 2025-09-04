@@ -102,9 +102,47 @@ public class MessageEncoder {
 
     private void initMessage(MessageBO messageBO) {
         // init topic length
+        if (messageBO.getTopicLength() < 0) {
+            messageBO.setTopicLength(
+                messageBO.getTopic().getBytes(MQConstants.MQ_CHARSET).length
+            );
+        }
         // int body length
+        if (messageBO.getBodyLength() < 0) {
+            messageBO.setBodyLength(
+                messageBO.getBody() == null ? 0 : messageBO.getBody().length
+            );
+        }
+
         // init property length
+        if (messageBO.getPropertyLength() < 0) {
+            calculatePropertyLength(messageBO);
+        }
+
         // init message length
+        if (messageBO.getMessageLength() < 0) {
+            messageBO.setMessageLength(
+                calculateLength(messageBO)
+            );
+        }
+    }
+
+    private void calculatePropertyLength(MessageBO messageBO) {
+        byte[] properties = messageBO.getPropertiesString().getBytes(MQConstants.MQ_CHARSET);
+        int propertyLength = properties.length;
+
+        if (propertyLength > 0
+            && propertyCRCLength > 0
+            && properties[propertyLength - 1] != MessageConst.PROPERTY_SEPARATOR
+        ) {
+            propertyLength += 1;
+            messageBO.setAppendPropertyCRC(true);
+        } else {
+            messageBO.setAppendPropertyCRC(false);
+        }
+
+        propertyLength += propertyCRCLength;
+        messageBO.setPropertyLength(propertyLength);
     }
 
     public static int calculateLength(MessageBO messageBO) {

@@ -34,13 +34,13 @@ public class MessageBO extends Message implements Serializable {
     private String topicKey;
 
     @Builder.Default
-    private int messageLength = 0;
+    private int messageLength = -1;
     @Builder.Default
-    private int topicLength = 0;
+    private int topicLength = -1;
     @Builder.Default
-    private int bodyLength = 0;
+    private int bodyLength = -1;
     @Builder.Default
-    private int propertyLength = 0;
+    private int propertyLength = -1;
     @Builder.Default
     private boolean appendPropertyCRC = false;
 

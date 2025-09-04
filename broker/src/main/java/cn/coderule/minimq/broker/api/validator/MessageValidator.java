@@ -10,7 +10,6 @@ import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.domain.message.MessageEncoder;
 import cn.coderule.minimq.domain.domain.meta.topic.TopicValidator;
 import cn.coderule.minimq.domain.core.exception.InvalidRequestException;
-import cn.coderule.minimq.domain.utils.message.MessageUtils;
 
 import static cn.coderule.common.util.lang.string.StringUtil.containControlCharacter;
 
@@ -83,8 +82,8 @@ public class MessageValidator {
         }
     }
 
-    private void calculatePropertyLength(String propertiesString, MessageBO messageBO) {
-        byte[] properties = propertiesString.getBytes(MQConstants.MQ_CHARSET);
+    private void calculatePropertyLength(MessageBO messageBO) {
+        byte[] properties = messageBO.getPropertiesString().getBytes(MQConstants.MQ_CHARSET);
         int propertyLength = properties.length;
 
         if (propertyLength > 0
@@ -99,10 +98,7 @@ public class MessageValidator {
     }
 
     private void validatePropertyLength(MessageBO messageBO) {
-        String propertiesString = MessageUtils.propertiesToString(messageBO.getProperties());
-        messageBO.setPropertiesString(propertiesString);
-
-        calculatePropertyLength(propertiesString, messageBO);
+        calculatePropertyLength(messageBO);
 
         int maxPropertySize = messageConfig.getMaxPropertySize();
         if (maxPropertySize <= 0) {
