@@ -47,14 +47,7 @@ public class MessageConverter {
     }
 
     private static void setBornInfo(RequestContext context, MessageBO messageBO) {
-        String bornHost = messageBO.getProperty(MessageConst.PROPERTY_BORN_HOST);
-        String bornTime = messageBO.getProperty(MessageConst.PROPERTY_BORN_TIMESTAMP);
-
-        if (StringUtil.notBlank(bornHost)) {
-            messageBO.setBornHost(
-                NetworkUtil.toSocketAddress(bornHost)
-            );
-        } else if (StringUtil.notBlank(context.getRemoteAddress())) {
+        if (StringUtil.notBlank(context.getRemoteAddress())) {
             messageBO.setBornHost(
                 NetworkUtil.toSocketAddress(context.getRemoteAddress())
             );
@@ -64,11 +57,7 @@ public class MessageConverter {
             );
         }
 
-        if (StringUtil.notBlank(bornTime)) {
-            messageBO.setBornTimestamp(Long.parseLong(bornTime));
-        } else {
-            messageBO.setBornTimestamp(System.currentTimeMillis());
-        }
+        messageBO.setBornTimestamp(System.currentTimeMillis());
     }
 
     private static void validateProperty(Map<String, String> properties) {
