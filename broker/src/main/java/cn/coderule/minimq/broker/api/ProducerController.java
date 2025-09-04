@@ -88,9 +88,6 @@ public class ProducerController {
     private void initMessage(MessageBO messageBO) {
         this.setMessageId(messageBO);
 
-        long now = System.currentTimeMillis();
-        messageBO.setStoreTimestamp(now);
-
         // init sizes of message and properties
     }
 

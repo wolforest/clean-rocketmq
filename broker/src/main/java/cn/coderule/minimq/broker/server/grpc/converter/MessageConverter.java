@@ -5,6 +5,7 @@ import apache.rocketmq.v2.Message;
 import apache.rocketmq.v2.MessageType;
 import apache.rocketmq.v2.SendMessageRequest;
 import cn.coderule.common.util.lang.string.StringUtil;
+import cn.coderule.common.util.net.NetworkUtil;
 import cn.coderule.minimq.domain.core.constant.MessageConst;
 import cn.coderule.minimq.domain.core.constant.flag.MessageSysFlag;
 import cn.coderule.minimq.domain.core.enums.code.InvalidCode;
@@ -14,6 +15,7 @@ import cn.coderule.minimq.domain.core.exception.InvalidRequestException;
 import com.google.protobuf.Timestamp;
 import com.google.protobuf.util.Durations;
 import com.google.protobuf.util.Timestamps;
+import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -37,10 +39,36 @@ public class MessageConverter {
                 .properties(buildProperties(context, rpcMsg, topic))
                 .build();
 
+            setBornInfo(context, messageBO);
             messageList.add(messageBO);
         }
 
         return messageList;
+    }
+
+    private static void setBornInfo(RequestContext context, MessageBO messageBO) {
+        String bornHost = messageBO.getProperty(MessageConst.PROPERTY_BORN_HOST);
+        String bornTime = messageBO.getProperty(MessageConst.PROPERTY_BORN_TIMESTAMP);
+
+        if (StringUtil.notBlank(bornHost)) {
+            messageBO.setBornHost(
+                NetworkUtil.toSocketAddress(bornHost)
+            );
+        } else if (StringUtil.notBlank(context.getRemoteAddress())) {
+            messageBO.setBornHost(
+                NetworkUtil.toSocketAddress(context.getRemoteAddress())
+            );
+        } else {
+            messageBO.setBornHost(
+                new InetSocketAddress("0.0.0.0", 0)
+            );
+        }
+
+        if (StringUtil.notBlank(bornTime)) {
+            messageBO.setBornTimestamp(Long.parseLong(bornTime));
+        } else {
+            messageBO.setBornTimestamp(System.currentTimeMillis());
+        }
     }
 
     private static void validateProperty(Map<String, String> properties) {
