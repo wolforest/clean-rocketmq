@@ -19,8 +19,7 @@ import java.util.concurrent.CompletableFuture;
  *  - MappedFileQueue
  *  - StoreCheckPoint
  */
-public class FlushManager implements Lifecycle {
-    private State state = State.RUNNING;
+public class FlushManager implements CommitFlusher, Lifecycle {
     private final CommitConfig commitConfig;
 
     private final Flusher commitService;
@@ -47,7 +46,6 @@ public class FlushManager implements Lifecycle {
 
     @Override
     public void start() throws Exception {
-        this.state = State.STARTING;
 
         this.flusher.start();
 
@@ -58,12 +56,10 @@ public class FlushManager implements Lifecycle {
             this.commitService.start();
         }
 
-        this.state = State.RUNNING;
     }
 
     @Override
     public void shutdown() throws Exception {
-        this.state = State.SHUTTING_DOWN;
 
         this.flusher.shutdown();
         this.flushWatcher.shutdown();
@@ -72,9 +68,9 @@ public class FlushManager implements Lifecycle {
             this.commitService.shutdown();
         }
 
-        this.state = State.TERMINATED;
     }
 
+    @Override
     public InsertFuture flush(InsertResult insertResult, MessageBO messageBO) {
         if (FlushType.SYNC.equals(commitConfig.getFlushType())) {
             return syncFlush(insertResult, messageBO);
