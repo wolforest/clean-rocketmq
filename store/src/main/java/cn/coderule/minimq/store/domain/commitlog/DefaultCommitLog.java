@@ -181,25 +181,11 @@ public class DefaultCommitLog implements CommitLog {
     }
 
     private InsertContext initContext(MessageBO messageBO) {
-        initMessage(messageBO);
-
-        long now = System.currentTimeMillis();
-        messageBO.setStoreTimestamp(now);
-
         return InsertContext.builder()
-            .now(now)
+            .now(messageBO.getStoreTimestamp())
             .messageBO(messageBO)
             .encoder(localEncoder.get().getEncoder())
             .build();
-    }
-
-    private void initMessage(MessageBO messageBO) {
-        messageBO.setBodyCRC(HashUtil.crc32(messageBO.getBody()));
-
-        messageBO.setVersion(MessageVersion.V1);
-        if (messageBO.getTopic().length() > Byte.MAX_VALUE) {
-            messageBO.setVersion(MessageVersion.V2);
-        }
     }
 
     private MappedFile getMappedFile(int size) {

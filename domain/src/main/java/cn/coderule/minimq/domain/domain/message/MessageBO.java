@@ -76,12 +76,26 @@ public class MessageBO extends Message implements Serializable {
     private int reconsumeTimes;
     private long preparedTransactionOffset;
 
-    private MessageVersion version = MessageVersion.V1;
+    private MessageVersion version = null;
 
     public static MessageBO notFound() {
         MessageBO messageBO = new MessageBO();
         messageBO.status = MessageStatus.NO_MATCHED_MESSAGE;
         return messageBO;
+    }
+
+    public MessageVersion getVersion() {
+        if (null != this.version) {
+            return this.version;
+        }
+
+        if (topic.length() > Byte.MAX_VALUE) {
+            this.version = MessageVersion.V2;
+        } else {
+            this.version = MessageVersion.V1;
+        }
+
+        return this.version;
     }
 
     public void setSystemQueue(String systemTopic, int systemQueueId) {
