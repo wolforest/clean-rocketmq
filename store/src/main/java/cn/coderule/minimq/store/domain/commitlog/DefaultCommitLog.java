@@ -1,12 +1,11 @@
 package cn.coderule.minimq.store.domain.commitlog;
 
 import cn.coderule.minimq.domain.config.server.StoreConfig;
+import cn.coderule.minimq.store.domain.commitlog.flush.CommitFlusher;
 import cn.coderule.minimq.store.domain.commitlog.vo.InsertContext;
-import cn.coderule.common.util.encrypt.HashUtil;
 import cn.coderule.minimq.domain.config.store.CommitConfig;
 import cn.coderule.minimq.domain.config.business.MessageConfig;
 import cn.coderule.minimq.domain.core.enums.store.EnqueueStatus;
-import cn.coderule.minimq.domain.core.enums.message.MessageVersion;
 import cn.coderule.minimq.domain.core.exception.EnqueueException;
 import cn.coderule.minimq.domain.domain.cluster.store.InsertFuture;
 import cn.coderule.minimq.domain.domain.cluster.store.InsertResult;
@@ -18,7 +17,6 @@ import cn.coderule.minimq.domain.core.lock.commitlog.CommitLogReentrantLock;
 import cn.coderule.minimq.domain.service.store.domain.commitlog.CommitLog;
 import cn.coderule.minimq.domain.service.store.infra.MappedFileQueue;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
-import cn.coderule.minimq.store.domain.commitlog.flush.FlushManager;
 import cn.coderule.minimq.store.domain.commitlog.vo.EnqueueThreadLocal;
 import cn.coderule.minimq.store.infra.memory.CLibrary;
 import java.nio.ByteBuffer;
@@ -36,7 +34,7 @@ public class DefaultCommitLog implements CommitLog {
     private final StoreConfig storeConfig;
     private final CommitConfig commitConfig;
     private final MessageConfig messageConfig;
-    private final FlushManager flushManager;
+    private final CommitFlusher commitFlusher;
 
     @Getter
     private final MappedFileQueue mappedFileQueue;
@@ -46,14 +44,14 @@ public class DefaultCommitLog implements CommitLog {
     public DefaultCommitLog(
         StoreConfig storeConfig,
         MappedFileQueue mappedFileQueue,
-        FlushManager flushManager
+        CommitFlusher commitFlusher
     ) {
         this.storeConfig = storeConfig;
         this.commitConfig = storeConfig.getCommitConfig();
         this.messageConfig = storeConfig.getMessageConfig();
 
         this.mappedFileQueue = mappedFileQueue;
-        this.flushManager = flushManager;
+        this.commitFlusher = commitFlusher;
 
         this.commitLogLock = new CommitLogReentrantLock();
         initLocalEncoder();
@@ -73,7 +71,7 @@ public class DefaultCommitLog implements CommitLog {
             InsertResult insertResult = mappedFile.insert(messageBuffer);
             handleInsertError(insertResult);
 
-            return flushManager.flush(insertResult, messageBO);
+            return commitFlusher.flush(insertResult, messageBO);
         } catch (EnqueueException messageException) {
             return InsertFuture.failure(messageException.getStatus());
         } finally {
