@@ -10,7 +10,7 @@ import cn.coderule.minimq.domain.config.store.ConsumeQueueConfig;
 import cn.coderule.minimq.domain.config.store.MetaConfig;
 import cn.coderule.minimq.domain.config.store.StorePath;
 
-public class ConfigTest {
+public class ConfigMock {
     public static StoreConfig createStoreConfig(String rootPath) {
         StoreConfig storeConfig = new StoreConfig();
         storeConfig.setRootDir(rootPath);

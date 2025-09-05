@@ -6,14 +6,12 @@ import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.service.store.domain.commitlog.CommitLog;
 import cn.coderule.minimq.domain.service.store.domain.commitlog.CommitLogFlusher;
 import cn.coderule.minimq.domain.service.store.infra.MappedFileQueue;
-import cn.coderule.minimq.domain.utils.test.ConfigTest;
+import cn.coderule.minimq.domain.utils.test.ConfigMock;
 import cn.coderule.minimq.store.domain.commitlog.flush.SyncCommitLogFlusher;
 import cn.coderule.minimq.store.infra.file.DefaultMappedFileQueue;
 import java.nio.file.Path;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class DefaultCommitLogTest {
     public static int MMAP_FILE_SIZE = 2 * 1024 * 1024;
@@ -24,7 +22,7 @@ class DefaultCommitLogTest {
     }
 
     private CommitLog createCommitLog(String dir) {
-        StoreConfig storeConfig = ConfigTest.createStoreConfig(dir);
+        StoreConfig storeConfig = ConfigMock.createStoreConfig(dir);
         CommitConfig commitConfig = storeConfig.getCommitConfig();
         commitConfig.setFileSize(MMAP_FILE_SIZE);
 
