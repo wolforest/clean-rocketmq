@@ -30,6 +30,14 @@ public interface CommitLog {
     long getMaxOffset();
 
     /**
+     * get commit offset
+     *  - get current MappedFile
+     *  - minOffset + writePosition
+     * @return commitOffset of the mappedFileQueue
+     */
+    long getCommitOffset(int size);
+
+    /**
      * get flushed offset
      * @return flushedPosition of the mappedFileQueue
      */

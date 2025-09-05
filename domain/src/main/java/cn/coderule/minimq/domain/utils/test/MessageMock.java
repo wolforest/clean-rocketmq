@@ -12,17 +12,21 @@ public class MessageMock {
         return MessageBO.builder()
             .topic("test")
             .body("test".getBytes())
-            .flag(0)
+            .properties(new HashMap<>())
+
             .queueId(0)
+            .queueOffset(0)
             .commitOffset(0)
+            .preparedTransactionOffset(0)
+
+            .flag(0)
             .sysFlag(0)
+            .reconsumeTimes(0)
+
             .bornTimestamp(now)
             .storeTimestamp(now)
             .bornHost(address)
             .storeHost(address)
-            .reconsumeTimes(0)
-            .preparedTransactionOffset(0)
-            .properties(new HashMap<>())
             .build();
     }
 

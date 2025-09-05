@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 class DefaultCommitLogTest {
-    public static int MMAP_FILE_SIZE = 2 * 1024 * 1024;
+    public static int MMAP_FILE_SIZE = 1024 * 1024;
 
     @Test
     void testInsertAndSelect(@TempDir Path tmpDir) {
@@ -32,7 +32,4 @@ class DefaultCommitLogTest {
         return new DefaultCommitLog(storeConfig, queue, flusher);
     }
 
-    private MessageBO createMessageBO() {
-        return null;
-    }
 }

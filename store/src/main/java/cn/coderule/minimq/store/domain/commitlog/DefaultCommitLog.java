@@ -165,6 +165,12 @@ public class DefaultCommitLog implements CommitLog {
     }
 
     @Override
+    public long getCommitOffset(int size) {
+        MappedFile mappedFile = getMappedFile(size);
+        return mappedFile.getMinOffset() + mappedFile.getWritePosition();
+    }
+
+    @Override
     public long getFlushedOffset() {
         return mappedFileQueue.getFlushPosition();
     }
