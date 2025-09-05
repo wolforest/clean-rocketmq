@@ -167,12 +167,6 @@ public class DefaultCommitLog implements CommitLog {
     }
 
     @Override
-    public long getCommitOffset(int size) {
-        MappedFile mappedFile = getMappedFile(size);
-        return mappedFile.getMinOffset() + mappedFile.getWritePosition();
-    }
-
-    @Override
     public void assignCommitOffset(MessageBO messageBO) {
         if (messageBO.getMessageLength() < 0) {
             throw new InvalidRequestException(

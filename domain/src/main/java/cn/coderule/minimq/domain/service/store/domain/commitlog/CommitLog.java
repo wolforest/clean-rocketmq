@@ -30,13 +30,12 @@ public interface CommitLog {
     long getMaxOffset();
 
     /**
-     * get commit offset
+     * assign commit offset
      *  - get current MappedFile
      *  - minOffset + writePosition
-     * @return commitOffset of the mappedFileQueue
+     * @param messageBO message
+     *  - messageLength can't be null
      */
-    long getCommitOffset(int size);
-
     void assignCommitOffset(MessageBO messageBO);
 
     /**
