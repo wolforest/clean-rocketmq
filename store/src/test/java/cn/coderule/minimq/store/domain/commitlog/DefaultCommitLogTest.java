@@ -48,6 +48,31 @@ class DefaultCommitLogTest {
         assertEquals(messageBO.getTopic(), newMessage.getTopic());
     }
 
+    @Test
+    void testAssignCommitOffset(@TempDir Path tmpDir) throws ExecutionException, InterruptedException {
+        String dir = tmpDir.toString();
+        StoreConfig storeConfig = ConfigMock.createStoreConfig(dir);
+        CommitLog commitLog = createCommitLog(dir, storeConfig);
+
+        MessageEncoder encoder = new MessageEncoder(storeConfig.getMessageConfig());
+        MessageBO first = createMessage(encoder);
+
+        commitLog.assignCommitOffset(first);
+        assertTrue(first.getCommitOffset() >= 0);
+
+        InsertFuture future = commitLog.insert(first);
+        EnqueueResult result = future.get();
+        assertNotNull(result);
+
+        MessageBO second = createMessage(encoder);
+        commitLog.assignCommitOffset(second);
+        assertTrue(second.getCommitOffset() >= 0);
+        assertTrue(second.getCommitOffset() > first.getCommitOffset());
+
+        long diff = second.getCommitOffset() - first.getCommitOffset();
+        assertEquals(diff, first.getMessageLength());
+    }
+
     private CommitLog createCommitLog(String dir, StoreConfig storeConfig) {
         CommitConfig commitConfig = storeConfig.getCommitConfig();
         commitConfig.setFileSize(MMAP_FILE_SIZE);
