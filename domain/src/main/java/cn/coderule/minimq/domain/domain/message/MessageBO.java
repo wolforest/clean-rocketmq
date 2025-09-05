@@ -136,11 +136,19 @@ public class MessageBO extends Message implements Serializable {
     }
 
     public byte[] getBornHostBytes() {
+        if (null == this.bornHost) {
+            return null;
+        }
+
         ByteBuffer buffer = MessageUtils.socketAddress2ByteBuffer(this.bornHost);
         return buffer.array();
     }
 
     public byte[] getStoreHostBytes() {
+        if (null == this.storeHost) {
+            return null;
+        }
+
         ByteBuffer buffer = MessageUtils.socketAddress2ByteBuffer(this.storeHost);
         return buffer.array();
     }

@@ -1,5 +1,7 @@
 package cn.coderule.minimq.domain.domain.message;
 
+import cn.coderule.common.lang.type.Pair;
+import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.minimq.domain.config.business.MessageConfig;
 import cn.coderule.minimq.domain.core.constant.MQConstants;
 import cn.coderule.minimq.domain.core.constant.MessageConst;
@@ -8,6 +10,8 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.buffer.UnpooledByteBufAllocator;
 import java.nio.ByteBuffer;
+import java.util.HashSet;
+import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -31,6 +35,78 @@ public class MessageEncoder {
             messageBO.getTopicLength(),
             messageBO.getPropertyLength()
         );
+    }
+
+    public static Pair<Boolean, Set<String>> validate(MessageBO messageBO) {
+        boolean status = true;
+        Set<String> errorKeys = new HashSet<>();
+
+        if (messageBO.getQueueId() < 0) {
+            status = false;
+            errorKeys.add("queueId");
+        }
+
+        if (messageBO.getFlag() < 0) {
+            status = false;
+            errorKeys.add("flag");
+        }
+
+        if (messageBO.getQueueOffset() < 0) {
+            status = false;
+            errorKeys.add("queueOffset");
+        }
+
+        if (messageBO.getCommitOffset() < 0) {
+            status = false;
+            errorKeys.add("commitOffset");
+        }
+
+        if (messageBO.getSysFlag() < 0) {
+            status = false;
+            errorKeys.add("sysFlag");
+        }
+
+        if (messageBO.getBornTimestamp() < 0) {
+            status = false;
+            errorKeys.add("bornTimestamp");
+        }
+
+        if (messageBO.getStoreTimestamp() < 0) {
+            status = false;
+            errorKeys.add("storeTimestamp");
+        }
+
+        if (null == messageBO.getBornHostBytes()) {
+            status = false;
+            errorKeys.add("bornHost");
+        }
+
+        if (null == messageBO.getStoreHostBytes()) {
+            status = false;
+            errorKeys.add("storeHost");
+        }
+
+        if (messageBO.getReconsumeTimes() < 0) {
+            status = false;
+            errorKeys.add("reconsumeTimes");
+        }
+
+        if (messageBO.getPreparedTransactionOffset() < 0) {
+            status = false;
+            errorKeys.add("preparedTransactionOffset");
+        }
+
+        if (StringUtil.isBlank(messageBO.getTopic())) {
+            status = false;
+            errorKeys.add("topic");
+        }
+
+        if (null == messageBO.getBody()) {
+            status = false;
+            errorKeys.add("body");
+        }
+
+        return Pair.of(status, errorKeys);
     }
 
     public ByteBuffer encode(MessageBO messageBO) {
