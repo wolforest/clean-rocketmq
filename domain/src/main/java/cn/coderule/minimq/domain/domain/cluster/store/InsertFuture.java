@@ -5,6 +5,7 @@ import cn.coderule.minimq.domain.domain.producer.EnqueueResult;
 import cn.coderule.minimq.domain.core.enums.store.EnqueueStatus;
 import java.io.Serializable;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,6 +23,10 @@ public class InsertFuture implements Serializable {
 
     public InsertFuture(InsertResult insertResult) {
         this.insertResult = insertResult;
+    }
+
+    public EnqueueResult get() throws ExecutionException, InterruptedException {
+        return future.get();
     }
 
     public boolean isInsertSuccess() {

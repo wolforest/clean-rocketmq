@@ -109,7 +109,7 @@ public class MessageEncoder {
         return Pair.of(status, errorKeys);
     }
 
-    private void calculate(MessageBO messageBO) {
+    public void calculate(MessageBO messageBO) {
         // init topic length
         if (messageBO.getTopicLength() < 0) {
             messageBO.setTopicLength(
