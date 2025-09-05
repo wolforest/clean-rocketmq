@@ -37,6 +37,8 @@ public interface CommitLog {
      */
     long getCommitOffset(int size);
 
+    void assignCommitOffset(MessageBO messageBO);
+
     /**
      * get flushed offset
      * @return flushedPosition of the mappedFileQueue

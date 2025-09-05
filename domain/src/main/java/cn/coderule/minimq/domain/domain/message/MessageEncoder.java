@@ -28,7 +28,7 @@ public class MessageEncoder {
             : 0;
     }
 
-    public static int calculateLength(MessageBO messageBO) {
+    public static int calculateMessageLength(MessageBO messageBO) {
         return calculateMessageLength(
             messageBO.getVersion(),
             messageBO.getBodyLength(),
@@ -109,9 +109,36 @@ public class MessageEncoder {
         return Pair.of(status, errorKeys);
     }
 
+    private void calculate(MessageBO messageBO) {
+        // init topic length
+        if (messageBO.getTopicLength() < 0) {
+            messageBO.setTopicLength(
+                messageBO.getTopic().getBytes(MQConstants.MQ_CHARSET).length
+            );
+        }
+        // int body length
+        if (messageBO.getBodyLength() < 0) {
+            messageBO.setBodyLength(
+                messageBO.getBody() == null ? 0 : messageBO.getBody().length
+            );
+        }
+
+        // init property length
+        if (messageBO.getPropertyLength() < 0) {
+            calculatePropertyLength(messageBO);
+        }
+
+        // init message length
+        if (messageBO.getMessageLength() < 0) {
+            messageBO.setMessageLength(
+                calculateMessageLength(messageBO)
+            );
+        }
+    }
+
     public ByteBuffer encode(MessageBO messageBO) {
         buffer.clear();
-        initMessage(messageBO);
+        calculate(messageBO);
 
         // 1 TOTAL_SIZE
         buffer.writeInt(messageBO.getMessageLength());
@@ -185,32 +212,7 @@ public class MessageEncoder {
         }
     }
 
-    private void initMessage(MessageBO messageBO) {
-        // init topic length
-        if (messageBO.getTopicLength() < 0) {
-            messageBO.setTopicLength(
-                messageBO.getTopic().getBytes(MQConstants.MQ_CHARSET).length
-            );
-        }
-        // int body length
-        if (messageBO.getBodyLength() < 0) {
-            messageBO.setBodyLength(
-                messageBO.getBody() == null ? 0 : messageBO.getBody().length
-            );
-        }
 
-        // init property length
-        if (messageBO.getPropertyLength() < 0) {
-            calculatePropertyLength(messageBO);
-        }
-
-        // init message length
-        if (messageBO.getMessageLength() < 0) {
-            messageBO.setMessageLength(
-                calculateLength(messageBO)
-            );
-        }
-    }
 
     private void calculatePropertyLength(MessageBO messageBO) {
         byte[] properties = messageBO.getPropertiesString().getBytes(MQConstants.MQ_CHARSET);

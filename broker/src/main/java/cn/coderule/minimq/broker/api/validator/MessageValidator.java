@@ -59,7 +59,7 @@ public class MessageValidator {
     }
 
     private void validateMessageLength(MessageBO messageBO) {
-        int messageLength = MessageEncoder.calculateLength(messageBO);
+        int messageLength = MessageEncoder.calculateMessageLength(messageBO);
         messageBO.setMessageLength(messageLength);
 
         if (messageLength > maxMessageLength) {

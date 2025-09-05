@@ -19,6 +19,7 @@ class DefaultCommitLogTest {
     @Test
     void testInsertAndSelect(@TempDir Path tmpDir) {
         CommitLog commitLog = createCommitLog(tmpDir.toString());
+
     }
 
     private CommitLog createCommitLog(String dir) {
@@ -31,5 +32,9 @@ class DefaultCommitLogTest {
 
         return new DefaultCommitLog(storeConfig, queue, flusher);
     }
+
+
+
+
 
 }

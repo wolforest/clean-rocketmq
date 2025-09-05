@@ -1,6 +1,8 @@
 package cn.coderule.minimq.store.domain.commitlog;
 
 import cn.coderule.minimq.domain.config.server.StoreConfig;
+import cn.coderule.minimq.domain.core.enums.code.InvalidCode;
+import cn.coderule.minimq.domain.core.exception.InvalidRequestException;
 import cn.coderule.minimq.domain.service.store.domain.commitlog.CommitLogFlusher;
 import cn.coderule.minimq.store.domain.commitlog.vo.InsertContext;
 import cn.coderule.minimq.domain.config.store.CommitConfig;
@@ -168,6 +170,19 @@ public class DefaultCommitLog implements CommitLog {
     public long getCommitOffset(int size) {
         MappedFile mappedFile = getMappedFile(size);
         return mappedFile.getMinOffset() + mappedFile.getWritePosition();
+    }
+
+    @Override
+    public void assignCommitOffset(MessageBO messageBO) {
+        if (messageBO.getMessageLength() < 0) {
+            throw new InvalidRequestException(
+                InvalidCode.MESSAGE_CORRUPTED,
+                "Message length can't be null, while assign commitOffset"
+            );
+        }
+
+        MappedFile mappedFile = getMappedFile(messageBO.getMessageLength());
+        assignCommitOffset(messageBO, mappedFile);
     }
 
     @Override
