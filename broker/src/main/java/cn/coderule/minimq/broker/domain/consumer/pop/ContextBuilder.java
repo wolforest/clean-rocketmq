@@ -120,6 +120,10 @@ public class ContextBuilder {
     }
 
     private void  compensateRetrySubscription(PopContext context) {
+        if (!context.shouldRetry()) {
+            return;
+        }
+
         PopRequest request = context.getRequest();
         String retryTopic = context.getRetryTopic().getTopicName();
 
