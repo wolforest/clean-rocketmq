@@ -3,34 +3,19 @@ package cn.coderule.minimq.domain.domain.message;
 import cn.coderule.common.util.encrypt.HashUtil;
 import cn.coderule.minimq.domain.core.enums.message.MessageStatus;
 import cn.coderule.minimq.domain.core.enums.message.MessageVersion;
+import cn.coderule.minimq.domain.utils.message.MessageUtils;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 
 public class MessageDecoder {
     public static MessageBO decode(ByteBuffer byteBuffer) {
-        return decode(byteBuffer, true, true);
+        return decode(byteBuffer, true);
     }
 
-    public static MessageBO decode(ByteBuffer byteBuffer, final boolean readBody) {
-        return decode(byteBuffer, readBody, true);
-    }
-
-    public static MessageBO decode(
-        ByteBuffer byteBuffer,
-        boolean readBody,
-        boolean isSetPropertiesString
-    ) {
-        return decode(byteBuffer, readBody, isSetPropertiesString, false);
-    }
-
-    public static MessageBO decode(
-        ByteBuffer byteBuffer,
-        boolean readBody,
-        boolean isSetPropertiesString,
-        boolean checkCRC
-    ) {
+    public static MessageBO decode(ByteBuffer byteBuffer, boolean checkCRC) {
         try {
             MessageBO msg = new MessageBO();
 
@@ -100,22 +85,18 @@ public class MessageDecoder {
             // 15 BODY
             int bodyLen = byteBuffer.getInt();
             if (bodyLen > 0) {
-                if (readBody) {
-                    byte[] body = new byte[bodyLen];
-                    byteBuffer.get(body);
+                byte[] body = new byte[bodyLen];
+                byteBuffer.get(body);
 
-                    if (checkCRC) {
-                        //crc body
-                        int crc = HashUtil.crc32(body);
-                        if (crc != bodyCRC) {
-                            throw new Exception("Msg crc is error!");
-                        }
+                if (checkCRC) {
+                    //crc body
+                    int crc = HashUtil.crc32(body);
+                    if (crc != bodyCRC) {
+                        throw new Exception("Msg crc is error!");
                     }
-
-                    msg.setBody(body);
-                } else {
-                    byteBuffer.position(byteBuffer.position() + bodyLen);
                 }
+
+                msg.setBody(body);
             }
 
             // 16 TOPIC
@@ -129,19 +110,14 @@ public class MessageDecoder {
             if (propertiesLength > 0) {
                 byte[] properties = new byte[propertiesLength];
                 byteBuffer.get(properties);
+
                 String propertiesString = new String(properties, StandardCharsets.UTF_8);
-//                if (!isSetPropertiesString) {
-//                    Map<String, String> map = string2messageProperties(propertiesString);
-//                    msgExt.setProperties(map);
-//                } else {
-//                    Map<String, String> map = string2messageProperties(propertiesString);
-//                    map.put("propertiesString", propertiesString);
-//                    msgExt.setProperties(map);
-//                }
+                Map<String, String> map = MessageUtils.stringToProperties(propertiesString);
+                msg.setProperties(map);
             }
 
-            int msgIDLength = storehostIPLength + 4 + 8;
-            ByteBuffer byteBufferMsgId = ByteBuffer.allocate(msgIDLength);
+//            int msgIDLength = storehostIPLength + 4 + 8;
+//            ByteBuffer byteBufferMsgId = ByteBuffer.allocate(msgIDLength);
 //            String msgId = createMessageId(byteBufferMsgId, msgExt.getStoreHost(), msgExt.getCommitLogOffset());
 //            msgExt.setMsgId(msgId);
 
