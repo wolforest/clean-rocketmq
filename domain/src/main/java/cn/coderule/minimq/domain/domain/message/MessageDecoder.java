@@ -18,16 +18,20 @@ public class MessageDecoder {
     }
 
     public static MessageBO decode(
-        java.nio.ByteBuffer byteBuffer, final boolean readBody,
-        final boolean isSetPropertiesString) {
+        ByteBuffer byteBuffer,
+        boolean readBody,
+        boolean isSetPropertiesString
+    ) {
         return decode(byteBuffer, readBody, isSetPropertiesString, false);
     }
 
     public static MessageBO decode(
-        java.nio.ByteBuffer byteBuffer, final boolean readBody,
-        final boolean isSetPropertiesString, final boolean checkCRC) {
+        ByteBuffer byteBuffer,
+        boolean readBody,
+        boolean isSetPropertiesString,
+        boolean checkCRC
+    ) {
         try {
-
             MessageBO msg = new MessageBO();
 
             // 1 TOTAL_SIZE

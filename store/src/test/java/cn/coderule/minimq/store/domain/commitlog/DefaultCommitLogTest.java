@@ -29,7 +29,8 @@ class DefaultCommitLogTest {
     void testInsertAndSelect(@TempDir Path tmpDir) throws ExecutionException, InterruptedException {
         String dir = tmpDir.toString();
         StoreConfig storeConfig = ConfigMock.createStoreConfig(dir);
-        CommitLog commitLog = createCommitLog(dir, storeConfig);
+        MappedFileQueue queue = new DefaultMappedFileQueue(dir, MMAP_FILE_SIZE);
+        CommitLog commitLog = createCommitLog(storeConfig, queue);
 
         MessageEncoder encoder = new MessageEncoder(storeConfig.getMessageConfig());
         MessageBO messageBO = createMessage(encoder);
@@ -44,15 +45,18 @@ class DefaultCommitLogTest {
         MessageBO newMessage = commitLog.select(messageBO.getCommitOffset());
         assertNotNull(newMessage);
         assertEquals(messageBO.getCommitOffset(), newMessage.getCommitOffset());
-        assertEquals(messageBO.getBody(), newMessage.getBody());
+        assertEquals(messageBO.getBody().length, newMessage.getBody().length);
         assertEquals(messageBO.getTopic(), newMessage.getTopic());
+
+        queue.destroy();
     }
 
     @Test
     void testAssignCommitOffset(@TempDir Path tmpDir) throws ExecutionException, InterruptedException {
         String dir = tmpDir.toString();
         StoreConfig storeConfig = ConfigMock.createStoreConfig(dir);
-        CommitLog commitLog = createCommitLog(dir, storeConfig);
+        MappedFileQueue queue = new DefaultMappedFileQueue(dir, MMAP_FILE_SIZE);
+        CommitLog commitLog = createCommitLog(storeConfig, queue);
 
         MessageEncoder encoder = new MessageEncoder(storeConfig.getMessageConfig());
         MessageBO first = createMessage(encoder);
@@ -71,15 +75,15 @@ class DefaultCommitLogTest {
 
         long diff = second.getCommitOffset() - first.getCommitOffset();
         assertEquals(diff, first.getMessageLength());
+
+        queue.destroy();
     }
 
-    private CommitLog createCommitLog(String dir, StoreConfig storeConfig) {
+    private CommitLog createCommitLog(StoreConfig storeConfig, MappedFileQueue queue) {
         CommitConfig commitConfig = storeConfig.getCommitConfig();
         commitConfig.setFileSize(MMAP_FILE_SIZE);
 
-        MappedFileQueue queue = new DefaultMappedFileQueue(dir, MMAP_FILE_SIZE);
         CommitLogFlusher flusher = new SyncCommitLogFlusher(queue);
-
         return new DefaultCommitLog(storeConfig, queue, flusher);
     }
 

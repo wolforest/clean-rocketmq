@@ -125,8 +125,10 @@ public class DefaultCommitLog implements CommitLog {
             return MessageBO.notFound();
         }
 
-        int size = buffer.getByteBuffer().getInt();
-        buffer.getByteBuffer().limit(size);
+        ByteBuffer byteBuffer = buffer.getByteBuffer();
+        int size = byteBuffer.getInt();
+        byteBuffer.limit(size);
+        byteBuffer.rewind();
 
         MessageBO messageBO = MessageDecoder.decode(buffer.getByteBuffer());
         buffer.release();
