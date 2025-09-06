@@ -60,6 +60,7 @@ public class MessageBO extends Message implements Serializable {
     private SocketAddress storeHost;
     private String messageId;
 
+    @Builder.Default
     private int bodyCRC = -1;
     private int magicCode;
 
@@ -103,7 +104,7 @@ public class MessageBO extends Message implements Serializable {
             return this.bodyCRC;
         }
 
-        if (null == body) {
+        if (null == body || body.length == 0) {
             this.bodyCRC = 0;
         } else {
             this.bodyCRC = HashUtil.crc32(body);

@@ -69,9 +69,9 @@ public class MessageDecoder {
             msg.setStoreTimestamp(storeTimestamp);
 
             // 12 STORE_HOST
-            int storehostIPLength = 4;
-            byte[] storeHost = new byte[storehostIPLength];
-            byteBuffer.get(storeHost, 0, storehostIPLength);
+            int storeHostIPLength = 4;
+            byte[] storeHost = new byte[storeHostIPLength];
+            byteBuffer.get(storeHost, 0, storeHostIPLength);
             port = byteBuffer.getInt();
             msg.setStoreHost(new InetSocketAddress(InetAddress.getByAddress(storeHost), port));
 
@@ -117,7 +117,7 @@ public class MessageDecoder {
                 msg.setProperties(map);
             }
 
-            int msgIDLength = storehostIPLength + 4 + 8;
+            int msgIDLength = storeHostIPLength + 4 + 8;
             ByteBuffer byteBufferMsgId = ByteBuffer.allocate(msgIDLength);
             String msgId = createMessageId(byteBufferMsgId, msg.getStoreHostBuffer(), msg.getCommitOffset());
             msg.setMessageId(msgId);
