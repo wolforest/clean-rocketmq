@@ -13,7 +13,7 @@ import java.util.Map;
 
 public class MessageDecoder {
     public static MessageBO decode(ByteBuffer byteBuffer) {
-        return decode(byteBuffer, true);
+        return decode(byteBuffer, false);
     }
 
     public static MessageBO decode(ByteBuffer byteBuffer, boolean checkCRC) {
