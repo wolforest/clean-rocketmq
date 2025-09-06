@@ -159,6 +159,11 @@ public class DefaultConsumeQueue implements ConsumeQueue {
         return MAX_OFFSET_UPDATER.addAndGet(this, 1);
     }
 
+    @Override
+    public void destroy() {
+        mappedFileQueue.destroy();
+    }
+
     private QueueUnit createQueueUnit(long offset, SelectedMappedBuffer buffer) {
         return QueueUnit.builder()
             .queueOffset(offset)

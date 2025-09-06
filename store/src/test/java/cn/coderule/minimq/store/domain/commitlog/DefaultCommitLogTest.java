@@ -29,8 +29,7 @@ class DefaultCommitLogTest {
     void testInsertAndSelect(@TempDir Path tmpDir) throws ExecutionException, InterruptedException {
         String dir = tmpDir.toString();
         StoreConfig storeConfig = ConfigMock.createStoreConfig(dir);
-        MappedFileQueue queue = new DefaultMappedFileQueue(dir, MMAP_FILE_SIZE);
-        CommitLog commitLog = createCommitLog(storeConfig, queue);
+        CommitLog commitLog = createCommitLog(dir, storeConfig);
 
         MessageEncoder encoder = new MessageEncoder(storeConfig.getMessageConfig());
         MessageBO messageBO = createMessage(encoder);
@@ -48,7 +47,7 @@ class DefaultCommitLogTest {
         assertEquals(messageBO.getBody().length, newMessage.getBody().length);
         assertEquals(messageBO.getTopic(), newMessage.getTopic());
 
-        queue.destroy();
+        commitLog.destroy();
     }
 
     @Test

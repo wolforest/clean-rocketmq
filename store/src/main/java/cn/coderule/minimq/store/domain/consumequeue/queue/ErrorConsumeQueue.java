@@ -96,4 +96,9 @@ public class ErrorConsumeQueue implements ConsumeQueue {
     public MappedFileQueue getMappedFileQueue() {
         return null;
     }
+
+    @Override
+    public void destroy() {
+
+    }
 }
