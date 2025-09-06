@@ -56,7 +56,6 @@ public class ContextBuilder {
 
     private void loadTopic(PopContext context) {
         PopRequest request = context.getRequest();
-        MessageQueue messageQueue = context.getMessageQueue();
         Topic topic = topicFacade.getTopic(request.getTopicName());
         context.setTopic(topic);
 
@@ -70,16 +69,6 @@ public class ContextBuilder {
             log.error("Topic permission error: {}", request.getTopicName());
             throw new InvalidRequestException(
                 InvalidCode.ILLEGAL_TOPIC, "Topic permission error: " + request.getTopicName());
-        }
-
-        if (messageQueue.getQueueId() >= topic.getReadQueueNums()) {
-            log.error("Topic queueId error: topic={}, queueId={}",
-                request.getTopicName(), messageQueue.getQueueId());
-            throw new InvalidRequestException(
-                InvalidCode.ILLEGAL_TOPIC,
-                "Message queue can not find: " + request.getTopicName()
-                    + ":" + messageQueue.getQueueId()
-            );
         }
     }
 
