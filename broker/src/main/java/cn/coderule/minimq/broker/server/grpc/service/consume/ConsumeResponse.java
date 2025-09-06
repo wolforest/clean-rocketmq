@@ -182,7 +182,7 @@ public class ConsumeResponse {
         InvisibleRequest invisibleRequest = InvisibleRequest.builder()
             .requestContext(context)
             .receiptHandle(ReceiptHandle.decode(handle))
-            .messageId(messageBO.getMessageId())
+            .messageId(messageBO.getUniqueKey())
             .topicName(messageBO.getTopic())
             .build();
         consumerController.changeInvisible(invisibleRequest);

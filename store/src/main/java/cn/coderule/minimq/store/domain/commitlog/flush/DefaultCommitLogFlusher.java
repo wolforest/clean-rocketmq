@@ -123,7 +123,7 @@ public class DefaultCommitLogFlusher implements CommitLogFlusher, Lifecycle {
         return EnqueueResult.builder()
             .status(status)
             .insertResult(insertResult)
-            .messageId(messageBO.getMessageId())
+            .messageId(messageBO.getUniqueKey())
             .transactionId(messageBO.getTransactionId())
             .commitOffset(messageBO.getCommitOffset())
             .queueId(messageBO.getQueueId())

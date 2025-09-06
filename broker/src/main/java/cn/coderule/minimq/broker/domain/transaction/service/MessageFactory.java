@@ -21,7 +21,7 @@ public class MessageFactory {
     }
 
     private MessageBO createPrepareMessage(MessageBO msg) {
-        String uniqId = msg.getMessageId();
+        String uniqId = msg.getUniqueKey();
         if (uniqId != null && !uniqId.isEmpty()) {
             msg.putProperty(TransactionUtil.TRANSACTION_ID, uniqId);
         }
@@ -40,7 +40,7 @@ public class MessageFactory {
     public MessageBO recreatePrepareMessage(MessageBO prepareMessage) {
         MessageBO newMsg = new MessageBO();
         newMsg.setWaitStore(false);
-        newMsg.setMsgId(prepareMessage.getMsgId());
+        newMsg.setMessageId(prepareMessage.getMessageId());
         newMsg.setTopic(prepareMessage.getProperty(MessageConst.PROPERTY_REAL_TOPIC));
         newMsg.setBody(prepareMessage.getBody());
         String realQueueIdStr = prepareMessage.getProperty(MessageConst.PROPERTY_REAL_QUEUE_ID);

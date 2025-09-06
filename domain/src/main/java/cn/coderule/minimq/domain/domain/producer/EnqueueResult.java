@@ -50,7 +50,7 @@ public class EnqueueResult implements Serializable {
         return EnqueueResult.builder()
             .status(EnqueueStatus.PUT_OK)
             .insertResult(insertResult)
-            .messageId(messageBO.getMessageId())
+            .messageId(messageBO.getUniqueKey())
             .transactionId(messageBO.getTransactionId())
             .commitOffset(messageBO.getCommitOffset())
             .queueOffset(messageBO.getQueueOffset())

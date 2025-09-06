@@ -128,7 +128,7 @@ public class TimerTaskScheduler extends ServiceThread {
     }
 
     private boolean processTimerEvent(TimerEvent event, MessageBO message, boolean success) throws InterruptedException {
-        String messageId = message.getMessageId();
+        String messageId = message.getUniqueKey();
         if (messageId == null) {
             log.warn("enqueueTimerEvent messageId is null: {}",  message);
         }

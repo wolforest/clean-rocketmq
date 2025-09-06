@@ -58,8 +58,7 @@ public class MessageBO extends Message implements Serializable {
 
     private long storeTimestamp;
     private SocketAddress storeHost;
-    @Deprecated
-    private String msgId;
+    private String messageId;
 
     private int bodyCRC = -1;
     private int magicCode;
@@ -140,8 +139,15 @@ public class MessageBO extends Message implements Serializable {
             return null;
         }
 
-        ByteBuffer buffer = MessageUtils.socketAddress2ByteBuffer(this.bornHost);
-        return buffer.array();
+        return getBornHostBuffer().array();
+    }
+
+    public ByteBuffer getBornHostBuffer() {
+        if (null == this.bornHost) {
+            return null;
+        }
+
+        return MessageUtils.socketAddress2ByteBuffer(this.bornHost);
     }
 
     public byte[] getStoreHostBytes() {
@@ -149,8 +155,15 @@ public class MessageBO extends Message implements Serializable {
             return null;
         }
 
-        ByteBuffer buffer = MessageUtils.socketAddress2ByteBuffer(this.storeHost);
-        return buffer.array();
+        return getStoreHostBuffer().array();
+    }
+
+    public ByteBuffer getStoreHostBuffer() {
+        if (null == this.storeHost) {
+            return null;
+        }
+
+        return MessageUtils.socketAddress2ByteBuffer(this.storeHost);
     }
 
     public boolean isValid() {
@@ -211,11 +224,11 @@ public class MessageBO extends Message implements Serializable {
         this.putProperty(MessageConst.PROPERTY_TAGS, tags);
     }
 
-    public String getMessageId() {
+    public String getUniqueKey() {
         return this.getProperty(MessageConst.PROPERTY_UNIQ_CLIENT_MESSAGE_ID_KEYIDX);
     }
 
-    public void setMessageId(String tags) {
+    public void setUniqueKey(String tags) {
         this.putProperty(MessageConst.PROPERTY_UNIQ_CLIENT_MESSAGE_ID_KEYIDX, tags);
     }
 

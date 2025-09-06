@@ -1,6 +1,7 @@
 package cn.coderule.minimq.domain.domain.message;
 
 import cn.coderule.common.util.encrypt.HashUtil;
+import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.minimq.domain.core.enums.message.MessageStatus;
 import cn.coderule.minimq.domain.core.enums.message.MessageVersion;
 import cn.coderule.minimq.domain.utils.message.MessageUtils;
@@ -116,10 +117,10 @@ public class MessageDecoder {
                 msg.setProperties(map);
             }
 
-//            int msgIDLength = storehostIPLength + 4 + 8;
-//            ByteBuffer byteBufferMsgId = ByteBuffer.allocate(msgIDLength);
-//            String msgId = createMessageId(byteBufferMsgId, msgExt.getStoreHost(), msgExt.getCommitLogOffset());
-//            msgExt.setMsgId(msgId);
+            int msgIDLength = storehostIPLength + 4 + 8;
+            ByteBuffer byteBufferMsgId = ByteBuffer.allocate(msgIDLength);
+            String msgId = createMessageId(byteBufferMsgId, msg.getStoreHostBuffer(), msg.getCommitOffset());
+            msg.setMessageId(msgId);
 
             msg.setStatus(MessageStatus.FOUND);
             return msg;
@@ -130,15 +131,14 @@ public class MessageDecoder {
         return MessageBO.notFound();
     }
 
-    public static String createMessageId(final ByteBuffer input, final ByteBuffer addr, final long offset) {
+    private static String createMessageId(final ByteBuffer input, final ByteBuffer addr, final long offset) {
         input.flip();
         int msgIDLength = addr.limit() == 8 ? 16 : 28;
         input.limit(msgIDLength);
 
         input.put(addr);
         input.putLong(offset);
-        return null;
-//        return StringUtils.bytes2string(input.array());
+        return StringUtil.bytes2string(input.array());
     }
 
 }

@@ -124,10 +124,10 @@ public class PopConverter {
 
         if (ackInfo instanceof BatchAckInfo) {
             msgInner.setTags(PopConstants.BATCH_ACK_TAG);
-            msgInner.setMessageId(PopKeyBuilder.genBatchAckUniqueId((BatchAckInfo) ackInfo));
+            msgInner.setUniqueKey(PopKeyBuilder.genBatchAckUniqueId((BatchAckInfo) ackInfo));
         } else {
             msgInner.setTags(PopConstants.ACK_TAG);
-            msgInner.setMessageId(PopKeyBuilder.genAckUniqueId(ackInfo));
+            msgInner.setUniqueKey(PopKeyBuilder.genAckUniqueId(ackInfo));
         }
 
         msgInner.setBornTimestamp(System.currentTimeMillis());
@@ -175,7 +175,7 @@ public class PopConverter {
             .queueId(request.getQueueId())
             .receiptHandleStr(receiptStr)
             .originalReceiptHandleStr(receiptStr)
-            .messageId(messageBO.getMessageId())
+            .messageId(messageBO.getUniqueKey())
             .queueOffset(messageBO.getQueueOffset())
             .reconsumeTimes(messageBO.getReconsumeTimes())
             .originalReceiptHandle(receiptHandle)
