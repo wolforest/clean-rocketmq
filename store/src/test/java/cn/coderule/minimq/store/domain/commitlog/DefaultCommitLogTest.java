@@ -55,8 +55,7 @@ class DefaultCommitLogTest {
     void testAssignCommitOffset(@TempDir Path tmpDir) throws ExecutionException, InterruptedException {
         String dir = tmpDir.toString();
         StoreConfig storeConfig = ConfigMock.createStoreConfig(dir);
-        MappedFileQueue queue = new DefaultMappedFileQueue(dir, MMAP_FILE_SIZE);
-        CommitLog commitLog = createCommitLog(storeConfig, queue);
+        CommitLog commitLog = createCommitLog(dir, storeConfig);
 
         MessageEncoder encoder = new MessageEncoder(storeConfig.getMessageConfig());
         MessageBO first = createMessage(encoder);
@@ -76,10 +75,12 @@ class DefaultCommitLogTest {
         long diff = second.getCommitOffset() - first.getCommitOffset();
         assertEquals(diff, first.getMessageLength());
 
-        queue.destroy();
+        commitLog.destroy();
     }
 
-    private CommitLog createCommitLog(StoreConfig storeConfig, MappedFileQueue queue) {
+    private CommitLog createCommitLog(String dir, StoreConfig storeConfig) {
+        MappedFileQueue queue = new DefaultMappedFileQueue(dir, MMAP_FILE_SIZE);
+
         CommitConfig commitConfig = storeConfig.getCommitConfig();
         commitConfig.setFileSize(MMAP_FILE_SIZE);
 

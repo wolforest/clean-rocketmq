@@ -159,6 +159,11 @@ public class DefaultCommitLog implements CommitLog {
     }
 
     @Override
+    public void destroy() {
+        mappedFileQueue.destroy();
+    }
+
+    @Override
     public long getMinOffset() {
         return mappedFileQueue.getMinOffset();
     }

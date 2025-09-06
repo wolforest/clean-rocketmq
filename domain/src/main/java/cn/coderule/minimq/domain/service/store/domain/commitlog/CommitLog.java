@@ -77,4 +77,6 @@ public interface CommitLog {
      * @return selected mapped buffer
      */
     SelectedMappedBuffer selectBuffer(long offset, int size);
+
+    void destroy();
 }
