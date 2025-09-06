@@ -63,7 +63,7 @@ public class AllocateMappedFileService extends ServiceThread implements Lifecycl
             return null;
         }
 
-        return waitAndReturnMappedFile(nextPath);
+        return waitAndReturnMappedFile(path);
     }
 
     @Override
