@@ -21,9 +21,7 @@ public class ConsumeQueueFactory implements ConsumeQueueRegistry {
     private final List<ConsumeQueueRegistry> createHooks = new ArrayList<>();
     /**
      * consume queue map, structure:
-     * - topic
-     *  - queueId
-     *    - consumeQueue
+     * topic -> queueId -> consumeQueue
      */
     protected final ConcurrentMap<String, ConcurrentMap<Integer, ConsumeQueue>> topicMap;
 

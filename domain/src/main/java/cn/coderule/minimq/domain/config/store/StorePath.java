@@ -13,6 +13,7 @@ public class StorePath {
         DirUtil.createIfNotExists(getMetaPath());
         DirUtil.createIfNotExists(getIndexPath());
         DirUtil.createIfNotExists(getCommitLogPath());
+        DirUtil.createIfNotExists(getCheckpointPath());
         DirUtil.createIfNotExists(getConsumeQueuePath());
     }
 

@@ -13,8 +13,12 @@ public class Offset implements Serializable {
     private volatile long dispatchedOffset = -1;
     private volatile long indexOffset = -1;
 
+    /**
+     * topic -> [ queueId : offset ]
+     */
     @Setter
-    private ConcurrentMap<String, ArrayList<Long>> topicOffsetMap = new ConcurrentHashMap<>(16);
+    private ConcurrentMap<String, ArrayList<Long>> topicOffsetMap
+        = new ConcurrentHashMap<>(16);
 
     public void setCommitLogOffset(long commitLogOffset) {
         if (commitLogOffset < this.commitLogOffset) {
