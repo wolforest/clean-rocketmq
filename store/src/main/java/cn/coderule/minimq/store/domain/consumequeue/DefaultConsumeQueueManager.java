@@ -56,7 +56,6 @@ public class DefaultConsumeQueueManager implements ConsumeQueueManager {
     private void initConfig() {
         StoreConfig storeConfig = StoreContext.getBean(StoreConfig.class);
         consumeQueueConfig = storeConfig.getConsumeQueueConfig();
-        consumeQueueConfig.setRootPath(StorePath.getConsumeQueuePath());
     }
 
     private void initConsumeQueue() {

@@ -2,6 +2,7 @@ package cn.coderule.minimq.store.domain.consumequeue.queue;
 
 import cn.coderule.common.util.lang.ThreadUtil;
 import cn.coderule.minimq.domain.config.store.ConsumeQueueConfig;
+import cn.coderule.minimq.domain.config.store.StorePath;
 import cn.coderule.minimq.domain.core.enums.store.QueueType;
 import cn.coderule.minimq.domain.domain.cluster.store.CommitEvent;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
@@ -23,8 +24,10 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class DefaultConsumeQueue implements ConsumeQueue {
-    private static final AtomicLongFieldUpdater<DefaultConsumeQueue> MAX_OFFSET_UPDATER = AtomicLongFieldUpdater.newUpdater(DefaultConsumeQueue.class, "maxOffset");
-    private static final AtomicLongFieldUpdater<DefaultConsumeQueue> MIN_OFFSET_UPDATER = AtomicLongFieldUpdater.newUpdater(DefaultConsumeQueue.class, "minOffset");
+    private static final AtomicLongFieldUpdater<DefaultConsumeQueue> MAX_OFFSET_UPDATER
+        = AtomicLongFieldUpdater.newUpdater(DefaultConsumeQueue.class, "maxOffset");
+    private static final AtomicLongFieldUpdater<DefaultConsumeQueue> MIN_OFFSET_UPDATER
+        = AtomicLongFieldUpdater.newUpdater(DefaultConsumeQueue.class, "minOffset");
 
     @Getter
     private final String topic;
@@ -167,7 +170,7 @@ public class DefaultConsumeQueue implements ConsumeQueue {
     }
 
     private void initMappedFileQueue() {
-        String path = config.getRootPath()
+        String path = StorePath.getConsumeQueuePath()
             + File.separator
             + topic
             + File.separator
