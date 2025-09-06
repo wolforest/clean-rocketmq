@@ -70,7 +70,7 @@ public class RegisterService {
             .enableSubscriptionModification(updateSubscription)
             .build();
 
-        consumerController.register(context, consumerInfo);
+        consumerController.register(consumerInfo);
 
         return (GrpcChannel) channelInfo.getChannel();
     }

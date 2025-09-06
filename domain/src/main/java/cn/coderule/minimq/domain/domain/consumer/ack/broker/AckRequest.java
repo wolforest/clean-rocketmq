@@ -9,6 +9,7 @@ import lombok.Data;
 @Data
 public class AckRequest implements Serializable {
     private RequestContext requestContext;
+
     private List<MessageIdReceipt> receiptList;
     private String topicName;
     private String groupName;

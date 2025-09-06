@@ -17,26 +17,24 @@ import cn.coderule.minimq.domain.domain.meta.subscription.SubscriptionGroup;
 import java.util.concurrent.CompletableFuture;
 
 public class ConsumerController {
-    private final BrokerConfig brokerConfig;
     private final MessageConfig messageConfig;
 
     private final Consumer consumer;
     private final PopValidator popValidator;
 
     public ConsumerController(BrokerConfig brokerConfig, Consumer consumer) {
-        this.brokerConfig = brokerConfig;
         this.messageConfig = brokerConfig.getMessageConfig();
 
         this.consumer = consumer;
         this.popValidator = new PopValidator(brokerConfig);
     }
 
-    public boolean register(RequestContext context, ConsumerInfo consumerInfo) {
+    public boolean register(ConsumerInfo consumerInfo) {
         GroupValidator.validate(consumerInfo.getGroupName());
         return consumer.register(consumerInfo);
     }
 
-    public void unregister(RequestContext context, ConsumerInfo consumerInfo) {
+    public void unregister(ConsumerInfo consumerInfo) {
         consumer.unregister(consumerInfo);
     }
 
@@ -58,7 +56,7 @@ public class ConsumerController {
         return consumer.popMessage(request);
     }
 
-    public CompletableFuture<AckResult> ack(RequestContext context, AckRequest request) {
+    public CompletableFuture<AckResult> ack(AckRequest request) {
         return consumer.ack(request);
     }
 

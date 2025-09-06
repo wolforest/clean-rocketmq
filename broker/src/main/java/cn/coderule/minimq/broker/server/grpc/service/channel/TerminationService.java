@@ -97,7 +97,7 @@ public class TerminationService {
             .groupName(consumerGroup)
             .channelInfo(channelInfo)
             .build();
-        consumerController.unregister(context, consumerInfo);
+        consumerController.unregister(consumerInfo);
     }
 
     private int parseClientVersion(String clientVersionStr) {
