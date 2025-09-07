@@ -7,7 +7,6 @@ import cn.coderule.minimq.domain.domain.cluster.store.CommitEvent;
 import cn.coderule.minimq.domain.domain.cluster.store.QueueUnit;
 import cn.coderule.minimq.domain.domain.cluster.store.domain.consumequeue.ConsumeQueue;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
-import cn.coderule.minimq.domain.domain.message.MessageEncoder;
 import cn.coderule.minimq.domain.test.ConfigMock;
 import cn.coderule.minimq.domain.test.MessageMock;
 import cn.coderule.minimq.domain.test.QueueMock;
@@ -46,13 +45,13 @@ class DefaultConsumeQueueTest {
         ConsumeQueue queue = createConsumeQueue(tmpDir.toString());
 
         long firstOffset = queue.increaseOffset();
-        assertEquals(1, firstOffset);
+        assertEquals(0, firstOffset);
 
         long secondOffset = queue.increaseOffset();
-        assertEquals(2, secondOffset);
+        assertEquals(1, secondOffset);
 
         long thirdOffset = queue.increaseOffset();
-        assertEquals(3, thirdOffset);
+        assertEquals(2, thirdOffset);
 
         queue.destroy();
     }

@@ -102,7 +102,7 @@ public class DefaultConsumeQueue implements ConsumeQueue {
     @Override
     public List<QueueUnit> get(long index, int num) {
         long offset = index * config.getUnitSize();
-        if (offset <= MIN_OFFSET_UPDATER.get(this)) {
+        if (offset < MIN_OFFSET_UPDATER.get(this)) {
             return List.of();
         }
 
@@ -156,7 +156,7 @@ public class DefaultConsumeQueue implements ConsumeQueue {
 
     @Override
     public long increaseOffset() {
-        return MAX_OFFSET_UPDATER.addAndGet(this, 1);
+        return MAX_OFFSET_UPDATER.getAndAdd(this, 1);
     }
 
     @Override
@@ -166,8 +166,8 @@ public class DefaultConsumeQueue implements ConsumeQueue {
 
     private QueueUnit createQueueUnit(long offset, SelectedMappedBuffer buffer) {
         return QueueUnit.builder()
-            .queueOffset(offset)
-            .commitLogOffset(buffer.getByteBuffer().getLong())
+            .queueOffset(offset / config.getUnitSize())
+            .commitOffset(buffer.getByteBuffer().getLong())
             .messageSize(buffer.getByteBuffer().getInt())
             .tagsCode(buffer.getByteBuffer().getLong())
             .unitSize(config.getUnitSize())
@@ -316,6 +316,7 @@ public class DefaultConsumeQueue implements ConsumeQueue {
             maxCommitLogOffset = offset;
         }
 
+        // save checkpoint
     }
 
 }

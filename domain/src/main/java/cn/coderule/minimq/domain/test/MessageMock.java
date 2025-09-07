@@ -14,12 +14,12 @@ public class MessageMock {
         long now = System.currentTimeMillis();
         SocketAddress address = new InetSocketAddress("0.0.0.0", 0);
         return MessageBO.builder()
-            .topic("test")
+            .topic(topic)
             .body("test".getBytes())
             .properties(new HashMap<>())
 
-            .queueId(0)
-            .queueOffset(0)
+            .queueId(queueId)
+            .queueOffset(queueOffset)
             .commitOffset(0)
             .preparedTransactionOffset(0)
 

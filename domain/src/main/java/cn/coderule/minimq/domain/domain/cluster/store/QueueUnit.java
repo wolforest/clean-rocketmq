@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class QueueUnit implements Serializable {
     private long queueOffset;
 
-    private long commitLogOffset;
+    private long commitOffset;
     private int messageSize;
     @Builder.Default
     private short batchNum = 1;
@@ -25,7 +25,7 @@ public class QueueUnit implements Serializable {
     private int unitSize;
 
     public boolean isValid() {
-        return commitLogOffset != 0
+        return commitOffset != 0
             && messageSize != Integer.MAX_VALUE
             && tagsCode != 0;
     }

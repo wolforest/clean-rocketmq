@@ -81,7 +81,7 @@ public class ConsumeQueueRecovery implements ConsumeQueueRegistry {
         }
 
         mappedFile.setInsertOffset(maxOffset);
-        queue.setMaxCommitLogOffset(unit.getCommitLogOffset());
+        queue.setMaxCommitLogOffset(unit.getCommitOffset());
     }
 
     private void recoverFromOffset(ConsumeQueue queue, long startOffset) {
@@ -120,7 +120,7 @@ public class ConsumeQueueRecovery implements ConsumeQueueRegistry {
 
         if (null != lastValidFile && null != lastUnit) {
             lastValidFile.setInsertOffset(lastUnit.getQueueOffset() + queue.getUnitSize());
-            queue.setMaxCommitLogOffset(lastUnit.getCommitLogOffset());
+            queue.setMaxCommitLogOffset(lastUnit.getCommitOffset());
         }
 
         mappedFileQueue.removeMappedFiles(dirtyFiles);
