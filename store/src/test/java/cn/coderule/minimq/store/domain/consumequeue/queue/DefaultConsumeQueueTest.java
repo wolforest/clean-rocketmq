@@ -3,8 +3,11 @@ package cn.coderule.minimq.store.domain.consumequeue.queue;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.domain.config.store.ConsumeQueueConfig;
 import cn.coderule.minimq.domain.config.store.StorePath;
+import cn.coderule.minimq.domain.domain.cluster.store.CommitEvent;
 import cn.coderule.minimq.domain.domain.cluster.store.domain.consumequeue.ConsumeQueue;
+import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.test.ConfigMock;
+import cn.coderule.minimq.domain.test.MessageMock;
 import cn.coderule.minimq.domain.test.QueueMock;
 import cn.coderule.minimq.store.server.bootstrap.StoreCheckpoint;
 import java.nio.file.Path;
@@ -53,5 +56,16 @@ class DefaultConsumeQueueTest {
             queueConfig,
             checkpoint
         );
+    }
+
+    private CommitEvent createCommitEvent(ConsumeQueue queue) {
+        long offset = queue.increaseOffset();
+        MessageBO messageBO = MessageMock.createMessage(
+            queue.getTopic(),
+            queue.getQueueId(),
+            offset
+        );
+
+        return CommitEvent.of(messageBO);
     }
 }

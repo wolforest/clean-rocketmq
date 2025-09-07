@@ -7,6 +7,10 @@ import java.util.HashMap;
 
 public class MessageMock {
     public static MessageBO createMessage() {
+       return createMessage("test", 0, 0);
+    }
+
+    public static MessageBO createMessage(String topic, int queueId, long queueOffset) {
         long now = System.currentTimeMillis();
         SocketAddress address = new InetSocketAddress("0.0.0.0", 0);
         return MessageBO.builder()
