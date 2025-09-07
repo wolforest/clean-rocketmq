@@ -28,10 +28,17 @@ class DefaultConsumeQueueTest {
     void testAssignOffset(@TempDir Path tmpDir) {
         ConsumeQueue queue = createConsumeQueue(tmpDir.toString());
 
+        long firstOffset = queue.increaseOffset();
+        assertEquals(1, firstOffset);
+
+        long secondOffset = queue.increaseOffset();
+        assertEquals(2, secondOffset);
+
+        long thirdOffset = queue.increaseOffset();
+        assertEquals(3, thirdOffset);
 
         queue.destroy();
     }
-
 
     private ConsumeQueue createConsumeQueue(String dir) {
         StoreConfig storeConfig = ConfigMock.createStoreConfig(dir);
