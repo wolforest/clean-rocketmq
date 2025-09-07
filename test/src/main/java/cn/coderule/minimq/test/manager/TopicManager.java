@@ -97,7 +97,7 @@ public class TopicManager {
             return false;
         }
         try {
-            TopicConfig topicConfig = new TopicConfig(topic);
+            TopicConfig topicConfig = new TopicConfig(topic, 1, 1);
             topicConfig.setAttributes(attributes);
 
             for (String addr: clusterInfo.getAllAddr()) {
