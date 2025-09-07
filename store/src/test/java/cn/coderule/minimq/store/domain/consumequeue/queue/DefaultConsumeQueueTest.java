@@ -4,13 +4,16 @@ import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.domain.config.store.ConsumeQueueConfig;
 import cn.coderule.minimq.domain.config.store.StorePath;
 import cn.coderule.minimq.domain.domain.cluster.store.CommitEvent;
+import cn.coderule.minimq.domain.domain.cluster.store.QueueUnit;
 import cn.coderule.minimq.domain.domain.cluster.store.domain.consumequeue.ConsumeQueue;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
+import cn.coderule.minimq.domain.domain.message.MessageEncoder;
 import cn.coderule.minimq.domain.test.ConfigMock;
 import cn.coderule.minimq.domain.test.MessageMock;
 import cn.coderule.minimq.domain.test.QueueMock;
 import cn.coderule.minimq.store.server.bootstrap.StoreCheckpoint;
 import java.nio.file.Path;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -23,6 +26,17 @@ class DefaultConsumeQueueTest {
     void testInsertAndSelect(@TempDir Path tmpDir) {
         ConsumeQueue queue = createConsumeQueue(tmpDir.toString());
 
+        CommitEvent event = null;
+        for (int i = 0; i < 10; i++) {
+            event = createCommitEvent(queue);
+            queue.enqueue(event);
+        }
+
+        List<QueueUnit> units = queue.get(0, 20);
+        assertEquals(10, units.size());
+
+        QueueUnit last = units.get(units.size() - 1);
+        assertEquals(event.getMessageBO().getQueueOffset(), last.getQueueOffset());
 
         queue.destroy();
     }
