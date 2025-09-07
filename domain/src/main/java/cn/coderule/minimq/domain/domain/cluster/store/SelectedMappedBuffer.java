@@ -1,6 +1,6 @@
 package cn.coderule.minimq.domain.domain.cluster.store;
 
-import cn.coderule.minimq.domain.service.store.infra.MappedFile;
+import cn.coderule.minimq.domain.domain.cluster.store.infra.MappedFile;
 import java.io.Serializable;
 import java.nio.ByteBuffer;
 import lombok.AllArgsConstructor;

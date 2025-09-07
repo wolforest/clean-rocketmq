@@ -8,10 +8,10 @@ import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueResult;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.helper.PopConverter;
 import cn.coderule.minimq.domain.domain.meta.order.OrderRequest;
-import cn.coderule.minimq.domain.service.store.domain.commitlog.CommitLog;
-import cn.coderule.minimq.domain.service.store.domain.consumequeue.ConsumeQueueGateway;
-import cn.coderule.minimq.domain.service.store.domain.meta.ConsumeOffsetService;
-import cn.coderule.minimq.domain.service.store.domain.meta.ConsumeOrderService;
+import cn.coderule.minimq.domain.domain.cluster.store.domain.commitlog.CommitLog;
+import cn.coderule.minimq.domain.domain.cluster.store.domain.consumequeue.ConsumeQueueGateway;
+import cn.coderule.minimq.domain.domain.cluster.store.domain.meta.ConsumeOffsetService;
+import cn.coderule.minimq.domain.domain.cluster.store.domain.meta.ConsumeOrderService;
 import cn.coderule.minimq.store.domain.mq.ack.AckService;
 import lombok.extern.slf4j.Slf4j;
 

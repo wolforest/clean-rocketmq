@@ -6,7 +6,7 @@ import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.domain.consumer.receipt.MessageReceipt;
 import cn.coderule.minimq.domain.domain.consumer.receipt.ReceiptHandleGroup;
 import cn.coderule.minimq.domain.domain.consumer.receipt.ReceiptHandleGroupKey;
-import cn.coderule.minimq.domain.service.broker.consume.ReceiptHandler;
+import cn.coderule.minimq.domain.domain.consumer.receipt.ReceiptHandler;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;

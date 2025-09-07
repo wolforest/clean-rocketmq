@@ -1,6 +1,6 @@
 package cn.coderule.minimq.broker.server.bootstrap;
 
-import cn.coderule.minimq.domain.service.common.ServerEventBus;
+import cn.coderule.minimq.domain.core.event.ServerEventBus;
 
 /**
  * context initializer

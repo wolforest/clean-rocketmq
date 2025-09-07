@@ -16,7 +16,7 @@
  */
 package cn.coderule.minimq.domain.domain.meta.subscription;
 
-import cn.coderule.minimq.domain.service.broker.consume.RetryPolicy;
+import cn.coderule.minimq.domain.domain.consumer.consume.RetryPolicy;
 import com.alibaba.fastjson2.annotation.JSONField;
 import com.google.common.base.MoreObjects;
 

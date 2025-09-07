@@ -2,9 +2,6 @@
 package cn.coderule.minimq.domain.domain.cluster.selector;
 
 import cn.coderule.common.lang.concurrent.thread.local.ThreadLocalSequence;
-import cn.coderule.minimq.domain.service.broker.selector.LatencyFaultTolerance;
-import cn.coderule.minimq.domain.service.broker.selector.Resolver;
-import cn.coderule.minimq.domain.service.broker.selector.ServiceDetector;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.LinkedList;

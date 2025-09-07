@@ -1,8 +1,8 @@
 package cn.coderule.minimq.broker.infra.task.strategy;
 
 import cn.coderule.minimq.broker.infra.task.TaskContext;
-import cn.coderule.minimq.domain.service.broker.infra.task.TaskFactory;
-import cn.coderule.minimq.domain.service.broker.infra.task.TaskLoader;
+import cn.coderule.minimq.domain.domain.cluster.task.TaskFactory;
+import cn.coderule.minimq.domain.domain.cluster.task.TaskLoader;
 
 public class BindingTaskLoader implements TaskLoader {
     private final TaskContext taskContext;

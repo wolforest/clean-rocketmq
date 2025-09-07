@@ -2,8 +2,8 @@ package cn.coderule.minimq.store.domain.consumequeue;
 
 import cn.coderule.minimq.domain.domain.cluster.store.CommitEvent;
 import cn.coderule.minimq.domain.domain.cluster.store.QueueUnit;
-import cn.coderule.minimq.domain.service.store.domain.consumequeue.ConsumeQueueGateway;
-import cn.coderule.minimq.domain.service.store.domain.consumequeue.ConsumeQueue;
+import cn.coderule.minimq.domain.domain.cluster.store.domain.consumequeue.ConsumeQueueGateway;
+import cn.coderule.minimq.domain.domain.cluster.store.domain.consumequeue.ConsumeQueue;
 import cn.coderule.minimq.store.domain.consumequeue.queue.ConsumeQueueFactory;
 import java.util.List;
 

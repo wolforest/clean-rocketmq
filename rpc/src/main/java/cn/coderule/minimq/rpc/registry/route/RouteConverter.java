@@ -5,7 +5,7 @@ import cn.coderule.common.util.lang.collection.MapUtil;
 import cn.coderule.minimq.domain.core.constant.MQConstants;
 import cn.coderule.minimq.domain.core.constant.PermName;
 import cn.coderule.minimq.domain.domain.MessageQueue;
-import cn.coderule.minimq.domain.domain.cluster.cluster.GroupInfo;
+import cn.coderule.minimq.domain.domain.cluster.server.GroupInfo;
 import cn.coderule.minimq.domain.domain.cluster.route.PublishInfo;
 import cn.coderule.minimq.domain.domain.cluster.route.QueueInfo;
 import cn.coderule.minimq.domain.domain.cluster.route.RouteInfo;

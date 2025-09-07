@@ -2,7 +2,7 @@ package cn.coderule.minimq.broker.domain.consumer.revive;
 
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.minimq.domain.domain.cluster.task.QueueTask;
-import cn.coderule.minimq.domain.service.broker.infra.task.TaskFactory;
+import cn.coderule.minimq.domain.domain.cluster.task.TaskFactory;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import lombok.extern.slf4j.Slf4j;

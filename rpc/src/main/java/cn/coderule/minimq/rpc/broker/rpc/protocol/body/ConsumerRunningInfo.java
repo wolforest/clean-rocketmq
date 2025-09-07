@@ -6,7 +6,7 @@ import cn.coderule.minimq.domain.core.enums.consume.ConsumeType;
 import cn.coderule.minimq.domain.domain.consumer.running.ConsumeStatus;
 import cn.coderule.minimq.domain.domain.consumer.running.PopProcessQueueInfo;
 import cn.coderule.minimq.domain.domain.consumer.running.ProcessQueueInfo;
-import cn.coderule.minimq.domain.domain.cluster.heartbeat.SubscriptionData;
+import cn.coderule.minimq.domain.domain.cluster.server.heartbeat.SubscriptionData;
 import cn.coderule.minimq.rpc.common.rpc.protocol.codec.RpcSerializable;
 import java.util.Iterator;
 import java.util.Map.Entry;

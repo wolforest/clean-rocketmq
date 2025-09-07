@@ -2,7 +2,7 @@ package cn.coderule.minimq.store.domain.commitlog.vo;
 
 import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.domain.producer.EnqueueResult;
-import cn.coderule.minimq.domain.service.store.infra.MappedFile;
+import cn.coderule.minimq.domain.domain.cluster.store.infra.MappedFile;
 import cn.coderule.minimq.domain.domain.message.MessageEncoder;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;

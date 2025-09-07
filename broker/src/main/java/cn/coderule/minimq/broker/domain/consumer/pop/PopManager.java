@@ -11,7 +11,7 @@ import cn.coderule.minimq.broker.infra.store.SubscriptionStore;
 import cn.coderule.minimq.broker.infra.store.TopicStore;
 import cn.coderule.minimq.broker.server.bootstrap.BrokerContext;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
-import cn.coderule.minimq.domain.service.broker.consume.ReceiptHandler;
+import cn.coderule.minimq.domain.domain.consumer.receipt.ReceiptHandler;
 
 public class PopManager implements Lifecycle {
     private BrokerConfig brokerConfig;

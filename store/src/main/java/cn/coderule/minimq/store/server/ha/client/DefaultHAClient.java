@@ -3,7 +3,7 @@ package cn.coderule.minimq.store.server.ha.client;
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 import cn.coderule.common.util.net.NetworkUtil;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
-import cn.coderule.minimq.domain.service.store.api.CommitLogStore;
+import cn.coderule.minimq.domain.domain.cluster.store.api.CommitLogStore;
 import cn.coderule.minimq.rpc.common.rpc.netty.service.helper.NettyHelper;
 import cn.coderule.minimq.store.server.ha.core.ConnectionState;
 import cn.coderule.minimq.store.server.ha.core.monitor.FlowMonitor;

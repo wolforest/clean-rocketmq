@@ -9,7 +9,7 @@ import cn.coderule.minimq.domain.domain.consumer.consume.pop.helper.PopConverter
 import cn.coderule.minimq.domain.domain.consumer.receipt.MessageReceipt;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.domain.meta.topic.Topic;
-import cn.coderule.minimq.domain.service.broker.consume.ReceiptHandler;
+import cn.coderule.minimq.domain.domain.consumer.receipt.ReceiptHandler;
 import java.util.concurrent.CompletableFuture;
 import lombok.extern.slf4j.Slf4j;
 

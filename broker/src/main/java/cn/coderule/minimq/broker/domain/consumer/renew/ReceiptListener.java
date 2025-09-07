@@ -4,8 +4,8 @@ import cn.coderule.minimq.broker.server.core.ChannelHelper;
 import cn.coderule.minimq.domain.core.enums.consume.ConsumerEvent;
 import cn.coderule.minimq.domain.domain.cluster.ClientChannelInfo;
 import cn.coderule.minimq.domain.domain.consumer.receipt.ReceiptHandleGroupKey;
-import cn.coderule.minimq.domain.service.broker.consume.ConsumerListener;
-import cn.coderule.minimq.domain.service.broker.consume.ReceiptHandler;
+import cn.coderule.minimq.domain.domain.consumer.hook.ConsumerListener;
+import cn.coderule.minimq.domain.domain.consumer.receipt.ReceiptHandler;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

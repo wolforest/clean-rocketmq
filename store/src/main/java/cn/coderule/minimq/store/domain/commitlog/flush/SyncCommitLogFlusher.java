@@ -3,8 +3,8 @@ package cn.coderule.minimq.store.domain.commitlog.flush;
 import cn.coderule.minimq.domain.domain.cluster.store.InsertFuture;
 import cn.coderule.minimq.domain.domain.cluster.store.InsertResult;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
-import cn.coderule.minimq.domain.service.store.domain.commitlog.CommitLogFlusher;
-import cn.coderule.minimq.domain.service.store.infra.MappedFileQueue;
+import cn.coderule.minimq.domain.domain.cluster.store.domain.commitlog.CommitLogFlusher;
+import cn.coderule.minimq.domain.domain.cluster.store.infra.MappedFileQueue;
 import lombok.extern.slf4j.Slf4j;
 
 /**

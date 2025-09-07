@@ -1,7 +1,7 @@
 package cn.coderule.minimq.store.server.ha.client;
 
 import cn.coderule.common.convention.service.Lifecycle;
-import cn.coderule.minimq.domain.service.store.api.CommitLogStore;
+import cn.coderule.minimq.domain.domain.cluster.store.api.CommitLogStore;
 import cn.coderule.minimq.store.server.ha.core.DefaultHAConnection;
 import java.io.IOException;
 import java.nio.ByteBuffer;

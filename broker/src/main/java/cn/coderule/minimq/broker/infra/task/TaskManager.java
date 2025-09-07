@@ -3,7 +3,7 @@ package cn.coderule.minimq.broker.infra.task;
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.minimq.broker.server.bootstrap.BrokerContext;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
-import cn.coderule.minimq.domain.service.broker.infra.task.TaskLoader;
+import cn.coderule.minimq.domain.domain.cluster.task.TaskLoader;
 
 public class TaskManager implements Lifecycle {
     private TaskContext taskContext;

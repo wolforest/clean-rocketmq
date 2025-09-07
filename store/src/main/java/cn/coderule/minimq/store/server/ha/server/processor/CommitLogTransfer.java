@@ -7,7 +7,7 @@ import cn.coderule.common.util.lang.ThreadUtil;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.domain.config.store.CommitConfig;
 import cn.coderule.minimq.domain.domain.cluster.store.SelectedMappedBuffer;
-import cn.coderule.minimq.domain.service.store.api.CommitLogStore;
+import cn.coderule.minimq.domain.domain.cluster.store.api.CommitLogStore;
 import cn.coderule.minimq.store.server.ha.core.ConnectionState;
 import cn.coderule.minimq.store.server.ha.core.DefaultHAConnection;
 import cn.coderule.minimq.store.server.ha.core.HAConnection;

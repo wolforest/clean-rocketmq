@@ -1,9 +1,9 @@
 package cn.coderule.minimq.broker.server.grpc.service.consume;
 
 import cn.coderule.minimq.domain.domain.cluster.RequestContext;
-import cn.coderule.minimq.domain.domain.cluster.heartbeat.SubscriptionData;
+import cn.coderule.minimq.domain.domain.cluster.server.heartbeat.SubscriptionData;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
-import cn.coderule.minimq.domain.service.broker.consume.PopFilter;
+import cn.coderule.minimq.domain.domain.consumer.hook.PopFilter;
 import java.util.Set;
 
 public class DefaultPopFilter implements PopFilter {

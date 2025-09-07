@@ -6,7 +6,7 @@ import cn.coderule.common.util.net.NetworkUtil;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.core.exception.InvalidConfigException;
 import cn.coderule.minimq.domain.domain.cluster.selector.MessageQueueView;
-import cn.coderule.minimq.domain.domain.cluster.cluster.GroupInfo;
+import cn.coderule.minimq.domain.domain.cluster.server.GroupInfo;
 import cn.coderule.minimq.domain.domain.cluster.route.RouteInfo;
 import cn.coderule.minimq.rpc.registry.route.RouteLoader;
 import cn.coderule.minimq.domain.domain.cluster.RequestContext;

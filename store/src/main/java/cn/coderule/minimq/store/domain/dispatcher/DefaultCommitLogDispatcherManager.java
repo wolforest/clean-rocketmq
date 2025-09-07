@@ -1,10 +1,10 @@
 package cn.coderule.minimq.store.domain.dispatcher;
 
 import cn.coderule.minimq.domain.config.server.StoreConfig;
-import cn.coderule.minimq.domain.service.store.domain.commitlog.CommitLog;
-import cn.coderule.minimq.domain.service.store.domain.commitlog.CommitEventDispatcher;
-import cn.coderule.minimq.domain.service.store.domain.commitlog.CommitLogDispatcherManager;
-import cn.coderule.minimq.domain.service.store.server.CheckPoint;
+import cn.coderule.minimq.domain.domain.cluster.store.domain.commitlog.CommitLog;
+import cn.coderule.minimq.domain.domain.cluster.store.domain.commitlog.CommitEventDispatcher;
+import cn.coderule.minimq.domain.domain.cluster.store.domain.commitlog.CommitLogDispatcherManager;
+import cn.coderule.minimq.domain.domain.cluster.store.server.CheckPoint;
 import cn.coderule.minimq.store.server.bootstrap.StoreContext;
 
 public class DefaultCommitLogDispatcherManager implements CommitLogDispatcherManager {

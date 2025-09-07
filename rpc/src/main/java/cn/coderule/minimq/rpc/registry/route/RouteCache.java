@@ -1,7 +1,7 @@
 package cn.coderule.minimq.rpc.registry.route;
 
 import cn.coderule.minimq.domain.domain.MessageQueue;
-import cn.coderule.minimq.domain.domain.cluster.cluster.GroupInfo;
+import cn.coderule.minimq.domain.domain.cluster.server.GroupInfo;
 import cn.coderule.minimq.domain.domain.cluster.route.PublishInfo;
 import cn.coderule.minimq.domain.domain.cluster.route.RouteInfo;
 import com.google.common.collect.Sets;

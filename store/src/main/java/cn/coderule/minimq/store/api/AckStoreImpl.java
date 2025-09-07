@@ -2,7 +2,7 @@ package cn.coderule.minimq.store.api;
 
 import cn.coderule.minimq.domain.domain.consumer.ack.AckInfo;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.checkpoint.PopCheckPoint;
-import cn.coderule.minimq.domain.service.store.api.meta.AckStore;
+import cn.coderule.minimq.domain.domain.cluster.store.api.meta.AckStore;
 import cn.coderule.minimq.store.domain.mq.ack.AckService;
 
 public class AckStoreImpl implements AckStore {

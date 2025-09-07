@@ -2,8 +2,8 @@ package cn.coderule.minimq.store.api;
 
 import cn.coderule.minimq.domain.domain.cluster.store.InsertResult;
 import cn.coderule.minimq.domain.domain.cluster.store.SelectedMappedBuffer;
-import cn.coderule.minimq.domain.service.store.api.CommitLogStore;
-import cn.coderule.minimq.domain.service.store.domain.commitlog.CommitLog;
+import cn.coderule.minimq.domain.domain.cluster.store.api.CommitLogStore;
+import cn.coderule.minimq.domain.domain.cluster.store.domain.commitlog.CommitLog;
 
 public class CommitLogStoreImpl implements CommitLogStore {
     private CommitLog commitLog;

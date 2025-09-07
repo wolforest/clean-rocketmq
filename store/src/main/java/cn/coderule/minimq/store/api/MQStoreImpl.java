@@ -11,9 +11,9 @@ import cn.coderule.minimq.domain.domain.consumer.consume.mq.QueueRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.QueueResult;
 import cn.coderule.minimq.domain.domain.producer.EnqueueRequest;
 import cn.coderule.minimq.domain.domain.producer.EnqueueResult;
-import cn.coderule.minimq.domain.service.store.api.MQStore;
-import cn.coderule.minimq.domain.service.store.domain.consumequeue.ConsumeQueueGateway;
-import cn.coderule.minimq.domain.service.store.domain.mq.MQService;
+import cn.coderule.minimq.domain.domain.cluster.store.api.MQStore;
+import cn.coderule.minimq.domain.domain.cluster.store.domain.consumequeue.ConsumeQueueGateway;
+import cn.coderule.minimq.domain.domain.cluster.store.domain.mq.MQService;
 import cn.coderule.minimq.store.domain.mq.ack.AckService;
 import java.util.concurrent.CompletableFuture;
 

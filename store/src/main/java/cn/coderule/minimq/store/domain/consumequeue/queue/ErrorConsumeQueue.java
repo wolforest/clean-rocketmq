@@ -3,8 +3,8 @@ package cn.coderule.minimq.store.domain.consumequeue.queue;
 import cn.coderule.minimq.domain.core.enums.store.QueueType;
 import cn.coderule.minimq.domain.domain.cluster.store.CommitEvent;
 import cn.coderule.minimq.domain.domain.cluster.store.QueueUnit;
-import cn.coderule.minimq.domain.service.store.domain.consumequeue.ConsumeQueue;
-import cn.coderule.minimq.domain.service.store.infra.MappedFileQueue;
+import cn.coderule.minimq.domain.domain.cluster.store.domain.consumequeue.ConsumeQueue;
+import cn.coderule.minimq.domain.domain.cluster.store.infra.MappedFileQueue;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 

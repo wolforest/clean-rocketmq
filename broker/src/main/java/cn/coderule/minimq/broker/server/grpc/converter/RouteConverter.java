@@ -17,7 +17,7 @@ import apache.rocketmq.v2.Status;
 import cn.coderule.common.util.net.Address;
 import cn.coderule.minimq.domain.core.constant.MQConstants;
 import cn.coderule.minimq.domain.core.constant.PermName;
-import cn.coderule.minimq.domain.domain.cluster.cluster.GroupInfo;
+import cn.coderule.minimq.domain.domain.cluster.server.GroupInfo;
 import cn.coderule.minimq.domain.domain.cluster.route.QueueInfo;
 import cn.coderule.minimq.domain.domain.cluster.route.RouteInfo;
 import cn.coderule.minimq.rpc.common.grpc.response.ResponseBuilder;

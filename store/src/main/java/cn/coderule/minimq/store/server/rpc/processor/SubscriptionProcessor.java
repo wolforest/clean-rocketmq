@@ -2,7 +2,7 @@ package cn.coderule.minimq.store.server.rpc.processor;
 
 import cn.coderule.minimq.domain.domain.meta.subscription.SubscriptionGroup;
 import cn.coderule.minimq.domain.domain.meta.subscription.SubscriptionRequest;
-import cn.coderule.minimq.domain.service.store.api.meta.SubscriptionStore;
+import cn.coderule.minimq.domain.domain.cluster.store.api.meta.SubscriptionStore;
 import cn.coderule.minimq.rpc.common.rpc.RpcProcessor;
 import cn.coderule.minimq.rpc.common.rpc.core.exception.RemotingCommandException;
 import cn.coderule.minimq.rpc.common.rpc.core.invoke.RpcCommand;

@@ -1,8 +1,8 @@
 package cn.coderule.minimq.store.api;
 
 import cn.coderule.minimq.domain.domain.meta.order.OrderRequest;
-import cn.coderule.minimq.domain.service.store.api.meta.ConsumeOrderStore;
-import cn.coderule.minimq.domain.service.store.domain.meta.ConsumeOrderService;
+import cn.coderule.minimq.domain.domain.cluster.store.api.meta.ConsumeOrderStore;
+import cn.coderule.minimq.domain.domain.cluster.store.domain.meta.ConsumeOrderService;
 
 public class ConsumeOrderStoreImpl implements ConsumeOrderStore {
     private final ConsumeOrderService consumeOrderService;

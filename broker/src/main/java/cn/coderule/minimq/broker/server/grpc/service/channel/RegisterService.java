@@ -20,7 +20,7 @@ import cn.coderule.minimq.domain.core.enums.message.MessageModel;
 import cn.coderule.minimq.domain.core.enums.message.MessageType;
 import cn.coderule.minimq.domain.domain.cluster.ClientChannelInfo;
 import cn.coderule.minimq.domain.domain.cluster.RequestContext;
-import cn.coderule.minimq.domain.domain.cluster.heartbeat.SubscriptionData;
+import cn.coderule.minimq.domain.domain.cluster.server.heartbeat.SubscriptionData;
 import cn.coderule.minimq.rpc.broker.core.FilterAPI;
 import cn.coderule.minimq.domain.core.exception.InvalidRequestException;
 import java.util.HashSet;

@@ -9,7 +9,7 @@ import cn.coderule.minimq.rpc.common.rpc.core.invoke.RpcContext;
 import cn.coderule.minimq.rpc.common.rpc.protocol.code.RequestCode;
 import cn.coderule.minimq.rpc.common.rpc.protocol.code.ResponseCode;
 import cn.coderule.minimq.rpc.common.rpc.protocol.codec.RpcSerializable;
-import cn.coderule.minimq.domain.domain.cluster.cluster.GroupInfo;
+import cn.coderule.minimq.domain.domain.cluster.server.GroupInfo;
 import cn.coderule.minimq.domain.domain.cluster.route.QueueInfo;
 import cn.coderule.minimq.domain.domain.cluster.route.RouteInfo;
 import java.util.ArrayList;

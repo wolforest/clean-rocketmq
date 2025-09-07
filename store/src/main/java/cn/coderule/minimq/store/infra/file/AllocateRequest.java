@@ -1,6 +1,6 @@
 package cn.coderule.minimq.store.infra.file;
 
-import cn.coderule.minimq.domain.service.store.infra.MappedFile;
+import cn.coderule.minimq.domain.domain.cluster.store.infra.MappedFile;
 import java.io.File;
 import java.util.concurrent.CountDownLatch;
 import lombok.Data;

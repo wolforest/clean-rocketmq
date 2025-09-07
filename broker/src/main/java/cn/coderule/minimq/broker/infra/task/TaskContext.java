@@ -3,7 +3,7 @@ package cn.coderule.minimq.broker.infra.task;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.config.business.TaskConfig;
 import cn.coderule.minimq.domain.domain.cluster.task.StoreTask;
-import cn.coderule.minimq.domain.service.broker.infra.task.TaskFactory;
+import cn.coderule.minimq.domain.domain.cluster.task.TaskFactory;
 import java.io.Serializable;
 import lombok.Data;
 

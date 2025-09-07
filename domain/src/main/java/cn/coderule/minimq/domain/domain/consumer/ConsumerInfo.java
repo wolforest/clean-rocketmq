@@ -6,7 +6,7 @@ import cn.coderule.minimq.domain.core.enums.consume.ConsumeType;
 import cn.coderule.minimq.domain.core.enums.message.MessageModel;
 import cn.coderule.minimq.domain.domain.cluster.ClientChannelInfo;
 import cn.coderule.minimq.domain.domain.cluster.RequestContext;
-import cn.coderule.minimq.domain.domain.cluster.heartbeat.SubscriptionData;
+import cn.coderule.minimq.domain.domain.cluster.server.heartbeat.SubscriptionData;
 import java.io.Serializable;
 import java.util.Set;
 import java.util.TreeSet;

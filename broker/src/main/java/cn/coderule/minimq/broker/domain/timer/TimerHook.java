@@ -6,7 +6,7 @@ import cn.coderule.minimq.domain.core.enums.code.InvalidCode;
 import cn.coderule.minimq.domain.core.exception.InvalidRequestException;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.domain.producer.ProduceContext;
-import cn.coderule.minimq.domain.service.broker.produce.ProduceHook;
+import cn.coderule.minimq.domain.domain.producer.hook.ProduceHook;
 import lombok.extern.slf4j.Slf4j;
 
 import static cn.coderule.minimq.domain.domain.timer.TimerConstants.TIMER_TOPIC;

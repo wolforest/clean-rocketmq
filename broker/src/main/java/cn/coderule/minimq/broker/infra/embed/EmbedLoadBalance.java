@@ -2,8 +2,8 @@ package cn.coderule.minimq.broker.infra.embed;
 
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.domain.meta.topic.TopicValidator;
-import cn.coderule.minimq.domain.service.store.api.meta.SubscriptionStore;
-import cn.coderule.minimq.domain.service.store.api.meta.TopicStore;
+import cn.coderule.minimq.domain.domain.cluster.store.api.meta.SubscriptionStore;
+import cn.coderule.minimq.domain.domain.cluster.store.api.meta.TopicStore;
 
 public class EmbedLoadBalance {
     private final BrokerConfig brokerConfig;

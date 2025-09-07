@@ -5,7 +5,7 @@ import cn.coderule.common.util.lang.collection.MapUtil;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.core.enums.produce.ProducerEvent;
 import cn.coderule.minimq.domain.domain.cluster.ClientChannelInfo;
-import cn.coderule.minimq.domain.service.broker.produce.ProducerListener;
+import cn.coderule.minimq.domain.domain.producer.hook.ProducerListener;
 import cn.coderule.minimq.rpc.broker.rpc.protocol.body.ProducerInfo;
 import cn.coderule.minimq.rpc.broker.rpc.protocol.body.ProducerTableInfo;
 import cn.coderule.minimq.rpc.common.rpc.netty.service.helper.NettyHelper;

@@ -4,7 +4,7 @@ import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import cn.coderule.minimq.domain.domain.timer.ScanResult;
 import cn.coderule.minimq.domain.domain.timer.TimerEvent;
 import cn.coderule.minimq.domain.domain.timer.state.TimerCheckpoint;
-import cn.coderule.minimq.domain.service.store.api.TimerStore;
+import cn.coderule.minimq.domain.domain.cluster.store.api.TimerStore;
 import cn.coderule.minimq.rpc.store.facade.TimerFacade;
 
 public class EmbedTimerStore extends AbstractEmbedStore implements TimerFacade {

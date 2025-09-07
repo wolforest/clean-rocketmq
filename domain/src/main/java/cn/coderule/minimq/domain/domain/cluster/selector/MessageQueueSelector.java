@@ -4,7 +4,6 @@ import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.minimq.domain.core.constant.PermName;
 import cn.coderule.minimq.domain.domain.MessageQueue;
 import cn.coderule.minimq.domain.domain.meta.topic.TopicRouteWrapper;
-import cn.coderule.minimq.domain.service.common.QueueFilter;
 import cn.coderule.minimq.domain.domain.cluster.route.QueueInfo;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Preconditions;

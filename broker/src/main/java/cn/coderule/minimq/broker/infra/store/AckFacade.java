@@ -5,7 +5,7 @@ import cn.coderule.minimq.broker.infra.remote.RemoteAckStore;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.domain.consumer.ack.AckInfo;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.checkpoint.PopCheckPoint;
-import cn.coderule.minimq.domain.service.store.api.meta.AckStore;
+import cn.coderule.minimq.domain.domain.cluster.store.api.meta.AckStore;
 
 @Deprecated
 public class AckFacade implements AckStore {

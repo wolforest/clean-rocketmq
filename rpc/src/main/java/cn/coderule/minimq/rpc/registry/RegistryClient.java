@@ -2,12 +2,12 @@ package cn.coderule.minimq.rpc.registry;
 
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.minimq.rpc.registry.protocol.body.RegisterStoreResult;
-import cn.coderule.minimq.domain.domain.cluster.cluster.BrokerInfo;
-import cn.coderule.minimq.domain.domain.cluster.cluster.ClusterInfo;
-import cn.coderule.minimq.domain.domain.cluster.cluster.GroupInfo;
-import cn.coderule.minimq.domain.domain.cluster.cluster.HeartBeat;
-import cn.coderule.minimq.domain.domain.cluster.cluster.ServerInfo;
-import cn.coderule.minimq.domain.domain.cluster.cluster.StoreInfo;
+import cn.coderule.minimq.domain.domain.cluster.server.BrokerInfo;
+import cn.coderule.minimq.domain.domain.cluster.server.ClusterInfo;
+import cn.coderule.minimq.domain.domain.cluster.server.GroupInfo;
+import cn.coderule.minimq.domain.domain.cluster.server.HeartBeat;
+import cn.coderule.minimq.domain.domain.cluster.server.ServerInfo;
+import cn.coderule.minimq.domain.domain.cluster.server.StoreInfo;
 import cn.coderule.minimq.domain.domain.cluster.route.RouteInfo;
 import cn.coderule.minimq.domain.domain.cluster.route.TopicInfo;
 import java.util.List;

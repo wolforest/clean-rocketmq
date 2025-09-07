@@ -3,7 +3,7 @@ package cn.coderule.minimq.domain.domain.cluster.route;
 import cn.coderule.common.lang.concurrent.thread.local.ThreadLocalSequence;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.minimq.domain.domain.MessageQueue;
-import cn.coderule.minimq.domain.service.common.QueueFilter;
+import cn.coderule.minimq.domain.domain.cluster.selector.QueueFilter;
 import com.google.common.base.Preconditions;
 import java.io.Serializable;
 import java.util.ArrayList;

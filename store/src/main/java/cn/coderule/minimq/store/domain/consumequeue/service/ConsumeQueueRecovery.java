@@ -2,11 +2,11 @@ package cn.coderule.minimq.store.domain.consumequeue.service;
 
 import cn.coderule.minimq.domain.config.store.ConsumeQueueConfig;
 import cn.coderule.minimq.domain.domain.cluster.store.QueueUnit;
-import cn.coderule.minimq.domain.service.store.domain.consumequeue.ConsumeQueue;
-import cn.coderule.minimq.domain.service.store.infra.MappedFile;
-import cn.coderule.minimq.domain.service.store.infra.MappedFileQueue;
-import cn.coderule.minimq.domain.service.store.server.CheckPoint;
-import cn.coderule.minimq.domain.service.store.server.Offset;
+import cn.coderule.minimq.domain.domain.cluster.store.domain.consumequeue.ConsumeQueue;
+import cn.coderule.minimq.domain.domain.cluster.store.infra.MappedFile;
+import cn.coderule.minimq.domain.domain.cluster.store.infra.MappedFileQueue;
+import cn.coderule.minimq.domain.domain.cluster.store.server.CheckPoint;
+import cn.coderule.minimq.domain.domain.cluster.store.server.Offset;
 import cn.coderule.minimq.store.domain.consumequeue.queue.ConsumeQueueRegistry;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;

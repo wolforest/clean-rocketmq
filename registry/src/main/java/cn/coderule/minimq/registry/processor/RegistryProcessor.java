@@ -17,7 +17,7 @@ import cn.coderule.minimq.rpc.common.rpc.protocol.code.RequestCode;
 import cn.coderule.minimq.rpc.common.rpc.protocol.code.SystemResponseCode;
 import cn.coderule.minimq.rpc.registry.protocol.body.RegisterBrokerBody;
 import cn.coderule.minimq.rpc.registry.protocol.body.RegisterStoreResult;
-import cn.coderule.minimq.domain.domain.cluster.cluster.StoreInfo;
+import cn.coderule.minimq.domain.domain.cluster.server.StoreInfo;
 import cn.coderule.minimq.rpc.registry.protocol.header.RegisterBrokerRequestHeader;
 import cn.coderule.minimq.rpc.registry.protocol.header.RegisterBrokerResponseHeader;
 import cn.coderule.minimq.rpc.registry.protocol.header.RegisterTopicRequestHeader;

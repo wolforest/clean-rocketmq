@@ -1,7 +1,7 @@
 package cn.coderule.minimq.domain.domain.meta.topic;
 
 import cn.coderule.minimq.domain.core.constant.MQConstants;
-import cn.coderule.minimq.domain.domain.cluster.cluster.GroupInfo;
+import cn.coderule.minimq.domain.domain.cluster.server.GroupInfo;
 import cn.coderule.minimq.domain.domain.cluster.route.QueueInfo;
 import cn.coderule.minimq.domain.domain.cluster.route.RouteInfo;
 import java.util.HashMap;

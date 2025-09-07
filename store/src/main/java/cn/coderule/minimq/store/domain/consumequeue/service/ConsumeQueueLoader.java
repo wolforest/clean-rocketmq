@@ -1,8 +1,8 @@
 package cn.coderule.minimq.store.domain.consumequeue.service;
 
 import cn.coderule.minimq.domain.config.store.ConsumeQueueConfig;
-import cn.coderule.minimq.domain.service.store.domain.consumequeue.ConsumeQueue;
-import cn.coderule.minimq.domain.service.store.infra.MappedFileQueue;
+import cn.coderule.minimq.domain.domain.cluster.store.domain.consumequeue.ConsumeQueue;
+import cn.coderule.minimq.domain.domain.cluster.store.infra.MappedFileQueue;
 import cn.coderule.minimq.store.domain.consumequeue.queue.ConsumeQueueRegistry;
 import java.util.LinkedHashSet;
 import java.util.Set;

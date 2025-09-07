@@ -2,7 +2,7 @@ package cn.coderule.minimq.domain.domain.consumer.consume.mq;
 
 import cn.coderule.minimq.domain.core.enums.consume.ConsumeStrategy;
 import cn.coderule.minimq.domain.domain.cluster.RequestContext;
-import cn.coderule.minimq.domain.service.store.domain.mq.MessageFilter;
+import cn.coderule.minimq.domain.domain.cluster.store.domain.mq.MessageFilter;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

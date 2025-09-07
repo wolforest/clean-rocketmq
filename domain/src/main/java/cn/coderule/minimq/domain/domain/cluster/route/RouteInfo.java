@@ -6,7 +6,7 @@
 
 import cn.coderule.common.util.lang.string.JSONUtil;
 import cn.coderule.minimq.domain.core.enums.message.MessageType;
-import cn.coderule.minimq.domain.domain.cluster.cluster.GroupInfo;
+import cn.coderule.minimq.domain.domain.cluster.server.GroupInfo;
 import cn.coderule.minimq.domain.domain.meta.statictopic.TopicQueueMappingInfo;
 import com.alibaba.fastjson2.JSONWriter;
 import java.io.Serializable;

@@ -6,7 +6,7 @@ import cn.coderule.minimq.broker.server.grpc.service.channel.ChannelManager;
 import cn.coderule.minimq.broker.server.grpc.service.channel.SettingManager;
 import cn.coderule.minimq.domain.core.enums.consume.ConsumerEvent;
 import cn.coderule.minimq.domain.domain.cluster.ClientChannelInfo;
-import cn.coderule.minimq.domain.service.broker.consume.ConsumerListener;
+import cn.coderule.minimq.domain.domain.consumer.hook.ConsumerListener;
 import cn.coderule.minimq.broker.server.grpc.service.channel.GrpcChannel;
 import cn.coderule.minimq.broker.server.core.ChannelHelper;
 import io.netty.channel.Channel;

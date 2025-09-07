@@ -6,7 +6,7 @@ import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.domain.domain.meta.order.ConsumeOrder;
 import cn.coderule.minimq.domain.domain.meta.order.OrderRequest;
-import cn.coderule.minimq.domain.service.store.domain.meta.ConsumeOrderService;
+import cn.coderule.minimq.domain.domain.cluster.store.domain.meta.ConsumeOrderService;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

@@ -3,7 +3,7 @@ package cn.coderule.minimq.store.server.ha.server;
 import cn.coderule.common.convention.service.LifecycleManager;
 import cn.coderule.common.lang.concurrent.thread.WakeupCoordinator;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
-import cn.coderule.minimq.domain.service.store.api.CommitLogStore;
+import cn.coderule.minimq.domain.domain.cluster.store.api.CommitLogStore;
 import cn.coderule.minimq.store.server.ha.core.HAContext;
 import cn.coderule.minimq.store.server.ha.core.monitor.FlowMonitor;
 import cn.coderule.minimq.store.server.ha.server.processor.CommitLogSynchronizer;

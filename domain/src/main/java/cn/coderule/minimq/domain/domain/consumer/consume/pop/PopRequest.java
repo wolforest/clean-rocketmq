@@ -2,8 +2,8 @@ package cn.coderule.minimq.domain.domain.consumer.consume.pop;
 
 import cn.coderule.minimq.domain.core.enums.consume.ConsumeStrategy;
 import cn.coderule.minimq.domain.domain.cluster.RequestContext;
-import cn.coderule.minimq.domain.domain.cluster.heartbeat.SubscriptionData;
-import cn.coderule.minimq.domain.service.broker.consume.PopFilter;
+import cn.coderule.minimq.domain.domain.cluster.server.heartbeat.SubscriptionData;
+import cn.coderule.minimq.domain.domain.consumer.hook.PopFilter;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
