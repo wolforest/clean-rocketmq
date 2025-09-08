@@ -98,6 +98,11 @@ public class ErrorConsumeQueue implements ConsumeQueue {
     }
 
     @Override
+    public void load() {
+
+    }
+
+    @Override
     public void destroy() {
 
     }

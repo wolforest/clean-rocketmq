@@ -160,6 +160,11 @@ public class DefaultConsumeQueue implements ConsumeQueue {
     }
 
     @Override
+    public void load() {
+        mappedFileQueue.load();
+    }
+
+    @Override
     public void destroy() {
         mappedFileQueue.destroy();
     }

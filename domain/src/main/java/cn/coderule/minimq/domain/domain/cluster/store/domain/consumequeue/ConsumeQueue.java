@@ -27,5 +27,7 @@ public interface ConsumeQueue {
     long increaseOffset();
 
     MappedFileQueue getMappedFileQueue();
+
+    void load();
     void destroy();
 }
