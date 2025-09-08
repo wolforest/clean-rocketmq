@@ -2,8 +2,10 @@ package cn.coderule.minimq.store.infra.file;
 
 import cn.coderule.minimq.domain.core.enums.store.InsertStatus;
 import cn.coderule.minimq.domain.domain.cluster.store.InsertResult;
+import cn.coderule.minimq.domain.domain.cluster.store.SelectedMappedBuffer;
 import cn.coderule.minimq.domain.utils.store.OffsetUtils;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.nio.file.Path;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -33,6 +35,43 @@ class DefaultMappedFileTest {
         } catch (IOException e) {
             log.error("create mappedFile exception", e);
         }
+    }
+
+    @Test
+    void testInsertByteBuffer() {
+        String fileName = createFileName(2);
+        int fileSize = 20 * 100;
+
+        try {
+            DefaultMappedFile mappedFile = new DefaultMappedFile(fileName, fileSize);
+
+
+            ByteBuffer buffer = createByteBuffer();
+            mappedFile.insert(buffer);
+
+            SelectedMappedBuffer result = mappedFile.select(0, 20);
+            ByteBuffer resultBuffer = result.getByteBuffer();
+            assertEquals(50, resultBuffer.getLong());
+            assertEquals(30, resultBuffer.getInt());
+            assertEquals(8L, resultBuffer.getLong());
+
+            mappedFile.destroy(1000);
+        } catch (IOException e) {
+            log.error("create mappedFile exception", e);
+        }
+    }
+
+    private ByteBuffer createByteBuffer() {
+        ByteBuffer buffer = ByteBuffer.allocate(20);
+
+        buffer.putLong(50);
+        buffer.putInt(30);
+        buffer.putLong(8L);
+
+        buffer.flip();
+        buffer.limit(20);
+
+        return buffer;
     }
 
     @Test

@@ -65,7 +65,7 @@ public class PopService {
 
         PopRequest popRequest = buildPopRequest(context, request, settings, pollTime, subscriptionData);
         consumerController.popMessage(popRequest)
-            .thenAccept(result -> response.writeResponse(context, result));
+            .whenComplete((result, e) -> response.writeResponse(context, result, e));
     }
 
     private void receiveMessage(PopResult result, PopRequest request, ConsumeResponse response) {

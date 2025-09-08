@@ -38,28 +38,28 @@ public class PopService {
         queueSelector.select(context);
         CompletableFuture<PopResult> result = popMessage(context);
 
-        result.thenAccept(
-            popResult -> addReceipt(context, popResult)
-        );
+//        result.thenAccept(
+//            popResult -> addReceipt(context, popResult)
+//        );
         return result;
     }
 
     private CompletableFuture<PopResult> popMessage(PopContext context) {
         CompletableFuture<PopResult> result = PopResult.future();
 
-        if (context.shouldRetry()) {
-            result = popFromRetryQueue(context, result);
-        }
-
+//        if (context.shouldRetry()) {
+//            result = popFromRetryQueue(context, result);
+//        }
+        context.getRequest().setQueueId(0);
         if (context.hasRequestQueueId()) {
             result = popFromRequestQueue(context, result);
         } else {
             result = popFromTopicQueue(context, result);
         }
 
-        if (context.shouldRetryAgain()) {
-            result = popFromRetryQueue(context, result);
-        }
+//        if (context.shouldRetryAgain()) {
+//            result = popFromRetryQueue(context, result);
+//        }
 
         return result;
     }

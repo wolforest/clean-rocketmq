@@ -50,11 +50,33 @@ class DefaultConsumeQueueTest {
             queue.enqueue(event);
         }
 
+        queue.flush();
+
+        QueueUnit first = queue.get(0);
+        QueueUnit second = queue.get(1);
+        QueueUnit third = queue.get(2);
+        assertEquals(0, first.getQueueOffset());
+        assertEquals(1, second.getQueueOffset());
+        assertEquals(2, third.getQueueOffset());
+
+        assertEquals(50, first.getCommitOffset());
+        assertEquals(50, second.getCommitOffset());
+        assertEquals(50, third.getCommitOffset());
+
+        assertEquals(30, first.getMessageSize());
+        assertEquals(30, second.getMessageSize());
+        assertEquals(30, third.getMessageSize());
+
+
+
         List<QueueUnit> units = queue.get(0, 20);
         assertEquals(10, units.size());
 
         QueueUnit last = units.get(units.size() - 1);
         assertEquals(event.getMessageBO().getQueueOffset(), last.getQueueOffset());
+        assertEquals(event.getMessageBO().getCommitOffset(), last.getCommitOffset());
+        assertEquals(event.getMessageBO().getMessageLength(), last.getMessageSize());
+        assertEquals(event.getMessageBO().getTagsCode(), last.getTagsCode());
 
         queue.destroy();
     }

@@ -73,6 +73,15 @@ public class ConsumeResponse {
     }
 
     public void writeResponse(RequestContext context, PopResult popResult) {
+        writeResponse(context, popResult, null);
+    }
+
+    public void writeResponse(RequestContext context, PopResult popResult, Throwable e) {
+        if (e != null) {
+            writeResponse(context, e);
+            return;
+        }
+
         try {
             writeByStatus(context, popResult);
         } catch (Throwable t) {

@@ -85,11 +85,11 @@ public class DefaultConsumeQueue implements ConsumeQueue {
     @Override
     public QueueUnit get(long index) {
         long offset = index * config.getUnitSize();
-        if (offset <= MIN_OFFSET_UPDATER.get(this)) {
+        if (offset < MIN_OFFSET_UPDATER.get(this)) {
             return null;
         }
 
-        SelectedMappedBuffer buffer = select(offset);
+        SelectedMappedBuffer buffer = select(offset, config.getUnitSize());
         if (buffer == null) {
             return null;
         }
@@ -208,6 +208,16 @@ public class DefaultConsumeQueue implements ConsumeQueue {
         return mappedFile.select(position);
     }
 
+    private SelectedMappedBuffer select(long offset, int size) {
+        MappedFile mappedFile = mappedFileQueue.getMappedFileByOffset(offset);
+        if (mappedFile == null) {
+            return null;
+        }
+
+        int position = (int)(offset % config.getFileSize());
+        return mappedFile.select(position, size);
+    }
+
     private boolean insert(CommitEvent event) {
         MessageBO messageBO = event.getMessageBO();
 
@@ -222,7 +232,7 @@ public class DefaultConsumeQueue implements ConsumeQueue {
         }
 
         setWriteBuffer(event);
-        mappedFile.insert(writeBuffer);
+        mappedFile.insert(this.writeBuffer);
         return true;
     }
 
@@ -316,9 +326,13 @@ public class DefaultConsumeQueue implements ConsumeQueue {
         MessageBO messageBO = event.getMessageBO();
         this.writeBuffer.flip();
         this.writeBuffer.limit(config.getUnitSize());
+
         this.writeBuffer.putLong(messageBO.getCommitOffset());
         this.writeBuffer.putInt(messageBO.getMessageLength());
         this.writeBuffer.putLong(messageBO.getTagsCode());
+
+        this.writeBuffer.flip();
+        this.writeBuffer.limit(config.getUnitSize());
     }
 
     /**
