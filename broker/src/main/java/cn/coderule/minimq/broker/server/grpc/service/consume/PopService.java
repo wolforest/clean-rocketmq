@@ -102,7 +102,7 @@ public class PopService {
             .maxNum(request.getBatchSize())
             .invisibleTime(invisibleTime)
             .pollTime(pollTime)
-            .consumeStrategy(ConsumeStrategy.CONSUME_FROM_LATEST)
+            .consumeStrategy(ConsumeStrategy.CONSUME_FROM_START)
             .subscriptionData(subscriptionData)
             .fifo(settings.getSubscription().getFifo())
             .attemptId(request.hasAttemptId() ? request.getAttemptId() : null)
