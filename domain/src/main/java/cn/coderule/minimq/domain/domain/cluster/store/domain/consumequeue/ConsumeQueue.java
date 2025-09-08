@@ -29,5 +29,10 @@ public interface ConsumeQueue {
     MappedFileQueue getMappedFileQueue();
 
     void load();
+    void flush(int minPages);
     void destroy();
+
+    default void flush() {
+        flush(0);
+    }
 }

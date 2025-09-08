@@ -165,16 +165,26 @@ public class DefaultConsumeQueue implements ConsumeQueue {
     }
 
     @Override
+    public void flush(int minPages) {
+        mappedFileQueue.flush(minPages);
+    }
+
+    @Override
     public void destroy() {
         mappedFileQueue.destroy();
     }
 
     private QueueUnit createQueueUnit(long offset, SelectedMappedBuffer buffer) {
+        ByteBuffer byteBuffer = buffer.getByteBuffer();
+        long commitOffset = byteBuffer.getLong();
+        int messageSize = byteBuffer.getInt();
+        long tagsCode = byteBuffer.getLong();
+
         return QueueUnit.builder()
             .queueOffset(offset / config.getUnitSize())
-            .commitOffset(buffer.getByteBuffer().getLong())
-            .messageSize(buffer.getByteBuffer().getInt())
-            .tagsCode(buffer.getByteBuffer().getLong())
+            .commitOffset(commitOffset)
+            .messageSize(messageSize)
+            .tagsCode(tagsCode)
             .unitSize(config.getUnitSize())
             .build();
     }

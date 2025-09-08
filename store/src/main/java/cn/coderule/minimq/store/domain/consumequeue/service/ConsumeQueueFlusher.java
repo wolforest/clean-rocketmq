@@ -39,8 +39,7 @@ public class ConsumeQueueFlusher extends ServiceThread implements ConsumeQueueRe
 
         while (!this.isStopped()) {
             try {
-                int interval = config.getFlushInterval();
-                await(interval);
+                await(config.getFlushInterval());
                 flush();
             } catch (Exception e) {
                 log.warn("{} occurs exception.", getServiceName(), e);

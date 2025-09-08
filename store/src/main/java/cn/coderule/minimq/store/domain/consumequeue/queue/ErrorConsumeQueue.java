@@ -103,6 +103,11 @@ public class ErrorConsumeQueue implements ConsumeQueue {
     }
 
     @Override
+    public void flush(int minPages) {
+
+    }
+
+    @Override
     public void destroy() {
 
     }
