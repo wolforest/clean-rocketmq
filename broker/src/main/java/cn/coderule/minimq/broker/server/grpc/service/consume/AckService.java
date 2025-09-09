@@ -3,12 +3,19 @@ package cn.coderule.minimq.broker.server.grpc.service.consume;
 import apache.rocketmq.v2.AckMessageRequest;
 import apache.rocketmq.v2.AckMessageResponse;
 import apache.rocketmq.v2.AckMessageResultEntry;
+import apache.rocketmq.v2.Code;
+import apache.rocketmq.v2.Status;
 import cn.coderule.minimq.broker.api.ConsumerController;
 import cn.coderule.minimq.broker.server.grpc.service.channel.ChannelManager;
 import cn.coderule.minimq.broker.server.grpc.service.channel.SettingManager;
 import cn.coderule.minimq.domain.config.business.MessageConfig;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.domain.cluster.RequestContext;
+import cn.coderule.minimq.rpc.common.grpc.response.ResponseBuilder;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import lombok.extern.slf4j.Slf4j;
 
@@ -87,7 +94,46 @@ public class AckService {
         CompletableFuture<AckMessageResponse> result,
         CompletableFuture<AckMessageResultEntry>[] entryArray
     ) {
+        Set<Code> responseCodes = new HashSet<>();
+        List<AckMessageResultEntry> entryList = new ArrayList<>();
 
+        for (CompletableFuture<AckMessageResultEntry> entryFuture : entryArray) {
+            AckMessageResultEntry entry = entryFuture.join();
+            responseCodes.add(entry.getStatus().getCode());
+            entryList.add(entry);
+        }
+
+        AckMessageResponse.Builder responseBuilder = AckMessageResponse
+            .newBuilder()
+            .addAllEntries(entryList);
+
+        setAckResponseStatus(responseBuilder, responseCodes);
+        result.complete(responseBuilder.build());
+    }
+
+    private void setAckResponseStatus(AckMessageResponse.Builder response, Set<Code> responseCodes) {
+        Status status;
+        ResponseBuilder responseBuilder = ResponseBuilder.getInstance();
+
+        if (responseCodes.size() > 1) {
+            status = responseBuilder.buildStatus(
+                Code.MULTIPLE_RESULTS, Code.MULTIPLE_RESULTS.name()
+            );
+        } else if (responseCodes.size() == 1) {
+            Code code = responseCodes.stream()
+                .findAny()
+                .get();
+
+            status = responseBuilder.buildStatus(
+                code, code.name()
+            );
+        } else {
+            status = responseBuilder.buildStatus(
+                Code.INTERNAL_SERVER_ERROR, "ack message result is empty"
+            );
+        }
+
+        response.setStatus(status);
     }
 
     private CompletableFuture<AckMessageResultEntry> ackOneAsync(
