@@ -29,6 +29,12 @@ public class DequeueResult implements Serializable {
         this.messageList = new ArrayList<>();
     }
 
+    public void setStatusByMessageList() {
+        this.status = messageList.isEmpty()
+            ? MessageStatus.NO_MATCHED_MESSAGE
+            : MessageStatus.FOUND;
+    }
+
     public boolean isEmpty() {
         return messageList.isEmpty();
     }

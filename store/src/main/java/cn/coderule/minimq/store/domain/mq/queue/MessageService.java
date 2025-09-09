@@ -3,6 +3,7 @@ package cn.coderule.minimq.store.domain.mq.queue;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.minimq.domain.config.business.MessageConfig;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
+import cn.coderule.minimq.domain.core.enums.message.MessageStatus;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueResult;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueRequest;
 import cn.coderule.minimq.domain.domain.cluster.store.QueueUnit;
@@ -74,6 +75,7 @@ public class MessageService {
             result.addMessage(messageBO);
         }
 
+        result.setStatusByMessageList();
         return result;
     }
 
