@@ -39,6 +39,9 @@ public class MessageConfig implements Serializable {
     private long longPollingReserveTimeInMillis = 100;
 
     private long invisibleTimeMillisWhenClear = 1000L;
+
+    private boolean enableBatchAck = false;
+
     /**
      * message invisibleTime related config
      */
