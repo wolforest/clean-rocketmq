@@ -48,12 +48,18 @@ public class AckService {
         return null;
     }
 
-    @SuppressWarnings("unchecked")
     public CompletableFuture<AckMessageResponse> ackOneByOne(RequestContext context, AckMessageRequest request) {
         CompletableFuture<AckMessageResponse> result = new CompletableFuture<>();
-
         CompletableFuture<AckMessageResultEntry>[] entryArray = ackOneByOneAsync(context, request);
 
+        CompletableFuture.allOf(entryArray).whenComplete((ackResult, throwable) -> {
+            if (null != throwable) {
+                result.completeExceptionally(throwable);
+                return;
+            }
+
+            ackOneByOneComplete(result, entryArray);
+        });
 
         return result;
     }
@@ -75,6 +81,13 @@ public class AckService {
         }
 
         return entryArray;
+    }
+
+    private void ackOneByOneComplete(
+        CompletableFuture<AckMessageResponse> result,
+        CompletableFuture<AckMessageResultEntry>[] entryArray
+    ) {
+
     }
 
     private CompletableFuture<AckMessageResultEntry> ackOneAsync(
