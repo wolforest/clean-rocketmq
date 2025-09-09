@@ -33,12 +33,12 @@ public class MessageUtils {
 
     public static String generateMd5(String bodyStr) {
         byte[] bytes = calculateMd5(bodyStr.getBytes(StandardCharsets.UTF_8));
-        return ByteUtil.encodeHexString(bytes);
+        return ByteUtil.encodeHexString(bytes, false);
     }
 
     public static String generateMd5(byte[] content) {
         byte[] bytes = calculateMd5(content);
-        return ByteUtil.encodeHexString(bytes);
+        return ByteUtil.encodeHexString(bytes, false);
     }
 
     public static long getTagsCode(String tags) {
