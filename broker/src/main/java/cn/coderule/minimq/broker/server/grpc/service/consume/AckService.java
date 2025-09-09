@@ -2,6 +2,7 @@ package cn.coderule.minimq.broker.server.grpc.service.consume;
 
 import apache.rocketmq.v2.AckMessageRequest;
 import apache.rocketmq.v2.AckMessageResponse;
+import apache.rocketmq.v2.AckMessageResultEntry;
 import cn.coderule.minimq.broker.api.ConsumerController;
 import cn.coderule.minimq.broker.server.grpc.service.channel.ChannelManager;
 import cn.coderule.minimq.broker.server.grpc.service.channel.SettingManager;
@@ -32,22 +33,29 @@ public class AckService {
 
     public CompletableFuture<AckMessageResponse> ack(RequestContext context, AckMessageRequest request) {
         try {
+            // default value of enableBatchAck is false
             if (messageConfig.isEnableBatchAck()) {
-                return batchAck(context, request);
+                return ackBatch(context, request);
             } else {
-                return ack(context, request);
+                return ackOneByOne(context, request);
             }
         } catch (Throwable t) {
             return ackException(context, t);
         }
     }
 
-    public CompletableFuture<AckMessageResponse> batchAck(RequestContext context, AckMessageRequest request) {
+    public CompletableFuture<AckMessageResponse> ackBatch(RequestContext context, AckMessageRequest request) {
         return null;
     }
 
+    @SuppressWarnings("unchecked")
     public CompletableFuture<AckMessageResponse> ackOneByOne(RequestContext context, AckMessageRequest request) {
-        return null;
+        CompletableFuture<AckMessageResponse> result = new CompletableFuture<>();
+
+        CompletableFuture<AckMessageResultEntry>[] entryArray = ackOneByOneAsync(context, request);
+
+
+        return result;
     }
 
     public CompletableFuture<AckMessageResponse> ackException(RequestContext context, Throwable t) {
@@ -55,6 +63,26 @@ public class AckService {
         future.completeExceptionally(t);
 
         return future;
+    }
+
+    @SuppressWarnings("unchecked")
+    public CompletableFuture<AckMessageResultEntry>[] ackOneByOneAsync(RequestContext context, AckMessageRequest request) {
+        int size = request.getEntriesCount();
+        CompletableFuture<AckMessageResultEntry>[] entryArray = new CompletableFuture[size];
+
+        for (int i = 0; i < size; i++) {
+            entryArray[i] = ackOneAsync(context, request, i);
+        }
+
+        return entryArray;
+    }
+
+    private CompletableFuture<AckMessageResultEntry> ackOneAsync(
+        RequestContext context,
+        AckMessageRequest request,
+        int index
+    ) {
+        return null;
     }
 
 }
