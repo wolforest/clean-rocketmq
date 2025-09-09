@@ -20,7 +20,6 @@ import cn.coderule.minimq.broker.server.grpc.service.consume.PopService;
 import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import cn.coderule.minimq.rpc.common.grpc.activity.ActivityHelper;
 import io.grpc.stub.StreamObserver;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.function.Function;
 
@@ -48,8 +47,13 @@ public class ConsumerActivity {
         this.offsetService = offsetService;
     }
 
-    public void receiveMessage(RequestContext context, ReceiveMessageRequest request, StreamObserver<ReceiveMessageResponse> responseObserver) {
-        ActivityHelper<ReceiveMessageRequest, ReceiveMessageResponse> helper = getReceiveHelper(context, request, responseObserver);
+    public void receiveMessage(
+        RequestContext context,
+        ReceiveMessageRequest request,
+        StreamObserver<ReceiveMessageResponse> responseObserver
+    ) {
+        ActivityHelper<ReceiveMessageRequest, ReceiveMessageResponse> helper
+            = getReceiveHelper(context, request, responseObserver);
 
         try {
             Runnable task = ()
@@ -61,12 +65,17 @@ public class ConsumerActivity {
         }
     }
 
-    public void ackMessage(RequestContext context, AckMessageRequest request, StreamObserver<AckMessageResponse> responseObserver) {
-        ActivityHelper<AckMessageRequest, AckMessageResponse> helper = getAckHelper(context, request, responseObserver);
+    public void ackMessage(
+        RequestContext context,
+        AckMessageRequest request,
+        StreamObserver<AckMessageResponse> responseObserver
+    ) {
+        ActivityHelper<AckMessageRequest, AckMessageResponse> helper
+            = getAckHelper(context, request, responseObserver);
 
         try {
             Runnable task = ()
-                -> ackMessageAsync(context, request)
+                -> ackService.ack(context, request)
                 .whenComplete(helper::writeResponse);
 
             this.executor.submit(helper.createTask(task));
@@ -75,13 +84,17 @@ public class ConsumerActivity {
         }
     }
 
-    public void changeInvisibleDuration(RequestContext context,
-        ChangeInvisibleDurationRequest request, StreamObserver<ChangeInvisibleDurationResponse> responseObserver) {
-        ActivityHelper<ChangeInvisibleDurationRequest, ChangeInvisibleDurationResponse> helper = getInvisibleHelper(context, request, responseObserver);
+    public void changeInvisibleDuration(
+        RequestContext context,
+        ChangeInvisibleDurationRequest request,
+        StreamObserver<ChangeInvisibleDurationResponse> responseObserver
+    ) {
+        ActivityHelper<ChangeInvisibleDurationRequest, ChangeInvisibleDurationResponse> helper
+            = getInvisibleHelper(context, request, responseObserver);
 
         try {
             Runnable task = ()
-                -> changeInvisibleDurationAsync(context, request)
+                -> invisibleService.changeInvisible(context, request)
                 .whenComplete(helper::writeResponse);
 
             this.executor.submit(helper.createTask(task));
@@ -90,12 +103,17 @@ public class ConsumerActivity {
         }
     }
 
-    public void updateOffset(RequestContext context, UpdateOffsetRequest request, StreamObserver<UpdateOffsetResponse> responseObserver) {
-        ActivityHelper<UpdateOffsetRequest, UpdateOffsetResponse> helper = getUpdateOffsetHelper(context, request, responseObserver);
+    public void updateOffset(
+        RequestContext context,
+        UpdateOffsetRequest request,
+        StreamObserver<UpdateOffsetResponse> responseObserver
+    ) {
+        ActivityHelper<UpdateOffsetRequest, UpdateOffsetResponse> helper
+            = getUpdateOffsetHelper(context, request, responseObserver);
 
         try {
             Runnable task = ()
-                -> updateOffsetAsync(context, request)
+                -> offsetService.updateOffsetAsync(context, request)
                 .whenComplete(helper::writeResponse);
             this.executor.submit(helper.createTask(task));
         } catch (Throwable t) {
@@ -108,7 +126,7 @@ public class ConsumerActivity {
 
         try {
             Runnable task = ()
-                -> getOffsetAsync(context, request)
+                -> offsetService.getOffsetAsync(context, request)
                 .whenComplete(helper::writeResponse);
 
             this.executor.submit(helper.createTask(task));
@@ -122,7 +140,7 @@ public class ConsumerActivity {
 
         try {
             Runnable task = ()
-                -> queryOffsetAsync(context, request)
+                -> offsetService.queryOffsetAsync(context, request)
                 .whenComplete(helper::writeResponse);
 
             this.executor.submit(helper.createTask(task));
@@ -151,10 +169,6 @@ public class ConsumerActivity {
             .build();
     }
 
-    public CompletableFuture<AckMessageResponse> ackMessageAsync(RequestContext context, AckMessageRequest request) {
-        return null;
-    }
-
     private ActivityHelper<AckMessageRequest, AckMessageResponse> getAckHelper(
         RequestContext context,
         AckMessageRequest request,
@@ -173,10 +187,6 @@ public class ConsumerActivity {
         return status -> AckMessageResponse.newBuilder()
             .setStatus(status)
             .build();
-    }
-
-    public CompletableFuture<ChangeInvisibleDurationResponse> changeInvisibleDurationAsync(RequestContext context, ChangeInvisibleDurationRequest request) {
-        return null;
     }
 
     private ActivityHelper<ChangeInvisibleDurationRequest, ChangeInvisibleDurationResponse> getInvisibleHelper(
@@ -199,10 +209,6 @@ public class ConsumerActivity {
             .build();
     }
 
-    public CompletableFuture<UpdateOffsetResponse> updateOffsetAsync(RequestContext context, UpdateOffsetRequest request) {
-        return null;
-    }
-
     private ActivityHelper<UpdateOffsetRequest, UpdateOffsetResponse> getUpdateOffsetHelper(
         RequestContext context,
         UpdateOffsetRequest request,
@@ -223,10 +229,6 @@ public class ConsumerActivity {
             .build();
     }
 
-    public CompletableFuture<GetOffsetResponse> getOffsetAsync(RequestContext context, GetOffsetRequest request) {
-        return null;
-    }
-
     private ActivityHelper<GetOffsetRequest, GetOffsetResponse> getOffsetHelper(
         RequestContext context,
         GetOffsetRequest request,
@@ -245,10 +247,6 @@ public class ConsumerActivity {
         return status -> GetOffsetResponse.newBuilder()
             .setStatus(status)
             .build();
-    }
-
-    public CompletableFuture<QueryOffsetResponse> queryOffsetAsync(RequestContext context, QueryOffsetRequest request) {
-        return null;
     }
 
     private ActivityHelper<QueryOffsetRequest, QueryOffsetResponse> queryOffsetHelper(
