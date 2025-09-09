@@ -278,6 +278,7 @@ public class MessageManager implements Lifecycle {
             settingManager
         );
         AckService ackService = new AckService(
+            brokerConfig,
             consumerController,
             settingManager,
             channelManager

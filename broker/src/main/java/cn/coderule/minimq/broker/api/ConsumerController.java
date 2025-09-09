@@ -14,6 +14,7 @@ import cn.coderule.minimq.domain.domain.consumer.consume.pop.PopResult;
 import cn.coderule.minimq.domain.domain.consumer.running.ConsumerGroupInfo;
 import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import cn.coderule.minimq.domain.domain.meta.subscription.SubscriptionGroup;
+import cn.coderule.minimq.domain.domain.meta.topic.TopicValidator;
 import java.util.concurrent.CompletableFuture;
 
 public class ConsumerController {
@@ -57,6 +58,8 @@ public class ConsumerController {
     }
 
     public CompletableFuture<AckResult> ack(AckRequest request) {
+        GroupValidator.validate(request.getGroupName());
+        TopicValidator.validateTopic(request.getTopicName());
         return consumer.ack(request);
     }
 
