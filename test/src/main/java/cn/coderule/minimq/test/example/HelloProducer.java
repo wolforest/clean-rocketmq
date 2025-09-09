@@ -1,4 +1,4 @@
-package cn.coderule.minimq.hello.rocketmq;
+package cn.coderule.minimq.test.example;
 
 import java.io.IOException;
 import lombok.extern.slf4j.Slf4j;
@@ -12,10 +12,16 @@ import org.apache.rocketmq.client.apis.producer.SendReceipt;
 @Slf4j
 public class HelloProducer {
     private static final ClientServiceProvider provider = ClientServiceProvider.loadService();
-    private static final String TOPIC = "TestTopic";
+    private static final String TOPIC = "testTopic";
     private static final String ENDPOINT = "127.0.0.1:8081";
     public static void main(String[] args) throws ClientException, IOException {
-        new HelloProducer().sendMessage();
+//        new HelloProducer().sendMessage();
+
+        HelloProducer helloProducer = new HelloProducer();
+
+        for (int i = 0; i < 100; i++) {
+           helloProducer.sendMessage();
+        }
     }
 
     public void sendMessage() throws ClientException, IOException {

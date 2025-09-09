@@ -1,4 +1,4 @@
-package cn.coderule.minimq.hello.rocketmq;
+package cn.coderule.minimq.test.example;
 
 import cn.coderule.common.util.lang.ThreadUtil;
 import java.io.IOException;
@@ -13,9 +13,9 @@ import org.apache.rocketmq.client.apis.consumer.PushConsumer;
 
 public class HelloConsumer {
     private static final ClientServiceProvider provider = ClientServiceProvider.loadService();
-    private static final String TOPIC = "TestTopic";
+    private static final String TOPIC = "testTopic";
     private static final String ENDPOINT = "localhost:8081";
-    private static final String GROUP = "TestGroup";
+    private static final String GROUP = "testGroup";
 
     public static void main(String[] args) throws Exception {
         new HelloConsumer().consume();

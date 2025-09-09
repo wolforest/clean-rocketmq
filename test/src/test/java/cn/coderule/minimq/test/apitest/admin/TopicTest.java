@@ -17,6 +17,7 @@
 package cn.coderule.minimq.test.apitest.admin;
 
 import cn.coderule.minimq.test.apitest.ApiBaseTest;
+import cn.coderule.minimq.test.manager.GroupManager;
 import cn.coderule.minimq.test.manager.TopicManager;
 import org.apache.rocketmq.common.domain.topic.TopicConfig;
 import org.apache.rocketmq.common.domain.topic.TopicMessageType;
@@ -40,7 +41,8 @@ public class TopicTest extends ApiBaseTest {
     }
 
     public void testCreateTopic() {
-        TopicManager.createTopic("testMQ");
+        TopicManager.createTopic("testTopic");
+        GroupManager.createGroup("testGroup");
     }
 
     @Test

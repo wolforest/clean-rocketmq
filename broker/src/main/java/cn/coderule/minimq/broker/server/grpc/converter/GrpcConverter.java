@@ -19,6 +19,7 @@ import cn.coderule.minimq.domain.core.constant.MessageConst;
 import cn.coderule.minimq.domain.core.constant.flag.MessageSysFlag;
 import cn.coderule.minimq.domain.core.enums.consume.ExpressionType;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
+import cn.coderule.minimq.domain.utils.message.MessageUtils;
 import cn.coderule.minimq.domain.utils.message.NamespaceUtils;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.util.Timestamps;
@@ -127,7 +128,7 @@ public class GrpcConverter {
         }
 
         // body_digest & body_encoding
-        String md5Result = HashUtil.md5(messageExt.getBody());
+        String md5Result = MessageUtils.generateMd5(messageExt.getBody());
         Digest digest = Digest.newBuilder()
             .setType(DigestType.MD5)
             .setChecksum(md5Result)

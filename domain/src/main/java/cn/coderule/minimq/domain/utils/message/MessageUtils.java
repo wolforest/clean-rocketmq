@@ -1,5 +1,7 @@
 package cn.coderule.minimq.domain.utils.message;
 
+import cn.coderule.common.util.encrypt.HashUtil;
+import cn.coderule.common.util.lang.ByteUtil;
 import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.minimq.domain.core.enums.message.TagType;
 import java.net.Inet4Address;
@@ -7,12 +9,37 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 
 public class MessageUtils {
     public static final char NAME_VALUE_SEPARATOR = 1;
     public static final char PROPERTY_SEPARATOR = 2;
+
+    public static byte[] calculateMd5(byte[] binaryData) {
+        MessageDigest messageDigest = null;
+        try {
+            messageDigest = MessageDigest.getInstance("MD5");
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("MD5 algorithm not found.");
+        }
+        messageDigest.update(binaryData);
+        return messageDigest.digest();
+    }
+
+    public static String generateMd5(String bodyStr) {
+        byte[] bytes = calculateMd5(bodyStr.getBytes(StandardCharsets.UTF_8));
+        return ByteUtil.encodeHexString(bytes);
+    }
+
+    public static String generateMd5(byte[] content) {
+        byte[] bytes = calculateMd5(content);
+        return ByteUtil.encodeHexString(bytes);
+    }
 
     public static long getTagsCode(String tags) {
         if (StringUtil.isBlank(tags)) {
