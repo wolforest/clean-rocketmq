@@ -29,7 +29,7 @@ class DefaultConsumeQueueTest {
         StoreCheckpoint checkpoint = new StoreCheckpoint(StorePath.getCheckpointPath());
 
         ConsumeQueue queue = new DefaultConsumeQueue(
-            "MQT_ff7bb50a2ecb4f2b8313116b3457a7e5",
+            "MQT_8e16d78db3b54a2daa6c9cba381cd6f4",
             0,
             storeConfig.getConsumeQueueConfig(),
             checkpoint

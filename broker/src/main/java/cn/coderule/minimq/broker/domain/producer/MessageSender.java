@@ -171,7 +171,8 @@ public class MessageSender implements Lifecycle {
         MessageBO message = produceContext.getMessageBO();
 
         MessageQueue messageQueue = queueSelector.select(context, message);
-        message.setQueueId(messageQueue.getQueueId());
+        //message.setQueueId(messageQueue.getQueueId());
+        message.setQueueId(0);
 
         produceContext.setMessageQueue(messageQueue);
     }

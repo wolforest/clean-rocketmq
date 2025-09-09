@@ -5,8 +5,8 @@ import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.domain.domain.consumer.ack.AckBuffer;
 import cn.coderule.minimq.domain.domain.meta.topic.KeyBuilder;
 import cn.coderule.minimq.domain.domain.cluster.store.api.meta.AckStore;
-import cn.coderule.minimq.domain.domain.cluster.store.domain.mq.MQService;
 import cn.coderule.minimq.store.api.AckStoreImpl;
+import cn.coderule.minimq.store.domain.mq.queue.EnqueueService;
 import cn.coderule.minimq.store.server.bootstrap.StoreContext;
 
 public class AckManager implements Lifecycle {
@@ -20,8 +20,8 @@ public class AckManager implements Lifecycle {
         String reviveTopic = KeyBuilder.buildClusterReviveTopic(storeConfig.getCluster());
         ackMerger = new AckMerger(storeConfig.getMessageConfig(), reviveTopic, ackBuffer);
 
-        MQService mqService = StoreContext.getBean(MQService.class);
-        AckService ackService = new AckService(storeConfig, mqService, reviveTopic, ackBuffer);
+        EnqueueService enqueueService = StoreContext.getBean(EnqueueService.class);
+        AckService ackService = new AckService(storeConfig, reviveTopic, ackBuffer, enqueueService);
         StoreContext.register(ackService);
 
         AckStore ackStore = new AckStoreImpl(ackService);
