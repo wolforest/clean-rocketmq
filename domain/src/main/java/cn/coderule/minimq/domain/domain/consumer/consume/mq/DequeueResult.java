@@ -10,11 +10,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NonNull;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
 @Data
 @Slf4j
 @Builder
+@ToString
 @AllArgsConstructor
 public class DequeueResult implements Serializable {
     private MessageStatus status;

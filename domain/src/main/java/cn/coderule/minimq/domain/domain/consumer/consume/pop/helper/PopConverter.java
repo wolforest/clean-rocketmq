@@ -22,6 +22,7 @@ import cn.coderule.minimq.domain.utils.message.MessageUtils;
 import com.alibaba.fastjson2.JSON;
 import java.net.SocketAddress;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -188,7 +189,8 @@ public class PopConverter {
             return lastResult;
         }
 
-        List<MessageBO> messageList = lastResult.getMessageList();
+        List<MessageBO> messageList = new ArrayList<>();
+        messageList.addAll(lastResult.getMessageList());
         messageList.addAll(dequeueResult.getMessageList());
 
         return PopResult.builder()

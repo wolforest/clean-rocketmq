@@ -26,30 +26,30 @@ public class NextOffsetSetter {
         setMinOffset(request, result);
         setMaxOffset(request, result);
 
-        if (0 == result.getMaxOffset()) {
-            setOffsetIfQueueEmpty(request, result);
-            return;
-        }
-
-        if (request.getOffset() < result.getMinOffset()) {
-            setOffsetIfOffsetSmaller(request, result);
-            return;
-        }
-
-        if (request.getOffset() == result.getMaxOffset()) {
-            setOffsetIfOffsetEqualMax(request, result);
-            return;
-        }
-
-        if (request.getOffset() > result.getMaxOffset()) {
-            setOffsetIfOffsetBigger(request, result);
-            return;
-        }
-
-        if (result.isEmpty()) {
-            setOffsetIfResultEmpty(request, result);
-            return;
-        }
+//        if (0 == result.getMaxOffset()) {
+//            setOffsetIfQueueEmpty(request, result);
+//            return;
+//        }
+//
+//        if (request.getOffset() < result.getMinOffset()) {
+//            setOffsetIfOffsetSmaller(request, result);
+//            return;
+//        }
+//
+//        if (request.getOffset() == result.getMaxOffset()) {
+//            setOffsetIfOffsetEqualMax(request, result);
+//            return;
+//        }
+//
+//        if (request.getOffset() > result.getMaxOffset()) {
+//            setOffsetIfOffsetBigger(request, result);
+//            return;
+//        }
+//
+//        if (result.isEmpty()) {
+//            setOffsetIfResultEmpty(request, result);
+//            return;
+//        }
 
         setOffsetByMessageList(request, result);
     }

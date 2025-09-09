@@ -67,7 +67,7 @@ public class MessageService {
         MessageBO messageBO;
 
         for (QueueUnit unit : unitList) {
-            messageBO = commitLog.select(unit.getCommitOffset(), unit.getUnitSize());
+            messageBO = commitLog.select(unit.getCommitOffset(), unit.getMessageSize());
             if (messageBO == null) {
                 continue;
             }
