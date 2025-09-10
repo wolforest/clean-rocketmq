@@ -4,6 +4,7 @@ import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import cn.coderule.minimq.domain.domain.consumer.receipt.MessageIdReceipt;
 import cn.coderule.minimq.domain.domain.consumer.receipt.ReceiptHandle;
 import java.io.Serializable;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -23,7 +24,8 @@ public class AckRequest implements Serializable {
     private String topicName;
     private String groupName;
     private long invisibleTime;
-    private long timeout;
+    @Builder.Default
+    private long timeout = Duration.ofSeconds(2).toMillis();
 
     public void addReceipt(String messageId, ReceiptHandle receiptHandle) {
         receiptList.add(
