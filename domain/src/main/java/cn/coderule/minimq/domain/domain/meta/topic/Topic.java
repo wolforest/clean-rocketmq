@@ -68,6 +68,10 @@ public class Topic implements Serializable {
         this.messageType = other.messageType;
     }
 
+    public boolean existsQueue(int queueId) {
+        return queueId >= 0 && queueId < readQueueNums;
+    }
+
     @JSONField(serialize = false, deserialize = false)
     public MessageType getTopicType() {
         if (null != messageType) {
