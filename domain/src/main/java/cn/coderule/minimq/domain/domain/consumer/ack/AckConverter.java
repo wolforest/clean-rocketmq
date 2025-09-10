@@ -8,6 +8,8 @@ import cn.coderule.minimq.domain.domain.message.MessageBO;
 
 public class AckConverter {
     public static AckMessage toAckMessage(AckRequest request) {
+
+
         return null;
     }
 
