@@ -279,9 +279,7 @@ public class MessageManager implements Lifecycle {
         );
         AckService ackService = new AckService(
             brokerConfig,
-            consumerController,
-            settingManager,
-            channelManager
+            consumerController
         );
         InvisibleService invisibleService = new InvisibleService(
             consumerController,

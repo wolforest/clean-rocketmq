@@ -8,8 +8,6 @@ import apache.rocketmq.v2.Code;
 import apache.rocketmq.v2.Status;
 import cn.coderule.minimq.broker.api.ConsumerController;
 import cn.coderule.minimq.broker.server.grpc.converter.AckConverter;
-import cn.coderule.minimq.broker.server.grpc.service.channel.ChannelManager;
-import cn.coderule.minimq.broker.server.grpc.service.channel.SettingManager;
 import cn.coderule.minimq.domain.config.business.MessageConfig;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.domain.cluster.RequestContext;
@@ -26,19 +24,13 @@ import lombok.extern.slf4j.Slf4j;
 public class AckService {
     private final MessageConfig messageConfig;
     private final ConsumerController consumerController;
-    private final SettingManager settingManager;
-    private final ChannelManager channelManager;
 
     public AckService(
         BrokerConfig brokerConfig,
-        ConsumerController consumerController,
-        SettingManager settingManager,
-        ChannelManager channelManager
+        ConsumerController consumerController
     ) {
         this.messageConfig = brokerConfig.getMessageConfig();
         this.consumerController = consumerController;
-        this.settingManager = settingManager;
-        this.channelManager = channelManager;
     }
 
     public CompletableFuture<AckMessageResponse> ack(RequestContext context, AckMessageRequest request) {
