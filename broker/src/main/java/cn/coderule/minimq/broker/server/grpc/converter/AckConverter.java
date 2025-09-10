@@ -17,15 +17,21 @@ public class AckConverter {
         AckMessageRequest request,
         AckMessageEntry entry
     ) {
+        String requestTopic = request.getTopic().getName();
+        String requestGroup = request.getGroup().getName();
 
         AckRequest ackRequest = AckRequest.builder()
             .requestContext(context)
-            .topicName(request.getTopic().getName())
-            .groupName(request.getGroup().getName())
+            .groupName(requestGroup)
             .build();
+
 
         ReceiptHandle handle = ReceiptHandle.decode(entry.getReceiptHandle());
         ackRequest.addReceipt(entry.getMessageId(), handle);
+
+        String realTopic = handle.getRealTopic(requestTopic, requestGroup);
+        ackRequest.setTopicName(realTopic);
+        ackRequest.setQueueId(handle.getQueueId());
 
         return ackRequest;
     }

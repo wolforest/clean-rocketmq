@@ -129,7 +129,6 @@ public class MessageValidator {
                 "message properties number is more than " + maxPropertyCount
             );
         }
-
     }
 
     private void validateShardingKey(String keyName) {
@@ -190,7 +189,6 @@ public class MessageValidator {
     public void validateTag(String tag) {
         if (StringUtil.isEmpty(tag)) {
             return;
-
         }
 
         if (StringUtil.isBlank(tag)) {
