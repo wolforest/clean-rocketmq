@@ -19,8 +19,8 @@ import lombok.NoArgsConstructor;
 public class AckRequest implements Serializable {
     private RequestContext requestContext;
 
-    @Builder.Default
-    private List<MessageIdReceipt> receiptList = new ArrayList<>();
+    private ReceiptHandle receiptHandle;
+    private String messageId;
     private String topicName;
     private String groupName;
     private int queueId;
@@ -32,23 +32,5 @@ public class AckRequest implements Serializable {
     @Builder.Default
     private long timeout = Duration.ofSeconds(2).toMillis();
 
-    public void addReceipt(String messageId, ReceiptHandle receiptHandle) {
-        receiptList.add(
-            new MessageIdReceipt(receiptHandle, messageId)
-        );
-    }
 
-    public String getFirstMessageId() {
-        if (receiptList.isEmpty()) {
-            return null;
-        }
-        return receiptList.get(0).getMessageId();
-    }
-
-    public ReceiptHandle getFirstReceiptHandle() {
-        if (receiptList.isEmpty()) {
-            return null;
-        }
-        return receiptList.get(0).getReceiptHandle();
-    }
 }

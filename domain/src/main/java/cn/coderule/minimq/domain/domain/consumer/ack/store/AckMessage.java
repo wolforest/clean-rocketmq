@@ -14,4 +14,6 @@ public class AckMessage implements Serializable {
     private AckInfo ackInfo;
     private int reviveQueueId;
     private long invisibleTime;
+
+    private boolean isBatch = false;
 }
