@@ -1,5 +1,6 @@
 package cn.coderule.minimq.broker.api;
 
+import cn.coderule.minimq.broker.api.validator.AckValidator;
 import cn.coderule.minimq.broker.api.validator.GroupValidator;
 import cn.coderule.minimq.broker.api.validator.PopValidator;
 import cn.coderule.minimq.broker.domain.consumer.consumer.Consumer;
@@ -58,8 +59,7 @@ public class ConsumerController {
     }
 
     public CompletableFuture<AckResult> ack(AckRequest request) {
-        GroupValidator.validate(request.getGroupName());
-        TopicValidator.validateTopic(request.getTopicName());
+        AckValidator.validate(request);
         return consumer.ack(request);
     }
 
