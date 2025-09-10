@@ -7,6 +7,8 @@ import cn.coderule.minimq.domain.domain.consumer.ack.AckConverter;
 import cn.coderule.minimq.domain.domain.consumer.ack.broker.AckRequest;
 import cn.coderule.minimq.domain.domain.consumer.ack.broker.AckResult;
 import cn.coderule.minimq.domain.domain.consumer.ack.store.AckMessage;
+import cn.coderule.minimq.domain.domain.consumer.consume.mq.QueueRequest;
+import cn.coderule.minimq.domain.domain.consumer.consume.mq.QueueResult;
 import cn.coderule.minimq.domain.domain.consumer.receipt.ReceiptHandler;
 import cn.coderule.minimq.domain.domain.meta.topic.Topic;
 import cn.coderule.minimq.rpc.store.facade.MQFacade;
@@ -19,15 +21,15 @@ public class AckService {
     private final BrokerConfig brokerConfig;
 
     private final MQFacade mqStore;
-    private final TopicFacade topicFacade;
+    private final TopicFacade topicStore;
     private final ReceiptHandler receiptHandler;
 
 
-    public AckService(BrokerConfig brokerConfig, MQFacade mqStore, TopicFacade topicFacade, ReceiptHandler receiptHandler) {
+    public AckService(BrokerConfig brokerConfig, MQFacade mqStore, TopicFacade topicStore, ReceiptHandler receiptHandler) {
         this.brokerConfig = brokerConfig;
 
         this.mqStore = mqStore;
-        this.topicFacade = topicFacade;
+        this.topicStore = topicStore;
         this.receiptHandler = receiptHandler;
     }
 
@@ -54,7 +56,7 @@ public class AckService {
     }
 
     private Topic validateTopic(AckRequest request) {
-        Topic topic = topicFacade.getTopic(request.getTopicName());
+        Topic topic = topicStore.getTopic(request.getTopicName());
         if (topic != null) {
             return topic;
         }
@@ -79,7 +81,28 @@ public class AckService {
     }
 
     private void validateOffset(AckRequest request) {
+        QueueRequest queueRequest = QueueRequest.builder()
+            .context(request.getRequestContext())
+            .topic(request.getTopicName())
+            .group(request.getGroupName())
+            .queueId(request.getQueueId())
+            .build();
 
+        QueueResult minResult = mqStore.getMinOffset(queueRequest);
+        QueueResult maxResult = mqStore.getMaxOffset(queueRequest);
+
+        if (request.getOffset() >= minResult.getMinOffset()
+            && request.getOffset() <= maxResult.getMaxOffset()) {
+            return;
+        }
+
+        log.error("invalid offset error: topic={}, queueId={}, offset={}",
+            request.getTopicName(), request.getQueueId(), request.getOffset());
+
+        throw new InvalidRequestException(
+            InvalidCode.ILLEGAL_OFFSET,
+            "Invalid offset: " + request.getTopicName() + ":" + request.getQueueId() + ":" + request.getOffset()
+        );
     }
 
     private void removeReceipt(AckRequest request) {
