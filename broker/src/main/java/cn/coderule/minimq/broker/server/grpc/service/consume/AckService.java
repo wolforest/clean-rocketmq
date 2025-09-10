@@ -107,7 +107,7 @@ public class AckService {
             consumerController.ack(ackRequest)
                 .thenAccept(ackResult -> {
                     future.complete(
-                        AckConverter.toResultEntry(context, entry, ackResult)
+                        AckConverter.toResultEntry(entry, ackResult)
                     );
                 }).exceptionally(t -> {
                     future.complete(
