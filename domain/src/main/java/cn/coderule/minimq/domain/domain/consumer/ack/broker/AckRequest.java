@@ -30,4 +30,18 @@ public class AckRequest implements Serializable {
             new MessageIdReceipt(receiptHandle, messageId)
         );
     }
+
+    public String getFirstMessageId() {
+        if (receiptList.isEmpty()) {
+            return null;
+        }
+        return receiptList.get(0).getMessageId();
+    }
+
+    public ReceiptHandle getFirstReceiptHandle() {
+        if (receiptList.isEmpty()) {
+            return null;
+        }
+        return receiptList.get(0).getReceiptHandle();
+    }
 }
