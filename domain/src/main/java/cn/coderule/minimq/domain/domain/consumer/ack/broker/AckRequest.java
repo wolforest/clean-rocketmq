@@ -24,6 +24,8 @@ public class AckRequest implements Serializable {
     private String topicName;
     private String groupName;
     private int queueId;
+
+    private long offset;
     private long invisibleTime;
     @Builder.Default
     private long timeout = Duration.ofSeconds(2).toMillis();

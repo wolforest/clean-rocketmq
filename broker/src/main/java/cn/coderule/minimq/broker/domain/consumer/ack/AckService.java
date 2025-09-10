@@ -47,29 +47,39 @@ public class AckService {
         Topic topic = validateTopic(request);
 
         // validate queueId
-        if (!topic.existsQueue(request.getQueueId())) {
-            log.error("Topic queueId error: topic={}, queueId={}",
-                request.getTopicName(), request.getQueueId());
-            throw new InvalidRequestException(
-                InvalidCode.ILLEGAL_TOPIC,
-                "Message queue can not find: "
-                    + request.getTopicName()
-                    + ":" + request.getQueueId()
-            );
-        }
+        validateQueueId(request, topic);
 
         // validate offset
+        validateOffset(request);
     }
 
     private Topic validateTopic(AckRequest request) {
         Topic topic = topicFacade.getTopic(request.getTopicName());
-        if (topic == null) {
-            log.error("Topic not exists: {}", request.getTopicName());
-            throw new InvalidRequestException(
-                InvalidCode.ILLEGAL_TOPIC, "Topic not exists: " + request.getTopicName());
+        if (topic != null) {
+            return topic;
         }
 
-        return topic;
+        log.error("Topic not exists: {}", request.getTopicName());
+        throw new InvalidRequestException(
+            InvalidCode.ILLEGAL_TOPIC, "Topic not exists: " + request.getTopicName());
+    }
+
+    private void validateQueueId(AckRequest request, Topic topic) {
+        if (topic.existsQueue(request.getQueueId())) {
+            return;
+        }
+
+        log.error("Topic queueId error: topic={}, queueId={}",
+            request.getTopicName(), request.getQueueId());
+
+        throw new InvalidRequestException(
+            InvalidCode.ILLEGAL_TOPIC,
+            "Message queue can not find: " + request.getTopicName() + ":" + request.getQueueId()
+        );
+    }
+
+    private void validateOffset(AckRequest request) {
+
     }
 
     private void removeReceipt(AckRequest request) {
