@@ -111,7 +111,7 @@ public class AckService {
                     );
                 }).exceptionally(t -> {
                     future.complete(
-                        AckConverter.toResultEntry(context, entry, t)
+                        AckConverter.toResultEntry(entry, t)
                     );
                     return null;
                 });

@@ -52,10 +52,16 @@ public class AckConverter {
     }
 
     public static AckMessageResultEntry toResultEntry(
-        RequestContext context,
         AckMessageEntry entry,
         Throwable t
     ) {
-        return null;
+        Status status = ResponseBuilder.getInstance()
+            .buildStatus(t);
+
+        return AckMessageResultEntry.newBuilder()
+            .setMessageId(entry.getMessageId())
+            .setReceiptHandle(entry.getReceiptHandle())
+            .setStatus(status)
+            .build();
     }
 }
