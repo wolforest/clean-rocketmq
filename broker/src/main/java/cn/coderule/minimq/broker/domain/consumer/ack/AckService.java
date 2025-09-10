@@ -18,8 +18,11 @@ public class AckService {
     }
 
     public CompletableFuture<AckResult> ack(AckRequest request) {
+        // remove receipt
+
         AckMessage ackMessage = AckConverter.toAckMessage(request);
         mqStore.ack(ackMessage);
+
 
         return null;
     }
