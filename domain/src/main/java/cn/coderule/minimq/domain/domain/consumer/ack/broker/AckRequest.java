@@ -27,6 +27,8 @@ public class AckRequest implements Serializable {
 
     private long offset;
     private long invisibleTime;
+    private String extraInfo;
+
     @Builder.Default
     private long timeout = Duration.ofSeconds(2).toMillis();
 

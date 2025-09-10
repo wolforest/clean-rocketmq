@@ -33,6 +33,7 @@ public class AckConverter {
         ackRequest.setTopicName(realTopic);
         ackRequest.setQueueId(handle.getQueueId());
         ackRequest.setOffset(handle.getOffset());
+        ackRequest.setExtraInfo(handle.getReceiptHandle());
 
         return ackRequest;
     }
