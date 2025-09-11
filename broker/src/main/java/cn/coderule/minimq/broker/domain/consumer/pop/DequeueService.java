@@ -1,6 +1,6 @@
 package cn.coderule.minimq.broker.domain.consumer.pop;
 
-import cn.coderule.minimq.broker.domain.consumer.consumer.InflightCounter;
+import cn.coderule.minimq.domain.domain.consumer.consume.InflightCounter;
 import cn.coderule.minimq.domain.config.business.MessageConfig;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.domain.cluster.RequestContext;

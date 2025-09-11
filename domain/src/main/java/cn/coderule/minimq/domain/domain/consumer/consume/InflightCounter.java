@@ -1,4 +1,4 @@
-package cn.coderule.minimq.broker.domain.consumer.consumer;
+package cn.coderule.minimq.domain.domain.consumer.consume;
 
 import cn.coderule.common.lang.type.Pair;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.checkpoint.PopCheckPoint;
