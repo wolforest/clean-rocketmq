@@ -20,7 +20,14 @@ public class AckManager implements Lifecycle {
 
         EnqueueService enqueueService = StoreContext.getBean(EnqueueService.class);
         OffsetService offsetService = new OffsetService();
-        AckService ackService = new AckService(storeConfig, reviveTopic, ackBuffer, enqueueService, offsetService);
+
+        AckService ackService = new AckService(
+            storeConfig,
+            reviveTopic,
+            ackBuffer,
+            enqueueService,
+            offsetService
+        );
         StoreContext.register(ackService);
     }
 
