@@ -6,6 +6,7 @@ import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.domain.domain.consumer.ack.AckBuffer;
 import cn.coderule.minimq.domain.domain.consumer.ack.AckInfo;
 import cn.coderule.minimq.domain.domain.consumer.ack.BatchAckInfo;
+import cn.coderule.minimq.domain.domain.consumer.ack.store.AckMessage;
 import cn.coderule.minimq.domain.domain.producer.EnqueueResult;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.checkpoint.PopCheckPoint;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.checkpoint.PopCheckPointWrapper;
@@ -58,16 +59,19 @@ public class AckService {
         ackBuffer.enqueue(pointWrapper);
     }
 
-    public void ack(AckInfo ackInfo, int reviveQueueId, long invisibleTime) {
+    public void ack(AckMessage ackMessage) {
+        // offset operation
+
         if (!messageConfig.isEnablePopBufferMerge()) {
-            enqueueReviveQueue(ackInfo, reviveQueueId, invisibleTime);
+            enqueueReviveQueue(ackMessage);
             return;
         }
 
         try {
-            mergeAckMsg(ackInfo, reviveQueueId);
+            mergeAckMsg(ackMessage.getAckInfo(), ackMessage.getReviveQueueId());
         } catch (Throwable t) {
-            log.error("[PopBuffer]ack error, reviveQueueId: {}. ", reviveQueueId, t);
+            log.error("[PopBuffer]ack error, reviveQueueId: {}. ",
+                ackMessage.getReviveQueueId(), t);
         }
     }
 
@@ -183,27 +187,27 @@ public class AckService {
         }
     }
 
-    private MessageBO buildAckMsg(AckInfo ackInfo, int reviveQueueId, long invisibleTime) {
+    private MessageBO buildAckMsg(AckMessage ackMessage) {
         SocketAddress storeHost = new InetSocketAddress(storeConfig.getHost(), storeConfig.getPort());
         return PopConverter.toMessageBO(
-            ackInfo,
-            reviveQueueId,
+            ackMessage.getAckInfo(),
+            ackMessage.getReviveQueueId(),
             reviveTopic,
             storeHost,
-            invisibleTime
+            ackMessage.getInvisibleTime()
         );
     }
 
-    private void enqueueReviveQueue(AckInfo ackInfo, int reviveQueueId, long invisibleTime) {
-        MessageBO messageBO = buildAckMsg(ackInfo, reviveQueueId, invisibleTime);
+    private void enqueueReviveQueue(AckMessage ackMessage) {
+        MessageBO messageBO = buildAckMsg(ackMessage);
         EnqueueResult result = enqueueService.enqueue(messageBO);
         if (result.isFailure()) {
-            log.error("Enqueue ackMsg failed, ackMsg: {}; reviveQueueId:{}; invisibleTime: {};",
-                ackInfo, reviveQueueId, invisibleTime);
+            log.error("Enqueue ackMsg failed, ackMessage: {}; ",
+                ackMessage);
         }
 
         if (messageConfig.isEnablePopLog()) {
-            log.info("Enqueue ackMsg success, ackMsg: {}, result: {}", ackInfo, result);
+            log.info("Enqueue ackMsg success, ackMsg: {}, result: {}", ackMessage, result);
         }
     }
 

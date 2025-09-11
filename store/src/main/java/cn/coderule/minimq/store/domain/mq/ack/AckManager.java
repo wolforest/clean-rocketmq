@@ -4,8 +4,6 @@ import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.domain.domain.consumer.ack.AckBuffer;
 import cn.coderule.minimq.domain.domain.meta.topic.KeyBuilder;
-import cn.coderule.minimq.domain.domain.cluster.store.api.meta.AckStore;
-import cn.coderule.minimq.store.api.AckStoreImpl;
 import cn.coderule.minimq.store.domain.mq.queue.EnqueueService;
 import cn.coderule.minimq.store.server.bootstrap.StoreContext;
 
@@ -23,9 +21,6 @@ public class AckManager implements Lifecycle {
         EnqueueService enqueueService = StoreContext.getBean(EnqueueService.class);
         AckService ackService = new AckService(storeConfig, reviveTopic, ackBuffer, enqueueService);
         StoreContext.register(ackService);
-
-        AckStore ackStore = new AckStoreImpl(ackService);
-        StoreContext.registerAPI(ackStore, AckStore.class);
     }
 
     @Override
