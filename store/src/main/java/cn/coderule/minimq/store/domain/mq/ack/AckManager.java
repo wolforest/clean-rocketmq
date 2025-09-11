@@ -19,7 +19,8 @@ public class AckManager implements Lifecycle {
         ackMerger = new AckMerger(storeConfig.getMessageConfig(), reviveTopic, ackBuffer);
 
         EnqueueService enqueueService = StoreContext.getBean(EnqueueService.class);
-        AckService ackService = new AckService(storeConfig, reviveTopic, ackBuffer, enqueueService);
+        OffsetService offsetService = new OffsetService();
+        AckService ackService = new AckService(storeConfig, reviveTopic, ackBuffer, enqueueService, offsetService);
         StoreContext.register(ackService);
     }
 

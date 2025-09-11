@@ -27,15 +27,23 @@ public class AckService {
     private final String reviveTopic;
 
     private final AckBuffer ackBuffer;
+    private final OffsetService offsetService;
     private final EnqueueService enqueueService;
 
-    public AckService(StoreConfig storeConfig, String reviveTopic, AckBuffer ackBuffer, EnqueueService enqueueService) {
+    public AckService(
+        StoreConfig storeConfig,
+        String reviveTopic,
+        AckBuffer ackBuffer,
+        EnqueueService enqueueService,
+        OffsetService offsetService
+    ) {
         this.storeConfig  = storeConfig;
         this.messageConfig  = storeConfig.getMessageConfig();
-        this.enqueueService = enqueueService;
-
         this.reviveTopic = reviveTopic;
+
         this.ackBuffer = ackBuffer;
+        this.enqueueService = enqueueService;
+        this.offsetService = offsetService;
     }
 
     public void addCheckPoint(PopCheckPoint point, int reviveQueueId, long reviveOffset, long nextOffset) {
@@ -60,7 +68,7 @@ public class AckService {
     }
 
     public void ack(AckMessage ackMessage) {
-        // offset operation
+        offsetService.ack(ackMessage);
 
         if (!messageConfig.isEnablePopBufferMerge()) {
             enqueueReviveQueue(ackMessage);
