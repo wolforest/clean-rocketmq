@@ -1,8 +1,17 @@
 package cn.coderule.minimq.domain.domain.consumer.ack;
 
 import com.alibaba.fastjson2.annotation.JSONField;
+import java.io.Serializable;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-public class AckInfo {
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class AckInfo implements Serializable {
 
     @JSONField(name = "ao", alternateNames = {"ackOffset"})
     private long ackOffset;
@@ -24,62 +33,6 @@ public class AckInfo {
 
     @JSONField(name = "bn", alternateNames = {"brokerName"})
     private String brokerName;
-
-    public long getPopTime() {
-        return popTime;
-    }
-
-    public void setPopTime(long popTime) {
-        this.popTime = popTime;
-    }
-
-    public void setQueueId(int queueId) {
-        this.queueId = queueId;
-    }
-
-    public int getQueueId() {
-        return queueId;
-    }
-
-    public void setTopic(String topic) {
-        this.topic = topic;
-    }
-
-    public String getTopic() {
-        return topic;
-    }
-
-    public long getAckOffset() {
-        return ackOffset;
-    }
-
-    public String getConsumerGroup() {
-        return consumerGroup;
-    }
-
-    public void setConsumerGroup(String consumerGroup) {
-        this.consumerGroup = consumerGroup;
-    }
-
-    public void setAckOffset(long ackOffset) {
-        this.ackOffset = ackOffset;
-    }
-
-    public long getStartOffset() {
-        return startOffset;
-    }
-
-    public void setStartOffset(long startOffset) {
-        this.startOffset = startOffset;
-    }
-
-    public String getBrokerName() {
-        return brokerName;
-    }
-
-    public void setBrokerName(String brokerName) {
-        this.brokerName = brokerName;
-    }
 
     @Override
     public String toString() {
