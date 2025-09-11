@@ -14,6 +14,24 @@ public class OffsetService {
             return;
         }
 
+        if (isOffsetOld(ackMessage)) {
+            return;
+        }
+
+        lock(ackMessage);
+
+        try {
+            updateOffset(ackMessage);
+        } finally {
+            unlock(ackMessage);
+        }
+    }
+
+    private boolean isOffsetOld(AckMessage ackMessage) {
+        return false;
+    }
+
+    private void updateOffset(AckMessage ackMessage) {
 
     }
 
