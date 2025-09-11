@@ -40,8 +40,8 @@ public class AckService {
         AckMessage ackMessage = AckConverter.toAckMessage(request);
         mqStore.ack(ackMessage);
 
-
-        return null;
+        AckResult result = AckResult.success();
+        return CompletableFuture.completedFuture(result);
     }
 
     private void validate(AckRequest request) {

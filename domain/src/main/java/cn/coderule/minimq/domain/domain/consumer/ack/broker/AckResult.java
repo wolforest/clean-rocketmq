@@ -12,6 +12,13 @@ public class AckResult {
     private MessageIdReceipt idReceipt;
     private BrokerException brokerException;
 
+    public static AckResult success() {
+        AckResult result = new AckResult();
+        result.setStatus(AckStatus.OK);
+
+        return result;
+    }
+
     public boolean isSuccess() {
         return status == AckStatus.OK;
     }
