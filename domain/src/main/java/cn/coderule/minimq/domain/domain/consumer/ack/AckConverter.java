@@ -4,18 +4,21 @@ import cn.coderule.minimq.domain.domain.consumer.ack.broker.AckRequest;
 import cn.coderule.minimq.domain.domain.consumer.ack.broker.InvisibleRequest;
 import cn.coderule.minimq.domain.domain.consumer.ack.store.AckMessage;
 import cn.coderule.minimq.domain.domain.consumer.ack.store.CheckPointRequest;
+import cn.coderule.minimq.domain.domain.consumer.receipt.ReceiptHandle;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.utils.message.ExtraInfoUtils;
 
 public class AckConverter {
     public static AckMessage toAckMessage(AckRequest request) {
-        String[] extraInfo = ExtraInfoUtils.split(request.getExtraInfo());
+        String[] extraInfo = ExtraInfoUtils.split(request.getReceiptStr());
+        ReceiptHandle handle = ReceiptHandle.decode(request.getReceiptStr());
 
+        String realTopic = handle.getRealTopic(request.getTopicName(), request.getGroupName());
         AckInfo ackInfo = AckInfo.builder()
-            .topic(request.getTopicName())
+            .topic(realTopic)
             .consumerGroup(request.getGroupName())
-            .queueId(request.getQueueId())
-            .ackOffset(request.getOffset())
+            .queueId(handle.getQueueId())
+            .ackOffset(handle.getOffset())
             .startOffset(ExtraInfoUtils.getCkQueueOffset(extraInfo))
             .popTime(ExtraInfoUtils.getPopTime(extraInfo))
             .brokerName(ExtraInfoUtils.getBrokerName(extraInfo))

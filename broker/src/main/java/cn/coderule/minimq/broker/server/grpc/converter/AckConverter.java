@@ -8,7 +8,6 @@ import apache.rocketmq.v2.Status;
 import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import cn.coderule.minimq.domain.domain.consumer.ack.broker.AckRequest;
 import cn.coderule.minimq.domain.domain.consumer.ack.broker.AckResult;
-import cn.coderule.minimq.domain.domain.consumer.receipt.ReceiptHandle;
 import cn.coderule.minimq.rpc.common.grpc.response.ResponseBuilder;
 
 public class AckConverter {
@@ -19,22 +18,14 @@ public class AckConverter {
     ) {
         String requestTopic = request.getTopic().getName();
         String requestGroup = request.getGroup().getName();
-        ReceiptHandle handle = ReceiptHandle.decode(entry.getReceiptHandle());
 
-        AckRequest ackRequest = AckRequest.builder()
+        return AckRequest.builder()
             .requestContext(context)
+            .topicName(requestTopic)
             .groupName(requestGroup)
-            .receiptHandle(handle)
             .messageId(entry.getMessageId())
+            .receiptStr(entry.getReceiptHandle())
             .build();
-
-        String realTopic = handle.getRealTopic(requestTopic, requestGroup);
-        ackRequest.setTopicName(realTopic);
-        ackRequest.setQueueId(handle.getQueueId());
-        ackRequest.setOffset(handle.getOffset());
-        ackRequest.setExtraInfo(handle.getReceiptHandle());
-
-        return ackRequest;
     }
 
     public static AckMessageResultEntry toResultEntry(
