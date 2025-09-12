@@ -10,9 +10,8 @@ public class OffsetService {
     private ConsumeOffsetService consumeOffsetService;
 
     public void ack(AckMessage ackMessage) {
-        if (!validate(ackMessage)) {
-            return;
-        }
+        if (!ackMessage.isConsumeOrderly()) return;
+        if (isOffsetOld(ackMessage)) return;
 
         lock(ackMessage);
         try {
@@ -20,14 +19,6 @@ public class OffsetService {
         } finally {
             unlock(ackMessage);
         }
-    }
-
-    private boolean validate(AckMessage ackMessage) {
-        if (ackMessage.isConsumeOrderly()) {
-            return false;
-        }
-
-        return isOffsetOld(ackMessage);
     }
 
     private boolean isOffsetOld(AckMessage ackMessage) {
