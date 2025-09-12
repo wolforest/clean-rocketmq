@@ -4,6 +4,7 @@ import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.core.enums.code.InvalidCode;
 import cn.coderule.minimq.domain.core.exception.InvalidRequestException;
 import cn.coderule.minimq.domain.domain.consumer.ack.AckConverter;
+import cn.coderule.minimq.domain.domain.consumer.ack.AckInfo;
 import cn.coderule.minimq.domain.domain.consumer.ack.broker.AckRequest;
 import cn.coderule.minimq.domain.domain.consumer.ack.broker.AckResult;
 import cn.coderule.minimq.domain.domain.consumer.ack.store.AckMessage;
@@ -24,7 +25,6 @@ public class AckService {
     private final TopicFacade topicStore;
     private final ReceiptHandler receiptHandler;
 
-
     public AckService(BrokerConfig brokerConfig, MQFacade mqStore, TopicFacade topicStore, ReceiptHandler receiptHandler) {
         this.brokerConfig = brokerConfig;
 
@@ -34,74 +34,77 @@ public class AckService {
     }
 
     public CompletableFuture<AckResult> ack(AckRequest request) {
-        validate(request);
         removeReceipt(request);
-
         AckMessage ackMessage = AckConverter.toAckMessage(request);
+
+        validate(ackMessage);
         mqStore.ack(ackMessage);
 
         AckResult result = AckResult.success();
         return CompletableFuture.completedFuture(result);
     }
 
-    private void validate(AckRequest request) {
+    private void validate(AckMessage ackMessage) {
         // validate topic
-        Topic topic = validateTopic(request);
+        Topic topic = validateTopic(ackMessage);
 
         // validate queueId
-        validateQueueId(request, topic);
+        validateQueueId(ackMessage, topic);
 
         // validate offset
-        validateOffset(request);
+        validateOffset(ackMessage);
     }
 
-    private Topic validateTopic(AckRequest request) {
-        Topic topic = topicStore.getTopic(request.getTopicName());
+    private Topic validateTopic(AckMessage ackMessage) {
+        AckInfo ackInfo = ackMessage.getAckInfo();
+        Topic topic = topicStore.getTopic(ackInfo.getTopic());
         if (topic != null) {
             return topic;
         }
 
-        log.error("Topic not exists: {}", request.getTopicName());
+        log.error("Topic not exists: {}", ackInfo.getTopic());
         throw new InvalidRequestException(
-            InvalidCode.ILLEGAL_TOPIC, "Topic not exists: " + request.getTopicName());
+            InvalidCode.ILLEGAL_TOPIC, "Topic not exists: " + ackInfo.getTopic());
     }
 
-    private void validateQueueId(AckRequest request, Topic topic) {
-        if (topic.existsQueue(request.getQueueId())) {
+    private void validateQueueId(AckMessage ackMessage, Topic topic) {
+        AckInfo ackInfo = ackMessage.getAckInfo();
+        if (topic.existsQueue(ackInfo.getQueueId())) {
             return;
         }
 
         log.error("Topic queueId error: topic={}, queueId={}",
-            request.getTopicName(), request.getQueueId());
+            ackInfo.getTopic(), ackInfo.getQueueId());
 
         throw new InvalidRequestException(
             InvalidCode.ILLEGAL_TOPIC,
-            "Message queue can not find: " + request.getTopicName() + ":" + request.getQueueId()
+            "Message queue can not find: " + ackInfo.getTopic() + ":" + ackInfo.getQueueId()
         );
     }
 
-    private void validateOffset(AckRequest request) {
+    private void validateOffset(AckMessage ackMessage) {
+        AckInfo ackInfo = ackMessage.getAckInfo();
         QueueRequest queueRequest = QueueRequest.builder()
-            .context(request.getRequestContext())
-            .topic(request.getTopicName())
-            .group(request.getGroupName())
-            .queueId(request.getQueueId())
+            .context(ackMessage.getRequestContext())
+            .topic(ackInfo.getTopic())
+            .group(ackInfo.getConsumerGroup())
+            .queueId(ackInfo.getQueueId())
             .build();
 
         QueueResult minResult = mqStore.getMinOffset(queueRequest);
         QueueResult maxResult = mqStore.getMaxOffset(queueRequest);
 
-        if (request.getOffset() >= minResult.getMinOffset()
-            && request.getOffset() <= maxResult.getMaxOffset()) {
+        if (ackInfo.getAckOffset() >= minResult.getMinOffset()
+            && ackInfo.getAckOffset() <= maxResult.getMaxOffset()) {
             return;
         }
 
         log.error("invalid offset error: topic={}, queueId={}, offset={}",
-            request.getTopicName(), request.getQueueId(), request.getOffset());
+            ackInfo.getTopic(), ackInfo.getQueueId(), ackInfo.getAckOffset());
 
         throw new InvalidRequestException(
             InvalidCode.ILLEGAL_OFFSET,
-            "Invalid offset: " + request.getTopicName() + ":" + request.getQueueId() + ":" + request.getOffset()
+            "Invalid offset: " + ackInfo.getTopic() + ":" + ackInfo.getQueueId() + ":" + ackInfo.getAckOffset()
         );
     }
 
