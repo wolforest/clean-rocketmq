@@ -7,6 +7,8 @@ public interface ConsumeOffsetService extends MetaService {
     Long getAndRemove(String group, String topic, int queueId);
     void putOffset(String group, String topic, int queueId, long offset);
 
+    boolean containsResetOffset(String group, String topic, int queueId);
+
     void deleteByTopic(String topicName);
     void deleteByGroup(String groupName);
 

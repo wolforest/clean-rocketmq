@@ -55,6 +55,12 @@ public class ConsumeOffset implements Serializable {
         this.metaConfig = storeConfig.getMetaConfig();
     }
 
+    public boolean containsResetOffset(String group, String topic, int queueId) {
+        String key = buildKey(topic, group);
+        ConcurrentMap<Integer, Long> map = resetOffsetTable.get(key);
+        return map != null && map.containsKey(queueId);
+    }
+
     @JSONField(serialize = false)
     public long getOffset(String group, String topic, int queueId) {
         String key = buildKey(topic, group);

@@ -35,6 +35,11 @@ public class DefaultConsumeOffsetService implements ConsumeOffsetService {
     }
 
     @Override
+    public boolean containsResetOffset(String group, String topic, int queueId) {
+        return consumeOffset.containsResetOffset(group, topic, queueId);
+    }
+
+    @Override
     public void deleteByTopic(String topicName) {
         consumeOffset.deleteByTopic(topicName);
     }

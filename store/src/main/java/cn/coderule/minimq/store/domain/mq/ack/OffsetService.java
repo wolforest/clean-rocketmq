@@ -3,9 +3,13 @@ package cn.coderule.minimq.store.domain.mq.ack;
 import cn.coderule.minimq.domain.core.lock.queue.DequeueLock;
 import cn.coderule.minimq.domain.domain.cluster.store.domain.meta.ConsumeOffsetService;
 import cn.coderule.minimq.domain.domain.cluster.store.domain.meta.ConsumeOrderService;
+import cn.coderule.minimq.domain.domain.consumer.ack.AckConverter;
 import cn.coderule.minimq.domain.domain.consumer.ack.AckInfo;
 import cn.coderule.minimq.domain.domain.consumer.ack.store.AckMessage;
+import cn.coderule.minimq.domain.domain.meta.order.OrderRequest;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class OffsetService {
     private DequeueLock dequeueLock;
     private ConsumeOffsetService consumeOffsetService;
@@ -32,7 +36,34 @@ public class OffsetService {
             return;
         }
 
+        OrderRequest request = AckConverter.toOrderRequest(ackMessage);
+        long nextOffset = consumeOrderService.commit(request);
+        if (nextOffset < 0) {
+            log.warn("commit order failed, request: {}", request);
+            return;
+        }
 
+        AckInfo ackInfo = ackMessage.getAckInfo();
+        updateOffset(ackInfo, nextOffset);
+    }
+
+    private void updateOffset(AckInfo ackInfo, long nextOffset) {
+        boolean hasResetOffset = consumeOffsetService.containsResetOffset(
+            ackInfo.getConsumerGroup(),
+            ackInfo.getTopic(),
+            ackInfo.getQueueId()
+        );
+
+        if (hasResetOffset) {
+            return;
+        }
+
+        consumeOffsetService.putOffset(
+            ackInfo.getConsumerGroup(),
+            ackInfo.getTopic(),
+            ackInfo.getQueueId(),
+            nextOffset
+        );
     }
 
     private void lock(AckMessage ackMessage) {
