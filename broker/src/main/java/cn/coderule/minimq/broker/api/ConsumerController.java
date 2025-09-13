@@ -1,8 +1,7 @@
 package cn.coderule.minimq.broker.api;
 
-import cn.coderule.minimq.broker.api.validator.AckValidator;
 import cn.coderule.minimq.broker.api.validator.GroupValidator;
-import cn.coderule.minimq.broker.api.validator.PopValidator;
+import cn.coderule.minimq.broker.api.validator.ConsumeValidator;
 import cn.coderule.minimq.broker.domain.consumer.consumer.Consumer;
 import cn.coderule.minimq.domain.config.business.MessageConfig;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
@@ -21,13 +20,15 @@ public class ConsumerController {
     private final MessageConfig messageConfig;
 
     private final Consumer consumer;
-    private final PopValidator popValidator;
+
+    private final ConsumeValidator consumeValidator;
 
     public ConsumerController(BrokerConfig brokerConfig, Consumer consumer) {
         this.messageConfig = brokerConfig.getMessageConfig();
 
         this.consumer = consumer;
-        this.popValidator = new PopValidator(brokerConfig);
+        this.consumeValidator = new ConsumeValidator(brokerConfig);
+
     }
 
     public boolean register(ConsumerInfo consumerInfo) {
@@ -53,16 +54,17 @@ public class ConsumerController {
 
     public CompletableFuture<PopResult> popMessage(PopRequest request) {
         formatInvisibleTime(request);
-        popValidator.validate(request);
+        consumeValidator.validate(request);
         return consumer.popMessage(request);
     }
 
     public CompletableFuture<AckResult> ack(AckRequest request) {
-        AckValidator.validate(request);
+        consumeValidator.validate(request);
         return consumer.ack(request);
     }
 
     public CompletableFuture<AckResult> changeInvisible(InvisibleRequest request) {
+        consumeValidator.validate(request);
         return consumer.changeInvisible(request);
     }
 
@@ -70,7 +72,7 @@ public class ConsumerController {
         if (messageConfig.isEnableAutoRenew() && request.isAutoRenew()) {
             request.setInvisibleTime(messageConfig.getDefaultInvisibleTime());
         } else {
-            popValidator.validateInvisibleTime(request.getInvisibleTime());
+            consumeValidator.validateInvisibleTime(request.getInvisibleTime());
         }
     }
 }
