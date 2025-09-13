@@ -2,7 +2,6 @@ package cn.coderule.minimq.broker.domain.consumer.pop;
 
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.minimq.broker.domain.consumer.consumer.ConsumerRegister;
-import cn.coderule.minimq.domain.domain.consumer.consume.InflightCounter;
 import cn.coderule.minimq.broker.domain.consumer.renew.DefaultReceiptHandler;
 import cn.coderule.minimq.broker.domain.meta.RouteService;
 import cn.coderule.minimq.broker.infra.store.ConsumeOrderStore;
@@ -56,7 +55,6 @@ public class PopManager implements Lifecycle {
     private void initDequeueService() {
         dequeueService = new DequeueService(
             brokerConfig,
-            BrokerContext.getBean(InflightCounter.class),
             BrokerContext.getBean(MQStore.class),
             BrokerContext.getBean(ConsumeOrderStore.class)
         );

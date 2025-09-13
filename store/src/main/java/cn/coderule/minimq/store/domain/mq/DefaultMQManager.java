@@ -9,6 +9,7 @@ import cn.coderule.minimq.domain.domain.cluster.store.domain.meta.ConsumeOffsetS
 import cn.coderule.minimq.domain.domain.cluster.store.domain.meta.ConsumeOrderService;
 import cn.coderule.minimq.domain.domain.cluster.store.domain.mq.MQManager;
 import cn.coderule.minimq.domain.domain.cluster.store.domain.mq.MQService;
+import cn.coderule.minimq.domain.domain.consumer.consume.InflightCounter;
 import cn.coderule.minimq.store.api.MQStoreImpl;
 import cn.coderule.minimq.store.domain.mq.ack.AckManager;
 import cn.coderule.minimq.store.domain.mq.ack.AckService;
@@ -23,6 +24,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class DefaultMQManager implements MQManager {
     private DequeueLock dequeueLock;
+    private InflightCounter inflightCounter;
+
     private AckManager ackManager;
     private EnqueueService enqueueService;
     private DequeueService dequeueService;
@@ -33,6 +36,10 @@ public class DefaultMQManager implements MQManager {
     @Override
     public void initialize() throws Exception {
         dequeueLock = new DequeueLock();
+        inflightCounter = new InflightCounter();
+        StoreContext.register(dequeueLock);
+        StoreContext.register(inflightCounter);
+
         initPubService();
         initAckManager();
 
@@ -95,7 +102,7 @@ public class DefaultMQManager implements MQManager {
         StoreContext.register(offsetService, OffsetService.class);
 
         this.dequeueService = new DequeueService(
-            storeConfig, dequeueLock, messageService, ackService, offsetService
+            storeConfig, dequeueLock, messageService, ackService, offsetService, inflightCounter
         );
         StoreContext.register(dequeueService, DequeueService.class);
 

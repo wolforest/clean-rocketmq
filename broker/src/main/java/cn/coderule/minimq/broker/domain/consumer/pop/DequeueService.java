@@ -1,6 +1,5 @@
 package cn.coderule.minimq.broker.domain.consumer.pop;
 
-import cn.coderule.minimq.domain.domain.consumer.consume.InflightCounter;
 import cn.coderule.minimq.domain.config.business.MessageConfig;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.domain.cluster.RequestContext;
@@ -23,16 +22,13 @@ public class DequeueService {
 
     private final MQFacade mqStore;
     private final ConsumeOrderFacade orderStore;
-    private final InflightCounter inflightCounter;
 
     public DequeueService(
         BrokerConfig brokerConfig,
-        InflightCounter inflightCounter,
         MQFacade mqStore,
         ConsumeOrderFacade orderStore
     ) {
         this.brokerConfig = brokerConfig;
-        this.inflightCounter = inflightCounter;
         this.mqStore = mqStore;
         this.orderStore = orderStore;
     }
@@ -78,9 +74,6 @@ public class DequeueService {
 
         long restNum = calculateNextNum(context, topicName, queueId, lastResult);
         newResult.setRestNum(restNum);
-
-        String consumerGroup = context.getRequest().getConsumerGroup();
-        inflightCounter.increment(topicName, consumerGroup, queueId, dequeueResult.countMessage());
 
         return newResult;
     }

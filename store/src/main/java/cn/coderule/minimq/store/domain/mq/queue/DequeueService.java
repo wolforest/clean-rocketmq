@@ -3,6 +3,7 @@ package cn.coderule.minimq.store.domain.mq.queue;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.domain.core.enums.message.MessageStatus;
 import cn.coderule.minimq.domain.core.exception.DequeueException;
+import cn.coderule.minimq.domain.domain.consumer.consume.InflightCounter;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueResult;
 import cn.coderule.minimq.domain.core.lock.queue.DequeueLock;
@@ -20,16 +21,19 @@ public class DequeueService {
     private final AckService ackService;
     private final MessageService messageService;
     private final OffsetService offsetService;
+    private final InflightCounter inflightCounter;
 
     public DequeueService(
         StoreConfig storeConfig,
         DequeueLock dequeueLock,
         MessageService messageService,
         AckService ackService,
-        OffsetService offsetService
+        OffsetService offsetService,
+        InflightCounter inflightCounter
     ) {
         this.storeConfig = storeConfig;
         this.dequeueLock = dequeueLock;
+        this.inflightCounter = inflightCounter;
 
         this.ackService = ackService;
         this.offsetService = offsetService;
@@ -51,6 +55,7 @@ public class DequeueService {
             DequeueResult result = getMessage(request);
             updateOffset(request, result);
             addCheckpoint(request, result);
+            increaseCounter(request, result);
 
             return result;
         } catch (DequeueException e) {
@@ -105,6 +110,15 @@ public class DequeueService {
         }
 
         offsetService.updateOffset(request, result);
+    }
+
+    private void increaseCounter(DequeueRequest request, DequeueResult result) {
+        inflightCounter.increment(
+            request.getTopic(),
+            request.getGroup(),
+            request.getQueueId(),
+            result.countMessage()
+        );
     }
 
     private void addCheckpoint(DequeueRequest request, DequeueResult result) {
