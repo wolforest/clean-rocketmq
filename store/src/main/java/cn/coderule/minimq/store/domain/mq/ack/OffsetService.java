@@ -12,10 +12,22 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class OffsetService {
-    private DequeueLock dequeueLock;
-    private ConsumeOffsetService consumeOffsetService;
-    private ConsumeOrderService consumeOrderService;
-    private InflightCounter inflightCounter;
+    private final DequeueLock dequeueLock;
+    private final ConsumeOffsetService consumeOffsetService;
+    private final ConsumeOrderService consumeOrderService;
+    private final InflightCounter inflightCounter;
+
+    public OffsetService(
+        DequeueLock dequeueLock,
+        InflightCounter inflightCounter,
+        ConsumeOffsetService consumeOffsetService,
+        ConsumeOrderService consumeOrderService
+    ) {
+        this.dequeueLock = dequeueLock;
+        this.consumeOffsetService = consumeOffsetService;
+        this.consumeOrderService = consumeOrderService;
+        this.inflightCounter = inflightCounter;
+    }
 
     public void ack(AckMessage ackMessage) {
         if (!ackMessage.isConsumeOrderly()) return;
