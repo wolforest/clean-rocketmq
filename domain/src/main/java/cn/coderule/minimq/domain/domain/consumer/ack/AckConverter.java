@@ -1,15 +1,22 @@
 package cn.coderule.minimq.domain.domain.consumer.ack;
 
+import cn.coderule.common.util.lang.string.JSONUtil;
+import cn.coderule.minimq.domain.core.constant.MQConstants;
+import cn.coderule.minimq.domain.core.constant.MessageConst;
+import cn.coderule.minimq.domain.core.constant.PopConstants;
 import cn.coderule.minimq.domain.domain.consumer.ack.broker.AckRequest;
 import cn.coderule.minimq.domain.domain.consumer.ack.broker.AckResult;
 import cn.coderule.minimq.domain.domain.consumer.ack.broker.InvisibleRequest;
 import cn.coderule.minimq.domain.domain.consumer.ack.store.AckMessage;
 import cn.coderule.minimq.domain.domain.consumer.ack.store.CheckPointRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.checkpoint.PopCheckPoint;
+import cn.coderule.minimq.domain.domain.consumer.consume.pop.helper.PopKeyBuilder;
 import cn.coderule.minimq.domain.domain.consumer.receipt.ReceiptHandle;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.domain.meta.order.OrderRequest;
 import cn.coderule.minimq.domain.utils.message.ExtraInfoUtils;
+import cn.coderule.minimq.domain.utils.message.MessageUtils;
+import java.net.SocketAddress;
 
 public class AckConverter {
 
@@ -109,6 +116,24 @@ public class AckConverter {
 
         checkPoint.addDiff(0);
         return checkPoint;
+    }
+
+    public static MessageBO toMessage(AckMessage ackMessage, PopCheckPoint checkPoint, String reviveTopic, SocketAddress storeHost) {
+        MessageBO messageBO = MessageBO.builder()
+            .topic(reviveTopic)
+            .body(JSONUtil.toJSONString(checkPoint).getBytes(MQConstants.MQ_CHARSET))
+            .queueId(ackMessage.getReviveQueueId())
+            .bornTimestamp(checkPoint.getPopTime())
+            .bornHost(storeHost)
+            .storeHost(storeHost)
+            .build();
+
+        messageBO.setTags(PopConstants.CK_TAG);
+        messageBO.setDeliverTime(checkPoint.getReviveTime() - PopConstants.ackTimeInterval);
+        messageBO.setUniqueKey(PopKeyBuilder.genCkUniqueId(checkPoint));
+        messageBO.initPropertiesString();
+
+        return messageBO;
     }
 
     public static CheckPointRequest toCheckPointRequest(InvisibleRequest request) {

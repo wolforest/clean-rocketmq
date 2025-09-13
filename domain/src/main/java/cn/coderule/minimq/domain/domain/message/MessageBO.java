@@ -192,6 +192,10 @@ public class MessageBO extends Message implements Serializable {
         return this.tagsCode;
     }
 
+    public void initPropertiesString() {
+        this.propertiesString = MessageUtils.propertiesToString(this.getProperties());
+    }
+
     public String getPropertiesString() {
         if (null != this.propertiesString) {
             return this.propertiesString;
