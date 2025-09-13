@@ -5,6 +5,7 @@ import cn.coderule.minimq.domain.domain.cluster.store.domain.meta.ConsumeOffsetS
 import cn.coderule.minimq.domain.domain.cluster.store.domain.meta.ConsumeOrderService;
 import cn.coderule.minimq.domain.domain.consumer.ack.AckConverter;
 import cn.coderule.minimq.domain.domain.consumer.ack.AckInfo;
+import cn.coderule.minimq.domain.domain.consumer.ack.broker.AckResult;
 import cn.coderule.minimq.domain.domain.consumer.ack.store.AckMessage;
 import cn.coderule.minimq.domain.domain.consumer.consume.InflightCounter;
 import cn.coderule.minimq.domain.domain.meta.order.OrderRequest;
@@ -40,6 +41,10 @@ public class OffsetService {
         } finally {
             unlock(ackMessage);
         }
+    }
+
+    public AckResult changeInvisible(AckMessage ackMessage) {
+        return null;
     }
 
     private boolean isOffsetOld(AckMessage ackMessage) {

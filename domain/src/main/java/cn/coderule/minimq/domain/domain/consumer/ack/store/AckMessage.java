@@ -21,9 +21,11 @@ public class AckMessage implements Serializable {
 
     private String receiptStr;
     private ReceiptHandle receiptHandle;
+
     private AckInfo ackInfo;
     private int reviveQueueId;
     private long invisibleTime;
+    private long commitOffset;
 
     @Builder.Default
     private boolean isOrderly = false;

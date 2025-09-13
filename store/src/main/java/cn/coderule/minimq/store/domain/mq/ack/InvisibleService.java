@@ -36,20 +36,23 @@ public class InvisibleService {
 
     public AckResult changeInvisible(AckMessage ackMessage) {
         if (ackMessage.isConsumeOrderly()) {
-            return changeForOrderlyQueue(ackMessage);
+            return offsetService.changeInvisible(ackMessage);
         }
 
-        return changeForOtherQueue(ackMessage);
+        AckResult result = appendCheckpoint(ackMessage);
+
+        return ackOriginal(ackMessage, result);
     }
 
-    private AckResult changeForOrderlyQueue(AckMessage ackMessage) {
+
+    private AckResult appendCheckpoint(AckMessage ackMessage) {
 
         return null;
     }
 
-    private AckResult changeForOtherQueue(AckMessage ackMessage) {
+    private AckResult ackOriginal(AckMessage ackMessage, AckResult result) {
 
-        return null;
+        return result;
     }
 
 

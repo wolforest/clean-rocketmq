@@ -1,6 +1,7 @@
 package cn.coderule.minimq.domain.domain.consumer.ack;
 
 import cn.coderule.minimq.domain.domain.consumer.ack.broker.AckRequest;
+import cn.coderule.minimq.domain.domain.consumer.ack.broker.AckResult;
 import cn.coderule.minimq.domain.domain.consumer.ack.broker.InvisibleRequest;
 import cn.coderule.minimq.domain.domain.consumer.ack.store.AckMessage;
 import cn.coderule.minimq.domain.domain.consumer.ack.store.CheckPointRequest;
@@ -35,6 +36,7 @@ public class AckConverter {
             .receiptHandle(handle)
             .receiptStr(request.getReceiptStr())
             .isOrderly(ExtraInfoUtils.isOrder(extraInfo))
+            .commitOffset(handle.getCommitLogOffset())
             .build();
      }
 
@@ -62,6 +64,16 @@ public class AckConverter {
             .reviveQueueId(ExtraInfoUtils.getReviveQid(extraInfo))
             .invisibleTime(ExtraInfoUtils.getInvisibleTime(extraInfo))
             .isOrderly(ExtraInfoUtils.isOrder(extraInfo))
+            .commitOffset(handle.getCommitLogOffset())
+            .build();
+    }
+
+    public static AckResult toAckResult(AckMessage ackMessage) {
+        return AckResult.builder()
+            .receiptStr(ackMessage.getReceiptStr())
+            .reviveQueueId(ackMessage.getReviveQueueId())
+            .invisibleTime(ackMessage.getInvisibleTime())
+            .commitOffset(ackMessage.getCommitOffset())
             .build();
     }
 
