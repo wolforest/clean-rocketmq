@@ -35,6 +35,22 @@ public class InvisibleService {
     }
 
     public AckResult changeInvisible(AckMessage ackMessage) {
+        if (ackMessage.isConsumeOrderly()) {
+            return changeForOrderlyQueue(ackMessage);
+        }
+
+        return changeForOtherQueue(ackMessage);
+    }
+
+    private AckResult changeForOrderlyQueue(AckMessage ackMessage) {
+
         return null;
     }
+
+    private AckResult changeForOtherQueue(AckMessage ackMessage) {
+
+        return null;
+    }
+
+
 }
