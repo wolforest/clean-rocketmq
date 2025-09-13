@@ -28,7 +28,16 @@ public class OffsetService {
     }
 
     private boolean isOffsetOld(AckMessage ackMessage) {
-        return false;
+        AckInfo ackInfo = ackMessage.getAckInfo();
+        long ackOffset = ackInfo.getAckOffset();
+
+        long offset = consumeOffsetService.getOffset(
+            ackInfo.getConsumerGroup(),
+            ackInfo.getTopic(),
+            ackInfo.getQueueId()
+        );
+
+        return ackOffset < offset;
     }
 
     private void updateOffset(AckMessage ackMessage) {
