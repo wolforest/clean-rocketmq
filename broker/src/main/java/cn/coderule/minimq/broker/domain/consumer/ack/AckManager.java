@@ -21,7 +21,7 @@ public class AckManager implements Lifecycle {
         AckService ackService = new AckService(brokerConfig, mqFacade, topicFacade, receiptHandler);
         BrokerContext.register(ackService);
 
-        InvisibleService invisibleService = new InvisibleService(brokerConfig, mqFacade);
+        InvisibleService invisibleService = new InvisibleService(brokerConfig, mqFacade, receiptHandler);
         BrokerContext.register(invisibleService);
     }
 
