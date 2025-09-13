@@ -2,12 +2,14 @@ package cn.coderule.minimq.store.domain.mq.ack;
 
 import cn.coderule.minimq.domain.core.lock.queue.DequeueLock;
 import cn.coderule.minimq.domain.domain.cluster.store.domain.meta.ConsumeOffsetService;
+import cn.coderule.minimq.domain.domain.cluster.store.domain.meta.ConsumeOrderService;
 import cn.coderule.minimq.domain.domain.consumer.ack.AckInfo;
 import cn.coderule.minimq.domain.domain.consumer.ack.store.AckMessage;
 
 public class OffsetService {
     private DequeueLock dequeueLock;
     private ConsumeOffsetService consumeOffsetService;
+    private ConsumeOrderService consumeOrderService;
 
     public void ack(AckMessage ackMessage) {
         if (!ackMessage.isConsumeOrderly()) return;

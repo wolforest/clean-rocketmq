@@ -6,6 +6,7 @@ import cn.coderule.minimq.domain.domain.consumer.ack.store.AckMessage;
 import cn.coderule.minimq.domain.domain.consumer.ack.store.CheckPointRequest;
 import cn.coderule.minimq.domain.domain.consumer.receipt.ReceiptHandle;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
+import cn.coderule.minimq.domain.domain.meta.order.OrderRequest;
 import cn.coderule.minimq.domain.utils.message.ExtraInfoUtils;
 
 public class AckConverter {
@@ -29,6 +30,20 @@ public class AckConverter {
             .reviveQueueId(ExtraInfoUtils.getReviveQid(extraInfo))
             .invisibleTime(ExtraInfoUtils.getInvisibleTime(extraInfo))
             .ackInfo(ackInfo)
+            .build();
+    }
+
+    public static OrderRequest toOrderRequest(AckMessage ackMessage) {
+        AckInfo ackInfo = ackMessage.getAckInfo();
+        return OrderRequest.builder()
+            .requestContext(ackMessage.getRequestContext())
+            .storeGroup(ackMessage.getStoreGroup())
+
+            .topicName(ackInfo.getTopic())
+            .consumerGroup(ackInfo.getConsumerGroup())
+            .queueId(ackInfo.getQueueId())
+            .queueOffset(ackInfo.getAckOffset())
+            .dequeueTime(ackInfo.getPopTime())
             .build();
     }
 
