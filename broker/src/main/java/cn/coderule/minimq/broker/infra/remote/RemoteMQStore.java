@@ -1,6 +1,7 @@
 package cn.coderule.minimq.broker.infra.remote;
 
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
+import cn.coderule.minimq.domain.domain.consumer.ack.broker.AckResult;
 import cn.coderule.minimq.domain.domain.consumer.ack.store.AckMessage;
 import cn.coderule.minimq.domain.domain.consumer.ack.store.CheckPointRequest;
 import cn.coderule.minimq.domain.domain.consumer.ack.store.OffsetRequest;
@@ -86,6 +87,13 @@ public class RemoteMQStore extends AbstractRemoteStore implements MQFacade {
         String topic = request.getAckInfo().getTopic();
         String address = loadBalance.findByTopic(topic);
         getClient(address).ack(request);
+    }
+
+    @Override
+    public AckResult changeInvisible(AckMessage request) {
+        String topic = request.getAckInfo().getTopic();
+        String address = loadBalance.findByTopic(topic);
+        return getClient(address).changeInvisible(request);
     }
 
     @Override

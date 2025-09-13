@@ -1,5 +1,6 @@
 package cn.coderule.minimq.domain.domain.cluster.store.api;
 
+import cn.coderule.minimq.domain.domain.consumer.ack.broker.AckResult;
 import cn.coderule.minimq.domain.domain.consumer.ack.store.AckMessage;
 import cn.coderule.minimq.domain.domain.consumer.ack.store.CheckPointRequest;
 import cn.coderule.minimq.domain.domain.consumer.ack.store.OffsetRequest;
@@ -28,6 +29,9 @@ public interface MQStore {
 
     void addCheckPoint(CheckPointRequest request);
     void ack(AckMessage request);
+    AckResult changeInvisible(AckMessage request);
+
+
     QueueResult getBufferedOffset(OffsetRequest request);
     QueueResult getMinOffset(QueueRequest request);
     QueueResult getMaxOffset(QueueRequest request);

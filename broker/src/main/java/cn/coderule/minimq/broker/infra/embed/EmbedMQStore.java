@@ -1,5 +1,6 @@
 package cn.coderule.minimq.broker.infra.embed;
 
+import cn.coderule.minimq.domain.domain.consumer.ack.broker.AckResult;
 import cn.coderule.minimq.domain.domain.consumer.ack.store.AckMessage;
 import cn.coderule.minimq.domain.domain.consumer.ack.store.CheckPointRequest;
 import cn.coderule.minimq.domain.domain.consumer.ack.store.OffsetRequest;
@@ -61,6 +62,11 @@ public class EmbedMQStore extends AbstractEmbedStore implements MQFacade {
     @Override
     public void ack(AckMessage request) {
         mqStore.ack(request);
+    }
+
+    @Override
+    public AckResult changeInvisible(AckMessage request) {
+        return mqStore.changeInvisible(request);
     }
 
     @Override

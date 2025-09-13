@@ -1,5 +1,6 @@
 package cn.coderule.minimq.rpc.store.client;
 
+import cn.coderule.minimq.domain.domain.consumer.ack.broker.AckResult;
 import cn.coderule.minimq.domain.domain.consumer.ack.store.AckMessage;
 import cn.coderule.minimq.domain.domain.consumer.ack.store.CheckPointRequest;
 import cn.coderule.minimq.domain.domain.consumer.ack.store.OffsetRequest;
@@ -61,6 +62,11 @@ public class MQClient extends AbstractStoreClient implements StoreClient, MQFaca
     @Override
     public void ack(AckMessage request) {
 
+    }
+
+    @Override
+    public AckResult changeInvisible(AckMessage request) {
+        return null;
     }
 
     @Override

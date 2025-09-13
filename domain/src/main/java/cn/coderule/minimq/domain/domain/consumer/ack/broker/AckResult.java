@@ -20,6 +20,13 @@ public class AckResult implements Serializable {
         return result;
     }
 
+    public static AckResult failure() {
+        AckResult result = new AckResult();
+        result.setStatus(AckStatus.NO_EXIST);
+
+        return result;
+    }
+
     public boolean isSuccess() {
         return status == AckStatus.OK;
     }
