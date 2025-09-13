@@ -24,4 +24,6 @@ public enum MessageStatus {
     OFFSET_RESET,
 
     LOCK_FAILED,
+
+    FLOW_CONTROL,
 }

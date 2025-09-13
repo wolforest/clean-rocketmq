@@ -102,7 +102,7 @@ public class DefaultMQManager implements MQManager {
         StoreContext.register(offsetService, OffsetService.class);
 
         this.dequeueService = new DequeueService(
-            storeConfig, dequeueLock, messageService, ackService, offsetService, inflightCounter
+            storeConfig, dequeueLock, messageService, ackService, offsetService, inflightCounter, orderService
         );
         StoreContext.register(dequeueService, DequeueService.class);
 

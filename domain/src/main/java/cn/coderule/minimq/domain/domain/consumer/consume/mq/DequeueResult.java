@@ -115,5 +115,12 @@ public class DequeueResult implements Serializable {
             .messageList(List.of())
             .build();
     }
+
+    public static DequeueResult flowControl() {
+        return DequeueResult.builder()
+            .status(MessageStatus.FLOW_CONTROL)
+            .messageList(List.of())
+            .build();
+    }
 }
 

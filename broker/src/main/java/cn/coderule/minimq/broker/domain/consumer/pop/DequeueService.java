@@ -1,7 +1,5 @@
 package cn.coderule.minimq.broker.domain.consumer.pop;
 
-import cn.coderule.minimq.domain.config.business.MessageConfig;
-import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueResult;
@@ -11,26 +9,16 @@ import cn.coderule.minimq.domain.domain.consumer.consume.pop.PopRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.PopResult;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.helper.PopConverter;
 import cn.coderule.minimq.domain.domain.meta.order.OrderRequest;
-import cn.coderule.minimq.rpc.store.facade.ConsumeOrderFacade;
 import cn.coderule.minimq.rpc.store.facade.MQFacade;
 import java.util.concurrent.CompletableFuture;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class DequeueService {
-    private final BrokerConfig brokerConfig;
-
     private final MQFacade mqStore;
-    private final ConsumeOrderFacade orderStore;
 
-    public DequeueService(
-        BrokerConfig brokerConfig,
-        MQFacade mqStore,
-        ConsumeOrderFacade orderStore
-    ) {
-        this.brokerConfig = brokerConfig;
+    public DequeueService(MQFacade mqStore) {
         this.mqStore = mqStore;
-        this.orderStore = orderStore;
     }
 
     public CompletableFuture<PopResult> dequeue(
@@ -40,10 +28,6 @@ public class DequeueService {
         PopResult lastResult
     ) {
         if (shouldStop(context, topicName, queueId, lastResult)) {
-            return stopDequeue(context, topicName, queueId, lastResult);
-        }
-
-        if (!validateOrderMessage(context, topicName, queueId)) {
             return stopDequeue(context, topicName, queueId, lastResult);
         }
 
@@ -143,45 +127,9 @@ public class DequeueService {
             .build();
     }
 
-    private boolean validateOrderMessage(PopContext context, String topicName, int queueId) {
-        PopRequest request = context.getRequest();
-        if (!request.isFifo()) {
-            return true;
-        }
-
-        OrderRequest orderRequest = createOrderRequest(request, topicName, queueId);
-        if (!orderStore.isLocked(orderRequest)) {
-            return false;
-        }
-
-        // todo: move to store
-        // inflightCounter.clear(topicName, request.getConsumerGroup(), queueId);
-        return true;
-    }
-
     private boolean shouldStop(PopContext context, String topicName, int queueId, PopResult lastResult) {
         PopRequest request = context.getRequest();
-        if (lastResult.countMessage() >= request.getMaxNum()) {
-            return true;
-        }
-
-        MessageConfig messageConfig = brokerConfig.getMessageConfig();
-        if (!messageConfig.isEnablePopThreshold()) {
-            return false;
-        }
-
-        return true;
-        // todo move to store
-//        long inflight = inflightCounter.get(topicName, request.getConsumerGroup(), queueId);
-//        boolean status = inflight > messageConfig.getPopInflightThreshold();
-//        if (status) {
-//            log.warn("Stop pop because too much message inflight,"
-//                    + "topic={}; group={}, queueId={}",
-//                topicName, request.getConsumerGroup(), queueId
-//            );
-//        }
-//
-//        return status;
+        return lastResult.countMessage() >= request.getMaxNum();
     }
 
 }
