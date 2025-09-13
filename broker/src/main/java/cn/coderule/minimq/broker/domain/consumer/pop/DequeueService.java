@@ -154,7 +154,8 @@ public class DequeueService {
             return false;
         }
 
-        inflightCounter.clear(topicName, request.getConsumerGroup(), queueId);
+        // todo: move to store
+        // inflightCounter.clear(topicName, request.getConsumerGroup(), queueId);
         return true;
     }
 
@@ -169,16 +170,18 @@ public class DequeueService {
             return false;
         }
 
-        long inflight = inflightCounter.get(topicName, request.getConsumerGroup(), queueId);
-        boolean status = inflight > messageConfig.getPopInflightThreshold();
-        if (status) {
-            log.warn("Stop pop because too much message inflight,"
-                    + "topic={}; group={}, queueId={}",
-                topicName, request.getConsumerGroup(), queueId
-            );
-        }
-
-        return status;
+        return true;
+        // todo move to store
+//        long inflight = inflightCounter.get(topicName, request.getConsumerGroup(), queueId);
+//        boolean status = inflight > messageConfig.getPopInflightThreshold();
+//        if (status) {
+//            log.warn("Stop pop because too much message inflight,"
+//                    + "topic={}; group={}, queueId={}",
+//                topicName, request.getConsumerGroup(), queueId
+//            );
+//        }
+//
+//        return status;
     }
 
 }

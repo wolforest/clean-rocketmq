@@ -6,6 +6,7 @@ import cn.coderule.minimq.domain.domain.cluster.store.domain.meta.ConsumeOrderSe
 import cn.coderule.minimq.domain.domain.consumer.ack.AckConverter;
 import cn.coderule.minimq.domain.domain.consumer.ack.AckInfo;
 import cn.coderule.minimq.domain.domain.consumer.ack.store.AckMessage;
+import cn.coderule.minimq.domain.domain.consumer.consume.InflightCounter;
 import cn.coderule.minimq.domain.domain.meta.order.OrderRequest;
 import lombok.extern.slf4j.Slf4j;
 
@@ -14,6 +15,7 @@ public class OffsetService {
     private DequeueLock dequeueLock;
     private ConsumeOffsetService consumeOffsetService;
     private ConsumeOrderService consumeOrderService;
+    private InflightCounter inflightCounter;
 
     public void ack(AckMessage ackMessage) {
         if (!ackMessage.isConsumeOrderly()) return;
@@ -22,6 +24,7 @@ public class OffsetService {
         lock(ackMessage);
         try {
             updateOffset(ackMessage);
+            decreaseCounter(ackMessage);
         } finally {
             unlock(ackMessage);
         }
@@ -72,6 +75,17 @@ public class OffsetService {
             ackInfo.getTopic(),
             ackInfo.getQueueId(),
             nextOffset
+        );
+    }
+
+    private void decreaseCounter(AckMessage ackMessage) {
+        AckInfo ackInfo = ackMessage.getAckInfo();
+        inflightCounter.decrement(
+            ackInfo.getTopic(),
+            ackInfo.getConsumerGroup(),
+            ackInfo.getPopTime(),
+            ackInfo.getQueueId(),
+            1
         );
     }
 
