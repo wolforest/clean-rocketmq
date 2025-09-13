@@ -3,8 +3,10 @@ package cn.coderule.minimq.store.domain.mq.ack;
 import cn.coderule.minimq.domain.config.business.MessageConfig;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.domain.domain.consumer.ack.AckBuffer;
+import cn.coderule.minimq.domain.domain.consumer.ack.AckConverter;
 import cn.coderule.minimq.domain.domain.consumer.ack.broker.AckResult;
 import cn.coderule.minimq.domain.domain.consumer.ack.store.AckMessage;
+import cn.coderule.minimq.domain.domain.consumer.consume.pop.checkpoint.PopCheckPoint;
 import cn.coderule.minimq.store.domain.mq.queue.EnqueueService;
 import lombok.extern.slf4j.Slf4j;
 
@@ -39,15 +41,21 @@ public class InvisibleService {
             return offsetService.changeInvisible(ackMessage);
         }
 
-        AckResult result = appendCheckpoint(ackMessage);
+        long now = System.currentTimeMillis();
+        AckResult result = AckConverter.toAckResult(ackMessage, now);
+
+        if (!appendCheckpoint(ackMessage, now)) {
+            return result.appendCheckpointFailure();
+        }
 
         return ackOriginal(ackMessage, result);
     }
 
 
-    private AckResult appendCheckpoint(AckMessage ackMessage) {
+    private boolean appendCheckpoint(AckMessage ackMessage, long now) {
+        PopCheckPoint checkPoint = AckConverter.toCheckpoint(ackMessage, now);
 
-        return null;
+        return false;
     }
 
     private AckResult ackOriginal(AckMessage ackMessage, AckResult result) {

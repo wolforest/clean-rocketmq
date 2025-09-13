@@ -5,6 +5,7 @@ import cn.coderule.minimq.domain.domain.consumer.ack.broker.AckResult;
 import cn.coderule.minimq.domain.domain.consumer.ack.broker.InvisibleRequest;
 import cn.coderule.minimq.domain.domain.consumer.ack.store.AckMessage;
 import cn.coderule.minimq.domain.domain.consumer.ack.store.CheckPointRequest;
+import cn.coderule.minimq.domain.domain.consumer.consume.pop.checkpoint.PopCheckPoint;
 import cn.coderule.minimq.domain.domain.consumer.receipt.ReceiptHandle;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.domain.meta.order.OrderRequest;
@@ -68,8 +69,9 @@ public class AckConverter {
             .build();
     }
 
-    public static AckResult toAckResult(AckMessage ackMessage) {
+    public static AckResult toAckResult(AckMessage ackMessage, long popTime) {
         return AckResult.builder()
+            .popTime(popTime)
             .receiptStr(ackMessage.getReceiptStr())
             .reviveQueueId(ackMessage.getReviveQueueId())
             .invisibleTime(ackMessage.getInvisibleTime())
@@ -89,6 +91,24 @@ public class AckConverter {
             .queueOffset(ackInfo.getAckOffset())
             .dequeueTime(ackInfo.getPopTime())
             .build();
+    }
+
+    public static PopCheckPoint toCheckpoint(AckMessage ackMessage, long now) {
+        AckInfo ackInfo = ackMessage.getAckInfo();
+        PopCheckPoint checkPoint = PopCheckPoint.builder()
+            .bitMap(0)
+            .num((byte) 1)
+            .popTime(now)
+            .invisibleTime(ackMessage.getInvisibleTime())
+            .startOffset(ackInfo.getStartOffset())
+            .cid(ackInfo.getConsumerGroup())
+            .topic(ackInfo.getTopic())
+            .queueId(ackInfo.getQueueId())
+            .brokerName(ackInfo.getBrokerName())
+            .build();
+
+        checkPoint.addDiff(0);
+        return checkPoint;
     }
 
     public static CheckPointRequest toCheckPointRequest(InvisibleRequest request) {

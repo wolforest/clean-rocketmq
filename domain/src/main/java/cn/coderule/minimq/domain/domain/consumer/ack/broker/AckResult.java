@@ -41,4 +41,10 @@ public class AckResult implements Serializable {
         return status == AckStatus.OK;
     }
 
+    public AckResult appendCheckpointFailure() {
+        this.status  = AckStatus.NO_EXIST;
+
+        return this;
+    }
+
 }
