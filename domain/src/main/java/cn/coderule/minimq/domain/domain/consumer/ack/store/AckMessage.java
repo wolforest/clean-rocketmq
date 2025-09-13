@@ -2,6 +2,7 @@ package cn.coderule.minimq.domain.domain.consumer.ack.store;
 
 import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import cn.coderule.minimq.domain.domain.consumer.ack.AckInfo;
+import cn.coderule.minimq.domain.domain.consumer.receipt.ReceiptHandle;
 import cn.coderule.minimq.domain.domain.meta.topic.KeyBuilder;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
@@ -18,6 +19,8 @@ public class AckMessage implements Serializable {
 
     private String storeGroup;
 
+    private String receiptStr;
+    private ReceiptHandle receiptHandle;
     private AckInfo ackInfo;
     private int reviveQueueId;
     private long invisibleTime;

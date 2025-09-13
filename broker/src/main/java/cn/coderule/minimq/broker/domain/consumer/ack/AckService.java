@@ -28,13 +28,20 @@ public class AckService {
     private final TopicFacade topicStore;
     private final ReceiptHandler receiptHandler;
 
-    private ConsumerRegister consumerRegister;
+    private final ConsumerRegister consumerRegister;
 
-    public AckService(BrokerConfig brokerConfig, MQFacade mqStore, TopicFacade topicStore, ReceiptHandler receiptHandler) {
+    public AckService(
+        BrokerConfig brokerConfig,
+        MQFacade mqStore,
+        TopicFacade topicStore,
+        ConsumerRegister consumerRegister,
+        ReceiptHandler receiptHandler
+    ) {
         this.brokerConfig = brokerConfig;
 
         this.mqStore = mqStore;
         this.topicStore = topicStore;
+        this.consumerRegister = consumerRegister;
         this.receiptHandler = receiptHandler;
     }
 
@@ -51,6 +58,14 @@ public class AckService {
     }
 
     private void validate(AckMessage ackMessage) {
+        // validate receipt handle
+        if (ackMessage.getReceiptHandle().isExpired()) {
+            throw new InvalidRequestException(
+                InvalidCode.INVALID_RECEIPT_HANDLE,
+                "Receipt handle is expired: " + ackMessage.getReceiptStr()
+            );
+        }
+
         // validate topic
         Topic topic = validateTopic(ackMessage);
 
