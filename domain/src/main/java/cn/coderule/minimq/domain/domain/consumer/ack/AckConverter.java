@@ -34,6 +34,7 @@ public class AckConverter {
             .ackInfo(ackInfo)
             .receiptHandle(handle)
             .receiptStr(request.getReceiptStr())
+            .isOrderly(ExtraInfoUtils.isOrder(extraInfo))
             .build();
      }
 
@@ -60,6 +61,7 @@ public class AckConverter {
             .receiptStr(request.getReceiptStr())
             .reviveQueueId(ExtraInfoUtils.getReviveQid(extraInfo))
             .invisibleTime(ExtraInfoUtils.getInvisibleTime(extraInfo))
+            .isOrderly(ExtraInfoUtils.isOrder(extraInfo))
             .build();
     }
 

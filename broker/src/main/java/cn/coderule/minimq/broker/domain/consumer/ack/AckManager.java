@@ -20,13 +20,15 @@ public class AckManager implements Lifecycle {
         ReceiptHandler receiptHandler = BrokerContext.getBean(DefaultReceiptHandler.class);
         ConsumerRegister consumerRegister = BrokerContext.getBean(ConsumerRegister.class);
 
+        AckValidator ackValidator = new AckValidator(mqFacade, topicFacade);
+
         AckService ackService = new AckService(
-            brokerConfig, mqFacade, topicFacade, consumerRegister, receiptHandler
+            mqFacade, consumerRegister, receiptHandler, ackValidator
         );
         BrokerContext.register(ackService);
 
         InvisibleService invisibleService = new InvisibleService(
-            brokerConfig, mqFacade, consumerRegister, receiptHandler
+            brokerConfig, mqFacade, consumerRegister, receiptHandler, ackValidator
         );
         BrokerContext.register(invisibleService);
     }

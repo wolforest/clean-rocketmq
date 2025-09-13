@@ -25,6 +25,9 @@ public class AckMessage implements Serializable {
     private int reviveQueueId;
     private long invisibleTime;
 
+    @Builder.Default
+    private boolean isOrderly = false;
+
     public boolean isConsumeOrderly() {
         return KeyBuilder.POP_ORDER_REVIVE_QUEUE == reviveQueueId;
     }
