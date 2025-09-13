@@ -282,9 +282,7 @@ public class MessageManager implements Lifecycle {
             consumerController
         );
         InvisibleService invisibleService = new InvisibleService(
-            consumerController,
-            settingManager,
-            channelManager
+            consumerController
         );
         OffsetService offsetService = new OffsetService();
 
