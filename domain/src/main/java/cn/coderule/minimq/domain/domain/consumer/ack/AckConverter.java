@@ -118,8 +118,22 @@ public class AckConverter {
         return checkPoint;
     }
 
-    public static MessageBO toMessage(AckInfo ackInfo, int reviveQueueId, long deliverTime, SocketAddress storeHost) {
-        return null;
+    public static MessageBO toMessage(AckInfo ackInfo, String reviveTopic, int reviveQueueId, long deliverTime, SocketAddress storeHost) {
+        MessageBO messageBO = MessageBO.builder()
+            .topic(reviveTopic)
+            .body(JSONUtil.toJSONString(ackInfo).getBytes(MQConstants.MQ_CHARSET))
+            .queueId(reviveQueueId)
+            .bornTimestamp(System.currentTimeMillis())
+            .bornHost(storeHost)
+            .storeHost(storeHost)
+            .build();
+
+        messageBO.setTags(PopConstants.ACK_TAG);
+        messageBO.setDeliverTime(deliverTime);
+        messageBO.setUniqueKey(PopKeyBuilder.genAckUniqueId(ackInfo));
+        messageBO.initPropertiesString();
+
+        return messageBO;
     }
 
     public static MessageBO toMessage(AckMessage ackMessage, PopCheckPoint checkPoint, String reviveTopic, SocketAddress storeHost) {

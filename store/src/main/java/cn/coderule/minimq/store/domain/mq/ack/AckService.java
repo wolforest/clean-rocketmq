@@ -16,8 +16,6 @@ import cn.coderule.minimq.domain.domain.consumer.consume.pop.helper.PopKeyBuilde
 import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.domain.meta.topic.KeyBuilder;
 import cn.coderule.minimq.store.domain.mq.queue.EnqueueService;
-import java.net.InetSocketAddress;
-import java.net.SocketAddress;
 import java.util.concurrent.atomic.AtomicInteger;
 import lombok.extern.slf4j.Slf4j;
 
@@ -223,7 +221,7 @@ public class AckService {
     }
     private MessageBO buildNackMsg(AckInfo ackInfo, int reviveQueueId, long deliverTime) {
         return AckConverter.toMessage(
-            ackInfo, reviveQueueId, deliverTime, storeConfig.getHostAddress()
+            ackInfo, reviveTopic, reviveQueueId, deliverTime, storeConfig.getHostAddress()
         );
     }
 
