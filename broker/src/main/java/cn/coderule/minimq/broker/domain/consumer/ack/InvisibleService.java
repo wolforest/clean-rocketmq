@@ -42,8 +42,8 @@ public class InvisibleService {
         AckMessage ackMessage = AckConverter.toAckMessage(request);
         ackValidator.validate(ackMessage);
 
-
-        return null;
+        AckResult result = mqStore.changeInvisible(ackMessage);
+        return CompletableFuture.completedFuture(result);
     }
 
     private void removeReceipt(InvisibleRequest request) {

@@ -21,7 +21,6 @@ public class AckConverter {
     public static AckMessage toAckMessage(InvisibleRequest request) {
         String[] extraInfo = ExtraInfoUtils.split(request.getReceiptStr());
         ReceiptHandle handle = ReceiptHandle.decode(request.getReceiptStr());
-
         String realTopic = handle.getRealTopic(request.getTopicName(), request.getGroupName());
 
         AckInfo ackInfo = AckInfo.builder()
@@ -49,8 +48,8 @@ public class AckConverter {
     public static AckMessage toAckMessage(AckRequest request) {
         String[] extraInfo = ExtraInfoUtils.split(request.getReceiptStr());
         ReceiptHandle handle = ReceiptHandle.decode(request.getReceiptStr());
-
         String realTopic = handle.getRealTopic(request.getTopicName(), request.getGroupName());
+
         AckInfo ackInfo = AckInfo.builder()
             .topic(realTopic)
             .consumerGroup(request.getGroupName())
@@ -63,7 +62,6 @@ public class AckConverter {
 
         return AckMessage.builder()
             .requestContext(request.getRequestContext())
-
             .ackInfo(ackInfo)
             .receiptHandle(handle)
             .receiptStr(request.getReceiptStr())
