@@ -44,6 +44,18 @@ public class OffsetService {
     }
 
     public AckResult changeInvisible(AckMessage ackMessage) {
+        if (!ackMessage.isConsumeOrderly()) return AckResult.failure();
+        if (isOffsetOld(ackMessage)) return AckResult.failure();
+
+        lock(ackMessage);
+        try {
+            return changeInvisibleWithLock(ackMessage);
+        } finally {
+            unlock(ackMessage);
+        }
+    }
+
+    public AckResult changeInvisibleWithLock(AckMessage ackMessage) {
         return null;
     }
 
