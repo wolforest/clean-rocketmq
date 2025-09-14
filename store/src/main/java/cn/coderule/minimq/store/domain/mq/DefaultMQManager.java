@@ -13,6 +13,7 @@ import cn.coderule.minimq.domain.domain.consumer.consume.InflightCounter;
 import cn.coderule.minimq.store.api.MQStoreImpl;
 import cn.coderule.minimq.store.domain.mq.ack.AckManager;
 import cn.coderule.minimq.store.domain.mq.ack.AckService;
+import cn.coderule.minimq.store.domain.mq.ack.InvisibleService;
 import cn.coderule.minimq.store.domain.mq.queue.DequeueService;
 import cn.coderule.minimq.store.domain.mq.queue.EnqueueService;
 import cn.coderule.minimq.store.domain.mq.queue.MessageService;
@@ -64,9 +65,10 @@ public class DefaultMQManager implements MQManager {
 
     private void initMQManager() {
         AckService ackService = StoreContext.getBean(AckService.class);
+        InvisibleService invisibleService = StoreContext.getBean(InvisibleService.class);
         ConsumeQueueGateway consumeQueueGateway = StoreContext.getBean(ConsumeQueueGateway.class);
 
-        MQStore MQStore = new MQStoreImpl(mqService, ackService, consumeQueueGateway);
+        MQStore MQStore = new MQStoreImpl(mqService, ackService, invisibleService, consumeQueueGateway);
         StoreContext.registerAPI(MQStore, MQStore.class);
     }
 

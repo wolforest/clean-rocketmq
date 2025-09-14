@@ -38,6 +38,15 @@ public class AckManager implements Lifecycle {
             offsetService
         );
         StoreContext.register(ackService);
+
+        InvisibleService invisibleService = new InvisibleService(
+            storeConfig,
+            reviveTopic,
+            ackService,
+            enqueueService,
+            offsetService
+        );
+        StoreContext.register(invisibleService);
     }
 
     @Override

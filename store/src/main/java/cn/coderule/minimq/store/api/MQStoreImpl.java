@@ -16,16 +16,25 @@ import cn.coderule.minimq.domain.domain.cluster.store.api.MQStore;
 import cn.coderule.minimq.domain.domain.cluster.store.domain.consumequeue.ConsumeQueueGateway;
 import cn.coderule.minimq.domain.domain.cluster.store.domain.mq.MQService;
 import cn.coderule.minimq.store.domain.mq.ack.AckService;
+import cn.coderule.minimq.store.domain.mq.ack.InvisibleService;
 import java.util.concurrent.CompletableFuture;
 
 public class MQStoreImpl implements MQStore {
     private final MQService mqService;
     private final AckService ackService;
+    private final InvisibleService invisibleService;
     private final ConsumeQueueGateway consumeQueueGateway;
 
-    public MQStoreImpl(MQService mqService, AckService ackService, ConsumeQueueGateway consumeQueueGateway) {
-        this.mqService = mqService;
+    public MQStoreImpl(
+        MQService mqService,
+        AckService ackService,
+        InvisibleService invisibleService,
+        ConsumeQueueGateway consumeQueueGateway
+    ) {
         this.ackService = ackService;
+        this.invisibleService = invisibleService;
+
+        this.mqService = mqService;
         this.consumeQueueGateway = consumeQueueGateway;
     }
 
@@ -76,7 +85,7 @@ public class MQStoreImpl implements MQStore {
 
     @Override
     public AckResult changeInvisible(AckMessage request) {
-        return null;
+        return invisibleService.changeInvisible(request);
     }
 
     @Override
