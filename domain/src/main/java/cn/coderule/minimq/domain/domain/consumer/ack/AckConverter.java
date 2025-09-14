@@ -118,6 +118,10 @@ public class AckConverter {
         return checkPoint;
     }
 
+    public static MessageBO toMessage(AckInfo ackInfo, int reviveQueueId, long deliverTime) {
+        return null;
+    }
+
     public static MessageBO toMessage(AckMessage ackMessage, PopCheckPoint checkPoint, String reviveTopic, SocketAddress storeHost) {
         MessageBO messageBO = MessageBO.builder()
             .topic(reviveTopic)

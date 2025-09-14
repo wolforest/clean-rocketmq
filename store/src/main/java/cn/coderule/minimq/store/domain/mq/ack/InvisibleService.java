@@ -63,7 +63,7 @@ public class InvisibleService {
         long deliverTime = ackInfo.getPopTime() + ackMessage.getInvisibleTime();
         int reviveQueueId = ackMessage.getReviveQueueId();
 
-        ackService.ack(ackInfo, reviveQueueId, deliverTime);
+        ackService.ackOriginal(ackInfo, reviveQueueId, deliverTime);
         return result;
     }
 }

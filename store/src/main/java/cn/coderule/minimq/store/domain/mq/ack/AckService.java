@@ -4,6 +4,7 @@ import cn.coderule.common.util.lang.ByteUtil;
 import cn.coderule.minimq.domain.config.business.MessageConfig;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.domain.domain.consumer.ack.AckBuffer;
+import cn.coderule.minimq.domain.domain.consumer.ack.AckConverter;
 import cn.coderule.minimq.domain.domain.consumer.ack.AckInfo;
 import cn.coderule.minimq.domain.domain.consumer.ack.BatchAckInfo;
 import cn.coderule.minimq.domain.domain.consumer.ack.store.AckMessage;
@@ -71,7 +72,8 @@ public class AckService {
         offsetService.ack(ackMessage);
 
         if (!messageConfig.isEnablePopBufferMerge()) {
-            enqueueReviveQueue(ackMessage);
+            MessageBO messageBO = buildAckMsg(ackMessage);
+            enqueueReviveQueue(messageBO);
             return;
         }
 
@@ -83,8 +85,19 @@ public class AckService {
         }
     }
 
-    public void ack(AckInfo ackInfo, int reviveQueueId, long deliverTime) {
+    public void ackOriginal(AckInfo ackInfo, int reviveQueueId, long deliverTime) {
+        if (!messageConfig.isEnablePopBufferMerge()) {
+            MessageBO messageBO = AckConverter.toMessage(ackInfo, reviveQueueId, deliverTime);
+            enqueueReviveQueue(messageBO);
+            return;
+        }
 
+        try {
+            mergeAckMsg(ackInfo, reviveQueueId);
+        } catch (Throwable t) {
+            log.error("[PopBuffer]ack error, reviveQueueId: {}. ",
+                reviveQueueId, t);
+        }
     }
 
     public long getBufferedOffset(String group, String topic, int queueId) {
@@ -210,26 +223,24 @@ public class AckService {
         );
     }
 
-    private void enqueueReviveQueue(AckMessage ackMessage) {
-        MessageBO messageBO = buildAckMsg(ackMessage);
+    private void enqueueReviveQueue(MessageBO messageBO) {
         EnqueueResult result = enqueueService.enqueue(messageBO);
         if (result.isFailure()) {
             log.error("Enqueue ackMsg failed, ackMessage: {}; ",
-                ackMessage);
+                messageBO);
         }
 
         if (messageConfig.isEnablePopLog()) {
-            log.info("Enqueue ackMsg success, ackMsg: {}, result: {}", ackMessage, result);
+            log.info("Enqueue ackMsg success, ackMsg: {}, result: {}", messageBO, result);
         }
     }
 
     private MessageBO buildReviveMsg(PopCheckPointWrapper pointWrapper) {
-        SocketAddress storeHost = new InetSocketAddress(storeConfig.getHost(), storeConfig.getPort());
         return PopConverter.toMessage(
             pointWrapper.getCk(),
             pointWrapper.getReviveQueueId(),
             reviveTopic,
-            storeHost
+            storeConfig.getHostAddress()
         );
     }
 
