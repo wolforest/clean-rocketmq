@@ -83,9 +83,9 @@ public class AckService {
         }
     }
 
-    public void nack(AckInfo ackInfo, int reviveQueueId, long deliverTime) {
+    public void nack(AckInfo ackInfo, int reviveQueueId, long invisibleTime) {
         if (!messageConfig.isEnablePopBufferMerge()) {
-            MessageBO messageBO = buildNackMsg(ackInfo, reviveQueueId, deliverTime);
+            MessageBO messageBO = buildNackMsg(ackInfo, reviveQueueId, invisibleTime);
             enqueueReviveQueue(messageBO);
             return;
         }
@@ -211,17 +211,17 @@ public class AckService {
     }
 
     private MessageBO buildAckMsg(AckMessage ackMessage) {
-        return PopConverter.toMessageBO(
+        return AckConverter.toMessage(
             ackMessage.getAckInfo(),
-            ackMessage.getReviveQueueId(),
             reviveTopic,
-            storeConfig.getHostAddress(),
-            ackMessage.getInvisibleTime()
+            ackMessage.getReviveQueueId(),
+            ackMessage.getInvisibleTime(),
+            storeConfig.getHostAddress()
         );
     }
-    private MessageBO buildNackMsg(AckInfo ackInfo, int reviveQueueId, long deliverTime) {
+    private MessageBO buildNackMsg(AckInfo ackInfo, int reviveQueueId, long invisibleTime) {
         return AckConverter.toMessage(
-            ackInfo, reviveTopic, reviveQueueId, deliverTime, storeConfig.getHostAddress()
+            ackInfo, reviveTopic, reviveQueueId, invisibleTime, storeConfig.getHostAddress()
         );
     }
 

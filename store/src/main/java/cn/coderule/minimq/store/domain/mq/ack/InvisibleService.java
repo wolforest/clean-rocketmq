@@ -2,7 +2,6 @@ package cn.coderule.minimq.store.domain.mq.ack;
 
 import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.domain.domain.consumer.ack.AckConverter;
-import cn.coderule.minimq.domain.domain.consumer.ack.AckInfo;
 import cn.coderule.minimq.domain.domain.consumer.ack.broker.AckResult;
 import cn.coderule.minimq.domain.domain.consumer.ack.store.AckMessage;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.checkpoint.PopCheckPoint;
@@ -59,11 +58,11 @@ public class InvisibleService {
     }
 
     private AckResult nack(AckMessage ackMessage, AckResult result) {
-        AckInfo ackInfo = ackMessage.getAckInfo();
-        long deliverTime = ackInfo.getPopTime() + ackMessage.getInvisibleTime();
-        int reviveQueueId = ackMessage.getReviveQueueId();
-
-        ackService.nack(ackInfo, reviveQueueId, deliverTime);
+        ackService.nack(
+            ackMessage.getAckInfo(),
+            ackMessage.getReviveQueueId(),
+            ackMessage.getInvisibleTime()
+        );
         return result;
     }
 }

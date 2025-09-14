@@ -2,7 +2,6 @@ package cn.coderule.minimq.domain.domain.consumer.ack;
 
 import cn.coderule.common.util.lang.string.JSONUtil;
 import cn.coderule.minimq.domain.core.constant.MQConstants;
-import cn.coderule.minimq.domain.core.constant.MessageConst;
 import cn.coderule.minimq.domain.core.constant.PopConstants;
 import cn.coderule.minimq.domain.domain.consumer.ack.broker.AckRequest;
 import cn.coderule.minimq.domain.domain.consumer.ack.broker.AckResult;
@@ -15,7 +14,6 @@ import cn.coderule.minimq.domain.domain.consumer.receipt.ReceiptHandle;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.domain.meta.order.OrderRequest;
 import cn.coderule.minimq.domain.utils.message.ExtraInfoUtils;
-import cn.coderule.minimq.domain.utils.message.MessageUtils;
 import java.net.SocketAddress;
 
 public class AckConverter {
@@ -118,7 +116,7 @@ public class AckConverter {
         return checkPoint;
     }
 
-    public static MessageBO toMessage(AckInfo ackInfo, String reviveTopic, int reviveQueueId, long deliverTime, SocketAddress storeHost) {
+    public static MessageBO toMessage(AckInfo ackInfo, String reviveTopic, int reviveQueueId, long invisibleTime, SocketAddress storeHost) {
         MessageBO messageBO = MessageBO.builder()
             .topic(reviveTopic)
             .body(JSONUtil.toJSONString(ackInfo).getBytes(MQConstants.MQ_CHARSET))
@@ -128,11 +126,16 @@ public class AckConverter {
             .storeHost(storeHost)
             .build();
 
-        messageBO.setTags(PopConstants.ACK_TAG);
-        messageBO.setDeliverTime(deliverTime);
-        messageBO.setUniqueKey(PopKeyBuilder.genAckUniqueId(ackInfo));
-        messageBO.initPropertiesString();
+        if (ackInfo instanceof BatchAckInfo) {
+            messageBO.setTags(PopConstants.BATCH_ACK_TAG);
+            messageBO.setUniqueKey(PopKeyBuilder.genBatchAckUniqueId((BatchAckInfo) ackInfo));
+        } else {
+            messageBO.setTags(PopConstants.ACK_TAG);
+            messageBO.setUniqueKey(PopKeyBuilder.genAckUniqueId(ackInfo));
+        }
 
+        messageBO.setDeliverTime(ackInfo.getPopTime() + invisibleTime);
+        messageBO.initPropertiesString();
         return messageBO;
     }
 
@@ -153,6 +156,8 @@ public class AckConverter {
 
         return messageBO;
     }
+
+
 
     public static CheckPointRequest toCheckPointRequest(InvisibleRequest request) {
         return null;

@@ -116,30 +116,6 @@ public class PopConverter {
         return point;
     }
 
-    public static MessageBO toMessageBO(AckInfo ackInfo, int reviveQid, String reviveTopic, SocketAddress storeHost, long invisibleTime) {
-        MessageBO msgInner = new MessageBO();
-
-        msgInner.setTopic(reviveTopic);
-        msgInner.setBody(JSON.toJSONString(ackInfo).getBytes(StandardCharsets.UTF_8));
-        msgInner.setQueueId(reviveQid);
-
-        if (ackInfo instanceof BatchAckInfo) {
-            msgInner.setTags(PopConstants.BATCH_ACK_TAG);
-            msgInner.setUniqueKey(PopKeyBuilder.genBatchAckUniqueId((BatchAckInfo) ackInfo));
-        } else {
-            msgInner.setTags(PopConstants.ACK_TAG);
-            msgInner.setUniqueKey(PopKeyBuilder.genAckUniqueId(ackInfo));
-        }
-
-        msgInner.setBornTimestamp(System.currentTimeMillis());
-        msgInner.setBornHost(storeHost);
-        msgInner.setStoreHost(storeHost);
-        msgInner.setDeliverTime(ackInfo.getPopTime() + invisibleTime);
-
-        msgInner.setPropertiesString(MessageUtils.propertiesToString(msgInner.getProperties()));
-        return msgInner;
-    }
-
     private static void initMsgTopic(PopCheckPoint popCheckPoint, MessageBO msgInner) {
         if (!popCheckPoint.getTopic().startsWith(MQConstants.RETRY_GROUP_TOPIC_PREFIX)) {
             msgInner.setTopic(KeyBuilder.buildPopRetryTopic(popCheckPoint.getTopic(), popCheckPoint.getCId(), false));
