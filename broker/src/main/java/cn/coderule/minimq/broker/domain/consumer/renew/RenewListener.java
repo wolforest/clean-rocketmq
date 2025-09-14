@@ -6,7 +6,6 @@ import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import cn.coderule.minimq.domain.domain.consumer.ack.broker.AckResult;
 import cn.coderule.minimq.domain.domain.consumer.ack.broker.InvisibleRequest;
 import cn.coderule.minimq.domain.domain.consumer.receipt.MessageReceipt;
-import cn.coderule.minimq.domain.domain.consumer.receipt.ReceiptHandle;
 import cn.coderule.minimq.domain.domain.consumer.receipt.ReceiptHandleGroupKey;
 import cn.coderule.minimq.domain.domain.consumer.revive.RenewEvent;
 import java.util.concurrent.CompletableFuture;
@@ -95,11 +94,9 @@ public class RenewListener implements EventListener<RenewEvent> {
 
     private InvisibleRequest createInvisibleRequest(RenewEvent event, RequestContext context) {
         MessageReceipt receipt = event.getMessageReceiptHandle();
-        ReceiptHandle handle = ReceiptHandle.decode(receipt.getReceiptHandleStr());
 
         return InvisibleRequest.builder()
             .requestContext(context)
-            .receiptHandle(handle)
             .messageId(receipt.getMessageId())
             .topicName(receipt.getTopic())
             .groupName(receipt.getGroup())

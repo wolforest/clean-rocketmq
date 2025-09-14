@@ -10,7 +10,6 @@ import cn.coderule.minimq.domain.core.constant.MessageConst;
 import cn.coderule.minimq.domain.domain.consumer.ack.broker.InvisibleRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.PopResult;
 import cn.coderule.minimq.domain.domain.cluster.RequestContext;
-import cn.coderule.minimq.domain.domain.consumer.receipt.ReceiptHandle;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.rpc.common.grpc.response.ResponseBuilder;
 import cn.coderule.minimq.rpc.common.grpc.response.ResponseWriter;
@@ -190,7 +189,6 @@ public class ConsumeResponse {
 
         InvisibleRequest invisibleRequest = InvisibleRequest.builder()
             .requestContext(context)
-            .receiptHandle(ReceiptHandle.decode(handle))
             .messageId(messageBO.getUniqueKey())
             .topicName(messageBO.getTopic())
             .build();
