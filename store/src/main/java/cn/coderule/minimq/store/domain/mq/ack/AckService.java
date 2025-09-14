@@ -85,9 +85,9 @@ public class AckService {
         }
     }
 
-    public void ackOriginal(AckInfo ackInfo, int reviveQueueId, long deliverTime) {
+    public void nack(AckInfo ackInfo, int reviveQueueId, long deliverTime) {
         if (!messageConfig.isEnablePopBufferMerge()) {
-            MessageBO messageBO = AckConverter.toMessage(ackInfo, reviveQueueId, deliverTime);
+            MessageBO messageBO = buildNackMsg(ackInfo, reviveQueueId, deliverTime);
             enqueueReviveQueue(messageBO);
             return;
         }
@@ -213,13 +213,17 @@ public class AckService {
     }
 
     private MessageBO buildAckMsg(AckMessage ackMessage) {
-        SocketAddress storeHost = new InetSocketAddress(storeConfig.getHost(), storeConfig.getPort());
         return PopConverter.toMessageBO(
             ackMessage.getAckInfo(),
             ackMessage.getReviveQueueId(),
             reviveTopic,
-            storeHost,
+            storeConfig.getHostAddress(),
             ackMessage.getInvisibleTime()
+        );
+    }
+    private MessageBO buildNackMsg(AckInfo ackInfo, int reviveQueueId, long deliverTime) {
+        return AckConverter.toMessage(
+            ackInfo, reviveQueueId, deliverTime, storeConfig.getHostAddress()
         );
     }
 

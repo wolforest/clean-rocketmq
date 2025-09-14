@@ -118,7 +118,7 @@ public class AckConverter {
         return checkPoint;
     }
 
-    public static MessageBO toMessage(AckInfo ackInfo, int reviveQueueId, long deliverTime) {
+    public static MessageBO toMessage(AckInfo ackInfo, int reviveQueueId, long deliverTime, SocketAddress storeHost) {
         return null;
     }
 

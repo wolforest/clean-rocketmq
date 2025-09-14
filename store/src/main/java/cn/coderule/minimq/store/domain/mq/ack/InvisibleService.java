@@ -47,7 +47,7 @@ public class InvisibleService {
             return result.appendCheckpointFailure();
         }
 
-        return ackOriginal(ackMessage, result);
+        return nack(ackMessage, result);
     }
 
     private boolean appendCheckpoint(AckMessage ackMessage, long now) {
@@ -58,12 +58,12 @@ public class InvisibleService {
         return result.isSuccess();
     }
 
-    private AckResult ackOriginal(AckMessage ackMessage, AckResult result) {
+    private AckResult nack(AckMessage ackMessage, AckResult result) {
         AckInfo ackInfo = ackMessage.getAckInfo();
         long deliverTime = ackInfo.getPopTime() + ackMessage.getInvisibleTime();
         int reviveQueueId = ackMessage.getReviveQueueId();
 
-        ackService.ackOriginal(ackInfo, reviveQueueId, deliverTime);
+        ackService.nack(ackInfo, reviveQueueId, deliverTime);
         return result;
     }
 }
