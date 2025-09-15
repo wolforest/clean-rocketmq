@@ -89,10 +89,10 @@ public class DequeueService {
             return false;
         }
 
-        return !hasOrderLock(request);
+        return isOrderQueueLocked(request);
     }
 
-    private boolean hasOrderLock(DequeueRequest request) {
+    private boolean isOrderQueueLocked(DequeueRequest request) {
         OrderRequest orderRequest = OrderRequest.builder()
             .topicName(request.getTopic())
             .consumerGroup(request.getGroup())
@@ -102,8 +102,8 @@ public class DequeueService {
             .build();
 
         boolean hasLock = consumeOrderService.isLocked(orderRequest);
-        if (!hasLock) {
-            return false;
+        if (hasLock) {
+            return true;
         }
 
         inflightCounter.clear(
@@ -111,7 +111,7 @@ public class DequeueService {
             request.getGroup(),
             request.getQueueId()
         );
-        return true;
+        return false;
     }
 
     private boolean hasTooManyInflightMessages(DequeueRequest request) {
