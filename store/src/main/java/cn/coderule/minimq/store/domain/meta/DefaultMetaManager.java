@@ -26,10 +26,9 @@ public class DefaultMetaManager implements MetaManager {
 
     @Override
     public void initialize() throws Exception {
+        initConsumerOffset();
         initTopic();
         initSubscription();
-
-        initConsumerOffset();
         initConsumeOrder();
     }
 
@@ -40,10 +39,9 @@ public class DefaultMetaManager implements MetaManager {
 
     @Override
     public void shutdown() throws Exception {
+        offsetService.store();
         topicService.store();
         subscriptionService.store();
-
-        offsetService.store();
         orderService.store();
     }
 

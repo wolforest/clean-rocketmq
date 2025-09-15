@@ -82,7 +82,7 @@ public class TopicTest extends ApiBaseTest {
 
         TopicConfig config2 = TopicManager.findTopic(topic);
         Assert.assertNull(config2);
-        LOG.info("testDelayTopic ok");
+        LOG.info("testOrderlyTopic ok");
     }
 
     @Test
