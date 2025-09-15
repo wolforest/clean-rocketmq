@@ -95,6 +95,10 @@ public class PopService {
 
     private CompletableFuture<PopResult> popFromRetryQueue(PopContext context, CompletableFuture<PopResult> result) {
         Topic topic = context.getRetryTopic();
+        if (topic == null) {
+            return result;
+        }
+
         String topicName = topic.getTopicName();
 
         int queueNum = topic.getReadQueueNums();
