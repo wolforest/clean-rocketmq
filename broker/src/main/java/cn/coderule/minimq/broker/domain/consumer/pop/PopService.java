@@ -104,7 +104,7 @@ public class PopService {
             result = result.thenCompose(
                 popResult -> dequeueService.dequeue(context, topicName, queueId, popResult)
             );
-        am ''}
+        }
 
         return result;
     }

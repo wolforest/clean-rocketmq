@@ -72,10 +72,6 @@ public class ContextBuilder {
     }
 
     private void loadRetryTopic(PopContext context) {
-        if (!context.shouldRetry()) {
-            return;
-        }
-
         PopRequest request = context.getRequest();
         String retryTopicName = KeyBuilder.buildPopRetryTopic(
             request.getTopicName(),
