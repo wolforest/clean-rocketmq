@@ -199,7 +199,7 @@ public class MessageConverter {
 
         Timestamp timestamp = message.getSystemProperties().getDeliveryTimestamp();
         long delayTime = Timestamps.toMillis(timestamp);
-        properties.put(MessageConst.PROPERTY_DELAY_TIME_LEVEL, String.valueOf(delayTime));
+        properties.put(MessageConst.PROPERTY_TIMER_DELIVER_MS, String.valueOf(delayTime));
     }
 
     private static void setReconsumeTimes(Map<String, String> properties, Message message) {
