@@ -285,7 +285,7 @@ public class RouteConverter {
     public static List<MessageType> toTypeList(cn.coderule.minimq.domain.core.enums.message.MessageType type) {
         return switch (type) {
             case NORMAL -> Collections.singletonList(MessageType.NORMAL);
-            case ORDER -> Collections.singletonList(MessageType.FIFO);
+            case FIFO -> Collections.singletonList(MessageType.FIFO);
             case TRANSACTION -> Collections.singletonList(MessageType.TRANSACTION);
             case DELAY -> Collections.singletonList(MessageType.DELAY);
             case MIXED -> Arrays.asList(

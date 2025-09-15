@@ -66,6 +66,26 @@ public class TopicTest extends ApiBaseTest {
     }
 
     @Test
+    public void testOrderlyTopic() {
+        String topic = TopicManager.createUniqueTopic();
+        boolean status = TopicManager.createFIFOTopic(topic);
+        if (!status) {
+            return;
+        }
+
+        TopicConfig topicConfig = TopicManager.findTopic(topic);
+        Assert.assertNotNull(topicConfig);
+        Assert.assertEquals(topic, topicConfig.getTopicName());
+        Assert.assertEquals(TopicMessageType.FIFO, topicConfig.getTopicMessageType());
+
+        TopicManager.deleteTopic(topic);
+
+        TopicConfig config2 = TopicManager.findTopic(topic);
+        Assert.assertNull(config2);
+        LOG.info("testDelayTopic ok");
+    }
+
+    @Test
     public void testDelayTopic() {
         String topic = TopicManager.createUniqueTopic();
         boolean status = TopicManager.createDelayTopic(topic);

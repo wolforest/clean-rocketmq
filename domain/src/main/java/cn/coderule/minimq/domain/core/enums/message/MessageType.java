@@ -9,7 +9,7 @@ import lombok.Getter;
 public enum MessageType {
     UNSPECIFIED("UNSPECIFIED"),
     NORMAL("NORMAL"),
-    ORDER("ORDER"),
+    FIFO("FIFO"),
     DELAY("DELAY"),
     PREPARE("PREPARE"),
     COMMIT("COMMIT"),
@@ -31,7 +31,7 @@ public enum MessageType {
         return Sets.newHashSet(
             UNSPECIFIED.value,
             NORMAL.value,
-            ORDER.value,
+            FIFO.value,
             DELAY.value,
             PREPARE.value,
             COMMIT.value,
