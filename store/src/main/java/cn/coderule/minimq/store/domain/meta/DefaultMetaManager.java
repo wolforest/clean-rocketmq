@@ -6,6 +6,7 @@ import cn.coderule.minimq.domain.domain.cluster.store.api.meta.SubscriptionStore
 import cn.coderule.minimq.domain.domain.cluster.store.api.meta.TopicStore;
 import cn.coderule.minimq.domain.domain.cluster.store.domain.consumequeue.ConsumeQueueGateway;
 import cn.coderule.minimq.domain.domain.cluster.store.domain.meta.ConsumeOffsetService;
+import cn.coderule.minimq.domain.domain.cluster.store.domain.meta.ConsumeOrderService;
 import cn.coderule.minimq.domain.domain.cluster.store.domain.meta.SubscriptionService;
 import cn.coderule.minimq.domain.domain.cluster.store.domain.meta.TopicService;
 import cn.coderule.minimq.domain.domain.cluster.store.domain.meta.MetaManager;
@@ -17,15 +18,19 @@ import cn.coderule.minimq.domain.config.store.StorePath;
 import cn.coderule.minimq.store.infra.StoreRegister;
 
 public class DefaultMetaManager implements MetaManager {
-    private ConsumeOffsetService offsetService;
     private DefaultTopicService topicService;
     private SubscriptionService subscriptionService;
 
+    private ConsumeOffsetService offsetService;
+    private ConsumeOrderService orderService;
+
     @Override
     public void initialize() throws Exception {
-        initConsumerOffset();
         initTopic();
         initSubscription();
+
+        initConsumerOffset();
+        initConsumeOrder();
     }
 
     @Override
@@ -35,9 +40,11 @@ public class DefaultMetaManager implements MetaManager {
 
     @Override
     public void shutdown() throws Exception {
-        offsetService.store();
         topicService.store();
         subscriptionService.store();
+
+        offsetService.store();
+        orderService.store();
     }
 
     private void injectDependency() {
@@ -81,5 +88,16 @@ public class DefaultMetaManager implements MetaManager {
         SubscriptionStore subscriptionApi = new SubscriptionStoreImpl(subscriptionService);
         StoreContext.registerAPI(subscriptionApi, SubscriptionStore.class);
         StoreContext.register(subscriptionApi, SubscriptionStore.class);
+    }
+
+    private void initConsumeOrder() {
+        StoreConfig storeConfig = StoreContext.getBean(StoreConfig.class);
+        String storePath = StorePath.getConsumerOrderInfoPath();
+
+        OrderLockCleaner cleaner = new OrderLockCleaner(topicService, subscriptionService);
+        orderService = new DefaultConsumeOrderService(storeConfig, storePath, cleaner);
+        StoreContext.register(orderService, ConsumeOrderService.class);
+
+        orderService.load();
     }
 }

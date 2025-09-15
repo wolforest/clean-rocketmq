@@ -12,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class DefaultConsumeOrderService implements ConsumeOrderService {
     private final String storePath;
-    private final StoreConfig storeConfig;
     private final OrderLockCleaner orderLockCleaner;
 
     private ConsumeOrder consumeOrder;
@@ -22,7 +21,6 @@ public class DefaultConsumeOrderService implements ConsumeOrderService {
         String storePath,
         OrderLockCleaner orderLockCleaner
     ) {
-        this.storeConfig = storeConfig;
         this.storePath = storePath;
 
         this.orderLockCleaner = orderLockCleaner;

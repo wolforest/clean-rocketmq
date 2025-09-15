@@ -17,8 +17,16 @@ import lombok.extern.slf4j.Slf4j;
 public class OrderLockCleaner {
     private static final long CLEAN_SPAN_FROM_LAST = 24 * 3600 * 1000;
 
-    private TopicService topicService;
-    private SubscriptionService subscriptionService;
+    private final TopicService topicService;
+    private final SubscriptionService subscriptionService;
+
+    public OrderLockCleaner(
+        TopicService topicService,
+        SubscriptionService subscriptionService
+    ) {
+        this.topicService = topicService;
+        this.subscriptionService = subscriptionService;
+    }
 
     public void clean(ConsumeOrder consumeOrder) {
         Iterator<
