@@ -80,7 +80,7 @@ public class OrderlyTest extends ApiBaseTest {
             TopicManager.deleteTopic(TOPIC);
             GroupManager.deleteGroup(CONSUMER_GROUP);
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.error("after method error", e);
         }
     }
 
