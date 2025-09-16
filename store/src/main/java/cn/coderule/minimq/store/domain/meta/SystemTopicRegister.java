@@ -1,10 +1,13 @@
 package cn.coderule.minimq.store.domain.meta;
 
+import cn.coderule.minimq.domain.config.business.TopicConfig;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
+import cn.coderule.minimq.domain.core.constant.MQConstants;
 import cn.coderule.minimq.domain.domain.meta.topic.Topic;
 import cn.coderule.minimq.domain.domain.store.domain.meta.TopicService;
 import cn.coderule.minimq.domain.domain.meta.topic.KeyBuilder;
 import cn.coderule.minimq.domain.domain.meta.topic.TopicValidator;
+import cn.coderule.minimq.domain.domain.timer.TimerConstants;
 
 public class SystemTopicRegister {
     private static final int SCHEDULE_TOPIC_QUEUE_NUM = 18;
@@ -23,8 +26,16 @@ public class SystemTopicRegister {
         addSystemTopic(TopicValidator.RMQ_SYS_OFFSET_MOVED_EVENT, 1, 1);
         addSystemTopic(TopicValidator.RMQ_SYS_SCHEDULE_TOPIC, SCHEDULE_TOPIC_QUEUE_NUM, SCHEDULE_TOPIC_QUEUE_NUM);
 
-         // PopAckConstants.REVIVE_TOPIC
-        addSystemTopic(KeyBuilder.buildClusterReviveTopic(storeConfig.getCluster()), 8, 8);
+
+        addSystemTopic(storeConfig.getCluster() + "_" + MQConstants.REPLY_TOPIC_POSTFIX, 1, 1);
+
+        TopicConfig topicConfig = storeConfig.getTopicConfig();
+
+        // timer topic
+        addSystemTopic(TimerConstants.TIMER_TOPIC, topicConfig.getTimerQueueNum(), topicConfig.getTimerQueueNum());
+
+        // PopAckConstants.REVIVE_TOPIC
+        addSystemTopic(KeyBuilder.buildClusterReviveTopic(storeConfig.getCluster()), topicConfig.getReviveQueueNum(), topicConfig.getReviveQueueNum());
 
         // sync broker member group topic
         addSystemTopic(TopicValidator.SYNC_BROKER_MEMBER_GROUP_PREFIX + storeConfig.getCluster(), 1, 1);
