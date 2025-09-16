@@ -88,6 +88,11 @@ public class MessageBO extends Message implements Serializable {
         return messageBO;
     }
 
+    public void setTopic(String topic) {
+        this.topic = topic;
+        this.topicLength = topic.getBytes(MQConstants.MQ_CHARSET).length;
+    }
+
     public MessageVersion getVersion() {
         if (null != this.version) {
             return this.version;
