@@ -5,6 +5,8 @@ import cn.coderule.minimq.broker.domain.producer.ProduceHookManager;
 import cn.coderule.minimq.broker.domain.timer.context.TimerContext;
 import cn.coderule.minimq.broker.domain.timer.service.TimerFactory;
 import cn.coderule.minimq.broker.domain.timer.transit.TimerMessageProducer;
+import cn.coderule.minimq.broker.domain.timer.transit.TimerTaskSaver;
+import cn.coderule.minimq.broker.domain.timer.transit.TimerTaskScanner;
 import cn.coderule.minimq.broker.domain.timer.transit.TimerTaskScheduler;
 import cn.coderule.minimq.broker.infra.store.MQStore;
 import cn.coderule.minimq.broker.infra.store.TimerStore;
@@ -13,13 +15,18 @@ import cn.coderule.minimq.domain.config.business.TimerConfig;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.domain.timer.TimerQueue;
 import cn.coderule.minimq.domain.domain.timer.state.TimerState;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class TimerManager implements Lifecycle {
     private BrokerConfig brokerConfig;
     private TimerConfig timerConfig;
 
-    private TimerFactory timerFactory;
     private TimerContext timerContext;
+    private TimerFactory timerFactory;
+
+    private TimerTaskSaver taskSaver;
+    private TimerTaskScanner taskScanner;
 
     private TimerMessageProducer[] messageProducers;
     private TimerTaskScheduler[] taskSchedulers;
@@ -32,12 +39,14 @@ public class TimerManager implements Lifecycle {
             return;
         }
 
+        initTimerContext();
+
+        taskSaver = new TimerTaskSaver(timerContext);
+        taskScanner = new TimerTaskScanner(timerContext);
         initMessageProducers();
         initTaskSchedulers();
 
-        initTimerContext();
         initTimerFactory();
-
         injectTimerHook();
     }
 
@@ -48,6 +57,9 @@ public class TimerManager implements Lifecycle {
         }
 
         timerFactory.start();
+        taskSaver.start();
+        taskScanner.start();
+
         startMessageProducers();
         startTaskSchedulers();
     }
@@ -59,11 +71,20 @@ public class TimerManager implements Lifecycle {
         }
 
         timerFactory.shutdown();
+        taskSaver.shutdown();
+        taskScanner.shutdown();
+
         shutdownMessageProducers();
         shutdownTaskSchedulers();
     }
 
     private void initTimerContext() {
+        int producerNum = timerConfig.getConsumerThreadNum();
+        messageProducers = new TimerMessageProducer[producerNum];
+
+        int schedulerNum = timerConfig.getSchedulerThreadNum();
+        taskSchedulers = new TimerTaskScheduler[schedulerNum];
+
         timerContext = TimerContext.builder()
             .brokerConfig(brokerConfig)
             .timerQueue(new TimerQueue(timerConfig))
@@ -80,7 +101,6 @@ public class TimerManager implements Lifecycle {
 
     private void initMessageProducers() {
         int producerNum = timerConfig.getConsumerThreadNum();
-        messageProducers = new TimerMessageProducer[producerNum];
         for (int i = 0; i < producerNum; i++) {
             messageProducers[i] = new TimerMessageProducer(timerContext);
         }
@@ -88,7 +108,6 @@ public class TimerManager implements Lifecycle {
 
     private void initTaskSchedulers() {
         int schedulerNum = timerConfig.getSchedulerThreadNum();
-        taskSchedulers = new TimerTaskScheduler[schedulerNum];
         for (int i = 0; i < schedulerNum; i++) {
             taskSchedulers[i] = new TimerTaskScheduler(timerContext);
         }
