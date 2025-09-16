@@ -3,25 +3,20 @@ package cn.coderule.minimq.store.domain.timer.wheel;
 import cn.coderule.minimq.domain.config.business.TimerConfig;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.domain.domain.timer.ScanResult;
-import cn.coderule.minimq.domain.domain.timer.state.TimerCheckpoint;
 import cn.coderule.minimq.domain.domain.timer.TimerEvent;
 import cn.coderule.minimq.domain.domain.cluster.store.domain.timer.Timer;
-import cn.coderule.minimq.store.domain.timer.service.CheckpointService;
 import cn.coderule.minimq.domain.config.store.StorePath;
 import java.io.IOException;
 
 public class DefaultTimer implements Timer {
-    private final CheckpointService checkpointService;
-
     private final TaskScheduler taskScheduler;
     private final WheelScanner wheelScanner;
     private final TimerLog timerLog;
     private final TimerWheel timerWheel;
 
 
-    public DefaultTimer(StoreConfig storeConfig, CheckpointService checkpointService) throws IOException {
+    public DefaultTimer(StoreConfig storeConfig) throws IOException {
         TimerConfig timerConfig = storeConfig.getTimerConfig();
-        this.checkpointService = checkpointService;
 
         this.timerLog = new TimerLog(
             StorePath.getTimerLogPath(),
@@ -52,16 +47,6 @@ public class DefaultTimer implements Timer {
     public void shutdown() throws Exception {
         timerWheel.shutdown();
         timerLog.shutdown();
-    }
-
-    @Override
-    public void storeCheckpoint(TimerCheckpoint checkpoint) {
-        checkpointService.store(checkpoint);
-    }
-
-    @Override
-    public TimerCheckpoint loadCheckpoint() {
-        return checkpointService.load();
     }
 
     @Override

@@ -27,14 +27,12 @@ public class TimerService implements Timer {
         timer = initTimer(storeConfig);
     }
 
-    @Override
     public void storeCheckpoint(TimerCheckpoint checkpoint) {
-        timer.storeCheckpoint(checkpoint);
+        checkpointService.store(checkpoint);
     }
 
-    @Override
     public TimerCheckpoint loadCheckpoint() {
-        return timer.loadCheckpoint();
+        return checkpointService.load();
     }
 
     @Override
@@ -54,10 +52,10 @@ public class TimerService implements Timer {
             }
 
             if (timerConfig.isEnableRocksDB()) {
-                return new RocksdbTimer(storeConfig, checkpointService);
+                return new RocksdbTimer(storeConfig);
             }
 
-            return new DefaultTimer(storeConfig, checkpointService);
+            return new DefaultTimer(storeConfig);
         } catch (Exception e) {
             log.error("init timer error", e);
         }

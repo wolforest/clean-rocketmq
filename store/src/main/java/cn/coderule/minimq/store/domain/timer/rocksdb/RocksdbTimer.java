@@ -2,28 +2,14 @@ package cn.coderule.minimq.store.domain.timer.rocksdb;
 
 import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.domain.domain.timer.ScanResult;
-import cn.coderule.minimq.domain.domain.timer.state.TimerCheckpoint;
 import cn.coderule.minimq.domain.domain.timer.TimerEvent;
 import cn.coderule.minimq.domain.domain.cluster.store.domain.timer.Timer;
-import cn.coderule.minimq.store.domain.timer.service.CheckpointService;
 
 public class RocksdbTimer implements Timer {
     private final StoreConfig storeConfig;
-    private final CheckpointService checkpointService;
 
-    public RocksdbTimer(StoreConfig storeConfig, CheckpointService checkpointService) {
+    public RocksdbTimer(StoreConfig storeConfig) {
         this.storeConfig = storeConfig;
-        this.checkpointService = checkpointService;
-    }
-
-    @Override
-    public void storeCheckpoint(TimerCheckpoint checkpoint) {
-        checkpointService.store(checkpoint);
-    }
-
-    @Override
-    public TimerCheckpoint loadCheckpoint() {
-        return checkpointService.load();
     }
 
     @Override
