@@ -8,12 +8,10 @@ import cn.coderule.minimq.domain.utils.store.TimerUtils;
 
 public class TimerConverter {
     public static TimerEvent toEvent(MessageBO messageBO, long enqueueTime, int magic) {
-        long delayTime = getDelayTime(messageBO);
-
         return TimerEvent.builder()
             .commitLogOffset(messageBO.getCommitOffset())
             .messageSize(messageBO.getMessageLength())
-            .delayTime(delayTime)
+            .delayTime(messageBO.getDelayTime())
             .magic(magic)
             .enqueueTime(enqueueTime)
             .messageBO(messageBO)
@@ -78,9 +76,5 @@ public class TimerConverter {
 
         newMessage.removeProperty(MessageConst.PROPERTY_REAL_TOPIC);
         newMessage.removeProperty(MessageConst.PROPERTY_REAL_QUEUE_ID);
-    }
-    private static long getDelayTime(MessageBO messageBO) {
-        String delayString = messageBO.getProperty(MessageConst.PROPERTY_TIMER_OUT_MS);
-        return Long.parseLong(delayString);
     }
 }
