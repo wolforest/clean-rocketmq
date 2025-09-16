@@ -83,14 +83,14 @@ public class TimerLog {
     /**
      * fetch TimerMessage by offset
      *
-     * @param offsetPy offset
+     * @param offset offset
      * @return TimerMessage related SelectedMappedBuffer
      */
-    public SelectedMappedBuffer getTimerMessage(long offsetPy) {
-        MappedFile mappedFile = mappedFileQueue.getMappedFileByOffset(offsetPy);
+    public SelectedMappedBuffer getTimerMessage(long offset) {
+        MappedFile mappedFile = mappedFileQueue.getMappedFileByOffset(offset);
         if (null == mappedFile)
             return null;
-        return mappedFile.select((int) (offsetPy % mappedFile.getFileSize()));
+        return mappedFile.select((int) (offset % mappedFile.getFileSize()));
     }
 
     /**
@@ -104,10 +104,6 @@ public class TimerLog {
         if (null == mappedFile)
             return null;
         return mappedFile.select(0);
-    }
-
-    public MappedFileQueue getMappedFileQueue() {
-        return mappedFileQueue;
     }
 
     public void shutdown() {

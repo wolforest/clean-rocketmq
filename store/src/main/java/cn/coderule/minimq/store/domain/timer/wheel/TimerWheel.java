@@ -37,7 +37,7 @@ public class TimerWheel {
     private final MappedByteBuffer mappedByteBuffer;
 
     private final ByteBuffer byteBuffer;
-    private final ThreadLocal<ByteBuffer> localBuffer = new ThreadLocal<ByteBuffer>() {
+    private final ThreadLocal<ByteBuffer> localBuffer = new ThreadLocal<>() {
         @Override
         protected ByteBuffer initialValue() {
             return byteBuffer.duplicate();
