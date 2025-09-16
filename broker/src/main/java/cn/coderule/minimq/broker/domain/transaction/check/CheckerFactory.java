@@ -40,6 +40,11 @@ public class CheckerFactory implements TaskFactory, Lifecycle {
     }
 
     @Override
+    public void destroy(QueueTask task) {
+
+    }
+
+    @Override
     public void start() throws Exception {
 
     }

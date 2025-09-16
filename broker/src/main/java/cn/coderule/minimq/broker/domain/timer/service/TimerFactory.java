@@ -34,14 +34,19 @@ public class TimerFactory implements TaskFactory, Lifecycle {
     }
 
     @Override
+    public void destroy(QueueTask task) {
+
+    }
+
+    @Override
     public void start() throws Exception {
 
     }
 
     @Override
     public void shutdown() throws Exception {
-        for (TimerQueueConsumer worker : workerMap.values()) {
-            worker.shutdown();
+        for (TimerQueueConsumer consumer : workerMap.values()) {
+            consumer.shutdown();
         }
     }
 
