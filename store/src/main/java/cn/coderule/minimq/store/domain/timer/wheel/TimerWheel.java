@@ -1,6 +1,7 @@
 package cn.coderule.minimq.store.domain.timer.wheel;
 
 import cn.coderule.common.util.io.DirUtil;
+import cn.coderule.common.util.io.FileUtil;
 import cn.coderule.common.util.lang.ByteUtil;
 import cn.coderule.minimq.domain.domain.timer.wheel.Slot;
 import java.io.File;
@@ -33,6 +34,7 @@ public class TimerWheel {
      */
     private final int wheelLength;
 
+    private final File file;
     private final FileChannel fileChannel;
     private final MappedByteBuffer mappedByteBuffer;
 
@@ -50,12 +52,14 @@ public class TimerWheel {
         // why ?
         this.wheelLength = this.slotsTotal * 2 * Slot.SIZE;
 
-        File file = new File(fileName);
+        file = new File(fileName);
         DirUtil.createIfNotExists(file.getParent());
 
-        try (RandomAccessFile randomAccessFile = new RandomAccessFile(fileName, "rw")) {
+        try (RandomAccessFile randomAccessFile = new RandomAccessFile(file, "rw")) {
             if (file.exists() && randomAccessFile.length() != 0 && randomAccessFile.length() != wheelLength) {
-                throw new RuntimeException(String.format("Timer wheel length:%d != expected:%s", randomAccessFile.length(), wheelLength));
+                throw new RuntimeException(
+                    String.format("Timer wheel length:%d != expected:%s", randomAccessFile.length(), wheelLength)
+                );
             }
 
             randomAccessFile.setLength(wheelLength);
@@ -90,6 +94,11 @@ public class TimerWheel {
         } catch (IOException e) {
             log.error("Shutdown error in timer wheel", e);
         }
+    }
+
+    public void destroy() {
+        shutdown(false);
+        FileUtil.delete(this.file);
     }
 
     /**
