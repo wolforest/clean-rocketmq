@@ -2,10 +2,10 @@ package cn.coderule.minimq.store.domain.consumequeue;
 
 import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.domain.config.store.ConsumeQueueConfig;
-import cn.coderule.minimq.domain.domain.cluster.store.domain.commitlog.CommitEventDispatcher;
-import cn.coderule.minimq.domain.domain.cluster.store.domain.consumequeue.ConsumeQueueGateway;
-import cn.coderule.minimq.domain.domain.cluster.store.domain.meta.TopicService;
-import cn.coderule.minimq.domain.domain.cluster.store.domain.consumequeue.ConsumeQueueManager;
+import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitEventDispatcher;
+import cn.coderule.minimq.domain.domain.store.domain.consumequeue.ConsumeQueueGateway;
+import cn.coderule.minimq.domain.domain.store.domain.meta.TopicService;
+import cn.coderule.minimq.domain.domain.store.domain.consumequeue.ConsumeQueueManager;
 import cn.coderule.minimq.store.domain.consumequeue.queue.ConsumeQueueFactory;
 import cn.coderule.minimq.store.domain.consumequeue.service.ConsumeQueueFlusher;
 import cn.coderule.minimq.store.domain.consumequeue.service.ConsumeQueueLoader;

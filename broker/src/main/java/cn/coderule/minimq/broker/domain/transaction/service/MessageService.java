@@ -2,7 +2,7 @@ package cn.coderule.minimq.broker.domain.transaction.service;
 
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.domain.MessageQueue;
-import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueResult;
+import cn.coderule.minimq.domain.domain.store.domain.mq.DequeueResult;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.util.HashSet;

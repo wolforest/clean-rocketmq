@@ -10,7 +10,7 @@ import cn.coderule.minimq.broker.domain.transaction.service.MessageService;
 import cn.coderule.minimq.domain.config.business.TransactionConfig;
 import cn.coderule.minimq.domain.domain.MessageQueue;
 import cn.coderule.minimq.domain.domain.cluster.task.QueueTask;
-import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueResult;
+import cn.coderule.minimq.domain.domain.store.domain.mq.DequeueResult;
 import cn.coderule.minimq.domain.domain.transaction.CheckBuffer;
 import cn.coderule.minimq.domain.domain.transaction.TransactionUtil;
 import java.util.Set;

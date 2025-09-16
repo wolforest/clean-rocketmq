@@ -2,7 +2,7 @@ package cn.coderule.minimq.store.domain.meta;
 
 import cn.coderule.minimq.domain.core.constant.MQConstants;
 import cn.coderule.minimq.domain.domain.meta.subscription.SubscriptionGroup;
-import cn.coderule.minimq.domain.domain.cluster.store.domain.meta.SubscriptionService;
+import cn.coderule.minimq.domain.domain.store.domain.meta.SubscriptionService;
 
 public class SystemGroupRegister {
     private final SubscriptionService subscriptionService;

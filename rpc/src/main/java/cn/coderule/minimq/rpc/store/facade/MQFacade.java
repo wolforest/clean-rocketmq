@@ -4,14 +4,14 @@ import cn.coderule.minimq.domain.domain.consumer.ack.broker.AckResult;
 import cn.coderule.minimq.domain.domain.consumer.ack.store.AckMessage;
 import cn.coderule.minimq.domain.domain.consumer.ack.store.CheckPointRequest;
 import cn.coderule.minimq.domain.domain.consumer.ack.store.OffsetRequest;
-import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueRequest;
-import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueResult;
+import cn.coderule.minimq.domain.domain.store.domain.mq.DequeueRequest;
+import cn.coderule.minimq.domain.domain.store.domain.mq.DequeueResult;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.MessageRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.MessageResult;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.QueueRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.QueueResult;
-import cn.coderule.minimq.domain.domain.producer.EnqueueRequest;
-import cn.coderule.minimq.domain.domain.producer.EnqueueResult;
+import cn.coderule.minimq.domain.domain.store.domain.mq.EnqueueRequest;
+import cn.coderule.minimq.domain.domain.store.domain.mq.EnqueueResult;
 import java.util.concurrent.CompletableFuture;
 
 public interface MQFacade {

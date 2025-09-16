@@ -1,8 +1,8 @@
 package cn.coderule.minimq.store.domain.consumequeue.queue;
 
 import cn.coderule.minimq.domain.config.store.ConsumeQueueConfig;
-import cn.coderule.minimq.domain.domain.cluster.store.domain.consumequeue.ConsumeQueue;
-import cn.coderule.minimq.domain.domain.cluster.store.domain.meta.TopicService;
+import cn.coderule.minimq.domain.domain.store.domain.consumequeue.ConsumeQueue;
+import cn.coderule.minimq.domain.domain.store.domain.meta.TopicService;
 import cn.coderule.minimq.store.server.bootstrap.StoreCheckpoint;
 import java.util.ArrayList;
 import java.util.List;

@@ -2,7 +2,7 @@ package cn.coderule.minimq.domain.core.lock.queue;
 
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 import cn.coderule.minimq.domain.core.lock.TimedLock;
-import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueRequest;
+import cn.coderule.minimq.domain.domain.store.domain.mq.DequeueRequest;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

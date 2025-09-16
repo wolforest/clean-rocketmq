@@ -3,7 +3,7 @@ package cn.coderule.minimq.store.domain.timer.rocksdb;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.domain.domain.timer.ScanResult;
 import cn.coderule.minimq.domain.domain.timer.TimerEvent;
-import cn.coderule.minimq.domain.domain.cluster.store.domain.timer.Timer;
+import cn.coderule.minimq.domain.domain.store.domain.timer.Timer;
 
 public class RocksdbTimer implements Timer {
     private final StoreConfig storeConfig;

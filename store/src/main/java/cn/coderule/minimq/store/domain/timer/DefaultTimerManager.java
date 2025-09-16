@@ -1,8 +1,7 @@
 package cn.coderule.minimq.store.domain.timer;
 
 import cn.coderule.minimq.domain.config.server.StoreConfig;
-import cn.coderule.minimq.domain.domain.cluster.store.domain.timer.TimerManager;
-import cn.coderule.minimq.domain.domain.timer.state.TimerCheckpoint;
+import cn.coderule.minimq.domain.domain.store.domain.timer.TimerManager;
 import cn.coderule.minimq.store.domain.timer.service.CheckpointService;
 import cn.coderule.minimq.store.domain.timer.service.TimerService;
 import cn.coderule.minimq.store.server.bootstrap.StoreContext;

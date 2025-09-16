@@ -5,7 +5,7 @@ import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.common.util.lang.string.JSONUtil;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.domain.domain.meta.offset.ConsumeOffset;
-import cn.coderule.minimq.domain.domain.cluster.store.domain.meta.ConsumeOffsetService;
+import cn.coderule.minimq.domain.domain.store.domain.meta.ConsumeOffsetService;
 import java.util.Set;
 
 public class DefaultConsumeOffsetService implements ConsumeOffsetService {

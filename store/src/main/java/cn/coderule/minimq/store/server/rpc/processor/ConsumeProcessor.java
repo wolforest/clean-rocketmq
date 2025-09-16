@@ -2,7 +2,7 @@ package cn.coderule.minimq.store.server.rpc.processor;
 
 import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.minimq.domain.core.constant.MQConstants;
-import cn.coderule.minimq.domain.domain.cluster.store.api.meta.ConsumeOffsetStore;
+import cn.coderule.minimq.domain.domain.store.api.meta.ConsumeOffsetStore;
 import cn.coderule.minimq.rpc.common.rpc.RpcProcessor;
 import cn.coderule.minimq.rpc.common.rpc.core.exception.RemotingCommandException;
 import cn.coderule.minimq.rpc.common.rpc.core.invoke.RpcCommand;

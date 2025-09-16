@@ -3,7 +3,7 @@ package cn.coderule.minimq.broker.domain.producer;
 import cn.coderule.minimq.domain.domain.cluster.ClientChannelInfo;
 import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
-import cn.coderule.minimq.domain.domain.producer.EnqueueResult;
+import cn.coderule.minimq.domain.domain.store.domain.mq.EnqueueResult;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import lombok.extern.slf4j.Slf4j;

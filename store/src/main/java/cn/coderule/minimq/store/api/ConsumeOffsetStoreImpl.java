@@ -5,8 +5,8 @@ import cn.coderule.minimq.domain.domain.meta.offset.OffsetFilter;
 import cn.coderule.minimq.domain.domain.meta.offset.OffsetRequest;
 import cn.coderule.minimq.domain.domain.meta.offset.OffsetResult;
 import cn.coderule.minimq.domain.domain.meta.offset.TopicResult;
-import cn.coderule.minimq.domain.domain.cluster.store.api.meta.ConsumeOffsetStore;
-import cn.coderule.minimq.domain.domain.cluster.store.domain.meta.ConsumeOffsetService;
+import cn.coderule.minimq.domain.domain.store.api.meta.ConsumeOffsetStore;
+import cn.coderule.minimq.domain.domain.store.domain.meta.ConsumeOffsetService;
 import java.util.Set;
 
 public class ConsumeOffsetStoreImpl implements ConsumeOffsetStore {

@@ -1,8 +1,8 @@
 package cn.coderule.minimq.store.domain.mq.ack;
 
 import cn.coderule.minimq.domain.core.lock.queue.DequeueLock;
-import cn.coderule.minimq.domain.domain.cluster.store.domain.meta.ConsumeOffsetService;
-import cn.coderule.minimq.domain.domain.cluster.store.domain.meta.ConsumeOrderService;
+import cn.coderule.minimq.domain.domain.store.domain.meta.ConsumeOffsetService;
+import cn.coderule.minimq.domain.domain.store.domain.meta.ConsumeOrderService;
 import cn.coderule.minimq.domain.domain.consumer.ack.AckConverter;
 import cn.coderule.minimq.domain.domain.consumer.ack.AckInfo;
 import cn.coderule.minimq.domain.domain.consumer.ack.broker.AckResult;

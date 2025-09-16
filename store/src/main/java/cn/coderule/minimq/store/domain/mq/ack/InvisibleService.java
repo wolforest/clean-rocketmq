@@ -6,7 +6,7 @@ import cn.coderule.minimq.domain.domain.consumer.ack.broker.AckResult;
 import cn.coderule.minimq.domain.domain.consumer.ack.store.AckMessage;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.checkpoint.PopCheckPoint;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
-import cn.coderule.minimq.domain.domain.producer.EnqueueResult;
+import cn.coderule.minimq.domain.domain.store.domain.mq.EnqueueResult;
 import cn.coderule.minimq.store.domain.mq.queue.EnqueueService;
 import lombok.extern.slf4j.Slf4j;
 

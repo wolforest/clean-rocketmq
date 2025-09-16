@@ -2,12 +2,12 @@ package cn.coderule.minimq.store.domain.dispatcher;
 
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 import cn.coderule.common.util.lang.ThreadUtil;
-import cn.coderule.minimq.domain.domain.cluster.store.CommitEvent;
+import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitEvent;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
-import cn.coderule.minimq.domain.domain.cluster.store.domain.commitlog.CommitLog;
-import cn.coderule.minimq.domain.domain.cluster.store.domain.commitlog.CommitEventHandler;
-import cn.coderule.minimq.domain.domain.cluster.store.domain.commitlog.CommitEventDispatcher;
-import cn.coderule.minimq.domain.domain.cluster.store.server.CheckPoint;
+import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitLog;
+import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitEventHandler;
+import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitEventDispatcher;
+import cn.coderule.minimq.domain.domain.store.server.CheckPoint;
 import java.util.ArrayList;
 import lombok.Getter;
 import lombok.Setter;

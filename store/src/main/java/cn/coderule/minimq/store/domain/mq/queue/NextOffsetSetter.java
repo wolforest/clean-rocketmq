@@ -3,10 +3,10 @@ package cn.coderule.minimq.store.domain.mq.queue;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.domain.config.store.MetaConfig;
 import cn.coderule.minimq.domain.core.enums.message.MessageStatus;
-import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueRequest;
-import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueResult;
+import cn.coderule.minimq.domain.domain.store.domain.mq.DequeueRequest;
+import cn.coderule.minimq.domain.domain.store.domain.mq.DequeueResult;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
-import cn.coderule.minimq.domain.domain.cluster.store.domain.consumequeue.ConsumeQueueGateway;
+import cn.coderule.minimq.domain.domain.store.domain.consumequeue.ConsumeQueueGateway;
 
 public class NextOffsetSetter {
     private final StoreConfig storeConfig;

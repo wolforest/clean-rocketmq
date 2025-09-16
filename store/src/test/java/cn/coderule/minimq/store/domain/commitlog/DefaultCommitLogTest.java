@@ -3,13 +3,13 @@ package cn.coderule.minimq.store.domain.commitlog;
 import cn.coderule.common.lang.type.Pair;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.domain.config.store.CommitConfig;
-import cn.coderule.minimq.domain.domain.cluster.store.InsertFuture;
+import cn.coderule.minimq.domain.domain.store.domain.mq.EnqueueFuture;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.domain.message.MessageEncoder;
-import cn.coderule.minimq.domain.domain.producer.EnqueueResult;
-import cn.coderule.minimq.domain.domain.cluster.store.domain.commitlog.CommitLog;
-import cn.coderule.minimq.domain.domain.cluster.store.domain.commitlog.CommitLogFlusher;
-import cn.coderule.minimq.domain.domain.cluster.store.infra.MappedFileQueue;
+import cn.coderule.minimq.domain.domain.store.domain.mq.EnqueueResult;
+import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitLog;
+import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitLogFlusher;
+import cn.coderule.minimq.domain.domain.store.infra.MappedFileQueue;
 import cn.coderule.minimq.domain.test.ConfigMock;
 import cn.coderule.minimq.domain.test.MessageMock;
 import cn.coderule.minimq.store.domain.commitlog.flush.SyncCommitLogFlusher;
@@ -37,7 +37,7 @@ class DefaultCommitLogTest {
         commitLog.assignCommitOffset(messageBO);
         assertTrue(messageBO.getCommitOffset() >= 0);
 
-        InsertFuture future = commitLog.insert(messageBO);
+        EnqueueFuture future = commitLog.insert(messageBO);
         EnqueueResult result = future.get();
         assertNotNull(result);
 
@@ -62,7 +62,7 @@ class DefaultCommitLogTest {
         commitLog.assignCommitOffset(first);
         assertTrue(first.getCommitOffset() >= 0);
 
-        InsertFuture future = commitLog.insert(first);
+        EnqueueFuture future = commitLog.insert(first);
         EnqueueResult result = future.get();
         assertNotNull(result);
 

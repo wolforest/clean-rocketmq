@@ -1,15 +1,15 @@
 package cn.coderule.minimq.store.domain.meta;
 
 import cn.coderule.minimq.domain.config.server.StoreConfig;
-import cn.coderule.minimq.domain.domain.cluster.store.api.meta.ConsumeOffsetStore;
-import cn.coderule.minimq.domain.domain.cluster.store.api.meta.SubscriptionStore;
-import cn.coderule.minimq.domain.domain.cluster.store.api.meta.TopicStore;
-import cn.coderule.minimq.domain.domain.cluster.store.domain.consumequeue.ConsumeQueueGateway;
-import cn.coderule.minimq.domain.domain.cluster.store.domain.meta.ConsumeOffsetService;
-import cn.coderule.minimq.domain.domain.cluster.store.domain.meta.ConsumeOrderService;
-import cn.coderule.minimq.domain.domain.cluster.store.domain.meta.SubscriptionService;
-import cn.coderule.minimq.domain.domain.cluster.store.domain.meta.TopicService;
-import cn.coderule.minimq.domain.domain.cluster.store.domain.meta.MetaManager;
+import cn.coderule.minimq.domain.domain.store.api.meta.ConsumeOffsetStore;
+import cn.coderule.minimq.domain.domain.store.api.meta.SubscriptionStore;
+import cn.coderule.minimq.domain.domain.store.api.meta.TopicStore;
+import cn.coderule.minimq.domain.domain.store.domain.consumequeue.ConsumeQueueGateway;
+import cn.coderule.minimq.domain.domain.store.domain.meta.ConsumeOffsetService;
+import cn.coderule.minimq.domain.domain.store.domain.meta.ConsumeOrderService;
+import cn.coderule.minimq.domain.domain.store.domain.meta.SubscriptionService;
+import cn.coderule.minimq.domain.domain.store.domain.meta.TopicService;
+import cn.coderule.minimq.domain.domain.store.domain.meta.MetaManager;
 import cn.coderule.minimq.store.api.ConsumeOffsetStoreImpl;
 import cn.coderule.minimq.store.api.SubscriptionStoreImpl;
 import cn.coderule.minimq.store.api.TopicStoreImpl;

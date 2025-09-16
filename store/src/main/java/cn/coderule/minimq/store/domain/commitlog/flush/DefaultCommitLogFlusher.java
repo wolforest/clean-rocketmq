@@ -1,17 +1,17 @@
 package cn.coderule.minimq.store.domain.commitlog.flush;
 
 import cn.coderule.minimq.domain.core.enums.store.EnqueueStatus;
-import cn.coderule.minimq.domain.domain.cluster.store.domain.commitlog.CommitLogFlusher;
-import cn.coderule.minimq.domain.domain.cluster.store.server.CheckPoint;
+import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitLogFlusher;
+import cn.coderule.minimq.domain.domain.store.server.CheckPoint;
 import cn.coderule.minimq.store.domain.commitlog.vo.GroupCommitRequest;
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.minimq.domain.config.store.CommitConfig;
 import cn.coderule.minimq.domain.core.enums.store.FlushType;
-import cn.coderule.minimq.domain.domain.producer.EnqueueResult;
-import cn.coderule.minimq.domain.domain.cluster.store.InsertFuture;
-import cn.coderule.minimq.domain.domain.cluster.store.InsertResult;
+import cn.coderule.minimq.domain.domain.store.domain.mq.EnqueueResult;
+import cn.coderule.minimq.domain.domain.store.domain.mq.EnqueueFuture;
+import cn.coderule.minimq.domain.domain.store.infra.InsertResult;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
-import cn.coderule.minimq.domain.domain.cluster.store.infra.MappedFileQueue;
+import cn.coderule.minimq.domain.domain.store.infra.MappedFileQueue;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -72,7 +72,7 @@ public class DefaultCommitLogFlusher implements CommitLogFlusher, Lifecycle {
     }
 
     @Override
-    public InsertFuture flush(InsertResult insertResult, MessageBO messageBO) {
+    public EnqueueFuture flush(InsertResult insertResult, MessageBO messageBO) {
         if (FlushType.SYNC.equals(commitConfig.getFlushType())) {
             return syncFlush(insertResult, messageBO);
         }
@@ -80,12 +80,12 @@ public class DefaultCommitLogFlusher implements CommitLogFlusher, Lifecycle {
         return asyncFlush(insertResult, messageBO);
     }
 
-    private InsertFuture syncFlush(InsertResult insertResult, MessageBO messageBO) {
+    private EnqueueFuture syncFlush(InsertResult insertResult, MessageBO messageBO) {
         flusher.setMaxOffset(insertResult.getWroteOffset());
 
         if (!messageBO.isWaitStore()) {
             flusher.wakeup();
-            return InsertFuture.success(insertResult, messageBO);
+            return EnqueueFuture.success(insertResult, messageBO);
         }
 
         GroupCommitRequest request = createGroupCommitRequest(insertResult);
@@ -95,7 +95,7 @@ public class DefaultCommitLogFlusher implements CommitLogFlusher, Lifecycle {
         return formatResult(insertResult, request, messageBO);
     }
 
-    private InsertFuture asyncFlush(InsertResult insertResult, MessageBO messageBO) {
+    private EnqueueFuture asyncFlush(InsertResult insertResult, MessageBO messageBO) {
         flusher.setMaxOffset(insertResult.getWroteOffset());
 
         if (commitConfig.isEnableWriteCache()) {
@@ -104,16 +104,16 @@ public class DefaultCommitLogFlusher implements CommitLogFlusher, Lifecycle {
             flusher.wakeup();
         }
 
-        return InsertFuture.success(insertResult, messageBO);
+        return EnqueueFuture.success(insertResult, messageBO);
     }
 
-    private InsertFuture formatResult(InsertResult insertResult, GroupCommitRequest request, MessageBO messageBO) {
+    private EnqueueFuture formatResult(InsertResult insertResult, GroupCommitRequest request, MessageBO messageBO) {
         CompletableFuture<EnqueueResult> result = request.future()
             .thenApply(
                 flushStatus -> buildEnqueueResult(flushStatus, insertResult, messageBO)
             );
 
-        return InsertFuture.builder()
+        return EnqueueFuture.builder()
             .insertResult(insertResult)
             .future(result)
             .build();

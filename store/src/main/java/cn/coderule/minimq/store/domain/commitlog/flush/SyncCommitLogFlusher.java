@@ -1,10 +1,10 @@
 package cn.coderule.minimq.store.domain.commitlog.flush;
 
-import cn.coderule.minimq.domain.domain.cluster.store.InsertFuture;
-import cn.coderule.minimq.domain.domain.cluster.store.InsertResult;
+import cn.coderule.minimq.domain.domain.store.domain.mq.EnqueueFuture;
+import cn.coderule.minimq.domain.domain.store.infra.InsertResult;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
-import cn.coderule.minimq.domain.domain.cluster.store.domain.commitlog.CommitLogFlusher;
-import cn.coderule.minimq.domain.domain.cluster.store.infra.MappedFileQueue;
+import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitLogFlusher;
+import cn.coderule.minimq.domain.domain.store.infra.MappedFileQueue;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -22,13 +22,13 @@ public class SyncCommitLogFlusher implements CommitLogFlusher {
     }
 
     @Override
-    public InsertFuture flush(InsertResult insertResult, MessageBO messageBO) {
+    public EnqueueFuture flush(InsertResult insertResult, MessageBO messageBO) {
         boolean status = forceFlush();
         if (!status) {
-            return InsertFuture.failure();
+            return EnqueueFuture.failure();
         }
 
-        return InsertFuture.success(insertResult, messageBO);
+        return EnqueueFuture.success(insertResult, messageBO);
     }
 
     private boolean forceFlush() {

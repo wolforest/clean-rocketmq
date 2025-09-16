@@ -1,9 +1,9 @@
 package cn.coderule.minimq.store.domain.consumequeue;
 
-import cn.coderule.minimq.domain.domain.cluster.store.CommitEvent;
+import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitEvent;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
-import cn.coderule.minimq.domain.domain.cluster.store.domain.commitlog.CommitEventHandler;
-import cn.coderule.minimq.domain.domain.cluster.store.domain.consumequeue.ConsumeQueueGateway;
+import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitEventHandler;
+import cn.coderule.minimq.domain.domain.store.domain.consumequeue.ConsumeQueueGateway;
 
 public class QueueCommitEventHandler implements CommitEventHandler {
     private final ConsumeQueueGateway consumeQueueGateway;

@@ -1,9 +1,9 @@
 package cn.coderule.minimq.store.infra.file;
 
 import cn.coderule.minimq.domain.core.enums.store.InsertStatus;
-import cn.coderule.minimq.domain.domain.cluster.store.InsertResult;
-import cn.coderule.minimq.domain.domain.cluster.store.infra.MappedFile;
-import cn.coderule.minimq.domain.domain.cluster.store.infra.MappedFileQueue;
+import cn.coderule.minimq.domain.domain.store.infra.InsertResult;
+import cn.coderule.minimq.domain.domain.store.infra.MappedFile;
+import cn.coderule.minimq.domain.domain.store.infra.MappedFileQueue;
 import java.nio.file.Path;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;

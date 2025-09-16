@@ -4,7 +4,7 @@ import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.minimq.broker.domain.transaction.check.context.CheckContext;
 import cn.coderule.minimq.broker.domain.transaction.check.context.TransactionContext;
 import cn.coderule.minimq.broker.domain.transaction.service.MessageService;
-import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueResult;
+import cn.coderule.minimq.domain.domain.store.domain.mq.DequeueResult;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.domain.transaction.TransactionUtil;
 import java.util.HashSet;

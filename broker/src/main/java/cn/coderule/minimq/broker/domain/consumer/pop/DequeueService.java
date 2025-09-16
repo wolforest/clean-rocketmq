@@ -1,8 +1,8 @@
 package cn.coderule.minimq.broker.domain.consumer.pop;
 
 import cn.coderule.minimq.domain.domain.cluster.RequestContext;
-import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueRequest;
-import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueResult;
+import cn.coderule.minimq.domain.domain.store.domain.mq.DequeueRequest;
+import cn.coderule.minimq.domain.domain.store.domain.mq.DequeueResult;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.QueueRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.PopContext;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.PopRequest;

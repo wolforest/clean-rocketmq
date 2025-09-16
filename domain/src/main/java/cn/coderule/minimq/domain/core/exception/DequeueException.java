@@ -2,8 +2,7 @@ package cn.coderule.minimq.domain.core.exception;
 
 import cn.coderule.common.lang.exception.BusinessException;
 import cn.coderule.minimq.domain.core.enums.message.MessageStatus;
-import cn.coderule.minimq.domain.core.enums.store.EnqueueStatus;
-import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueResult;
+import cn.coderule.minimq.domain.domain.store.domain.mq.DequeueResult;
 import java.util.List;
 import lombok.Getter;
 

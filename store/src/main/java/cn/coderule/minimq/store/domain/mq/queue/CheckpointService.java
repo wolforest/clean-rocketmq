@@ -1,7 +1,7 @@
 package cn.coderule.minimq.store.domain.mq.queue;
 
-import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueRequest;
-import cn.coderule.minimq.domain.domain.consumer.consume.mq.DequeueResult;
+import cn.coderule.minimq.domain.domain.store.domain.mq.DequeueRequest;
+import cn.coderule.minimq.domain.domain.store.domain.mq.DequeueResult;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.checkpoint.PopCheckPoint;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.helper.PopConverter;
 import cn.coderule.minimq.store.domain.mq.ack.AckService;

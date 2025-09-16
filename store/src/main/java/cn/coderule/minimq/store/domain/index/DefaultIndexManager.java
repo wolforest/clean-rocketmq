@@ -1,7 +1,7 @@
 package cn.coderule.minimq.store.domain.index;
 
-import cn.coderule.minimq.domain.domain.cluster.store.domain.commitlog.CommitEventDispatcher;
-import cn.coderule.minimq.domain.domain.cluster.store.domain.index.IndexManager;
+import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitEventDispatcher;
+import cn.coderule.minimq.domain.domain.store.domain.index.IndexManager;
 import cn.coderule.minimq.store.server.bootstrap.StoreContext;
 
 public class DefaultIndexManager implements IndexManager {

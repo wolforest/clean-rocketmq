@@ -1,7 +1,7 @@
 package cn.coderule.minimq.store.domain.index;
 
-import cn.coderule.minimq.domain.domain.cluster.store.CommitEvent;
-import cn.coderule.minimq.domain.domain.cluster.store.domain.commitlog.CommitEventHandler;
+import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitEvent;
+import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitEventHandler;
 
 public class IndexCommitEventHandler implements CommitEventHandler {
     @Override

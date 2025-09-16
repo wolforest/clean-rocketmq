@@ -2,8 +2,8 @@ package cn.coderule.minimq.store.infra.file;
 
 import cn.coderule.common.util.io.FileUtil;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
-import cn.coderule.minimq.domain.domain.cluster.store.infra.MappedFile;
-import cn.coderule.minimq.domain.domain.cluster.store.infra.MappedFileQueue;
+import cn.coderule.minimq.domain.domain.store.infra.MappedFile;
+import cn.coderule.minimq.domain.domain.store.infra.MappedFileQueue;
 import cn.coderule.minimq.domain.utils.store.OffsetUtils;
 import java.io.File;
 import java.io.IOException;

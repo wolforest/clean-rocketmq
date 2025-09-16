@@ -2,7 +2,7 @@ package cn.coderule.minimq.store.server.ha.client;
 
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
-import cn.coderule.minimq.domain.domain.cluster.store.api.CommitLogStore;
+import cn.coderule.minimq.domain.domain.store.api.CommitLogStore;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import lombok.extern.slf4j.Slf4j;

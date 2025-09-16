@@ -3,21 +3,21 @@ package cn.coderule.minimq.store.domain.commitlog;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.domain.core.enums.code.InvalidCode;
 import cn.coderule.minimq.domain.core.exception.InvalidRequestException;
-import cn.coderule.minimq.domain.domain.cluster.store.domain.commitlog.CommitLogFlusher;
+import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitLogFlusher;
 import cn.coderule.minimq.store.domain.commitlog.vo.InsertContext;
 import cn.coderule.minimq.domain.config.store.CommitConfig;
 import cn.coderule.minimq.domain.config.business.MessageConfig;
 import cn.coderule.minimq.domain.core.enums.store.EnqueueStatus;
 import cn.coderule.minimq.domain.core.exception.EnqueueException;
-import cn.coderule.minimq.domain.domain.cluster.store.InsertFuture;
-import cn.coderule.minimq.domain.domain.cluster.store.InsertResult;
-import cn.coderule.minimq.domain.domain.cluster.store.SelectedMappedBuffer;
-import cn.coderule.minimq.domain.domain.cluster.store.infra.MappedFile;
+import cn.coderule.minimq.domain.domain.store.domain.mq.EnqueueFuture;
+import cn.coderule.minimq.domain.domain.store.infra.InsertResult;
+import cn.coderule.minimq.domain.domain.store.infra.SelectedMappedBuffer;
+import cn.coderule.minimq.domain.domain.store.infra.MappedFile;
 import cn.coderule.minimq.domain.domain.message.MessageDecoder;
 import cn.coderule.minimq.domain.core.lock.commitlog.CommitLogLock;
 import cn.coderule.minimq.domain.core.lock.commitlog.CommitLogReentrantLock;
-import cn.coderule.minimq.domain.domain.cluster.store.domain.commitlog.CommitLog;
-import cn.coderule.minimq.domain.domain.cluster.store.infra.MappedFileQueue;
+import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitLog;
+import cn.coderule.minimq.domain.domain.store.infra.MappedFileQueue;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.store.domain.commitlog.vo.EnqueueThreadLocal;
 import cn.coderule.minimq.store.infra.memory.CLibrary;
@@ -60,7 +60,7 @@ public class DefaultCommitLog implements CommitLog {
     }
 
     @Override
-    public InsertFuture insert(MessageBO messageBO) {
+    public EnqueueFuture insert(MessageBO messageBO) {
         InsertContext context = initContext(messageBO);
 
         this.commitLogLock.lock();
@@ -75,7 +75,7 @@ public class DefaultCommitLog implements CommitLog {
 
             return commitLogFlusher.flush(insertResult, messageBO);
         } catch (EnqueueException messageException) {
-            return InsertFuture.failure(messageException.getStatus());
+            return EnqueueFuture.failure(messageException.getStatus());
         } finally {
             this.commitLogLock.unlock();
         }

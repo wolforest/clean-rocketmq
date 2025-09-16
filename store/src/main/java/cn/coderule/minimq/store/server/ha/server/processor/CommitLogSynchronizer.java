@@ -8,10 +8,10 @@ import cn.coderule.minimq.domain.core.constant.MQConstants;
 import cn.coderule.minimq.domain.core.enums.store.EnqueueStatus;
 import cn.coderule.minimq.domain.core.lock.commitlog.CommitLogLock;
 import cn.coderule.minimq.domain.core.lock.commitlog.CommitLogSpinLock;
-import cn.coderule.minimq.domain.domain.cluster.store.GroupCommitEvent;
-import cn.coderule.minimq.domain.domain.producer.EnqueueResult;
-import cn.coderule.minimq.domain.domain.cluster.store.InsertFuture;
-import cn.coderule.minimq.domain.domain.cluster.store.api.CommitLogStore;
+import cn.coderule.minimq.domain.domain.store.domain.commitlog.GroupCommitEvent;
+import cn.coderule.minimq.domain.domain.store.domain.mq.EnqueueResult;
+import cn.coderule.minimq.domain.domain.store.domain.mq.EnqueueFuture;
+import cn.coderule.minimq.domain.domain.store.api.CommitLogStore;
 import cn.coderule.minimq.store.server.ha.core.HAConnection;
 import cn.coderule.minimq.store.server.ha.server.ConnectionPool;
 import cn.coderule.minimq.store.server.ha.server.SlaveOffsetCounter;
@@ -64,7 +64,7 @@ public class CommitLogSynchronizer extends ServiceThread implements Lifecycle {
         log.info("{} service end", this.getServiceName());
     }
 
-    public CompletableFuture<EnqueueResult> sync(InsertFuture request) {
+    public CompletableFuture<EnqueueResult> sync(EnqueueFuture request) {
         if (!storeConfig.isEnableHA()) {
             return request.getFuture();
         }

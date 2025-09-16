@@ -5,7 +5,7 @@ import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 import cn.coderule.common.util.lang.ThreadUtil;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
-import cn.coderule.minimq.domain.domain.cluster.store.infra.MappedFile;
+import cn.coderule.minimq.domain.domain.store.infra.MappedFile;
 import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;

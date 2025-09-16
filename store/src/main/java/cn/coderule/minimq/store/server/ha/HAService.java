@@ -1,8 +1,8 @@
 package cn.coderule.minimq.store.server.ha;
 
 import cn.coderule.common.convention.service.Lifecycle;
-import cn.coderule.minimq.domain.domain.cluster.store.InsertFuture;
-import cn.coderule.minimq.domain.domain.producer.EnqueueResult;
+import cn.coderule.minimq.domain.domain.store.domain.mq.EnqueueFuture;
+import cn.coderule.minimq.domain.domain.store.domain.mq.EnqueueResult;
 import cn.coderule.minimq.store.server.ha.client.HAClient;
 import cn.coderule.minimq.store.server.ha.core.HAContext;
 import cn.coderule.minimq.store.server.ha.core.monitor.StateMonitor;
@@ -65,7 +65,7 @@ public class HAService implements Lifecycle {
         haClient.setMasterHaAddress(addr);
     }
 
-    public CompletableFuture<EnqueueResult> syncCommitLog(InsertFuture result) {
+    public CompletableFuture<EnqueueResult> syncCommitLog(EnqueueFuture result) {
         return commitLogSynchronizer.sync(result);
     }
 

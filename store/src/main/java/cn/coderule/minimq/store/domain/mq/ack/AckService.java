@@ -8,7 +8,7 @@ import cn.coderule.minimq.domain.domain.consumer.ack.AckConverter;
 import cn.coderule.minimq.domain.domain.consumer.ack.AckInfo;
 import cn.coderule.minimq.domain.domain.consumer.ack.BatchAckInfo;
 import cn.coderule.minimq.domain.domain.consumer.ack.store.AckMessage;
-import cn.coderule.minimq.domain.domain.producer.EnqueueResult;
+import cn.coderule.minimq.domain.domain.store.domain.mq.EnqueueResult;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.checkpoint.PopCheckPoint;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.checkpoint.PopCheckPointWrapper;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.helper.PopConverter;

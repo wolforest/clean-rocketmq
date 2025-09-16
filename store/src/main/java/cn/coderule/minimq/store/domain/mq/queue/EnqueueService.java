@@ -1,12 +1,12 @@
 package cn.coderule.minimq.store.domain.mq.queue;
 
 import cn.coderule.minimq.domain.config.server.StoreConfig;
-import cn.coderule.minimq.domain.domain.producer.EnqueueResult;
-import cn.coderule.minimq.domain.domain.cluster.store.InsertFuture;
+import cn.coderule.minimq.domain.domain.store.domain.mq.EnqueueResult;
+import cn.coderule.minimq.domain.domain.store.domain.mq.EnqueueFuture;
 import cn.coderule.minimq.domain.core.lock.queue.EnqueueLock;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
-import cn.coderule.minimq.domain.domain.cluster.store.domain.commitlog.CommitLog;
-import cn.coderule.minimq.domain.domain.cluster.store.domain.consumequeue.ConsumeQueueGateway;
+import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitLog;
+import cn.coderule.minimq.domain.domain.store.domain.consumequeue.ConsumeQueueGateway;
 import cn.coderule.minimq.store.server.bootstrap.StoreContext;
 import cn.coderule.minimq.store.server.ha.server.processor.CommitLogSynchronizer;
 import java.util.concurrent.CompletableFuture;
@@ -54,7 +54,7 @@ public class EnqueueService {
             long queueOffset = consumeQueueGateway.assignOffset(messageBO.getTopic(), messageBO.getQueueId());
             messageBO.setQueueOffset(queueOffset);
 
-            InsertFuture result = commitLog.insert(messageBO);
+            EnqueueFuture result = commitLog.insert(messageBO);
 
             if (result.isInsertSuccess()) {
                 consumeQueueGateway.increaseOffset(messageBO.getTopic(), messageBO.getQueueId());

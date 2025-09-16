@@ -3,7 +3,7 @@ package cn.coderule.minimq.broker.infra.embed;
 import cn.coderule.minimq.domain.domain.meta.subscription.SubscriptionGroup;
 import cn.coderule.minimq.domain.domain.meta.subscription.SubscriptionRequest;
 import cn.coderule.minimq.rpc.store.facade.SubscriptionFacade;
-import cn.coderule.minimq.domain.domain.cluster.store.api.meta.SubscriptionStore;
+import cn.coderule.minimq.domain.domain.store.api.meta.SubscriptionStore;
 import java.util.concurrent.CompletableFuture;
 
 public class EmbedSubscriptionStore extends AbstractEmbedStore implements SubscriptionFacade {

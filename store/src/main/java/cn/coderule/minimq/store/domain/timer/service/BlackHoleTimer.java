@@ -2,7 +2,7 @@ package cn.coderule.minimq.store.domain.timer.service;
 
 import cn.coderule.minimq.domain.domain.timer.ScanResult;
 import cn.coderule.minimq.domain.domain.timer.TimerEvent;
-import cn.coderule.minimq.domain.domain.cluster.store.domain.timer.Timer;
+import cn.coderule.minimq.domain.domain.store.domain.timer.Timer;
 
 public class BlackHoleTimer implements Timer {
     @Override
