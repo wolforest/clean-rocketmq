@@ -9,8 +9,8 @@ import cn.coderule.minimq.domain.config.store.StorePath;
 import java.io.IOException;
 
 public class DefaultTimer implements Timer {
-    private final TaskScheduler taskScheduler;
-    private final WheelScanner wheelScanner;
+    private final TaskAdder taskAdder;
+    private final TaskScanner taskScanner;
     private final TimerLog timerLog;
     private final TimerWheel timerWheel;
 
@@ -29,8 +29,8 @@ public class DefaultTimer implements Timer {
             timerConfig.getPrecision()
         );
 
-        this.wheelScanner = new WheelScanner(storeConfig, timerLog, timerWheel);
-        this.taskScheduler = new TaskScheduler(storeConfig, timerLog, timerWheel);
+        this.taskScanner = new TaskScanner(storeConfig, timerLog, timerWheel);
+        this.taskAdder = new TaskAdder(storeConfig, timerLog, timerWheel);
     }
 
     @Override
@@ -51,12 +51,12 @@ public class DefaultTimer implements Timer {
 
     @Override
     public boolean addTimer(TimerEvent event) {
-        return taskScheduler.addTimer(event);
+        return taskAdder.addTimer(event);
     }
 
     @Override
     public ScanResult scan(long delayTime) {
-        return wheelScanner.scan(delayTime);
+        return taskScanner.scan(delayTime);
     }
 
 

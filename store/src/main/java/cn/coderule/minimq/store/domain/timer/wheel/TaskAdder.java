@@ -12,12 +12,12 @@ import cn.coderule.minimq.domain.domain.timer.wheel.Slot;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class TaskScheduler {
+public class TaskAdder {
     private final TimerConfig timerConfig;
     private final TimerLog timerLog;
     private final TimerWheel timerWheel;
 
-    public TaskScheduler(StoreConfig storeConfig, TimerLog timerLog, TimerWheel timerWheel) {
+    public TaskAdder(StoreConfig storeConfig, TimerLog timerLog, TimerWheel timerWheel) {
         this.timerConfig = storeConfig.getTimerConfig();
         this.timerLog = timerLog;
         this.timerWheel = timerWheel;

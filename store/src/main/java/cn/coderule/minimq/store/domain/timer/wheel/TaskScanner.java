@@ -14,12 +14,12 @@ import java.util.concurrent.ConcurrentSkipListSet;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class WheelScanner {
+public class TaskScanner {
     private final TimerConfig timerConfig;
     private final TimerLog timerLog;
     private final TimerWheel timerWheel;
 
-    public WheelScanner(StoreConfig storeConfig, TimerLog timerLog, TimerWheel timerWheel) {
+    public TaskScanner(StoreConfig storeConfig, TimerLog timerLog, TimerWheel timerWheel) {
         this.timerConfig = storeConfig.getTimerConfig();
         this.timerLog = timerLog;
         this.timerWheel = timerWheel;
