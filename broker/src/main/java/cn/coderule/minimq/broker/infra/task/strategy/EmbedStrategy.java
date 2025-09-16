@@ -7,29 +7,17 @@ import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.domain.cluster.task.QueueTask;
 import cn.coderule.minimq.domain.domain.cluster.task.StoreTask;
 import cn.coderule.minimq.domain.domain.cluster.task.TaskFactory;
-import cn.coderule.minimq.domain.domain.cluster.task.TaskLoader;
+import cn.coderule.minimq.domain.domain.cluster.task.TaskStrategy;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.IntStream;
 
-public class EmbedTaskLoader implements TaskLoader {
+public class EmbedStrategy implements TaskStrategy {
     private final TaskContext taskContext;
 
-    public EmbedTaskLoader(TaskContext taskContext) {
+    public EmbedStrategy(TaskContext taskContext) {
         this.taskContext = taskContext;
-    }
-
-    @Override
-    public void setTimerFactory(TaskFactory factory) {
-    }
-
-    @Override
-    public void setReviveFactory(TaskFactory factory) {
-    }
-
-    @Override
-    public void setTransactionFactory(TaskFactory factory) {
     }
 
     @Override

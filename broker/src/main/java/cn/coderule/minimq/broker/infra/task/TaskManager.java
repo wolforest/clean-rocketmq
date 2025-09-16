@@ -4,6 +4,7 @@ import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.minimq.broker.server.bootstrap.BrokerContext;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.domain.cluster.task.TaskLoader;
+import cn.coderule.minimq.store.server.bootstrap.StoreContext;
 
 public class TaskManager implements Lifecycle {
     private TaskContext taskContext;
@@ -14,6 +15,7 @@ public class TaskManager implements Lifecycle {
         initContext();
 
         taskLoader = new DefaultTaskLoader(taskContext);
+        StoreContext.register(taskLoader, TaskLoader.class);
     }
 
     @Override

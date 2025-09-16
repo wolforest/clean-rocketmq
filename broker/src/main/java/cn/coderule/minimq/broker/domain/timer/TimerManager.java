@@ -2,13 +2,17 @@ package cn.coderule.minimq.broker.domain.timer;
 
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.minimq.broker.domain.producer.ProduceHookManager;
+import cn.coderule.minimq.broker.domain.timer.service.TimerFactory;
 import cn.coderule.minimq.broker.server.bootstrap.BrokerContext;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 
 public class TimerManager implements Lifecycle {
+    private TimerFactory timerFactory;
+
     @Override
     public void initialize() throws Exception {
         injectTimerHook();
+        initTimerFactory();
     }
 
     @Override
@@ -18,6 +22,10 @@ public class TimerManager implements Lifecycle {
 
     @Override
     public void shutdown() throws Exception {
+
+    }
+
+    private void initTimerFactory() {
 
     }
 

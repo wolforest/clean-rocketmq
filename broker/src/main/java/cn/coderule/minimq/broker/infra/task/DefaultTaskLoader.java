@@ -1,12 +1,13 @@
 package cn.coderule.minimq.broker.infra.task;
 
-import cn.coderule.minimq.broker.infra.task.strategy.BindingTaskLoader;
-import cn.coderule.minimq.broker.infra.task.strategy.EmbedTaskLoader;
-import cn.coderule.minimq.broker.infra.task.strategy.ShardingTaskLoader;
+import cn.coderule.minimq.broker.infra.task.strategy.BindingStrategy;
+import cn.coderule.minimq.broker.infra.task.strategy.EmbedStrategy;
+import cn.coderule.minimq.broker.infra.task.strategy.ShardingStrategy;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.config.business.TaskConfig;
 import cn.coderule.minimq.domain.domain.cluster.task.TaskFactory;
 import cn.coderule.minimq.domain.domain.cluster.task.TaskLoader;
+import cn.coderule.minimq.domain.domain.cluster.task.TaskStrategy;
 
 public class DefaultTaskLoader implements TaskLoader {
     private final TaskContext taskContext;
@@ -32,24 +33,29 @@ public class DefaultTaskLoader implements TaskLoader {
 
     @Override
     public void load() {
-        TaskLoader loader = null;
+        TaskStrategy strategy = getStrategy();
+        if (strategy != null) {
+            strategy.load();
+        }
+    }
+
+    private TaskStrategy getStrategy() {
+        TaskStrategy strategy = null;
 
         BrokerConfig brokerConfig = taskContext.getBrokerConfig();
         if (brokerConfig.isEnableEmbedStore()) {
-            loader = new EmbedTaskLoader(taskContext);
+            strategy = new EmbedStrategy(taskContext);
         }
 
         TaskConfig taskConfig = brokerConfig.getTaskConfig();
         if ("binding".equalsIgnoreCase(taskConfig.getTaskMode())) {
-            loader = new BindingTaskLoader(taskContext);
+            strategy = new BindingStrategy(taskContext);
         }
 
         if ("sharding".equalsIgnoreCase(taskConfig.getTaskMode())) {
-            loader = new ShardingTaskLoader(taskContext);
+            strategy = new ShardingStrategy(taskContext);
         }
 
-        if (loader != null) {
-            loader.load();
-        }
+        return strategy;
     }
 }
