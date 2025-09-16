@@ -35,7 +35,17 @@ public class TimerFactory implements TaskFactory, Lifecycle {
 
     @Override
     public void destroy(QueueTask task) {
+        TimerQueueConsumer consumer = workerMap.remove(task.getQueueId());
+        if (consumer == null) {
+            return;
+        }
 
+        try {
+            consumer.shutdown();
+        } catch (Exception e) {
+            log.error("destroy timer consumer error: storeGroup={}, queueId={}",
+                task.getStoreGroup(), task.getQueueId(), e);
+        }
     }
 
     @Override

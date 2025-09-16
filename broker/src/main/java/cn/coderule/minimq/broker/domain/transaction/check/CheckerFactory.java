@@ -41,7 +41,17 @@ public class CheckerFactory implements TaskFactory, Lifecycle {
 
     @Override
     public void destroy(QueueTask task) {
+        TransactionChecker checker = checkerMap.remove(task.getQueueId());
+        if (checker == null) {
+            return;
+        }
 
+        try {
+            checker.shutdown();
+        } catch (Exception e) {
+            log.error("shutdown transaction check error: storeGroup={}, queueId={}",
+                task.getStoreGroup(), task.getQueueId(), e);
+        }
     }
 
     @Override

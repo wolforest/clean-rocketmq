@@ -37,7 +37,17 @@ public class ReviverFactory implements TaskFactory, Lifecycle {
 
     @Override
     public void destroy(QueueTask task) {
+        ReviveThread reviver = workerMap.remove(task.getQueueId());
+        if (reviver == null) {
+            return;
+        }
 
+        try {
+            reviver.shutdown();
+        } catch (Exception e) {
+            log.error("destroy reviver error: storeGroup={}, queueId={}",
+                task.getStoreGroup(), task.getQueueId());
+        }
     }
 
     @Override
