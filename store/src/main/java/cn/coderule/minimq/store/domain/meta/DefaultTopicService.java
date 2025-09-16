@@ -112,6 +112,7 @@ public class DefaultTopicService implements TopicService {
         }
 
         this.topicMap = JSONUtil.parse(data, TopicMap.class);
+        registerSystemTopic();
     }
 
     private void deleteRetryTopic(String topicName) {
