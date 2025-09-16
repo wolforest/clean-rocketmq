@@ -17,12 +17,9 @@ public class TimerService implements Timer {
 
     private final Timer timer;
 
-    public TimerService(
-        StoreConfig storeConfig,
-        CheckpointService checkpointService
-    ) {
+    public TimerService(StoreConfig storeConfig) {
         this.timerConfig = storeConfig.getTimerConfig();
-        this.checkpointService = checkpointService;
+        this.checkpointService = new CheckpointService(storeConfig);
 
         timer = initTimer(storeConfig);
     }
