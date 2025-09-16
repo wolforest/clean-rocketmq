@@ -76,7 +76,7 @@ public class AllocateMappedFileService extends ServiceThread implements Lifecycl
             }
 
             log.info("delete pre allocated mapped file, {}", req.mappedFile.getFileName());
-            req.mappedFile.destroy(1000);
+            req.mappedFile.destroy();
         }
     }
 

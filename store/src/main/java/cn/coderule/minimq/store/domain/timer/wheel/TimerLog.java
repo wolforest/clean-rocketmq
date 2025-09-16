@@ -41,6 +41,9 @@ public class TimerLog {
         return this.mappedFileQueue.load();
     }
 
+    public void destroy() {
+        this.mappedFileQueue.destroy();
+    }
     /**
      * append by block unit object
      * the only public append API

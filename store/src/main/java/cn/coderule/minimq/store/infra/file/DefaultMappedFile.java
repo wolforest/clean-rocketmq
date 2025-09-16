@@ -24,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class DefaultMappedFile extends ReferenceResource implements MappedFile {
     public static final int OS_PAGE_SIZE = 1024 * 4;
+    private static final int DEFAULT_DESTROY_TIMEOUT = 3_000;
 
     protected static final AtomicIntegerFieldUpdater<DefaultMappedFile> WRITE_POSITION_UPDATER
         = AtomicIntegerFieldUpdater.newUpdater(DefaultMappedFile.class, "writePosition");
@@ -355,6 +356,11 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
             log.warn("close file channel {} Failed. ", this.fileName, e);
         }
 
+    }
+
+    @Override
+    public void destroy() {
+        destroy(DEFAULT_DESTROY_TIMEOUT);
     }
 
     private void initFile() throws IOException {

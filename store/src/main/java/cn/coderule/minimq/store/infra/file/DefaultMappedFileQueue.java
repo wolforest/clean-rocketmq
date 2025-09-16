@@ -83,7 +83,7 @@ public class DefaultMappedFileQueue implements MappedFileQueue {
     @Override
     public void destroy() {
         for (MappedFile mf : this.mappedFiles) {
-            mf.destroy(1000 * 3);
+            mf.destroy();
         }
         this.mappedFiles.clear();
         this.flushPosition = 0;
@@ -215,7 +215,7 @@ public class DefaultMappedFileQueue implements MappedFileQueue {
         }
 
         if (this.mappedFiles.remove(mappedFile)) {
-            mappedFile.destroy(1000 * 3);
+            mappedFile.destroy();
         }
     }
 

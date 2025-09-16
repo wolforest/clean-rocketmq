@@ -159,6 +159,7 @@ public interface MappedFile {
      * @param interval If {@code true} then this method will destroy the file forcibly and ignore the reference
      */
     void destroy(long interval);
+    void destroy();
 
     /**
      * Shutdowns the file and mark it unavailable.

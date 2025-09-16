@@ -31,7 +31,7 @@ class DefaultMappedFileTest {
             assertEquals(fileSize, mappedFile.getMaxOffset());
             assertEquals(0, mappedFile.getInsertPosition());
 
-            mappedFile.destroy(1000);
+            mappedFile.destroy();
         } catch (IOException e) {
             log.error("create mappedFile exception", e);
         }
@@ -55,7 +55,7 @@ class DefaultMappedFileTest {
             assertEquals(30, resultBuffer.getInt());
             assertEquals(8L, resultBuffer.getLong());
 
-            mappedFile.destroy(1000);
+            mappedFile.destroy();
         } catch (IOException e) {
             log.error("create mappedFile exception", e);
         }
@@ -101,7 +101,7 @@ class DefaultMappedFileTest {
             assertEquals(10, insertResult.getWroteBytes());
             assertEquals(20, mappedFile.getInsertPosition());
 
-            mappedFile.destroy(1000);
+            mappedFile.destroy();
         } catch (IOException e) {
             log.error("create mappedFile exception", e);
         }
