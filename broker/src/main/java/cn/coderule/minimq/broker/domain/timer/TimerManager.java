@@ -4,6 +4,8 @@ import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.minimq.broker.domain.producer.ProduceHookManager;
 import cn.coderule.minimq.broker.domain.timer.context.TimerContext;
 import cn.coderule.minimq.broker.domain.timer.service.TimerFactory;
+import cn.coderule.minimq.broker.domain.timer.transit.TimerMessageProducer;
+import cn.coderule.minimq.broker.domain.timer.transit.TimerTaskScheduler;
 import cn.coderule.minimq.broker.infra.store.MQStore;
 import cn.coderule.minimq.broker.infra.store.TimerStore;
 import cn.coderule.minimq.broker.server.bootstrap.BrokerContext;
@@ -19,6 +21,9 @@ public class TimerManager implements Lifecycle {
     private TimerFactory timerFactory;
     private TimerContext timerContext;
 
+    private TimerMessageProducer[] messageProducers;
+    private TimerTaskScheduler[] taskSchedulers;
+
     @Override
     public void initialize() throws Exception {
         brokerConfig = BrokerContext.getBean(BrokerConfig.class);
@@ -26,6 +31,9 @@ public class TimerManager implements Lifecycle {
         if (!timerConfig.isEnableTimer()) {
             return;
         }
+
+        initMessageProducers();
+        initTaskSchedulers();
 
         initTimerContext();
         initTimerFactory();
@@ -38,6 +46,10 @@ public class TimerManager implements Lifecycle {
         if (!timerConfig.isEnableTimer()) {
             return;
         }
+
+        timerFactory.start();
+        startMessageProducers();
+        startTaskSchedulers();
     }
 
     @Override
@@ -45,6 +57,10 @@ public class TimerManager implements Lifecycle {
         if (!timerConfig.isEnableTimer()) {
             return;
         }
+
+        timerFactory.shutdown();
+        shutdownMessageProducers();
+        shutdownTaskSchedulers();
     }
 
     private void initTimerContext() {
@@ -53,10 +69,53 @@ public class TimerManager implements Lifecycle {
             .timerQueue(new TimerQueue(timerConfig))
             .timerState(new TimerState(timerConfig))
 
+            .messageProducers(messageProducers)
+            .taskSchedulers(taskSchedulers)
+
             .mqStore(BrokerContext.getBean(MQStore.class))
             .timerStore(BrokerContext.getBean(TimerStore.class))
 
             .build();
+    }
+
+    private void initMessageProducers() {
+        int producerNum = timerConfig.getConsumerThreadNum();
+        messageProducers = new TimerMessageProducer[producerNum];
+        for (int i = 0; i < producerNum; i++) {
+            messageProducers[i] = new TimerMessageProducer(timerContext);
+        }
+    }
+
+    private void initTaskSchedulers() {
+        int schedulerNum = timerConfig.getSchedulerThreadNum();
+        taskSchedulers = new TimerTaskScheduler[schedulerNum];
+        for (int i = 0; i < schedulerNum; i++) {
+            taskSchedulers[i] = new TimerTaskScheduler(timerContext);
+        }
+    }
+
+    private void startMessageProducers() throws Exception {
+        for (TimerMessageProducer producer : messageProducers) {
+            producer.start();
+        }
+    }
+
+    private void startTaskSchedulers() throws Exception {
+        for (TimerTaskScheduler scheduler : taskSchedulers) {
+            scheduler.start();
+        }
+    }
+
+    private void shutdownMessageProducers() throws Exception {
+        for (TimerMessageProducer producer : messageProducers) {
+            producer.shutdown();
+        }
+    }
+
+    private void shutdownTaskSchedulers() throws Exception {
+        for (TimerTaskScheduler scheduler : taskSchedulers) {
+            scheduler.shutdown();
+        }
     }
 
     private void initTimerFactory() {

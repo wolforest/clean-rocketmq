@@ -35,8 +35,8 @@ public class TimerContext implements Serializable {
     private MQStore mqStore;
     private TimerStore timerStore;
 
-    private TimerMessageProducer[] timerMessageProducers;
-    private TimerTaskScheduler[] timerTaskSchedulers;
+    private TimerMessageProducer[] messageProducers;
+    private TimerTaskScheduler[] taskSchedulers;
 
     public void initQueueTask(QueueTask task) {
         if (null != queueTask) {
@@ -90,11 +90,11 @@ public class TimerContext implements Serializable {
             return true;
         }
 
-        if (isAllWaiting(timerMessageProducers)) {
+        if (isAllWaiting(messageProducers)) {
             return true;
         }
 
-        return isAllWaiting(timerTaskSchedulers);
+        return isAllWaiting(taskSchedulers);
     }
 
     private boolean isAllWaiting(TimerMessageProducer[] timerMessageProducers) {
