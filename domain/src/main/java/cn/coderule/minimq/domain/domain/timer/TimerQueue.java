@@ -17,9 +17,7 @@ public class TimerQueue {
     private final BlockingQueue<List<TimerEvent>> scheduleQueue;
 
 
-    public TimerQueue(StoreConfig storeConfig) {
-        TimerConfig timerConfig = storeConfig.getTimerConfig();
-
+    public TimerQueue(TimerConfig timerConfig) {
         if (timerConfig.isEnableDisruptor()) {
             this.consumeQueue = new DisruptorBlockingQueue<>(DEFAULT_CAPACITY);
             this.produceQueue = new DisruptorBlockingQueue<>(DEFAULT_CAPACITY);

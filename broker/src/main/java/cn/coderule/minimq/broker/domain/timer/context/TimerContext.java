@@ -25,9 +25,10 @@ import lombok.extern.slf4j.Slf4j;
 @AllArgsConstructor
 public class TimerContext implements Serializable {
     private static final int MAX_WAIT_TIMES = 100;
+    private BrokerConfig brokerConfig;
+
     private QueueTask queueTask;
 
-    private BrokerConfig brokerConfig;
     private TimerQueue timerQueue;
     private TimerState timerState;
 
