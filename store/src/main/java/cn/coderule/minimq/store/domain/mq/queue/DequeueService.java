@@ -210,8 +210,8 @@ public class DequeueService {
             return false;
         }
 
-        if (!result.isEmpty()) {
-            return true;
+        if (result.isEmpty()) {
+            return false;
         }
 
         if (result.getNextOffset() < 0) {
