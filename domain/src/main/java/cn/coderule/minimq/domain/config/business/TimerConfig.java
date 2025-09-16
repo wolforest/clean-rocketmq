@@ -30,9 +30,13 @@ public class TimerConfig implements Serializable {
     private int precision = 1_000;
 
     private int flushInterval = 1_000;
-    private int consumerThreadNum = 3;
-    private int producerThreadNum = 3;
-    private int schedulerThreadNum = 3;
+//    private int consumerThreadNum = 3;
+//    private int producerThreadNum = 3;
+//    private int schedulerThreadNum = 3;
+
+    private int consumerThreadNum = 1;
+    private int producerThreadNum = 1;
+    private int schedulerThreadNum = 1;
 
     private int maxDelayTime = 24 * 3600;
 }

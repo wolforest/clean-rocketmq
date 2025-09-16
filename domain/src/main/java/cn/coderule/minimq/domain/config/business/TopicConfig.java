@@ -14,7 +14,9 @@ public class TopicConfig implements Serializable {
     private int defaultQueueNum = 1;
 
     private int timerQueueNum = 1;
-    private int reviveQueueNum = 8;
+    private int reviveQueueNum = 1;
+    // 1 for test
+    //private int reviveQueueNum = 8;
     private int prepareQueueNum = 1;
     private int commitQueueNum = 1;
     private int checkQueueNum = 1;

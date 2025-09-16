@@ -13,6 +13,7 @@ import cn.coderule.minimq.broker.infra.store.TimerStore;
 import cn.coderule.minimq.broker.server.bootstrap.BrokerContext;
 import cn.coderule.minimq.domain.config.business.TimerConfig;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
+import cn.coderule.minimq.domain.domain.cluster.task.TaskLoader;
 import cn.coderule.minimq.domain.domain.timer.TimerQueue;
 import cn.coderule.minimq.domain.domain.timer.state.TimerState;
 import lombok.extern.slf4j.Slf4j;
@@ -139,6 +140,9 @@ public class TimerManager implements Lifecycle {
 
     private void initTimerFactory() {
         timerFactory = new TimerFactory(timerContext);
+
+        TaskLoader loader = BrokerContext.getBean(TaskLoader.class);
+        loader.setTimerFactory(timerFactory);
     }
 
     private void injectTimerHook() {
