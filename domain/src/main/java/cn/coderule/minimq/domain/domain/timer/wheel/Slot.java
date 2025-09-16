@@ -1,7 +1,10 @@
 package cn.coderule.minimq.domain.domain.timer.wheel;
 
 import java.io.Serializable;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * Represents a slot of timing wheel. Format:
@@ -12,13 +15,16 @@ import lombok.Data;
  * └────────────┴───────────┴───────────┴───────────┴───────────┘
  */
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Slot implements Serializable {
     public static final short SIZE = 32;
-    public final long timeMs; //delayed time
-    public final long firstPos;
-    public final long lastPos;
-    public final int num;
-    public final int magic; //no use now, just keep it
+    public long timeMs; //delayed time
+    public long firstPos;
+    public long lastPos;
+    public int num;
+    public int magic; //useless now, just keep it
 
     public Slot(long timeMs, long firstPos, long lastPos) {
         this.timeMs = timeMs;
@@ -28,11 +34,4 @@ public class Slot implements Serializable {
         this.magic = 0;
     }
 
-    public Slot(long timeMs, long firstPos, long lastPos, int num, int magic) {
-        this.timeMs = timeMs;
-        this.firstPos = firstPos;
-        this.lastPos = lastPos;
-        this.num = num;
-        this.magic = magic;
-    }
 }

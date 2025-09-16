@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.checkerframework.checker.units.qual.N;
 
 /**
  * Represents a block of timer log. Format:
@@ -20,6 +19,7 @@ import org.checkerframework.checker.units.qual.N;
 @Data
 @Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class Block implements Serializable {
     public static final short SIZE = 0
             + 4 //size
@@ -48,26 +48,6 @@ public class Block implements Serializable {
     public int sizePy;
     public int hashCodeOfRealTopic;
     public long reservedValue;
-
-    public Block(int size,
-                 long prevPos,
-                 int magic,
-                 long currWriteTime,
-                 int delayedTime,
-                 long offsetPy,
-                 int sizePy,
-                 int hashCodeOfRealTopic,
-                 long reservedValue) {
-        this.size = size;
-        this.prevPos = prevPos;
-        this.magic = magic;
-        this.currWriteTime = currWriteTime;
-        this.delayedTime = delayedTime;
-        this.offsetPy = offsetPy;
-        this.sizePy = sizePy;
-        this.hashCodeOfRealTopic = hashCodeOfRealTopic;
-        this.reservedValue = reservedValue;
-    }
 
     public byte[] bytes() {
         ByteBuffer tmpBuffer = blockBuffer;

@@ -34,7 +34,7 @@ public class TimerLog {
 
     public TimerLog(final String storePath, final int fileSize) {
         this.fileSize = fileSize;
-        this.mappedFileQueue = new DefaultMappedFileQueue(storePath, fileSize, null);
+        this.mappedFileQueue = new DefaultMappedFileQueue(storePath, fileSize);
     }
 
     public boolean load() {
@@ -43,15 +43,14 @@ public class TimerLog {
 
     /**
      * append by block unit object
-     * the only one public append API
-     *
+     * the only public append API
      * called by TimerWheelPersistence,
      *      and pos is always 0;
      *      and len is always Block.SIZE;
      *
      * @param block block object
      * @param pos   position or offset
-     * @param len   len of block,current is fixed length Block.SIZE
+     * @param len   len of block,current is fixed length Block SIZE
      * @return offset
      */
     public long append(Block block, int pos, int len) {
