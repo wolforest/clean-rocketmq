@@ -110,6 +110,10 @@ public class TimerState implements Serializable {
         }
     }
 
+    public void start() {
+        this.state = TimerConstants.RUNNING;
+    }
+
     public boolean isRunning() {
         return TimerConstants.RUNNING == state;
     }

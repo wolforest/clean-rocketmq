@@ -38,6 +38,10 @@ public class TimerContext implements Serializable {
     private TimerMessageProducer[] messageProducers;
     private TimerTaskScheduler[] taskSchedulers;
 
+    public void start() {
+        timerState.start();
+    }
+
     public void initQueueTask(QueueTask task) {
         if (null != queueTask) {
             return;

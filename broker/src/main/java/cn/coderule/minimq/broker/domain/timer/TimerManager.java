@@ -56,6 +56,7 @@ public class TimerManager implements Lifecycle {
         if (!timerConfig.isEnableTimer()) {
             return;
         }
+        timerContext.start();
 
         timerFactory.start();
         taskSaver.start();
