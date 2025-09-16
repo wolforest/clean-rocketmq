@@ -2,6 +2,7 @@ package cn.coderule.minimq.domain.domain.message;
 
 import cn.coderule.common.util.encrypt.HashUtil;
 import cn.coderule.common.util.lang.collection.MapUtil;
+import cn.coderule.minimq.domain.core.constant.MQConstants;
 import cn.coderule.minimq.domain.core.constant.flag.MessageSysFlag;
 import cn.coderule.minimq.domain.core.constant.MessageConst;
 import cn.coderule.minimq.domain.core.enums.message.MessageStatus;
@@ -121,6 +122,9 @@ public class MessageBO extends Message implements Serializable {
 
         this.topic = systemTopic;
         this.queueId = systemQueueId;
+
+        this.topicLength = systemTopic.getBytes(MQConstants.MQ_CHARSET).length;
+
     }
 
     public boolean isNormalOrCommitMessage(){
