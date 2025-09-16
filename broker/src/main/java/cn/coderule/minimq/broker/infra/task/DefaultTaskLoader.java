@@ -17,17 +17,17 @@ public class DefaultTaskLoader implements TaskLoader {
     }
 
     @Override
-    public void setTimerFactory(TaskFactory factory) {
+    public void registerTimerFactory(TaskFactory factory) {
         taskContext.setTimerFactory(factory);
     }
 
     @Override
-    public void setReviveFactory(TaskFactory factory) {
+    public void registerReviveFactory(TaskFactory factory) {
         taskContext.setReviveFactory(factory);
     }
 
     @Override
-    public void setTransactionFactory(TaskFactory factory) {
+    public void registerTransactionFactory(TaskFactory factory) {
         taskContext.setTransactionFactory(factory);
     }
 

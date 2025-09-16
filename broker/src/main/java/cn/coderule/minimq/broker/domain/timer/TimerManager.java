@@ -142,7 +142,7 @@ public class TimerManager implements Lifecycle {
         timerFactory = new TimerFactory(timerContext);
 
         TaskLoader loader = BrokerContext.getBean(TaskLoader.class);
-        loader.setTimerFactory(timerFactory);
+        loader.registerTimerFactory(timerFactory);
     }
 
     private void injectTimerHook() {
