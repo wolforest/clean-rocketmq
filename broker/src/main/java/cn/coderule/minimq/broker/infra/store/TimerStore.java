@@ -22,7 +22,16 @@ public class TimerStore implements TimerFacade {
 
     @Override
     public void storeCheckpoint(TimerCheckpoint checkpoint) {
+        if (embedStore.isClusterGroup(checkpoint.getStoreGroup())) {
+            embedStore.storeCheckpoint(checkpoint);
+            return;
+        }
 
+        if (!brokerConfig.isEnableRemoteStore()) {
+            return;
+        }
+
+        remoteStore.storeCheckpoint(checkpoint);
     }
 
     @Override
