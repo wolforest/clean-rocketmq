@@ -1,5 +1,6 @@
 package cn.coderule.minimq.store.domain.timer.service;
 
+import cn.coderule.common.convention.ability.Flushable;
 import cn.coderule.minimq.domain.config.business.TimerConfig;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.domain.config.store.StorePath;
@@ -12,7 +13,7 @@ import cn.coderule.minimq.store.domain.timer.wheel.DefaultTimer;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class TimerService implements Timer {
+public class TimerService implements Timer, Flushable {
     private final TimerConfig timerConfig;
     private final CheckpointService checkpointService;
 
@@ -74,5 +75,14 @@ public class TimerService implements Timer {
     @Override
     public void shutdown() throws Exception {
         timer.shutdown();
+    }
+
+    @Override
+    public void flush() throws Exception {
+        if (timer instanceof Flushable) {
+            ((Flushable) timer).flush();
+        }
+
+        checkpointService.flush();
     }
 }

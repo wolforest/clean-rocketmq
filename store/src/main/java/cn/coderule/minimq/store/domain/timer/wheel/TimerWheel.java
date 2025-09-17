@@ -1,5 +1,6 @@
 package cn.coderule.minimq.store.domain.timer.wheel;
 
+import cn.coderule.common.convention.ability.Flushable;
 import cn.coderule.common.util.io.DirUtil;
 import cn.coderule.common.util.io.FileUtil;
 import cn.coderule.common.util.lang.ByteUtil;
@@ -14,7 +15,7 @@ import java.nio.channels.FileChannel;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class TimerWheel {
+public class TimerWheel implements Flushable {
     public static final int BLANK = -1, IGNORE = -2;
 
     /**

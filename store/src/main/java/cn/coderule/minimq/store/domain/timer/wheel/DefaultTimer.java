@@ -1,5 +1,6 @@
 package cn.coderule.minimq.store.domain.timer.wheel;
 
+import cn.coderule.common.convention.ability.Flushable;
 import cn.coderule.minimq.domain.config.business.TimerConfig;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.domain.domain.timer.ScanResult;
@@ -8,7 +9,7 @@ import cn.coderule.minimq.domain.domain.store.domain.timer.Timer;
 import cn.coderule.minimq.domain.config.store.StorePath;
 import java.io.IOException;
 
-public class DefaultTimer implements Timer {
+public class DefaultTimer implements Timer, Flushable {
     private final TaskAdder taskAdder;
     private final TaskScanner taskScanner;
     private final TimerLog timerLog;
@@ -59,5 +60,9 @@ public class DefaultTimer implements Timer {
         return taskScanner.scan(delayTime);
     }
 
-
+    @Override
+    public void flush() throws Exception {
+        timerLog.flush();
+        timerWheel.flush();
+    }
 }

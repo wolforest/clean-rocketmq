@@ -1,5 +1,6 @@
 package cn.coderule.minimq.store.domain.timer.wheel;
 
+import cn.coderule.common.convention.ability.Flushable;
 import cn.coderule.minimq.domain.domain.store.infra.SelectedMappedBuffer;
 import cn.coderule.minimq.domain.domain.timer.wheel.Block;
 import cn.coderule.minimq.domain.domain.store.infra.MappedFile;
@@ -16,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
  *   - calculate offset for cleaning expired files
  */
 @Slf4j
-public class TimerLog {
+public class TimerLog implements Flushable {
     public final static int BLANK_MAGIC_CODE = 0xBBCCDDEE ^ 1880681586 + 8;
     private final static int MIN_BLANK_LEN = 4 + 8 + 4;
     public final static int UNIT_SIZE = Block.SIZE;
