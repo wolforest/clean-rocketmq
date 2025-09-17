@@ -82,7 +82,7 @@ public class TimerTaskSaver extends ServiceThread {
             return;
         }
 
-        while (!timerState.isRunning()) {
+        while (timerState.isRunning()) {
             boolean success = save(eventList);
             if (success) {
                 break;
