@@ -12,8 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 public class ErrorConsumeQueue implements ConsumeQueue {
     public static final ErrorConsumeQueue INSTANCE = new ErrorConsumeQueue();
 
-    public static ErrorConsumeQueue singleton() {
-        log.error("no such queue store");
+    public static ErrorConsumeQueue singleton(String msg) {
+        log.error("no such queue store: {}", msg);
         return INSTANCE;
     }
 

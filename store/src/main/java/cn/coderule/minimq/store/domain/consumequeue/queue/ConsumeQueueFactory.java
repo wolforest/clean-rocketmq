@@ -39,7 +39,8 @@ public class ConsumeQueueFactory implements ConsumeQueueRegistry {
 
     public ConsumeQueue getOrCreate(String topic, int queueId) {
         if (!topicService.exists(topic)) {
-            return ErrorConsumeQueue.singleton();
+            String msg = String.format("topic %s not exists", topic);
+            return ErrorConsumeQueue.singleton(msg);
         }
 
         ConsumeQueue queue = get(topic, queueId);
