@@ -50,7 +50,7 @@ public class TimerStore implements TimerFacade {
     @Override
     public boolean addTimer(TimerEvent event) {
         if (embedStore.isClusterGroup(event.getStoreGroup())) {
-            return remoteStore.addTimer(event);
+            return embedStore.addTimer(event);
         }
 
         if (!brokerConfig.isEnableRemoteStore()) {
