@@ -113,6 +113,10 @@ public class TimerLog {
         //it seems not need to call shutdown
     }
 
+    public void flush() {
+        this.mappedFileQueue.flush(0);
+    }
+
     /**
      * calculate offset for last unit
      * be careful.
