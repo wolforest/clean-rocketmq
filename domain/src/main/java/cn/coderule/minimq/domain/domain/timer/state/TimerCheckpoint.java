@@ -10,6 +10,8 @@ import lombok.Data;
 public class TimerCheckpoint implements Serializable {
     private final DataVersion dataVersion;
 
+    private String storeGroup;
+
     private volatile long lastReadTimeMs = 0L;
     private volatile long lastTimerLogFlushPos = 0L;
     private volatile long lastTimerQueueOffset = 0L;

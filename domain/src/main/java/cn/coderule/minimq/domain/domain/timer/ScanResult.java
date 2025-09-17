@@ -10,6 +10,13 @@ public class ScanResult implements Serializable {
     LinkedList<TimerEvent> deleteMsgStack = new LinkedList<>();
     int code = 0;
 
+    public static ScanResult empty() {
+        ScanResult result = new ScanResult();
+        result.setCode(0);
+
+        return result;
+    }
+
     public void addDeleteMsgStack(TimerEvent timerEvent) {
         deleteMsgStack.add(timerEvent);
     }

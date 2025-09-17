@@ -15,7 +15,7 @@ public abstract class AbstractEmbedStore {
         return loadBalance.containsSubscription(groupName);
     }
 
-    public boolean isEmbed(String storeGroup) {
+    public boolean isClusterGroup(String storeGroup) {
         return loadBalance.isEmbed(storeGroup);
     }
 }
