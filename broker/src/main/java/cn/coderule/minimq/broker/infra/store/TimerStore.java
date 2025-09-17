@@ -36,7 +36,15 @@ public class TimerStore implements TimerFacade {
 
     @Override
     public TimerCheckpoint loadCheckpoint(RequestContext context) {
-        return null;
+        if (embedStore.isClusterGroup(context.getStoreGroup())) {
+            return embedStore.loadCheckpoint(context);
+        }
+
+        if (!brokerConfig.isEnableRemoteStore()) {
+            return null;
+        }
+
+        return remoteStore.loadCheckpoint(context);
     }
 
     @Override
