@@ -19,25 +19,25 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class CheckpointService implements Flushable, Lifecycle {
     private final StoreConfig storeConfig;
-    private final String path;
 
     private final File file;
     private final FileChannel fileChannel;
-    private final MappedByteBuffer mappedByteBuffer;
+    private final MappedByteBuffer mappedBuffer;
 
     @Getter
     private final TimerCheckpoint checkpoint;
 
     public CheckpointService(StoreConfig storeConfig, String path) throws IOException {
         this.storeConfig = storeConfig;
-        this.path = path;
 
         file = new File(path);
         DirUtil.createIfNotExists(file.getParent());
 
         RandomAccessFile randomAccessFile = new RandomAccessFile(file, "rw");
         fileChannel = randomAccessFile.getChannel();
-        mappedByteBuffer = fileChannel.map(FileChannel.MapMode.READ_WRITE, 0, DefaultMappedFile.OS_PAGE_SIZE);
+
+        mappedBuffer = fileChannel.map(
+            FileChannel.MapMode.READ_WRITE, 0, DefaultMappedFile.OS_PAGE_SIZE);
 
         checkpoint = new TimerCheckpoint();
     }
@@ -50,7 +50,21 @@ public class CheckpointService implements Flushable, Lifecycle {
     }
 
     public void flush() {
+        if (null == mappedBuffer) {
+            return;
+        }
 
+        mappedBuffer.putLong(0, checkpoint.getLastReadTimeMs());
+        mappedBuffer.putLong(8, checkpoint.getLastTimerLogFlushPos());
+        mappedBuffer.putLong(16, checkpoint.getLastTimerQueueOffset());
+        mappedBuffer.putLong(24, checkpoint.getMasterTimerQueueOffset());
+
+        //update dataVersion
+        mappedBuffer.putLong(32, checkpoint.getDataVersion().getStateVersion());
+        mappedBuffer.putLong(40, checkpoint.getDataVersion().getTimestamp());
+        mappedBuffer.putLong(48, checkpoint.getDataVersion().getCounter().get());
+
+        mappedBuffer.force();
     }
 
     @Override
@@ -69,23 +83,23 @@ public class CheckpointService implements Flushable, Lifecycle {
             return;
         }
 
-        checkpoint.setLastReadTimeMs(mappedByteBuffer.getLong(0));
-        checkpoint.setLastTimerLogFlushPos(mappedByteBuffer.getLong(8));
-        checkpoint.setLastTimerQueueOffset(mappedByteBuffer.getLong(16));
-        checkpoint.setMasterTimerQueueOffset(mappedByteBuffer.getLong(24));
+        checkpoint.setLastReadTimeMs(mappedBuffer.getLong(0));
+        checkpoint.setLastTimerLogFlushPos(mappedBuffer.getLong(8));
+        checkpoint.setLastTimerQueueOffset(mappedBuffer.getLong(16));
+        checkpoint.setMasterTimerQueueOffset(mappedBuffer.getLong(24));
         setDataVersion();
 
         log.info("Load timer checkpoint: {}", checkpoint);
     }
 
     private void setDataVersion() {
-        if (!this.mappedByteBuffer.hasRemaining()) {
+        if (!this.mappedBuffer.hasRemaining()) {
             return;
         }
 
         DataVersion version = checkpoint.getDataVersion();
-        version.setStateVersion(mappedByteBuffer.getLong(32));
-        version.setTimestamp(mappedByteBuffer.getLong(40));
-        version.setCounter(new AtomicLong(mappedByteBuffer.getLong(48)));
+        version.setStateVersion(mappedBuffer.getLong(32));
+        version.setTimestamp(mappedBuffer.getLong(40));
+        version.setCounter(new AtomicLong(mappedBuffer.getLong(48)));
     }
 }
