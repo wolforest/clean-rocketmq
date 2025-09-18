@@ -6,7 +6,6 @@ import cn.coderule.common.util.io.FileUtil;
 import cn.coderule.common.util.lang.ByteUtil;
 import cn.coderule.minimq.domain.domain.timer.wheel.Slot;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
@@ -50,28 +49,21 @@ public class TimerWheel implements Flushable {
     public TimerWheel(String fileName, int slotsTotal, int precisionMs) throws IOException {
         this.slotsTotal = slotsTotal;
         this.precisionMs = precisionMs;
-        // why ?
         this.wheelLength = this.slotsTotal * 2 * Slot.SIZE;
 
         file = new File(fileName);
         DirUtil.createIfNotExists(file.getParent());
 
         try (RandomAccessFile randomAccessFile = new RandomAccessFile(file, "rw")) {
-            if (file.exists() && randomAccessFile.length() != 0 && randomAccessFile.length() != wheelLength) {
-                throw new RuntimeException(
-                    String.format("Timer wheel length:%d != expected:%s", randomAccessFile.length(), wheelLength)
-                );
-            }
+            validateFile(randomAccessFile);
 
             randomAccessFile.setLength(wheelLength);
             fileChannel = randomAccessFile.getChannel();
             mappedByteBuffer = fileChannel.map(FileChannel.MapMode.READ_WRITE, 0, wheelLength);
+
             assert wheelLength == mappedByteBuffer.remaining();
             this.byteBuffer = ByteBuffer.allocateDirect(wheelLength);
             this.byteBuffer.put(mappedByteBuffer);
-        } catch (FileNotFoundException e) {
-            log.error("create file channel {} Failed. ", fileName, e);
-            throw e;
         } catch (IOException e) {
             log.error("map file {} Failed. ", fileName, e);
             throw e;
@@ -272,5 +264,24 @@ public class TimerWheel implements Flushable {
             allNum = allNum + localBuffer.get().getInt();
         }
         return allNum;
+    }
+
+    private void validateFile(RandomAccessFile randomAccessFile) throws IOException {
+        if (!file.exists()) {
+            return;
+        }
+
+        long length = randomAccessFile.length();
+        if (length == 0) {
+            return;
+        }
+
+        if (length == wheelLength) {
+            return;
+        }
+
+        throw new RuntimeException(
+            String.format("Timer wheel length:%d != expected:%s", randomAccessFile.length(), wheelLength)
+        );
     }
 }

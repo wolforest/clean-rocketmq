@@ -138,6 +138,7 @@ public class TimerState implements Serializable {
         return TimerConstants.RUNNING == state;
     }
 
+    @SuppressWarnings("NonAtomicOperationOnVolatileField")
     public void moveScanTime() {
         this.lastScanTime = lastScanTime + precision;
         this.commitScanTime = lastScanTime;
