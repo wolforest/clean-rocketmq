@@ -3,6 +3,8 @@ package cn.coderule.minimq.store.domain.timer.service;
 import cn.coderule.common.convention.ability.Flushable;
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.util.io.DirUtil;
+import cn.coderule.common.util.io.FileUtil;
+import cn.coderule.common.util.lang.ByteUtil;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.domain.domain.meta.DataVersion;
 import cn.coderule.minimq.domain.domain.timer.state.TimerCheckpoint;
@@ -60,9 +62,10 @@ public class CheckpointService implements Flushable, Lifecycle {
         mappedBuffer.putLong(24, checkpoint.getMasterTimerQueueOffset());
 
         //update dataVersion
-        mappedBuffer.putLong(32, checkpoint.getDataVersion().getStateVersion());
-        mappedBuffer.putLong(40, checkpoint.getDataVersion().getTimestamp());
-        mappedBuffer.putLong(48, checkpoint.getDataVersion().getCounter().get());
+        DataVersion version = checkpoint.getDataVersion();
+        mappedBuffer.putLong(32, version.getStateVersion());
+        mappedBuffer.putLong(40, version.getTimestamp());
+        mappedBuffer.putLong(48, version.getCounter().get());
 
         mappedBuffer.force();
     }
@@ -74,7 +77,14 @@ public class CheckpointService implements Flushable, Lifecycle {
 
     @Override
     public void shutdown() throws Exception {
+        if (null == mappedBuffer) {
+            return;
+        }
 
+        flush();
+
+        ByteUtil.cleanBuffer(mappedBuffer);
+        FileUtil.closeChannel(fileChannel);
     }
 
     @Override
