@@ -17,7 +17,7 @@ public class AckManager implements Lifecycle {
         BrokerConfig brokerConfig = BrokerContext.getBean(BrokerConfig.class);
         MQFacade mqFacade = BrokerContext.getBean(MQStore.class);
         TopicFacade topicFacade = BrokerContext.getBean(TopicStore.class);
-        ReceiptHandler receiptHandler = BrokerContext.getBean(DefaultReceiptHandler.class);
+        ReceiptHandler receiptHandler = BrokerContext.getBean(ReceiptHandler.class);
         ConsumerRegister consumerRegister = BrokerContext.getBean(ConsumerRegister.class);
 
         AckValidator ackValidator = new AckValidator(mqFacade, topicFacade);

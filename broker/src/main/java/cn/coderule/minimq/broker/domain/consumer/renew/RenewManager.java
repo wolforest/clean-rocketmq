@@ -6,6 +6,7 @@ import cn.coderule.minimq.broker.domain.consumer.consumer.ConsumerRegister;
 import cn.coderule.minimq.broker.infra.store.SubscriptionStore;
 import cn.coderule.minimq.broker.server.bootstrap.BrokerContext;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
+import cn.coderule.minimq.domain.domain.consumer.receipt.ReceiptHandler;
 
 public class RenewManager implements Lifecycle {
     private BrokerConfig brokerConfig;
@@ -43,6 +44,7 @@ public class RenewManager implements Lifecycle {
 
     private void initReceiptHandler() {
         receiptHandler = new DefaultReceiptHandler(brokerConfig, renewListener);
+        BrokerContext.register(receiptHandler, ReceiptHandler.class);
     }
 
     private void initRenewService() throws Exception {
