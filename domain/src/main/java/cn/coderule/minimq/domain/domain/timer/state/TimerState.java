@@ -110,6 +110,11 @@ public class TimerState implements Serializable {
         }
     }
 
+    public void update(TimerCheckpoint checkpoint) {
+        this.lastScanTime = checkpoint.getLastReadTimeMs();
+        this.timerQueueOffset = checkpoint.getMasterTimerQueueOffset();
+    }
+
     public void start() {
         this.state = TimerConstants.RUNNING;
     }

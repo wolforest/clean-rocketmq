@@ -2,7 +2,10 @@ package cn.coderule.minimq.broker.domain.timer.service;
 
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 import cn.coderule.minimq.broker.domain.timer.context.TimerContext;
+import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import cn.coderule.minimq.domain.domain.cluster.task.QueueTask;
+import cn.coderule.minimq.domain.domain.timer.state.TimerCheckpoint;
+import cn.coderule.minimq.domain.domain.timer.state.TimerState;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -51,7 +54,17 @@ public class CheckpointService extends ServiceThread {
     }
 
     private void load() {
+        if (!loadQueueTask()) {
+            log.error("load queue task error");
+            return;
+        }
 
+        String storeGroup = queueTask.getStoreGroup();
+        RequestContext requestContext = RequestContext.create(storeGroup);
+        TimerCheckpoint checkpoint = context.getTimerStore().loadCheckpoint(requestContext);
+
+        TimerState timerState = context.getTimerState();
+        timerState.update(checkpoint);
     }
 
     private void store() {
