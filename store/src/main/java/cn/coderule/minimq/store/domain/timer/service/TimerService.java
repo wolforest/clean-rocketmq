@@ -7,6 +7,7 @@ import cn.coderule.minimq.domain.domain.timer.ScanResult;
 import cn.coderule.minimq.domain.domain.timer.state.TimerCheckpoint;
 import cn.coderule.minimq.domain.domain.timer.TimerEvent;
 import cn.coderule.minimq.domain.domain.store.domain.timer.Timer;
+import cn.coderule.minimq.store.domain.mq.queue.MessageService;
 import cn.coderule.minimq.store.domain.timer.rocksdb.RocksdbTimer;
 import cn.coderule.minimq.store.domain.timer.wheel.DefaultTimer;
 import lombok.extern.slf4j.Slf4j;
@@ -15,13 +16,16 @@ import lombok.extern.slf4j.Slf4j;
 public class TimerService implements Timer, Flushable {
     private final TimerConfig timerConfig;
     private final CheckpointService checkpointService;
+    private final MessageService messageService;
 
     private final Timer timer;
 
-    public TimerService(StoreConfig storeConfig, CheckpointService checkpointService) {
+    public TimerService(StoreConfig storeConfig, CheckpointService checkpointService, MessageService messageService) {
         this.timerConfig = storeConfig.getTimerConfig();
 
         this.checkpointService = checkpointService;
+        this.messageService = messageService;
+
         timer = initTimer(storeConfig);
     }
 
@@ -41,6 +45,11 @@ public class TimerService implements Timer, Flushable {
     @Override
     public ScanResult scan(long delayTime) {
         return timer.scan(delayTime);
+    }
+
+    @Override
+    public void recover() {
+        timer.recover();
     }
 
     private Timer initTimer(StoreConfig storeConfig) {

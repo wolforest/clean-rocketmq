@@ -5,6 +5,7 @@ import cn.coderule.minimq.domain.config.store.StorePath;
 import cn.coderule.minimq.domain.domain.store.api.TimerStore;
 import cn.coderule.minimq.domain.domain.store.domain.timer.TimerManager;
 import cn.coderule.minimq.store.api.TimerStoreImpl;
+import cn.coderule.minimq.store.domain.mq.queue.MessageService;
 import cn.coderule.minimq.store.domain.timer.service.CheckpointService;
 import cn.coderule.minimq.store.domain.timer.service.TimerService;
 import cn.coderule.minimq.store.server.bootstrap.StoreContext;
@@ -14,10 +15,12 @@ public class DefaultTimerManager implements TimerManager {
     @Override
     public void initialize() throws Exception {
         StoreConfig storeConfig = StoreContext.getBean(StoreConfig.class);
+        MessageService messageService = StoreContext.getBean(MessageService.class);
+
         String checkpointPath = StorePath.getTimerCheckPath();
         CheckpointService checkpointService = new CheckpointService(checkpointPath);
 
-        timerService = new TimerService(storeConfig, checkpointService);
+        timerService = new TimerService(storeConfig, checkpointService, messageService);
         StoreContext.register(timerService);
 
         TimerStore timerStore = new TimerStoreImpl(timerService);

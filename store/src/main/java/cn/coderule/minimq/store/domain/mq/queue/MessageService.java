@@ -1,8 +1,6 @@
 package cn.coderule.minimq.store.domain.mq.queue;
 
 import cn.coderule.common.util.lang.collection.CollectionUtil;
-import cn.coderule.minimq.domain.config.business.MessageConfig;
-import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.domain.domain.store.domain.mq.DequeueResult;
 import cn.coderule.minimq.domain.domain.store.domain.mq.DequeueRequest;
 import cn.coderule.minimq.domain.domain.store.domain.consumequeue.QueueUnit;
@@ -15,16 +13,13 @@ import java.util.List;
 import lombok.NonNull;
 
 public class MessageService {
-    private final MessageConfig messageConfig;
     private final CommitLog commitLog;
     private final ConsumeQueueGateway consumeQueueGateway;
 
     public MessageService(
-        StoreConfig storeConfig,
         CommitLog commitLog,
         ConsumeQueueGateway consumeQueueGateway
     ) {
-        this.messageConfig = storeConfig.getMessageConfig();
 
         this.commitLog = commitLog;
         this.consumeQueueGateway = consumeQueueGateway;
@@ -44,7 +39,7 @@ public class MessageService {
             .topic(topic)
             .queueId(queueId)
             .offset(offset)
-            .maxNum(messageConfig.getMaxRequestSize())
+            .maxNum(num)
             .build();
         return get(request);
     }

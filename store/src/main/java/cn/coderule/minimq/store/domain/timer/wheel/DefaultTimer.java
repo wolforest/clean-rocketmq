@@ -8,6 +8,7 @@ import cn.coderule.minimq.domain.domain.timer.TimerEvent;
 import cn.coderule.minimq.domain.domain.store.domain.timer.Timer;
 import cn.coderule.minimq.domain.config.store.StorePath;
 import cn.coderule.minimq.domain.domain.timer.state.TimerCheckpoint;
+import cn.coderule.minimq.store.domain.mq.queue.MessageService;
 import cn.coderule.minimq.store.domain.timer.service.CheckpointService;
 import java.io.IOException;
 
@@ -20,7 +21,7 @@ public class DefaultTimer implements Timer, Flushable {
     private final TaskScanner taskScanner;
     private final TimerRecover recover;
 
-    public DefaultTimer(StoreConfig storeConfig, CheckpointService checkpointService) throws IOException {
+    public DefaultTimer(StoreConfig storeConfig, CheckpointService checkpointService, MessageService messageService) throws IOException {
         TimerConfig timerConfig = storeConfig.getTimerConfig();
         this.checkpointService = checkpointService;
 
@@ -42,7 +43,8 @@ public class DefaultTimer implements Timer, Flushable {
             storeConfig,
             timerLog,
             timerWheel,
-            checkpointService
+            checkpointService,
+            messageService
         );
     }
 
