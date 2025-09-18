@@ -74,7 +74,7 @@ public class TimerState implements Serializable {
      * saved timer queue offset(not flushed)
      * @rocketmq original name commitQueueOffset
      */
-    private volatile long savedQueueOffset;
+    private volatile long commitQueueOffset;
 
     /**
      * timer task commit time, for checkpoint
@@ -82,13 +82,13 @@ public class TimerState implements Serializable {
      *      maybe useful in commercial version.
      * @rocketmq original name commitReadTime
      */
-    private volatile long commitSaveTime;
+    private volatile long commitScanTime;
 
     /**
      * last timer task committed save time, for checkpoint
      * @rocketmq original name lastCommitReadTimeMs
      */
-    private volatile long lastCommitSaveTime;
+    private volatile long lastCommitScanTime;
 
     /**
      * last committed queue offset, for checkpoint
@@ -112,7 +112,22 @@ public class TimerState implements Serializable {
 
     public void update(TimerCheckpoint checkpoint) {
         this.lastScanTime = checkpoint.getLastReadTimeMs();
+        this.commitScanTime = checkpoint.getLastReadTimeMs();
+
         this.timerQueueOffset = checkpoint.getMasterTimerQueueOffset();
+        this.commitQueueOffset = checkpoint.getLastTimerQueueOffset();
+    }
+
+    public TimerCheckpoint toCheckpoint() {
+        TimerCheckpoint checkpoint = new TimerCheckpoint();
+
+        checkpoint.setLastReadTimeMs(commitScanTime);
+        checkpoint.setLastTimerQueueOffset(commitQueueOffset);
+
+        lastCommitScanTime = commitScanTime;
+        lastCommitQueueOffset = commitQueueOffset;
+
+        return checkpoint;
     }
 
     public void start() {
@@ -125,7 +140,7 @@ public class TimerState implements Serializable {
 
     public void moveScanTime() {
         this.lastScanTime = lastScanTime + precision;
-        this.commitSaveTime = lastScanTime;
+        this.commitScanTime = lastScanTime;
     }
 
     public void tryMoveSaveTime() {

@@ -68,7 +68,8 @@ public class CheckpointService extends ServiceThread {
     }
 
     private void store() {
-
+        TimerCheckpoint checkpoint = context.getTimerState().toCheckpoint();
+        context.getTimerStore().storeCheckpoint(checkpoint);
     }
 
     private int getInterval() {
