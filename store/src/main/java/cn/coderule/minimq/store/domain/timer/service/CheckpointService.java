@@ -4,6 +4,7 @@ import cn.coderule.common.convention.ability.Flushable;
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.util.io.DirUtil;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
+import cn.coderule.minimq.domain.domain.meta.DataVersion;
 import cn.coderule.minimq.domain.domain.timer.state.TimerCheckpoint;
 import cn.coderule.minimq.store.infra.file.DefaultMappedFile;
 import java.io.File;
@@ -11,6 +12,7 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
+import java.util.concurrent.atomic.AtomicLong;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -66,5 +68,19 @@ public class CheckpointService implements Flushable, Lifecycle {
         if (!file.exists()) {
             return;
         }
+
+        checkpoint.setLastReadTimeMs(mappedByteBuffer.getLong(0));
+        checkpoint.setLastTimerLogFlushPos(mappedByteBuffer.getLong(8));
+        checkpoint.setLastTimerQueueOffset(mappedByteBuffer.getLong(16));
+        checkpoint.setMasterTimerQueueOffset(mappedByteBuffer.getLong(24));
+
+        if (this.mappedByteBuffer.hasRemaining()) {
+            DataVersion version = checkpoint.getDataVersion();
+            version.setStateVersion(mappedByteBuffer.getLong(32));
+            version.setTimestamp(mappedByteBuffer.getLong(40));
+            version.setCounter(new AtomicLong(mappedByteBuffer.getLong(48)));
+        }
+
+        log.info("Load timer checkpoint: {}", checkpoint);
     }
 }
