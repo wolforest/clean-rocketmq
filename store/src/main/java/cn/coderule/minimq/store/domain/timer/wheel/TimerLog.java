@@ -114,6 +114,10 @@ public class TimerLog implements Flushable {
         //it seems not need to call shutdown
     }
 
+    public long getFlushPosition() {
+        return this.mappedFileQueue.getFlushPosition();
+    }
+
     public void flush() {
         this.mappedFileQueue.flush(0);
     }

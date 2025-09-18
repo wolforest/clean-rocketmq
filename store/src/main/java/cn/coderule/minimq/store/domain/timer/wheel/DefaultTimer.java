@@ -7,6 +7,8 @@ import cn.coderule.minimq.domain.domain.timer.ScanResult;
 import cn.coderule.minimq.domain.domain.timer.TimerEvent;
 import cn.coderule.minimq.domain.domain.store.domain.timer.Timer;
 import cn.coderule.minimq.domain.config.store.StorePath;
+import cn.coderule.minimq.domain.domain.timer.state.TimerCheckpoint;
+import cn.coderule.minimq.store.domain.timer.service.CheckpointService;
 import java.io.IOException;
 
 public class DefaultTimer implements Timer, Flushable {
@@ -14,10 +16,12 @@ public class DefaultTimer implements Timer, Flushable {
     private final TaskScanner taskScanner;
     private final TimerLog timerLog;
     private final TimerWheel timerWheel;
+    private final CheckpointService checkpointService;
 
 
-    public DefaultTimer(StoreConfig storeConfig) throws IOException {
+    public DefaultTimer(StoreConfig storeConfig, CheckpointService checkpointService) throws IOException {
         TimerConfig timerConfig = storeConfig.getTimerConfig();
+        this.checkpointService = checkpointService;
 
         this.timerLog = new TimerLog(
             StorePath.getTimerLogPath(),
@@ -62,7 +66,18 @@ public class DefaultTimer implements Timer, Flushable {
 
     @Override
     public void flush() throws Exception {
+        updateCheckpoint();
+
         timerLog.flush();
         timerWheel.flush();
+    }
+
+    private void updateCheckpoint() {
+        long logPos = timerLog.getFlushPosition();
+
+        TimerCheckpoint checkpoint = new TimerCheckpoint();
+        checkpoint.setLastTimerLogFlushPos(logPos);
+
+        checkpointService.update(checkpoint);
     }
 }

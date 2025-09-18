@@ -39,7 +39,7 @@ public class CheckpointService implements Flushable, Lifecycle {
         checkpoint = new TimerCheckpoint();
     }
 
-    public void store(TimerCheckpoint checkpoint) {
+    public void update(TimerCheckpoint checkpoint) {
         if (checkpoint.getLastReadTimeMs() > 0) {
             this.checkpoint.setLastReadTimeMs(checkpoint.getLastReadTimeMs());
         }

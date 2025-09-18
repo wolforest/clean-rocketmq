@@ -26,7 +26,7 @@ public class TimerService implements Timer, Flushable {
     }
 
     public void storeCheckpoint(TimerCheckpoint checkpoint) {
-        checkpointService.store(checkpoint);
+        checkpointService.update(checkpoint);
     }
 
     public TimerCheckpoint loadCheckpoint() {
@@ -53,7 +53,7 @@ public class TimerService implements Timer, Flushable {
                 return new RocksdbTimer(storeConfig);
             }
 
-            return new DefaultTimer(storeConfig);
+            return new DefaultTimer(storeConfig, checkpointService);
         } catch (Exception e) {
             log.error("init timer error", e);
         }
