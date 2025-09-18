@@ -68,6 +68,8 @@ public class TimerHook implements ProduceHook {
 
         messageBO.setTimeout(deliverTime);
         messageBO.setSystemQueue(TIMER_TOPIC, 0);
+
+        messageBO.initPropertiesString();
     }
 
     private long formatDeliverTime(long deliverTime) {
