@@ -12,12 +12,13 @@ import cn.coderule.minimq.store.domain.timer.service.CheckpointService;
 import java.io.IOException;
 
 public class DefaultTimer implements Timer, Flushable {
-    private final TaskAdder taskAdder;
-    private final TaskScanner taskScanner;
     private final TimerLog timerLog;
     private final TimerWheel timerWheel;
     private final CheckpointService checkpointService;
 
+    private final TaskAdder taskAdder;
+    private final TaskScanner taskScanner;
+    private final TimerRecover recover;
 
     public DefaultTimer(StoreConfig storeConfig, CheckpointService checkpointService) throws IOException {
         TimerConfig timerConfig = storeConfig.getTimerConfig();
@@ -36,6 +37,13 @@ public class DefaultTimer implements Timer, Flushable {
 
         this.taskScanner = new TaskScanner(storeConfig, timerLog, timerWheel);
         this.taskAdder = new TaskAdder(storeConfig, timerLog, timerWheel);
+
+        this.recover = new TimerRecover(
+            storeConfig,
+            timerLog,
+            timerWheel,
+            checkpointService
+        );
     }
 
     @Override
@@ -62,6 +70,11 @@ public class DefaultTimer implements Timer, Flushable {
     @Override
     public ScanResult scan(long delayTime) {
         return taskScanner.scan(delayTime);
+    }
+
+    @Override
+    public void recover() {
+        recover.recover();
     }
 
     @Override

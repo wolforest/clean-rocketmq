@@ -8,4 +8,6 @@ public interface Timer extends Lifecycle {
     boolean addTimer(TimerEvent event);
     ScanResult scan(long delayTime);
 
+    void recover();
+
 }
