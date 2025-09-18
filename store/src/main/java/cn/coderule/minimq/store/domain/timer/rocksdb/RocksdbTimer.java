@@ -23,6 +23,11 @@ public class RocksdbTimer implements Timer {
     }
 
     @Override
+    public void recover() {
+
+    }
+
+    @Override
     public void start() throws Exception {
 
     }

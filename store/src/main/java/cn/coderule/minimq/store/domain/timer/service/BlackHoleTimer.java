@@ -16,6 +16,11 @@ public class BlackHoleTimer implements Timer {
     }
 
     @Override
+    public void recover() {
+
+    }
+
+    @Override
     public void start() throws Exception {
 
     }
