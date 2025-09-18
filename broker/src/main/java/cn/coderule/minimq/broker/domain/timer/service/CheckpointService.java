@@ -21,8 +21,48 @@ public class CheckpointService extends ServiceThread {
     }
 
     @Override
-    public void run() {
+    public void initialize() {
+        log.info("{} service initializing", this.getServiceName());
 
+        if (!loadQueueTask()) {
+            return;
+        }
+
+        load();
+    }
+
+    @Override
+    public void run() {
+        log.info("{} service started", this.getServiceName());
+        if (!loadQueueTask()) {
+            return;
+        }
+
+        while (!this.isStopped()) {
+            try {
+                store();
+                await(getInterval());
+            } catch (Throwable t) {
+                log.error("{} service has exception. ", this.getServiceName(), t);
+            }
+        }
+
+        log.info("{} service end", this.getServiceName());
+    }
+
+    private void load() {
+
+    }
+
+    private void store() {
+
+    }
+
+    private int getInterval() {
+        return context
+            .getBrokerConfig()
+            .getTimerConfig()
+            .getFlushInterval();
     }
 
     private boolean loadQueueTask() {
