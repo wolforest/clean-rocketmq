@@ -73,14 +73,19 @@ public class CheckpointService implements Flushable, Lifecycle {
         checkpoint.setLastTimerLogFlushPos(mappedByteBuffer.getLong(8));
         checkpoint.setLastTimerQueueOffset(mappedByteBuffer.getLong(16));
         checkpoint.setMasterTimerQueueOffset(mappedByteBuffer.getLong(24));
-
-        if (this.mappedByteBuffer.hasRemaining()) {
-            DataVersion version = checkpoint.getDataVersion();
-            version.setStateVersion(mappedByteBuffer.getLong(32));
-            version.setTimestamp(mappedByteBuffer.getLong(40));
-            version.setCounter(new AtomicLong(mappedByteBuffer.getLong(48)));
-        }
+        setDataVersion();
 
         log.info("Load timer checkpoint: {}", checkpoint);
+    }
+
+    private void setDataVersion() {
+        if (!this.mappedByteBuffer.hasRemaining()) {
+            return;
+        }
+
+        DataVersion version = checkpoint.getDataVersion();
+        version.setStateVersion(mappedByteBuffer.getLong(32));
+        version.setTimestamp(mappedByteBuffer.getLong(40));
+        version.setCounter(new AtomicLong(mappedByteBuffer.getLong(48)));
     }
 }
