@@ -15,7 +15,7 @@ public class DefaultTimerManager implements TimerManager {
     public void initialize() throws Exception {
         StoreConfig storeConfig = StoreContext.getBean(StoreConfig.class);
         String checkpointPath = StorePath.getTimerCheckPath();
-        CheckpointService checkpointService = new CheckpointService(storeConfig, checkpointPath);
+        CheckpointService checkpointService = new CheckpointService(checkpointPath);
 
         timerService = new TimerService(storeConfig, checkpointService);
         StoreContext.register(timerService);

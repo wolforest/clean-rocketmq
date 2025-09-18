@@ -5,7 +5,6 @@ import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.util.io.DirUtil;
 import cn.coderule.common.util.io.FileUtil;
 import cn.coderule.common.util.lang.ByteUtil;
-import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.domain.domain.meta.DataVersion;
 import cn.coderule.minimq.domain.domain.timer.state.TimerCheckpoint;
 import cn.coderule.minimq.store.infra.file.DefaultMappedFile;
@@ -20,8 +19,6 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class CheckpointService implements Flushable, Lifecycle {
-    private final StoreConfig storeConfig;
-
     private final File file;
     private final FileChannel fileChannel;
     private final MappedByteBuffer mappedBuffer;
@@ -29,9 +26,7 @@ public class CheckpointService implements Flushable, Lifecycle {
     @Getter
     private final TimerCheckpoint checkpoint;
 
-    public CheckpointService(StoreConfig storeConfig, String path) throws IOException {
-        this.storeConfig = storeConfig;
-
+    public CheckpointService(String path) throws IOException {
         file = new File(path);
         DirUtil.createIfNotExists(file.getParent());
 
@@ -49,6 +44,8 @@ public class CheckpointService implements Flushable, Lifecycle {
         this.checkpoint.setLastTimerLogFlushPos(checkpoint.getLastTimerLogFlushPos());
         this.checkpoint.setLastTimerQueueOffset(checkpoint.getLastTimerQueueOffset());
         this.checkpoint.setMasterTimerQueueOffset(checkpoint.getMasterTimerQueueOffset());
+
+        //async flush by flush service
     }
 
     public void flush() {
@@ -72,7 +69,6 @@ public class CheckpointService implements Flushable, Lifecycle {
 
     @Override
     public void start() throws Exception {
-
     }
 
     @Override
