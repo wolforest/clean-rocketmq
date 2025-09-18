@@ -40,10 +40,21 @@ public class CheckpointService implements Flushable, Lifecycle {
     }
 
     public void store(TimerCheckpoint checkpoint) {
-        this.checkpoint.setLastReadTimeMs(checkpoint.getLastReadTimeMs());
-        this.checkpoint.setLastTimerLogFlushPos(checkpoint.getLastTimerLogFlushPos());
-        this.checkpoint.setLastTimerQueueOffset(checkpoint.getLastTimerQueueOffset());
-        this.checkpoint.setMasterTimerQueueOffset(checkpoint.getMasterTimerQueueOffset());
+        if (checkpoint.getLastReadTimeMs() > 0) {
+            this.checkpoint.setLastReadTimeMs(checkpoint.getLastReadTimeMs());
+        }
+
+        if (checkpoint.getLastTimerLogFlushPos() > 0) {
+            this.checkpoint.setLastTimerLogFlushPos(checkpoint.getLastTimerLogFlushPos());
+        }
+
+        if (checkpoint.getLastTimerQueueOffset() > 0) {
+            this.checkpoint.setLastTimerQueueOffset(checkpoint.getLastTimerQueueOffset());
+        }
+
+        if (checkpoint.getMasterTimerQueueOffset() > 0) {
+            this.checkpoint.setMasterTimerQueueOffset(checkpoint.getMasterTimerQueueOffset());
+        }
 
         //async flush by flush service
     }
