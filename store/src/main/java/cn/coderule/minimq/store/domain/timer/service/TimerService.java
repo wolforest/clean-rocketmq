@@ -3,7 +3,6 @@ package cn.coderule.minimq.store.domain.timer.service;
 import cn.coderule.common.convention.ability.Flushable;
 import cn.coderule.minimq.domain.config.business.TimerConfig;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
-import cn.coderule.minimq.domain.config.store.StorePath;
 import cn.coderule.minimq.domain.domain.timer.ScanResult;
 import cn.coderule.minimq.domain.domain.timer.state.TimerCheckpoint;
 import cn.coderule.minimq.domain.domain.timer.TimerEvent;
@@ -31,7 +30,7 @@ public class TimerService implements Timer, Flushable {
     }
 
     public TimerCheckpoint loadCheckpoint() {
-        return checkpointService.load();
+        return checkpointService.getCheckpoint();
     }
 
     @Override
