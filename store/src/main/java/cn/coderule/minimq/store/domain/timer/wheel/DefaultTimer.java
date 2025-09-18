@@ -13,39 +13,33 @@ import cn.coderule.minimq.store.domain.timer.service.CheckpointService;
 import java.io.IOException;
 
 public class DefaultTimer implements Timer, Flushable {
+    private final StoreConfig storeConfig;
+
     private final TimerLog timerLog;
     private final TimerWheel timerWheel;
     private final CheckpointService checkpointService;
+    private final MessageService messageService;
 
     private final TaskAdder taskAdder;
     private final TaskScanner taskScanner;
     private final TimerRecover recover;
 
-    public DefaultTimer(StoreConfig storeConfig, CheckpointService checkpointService, MessageService messageService) throws IOException {
-        TimerConfig timerConfig = storeConfig.getTimerConfig();
+    public DefaultTimer(
+        StoreConfig storeConfig,
+        CheckpointService checkpointService,
+        MessageService messageService
+    ) throws IOException {
+        this.storeConfig = storeConfig;
+
         this.checkpointService = checkpointService;
+        this.messageService = messageService;
 
-        this.timerLog = new TimerLog(
-            StorePath.getTimerLogPath(),
-            timerConfig.getTimerLogFileSize()
-        );
-
-        this.timerWheel = new TimerWheel(
-            StorePath.getTimerWheelPath(),
-            timerConfig.getTotalSlots(),
-            timerConfig.getPrecision()
-        );
+        this.timerLog = initTimerLog();
+        this.timerWheel = initTimerWheel();
+        this.recover = initRecover();
 
         this.taskScanner = new TaskScanner(storeConfig, timerLog, timerWheel);
         this.taskAdder = new TaskAdder(storeConfig, timerLog, timerWheel);
-
-        this.recover = new TimerRecover(
-            storeConfig,
-            timerLog,
-            timerWheel,
-            checkpointService,
-            messageService
-        );
     }
 
     @Override
@@ -94,5 +88,34 @@ public class DefaultTimer implements Timer, Flushable {
         checkpoint.setLastTimerLogFlushPos(logPos);
 
         checkpointService.update(checkpoint);
+    }
+
+    private TimerLog initTimerLog() {
+        TimerConfig timerConfig = storeConfig.getTimerConfig();
+
+        return new TimerLog(
+            StorePath.getTimerLogPath(),
+            timerConfig.getTimerLogFileSize()
+        );
+    }
+
+    private TimerWheel initTimerWheel() throws IOException {
+        TimerConfig timerConfig = storeConfig.getTimerConfig();
+
+        return new TimerWheel(
+            StorePath.getTimerWheelPath(),
+            timerConfig.getTotalSlots(),
+            timerConfig.getPrecision()
+        );
+    }
+
+    private TimerRecover initRecover() {
+        return new TimerRecover(
+            storeConfig,
+            timerLog,
+            timerWheel,
+            checkpointService,
+            messageService
+        );
     }
 }

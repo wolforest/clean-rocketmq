@@ -62,7 +62,7 @@ public class TimerService implements Timer, Flushable {
                 return new RocksdbTimer(storeConfig);
             }
 
-            return new DefaultTimer(storeConfig, checkpointService);
+            return new DefaultTimer(storeConfig, checkpointService, messageService);
         } catch (Exception e) {
             log.error("init timer error", e);
         }
