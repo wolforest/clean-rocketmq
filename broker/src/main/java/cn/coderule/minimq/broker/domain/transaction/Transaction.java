@@ -4,6 +4,7 @@ import cn.coderule.minimq.broker.domain.transaction.service.CommitService;
 import cn.coderule.minimq.broker.domain.transaction.service.PrepareService;
 import cn.coderule.minimq.broker.domain.transaction.service.RollbackService;
 import cn.coderule.minimq.broker.domain.transaction.service.SubscribeService;
+import cn.coderule.minimq.domain.core.enums.TransactionType;
 import cn.coderule.minimq.domain.domain.store.domain.mq.EnqueueResult;
 import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
@@ -27,7 +28,11 @@ public class Transaction {
     }
 
     public CompletableFuture<CommitResult> submit(SubmitRequest request) {
-        return null;
+        if (request.getTransactionType() == TransactionType.COMMIT) {
+            return commit(request);
+        }
+
+        return rollback(request);
     }
 
     public CompletableFuture<CommitResult> commit(SubmitRequest request) {
@@ -37,5 +42,5 @@ public class Transaction {
     public CompletableFuture<CommitResult> rollback(SubmitRequest request) {
         return rollbackService.rollback(request);
     }
-    
+
 }

@@ -1,6 +1,6 @@
 package cn.coderule.minimq.domain.core.enums;
 
-public enum TransactionStatus {
+public enum TransactionType {
     UNKNOWN,
     COMMIT,
     ROLLBACK

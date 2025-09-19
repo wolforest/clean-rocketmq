@@ -1,6 +1,6 @@
 package cn.coderule.minimq.domain.domain.transaction;
 
-import cn.coderule.minimq.domain.core.enums.TransactionStatus;
+import cn.coderule.minimq.domain.core.enums.TransactionType;
 import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import java.io.Serializable;
 import java.time.Duration;
@@ -21,8 +21,8 @@ public class SubmitRequest implements Serializable {
     private String topicName;
 
     private boolean fromCheck;
-    private TransactionStatus transactionStatus;
     private int transactionFlag;
+    private TransactionType transactionType;
 
     @Builder.Default
     private long timeout = Duration.ofSeconds(2).toMillis();

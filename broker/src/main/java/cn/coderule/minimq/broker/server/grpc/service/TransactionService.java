@@ -8,7 +8,7 @@ import apache.rocketmq.v2.TransactionResolution;
 import apache.rocketmq.v2.TransactionSource;
 import cn.coderule.minimq.broker.api.TransactionController;
 import cn.coderule.minimq.domain.core.constant.flag.MessageSysFlag;
-import cn.coderule.minimq.domain.core.enums.TransactionStatus;
+import cn.coderule.minimq.domain.core.enums.TransactionType;
 import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import cn.coderule.minimq.domain.domain.transaction.SubmitRequest;
 import cn.coderule.minimq.rpc.common.grpc.response.ResponseBuilder;
@@ -53,7 +53,7 @@ public class TransactionService {
         EndTransactionRequest request
     ) {
         boolean fromCheck = request.getSource().equals(TransactionSource.SOURCE_SERVER_CHECK);
-        TransactionStatus status = getTransactionStatus(request);
+        TransactionType status = getTransactionStatus(request);
         int transactionFlag = buildCommitOrRollback(status);
 
         return SubmitRequest.builder()
@@ -62,13 +62,13 @@ public class TransactionService {
             .messageId(request.getMessageId())
             .topicName(request.getTopic().getName())
             .fromCheck(fromCheck)
-            .transactionStatus(status)
+            .transactionType(status)
             .transactionFlag(transactionFlag)
             .build();
     }
 
-    protected int buildCommitOrRollback(TransactionStatus transactionStatus) {
-        return switch (transactionStatus) {
+    protected int buildCommitOrRollback(TransactionType transactionType) {
+        return switch (transactionType) {
             case COMMIT -> MessageSysFlag.COMMIT_MESSAGE;
             case ROLLBACK -> MessageSysFlag.ROLLBACK_MESSAGE;
             default -> MessageSysFlag.NORMAL_MESSAGE;
@@ -76,20 +76,20 @@ public class TransactionService {
     }
 
 
-    private TransactionStatus getTransactionStatus(EndTransactionRequest request) {
-        TransactionStatus transactionStatus = TransactionStatus.UNKNOWN;
+    private TransactionType getTransactionStatus(EndTransactionRequest request) {
+        TransactionType transactionType = TransactionType.UNKNOWN;
         TransactionResolution transactionResolution = request.getResolution();
         switch (transactionResolution) {
             case COMMIT:
-                transactionStatus = TransactionStatus.COMMIT;
+                transactionType = TransactionType.COMMIT;
                 break;
             case ROLLBACK:
-                transactionStatus = TransactionStatus.ROLLBACK;
+                transactionType = TransactionType.ROLLBACK;
                 break;
             default:
                 break;
         }
 
-        return transactionStatus;
+        return transactionType;
     }
 }
