@@ -1,7 +1,7 @@
 package cn.coderule.minimq.broker.api;
 
 import cn.coderule.minimq.broker.domain.transaction.Transaction;
-import cn.coderule.minimq.domain.domain.transaction.CommitRequest;
+import cn.coderule.minimq.domain.domain.transaction.SubmitRequest;
 import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import cn.coderule.minimq.domain.domain.transaction.CommitResult;
 import java.util.concurrent.CompletableFuture;
@@ -17,13 +17,13 @@ public class TransactionController {
         transaction.subscribe(context, topicName, groupName);
     }
 
-    public CompletableFuture<CommitResult> commit(CommitRequest request) {
+    public CompletableFuture<CommitResult> commit(SubmitRequest request) {
         // validate topic
         // validate transactionId: not blank
         return transaction.commit(request);
     }
 
-    public CompletableFuture<CommitResult> rollback(CommitRequest request) {
+    public CompletableFuture<CommitResult> rollback(SubmitRequest request) {
         return transaction.rollback(request);
     }
 }

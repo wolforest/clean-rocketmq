@@ -1,4 +1,4 @@
-package cn.coderule.minimq.domain.core.enums.produce;
+package cn.coderule.minimq.domain.core.enums;
 
 public enum TransactionStatus {
     UNKNOWN,

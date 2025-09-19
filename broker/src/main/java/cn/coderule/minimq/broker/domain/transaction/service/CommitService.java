@@ -1,7 +1,7 @@
 package cn.coderule.minimq.broker.domain.transaction.service;
 
 import cn.coderule.minimq.domain.domain.transaction.CommitBuffer;
-import cn.coderule.minimq.domain.domain.transaction.CommitRequest;
+import cn.coderule.minimq.domain.domain.transaction.SubmitRequest;
 import cn.coderule.minimq.domain.domain.transaction.CommitResult;
 import java.util.concurrent.CompletableFuture;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +16,7 @@ public class CommitService {
         this.messageService = messageService;
     }
 
-    public CompletableFuture<CommitResult> commit(CommitRequest request) {
+    public CompletableFuture<CommitResult> commit(SubmitRequest request) {
         return null;
     }
 }

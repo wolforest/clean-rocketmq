@@ -1,12 +1,18 @@
 package cn.coderule.minimq.domain.domain.transaction;
 
-import cn.coderule.minimq.domain.core.enums.produce.TransactionStatus;
+import cn.coderule.minimq.domain.core.enums.TransactionStatus;
 import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import java.io.Serializable;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
-public class CommitRequest implements Serializable {
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class SubmitRequest implements Serializable {
     private RequestContext requestContext;
     private String transactionId;
     private String messageId;
