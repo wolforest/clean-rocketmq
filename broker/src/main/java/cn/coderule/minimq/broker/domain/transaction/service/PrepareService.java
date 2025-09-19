@@ -1,5 +1,7 @@
 package cn.coderule.minimq.broker.domain.transaction.service;
 
+import cn.coderule.minimq.broker.infra.store.MQStore;
+import cn.coderule.minimq.domain.domain.store.domain.mq.EnqueueRequest;
 import cn.coderule.minimq.domain.domain.store.domain.mq.EnqueueResult;
 import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
@@ -8,8 +10,17 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class PrepareService {
+    private MQStore mqStore;
+    private MessageFactory messageFactory;
+
     public CompletableFuture<EnqueueResult> prepare(RequestContext context, MessageBO messageBO) {
-        return null;
+        MessageBO prepareMessage = messageFactory.createPrepareMessage(messageBO);
+        EnqueueRequest request = EnqueueRequest.builder()
+            .requestContext(context)
+            .messageBO(prepareMessage)
+            .build();
+
+        return mqStore.enqueueAsync(request);
     }
 
 
