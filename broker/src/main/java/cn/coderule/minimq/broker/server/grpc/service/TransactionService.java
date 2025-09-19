@@ -55,12 +55,14 @@ public class TransactionService {
         boolean fromCheck = request.getSource().equals(TransactionSource.SOURCE_SERVER_CHECK);
         TransactionType status = getTransactionStatus(request);
         int transactionFlag = buildCommitOrRollback(status);
+        String topicName = request.getTopic().getName();
 
         return SubmitRequest.builder()
             .requestContext(context)
             .transactionId(request.getTransactionId())
             .messageId(request.getMessageId())
-            .topicName(request.getTopic().getName())
+            .topicName(topicName)
+            .producerGroup(topicName)
             .fromCheck(fromCheck)
             .transactionType(status)
             .transactionFlag(transactionFlag)

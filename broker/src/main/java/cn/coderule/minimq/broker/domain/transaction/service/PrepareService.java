@@ -25,7 +25,12 @@ public class PrepareService {
             .messageBO(prepareMessage)
             .build();
 
-        return mqStore.enqueueAsync(request);
+        return mqStore.enqueueAsync(request)
+            .thenApplyAsync(result -> registerTransaction(request, result));
+    }
+
+    public EnqueueResult registerTransaction(EnqueueRequest request, EnqueueResult result) {
+        return null;
     }
 
 

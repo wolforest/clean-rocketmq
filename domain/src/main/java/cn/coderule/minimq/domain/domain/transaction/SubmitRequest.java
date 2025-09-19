@@ -19,6 +19,7 @@ public class SubmitRequest implements Serializable {
     private String messageId;
 
     private String topicName;
+    private String producerGroup;
 
     private boolean fromCheck;
     private int transactionFlag;
