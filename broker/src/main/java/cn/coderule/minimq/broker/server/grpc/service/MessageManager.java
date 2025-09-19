@@ -1,7 +1,8 @@
-package cn.coderule.minimq.broker.server.grpc.service.message;
+package cn.coderule.minimq.broker.server.grpc.service;
 
 import cn.coderule.minimq.broker.api.RouteController;
-import cn.coderule.minimq.broker.server.grpc.service.ContextInitPipeline;
+import cn.coderule.minimq.broker.server.grpc.MessageService;
+import cn.coderule.minimq.broker.server.grpc.interceptor.ContextInitPipeline;
 import cn.coderule.minimq.broker.server.grpc.service.channel.ChannelManager;
 import cn.coderule.minimq.broker.server.grpc.service.channel.HeartbeatService;
 import cn.coderule.minimq.broker.server.grpc.service.channel.RegisterService;
