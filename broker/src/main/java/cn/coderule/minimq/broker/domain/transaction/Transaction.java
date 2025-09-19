@@ -26,6 +26,10 @@ public class Transaction {
         return prepareService.prepare(context, messageBO);
     }
 
+    public CompletableFuture<CommitResult> submit(SubmitRequest request) {
+        return null;
+    }
+
     public CompletableFuture<CommitResult> commit(SubmitRequest request) {
         return commitService.commit(request);
     }

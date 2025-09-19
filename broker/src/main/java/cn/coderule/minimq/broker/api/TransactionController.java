@@ -17,13 +17,9 @@ public class TransactionController {
         transaction.subscribe(context, topicName, groupName);
     }
 
-    public CompletableFuture<CommitResult> commit(SubmitRequest request) {
+    public CompletableFuture<CommitResult> submit(SubmitRequest request) {
         // validate topic
         // validate transactionId: not blank
-        return transaction.commit(request);
-    }
-
-    public CompletableFuture<CommitResult> rollback(SubmitRequest request) {
-        return transaction.rollback(request);
+        return transaction.submit(request);
     }
 }
