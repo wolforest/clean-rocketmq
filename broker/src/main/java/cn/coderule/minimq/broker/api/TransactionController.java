@@ -16,7 +16,10 @@ public class TransactionController {
     public void subscribe(RequestContext context, String topicName, String groupName) {
         transaction.subscribe(context, topicName, groupName);
     }
+
     public CompletableFuture<CommitResult> commit(CommitRequest request) {
+        // validate topic
+        // validate transactionId: not blank
         return transaction.commit(request);
     }
 

@@ -155,7 +155,7 @@ public class MessageService extends MessagingServiceGrpc.MessagingServiceImplBas
         RequestContext context = RequestContext.create();
         executePipeline(context, request);
 
-        transactionActivity.commit(context, request, responseObserver);
+        transactionActivity.submit(context, request, responseObserver);
     }
 
     @Override
