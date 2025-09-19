@@ -300,6 +300,8 @@ public class MessageManager implements Lifecycle {
         if (transactionController == null) {
             throw new StartupException("transaction controller is null");
         }
-        this.transactionActivity.setTransactionController(transactionController);
+
+        TransactionService transactionService = new TransactionService(transactionController);
+        this.transactionActivity.inject(transactionService);
     }
 }
