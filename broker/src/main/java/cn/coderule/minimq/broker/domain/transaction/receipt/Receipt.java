@@ -1,56 +1,28 @@
-package cn.coderule.minimq.broker.domain.transaction.client;
+package cn.coderule.minimq.broker.domain.transaction.receipt;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.collect.ComparisonChain;
+import java.io.Serializable;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-public class TransactionReceipt implements Comparable<TransactionReceipt> {
-    private final String brokerName;
-    private final String topic;
-    private final long tranStateTableOffset;
-    private final long commitLogOffset;
-    private final String transactionId;
-    private final long checkTimestamp;
-    private final long expireMs;
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class Receipt implements Comparable<Receipt>, Serializable {
+    private String brokerName;
+    private String topic;
+    private String transactionId;
 
-    public TransactionReceipt(String brokerName, String topic, long tranStateTableOffset, long commitLogOffset, String transactionId,
-        long checkTimestamp, long expireMs) {
-        this.brokerName = brokerName;
-        this.topic = topic;
-        this.tranStateTableOffset = tranStateTableOffset;
-        this.commitLogOffset = commitLogOffset;
-        this.transactionId = transactionId;
-        this.checkTimestamp = checkTimestamp;
-        this.expireMs = expireMs;
-    }
-
-    public String getBrokerName() {
-        return brokerName;
-    }
-
-    public String getTopic() {
-        return topic;
-    }
-
-    public long getTranStateTableOffset() {
-        return tranStateTableOffset;
-    }
-
-    public long getCommitLogOffset() {
-        return commitLogOffset;
-    }
-
-    public String getTransactionId() {
-        return transactionId;
-    }
-
-    public long getCheckTimestamp() {
-        return checkTimestamp;
-    }
-
-    public long getExpireMs() {
-        return expireMs;
-    }
+    private long tranStateTableOffset;
+    private long commitLogOffset;
+    private long checkTimestamp;
+    private long expireMs;
 
     public long getExpireTime() {
         return checkTimestamp + expireMs;
@@ -64,7 +36,7 @@ public class TransactionReceipt implements Comparable<TransactionReceipt> {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        TransactionReceipt data = (TransactionReceipt) o;
+        Receipt data = (Receipt) o;
         return tranStateTableOffset == data.tranStateTableOffset && commitLogOffset == data.commitLogOffset &&
             getExpireTime() == data.getExpireTime() && Objects.equal(brokerName, data.brokerName) &&
             Objects.equal(transactionId, data.transactionId);
@@ -76,7 +48,7 @@ public class TransactionReceipt implements Comparable<TransactionReceipt> {
     }
 
     @Override
-    public int compareTo(TransactionReceipt o) {
+    public int compareTo(Receipt o) {
         return ComparisonChain.start()
             .compare(getExpireTime(), o.getExpireTime())
             .compare(brokerName, o.brokerName)
