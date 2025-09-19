@@ -10,8 +10,13 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class PrepareService {
-    private MQStore mqStore;
-    private MessageFactory messageFactory;
+    private final MQStore mqStore;
+    private final MessageFactory messageFactory;
+
+    public PrepareService(MessageFactory messageFactory, MQStore mqStore) {
+        this.mqStore = mqStore;
+        this.messageFactory = messageFactory;
+    }
 
     public CompletableFuture<EnqueueResult> prepare(RequestContext context, MessageBO messageBO) {
         MessageBO prepareMessage = messageFactory.createPrepareMessage(messageBO);

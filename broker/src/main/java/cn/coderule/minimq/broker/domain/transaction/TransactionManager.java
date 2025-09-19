@@ -3,6 +3,8 @@ package cn.coderule.minimq.broker.domain.transaction;
 import cn.coderule.minimq.broker.api.TransactionController;
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.minimq.broker.domain.transaction.service.MessageFactory;
+import cn.coderule.minimq.broker.domain.transaction.service.PrepareService;
+import cn.coderule.minimq.broker.infra.store.MQStore;
 import cn.coderule.minimq.broker.server.bootstrap.BrokerContext;
 import cn.coderule.minimq.domain.config.business.TransactionConfig;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
@@ -28,6 +30,9 @@ public class TransactionManager implements Lifecycle {
     @Override
     public void initialize() throws Exception {
         initLibs();
+
+        MQStore mqStore = BrokerContext.getBean(MQStore.class);
+        PrepareService prepareService = new PrepareService(messageFactory, mqStore);
 
         transaction = new Transaction();
         BrokerContext.register(transaction);
