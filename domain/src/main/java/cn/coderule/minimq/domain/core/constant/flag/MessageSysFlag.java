@@ -57,7 +57,7 @@ public class MessageSysFlag {
      * @param flag message flag
      * @return transaction type
      */
-    public static int getMessageType(final int flag) {
+    public static int getTransactionType(final int flag) {
         return flag & ROLLBACK_MESSAGE;
     }
 

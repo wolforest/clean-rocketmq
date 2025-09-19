@@ -7,6 +7,7 @@ import apache.rocketmq.v2.Status;
 import apache.rocketmq.v2.TransactionResolution;
 import apache.rocketmq.v2.TransactionSource;
 import cn.coderule.minimq.broker.api.TransactionController;
+import cn.coderule.minimq.domain.core.constant.flag.MessageSysFlag;
 import cn.coderule.minimq.domain.core.enums.TransactionStatus;
 import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import cn.coderule.minimq.domain.domain.transaction.SubmitRequest;
@@ -51,16 +52,29 @@ public class TransactionService {
         RequestContext context,
         EndTransactionRequest request
     ) {
-        boolean byCheck = request.getSource().equals(TransactionSource.SOURCE_SERVER_CHECK);
+        boolean fromCheck = request.getSource().equals(TransactionSource.SOURCE_SERVER_CHECK);
+        TransactionStatus status = getTransactionStatus(request);
+        int transactionFlag = buildCommitOrRollback(status);
+
         return SubmitRequest.builder()
             .requestContext(context)
             .transactionId(request.getTransactionId())
             .messageId(request.getMessageId())
             .topicName(request.getTopic().getName())
-            .byCheck(byCheck)
-            .status(getTransactionStatus(request))
+            .fromCheck(fromCheck)
+            .transactionStatus(status)
+            .transactionFlag(transactionFlag)
             .build();
     }
+
+    protected int buildCommitOrRollback(TransactionStatus transactionStatus) {
+        return switch (transactionStatus) {
+            case COMMIT -> MessageSysFlag.COMMIT_MESSAGE;
+            case ROLLBACK -> MessageSysFlag.ROLLBACK_MESSAGE;
+            default -> MessageSysFlag.NORMAL_MESSAGE;
+        };
+    }
+
 
     private TransactionStatus getTransactionStatus(EndTransactionRequest request) {
         TransactionStatus transactionStatus = TransactionStatus.UNKNOWN;

@@ -133,7 +133,7 @@ public class MessageBO extends Message implements Serializable {
     }
 
     public boolean isNormalOrCommitMessage(){
-        int type = MessageSysFlag.getMessageType(this.sysFlag);
+        int type = MessageSysFlag.getTransactionType(this.sysFlag);
         return MessageSysFlag.NORMAL_MESSAGE == type
             || MessageSysFlag.COMMIT_MESSAGE == type;
     }
