@@ -20,13 +20,22 @@ public class TransactionService {
         this.transactionController = transactionController;
     }
 
-    public CompletableFuture<EndTransactionResponse> submit(
-        RequestContext context,
-        EndTransactionRequest request
-    ) {
+    public CompletableFuture<EndTransactionResponse> submit(RequestContext context, EndTransactionRequest request) {
+        try {
+            SubmitRequest submitRequest = buildSubmitRequest(context, request);
 
+            return transactionController.submit(submitRequest)
+                .thenApply(result -> success());
 
-        return null;
+        } catch (Throwable t) {
+            return failure(t);
+        }
+    }
+
+    private CompletableFuture<EndTransactionResponse> failure(Throwable t) {
+        CompletableFuture<EndTransactionResponse> future = new CompletableFuture<>();
+        future.completeExceptionally(t);
+        return future;
     }
 
     private EndTransactionResponse success() {
