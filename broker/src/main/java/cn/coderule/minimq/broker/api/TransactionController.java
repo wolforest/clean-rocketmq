@@ -1,6 +1,10 @@
 package cn.coderule.minimq.broker.api;
 
+import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.minimq.broker.domain.transaction.Transaction;
+import cn.coderule.minimq.domain.core.enums.code.InvalidCode;
+import cn.coderule.minimq.domain.core.exception.InvalidRequestException;
+import cn.coderule.minimq.domain.domain.meta.topic.TopicValidator;
 import cn.coderule.minimq.domain.domain.transaction.SubmitRequest;
 import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import cn.coderule.minimq.domain.domain.transaction.CommitResult;
@@ -18,8 +22,20 @@ public class TransactionController {
     }
 
     public CompletableFuture<CommitResult> submit(SubmitRequest request) {
-        // validate topic
-        // validate transactionId: not blank
+        validate(request);
         return transaction.submit(request);
+    }
+
+    private void validate(SubmitRequest request) {
+        // validate topic
+        TopicValidator.validateTopic(request.getTopicName());
+
+        // validate transactionId: not blank
+        if (StringUtil.isBlank(request.getTransactionId())) {
+            throw new InvalidRequestException(
+                InvalidCode.INVALID_TRANSACTION_ID,
+                "transactionId is blank"
+            );
+        }
     }
 }

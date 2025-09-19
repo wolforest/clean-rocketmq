@@ -18,9 +18,9 @@ public class SubmitRequest implements Serializable {
     private String messageId;
 
     private String topicName;
-    private String producerGroup;
 
-    private long timeout;
     private boolean byCheck;
     private TransactionStatus status;
+
+    private long timeout;
 }
