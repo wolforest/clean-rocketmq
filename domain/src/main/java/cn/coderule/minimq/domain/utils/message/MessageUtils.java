@@ -4,10 +4,12 @@ import cn.coderule.common.util.encrypt.HashUtil;
 import cn.coderule.common.util.lang.ByteUtil;
 import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.minimq.domain.core.enums.message.TagType;
+import cn.coderule.minimq.domain.domain.message.MessageId;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
+import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -138,6 +140,41 @@ public class MessageUtils {
         byteBuffer.putInt(inetSocketAddress.getPort());
         byteBuffer.flip();
         return byteBuffer;
+    }
+
+    public static MessageId decodeMessageId(final String msgId) throws UnknownHostException {
+        byte[] bytes = string2bytes(msgId);
+        ByteBuffer byteBuffer = ByteBuffer.wrap(bytes);
+
+        // address(ip+port)
+        byte[] ip = new byte[msgId.length() == 32 ? 4 : 16];
+        byteBuffer.get(ip);
+        int port = byteBuffer.getInt();
+        SocketAddress address = new InetSocketAddress(InetAddress.getByAddress(ip), port);
+
+        // offset
+        long offset = byteBuffer.getLong();
+
+        return new MessageId(address, offset);
+    }
+
+    public static byte[] string2bytes(String hexString) {
+        if (hexString == null || hexString.isEmpty()) {
+            return null;
+        }
+        hexString = hexString.toUpperCase();
+        int length = hexString.length() / 2;
+        char[] hexChars = hexString.toCharArray();
+        byte[] d = new byte[length];
+        for (int i = 0; i < length; i++) {
+            int pos = i * 2;
+            d[i] = (byte) (charToByte(hexChars[pos]) << 4 | charToByte(hexChars[pos + 1]));
+        }
+        return d;
+    }
+
+    private static byte charToByte(char c) {
+        return (byte) "0123456789ABCDEF".indexOf(c);
     }
 
 

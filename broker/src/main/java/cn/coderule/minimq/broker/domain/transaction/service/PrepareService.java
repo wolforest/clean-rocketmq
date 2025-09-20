@@ -29,10 +29,10 @@ public class PrepareService {
             .build();
 
         return mqStore.enqueueAsync(request)
-            .thenApplyAsync(result -> registerTransaction(request, result));
+            .thenApplyAsync(result -> registerReceipt(request, result));
     }
 
-    public EnqueueResult registerTransaction(EnqueueRequest request, EnqueueResult result) {
+    public EnqueueResult registerReceipt(EnqueueRequest request, EnqueueResult result) {
         return null;
     }
 

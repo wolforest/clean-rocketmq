@@ -4,6 +4,7 @@ import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.common.util.lang.SystemUtil;
 import cn.coderule.common.util.net.NetworkUtil;
 import cn.coderule.minimq.domain.core.constant.MessageConst;
+import cn.coderule.minimq.domain.utils.message.MessageUtils;
 import java.nio.ByteBuffer;
 import java.util.Calendar;
 import java.util.Date;
@@ -59,7 +60,7 @@ public class MessageIDSetter {
 
     public static Date getNearlyTimeFromID(String msgID) {
         ByteBuffer buf = ByteBuffer.allocate(8);
-        byte[] bytes = StringUtil.string2bytes(msgID);
+        byte[] bytes = MessageUtils.string2bytes(msgID);
         int ipLength = bytes.length == 28 ? 16 : 4;
         buf.put((byte) 0);
         buf.put((byte) 0);
@@ -94,7 +95,7 @@ public class MessageIDSetter {
     }
 
     public static byte[] getIPFromID(String msgID) {
-        byte[] bytes = StringUtil.string2bytes(msgID);
+        byte[] bytes = MessageUtils.string2bytes(msgID);
         int ipLength = bytes.length == 28 ? 16 : 4;
         byte[] result = new byte[ipLength];
         System.arraycopy(bytes, 0, result, 0, ipLength);
@@ -102,7 +103,7 @@ public class MessageIDSetter {
     }
 
     public static int getPidFromID(String msgID) {
-        byte[] bytes = StringUtil.string2bytes(msgID);
+        byte[] bytes = MessageUtils.string2bytes(msgID);
         ByteBuffer wrap = ByteBuffer.wrap(bytes);
         int value = wrap.getShort(bytes.length - 2 - 4 - 4 - 2);
         return value & 0x0000FFFF;
