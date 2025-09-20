@@ -1,7 +1,10 @@
 package cn.coderule.minimq.broker.domain.transaction.receipt;
 
 import cn.coderule.minimq.domain.config.business.TransactionConfig;
+import java.util.Iterator;
 import java.util.NavigableSet;
+import java.util.NoSuchElementException;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ConcurrentSkipListSet;
@@ -74,6 +77,57 @@ public class ReceiptRegistry {
 
             return dataSet;
         });
+    }
+
+    public void cleanExpiredReceipts() {
+        long now = System.currentTimeMillis();
+        Set<String> transactionIdSet = receiptMap.keySet();
+
+        for (String transactionId : transactionIdSet) {
+            clean(transactionId, now);
+        }
+    }
+
+    private void clean(String transactionId, long now) {
+        receiptMap.computeIfPresent(transactionId, (k, dataSet) -> {
+            clean(dataSet, now);
+
+            if (dataSet.isEmpty()) {
+                return null;
+            }
+
+            updateMaxExpireTime(dataSet);
+            return dataSet;
+        });
+    }
+
+    private void clean(NavigableSet<Receipt> dataSet, long now) {
+        Iterator<Receipt> iterator = dataSet.iterator();
+        while (iterator.hasNext()) {
+            try {
+                Receipt receipt = iterator.next();
+                if (receipt.getExpireTime() < now) {
+                    iterator.remove();
+                } else {
+                    break;
+                }
+            } catch (NoSuchElementException ignore) {
+                break;
+            }
+        }
+    }
+
+    private void updateMaxExpireTime(NavigableSet<Receipt> dataSet) {
+        try {
+            Receipt receipt = dataSet.last();
+            long expireTime = Math.max(
+                receipt.getExpireTime(),
+                maxExpireTime.get()
+            );
+
+            maxExpireTime.set(expireTime);
+         } catch (NoSuchElementException ignore) {
+        }
     }
 
     private Receipt pollValidReceipt(NavigableSet<Receipt> dataSet, long now) {
