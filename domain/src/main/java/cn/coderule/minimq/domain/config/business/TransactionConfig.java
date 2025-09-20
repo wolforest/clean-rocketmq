@@ -16,6 +16,7 @@ import lombok.Data;
 @Data
 public class TransactionConfig implements Serializable {
     private long transactionTimeout = 6_000;
+    private int maxReceiptNum = 15;
 
     private int maxCommitMessageLength = 4096;
     private int batchCommitInterval = 3_000;

@@ -25,6 +25,14 @@ public class Receipt implements Comparable<Receipt>, Serializable {
     private long checkTimestamp;
     private long expireMs;
 
+    public String getKey() {
+        return buildKey(producerGroup, transactionId);
+    }
+
+    public static String buildKey(String producerGroup, String transactionId) {
+        return producerGroup + "@" + transactionId;
+    }
+
     public long getExpireTime() {
         return checkTimestamp + expireMs;
     }
