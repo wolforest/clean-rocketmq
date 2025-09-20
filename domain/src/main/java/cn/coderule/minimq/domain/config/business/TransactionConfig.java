@@ -18,6 +18,10 @@ public class TransactionConfig implements Serializable {
     private long transactionTimeout = 6_000;
     private int maxReceiptNum = 15;
 
+    private long receiptScanInterval = 10_000;
+    private long receiptExpireTime = 30_000;
+    private long receiptCleanInterval = 30_000;
+
     private int maxCommitMessageLength = 4096;
     private int batchCommitInterval = 3_000;
 
