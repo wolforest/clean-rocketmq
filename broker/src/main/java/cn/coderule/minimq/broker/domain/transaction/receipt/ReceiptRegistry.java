@@ -28,6 +28,9 @@ public class ReceiptRegistry {
         this.receiptMap = new ConcurrentHashMap<>();
     }
 
+    public long getMaxExpireTime() {
+        return maxExpireTime.get();
+    }
 
     public void register(Receipt receipt) {
         receiptMap.compute(receipt.getKey(), (key, dataSet) -> {
