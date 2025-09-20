@@ -17,6 +17,7 @@ import lombok.NoArgsConstructor;
 public class Receipt implements Comparable<Receipt>, Serializable {
     private String brokerName;
     private String topic;
+    private String producerGroup;
     private String transactionId;
 
     private long tranStateTableOffset;
