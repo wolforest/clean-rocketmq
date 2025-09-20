@@ -64,6 +64,18 @@ public class ReceiptRegistry {
         return reference.get();
     }
 
+    public void remove(Receipt receipt) {
+        receiptMap.computeIfPresent(receipt.getKey(), (k, dataSet) -> {
+            dataSet.remove(receipt);
+
+            if (dataSet.isEmpty()) {
+                return null;
+            }
+
+            return dataSet;
+        });
+    }
+
     private Receipt pollValidReceipt(NavigableSet<Receipt> dataSet, long now) {
         Receipt receipt = dataSet.pollLast();
         while (receipt != null && receipt.getExpireTime() < now) {
@@ -71,10 +83,6 @@ public class ReceiptRegistry {
         }
 
         return receipt;
-    }
-
-    public void remove(Receipt receipt) {
-
     }
 
 }
