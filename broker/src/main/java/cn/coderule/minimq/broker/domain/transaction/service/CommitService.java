@@ -19,9 +19,10 @@ public class CommitService {
 
     public CompletableFuture<CommitResult> commit(SubmitRequest request) {
         MessageBO prepareMessage = messageService.getMessage(request);
-        MessageBO commitMessage = messageFactory.createCommitMessage(prepareMessage);
 
+        MessageBO commitMessage = messageFactory.createCommitMessage(request, prepareMessage);
         EnqueueResult enqueueResult = messageService.enqueueCommitMessage(request, commitMessage);
+
         messageService.deletePrepareMessage(prepareMessage);
 
         return toCommitResult(enqueueResult);

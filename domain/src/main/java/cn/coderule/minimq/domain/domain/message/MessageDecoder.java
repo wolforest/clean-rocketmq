@@ -81,7 +81,7 @@ public class MessageDecoder {
 
             // 14 Prepared Transaction Offset
             long preparedTransactionOffset = byteBuffer.getLong();
-            msg.setPreparedTransactionOffset(preparedTransactionOffset);
+            msg.setPrepareOffset(preparedTransactionOffset);
 
             // 15 BODY
             int bodyLen = byteBuffer.getInt();

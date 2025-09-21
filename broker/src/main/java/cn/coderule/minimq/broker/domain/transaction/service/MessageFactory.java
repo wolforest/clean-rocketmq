@@ -1,6 +1,7 @@
 package cn.coderule.minimq.broker.domain.transaction.service;
 
 import cn.coderule.common.util.lang.string.StringUtil;
+import cn.coderule.minimq.domain.domain.transaction.SubmitRequest;
 import cn.coderule.minimq.domain.domain.transaction.TransactionUtil;
 import cn.coderule.minimq.domain.domain.transaction.CommitBuffer;
 import cn.coderule.minimq.domain.domain.transaction.OffsetQueue;
@@ -37,31 +38,35 @@ public class MessageFactory {
         return msg;
     }
 
-    public MessageBO createCommitMessage(MessageBO prepareMessage) {
+    public MessageBO createCommitMessage(SubmitRequest request, MessageBO prepareMessage) {
         MessageBO newMsg = new MessageBO();
         newMsg.setWaitStore(false);
-        newMsg.setMessageId(prepareMessage.getMessageId());
-        newMsg.setTopic(prepareMessage.getProperty(MessageConst.PROPERTY_REAL_TOPIC));
+
+        newMsg.setTransactionId(prepareMessage.getProperty(MessageConst.PROPERTY_UNIQ_CLIENT_MESSAGE_ID_KEYIDX));
         newMsg.setBody(prepareMessage.getBody());
-        String realQueueIdStr = prepareMessage.getProperty(MessageConst.PROPERTY_REAL_QUEUE_ID);
-        if (StringUtil.isNumeric(realQueueIdStr)) {
-            newMsg.setQueueId(Integer.parseInt(realQueueIdStr));
-        }
+
+        newMsg.setTopic(prepareMessage.getProperty(MessageConst.PROPERTY_REAL_TOPIC));
+        newMsg.setQueueId(prepareMessage.getIntProperty(MessageConst.PROPERTY_REAL_QUEUE_ID));
+
         newMsg.setFlag(prepareMessage.getFlag());
         newMsg.setTagsCode(prepareMessage.getTagsCode());
-        newMsg.setBornTimestamp(prepareMessage.getBornTimestamp());
+
         newMsg.setBornHost(prepareMessage.getBornHost());
-        newMsg.setTransactionId(prepareMessage.getProperty(MessageConst.PROPERTY_UNIQ_CLIENT_MESSAGE_ID_KEYIDX));
+        newMsg.setBornTimestamp(prepareMessage.getBornTimestamp());
+        newMsg.setStoreHost(prepareMessage.getStoreHost());
+        newMsg.setStoreTimestamp(prepareMessage.getStoreTimestamp());
+
+        newMsg.setReconsumeTime(prepareMessage.getReconsumeTime());
 
         newMsg.setProperties(prepareMessage.getProperties());
-        newMsg.putProperty(MessageConst.PROPERTY_TRANSACTION_PREPARED, "true");
-        newMsg.removeProperty(MessageConst.PROPERTY_TRANSACTION_PREPARED_QUEUE_OFFSET);
+        newMsg.removeProperty(MessageConst.PROPERTY_REAL_TOPIC);
         newMsg.removeProperty(MessageConst.PROPERTY_REAL_QUEUE_ID);
+        newMsg.removeProperty(MessageConst.PROPERTY_TRANSACTION_PREPARED);
 
-        newMsg.setPropertiesString(MessageUtils.propertiesToString(newMsg.getProperties()));
+        newMsg.setQueueOffset(request.getQueueOffset());
+        newMsg.setPrepareOffset(request.getCommitOffset());
 
-        int sysFlag = prepareMessage.getSysFlag();
-        sysFlag |= MessageSysFlag.PREPARE_MESSAGE;
+        int sysFlag = MessageSysFlag.resetTransactionType(prepareMessage.getSysFlag(), request.getTransactionFlag());
         newMsg.setSysFlag(sysFlag);
 
         return newMsg;

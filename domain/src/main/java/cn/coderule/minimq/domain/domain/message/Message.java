@@ -49,6 +49,23 @@ public class Message implements Serializable {
         this.properties.remove(name);
     }
 
+    public int getIntProperty(String key) {
+        return getIntProperty(key, -1);
+    }
+
+    public int getIntProperty(String key, int defaultValue) {
+        String t = this.getProperty(key);
+        if (StringUtil.isBlank(t)) {
+            return defaultValue;
+        }
+
+        try {
+            return Integer.parseInt(t);
+        } catch (Exception e) {
+            return defaultValue;
+        }
+    }
+
     public long getLongProperty(String key) {
         return getLongProperty(key, -1);
     }

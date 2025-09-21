@@ -21,7 +21,7 @@ public class MessageMock {
             .queueId(queueId)
             .queueOffset(queueOffset)
             .commitOffset(0)
-            .preparedTransactionOffset(0)
+            .prepareOffset(0)
 
             .flag(0)
             .sysFlag(0)

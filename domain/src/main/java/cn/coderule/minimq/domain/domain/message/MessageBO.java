@@ -78,7 +78,7 @@ public class MessageBO extends Message implements Serializable {
      *  - message will send to DLG after reconsumeTimes greater than a special value
      */
     private int reconsumeTimes;
-    private long preparedTransactionOffset;
+    private long prepareOffset;
 
     private MessageVersion version = null;
 

@@ -91,7 +91,7 @@ public class MessageEncoder {
             errorKeys.add("reconsumeTimes");
         }
 
-        if (messageBO.getPreparedTransactionOffset() < 0) {
+        if (messageBO.getPrepareOffset() < 0) {
             status = false;
             errorKeys.add("preparedTransactionOffset");
         }
@@ -167,7 +167,7 @@ public class MessageEncoder {
         // 13 RECONSUME_TIMES
         buffer.writeInt(messageBO.getReconsumeTimes());
         // 14 Prepared Transaction Offset
-        buffer.writeLong(messageBO.getPreparedTransactionOffset());
+        buffer.writeLong(messageBO.getPrepareOffset());
         // 15 BODY
         writeBody(messageBO);
         // 16 TOPIC
