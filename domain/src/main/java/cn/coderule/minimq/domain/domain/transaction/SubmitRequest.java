@@ -25,6 +25,9 @@ public class SubmitRequest implements Serializable {
     private int transactionFlag;
     private TransactionType transactionType;
 
+    private long queueOffset;
+    private long commitOffset;
+
     @Builder.Default
     private long timeout = Duration.ofSeconds(2).toMillis();
 }

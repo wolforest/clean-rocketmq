@@ -18,6 +18,7 @@ public class Receipt implements Comparable<Receipt>, Serializable {
     private String topic;
     private String producerGroup;
     private String transactionId;
+    private String messageId;
 
     private long queueOffset;
     private long commitOffset;

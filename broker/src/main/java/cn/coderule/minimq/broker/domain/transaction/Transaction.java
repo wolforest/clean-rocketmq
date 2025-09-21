@@ -1,5 +1,8 @@
 package cn.coderule.minimq.broker.domain.transaction;
 
+import cn.coderule.minimq.broker.domain.transaction.receipt.Receipt;
+import cn.coderule.minimq.broker.domain.transaction.receipt.ReceiptCleaner;
+import cn.coderule.minimq.broker.domain.transaction.receipt.ReceiptRegistry;
 import cn.coderule.minimq.broker.domain.transaction.service.CommitService;
 import cn.coderule.minimq.broker.domain.transaction.service.PrepareService;
 import cn.coderule.minimq.broker.domain.transaction.service.RollbackService;
@@ -14,6 +17,7 @@ import java.util.concurrent.CompletableFuture;
 
 public class Transaction {
 
+    private ReceiptRegistry receiptRegistry;
     private SubscribeService subscribeService;
     private PrepareService prepareService;
     private CommitService commitService;
@@ -28,6 +32,8 @@ public class Transaction {
     }
 
     public CompletableFuture<CommitResult> submit(SubmitRequest request) {
+        getReceipt(request);
+
         if (request.getTransactionType() == TransactionType.COMMIT) {
             return commit(request);
         }
@@ -43,4 +49,18 @@ public class Transaction {
         return rollbackService.rollback(request);
     }
 
+    private void getReceipt(SubmitRequest request) {
+        Receipt receipt = receiptRegistry.poll(
+            request.getProducerGroup(),
+            request.getTransactionId()
+        );
+
+        if (receipt == null) {
+            return;
+        }
+
+        request.setMessageId(receipt.getMessageId());
+        request.setCommitOffset(receipt.getCommitOffset());
+        request.setQueueOffset(receipt.getQueueOffset());
+    }
 }
