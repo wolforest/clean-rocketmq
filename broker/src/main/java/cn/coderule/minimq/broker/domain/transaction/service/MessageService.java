@@ -1,5 +1,6 @@
 package cn.coderule.minimq.broker.domain.transaction.service;
 
+import cn.coderule.minimq.broker.infra.store.MQStore;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.domain.MessageQueue;
 import cn.coderule.minimq.domain.domain.store.domain.mq.DequeueResult;
@@ -12,16 +13,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class MessageService {
     private final BrokerConfig brokerConfig;
+    private final MQStore mqStore;
 
-    private final SocketAddress host;
-
-    public MessageService(BrokerConfig brokerConfig) {
+    public MessageService(BrokerConfig brokerConfig, MQStore mqStore) {
         this.brokerConfig = brokerConfig;
-
-        this.host = new InetSocketAddress(
-            brokerConfig.getHost(),
-            brokerConfig.getPort()
-        );
+        this.mqStore = mqStore;
     }
 
     public long getConsumeOffset(MessageQueue mq) {

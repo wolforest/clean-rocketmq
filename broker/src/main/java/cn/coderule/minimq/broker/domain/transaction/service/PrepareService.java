@@ -39,13 +39,15 @@ public class PrepareService {
 
     public EnqueueResult registerReceipt(MessageBO messageBO, EnqueueResult result) {
         Receipt receipt = Receipt.builder()
-            .brokerName(messageBO.getBrokerName())
             .topic(messageBO.getTopic())
             .producerGroup(messageBO.getTopic())
+
+            .storeGroup(result.getStoreGroup())
             .messageId(result.getMessageId())
             .transactionId(result.getTransactionId())
             .commitOffset(result.getCommitOffset())
             .queueOffset(result.getQueueOffset())
+
             .checkTimestamp(System.currentTimeMillis())
             .expireMs(transactionConfig.getReceiptExpireTime())
             .build();

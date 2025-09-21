@@ -30,7 +30,7 @@ import lombok.experimental.SuperBuilder;
 public class MessageBO extends Message implements Serializable {
     private MessageStatus status;
 
-    private String brokerName;
+    private String storeGroup;
     /**
      * set by MQ client
      */

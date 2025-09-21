@@ -18,6 +18,7 @@ public class SubmitRequest implements Serializable {
     private String transactionId;
     private String messageId;
 
+    private String storeGroup;
     private String topicName;
     private String producerGroup;
 

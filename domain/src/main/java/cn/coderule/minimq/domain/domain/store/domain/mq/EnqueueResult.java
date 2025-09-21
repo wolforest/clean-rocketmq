@@ -17,6 +17,7 @@ public class EnqueueResult implements Serializable {
     private EnqueueStatus status;
     private InsertResult insertResult;
 
+    private String storeGroup;
     private String messageId;
     private String transactionId;
     private String region;
@@ -50,6 +51,7 @@ public class EnqueueResult implements Serializable {
         return EnqueueResult.builder()
             .status(EnqueueStatus.PUT_OK)
             .insertResult(insertResult)
+            .storeGroup(messageBO.getStoreGroup())
             .messageId(messageBO.getUniqueKey())
             .transactionId(messageBO.getTransactionId())
             .commitOffset(messageBO.getCommitOffset())

@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Receipt implements Comparable<Receipt>, Serializable {
-    private String brokerName;
+    private String storeGroup;
     private String topic;
     private String producerGroup;
     private String transactionId;
@@ -47,20 +47,20 @@ public class Receipt implements Comparable<Receipt>, Serializable {
         }
         Receipt data = (Receipt) o;
         return queueOffset == data.queueOffset && commitOffset == data.commitOffset &&
-            getExpireTime() == data.getExpireTime() && Objects.equal(brokerName, data.brokerName) &&
+            getExpireTime() == data.getExpireTime() && Objects.equal(storeGroup, data.storeGroup) &&
             Objects.equal(transactionId, data.transactionId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(brokerName, transactionId, queueOffset, commitOffset, getExpireTime());
+        return Objects.hashCode(storeGroup, transactionId, queueOffset, commitOffset, getExpireTime());
     }
 
     @Override
     public int compareTo(Receipt o) {
         return ComparisonChain.start()
             .compare(getExpireTime(), o.getExpireTime())
-            .compare(brokerName, o.brokerName)
+            .compare(storeGroup, o.storeGroup)
             .compare(commitOffset, o.commitOffset)
             .compare(queueOffset, o.queueOffset)
             .compare(transactionId, o.transactionId)
@@ -70,7 +70,7 @@ public class Receipt implements Comparable<Receipt>, Serializable {
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(this)
-            .add("brokerName", brokerName)
+            .add("brokerName", storeGroup)
             .add("tranStateTableOffset", queueOffset)
             .add("commitLogOffset", commitOffset)
             .add("transactionId", transactionId)
