@@ -1,12 +1,16 @@
 package cn.coderule.minimq.broker.domain.transaction.service;
 
 import cn.coderule.minimq.broker.infra.store.MQStore;
+import cn.coderule.minimq.domain.config.business.TransactionConfig;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
+import cn.coderule.minimq.domain.core.enums.code.InvalidCode;
+import cn.coderule.minimq.domain.core.exception.InvalidRequestException;
 import cn.coderule.minimq.domain.domain.MessageQueue;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.MessageRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.MessageResult;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.domain.store.domain.mq.DequeueResult;
+import cn.coderule.minimq.domain.domain.transaction.SubmitRequest;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.util.HashSet;
@@ -15,11 +19,11 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class MessageService {
-    private final BrokerConfig brokerConfig;
+    private final TransactionConfig transactionConfig;
     private final MQStore mqStore;
 
     public MessageService(BrokerConfig brokerConfig, MQStore mqStore) {
-        this.brokerConfig = brokerConfig;
+        this.transactionConfig = brokerConfig.getTransactionConfig();
         this.mqStore = mqStore;
     }
 
@@ -54,7 +58,41 @@ public class MessageService {
                 .build();
 
         MessageResult result = mqStore.getMessage(request);
-        return result.isSuccess() ? result.getMessage() : null;
+        return result.getMessage();
     }
+
+    public void validateMessage(SubmitRequest request, MessageBO message) {
+        if (message == null) {
+            throw new InvalidRequestException(
+                InvalidCode.MESSAGE_NOT_FOUND,
+                "Can't find transaction message, while commit"
+            );
+        }
+
+        if (request.isFromCheck()) {
+            return;
+        }
+
+        validateCheckTime(message);
+    }
+
+    private void validateCheckTime(MessageBO message) {
+        long checkTime = message.getTransactionCheckTime();
+        if (checkTime < 0) {
+            return;
+        }
+
+        long timeout = transactionConfig.getTransactionTimeout();
+        long age = System.currentTimeMillis() - message.getBornTimestamp();
+        checkTime = Math.max(checkTime * 1000, timeout);
+
+        if (age > checkTime) {
+            throw new InvalidRequestException(
+                InvalidCode.ILLEGAL_MESSAGE_PROPERTY_KEY,
+                "Transaction message timeout"
+            );
+        }
+    }
+
 
 }
