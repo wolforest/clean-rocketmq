@@ -28,7 +28,7 @@ public class TransactionManager implements Lifecycle {
         transactionConfig = brokerConfig.getTransactionConfig();
 
         commitBuffer = new CommitBuffer();
-        messageFactory = new MessageFactory(transactionConfig, commitBuffer);
+        messageFactory = new MessageFactory(brokerConfig, commitBuffer);
 
         receiptRegistry = new ReceiptRegistry(transactionConfig);
         receiptCleaner = new ReceiptCleaner(transactionConfig, receiptRegistry);

@@ -15,7 +15,7 @@ public class TransactionUtil {
         return offset + OFFSET_SEPARATOR;
     }
 
-    public static String buildCommitTopic() {
+    public static String buildOperationTopic() {
         return TopicValidator.RMQ_SYS_TRANS_OP_HALF_TOPIC;
     }
 

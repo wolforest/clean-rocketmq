@@ -31,6 +31,10 @@ public class CommitResult implements Serializable {
             .build();
     }
 
+    public static CompletableFuture<CommitResult> successFuture() {
+        return CompletableFuture.completedFuture(success());
+    }
+
     public static CompletableFuture<CommitResult> failureFuture() {
         return CompletableFuture.completedFuture(failure());
     }

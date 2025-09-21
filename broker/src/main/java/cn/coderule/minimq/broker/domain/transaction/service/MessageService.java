@@ -24,6 +24,7 @@ public class MessageService {
 
     private final MQStore mqStore;
     private final CommitBuffer commitBuffer;
+    private final MessageFactory messageFactory;
     private final SubmitValidator submitValidator;
     private final BatchCommitService batchCommitService;
 
@@ -31,12 +32,14 @@ public class MessageService {
         BrokerConfig brokerConfig,
         CommitBuffer commitBuffer,
         BatchCommitService batchCommitService,
+        MessageFactory messageFactory,
         MQStore mqStore
     ) {
         this.transactionConfig = brokerConfig.getTransactionConfig();
 
         this.mqStore = mqStore;
         this.commitBuffer = commitBuffer;
+        this.messageFactory = messageFactory;
         this.batchCommitService = batchCommitService;
         this.submitValidator = new SubmitValidator(transactionConfig);
     }
@@ -65,16 +68,33 @@ public class MessageService {
     }
 
     public void deletePrepareMessage(SubmitRequest request, MessageBO messageBO) {
-        boolean status = wakeupBatchCommitService(messageBO);
-        if (status) {
-            return;
-        }
-    }
-
-    private boolean wakeupBatchCommitService(MessageBO messageBO) {
         OffsetQueue offsetQueue = commitBuffer.getQueue(messageBO.getQueueId());
         String offsetKey = TransactionUtil.buildOffsetKey(messageBO.getQueueOffset());
 
+        boolean status = wakeupBatchCommitService(messageBO, offsetKey, offsetQueue);
+        if (status) {
+            return;
+        }
+
+        MessageBO operationMessage = messageFactory.createOperationMessage(
+            messageBO, offsetKey, offsetQueue);
+        if (operationMessage == null) {
+            return;
+        }
+
+        enqueueOperationMessage(request, operationMessage);
+    }
+
+    private void enqueueOperationMessage(SubmitRequest request, MessageBO operationMessage) {
+        EnqueueRequest enqueueRequest = EnqueueRequest.builder()
+            .requestContext(request.getRequestContext())
+            .storeGroup(request.getStoreGroup())
+            .messageBO(operationMessage)
+            .build();
+        mqStore.enqueue(enqueueRequest);
+    }
+
+    private boolean wakeupBatchCommitService(MessageBO messageBO, String offsetKey, OffsetQueue offsetQueue) {
         try {
             boolean res = offsetQueue.offer(offsetKey, 100);
             if (!res) {

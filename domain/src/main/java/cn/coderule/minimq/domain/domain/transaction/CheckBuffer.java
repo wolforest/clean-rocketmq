@@ -18,7 +18,7 @@ public class CheckBuffer {
 
     public MessageQueue createCommitQueue(MessageQueue prepareQueue) {
         MessageQueue commitQueue = MessageQueue.builder()
-                .topicName(TransactionUtil.buildCommitTopic())
+                .topicName(TransactionUtil.buildOperationTopic())
                 .groupName(prepareQueue.getGroupName())
                 .queueId(prepareQueue.getQueueId())
                 .build();

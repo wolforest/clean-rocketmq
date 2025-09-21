@@ -8,12 +8,15 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class RollbackService {
+    private final MessageService messageService;
 
-    private MessageService messageService;
+    public RollbackService(MessageService messageService) {
+        this.messageService = messageService;
+    }
 
     public CompletableFuture<CommitResult> rollback(SubmitRequest request) {
         MessageBO messageBO = messageService.getMessage(request);
-
-        return null;
+        messageService.deletePrepareMessage(request, messageBO);
+        return CommitResult.successFuture();
     }
 }
