@@ -3,6 +3,9 @@ package cn.coderule.minimq.broker.domain.transaction.service;
 import cn.coderule.minimq.broker.infra.store.MQStore;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.domain.MessageQueue;
+import cn.coderule.minimq.domain.domain.consumer.consume.mq.MessageRequest;
+import cn.coderule.minimq.domain.domain.consumer.consume.mq.MessageResult;
+import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.domain.store.domain.mq.DequeueResult;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
@@ -43,6 +46,15 @@ public class MessageService {
         return null;
     }
 
+    public MessageBO getMessage(String storeGroup, long commitOffset) {
+        MessageRequest request = MessageRequest.builder()
+                .storeGroup(storeGroup)
+                .offset(commitOffset)
+                .size(1)
+                .build();
 
+        MessageResult result = mqStore.getMessage(request);
+        return result.isSuccess() ? result.getMessage() : null;
+    }
 
 }
