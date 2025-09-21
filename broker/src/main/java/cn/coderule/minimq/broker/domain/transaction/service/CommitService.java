@@ -19,16 +19,22 @@ public class CommitService {
 
     public CompletableFuture<CommitResult> commit(SubmitRequest request) {
         MessageBO prepareMessage = messageService.getMessage(request);
-
         MessageBO commitMessage = messageFactory.createCommitMessage(request, prepareMessage);
+
         EnqueueResult enqueueResult = messageService.enqueueCommitMessage(request, commitMessage);
+        if (!enqueueResult.isSuccess()) {
+            return toCommitResult(enqueueResult);
+        }
 
         messageService.deletePrepareMessage(prepareMessage);
-
         return toCommitResult(enqueueResult);
     }
 
     private CompletableFuture<CommitResult> toCommitResult(EnqueueResult enqueueResult) {
-        return null;
+        CommitResult result = CommitResult.builder()
+            .responseCode(enqueueResult.isSuccess() ? 1 : -1)
+            .build();
+
+        return CompletableFuture.completedFuture(result);
     }
 }

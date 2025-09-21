@@ -56,7 +56,12 @@ public class MessageService {
     }
 
     public EnqueueResult enqueueCommitMessage(SubmitRequest request, MessageBO messageBO) {
-        return null;
+        EnqueueRequest enqueueRequest = EnqueueRequest.builder()
+            .requestContext(request.getRequestContext())
+            .storeGroup(request.getStoreGroup())
+            .messageBO(messageBO)
+            .build();
+        return mqStore.enqueue(enqueueRequest);
     }
 
     public MessageBO getMessage(SubmitRequest submitRequest) {
