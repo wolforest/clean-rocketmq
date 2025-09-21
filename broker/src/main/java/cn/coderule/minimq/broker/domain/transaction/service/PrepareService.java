@@ -1,7 +1,9 @@
 package cn.coderule.minimq.broker.domain.transaction.service;
 
+import cn.coderule.minimq.broker.domain.transaction.receipt.Receipt;
 import cn.coderule.minimq.broker.domain.transaction.receipt.ReceiptRegistry;
 import cn.coderule.minimq.broker.infra.store.MQStore;
+import cn.coderule.minimq.domain.config.business.TransactionConfig;
 import cn.coderule.minimq.domain.domain.store.domain.mq.EnqueueRequest;
 import cn.coderule.minimq.domain.domain.store.domain.mq.EnqueueResult;
 import cn.coderule.minimq.domain.domain.cluster.RequestContext;
@@ -11,11 +13,14 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class PrepareService {
+    private final TransactionConfig transactionConfig;
     private final MQStore mqStore;
     private final MessageFactory messageFactory;
     private final ReceiptRegistry receiptRegistry;
 
-    public PrepareService(MessageFactory messageFactory, MQStore mqStore, ReceiptRegistry receiptRegistry) {
+    public PrepareService(TransactionConfig transactionConfig, MessageFactory messageFactory, MQStore mqStore, ReceiptRegistry receiptRegistry) {
+        this.transactionConfig = transactionConfig;
+
         this.mqStore = mqStore;
         this.messageFactory = messageFactory;
         this.receiptRegistry = receiptRegistry;
@@ -29,12 +34,22 @@ public class PrepareService {
             .build();
 
         return mqStore.enqueueAsync(request)
-            .thenApplyAsync(result -> registerReceipt(request, result));
+            .thenApplyAsync(result -> registerReceipt(messageBO, result));
     }
 
-    public EnqueueResult registerReceipt(EnqueueRequest request, EnqueueResult result) {
-        return null;
+    public EnqueueResult registerReceipt(MessageBO messageBO, EnqueueResult result) {
+        Receipt receipt = Receipt.builder()
+            .brokerName(messageBO.getBrokerName())
+            .topic(messageBO.getTopic())
+            .producerGroup(messageBO.getTopic())
+            .transactionId(messageBO.getTransactionId())
+            .commitOffset(result.getCommitOffset())
+            .queueOffset(result.getQueueOffset())
+            .checkTimestamp(System.currentTimeMillis())
+            .expireMs(transactionConfig.getReceiptExpireTime())
+            .build();
+        receiptRegistry.register(receipt);
+
+        return result;
     }
-
-
 }

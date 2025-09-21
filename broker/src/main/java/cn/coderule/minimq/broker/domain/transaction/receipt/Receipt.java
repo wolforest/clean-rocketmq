@@ -7,7 +7,6 @@ import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Data
@@ -20,8 +19,8 @@ public class Receipt implements Comparable<Receipt>, Serializable {
     private String producerGroup;
     private String transactionId;
 
-    private long tranStateTableOffset;
-    private long commitLogOffset;
+    private long queueOffset;
+    private long commitOffset;
     private long checkTimestamp;
     private long expireMs;
 
@@ -46,14 +45,14 @@ public class Receipt implements Comparable<Receipt>, Serializable {
             return false;
         }
         Receipt data = (Receipt) o;
-        return tranStateTableOffset == data.tranStateTableOffset && commitLogOffset == data.commitLogOffset &&
+        return queueOffset == data.queueOffset && commitOffset == data.commitOffset &&
             getExpireTime() == data.getExpireTime() && Objects.equal(brokerName, data.brokerName) &&
             Objects.equal(transactionId, data.transactionId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(brokerName, transactionId, tranStateTableOffset, commitLogOffset, getExpireTime());
+        return Objects.hashCode(brokerName, transactionId, queueOffset, commitOffset, getExpireTime());
     }
 
     @Override
@@ -61,8 +60,8 @@ public class Receipt implements Comparable<Receipt>, Serializable {
         return ComparisonChain.start()
             .compare(getExpireTime(), o.getExpireTime())
             .compare(brokerName, o.brokerName)
-            .compare(commitLogOffset, o.commitLogOffset)
-            .compare(tranStateTableOffset, o.tranStateTableOffset)
+            .compare(commitOffset, o.commitOffset)
+            .compare(queueOffset, o.queueOffset)
             .compare(transactionId, o.transactionId)
             .result();
     }
@@ -71,8 +70,8 @@ public class Receipt implements Comparable<Receipt>, Serializable {
     public String toString() {
         return MoreObjects.toStringHelper(this)
             .add("brokerName", brokerName)
-            .add("tranStateTableOffset", tranStateTableOffset)
-            .add("commitLogOffset", commitLogOffset)
+            .add("tranStateTableOffset", queueOffset)
+            .add("commitLogOffset", commitOffset)
             .add("transactionId", transactionId)
             .add("checkTimestamp", checkTimestamp)
             .add("expireMs", expireMs)

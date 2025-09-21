@@ -39,7 +39,8 @@ public class TransactionManager implements Lifecycle {
         initLibs();
 
         MQStore mqStore = BrokerContext.getBean(MQStore.class);
-        PrepareService prepareService = new PrepareService(messageFactory, mqStore, receiptRegistry);
+        PrepareService prepareService = new PrepareService(
+            transactionConfig, messageFactory, mqStore, receiptRegistry);
 
         transaction = new Transaction();
         BrokerContext.register(transaction);
