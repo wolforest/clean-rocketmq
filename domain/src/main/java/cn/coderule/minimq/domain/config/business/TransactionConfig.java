@@ -15,6 +15,8 @@ import lombok.Data;
  */
 @Data
 public class TransactionConfig implements Serializable {
+    private String storeGroup;
+
     private long transactionTimeout = 6_000;
     private int maxReceiptNum = 15;
 

@@ -68,7 +68,7 @@ public class MessageService {
     }
 
     public void deletePrepareMessage(SubmitRequest request, MessageBO messageBO) {
-        OffsetQueue offsetQueue = commitBuffer.getQueue(messageBO.getQueueId());
+        OffsetQueue offsetQueue = commitBuffer.getOffsetQueue(messageBO.getQueueId());
         String offsetKey = TransactionUtil.buildOffsetKey(messageBO.getQueueOffset());
 
         boolean status = wakeupBatchCommitService(messageBO, offsetKey, offsetQueue);
