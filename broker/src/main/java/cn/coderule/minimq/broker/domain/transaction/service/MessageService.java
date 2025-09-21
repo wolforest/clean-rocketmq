@@ -69,15 +69,16 @@ public class MessageService {
 
     public void deletePrepareMessage(SubmitRequest request, MessageBO messageBO) {
         OffsetQueue offsetQueue = commitBuffer.getOffsetQueue(messageBO.getQueueId());
-        String offsetKey = TransactionUtil.buildOffsetKey(messageBO.getQueueOffset());
 
-        boolean status = wakeupBatchCommitService(messageBO, offsetKey, offsetQueue);
+
+        boolean status = wakeupBatchCommitService(messageBO, offsetQueue);
         if (status) {
             return;
         }
 
+        MessageQueue operationQueue = commitBuffer.getOperationQueue(messageBO.getQueueId(), request.getStoreGroup());
         MessageBO operationMessage = messageFactory.createOperationMessage(
-            messageBO, offsetKey, offsetQueue);
+            messageBO, offsetQueue, operationQueue);
         if (operationMessage == null) {
             return;
         }
@@ -94,8 +95,9 @@ public class MessageService {
         mqStore.enqueue(enqueueRequest);
     }
 
-    private boolean wakeupBatchCommitService(MessageBO messageBO, String offsetKey, OffsetQueue offsetQueue) {
+    private boolean wakeupBatchCommitService(MessageBO messageBO, OffsetQueue offsetQueue) {
         try {
+            String offsetKey = TransactionUtil.buildOffsetKey(messageBO.getQueueOffset());
             boolean res = offsetQueue.offer(offsetKey, 100);
             if (!res) {
                 batchCommitService.wakeup();

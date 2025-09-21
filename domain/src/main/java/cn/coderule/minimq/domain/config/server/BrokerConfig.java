@@ -13,6 +13,8 @@ import cn.coderule.minimq.domain.config.network.GrpcConfig;
 import cn.coderule.minimq.domain.config.network.RpcClientConfig;
 import cn.coderule.minimq.domain.config.network.RpcServerConfig;
 import java.io.Serializable;
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
@@ -66,6 +68,10 @@ public class BrokerConfig extends ServerIdentity implements Serializable {
     private GrpcConfig grpcConfig;
     private RpcClientConfig rpcClientConfig;
     private RpcServerConfig rpcServerConfig;
+
+    public SocketAddress getHostAddress() {
+        return new InetSocketAddress(host, port);
+    }
 
     public boolean isEnableRegister() {
         if (!enableBrokerRegister) {

@@ -1,6 +1,8 @@
 package cn.coderule.minimq.broker.domain.transaction.service;
 
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
+import cn.coderule.minimq.domain.domain.MessageQueue;
+import cn.coderule.minimq.domain.domain.message.MessageIDSetter;
 import cn.coderule.minimq.domain.domain.transaction.SubmitRequest;
 import cn.coderule.minimq.domain.domain.transaction.TransactionUtil;
 import cn.coderule.minimq.domain.domain.transaction.CommitBuffer;
@@ -10,15 +12,18 @@ import cn.coderule.minimq.domain.core.constant.MessageConst;
 import cn.coderule.minimq.domain.core.constant.flag.MessageSysFlag;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.utils.message.MessageUtils;
+import java.net.SocketAddress;
 import java.nio.charset.StandardCharsets;
 
 public class MessageFactory {
     private final BrokerConfig brokerConfig;
     private final TransactionConfig transactionConfig;
+    private final SocketAddress host;
 
     public MessageFactory(BrokerConfig brokerConfig, CommitBuffer commitBuffer) {
         this.brokerConfig = brokerConfig;
         this.transactionConfig = brokerConfig.getTransactionConfig();
+        this.host = brokerConfig.getHostAddress();
     }
 
     public MessageBO createPrepareMessage(MessageBO msg) {
@@ -72,8 +77,9 @@ public class MessageFactory {
         return newMsg;
     }
 
-    public MessageBO createOperationMessage(MessageBO messageBO, String offsetKey, OffsetQueue offsetQueue) {
-        int offsetLength = null == offsetKey ? 0 : offsetKey.length();
+    public MessageBO createOperationMessage(MessageBO messageBO, OffsetQueue offsetQueue, MessageQueue operationQueue) {
+        String offsetKey = TransactionUtil.buildOffsetKey(messageBO.getQueueOffset());
+        int offsetLength = offsetKey.length();
 
         int bodyLength = calculateBodyLength(offsetLength, offsetQueue);
         StringBuilder bodyBuilder = buildBody(bodyLength, offsetKey, offsetQueue);
@@ -84,18 +90,28 @@ public class MessageFactory {
         int size = bodyBuilder.length() - offsetLength;
         offsetQueue.addAndGet(size);
 
-        return createOperationMessage(bodyBuilder);
+        return createOperationMessage(bodyBuilder, operationQueue);
     }
 
-    private MessageBO createOperationMessage(StringBuilder bodyBuilder) {
+    private MessageBO createOperationMessage(StringBuilder bodyBuilder, MessageQueue operationQueue) {
         byte[] body = bodyBuilder.toString().getBytes(StandardCharsets.UTF_8);
         String commitTopic = TransactionUtil.buildOperationTopic();
+        long now = System.currentTimeMillis();
+
         MessageBO messageBO = MessageBO.builder()
             .topic(commitTopic)
             .body(body)
+            .queueId(operationQueue.getQueueId())
+            .sysFlag(0)
+            .bornTimestamp(now)
+            .storeTimestamp(now)
+            .bornHost(host)
+            .storeHost(host)
             .build();
 
+        messageBO.setWaitStore(false);
         messageBO.setTags(TransactionUtil.REMOVE_TAG);
+        MessageIDSetter.setUniqID(messageBO);
 
         return messageBO;
     }
