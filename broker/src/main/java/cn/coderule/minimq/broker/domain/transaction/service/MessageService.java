@@ -8,6 +8,8 @@ import cn.coderule.minimq.domain.domain.consumer.consume.mq.MessageRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.MessageResult;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.domain.store.domain.mq.DequeueResult;
+import cn.coderule.minimq.domain.domain.store.domain.mq.EnqueueRequest;
+import cn.coderule.minimq.domain.domain.store.domain.mq.EnqueueResult;
 import cn.coderule.minimq.domain.domain.transaction.SubmitRequest;
 import java.util.HashSet;
 import java.util.Set;
@@ -47,6 +49,13 @@ public class MessageService {
     }
 
     public DequeueResult getMessage(MessageQueue mq, int num) {
+        return null;
+    }
+
+    public void deletePrepareMessage(MessageBO messageBO) {
+    }
+
+    public EnqueueResult enqueueCommitMessage(SubmitRequest request, MessageBO messageBO) {
         return null;
     }
 

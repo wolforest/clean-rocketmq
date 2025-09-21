@@ -37,7 +37,7 @@ public class MessageFactory {
         return msg;
     }
 
-    public MessageBO recreatePrepareMessage(MessageBO prepareMessage) {
+    public MessageBO createCommitMessage(MessageBO prepareMessage) {
         MessageBO newMsg = new MessageBO();
         newMsg.setWaitStore(false);
         newMsg.setMessageId(prepareMessage.getMessageId());
