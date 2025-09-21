@@ -26,7 +26,7 @@ public class CommitService {
             return toCommitResult(enqueueResult);
         }
 
-        messageService.deletePrepareMessage(prepareMessage);
+        messageService.deletePrepareMessage(request, prepareMessage);
         return toCommitResult(enqueueResult);
     }
 

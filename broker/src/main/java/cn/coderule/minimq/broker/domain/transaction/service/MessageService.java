@@ -10,7 +10,10 @@ import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.domain.store.domain.mq.DequeueResult;
 import cn.coderule.minimq.domain.domain.store.domain.mq.EnqueueRequest;
 import cn.coderule.minimq.domain.domain.store.domain.mq.EnqueueResult;
+import cn.coderule.minimq.domain.domain.transaction.CommitBuffer;
+import cn.coderule.minimq.domain.domain.transaction.OffsetQueue;
 import cn.coderule.minimq.domain.domain.transaction.SubmitRequest;
+import cn.coderule.minimq.domain.domain.transaction.TransactionUtil;
 import java.util.HashSet;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
@@ -20,12 +23,21 @@ public class MessageService {
     private final TransactionConfig transactionConfig;
 
     private final MQStore mqStore;
+    private final CommitBuffer commitBuffer;
     private final SubmitValidator submitValidator;
+    private final BatchCommitService batchCommitService;
 
-    public MessageService(BrokerConfig brokerConfig, MQStore mqStore) {
+    public MessageService(
+        BrokerConfig brokerConfig,
+        CommitBuffer commitBuffer,
+        BatchCommitService batchCommitService,
+        MQStore mqStore
+    ) {
         this.transactionConfig = brokerConfig.getTransactionConfig();
 
         this.mqStore = mqStore;
+        this.commitBuffer = commitBuffer;
+        this.batchCommitService = batchCommitService;
         this.submitValidator = new SubmitValidator(transactionConfig);
     }
 
@@ -52,7 +64,34 @@ public class MessageService {
         return null;
     }
 
-    public void deletePrepareMessage(MessageBO messageBO) {
+    public void deletePrepareMessage(SubmitRequest request, MessageBO messageBO) {
+        boolean status = wakeupBatchCommitService(messageBO);
+        if (status) {
+            return;
+        }
+    }
+
+    private boolean wakeupBatchCommitService(MessageBO messageBO) {
+        OffsetQueue offsetQueue = commitBuffer.getQueue(messageBO.getQueueId());
+        String offsetKey = TransactionUtil.buildOffsetKey(messageBO.getQueueOffset());
+
+        try {
+            boolean res = offsetQueue.offer(offsetKey, 100);
+            if (!res) {
+                batchCommitService.wakeup();
+                return false;
+            }
+
+            int keyLength = offsetKey.length();
+            int totalSize = offsetQueue.addAndGet(keyLength);
+            if (totalSize > transactionConfig.getMaxCommitMessageLength()) {
+                batchCommitService.wakeup();
+            }
+            return true;
+        } catch (Exception ignore) {
+        }
+
+        return false;
     }
 
     public EnqueueResult enqueueCommitMessage(SubmitRequest request, MessageBO messageBO) {

@@ -11,6 +11,10 @@ public class TransactionUtil {
     public static final String OFFSET_SEPARATOR = ",";
     public static final String TRANSACTION_ID = "__transactionId__";
 
+    public static String buildOffsetKey(long offset) {
+        return offset + OFFSET_SEPARATOR;
+    }
+
     public static String buildCommitTopic() {
         return TopicValidator.RMQ_SYS_TRANS_OP_HALF_TOPIC;
     }
