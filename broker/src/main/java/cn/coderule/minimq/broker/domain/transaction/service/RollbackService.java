@@ -12,8 +12,7 @@ public class RollbackService {
     private MessageService messageService;
 
     public CompletableFuture<CommitResult> rollback(SubmitRequest request) {
-        MessageBO messageBO = messageService.getMessage(
-            request.getStoreGroup(), request.getCommitOffset());
+        MessageBO messageBO = messageService.getMessage(request);
 
         return null;
     }

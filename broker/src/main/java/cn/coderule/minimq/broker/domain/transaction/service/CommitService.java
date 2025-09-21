@@ -21,10 +21,8 @@ public class CommitService {
     }
 
     public CompletableFuture<CommitResult> commit(SubmitRequest request) {
-        MessageBO messageBO = messageService.getMessage(
-            request.getStoreGroup(), request.getCommitOffset());
+        MessageBO messageBO = messageService.getMessage(request);
 
-        messageService.validateMessage(request, messageBO);
 
         return null;
     }
