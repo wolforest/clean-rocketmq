@@ -17,12 +17,25 @@ import cn.coderule.minimq.domain.domain.transaction.CommitResult;
 import java.util.concurrent.CompletableFuture;
 
 public class Transaction {
-    private ReceiptRegistry receiptRegistry;
-    private SubscribeService subscribeService;
-    private PrepareService prepareService;
-    private CommitService commitService;
-    private RollbackService rollbackService;
+    private final ReceiptRegistry receiptRegistry;
+    private final SubscribeService subscribeService;
+    private final PrepareService prepareService;
+    private final CommitService commitService;
+    private final RollbackService rollbackService;
 
+    public Transaction(
+        ReceiptRegistry receiptRegistry,
+        SubscribeService subscribeService,
+        PrepareService prepareService,
+        CommitService commitService,
+        RollbackService rollbackService
+    ) {
+        this.receiptRegistry = receiptRegistry;
+        this.subscribeService = subscribeService;
+        this.prepareService = prepareService;
+        this.commitService = commitService;
+        this.rollbackService = rollbackService;
+    }
     public void subscribe(RequestContext context, String topicName, String groupName) {
         subscribeService.subscribe(context, topicName, groupName);
     }

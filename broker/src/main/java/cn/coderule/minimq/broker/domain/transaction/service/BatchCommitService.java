@@ -5,11 +5,9 @@ import cn.coderule.minimq.domain.domain.transaction.CommitBuffer;
 
 public class BatchCommitService extends ServiceThread {
     private final CommitBuffer commitBuffer;
-    private final MessageService messageService;
 
-    public BatchCommitService(CommitBuffer commitBuffer, MessageService messageService) {
+    public BatchCommitService(CommitBuffer commitBuffer) {
         this.commitBuffer = commitBuffer;
-        this.messageService = messageService;
     }
 
     @Override
