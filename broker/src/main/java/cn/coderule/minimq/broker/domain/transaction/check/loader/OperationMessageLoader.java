@@ -12,11 +12,11 @@ import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class CommitMessageLoader {
+public class OperationMessageLoader {
     private static final int DEFAULT_PULL_NUM = 32;
     private final MessageService messageService;
 
-    public CommitMessageLoader(TransactionContext transactionContext) {
+    public OperationMessageLoader(TransactionContext transactionContext) {
         this.messageService = transactionContext.getMessageService();
     }
 

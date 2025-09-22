@@ -4,7 +4,7 @@ import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.minimq.broker.domain.transaction.check.context.CheckContext;
 import cn.coderule.minimq.broker.domain.transaction.check.context.TransactionContext;
-import cn.coderule.minimq.broker.domain.transaction.check.loader.CommitMessageLoader;
+import cn.coderule.minimq.broker.domain.transaction.check.loader.OperationMessageLoader;
 import cn.coderule.minimq.broker.domain.transaction.check.loader.PrepareMessageLoader;
 import cn.coderule.minimq.broker.domain.transaction.service.MessageService;
 import cn.coderule.minimq.domain.config.business.TransactionConfig;
@@ -28,7 +28,7 @@ public class TransactionChecker extends ServiceThread {
 
     private final MessageService messageService;
     private final CheckBuffer checkBuffer;
-    private final CommitMessageLoader commitMessageLoader;
+    private final OperationMessageLoader operationMessageLoader;
     private final PrepareMessageLoader prepareMessageLoader;
 
     public TransactionChecker(TransactionContext context, QueueTask task) {
@@ -38,8 +38,8 @@ public class TransactionChecker extends ServiceThread {
 
         this.messageService = context.getMessageService();
         this.checkBuffer = new CheckBuffer();
-        this.commitMessageLoader = new CommitMessageLoader(transactionContext);
-        this.prepareMessageLoader = new PrepareMessageLoader(transactionContext, commitMessageLoader);
+        this.operationMessageLoader = new OperationMessageLoader(transactionContext);
+        this.prepareMessageLoader = new PrepareMessageLoader(transactionContext, operationMessageLoader);
     }
 
     @Override
@@ -86,7 +86,7 @@ public class TransactionChecker extends ServiceThread {
             return;
         }
 
-        DequeueResult commitResult = commitMessageLoader.load(context);
+        DequeueResult commitResult = operationMessageLoader.load(context);
         if (commitResult.isEmpty()) {
             updateOffset(context, commitResult);
             return;

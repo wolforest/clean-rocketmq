@@ -17,13 +17,13 @@ public class PrepareMessageLoader {
     private static final int MAX_INVALID_PREPARE_MESSAGE_NUM = 1;
     private final MessageService messageService;
     private final TransactionConfig transactionConfig;
-    private final CommitMessageLoader commitMessageLoader;
+    private final OperationMessageLoader operationMessageLoader;
     private final TransactionContext transactionContext;
 
-    public PrepareMessageLoader(TransactionContext transactionContext, CommitMessageLoader commitMessageLoader) {
+    public PrepareMessageLoader(TransactionContext transactionContext, OperationMessageLoader operationMessageLoader) {
         this.transactionContext = transactionContext;
         this.transactionConfig = transactionContext.getBrokerConfig().getTransactionConfig();
-        this.commitMessageLoader = commitMessageLoader;
+        this.operationMessageLoader = operationMessageLoader;
         this.messageService = transactionContext.getMessageService();
     }
 
@@ -152,7 +152,7 @@ public class PrepareMessageLoader {
     }
 
     private void loadMoreCommitMessage(CheckContext context) {
-        DequeueResult result = commitMessageLoader.load(context);
+        DequeueResult result = operationMessageLoader.load(context);
 
         if (result == null
             || result.noNewMessage()
