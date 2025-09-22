@@ -65,6 +65,10 @@ public class BatchCommitService extends ServiceThread {
     }
 
     private long calculateCommitInterval() {
+        if (this.wakeupTime <= 0) {
+            return 0;
+        }
+
         long now = System.currentTimeMillis();
         long interval = wakeupTime - now;
         if (interval <= 0) {
@@ -83,7 +87,7 @@ public class BatchCommitService extends ServiceThread {
             refreshWakeupTime(context);
         } catch (Throwable e) {
             log.error("{} Commit error", getServiceName(), e);
-            this.wakeupTime = 0;
+            this.wakeupTime = 0L;
         }
     }
 
@@ -148,6 +152,13 @@ public class BatchCommitService extends ServiceThread {
     }
 
     private void refreshWakeupTime(BatchCommitContext context) {
+        long tmpTime = context.getFirstTime();
+        tmpTime += transactionConfig.getBatchCommitInterval();
 
+        if (!context.isOverflow() && tmpTime > context.getStartTime()) {
+            this.wakeupTime = tmpTime;
+        } else {
+            this.wakeupTime = 0L;
+        }
     }
 }
