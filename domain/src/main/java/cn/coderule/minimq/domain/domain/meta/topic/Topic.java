@@ -2,14 +2,17 @@ package cn.coderule.minimq.domain.domain.meta.topic;
 
 import cn.coderule.common.util.lang.collection.MapUtil;
 import cn.coderule.minimq.domain.core.enums.message.MessageType;
+import cn.coderule.minimq.domain.domain.MessageQueue;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.TypeReference;
 import com.alibaba.fastjson2.annotation.JSONField;
 import cn.coderule.minimq.domain.core.enums.message.TagType;
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -66,6 +69,28 @@ public class Topic implements Serializable {
         this.order = other.order;
         this.attributes = other.attributes;
         this.messageType = other.messageType;
+    }
+
+    @JSONField(serialize = false, deserialize = false)
+    public boolean isQueueEmpty() {
+        return readQueueNums <= 0 || writeQueueNums <= 0;
+    }
+
+    @JSONField(serialize = false, deserialize = false)
+    public Set<MessageQueue> toQueueSet(String storeGroup) {
+        Set<MessageQueue> result = new HashSet<>();
+
+        for (int i = 0; i < readQueueNums; i++) {
+            MessageQueue queue = MessageQueue.builder()
+                .topicName(topicName)
+                .groupName(storeGroup)
+                .queueId(i)
+                .build();
+
+            result.add(queue);
+        }
+
+        return result;
     }
 
     public boolean existsQueue(int queueId) {

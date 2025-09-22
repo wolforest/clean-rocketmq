@@ -19,6 +19,8 @@ public class TopicRequest implements Serializable {
 
     public static TopicRequest build(Topic topic) {
         return TopicRequest.builder()
+            .requestContext(RequestContext.create())
+            .topicName(topic.getTopicName())
             .topic(topic)
             .build();
     }

@@ -1,12 +1,16 @@
 package cn.coderule.minimq.broker.domain.transaction.service;
 
 import cn.coderule.minimq.broker.infra.store.MQStore;
+import cn.coderule.minimq.broker.infra.store.TopicStore;
 import cn.coderule.minimq.domain.config.business.TransactionConfig;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
+import cn.coderule.minimq.domain.core.constant.PermName;
 import cn.coderule.minimq.domain.domain.MessageQueue;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.MessageRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.MessageResult;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
+import cn.coderule.minimq.domain.domain.meta.topic.Topic;
+import cn.coderule.minimq.domain.domain.meta.topic.TopicRequest;
 import cn.coderule.minimq.domain.domain.store.domain.mq.DequeueResult;
 import cn.coderule.minimq.domain.domain.store.domain.mq.EnqueueRequest;
 import cn.coderule.minimq.domain.domain.store.domain.mq.EnqueueResult;
@@ -22,26 +26,31 @@ import lombok.extern.slf4j.Slf4j;
 public class MessageService {
     private final TransactionConfig transactionConfig;
 
-    private final MQStore mqStore;
     private final CommitBuffer commitBuffer;
     private final MessageFactory messageFactory;
     private final SubmitValidator submitValidator;
     private final BatchCommitService batchCommitService;
+
+    private final MQStore mqStore;
+    private final TopicStore topicStore;
 
     public MessageService(
         BrokerConfig brokerConfig,
         CommitBuffer commitBuffer,
         BatchCommitService batchCommitService,
         MessageFactory messageFactory,
-        MQStore mqStore
+        MQStore mqStore,
+        TopicStore topicStore
     ) {
         this.transactionConfig = brokerConfig.getTransactionConfig();
 
-        this.mqStore = mqStore;
         this.commitBuffer = commitBuffer;
         this.messageFactory = messageFactory;
         this.batchCommitService = batchCommitService;
         this.submitValidator = new SubmitValidator(transactionConfig);
+
+        this.mqStore = mqStore;
+        this.topicStore = topicStore;
     }
 
     public long getConsumeOffset(MessageQueue mq) {
@@ -52,15 +61,14 @@ public class MessageService {
 
     }
 
-    public Set<MessageQueue> getMessageQueues(String storeGroup, String topic) {
-        Set<MessageQueue> result = new HashSet<>();
-
-        if (!result.isEmpty()) {
-            return result;
+    public Set<MessageQueue> getMessageQueues(String storeGroup, String topicName) {
+        Topic topic = getOrCreateTopic(storeGroup, topicName);
+        if (topic.isQueueEmpty()) {
+            return Set.of();
         }
 
-        log.warn("no prepare message queue: storeGroup={}, topic={}", storeGroup, topic);
-        return result;
+        log.warn("no prepare message queue: storeGroup={}, topic={}", storeGroup, topicName);
+        return topic.toQueueSet(storeGroup);
     }
 
     public DequeueResult getMessage(MessageQueue mq, int num) {
@@ -136,4 +144,29 @@ public class MessageService {
         submitValidator.validate(submitRequest, result.getMessage());
         return result.getMessage();
     }
+
+    private Topic getOrCreateTopic(String storeGroup, String topicName) {
+        Topic topic = topicStore.getTopic(topicName);
+        if (topic != null) {
+            return topic;
+        }
+
+        topic = createTopic(storeGroup, topicName);
+        TopicRequest request = TopicRequest.build(topic);
+
+        topicStore.saveTopic(request);
+        return topic;
+    }
+
+    private Topic createTopic(String storeGroup, String topicName) {
+        return Topic.builder()
+            .topicName(topicName)
+            .writeQueueNums(1)
+            .readQueueNums(1)
+            .perm(PermName.PERM_WRITE | PermName.PERM_READ)
+            .topicSysFlag(0)
+            .build();
+    }
+
+
 }
