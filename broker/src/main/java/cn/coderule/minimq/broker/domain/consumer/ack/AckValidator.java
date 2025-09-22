@@ -76,9 +76,9 @@ public class AckValidator {
     private void validateOffset(AckMessage ackMessage) {
         AckInfo ackInfo = ackMessage.getAckInfo();
         QueueRequest queueRequest = QueueRequest.builder()
-            .context(ackMessage.getRequestContext())
-            .topic(ackInfo.getTopic())
-            .group(ackInfo.getConsumerGroup())
+            .requestContext(ackMessage.getRequestContext())
+            .topicName(ackInfo.getTopic())
+            .consumerGroup(ackInfo.getConsumerGroup())
             .queueId(ackInfo.getQueueId())
             .build();
 

@@ -11,9 +11,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class QueueResult implements Serializable {
-    private long offset;
-    private long minOffset;
-    private long maxOffset;
+    @Builder.Default
+    private long offset = 0;
+    @Builder.Default
+    private long minOffset = 0;
+    @Builder.Default
+    private long maxOffset = 0;
 
     public static QueueResult offset(long offset) {
         return QueueResult.builder()

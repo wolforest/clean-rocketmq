@@ -177,7 +177,7 @@ public class MQStore implements MQFacade {
 
     @Override
     public QueueResult getMinOffset(QueueRequest request) {
-        String topic = request.getTopic();
+        String topic = request.getTopicName();
         if (embedMQStore.containsTopic(topic)) {
             return embedMQStore.getMinOffset(request);
         }
@@ -191,7 +191,7 @@ public class MQStore implements MQFacade {
 
     @Override
     public QueueResult getMaxOffset(QueueRequest request) {
-        String topic = request.getTopic();
+        String topic = request.getTopicName();
         if (embedMQStore.containsTopic(topic)) {
             return embedMQStore.getMaxOffset(request);
         }

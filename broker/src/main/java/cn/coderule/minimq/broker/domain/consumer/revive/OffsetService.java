@@ -40,7 +40,7 @@ public class OffsetService {
         }
 
         QueueRequest request = QueueRequest.builder()
-            .topic(reviveTopic)
+            .topicName(reviveTopic)
             .queueId(queueId)
             .build();
 
@@ -59,7 +59,7 @@ public class OffsetService {
         }
 
         QueueRequest request = QueueRequest.builder()
-            .topic(reviveTopic)
+            .topicName(reviveTopic)
             .queueId(queueId)
             .build();
 

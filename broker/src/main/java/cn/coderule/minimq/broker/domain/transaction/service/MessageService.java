@@ -1,14 +1,20 @@
 package cn.coderule.minimq.broker.domain.transaction.service;
 
+import cn.coderule.minimq.broker.infra.store.ConsumeOffsetStore;
 import cn.coderule.minimq.broker.infra.store.MQStore;
 import cn.coderule.minimq.broker.infra.store.TopicStore;
 import cn.coderule.minimq.domain.config.business.TransactionConfig;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.core.constant.PermName;
 import cn.coderule.minimq.domain.domain.MessageQueue;
+import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.MessageRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.MessageResult;
+import cn.coderule.minimq.domain.domain.consumer.consume.mq.QueueRequest;
+import cn.coderule.minimq.domain.domain.consumer.consume.mq.QueueResult;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
+import cn.coderule.minimq.domain.domain.meta.offset.OffsetRequest;
+import cn.coderule.minimq.domain.domain.meta.offset.OffsetResult;
 import cn.coderule.minimq.domain.domain.meta.topic.Topic;
 import cn.coderule.minimq.domain.domain.meta.topic.TopicRequest;
 import cn.coderule.minimq.domain.domain.store.domain.mq.DequeueResult;
@@ -18,7 +24,6 @@ import cn.coderule.minimq.domain.domain.transaction.CommitBuffer;
 import cn.coderule.minimq.domain.domain.transaction.OffsetQueue;
 import cn.coderule.minimq.domain.domain.transaction.SubmitRequest;
 import cn.coderule.minimq.domain.domain.transaction.TransactionUtil;
-import java.util.HashSet;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 
@@ -33,6 +38,7 @@ public class MessageService {
 
     private final MQStore mqStore;
     private final TopicStore topicStore;
+    private final ConsumeOffsetStore consumeOffsetStore;
 
     public MessageService(
         BrokerConfig brokerConfig,
@@ -40,7 +46,8 @@ public class MessageService {
         BatchCommitService batchCommitService,
         MessageFactory messageFactory,
         MQStore mqStore,
-        TopicStore topicStore
+        TopicStore topicStore,
+        ConsumeOffsetStore consumeOffsetStore
     ) {
         this.transactionConfig = brokerConfig.getTransactionConfig();
 
@@ -51,10 +58,37 @@ public class MessageService {
 
         this.mqStore = mqStore;
         this.topicStore = topicStore;
+        this.consumeOffsetStore = consumeOffsetStore;
     }
 
     public long getConsumeOffset(MessageQueue mq) {
-        return 0;
+        OffsetRequest request = OffsetRequest.builder()
+            .requestContext(RequestContext.create(mq.getGroupName()))
+            .consumerGroup(TransactionUtil.buildConsumerGroup())
+
+            .storeGroup(mq.getGroupName())
+            .topicName(mq.getTopicName())
+            .queueId(mq.getQueueId())
+            .build();
+
+        OffsetResult result = consumeOffsetStore.getOffset(request);
+        if (result.isSuccess()) {
+            return result.getOffset();
+        }
+
+        return getMinOffset(request);
+    }
+
+    private long getMinOffset(OffsetRequest offsetRequest) {
+        QueueRequest request = QueueRequest.builder()
+            .requestContext(offsetRequest.getRequestContext())
+            .storeGroup(offsetRequest.getStoreGroup())
+            .consumerGroup(offsetRequest.getConsumerGroup())
+            .topicName(offsetRequest.getTopicName())
+            .queueId(offsetRequest.getQueueId())
+            .build();
+        QueueResult result = mqStore.getMinOffset(request);
+        return result.getMinOffset();
     }
 
     public void updateConsumeOffset(MessageQueue mq, long offset) {

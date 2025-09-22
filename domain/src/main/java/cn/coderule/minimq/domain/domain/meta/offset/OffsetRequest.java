@@ -15,6 +15,7 @@ public class OffsetRequest implements Serializable {
     private RequestContext requestContext;
     private long timeout;
 
+    private String storeGroup;
     private String topicName;
     private String consumerGroup;
     private int queueId;

@@ -101,7 +101,7 @@ public class MQStoreImpl implements MQStore {
     @Override
     public QueueResult getMinOffset(QueueRequest request) {
         long minOffset = consumeQueueGateway.getMinOffset(
-            request.getTopic(),
+            request.getTopicName(),
             request.getQueueId()
         );
 
@@ -111,7 +111,7 @@ public class MQStoreImpl implements MQStore {
     @Override
     public QueueResult getMaxOffset(QueueRequest request) {
         long maxOffset = consumeQueueGateway.getMaxOffset(
-            request.getTopic(),
+            request.getTopicName(),
             request.getQueueId()
         );
 

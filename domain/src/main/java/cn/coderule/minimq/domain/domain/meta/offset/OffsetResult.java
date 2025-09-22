@@ -16,4 +16,8 @@ public class OffsetResult implements Serializable {
     public static OffsetResult notFound() {
         return build(-1);
     }
+
+    public boolean isSuccess() {
+        return offset >= 0;
+    }
 }

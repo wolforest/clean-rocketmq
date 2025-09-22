@@ -12,10 +12,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class QueueRequest implements Serializable {
-    RequestContext context;
-
-    private String group;
-    private String topic;
+    RequestContext requestContext;
+    private String storeGroup;
+    private String consumerGroup;
+    private String topicName;
     private int queueId;
 }
 

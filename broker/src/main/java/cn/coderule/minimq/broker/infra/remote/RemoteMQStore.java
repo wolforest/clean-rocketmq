@@ -105,14 +105,14 @@ public class RemoteMQStore extends AbstractRemoteStore implements MQFacade {
 
     @Override
     public QueueResult getMinOffset(QueueRequest request) {
-        String topic = request.getTopic();
+        String topic = request.getTopicName();
         String address = loadBalance.findByTopic(topic);
         return getClient(address).getMinOffset(request);
     }
 
     @Override
     public QueueResult getMaxOffset(QueueRequest request) {
-        String topic = request.getTopic();
+        String topic = request.getTopicName();
         String address = loadBalance.findByTopic(topic);
         return getClient(address).getMaxOffset(request);
     }

@@ -13,6 +13,7 @@ import cn.coderule.minimq.broker.domain.transaction.service.MessageService;
 import cn.coderule.minimq.broker.domain.transaction.service.PrepareService;
 import cn.coderule.minimq.broker.domain.transaction.service.RollbackService;
 import cn.coderule.minimq.broker.domain.transaction.service.SubscribeService;
+import cn.coderule.minimq.broker.infra.store.ConsumeOffsetStore;
 import cn.coderule.minimq.broker.infra.store.MQStore;
 import cn.coderule.minimq.broker.infra.store.TopicStore;
 import cn.coderule.minimq.broker.server.bootstrap.BrokerContext;
@@ -80,12 +81,13 @@ public class TransactionManager implements Lifecycle {
     private void initTransaction() {
         MQStore mqStore = BrokerContext.getBean(MQStore.class);
         TopicStore topicStore = BrokerContext.getBean(TopicStore.class);
+        ConsumeOffsetStore consumeOffsetStore = BrokerContext.getBean(ConsumeOffsetStore.class);
 
         PrepareService prepareService = new PrepareService(
             transactionConfig, messageFactory, mqStore, receiptRegistry);
 
         messageService = new MessageService(
-            brokerConfig, commitBuffer, batchCommitService, messageFactory, mqStore, topicStore);
+            brokerConfig, commitBuffer, batchCommitService, messageFactory, mqStore, topicStore, consumeOffsetStore);
 
         SubscribeService subscribeService = new SubscribeService();
         CommitService commitService = new CommitService(messageService, messageFactory);

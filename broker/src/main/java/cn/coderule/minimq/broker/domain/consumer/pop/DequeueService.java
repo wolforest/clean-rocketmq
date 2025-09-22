@@ -79,9 +79,9 @@ public class DequeueService {
 
     private long getMaxOffset(RequestContext context, String group, String topic, int queueId) {
         QueueRequest request = QueueRequest.builder()
-            .context(context)
-            .group(group)
-            .topic(topic)
+            .requestContext(context)
+            .consumerGroup(group)
+            .topicName(topic)
             .queueId(queueId)
             .build();
 

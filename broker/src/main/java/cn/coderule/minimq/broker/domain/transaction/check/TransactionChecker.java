@@ -127,7 +127,7 @@ public class TransactionChecker extends ServiceThread {
     }
 
     private CheckContext buildCheckContext(MessageQueue prepareQueue) {
-        MessageQueue commitQueue = checkBuffer.createCommitQueue(prepareQueue);
+        MessageQueue commitQueue = checkBuffer.addCommitQueue(prepareQueue);
 
         CheckContext checkContext = CheckContext.builder()
                 .transactionContext(transactionContext)
