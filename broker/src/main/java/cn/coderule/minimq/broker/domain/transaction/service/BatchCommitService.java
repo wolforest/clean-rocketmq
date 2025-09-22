@@ -74,7 +74,32 @@ public class BatchCommitService extends ServiceThread {
 
     private void commit() {
         BatchCommitContext context = new BatchCommitContext();
-        for (Map.Entry<Integer, OffsetQueue> entry : commitBuffer.getOffsetEntrySet()) {
+
+        try {
+            buildOperationMessage(context);
+            enqueueOperationMessage(context);
+            refreshWakeupTime(context);
+        } catch (Throwable e) {
+            log.error("{} Commit error", getServiceName(), e);
+            this.wakeupTime = 0;
         }
+    }
+
+    private void buildOperationMessage(BatchCommitContext context) {
+        for (Map.Entry<Integer, OffsetQueue> entry : commitBuffer.getOffsetEntrySet()) {
+            buildOperationMessage(context, entry);
+        }
+    }
+
+    private void buildOperationMessage(BatchCommitContext context, Map.Entry<Integer, OffsetQueue> entry) {
+
+    }
+
+    private void enqueueOperationMessage(BatchCommitContext context) {
+
+    }
+
+    private void refreshWakeupTime(BatchCommitContext context) {
+
     }
 }
