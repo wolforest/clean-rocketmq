@@ -205,10 +205,10 @@ public class Reviver {
             long offset = point.ackOffsetByIndex((byte) i);
 
             DequeueRequest request = DequeueRequest.builder()
-                    .topic(point.getTopic())
+                    .topicName(point.getTopic())
                     .queueId(point.getQueueId())
                     .offset(offset)
-                    .maxNum(1)
+                    .num(1)
                     .build();
 
             DequeueResult result = mqFacade.get(request);

@@ -36,17 +36,17 @@ public class MessageService {
 
     public DequeueResult get(String topic, int queueId, long offset, int num) {
         DequeueRequest request = DequeueRequest.builder()
-            .topic(topic)
+            .topicName(topic)
             .queueId(queueId)
             .offset(offset)
-            .maxNum(num)
+            .num(num)
             .build();
         return get(request);
     }
 
     public DequeueResult get(DequeueRequest request) {
         List<QueueUnit> unitList = consumeQueueGateway.get(
-            request.getTopic(), request.getQueueId(), request.getOffset(), request.getMaxNum()
+            request.getTopicName(), request.getQueueId(), request.getOffset(), request.getNum()
         );
 
         if (CollectionUtil.isEmpty(unitList)) {

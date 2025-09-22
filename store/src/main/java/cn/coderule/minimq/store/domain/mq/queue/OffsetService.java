@@ -101,8 +101,8 @@ public class OffsetService {
         }
 
         consumeOffsetService.putOffset(
-            request.getGroup(),
-            request.getTopic(),
+            request.getConsumerGroup(),
+            request.getTopicName(),
             request.getQueueId(),
             newOffset
         );
@@ -110,8 +110,8 @@ public class OffsetService {
 
     private long getConsumeOffset(DequeueRequest request) {
         return consumeOffsetService.getOffset(
-            request.getGroup(),
-            request.getTopic(),
+            request.getConsumerGroup(),
+            request.getTopicName(),
             request.getQueueId()
         );
     }
@@ -129,7 +129,7 @@ public class OffsetService {
      */
     private long initOffset(DequeueRequest request) {
         if (request.isConsumeFromStart()) {
-            return consumeQueue.getMinOffset(request.getTopic(), request.getQueueId());
+            return consumeQueue.getMinOffset(request.getTopicName(), request.getQueueId());
         }
 
         long maxOffset = getMaxOffset(request);
@@ -150,7 +150,7 @@ public class OffsetService {
     }
 
     private long mergeBufferOffset(DequeueRequest request, long offset) {
-        long bufferOffset = ackService.getBufferedOffset(request.getGroup(), request.getTopic(), request.getQueueId());
+        long bufferOffset = ackService.getBufferedOffset(request.getConsumerGroup(), request.getTopicName(), request.getQueueId());
         if (bufferOffset < 0) {
             return offset;
         }
@@ -160,13 +160,13 @@ public class OffsetService {
 
     private long getMaxOffset(DequeueRequest request) {
         if (messageConfig.isInitOffsetByQueue()) {
-            long minOffset = consumeQueue.getMinOffset(request.getTopic(), request.getQueueId());
-            if (minOffset <= 0 && isOffsetExists(request.getTopic(), request.getQueueId())) {
+            long minOffset = consumeQueue.getMinOffset(request.getTopicName(), request.getQueueId());
+            if (minOffset <= 0 && isOffsetExists(request.getTopicName(), request.getQueueId())) {
                 return 0;
             }
         }
 
-        long maxOffset = consumeQueue.getMaxOffset(request.getTopic(), request.getQueueId());
+        long maxOffset = consumeQueue.getMaxOffset(request.getTopicName(), request.getQueueId());
         if (maxOffset < 0) {
             return 0;
         }

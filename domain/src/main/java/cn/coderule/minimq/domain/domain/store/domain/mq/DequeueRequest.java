@@ -17,8 +17,8 @@ public class DequeueRequest implements Serializable {
     private String storeGroup;
     private String attemptId;
 
-    private String group;
-    private String topic;
+    private String consumerGroup;
+    private String topicName;
     private int queueId;
     private int reviveQueueId;
     private long offset;
@@ -27,7 +27,7 @@ public class DequeueRequest implements Serializable {
     private long invisibleTime;
 
     @Builder.Default
-    private int maxNum = 1;
+    private int num = 1;
     @Builder.Default
     private boolean fifo = false;
     @Builder.Default

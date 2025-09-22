@@ -51,7 +51,7 @@ public class DequeueLock extends ServiceThread {
     }
 
     public boolean tryLock(DequeueRequest request) {
-        return tryLock(request.getGroup(), request.getTopic(), request.getQueueId());
+        return tryLock(request.getConsumerGroup(), request.getTopicName(), request.getQueueId());
     }
 
     public boolean tryLock(String group, String topic, int queueId) {
@@ -65,7 +65,7 @@ public class DequeueLock extends ServiceThread {
     }
 
     public void unlock(DequeueRequest request) {
-        unlock(request.getGroup(), request.getTopic(), request.getQueueId());
+        unlock(request.getConsumerGroup(), request.getTopicName(), request.getQueueId());
     }
 
     public void unlock(String group, String topic, int queueId) {

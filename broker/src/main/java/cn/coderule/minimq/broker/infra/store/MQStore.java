@@ -64,7 +64,7 @@ public class MQStore implements MQFacade {
 
     @Override
     public CompletableFuture<DequeueResult> dequeueAsync(DequeueRequest request) {
-        String topic = request.getTopic();
+        String topic = request.getTopicName();
         if (embedMQStore.containsTopic(topic)) {
             return embedMQStore.dequeueAsync(request);
         }
@@ -80,7 +80,7 @@ public class MQStore implements MQFacade {
 
     @Override
     public DequeueResult dequeue(DequeueRequest request) {
-        String topic = request.getTopic();
+        String topic = request.getTopicName();
         if (embedMQStore.containsTopic(topic)) {
             return embedMQStore.dequeue(request);
         }
@@ -94,7 +94,7 @@ public class MQStore implements MQFacade {
 
     @Override
     public DequeueResult get(DequeueRequest request) {
-        if (embedMQStore.containsTopic(request.getTopic())) {
+        if (embedMQStore.containsTopic(request.getTopicName())) {
             return embedMQStore.get(request);
         }
 

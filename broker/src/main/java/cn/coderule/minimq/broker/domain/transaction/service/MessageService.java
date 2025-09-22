@@ -17,6 +17,7 @@ import cn.coderule.minimq.domain.domain.meta.offset.OffsetRequest;
 import cn.coderule.minimq.domain.domain.meta.offset.OffsetResult;
 import cn.coderule.minimq.domain.domain.meta.topic.Topic;
 import cn.coderule.minimq.domain.domain.meta.topic.TopicRequest;
+import cn.coderule.minimq.domain.domain.store.domain.mq.DequeueRequest;
 import cn.coderule.minimq.domain.domain.store.domain.mq.DequeueResult;
 import cn.coderule.minimq.domain.domain.store.domain.mq.EnqueueRequest;
 import cn.coderule.minimq.domain.domain.store.domain.mq.EnqueueResult;
@@ -105,8 +106,17 @@ public class MessageService {
         return topic.toQueueSet(storeGroup);
     }
 
-    public DequeueResult getMessage(MessageQueue mq, int num) {
-        return null;
+    public DequeueResult getMessage(MessageQueue mq, long offset, int num) {
+        DequeueRequest request = DequeueRequest.builder()
+            .requestContext(RequestContext.create())
+            .consumerGroup(TransactionUtil.buildConsumerGroup())
+            .storeGroup(mq.getGroupName())
+            .topicName(mq.getTopicName())
+            .queueId(mq.getQueueId())
+            .offset(offset)
+            .num(num)
+            .build();
+        return mqStore.get(request);
     }
 
     public void deletePrepareMessage(SubmitRequest request, MessageBO messageBO) {

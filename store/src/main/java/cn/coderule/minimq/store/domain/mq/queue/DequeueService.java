@@ -94,8 +94,8 @@ public class DequeueService {
 
     private boolean isOrderQueueLocked(DequeueRequest request) {
         OrderRequest orderRequest = OrderRequest.builder()
-            .topicName(request.getTopic())
-            .consumerGroup(request.getGroup())
+            .topicName(request.getTopicName())
+            .consumerGroup(request.getConsumerGroup())
             .queueId(request.getQueueId())
             .attemptId(request.getAttemptId())
             .invisibleTime(request.getInvisibleTime())
@@ -107,8 +107,8 @@ public class DequeueService {
         }
 
         inflightCounter.clear(
-            request.getTopic(),
-            request.getGroup(),
+            request.getTopicName(),
+            request.getConsumerGroup(),
             request.getQueueId()
         );
         return false;
@@ -121,14 +121,14 @@ public class DequeueService {
         }
 
         long inflight = inflightCounter.get(
-            request.getTopic(), request.getGroup(), request.getQueueId()
+            request.getTopicName(), request.getConsumerGroup(), request.getQueueId()
         );
 
         boolean status = inflight > messageConfig.getPopInflightThreshold();
         if (status) {
             log.warn("Stop pop because too much message inflight,"
                     + "topic={}; group={}, queueId={}",
-                request.getTopic(), request.getGroup(), request.getQueueId()
+                request.getTopicName(), request.getConsumerGroup(), request.getQueueId()
             );
         }
 
@@ -182,8 +182,8 @@ public class DequeueService {
 
     private void increaseCounter(DequeueRequest request, DequeueResult result) {
         inflightCounter.increment(
-            request.getTopic(),
-            request.getGroup(),
+            request.getTopicName(),
+            request.getConsumerGroup(),
             request.getQueueId(),
             result.countMessage()
         );

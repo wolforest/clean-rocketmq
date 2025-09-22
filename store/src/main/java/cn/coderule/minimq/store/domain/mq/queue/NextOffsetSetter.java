@@ -18,7 +18,7 @@ public class NextOffsetSetter {
     }
 
     public void set(DequeueRequest request, DequeueResult result) {
-        if (!consumeQueue.existsQueue(request.getTopic(), request.getQueueId())) {
+        if (!consumeQueue.existsQueue(request.getTopicName(), request.getQueueId())) {
             setOffsetIfQueueNotExists(request, result);
             return;
         }
@@ -56,7 +56,7 @@ public class NextOffsetSetter {
 
     private void setMinOffset(DequeueRequest request, DequeueResult result) {
         long offset = consumeQueue.getMinOffset(
-            request.getGroup(),
+            request.getConsumerGroup(),
             request.getQueueId()
         );
 
@@ -65,7 +65,7 @@ public class NextOffsetSetter {
 
     private void setMaxOffset(DequeueRequest request, DequeueResult result) {
         long offset = consumeQueue.getMaxOffset(
-            request.getGroup(),
+            request.getConsumerGroup(),
             request.getQueueId()
         );
 
@@ -104,7 +104,7 @@ public class NextOffsetSetter {
         result.setStatus(MessageStatus.OFFSET_FOUND_NULL);
 
         long rolledOffset = consumeQueue.rollToOffset(
-            request.getTopic(),
+            request.getTopicName(),
             request.getQueueId(),
             request.getOffset()
         );

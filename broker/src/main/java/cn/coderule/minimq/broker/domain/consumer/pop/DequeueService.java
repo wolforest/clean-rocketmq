@@ -33,7 +33,7 @@ public class DequeueService {
 
         // @question need to add an atomic long to store restNum?
         DequeueRequest request = buildDequeueRequest(context, topicName, queueId);
-        request.setMaxNum(calculateMaxNum(context, lastResult));
+        request.setNum(calculateMaxNum(context, lastResult));
 
         return mqStore.dequeueAsync(request)
             .thenApply(
@@ -93,11 +93,11 @@ public class DequeueService {
         return DequeueRequest.builder()
             .requestContext(request.getRequestContext())
             .attemptId(request.getAttemptId())
-            .group(request.getConsumerGroup())
-            .topic(topicName)
+            .consumerGroup(request.getConsumerGroup())
+            .topicName(topicName)
             .queueId(queueId)
             .reviveQueueId(context.getReviveQueueId())
-            .maxNum(request.getMaxNum())
+            .num(request.getMaxNum())
             .fifo(request.isFifo())
             .dequeueTime(context.getPopTime())
             .invisibleTime(request.getInvisibleTime())

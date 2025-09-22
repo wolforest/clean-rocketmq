@@ -230,11 +230,11 @@ public class ReviveConsumer {
 
     private List<MessageBO> pullMessage(long reviveOffset) {
         DequeueRequest request = DequeueRequest.builder()
-            .group(PopConstants.REVIVE_GROUP)
-            .topic(reviveTopic)
+            .consumerGroup(PopConstants.REVIVE_GROUP)
+            .topicName(reviveTopic)
             .queueId(queueId)
             .offset(reviveOffset)
-            .maxNum(32)
+            .num(32)
             .build();
 
         DequeueResult result = mqFacade.get(request);

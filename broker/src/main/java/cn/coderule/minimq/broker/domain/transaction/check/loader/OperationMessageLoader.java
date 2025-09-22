@@ -25,7 +25,7 @@ public class OperationMessageLoader {
     }
 
     public DequeueResult load(CheckContext context, int num) {
-        DequeueResult result = messageService.getMessage(context.getCommitQueue(), num);
+        DequeueResult result = messageService.getMessage(context.getOperationQueue(), context.getOperationOffset(), num);
         if (!validateCommitResult(context, result)) {
             return result;
         }
@@ -43,13 +43,13 @@ public class OperationMessageLoader {
 
         if (result.isEmpty()) {
             log.error("no commit message for checking: commitQueue={}, commitOffset={}",
-                context.getCommitQueue(), context.getOperationOffset());
+                context.getOperationQueue(), context.getOperationOffset());
             return false;
         }
 
         if (result.isOffsetIllegal()) {
             log.error("commit message offset illegal: commitQueue={}, commitOffset={}, nextOffset={}",
-                context.getCommitQueue(), context.getOperationOffset(), result.getNextOffset());
+                context.getOperationQueue(), context.getOperationOffset(), result.getNextOffset());
             return false;
         }
 

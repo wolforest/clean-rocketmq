@@ -79,10 +79,10 @@ public class DefaultMQService implements MQService {
     @Override
     public List<MessageBO> getMessage(String topic, int queueId, long offset, int num) {
         DequeueRequest request = DequeueRequest.builder()
-            .topic(topic)
+            .topicName(topic)
             .queueId(queueId)
             .offset(offset)
-            .maxNum(num)
+            .num(num)
             .build();
 
         DequeueResult result = get(request);

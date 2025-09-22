@@ -133,7 +133,7 @@ public class TransactionChecker extends ServiceThread {
                 .transactionContext(transactionContext)
                 .transactionConfig(transactionConfig)
                 .prepareQueue(prepareQueue)
-                .commitQueue(commitQueue)
+                .operationQueue(commitQueue)
                 .build();
 
         initCheckOffset(checkContext);
@@ -146,7 +146,7 @@ public class TransactionChecker extends ServiceThread {
         long prepareOffset = messageService.getConsumeOffset(prepareQueue);
         checkContext.setStartPrepareOffset(prepareOffset);
 
-        MessageQueue operationQueue = checkContext.getCommitQueue();
+        MessageQueue operationQueue = checkContext.getOperationQueue();
         long operationOffset = messageService.getConsumeOffset(operationQueue);
         checkContext.setOperationOffset(operationOffset);
     }

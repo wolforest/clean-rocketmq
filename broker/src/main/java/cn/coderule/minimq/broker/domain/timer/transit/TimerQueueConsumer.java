@@ -111,12 +111,12 @@ public class TimerQueueConsumer extends ServiceThread {
     private DequeueResult pullMessage() {
         DequeueRequest request = DequeueRequest.builder()
             .storeGroup(task.getStoreGroup())
-            .group(TimerConstants.TIMER_GROUP)
-            .topic(TimerConstants.TIMER_TOPIC)
+            .consumerGroup(TimerConstants.TIMER_GROUP)
+            .topicName(TimerConstants.TIMER_TOPIC)
             .queueId(task.getQueueId())
             .offset(timerState.getTimerQueueOffset())
 //            .offset(0)
-            .maxNum(timerConfig.getConsumeMaxNum())
+            .num(timerConfig.getConsumeMaxNum())
             .build();
 
         return mqStore.get(request);

@@ -24,7 +24,7 @@ public class CheckContext implements Serializable {
     private TransactionConfig transactionConfig;
 
     private MessageQueue prepareQueue;
-    private MessageQueue commitQueue;
+    private MessageQueue operationQueue;
 
     private long startPrepareOffset;
     private long prepareOffset;

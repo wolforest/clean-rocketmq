@@ -50,14 +50,14 @@ public class RemoteMQStore extends AbstractRemoteStore implements MQFacade {
 
     @Override
     public CompletableFuture<DequeueResult> dequeueAsync(DequeueRequest request) {
-        String topic = request.getTopic();
+        String topic = request.getTopicName();
         String address = loadBalance.findByTopic(topic);
         return getClient(address).dequeueAsync(request);
     }
 
     @Override
     public DequeueResult dequeue(DequeueRequest request) {
-        String topic = request.getTopic();
+        String topic = request.getTopicName();
         String address = loadBalance.findByTopic(topic);
         return getClient(address).dequeue(request);
     }
@@ -65,7 +65,7 @@ public class RemoteMQStore extends AbstractRemoteStore implements MQFacade {
 
     @Override
     public DequeueResult get(DequeueRequest request) {
-        String address = loadBalance.findByTopic(request.getTopic());
+        String address = loadBalance.findByTopic(request.getTopicName());
         return getClient(address).get(request);
     }
 

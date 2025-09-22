@@ -89,8 +89,8 @@ public class PopConverter {
             .popTime(request.getDequeueTime())
             .invisibleTime(request.getInvisibleTime())
             .startOffset(firstOffset)
-            .topic(request.getTopic())
-            .cid(request.getGroup())
+            .topic(request.getTopicName())
+            .cid(request.getConsumerGroup())
             .queueId(request.getQueueId())
             .build();
 
@@ -206,8 +206,8 @@ public class PopConverter {
             .requestContext(request.getRequestContext())
             .storeGroup(request.getStoreGroup())
             .attemptId(request.getAttemptId())
-            .topicName(request.getTopic())
-            .consumerGroup(request.getGroup())
+            .topicName(request.getTopicName())
+            .consumerGroup(request.getConsumerGroup())
             .queueId(request.getQueueId())
             .dequeueTime(request.getDequeueTime())
             .invisibleTime(request.getInvisibleTime())
