@@ -22,29 +22,48 @@ public class TransactionManager implements Lifecycle {
     private TransactionConfig transactionConfig;
     private Transaction transaction;
 
-
     private CommitBuffer commitBuffer;
     private BatchCommitService batchCommitService;
     private MessageFactory messageFactory;
     private ReceiptRegistry receiptRegistry;
     private ReceiptCleaner receiptCleaner;
 
+    @Override
+    public void initialize() throws Exception {
+        initLibs();
+        initTransaction();
+        initController();
+    }
+
+    @Override
+    public void start() throws Exception {
+        receiptCleaner.start();
+        batchCommitService.start();
+    }
+
+    @Override
+    public void shutdown() throws Exception {
+        receiptCleaner.shutdown();
+        batchCommitService.shutdown();
+    }
+
     private void initLibs() {
         brokerConfig = BrokerContext.getBean(BrokerConfig.class);
         transactionConfig = brokerConfig.getTransactionConfig();
 
+        MQStore mqStore = BrokerContext.getBean(MQStore.class);
         commitBuffer = new CommitBuffer(transactionConfig);
-        batchCommitService = new BatchCommitService(commitBuffer);
         messageFactory = new MessageFactory(brokerConfig, commitBuffer);
+
+        batchCommitService = new BatchCommitService(
+            transactionConfig, commitBuffer, messageFactory, mqStore
+        );
 
         receiptRegistry = new ReceiptRegistry(transactionConfig);
         receiptCleaner = new ReceiptCleaner(transactionConfig, receiptRegistry);
     }
 
-    @Override
-    public void initialize() throws Exception {
-        initLibs();
-
+    private void initTransaction() {
         MQStore mqStore = BrokerContext.getBean(MQStore.class);
         PrepareService prepareService = new PrepareService(
             transactionConfig, messageFactory, mqStore, receiptRegistry);
@@ -71,20 +90,11 @@ public class TransactionManager implements Lifecycle {
             rollbackService
         );
         BrokerContext.register(transaction);
+    }
 
+    private void initController() {
         TransactionController controller = new TransactionController(transaction);
         BrokerContext.registerAPI(controller);
-    }
-    @Override
-    public void start() throws Exception {
-        receiptCleaner.start();
-        batchCommitService.start();
-    }
-
-    @Override
-    public void shutdown() throws Exception {
-        receiptCleaner.shutdown();
-        batchCommitService.shutdown();
     }
 
 }
