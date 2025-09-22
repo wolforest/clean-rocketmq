@@ -2,6 +2,8 @@ package cn.coderule.minimq.broker.domain.transaction;
 
 import cn.coderule.minimq.broker.api.TransactionController;
 import cn.coderule.common.convention.service.Lifecycle;
+import cn.coderule.minimq.broker.domain.transaction.check.CheckerFactory;
+import cn.coderule.minimq.broker.domain.transaction.check.context.TransactionContext;
 import cn.coderule.minimq.broker.domain.transaction.receipt.ReceiptCleaner;
 import cn.coderule.minimq.broker.domain.transaction.receipt.ReceiptRegistry;
 import cn.coderule.minimq.broker.domain.transaction.service.BatchCommitService;
@@ -15,6 +17,7 @@ import cn.coderule.minimq.broker.infra.store.MQStore;
 import cn.coderule.minimq.broker.server.bootstrap.BrokerContext;
 import cn.coderule.minimq.domain.config.business.TransactionConfig;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
+import cn.coderule.minimq.domain.domain.cluster.task.TaskLoader;
 import cn.coderule.minimq.domain.domain.transaction.CommitBuffer;
 
 public class TransactionManager implements Lifecycle {
@@ -24,27 +27,37 @@ public class TransactionManager implements Lifecycle {
 
     private CommitBuffer commitBuffer;
     private BatchCommitService batchCommitService;
+    private MessageService messageService;
+
     private MessageFactory messageFactory;
     private ReceiptRegistry receiptRegistry;
     private ReceiptCleaner receiptCleaner;
+
+    private CheckerFactory checkerFactory;
 
     @Override
     public void initialize() throws Exception {
         initLibs();
         initTransaction();
         initController();
+
+        initChecker();
     }
 
     @Override
     public void start() throws Exception {
         receiptCleaner.start();
         batchCommitService.start();
+
+        checkerFactory.start();
     }
 
     @Override
     public void shutdown() throws Exception {
         receiptCleaner.shutdown();
         batchCommitService.shutdown();
+
+        checkerFactory.shutdown();
     }
 
     private void initLibs() {
@@ -68,7 +81,7 @@ public class TransactionManager implements Lifecycle {
         PrepareService prepareService = new PrepareService(
             transactionConfig, messageFactory, mqStore, receiptRegistry);
 
-        MessageService messageService = new MessageService(
+        messageService = new MessageService(
             brokerConfig, commitBuffer, batchCommitService, messageFactory, mqStore);
 
         SubscribeService subscribeService = new SubscribeService();
@@ -88,5 +101,17 @@ public class TransactionManager implements Lifecycle {
     private void initController() {
         TransactionController controller = new TransactionController(transaction);
         BrokerContext.registerAPI(controller);
+    }
+
+    private void initChecker() {
+        TransactionContext context = TransactionContext.builder()
+            .brokerConfig(brokerConfig)
+            .messageService(messageService)
+            .build();
+
+        checkerFactory = new CheckerFactory(context);
+
+        TaskLoader loader = BrokerContext.getBean(TaskLoader.class);
+        loader.registerTransactionFactory(checkerFactory);
     }
 }

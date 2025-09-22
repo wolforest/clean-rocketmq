@@ -11,20 +11,12 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class CheckerFactory implements TaskFactory, Lifecycle {
-    private final BrokerConfig brokerConfig;
     private final TransactionContext transactionContext;
     private final ConcurrentMap<Integer, TransactionChecker> checkerMap;
 
-    public CheckerFactory(BrokerConfig brokerConfig) {
-        this.brokerConfig = brokerConfig;
+    public CheckerFactory(TransactionContext context) {
         this.checkerMap = new ConcurrentHashMap<>();
-        this.transactionContext = buildContext();
-    }
-
-    private TransactionContext buildContext() {
-        return TransactionContext.builder()
-            .brokerConfig(brokerConfig)
-            .build();
+        this.transactionContext = context;
     }
 
     @Override
