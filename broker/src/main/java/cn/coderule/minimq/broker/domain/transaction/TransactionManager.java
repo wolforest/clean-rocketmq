@@ -67,19 +67,12 @@ public class TransactionManager implements Lifecycle {
         MQStore mqStore = BrokerContext.getBean(MQStore.class);
         PrepareService prepareService = new PrepareService(
             transactionConfig, messageFactory, mqStore, receiptRegistry);
-        SubscribeService subscribeService = new SubscribeService();
 
         MessageService messageService = new MessageService(
-            brokerConfig,
-            commitBuffer,
-            batchCommitService,
-            messageFactory,
-            mqStore
-        );
-        CommitService commitService = new CommitService(
-            messageService, messageFactory
-        );
+            brokerConfig, commitBuffer, batchCommitService, messageFactory, mqStore);
 
+        SubscribeService subscribeService = new SubscribeService();
+        CommitService commitService = new CommitService(messageService, messageFactory);
         RollbackService rollbackService = new RollbackService(messageService);
 
         transaction = new Transaction(
@@ -96,5 +89,4 @@ public class TransactionManager implements Lifecycle {
         TransactionController controller = new TransactionController(transaction);
         BrokerContext.registerAPI(controller);
     }
-
 }
