@@ -43,13 +43,13 @@ public class CommitMessageLoader {
 
         if (result.isEmpty()) {
             log.error("no commit message for checking: commitQueue={}, commitOffset={}",
-                context.getCommitQueue(), context.getCommitOffset());
+                context.getCommitQueue(), context.getOperationOffset());
             return false;
         }
 
         if (result.isOffsetIllegal()) {
             log.error("commit message offset illegal: commitQueue={}, commitOffset={}, nextOffset={}",
-                context.getCommitQueue(), context.getCommitOffset(), result.getNextOffset());
+                context.getCommitQueue(), context.getOperationOffset(), result.getNextOffset());
             return false;
         }
 
@@ -108,7 +108,7 @@ public class CommitMessageLoader {
         String[] arr = body.split(TransactionUtil.OFFSET_SEPARATOR);
         for (String offsetString : arr) {
             Long offset = StringUtil.getLong(offsetString, -1);
-            if (offset < context.getPrepareStartOffset()) {
+            if (offset < context.getStartPrepareOffset()) {
                 continue;
             }
 

@@ -144,10 +144,10 @@ public class TransactionChecker extends ServiceThread {
     private void initCheckOffset(CheckContext checkContext) {
         MessageQueue prepareQueue = checkContext.getPrepareQueue();
         long prepareOffset = messageService.getConsumeOffset(prepareQueue);
-        checkContext.setPrepareStartOffset(prepareOffset);
+        checkContext.setStartPrepareOffset(prepareOffset);
 
-        MessageQueue commitQueue = checkContext.getCommitQueue();
-        long commitOffset = messageService.getConsumeOffset(commitQueue);
-        checkContext.setCommitOffset(commitOffset);
+        MessageQueue operationQueue = checkContext.getCommitQueue();
+        long operationOffset = messageService.getConsumeOffset(operationQueue);
+        checkContext.setOperationOffset(operationOffset);
     }
 }

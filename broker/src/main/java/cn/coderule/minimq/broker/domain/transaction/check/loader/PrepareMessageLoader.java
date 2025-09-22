@@ -163,7 +163,7 @@ public class PrepareMessageLoader {
             return;
         }
 
-        context.setCommitNextOffset(result.getNextOffset());
+        context.setNextOperationOffset(result.getNextOffset());
     }
 
 }
