@@ -4,6 +4,7 @@ import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 import cn.coderule.minimq.broker.infra.store.MQStore;
 import cn.coderule.minimq.domain.config.business.TransactionConfig;
 import cn.coderule.minimq.domain.domain.MessageQueue;
+import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.domain.transaction.CommitBuffer;
 import cn.coderule.minimq.domain.domain.transaction.OffsetQueue;
 import java.util.Map;
@@ -103,7 +104,17 @@ public class BatchCommitService extends ServiceThread {
             return;
         }
 
+        MessageBO messageBO = messageFactory.createOperationMessage(offsetQueue, operationQueue);
+        if (messageBO == null) {
+            return;
+        }
 
+        context.add(messageBO);
+        context.updateFirstTime(offsetQueue.getLastWriteTime());
+
+        if (offsetQueue.getTotalSize() >= transactionConfig.getMaxCommitMessageLength()) {
+            context.setOverflow(true);
+        }
     }
 
     private boolean shouldSkip(BatchCommitContext context, OffsetQueue offsetQueue) {

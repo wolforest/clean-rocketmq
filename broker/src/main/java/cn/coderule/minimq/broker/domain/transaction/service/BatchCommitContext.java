@@ -19,4 +19,12 @@ public class BatchCommitContext implements Serializable {
         this.sendMap = new HashMap<>();
         this.overflow = false;
     }
+
+    public void add(MessageBO messageBO) {
+        this.sendMap.put(messageBO.getQueueId(), messageBO);
+    }
+
+    public void updateFirstTime(long newTime) {
+        this.firstTime = Math.min(this.firstTime, newTime);
+    }
 }
