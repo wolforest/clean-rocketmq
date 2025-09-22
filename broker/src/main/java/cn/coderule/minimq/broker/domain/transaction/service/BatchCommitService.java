@@ -3,6 +3,7 @@ package cn.coderule.minimq.broker.domain.transaction.service;
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 import cn.coderule.minimq.broker.infra.store.MQStore;
 import cn.coderule.minimq.domain.config.business.TransactionConfig;
+import cn.coderule.minimq.domain.domain.MessageQueue;
 import cn.coderule.minimq.domain.domain.transaction.CommitBuffer;
 import cn.coderule.minimq.domain.domain.transaction.OffsetQueue;
 import java.util.Map;
@@ -90,11 +91,17 @@ public class BatchCommitService extends ServiceThread {
     }
 
     private void buildOperationMessage(BatchCommitContext context, Map.Entry<Integer, OffsetQueue> entry) {
+        int queueId = entry.getKey();
         OffsetQueue offsetQueue = entry.getValue();
         if (shouldSkip(context, offsetQueue)) {
             return;
         }
 
+        MessageQueue operationQueue = commitBuffer.getOperationQueue(queueId);
+        if (operationQueue == null) {
+            log.error("can't find operation queue: queueId: {}", queueId);
+            return;
+        }
 
 
     }

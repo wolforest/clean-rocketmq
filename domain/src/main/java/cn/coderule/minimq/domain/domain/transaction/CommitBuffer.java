@@ -1,7 +1,6 @@
 package cn.coderule.minimq.domain.domain.transaction;
 
 import cn.coderule.minimq.domain.config.business.TransactionConfig;
-import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.domain.MessageQueue;
 import java.util.Map;
 import java.util.Set;
@@ -26,7 +25,7 @@ public class CommitBuffer {
         return offsetMap.entrySet();
     }
 
-    public OffsetQueue getOffsetQueue(int queueId) {
+    public OffsetQueue initOffsetQueue(int queueId) {
         OffsetQueue offsetQueue = offsetMap.get(queueId);
         if (offsetQueue != null) {
             return offsetQueue;
@@ -38,7 +37,11 @@ public class CommitBuffer {
         return old != null ? old : offsetQueue;
     }
 
-    public MessageQueue getOperationQueue(int queueId, String storeGroup) {
+    public MessageQueue getOperationQueue(int queueId) {
+        return operationMap.get(queueId);
+    }
+
+    public MessageQueue initOperationQueue(int queueId, String storeGroup) {
         MessageQueue operationQueue = operationMap.get(queueId);
         if (operationQueue != null) {
             return operationQueue;

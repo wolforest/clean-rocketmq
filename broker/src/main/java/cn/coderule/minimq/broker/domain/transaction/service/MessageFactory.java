@@ -77,9 +77,18 @@ public class MessageFactory {
         return newMsg;
     }
 
-    public MessageBO createOperationMessage(MessageBO messageBO, OffsetQueue offsetQueue, MessageQueue operationQueue) {
-        String offsetKey = TransactionUtil.buildOffsetKey(messageBO.getQueueOffset());
-        int offsetLength = offsetKey.length();
+    public MessageBO createOperationMessage(OffsetQueue offsetQueue, MessageQueue operationQueue) {
+        return createOperationMessage(offsetQueue, operationQueue, -1);
+    }
+
+    public MessageBO createOperationMessage(OffsetQueue offsetQueue, MessageQueue operationQueue, long queueOffset) {
+        String offsetKey = queueOffset >= 0
+            ? TransactionUtil.buildOffsetKey(queueOffset)
+            : null;
+
+        int offsetLength = null != offsetKey
+            ? offsetKey.length()
+            : 0;
 
         int bodyLength = calculateBodyLength(offsetLength, offsetQueue);
         StringBuilder bodyBuilder = buildBody(bodyLength, offsetKey, offsetQueue);
