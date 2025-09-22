@@ -3,10 +3,8 @@ package cn.coderule.minimq.broker.domain.transaction.service;
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 import cn.coderule.minimq.broker.infra.store.MQStore;
 import cn.coderule.minimq.domain.config.business.TransactionConfig;
-import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.domain.transaction.CommitBuffer;
 import cn.coderule.minimq.domain.domain.transaction.OffsetQueue;
-import java.util.HashMap;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 
@@ -92,7 +90,25 @@ public class BatchCommitService extends ServiceThread {
     }
 
     private void buildOperationMessage(BatchCommitContext context, Map.Entry<Integer, OffsetQueue> entry) {
+        OffsetQueue offsetQueue = entry.getValue();
+        if (shouldSkip(context, offsetQueue)) {
+            return;
+        }
 
+
+
+    }
+
+    private boolean shouldSkip(BatchCommitContext context, OffsetQueue offsetQueue) {
+        if (offsetQueue.isEmpty()) return true;
+
+        long interval = transactionConfig.getBatchCommitInterval();
+        int maxSize = transactionConfig.getMaxCommitMessageLength();
+
+        boolean notFull = offsetQueue.getTotalSize() < maxSize;
+        boolean notExpired = context.getStartTime() - offsetQueue.getLastWriteTime() < interval;
+
+        return notFull && notExpired;
     }
 
     private void enqueueOperationMessage(BatchCommitContext context) {
