@@ -4,6 +4,7 @@ import cn.coderule.minimq.domain.domain.message.MessageBO;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import lombok.Data;
 
 @Data
@@ -26,5 +27,13 @@ public class BatchCommitContext implements Serializable {
 
     public void updateFirstTime(long newTime) {
         this.firstTime = Math.min(this.firstTime, newTime);
+    }
+
+    public boolean noMessage() {
+        return this.sendMap.isEmpty();
+    }
+
+    public Set<Map.Entry<Integer, MessageBO>> getSendEntrySet() {
+        return this.sendMap.entrySet();
     }
 }

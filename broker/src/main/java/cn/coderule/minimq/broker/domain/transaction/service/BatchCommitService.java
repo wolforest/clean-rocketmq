@@ -5,6 +5,8 @@ import cn.coderule.minimq.broker.infra.store.MQStore;
 import cn.coderule.minimq.domain.config.business.TransactionConfig;
 import cn.coderule.minimq.domain.domain.MessageQueue;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
+import cn.coderule.minimq.domain.domain.store.domain.mq.EnqueueRequest;
+import cn.coderule.minimq.domain.domain.store.domain.mq.EnqueueResult;
 import cn.coderule.minimq.domain.domain.transaction.CommitBuffer;
 import cn.coderule.minimq.domain.domain.transaction.OffsetQueue;
 import java.util.Map;
@@ -130,7 +132,19 @@ public class BatchCommitService extends ServiceThread {
     }
 
     private void enqueueOperationMessage(BatchCommitContext context) {
+        if (context.noMessage()) {
+            return;
+        }
 
+        for (Map.Entry<Integer, MessageBO> entry : context.getSendEntrySet()) {
+            EnqueueRequest request = EnqueueRequest.create(entry.getValue());
+            EnqueueResult result = mqStore.enqueue(request);
+
+            if (!result.isSuccess()) {
+                log.error("{} enqueue operation message failed, message: {}, result: {}",
+                    getServiceName(), entry.getValue(), result);
+            }
+        }
     }
 
     private void refreshWakeupTime(BatchCommitContext context) {
