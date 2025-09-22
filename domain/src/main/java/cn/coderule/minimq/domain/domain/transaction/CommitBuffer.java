@@ -3,6 +3,8 @@ package cn.coderule.minimq.domain.domain.transaction;
 import cn.coderule.minimq.domain.config.business.TransactionConfig;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.domain.MessageQueue;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -18,6 +20,10 @@ public class CommitBuffer {
 
         this.offsetMap = new ConcurrentHashMap<>();
         this.operationMap = new ConcurrentHashMap<>();
+    }
+
+    public Set<Map.Entry<Integer, OffsetQueue>> getOffsetEntrySet() {
+        return offsetMap.entrySet();
     }
 
     public OffsetQueue getOffsetQueue(int queueId) {
