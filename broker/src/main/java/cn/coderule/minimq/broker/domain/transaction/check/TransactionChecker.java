@@ -127,27 +127,24 @@ public class TransactionChecker extends ServiceThread {
     }
 
     private CheckContext buildCheckContext(MessageQueue prepareQueue) {
-        MessageQueue commitQueue = checkBuffer.addCommitQueue(prepareQueue);
+        MessageQueue operationQueue = checkBuffer.mapQueue(prepareQueue);
 
         CheckContext checkContext = CheckContext.builder()
                 .transactionContext(transactionContext)
                 .transactionConfig(transactionConfig)
                 .prepareQueue(prepareQueue)
-                .operationQueue(commitQueue)
+                .operationQueue(operationQueue)
                 .build();
 
         initCheckOffset(checkContext);
-
         return checkContext;
     }
 
-    private void initCheckOffset(CheckContext checkContext) {
-        MessageQueue prepareQueue = checkContext.getPrepareQueue();
-        long prepareOffset = messageService.getConsumeOffset(prepareQueue);
-        checkContext.setPrepareCounter(prepareOffset);
+    private void initCheckOffset(CheckContext context) {
+        long prepareOffset = messageService.getConsumeOffset(context.getPrepareQueue());
+        context.setPrepareOffset(prepareOffset);
 
-        MessageQueue operationQueue = checkContext.getOperationQueue();
-        long operationOffset = messageService.getConsumeOffset(operationQueue);
-        checkContext.setOperationOffset(operationOffset);
+        long operationOffset = messageService.getConsumeOffset(context.getOperationQueue());
+        context.setOperationOffset(operationOffset);
     }
 }

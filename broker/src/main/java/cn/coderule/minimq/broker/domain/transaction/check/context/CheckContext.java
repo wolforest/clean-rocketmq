@@ -46,6 +46,9 @@ public class CheckContext implements Serializable {
      * @rocketmq original name: opOffset
      */
     private long operationOffset;
+    /**
+     * @rocketmq original name: nextOpOffset
+     */
     private long nextOperationOffset;
 
     /**
@@ -79,24 +82,18 @@ public class CheckContext implements Serializable {
     private int rpcFailureCount = 0;
 
     public boolean isOffsetValid() {
-        boolean status = prepareCounter >= 0 && operationOffset >= 0;
-        if (!status) {
+        boolean status = prepareCounter < 0 && operationOffset < 0;
+        if (status) {
             return false;
         }
 
-        log.error("invalid offset for checking: prepareQueue={}, prepareOffset={}, commitOffset={}",
-            prepareQueue, prepareCounter, operationOffset);
-
+        log.error("invalid offset for checking: prepareOffset={}, operationOffset={}",
+            prepareOffset, operationOffset);
         return true;
     }
 
     public void increaseInvalidPrepareMessageCount() {
         this.invalidPrepareMessageCount++;
-    }
-
-    public void setPrepareOffset(long counter) {
-        this.prepareOffset = counter;
-        this.nextPrepareOffset = counter;
     }
 
     public void increasePrepareCounter() {

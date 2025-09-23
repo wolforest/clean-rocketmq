@@ -5,25 +5,33 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 public class CheckBuffer {
-    // prepareQueue -> commitQueue
+    /**
+     * prepareQueue -> operationQueue
+     * @rocketmq original name: TransactionalMessageCheckService.opQueueMap
+     */
     private final ConcurrentMap<MessageQueue, MessageQueue> queueMap;
 
     public CheckBuffer() {
         this.queueMap = new ConcurrentHashMap<>();
     }
 
-    public MessageQueue getCommitQueue(MessageQueue prepareQueue) {
+    public MessageQueue getQueue(MessageQueue prepareQueue) {
         return queueMap.get(prepareQueue);
     }
 
-    public MessageQueue addCommitQueue(MessageQueue prepareQueue) {
-        MessageQueue commitQueue = MessageQueue.builder()
+    /**
+     * @rocketmq original name: TransactionalMessageCheckService.getOpQueue
+     * @param prepareQueue prepareQueue
+     * @return operationQueue
+     */
+    public MessageQueue mapQueue(MessageQueue prepareQueue) {
+        MessageQueue operationQueue = MessageQueue.builder()
                 .topicName(TransactionUtil.buildOperationTopic())
                 .groupName(prepareQueue.getGroupName())
                 .queueId(prepareQueue.getQueueId())
                 .build();
 
-        queueMap.put(prepareQueue, commitQueue);
-        return commitQueue;
+        queueMap.put(prepareQueue, operationQueue);
+        return operationQueue;
     }
 }
