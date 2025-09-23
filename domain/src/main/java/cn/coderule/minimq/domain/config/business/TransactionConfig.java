@@ -27,7 +27,7 @@ public class TransactionConfig implements Serializable {
 
     private long checkTimeout = 6_000;
     private int checkInterval = 30_000;
-    private int batchCheckNumber = 15;
+    private int maxCheckTimes = 15;
 
     private int metricsFlushInterval = 3_000;
 }

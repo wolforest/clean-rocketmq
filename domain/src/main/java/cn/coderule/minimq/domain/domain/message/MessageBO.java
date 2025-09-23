@@ -353,4 +353,8 @@ public class MessageBO extends Message implements Serializable {
     }
 
 
+    public void putSystemProperty(String key, String value) {
+        this.putProperty(key, value);
+    }
+
 }

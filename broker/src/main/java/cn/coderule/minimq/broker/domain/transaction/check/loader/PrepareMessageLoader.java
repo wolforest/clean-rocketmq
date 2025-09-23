@@ -6,6 +6,7 @@ import cn.coderule.minimq.broker.domain.transaction.check.context.CheckContext;
 import cn.coderule.minimq.broker.domain.transaction.check.context.TransactionContext;
 import cn.coderule.minimq.broker.domain.transaction.service.MessageService;
 import cn.coderule.minimq.domain.config.business.TransactionConfig;
+import cn.coderule.minimq.domain.core.constant.MessageConst;
 import cn.coderule.minimq.domain.domain.store.domain.mq.DequeueResult;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +33,7 @@ public class PrepareMessageLoader {
             return handleEmptyPrepareMessage(context, result);
         }
 
-        if (isOverMaxCheckTimes(context, result)) {
+        if (isOverMaxCheckTimes(result) || isExpired(result)) {
             discardPrepareMessage(context, result);
             return true;
         }
@@ -93,7 +94,22 @@ public class PrepareMessageLoader {
 
     }
 
-    private boolean isOverMaxCheckTimes(CheckContext context, DequeueResult result) {
+    private boolean isExpired(DequeueResult result) {
+        return false;
+    }
+
+    private boolean isOverMaxCheckTimes(DequeueResult result) {
+        long maxTimes = transactionConfig.getMaxCheckTimes();
+        MessageBO message = result.getMessage();
+        int checkTimes = message.getIntProperty(MessageConst.PROPERTY_TRANSACTION_CHECK_TIMES);
+
+        if (checkTimes >= maxTimes) {
+            return true;
+        }
+
+        checkTimes++;
+        String checkTimesStr = String.valueOf(checkTimes);
+        message.putSystemProperty(MessageConst.PROPERTY_TRANSACTION_CHECK_TIMES, checkTimesStr);
         return false;
     }
 
