@@ -96,6 +96,11 @@ public class CheckContext implements Serializable {
         this.invalidPrepareMessageCount++;
     }
 
+    public void setPrepareCounter(long offset) {
+        this.prepareCounter = offset;
+        this.nextPrepareOffset = prepareCounter;
+    }
+
     public void increasePrepareCounter() {
         this.prepareCounter++;
         this.nextPrepareOffset = prepareCounter;

@@ -107,7 +107,7 @@ public class TransactionChecker extends ServiceThread {
 
             if (context.containsPrepareOffset(context.getPrepareOffset())) {
                 removePrepareOffset(context);
-            } else if (!prepareMessageLoader.loadAndCheck(context)) {
+            } else if (!prepareMessageLoader.check(context)) {
                 break;
             }
 

@@ -15,6 +15,7 @@ public class PrepareMessageLoader {
     private static final int DEFAULT_PULL_NUM = 1;
     private static final int WAIT_WHILE_NO_COMMIT_MESSAGE = 1_000;
     private static final int MAX_INVALID_PREPARE_MESSAGE_NUM = 1;
+
     private final MessageService messageService;
     private final TransactionConfig transactionConfig;
     private final OperationMessageLoader operationMessageLoader;
@@ -27,15 +28,7 @@ public class PrepareMessageLoader {
         this.messageService = transactionContext.getMessageService();
     }
 
-    public DequeueResult load(CheckContext checkContext) {
-        return load(checkContext, DEFAULT_PULL_NUM);
-    }
-
-    public DequeueResult load(CheckContext checkContext, int num) {
-        return DequeueResult.notFound();
-    }
-
-    public boolean loadAndCheck(CheckContext context) {
+    public boolean check(CheckContext context) {
         DequeueResult result = this.load(context);
         if (result.isEmpty()) {
             return handleEmptyPrepareMessage(context, result);
@@ -66,6 +59,14 @@ public class PrepareMessageLoader {
         return true;
     }
 
+    private DequeueResult load(CheckContext context) {
+        return messageService.getMessage(
+            context.getPrepareQueue(),
+            context.getPrepareOffset(),
+            DEFAULT_PULL_NUM
+        );
+    }
+
     private boolean handleEmptyPrepareMessage(CheckContext context, DequeueResult result) {
         context.increaseInvalidPrepareMessageCount();
 
@@ -85,7 +86,8 @@ public class PrepareMessageLoader {
             context.getInvalidPrepareMessageCount(),
             result
         );
-        context.setPrepareOffset(result.getNextOffset());
+
+        context.setPrepareCounter(result.getNextOffset());
         return true;
     }
 
