@@ -21,10 +21,14 @@ public class CheckService implements Lifecycle {
         this.executor = initExecutor();
     }
 
-
-
     public void check(MessageBO messageBO) {
-
+        executor.execute(() -> {
+            try {
+                checkAsync(messageBO);
+            } catch (Exception e) {
+                log.error("check message error", e);
+            }
+        });
     }
 
     @Override
