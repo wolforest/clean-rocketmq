@@ -93,7 +93,16 @@ public class MessageService {
     }
 
     public void updateConsumeOffset(MessageQueue mq, long offset) {
+        OffsetRequest request = OffsetRequest.builder()
+            .requestContext(RequestContext.create())
+            .consumerGroup(TransactionUtil.buildConsumerGroup())
+            .storeGroup(mq.getGroupName())
+            .topicName(mq.getTopicName())
+            .queueId(mq.getQueueId())
+            .newOffset(offset)
+            .build();
 
+        consumeOffsetStore.putOffset(request);
     }
 
     public Set<MessageQueue> getMessageQueues(String storeGroup, String topicName) {

@@ -119,6 +119,13 @@ public class TransactionChecker extends ServiceThread {
         if (context.getNextPrepareOffset() != context.getPrepareOffset()) {
             messageService.updateConsumeOffset(context.getPrepareQueue(), context.getNextPrepareOffset());
         }
+
+        long nextOperationOffset = context.calculateOperationOffset();
+        if (nextOperationOffset != context.getOperationOffset()) {
+            messageService.updateConsumeOffset(context.getOperationQueue(), nextOperationOffset);
+        }
+
+        // todo: logging new offset info
     }
 
     private void removePrepareOffset(CheckContext context) {
