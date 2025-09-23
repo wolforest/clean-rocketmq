@@ -91,4 +91,7 @@ public class MessageConfig implements Serializable {
      */
     private boolean initOffsetByQueue = true;
 
+    // The number of hours to keep a log file before deleting it (in hours)
+    private int fileReservedTime = 72 * 3600 * 1000;
+
 }

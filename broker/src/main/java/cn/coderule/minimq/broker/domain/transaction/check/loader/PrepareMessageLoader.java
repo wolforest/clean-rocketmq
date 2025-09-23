@@ -5,7 +5,9 @@ import cn.coderule.common.util.lang.time.DateUtil;
 import cn.coderule.minimq.broker.domain.transaction.check.context.CheckContext;
 import cn.coderule.minimq.broker.domain.transaction.check.context.TransactionContext;
 import cn.coderule.minimq.broker.domain.transaction.service.MessageService;
+import cn.coderule.minimq.domain.config.business.MessageConfig;
 import cn.coderule.minimq.domain.config.business.TransactionConfig;
+import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.core.constant.MessageConst;
 import cn.coderule.minimq.domain.domain.store.domain.mq.DequeueResult;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
@@ -19,10 +21,13 @@ public class PrepareMessageLoader {
 
     private final MessageService messageService;
     private final TransactionConfig transactionConfig;
+    private final MessageConfig messageConfig;
     private final OperationMessageLoader operationMessageLoader;
 
     public PrepareMessageLoader(TransactionContext transactionContext, OperationMessageLoader operationMessageLoader) {
-        this.transactionConfig = transactionContext.getBrokerConfig().getTransactionConfig();
+        BrokerConfig brokerConfig = transactionContext.getBrokerConfig();
+        this.transactionConfig = brokerConfig.getTransactionConfig();
+        this.messageConfig = brokerConfig.getMessageConfig();
         this.operationMessageLoader = operationMessageLoader;
         this.messageService = transactionContext.getMessageService();
     }
@@ -95,7 +100,17 @@ public class PrepareMessageLoader {
     }
 
     private boolean isExpired(DequeueResult result) {
-        return false;
+        MessageBO message = result.getMessage();
+        long timeout = messageConfig.getFileReservedTime();
+        long elapsed = System.currentTimeMillis() - message.getBornTimestamp();
+
+        if (elapsed <= timeout) {
+            return false;
+        }
+
+        log.info("Prepare message timeout, message={}, bornTime:{}, timeout={}",
+            message, message.getBornTimestamp(), timeout);
+        return true;
     }
 
     private boolean isOverMaxCheckTimes(DequeueResult result) {
