@@ -26,29 +26,29 @@ public class OperationMessageLoader {
 
     public DequeueResult load(CheckContext context, int num) {
         DequeueResult result = messageService.getMessage(context.getOperationQueue(), context.getOperationOffset(), num);
-        if (!validateCommitResult(context, result)) {
+        if (!validateResult(context, result)) {
             return result;
         }
 
-        formatCommitResult(context, result);
+        formatOperationResult(context, result);
 
         return result;
     }
 
-    private boolean validateCommitResult(CheckContext context, DequeueResult result) {
+    private boolean validateResult(CheckContext context, DequeueResult result) {
         if (null == result) {
-            log.error("illegal result, commitResult can't be null");
+            log.error("illegal result, operationResult can't be null");
             return false;
         }
 
         if (result.isEmpty()) {
-            log.error("no commit message for checking: commitQueue={}, commitOffset={}",
+            log.error("no operation message for checking: operationQueue={}, operationOffset={}",
                 context.getOperationQueue(), context.getOperationOffset());
             return false;
         }
 
         if (result.isOffsetIllegal()) {
-            log.error("commit message offset illegal: commitQueue={}, commitOffset={}, nextOffset={}",
+            log.error("operation message offset illegal: operationQueue={}, operationOffset={}, nextOffset={}",
                 context.getOperationQueue(), context.getOperationOffset(), result.getNextOffset());
             return false;
         }
@@ -57,20 +57,20 @@ public class OperationMessageLoader {
     }
 
     private void handleEmptyCommitMessage(CheckContext context, MessageBO message) {
-        log.error("body of commitMessage is null, queueId={}, offset={}",
+        log.error("body of operationMessage is null, queueId={}, offset={}",
             message.getQueueId(), message.getQueueOffset());
 
         context.addCommittedOffset(message.getQueueOffset());
     }
 
-    private void formatCommitResult(CheckContext context, DequeueResult result) {
+    private void formatOperationResult(CheckContext context, DequeueResult result) {
         for (MessageBO message : result.getMessageList()) {
             if (null == message.getBody()) {
                 handleEmptyCommitMessage(context, message);
                 continue;
             }
 
-            Set<Long> prepareOffsetSet = getCommitOffset(context, message);
+            Set<Long> prepareOffsetSet = getOperationOffset(context, message);
             if (prepareOffsetSet.isEmpty()) {
                 context.addCommittedOffset(message.getQueueOffset());
                 continue;
@@ -80,17 +80,17 @@ public class OperationMessageLoader {
         }
     }
 
-    private boolean validateCommitBody(MessageBO message, String body) {
-        log.debug("parse commitMessage: topic={}, tags={}, commitOffset={}, prepareOffsets={}",
+    private boolean validateBody(MessageBO message, String body) {
+        log.debug("parse operationMessage: topic={}, tags={}, commitOffset={}, prepareOffsets={}",
             message.getTopic(), message.getTags(), message.getQueueOffset(), body);
 
         if (StringUtil.isBlank(body)) {
-            log.error("commitMessage body is null, message={}", message);
+            log.error("operationMessage body is null, message={}", message);
             return false;
         }
 
         if (!TransactionUtil.REMOVE_TAG.equals(message.getTags())) {
-            log.error("commit message tag is not remove tag, message={}", message);
+            log.error("operation message tag is not remove tag, message={}", message);
             return false;
         }
 
@@ -98,10 +98,10 @@ public class OperationMessageLoader {
 
     }
 
-    private Set<Long> getCommitOffset(CheckContext context, MessageBO message) {
+    private Set<Long> getOperationOffset(CheckContext context, MessageBO message) {
         String body = message.getBodyString();
         Set<Long> set = new HashSet<>();
-        if (!validateCommitBody(message, body)) {
+        if (!validateBody(message, body)) {
             return set;
         }
 

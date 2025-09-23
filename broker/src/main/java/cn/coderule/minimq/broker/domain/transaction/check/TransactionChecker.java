@@ -72,7 +72,7 @@ public class TransactionChecker extends ServiceThread {
                 task.getStoreGroup(), prepareTopic);
 
             for (MessageQueue mq : queueSet) {
-                checkMessageQueue(mq);
+                checkPreparedQueue(mq);
             }
 
         } catch (Throwable e) {
@@ -80,7 +80,7 @@ public class TransactionChecker extends ServiceThread {
         }
     }
 
-    private void checkMessageQueue(MessageQueue prepareQueue) {
+    private void checkPreparedQueue(MessageQueue prepareQueue) {
         CheckContext context = buildCheckContext(prepareQueue);
         if (!context.isOffsetValid()) {
             return;
