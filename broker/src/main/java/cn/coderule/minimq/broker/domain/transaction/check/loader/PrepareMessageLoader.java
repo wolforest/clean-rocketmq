@@ -2,6 +2,8 @@ package cn.coderule.minimq.broker.domain.transaction.check.loader;
 
 import cn.coderule.common.util.lang.ThreadUtil;
 import cn.coderule.common.util.lang.time.DateUtil;
+import cn.coderule.minimq.broker.domain.transaction.check.CheckService;
+import cn.coderule.minimq.broker.domain.transaction.check.DiscardService;
 import cn.coderule.minimq.broker.domain.transaction.check.context.CheckContext;
 import cn.coderule.minimq.broker.domain.transaction.check.context.TransactionContext;
 import cn.coderule.minimq.broker.domain.transaction.service.MessageService;
@@ -19,17 +21,24 @@ public class PrepareMessageLoader {
     private static final int WAIT_WHILE_NO_COMMIT_MESSAGE = 1_000;
     private static final int MAX_INVALID_PREPARE_MESSAGE_NUM = 1;
 
-    private final MessageService messageService;
     private final TransactionConfig transactionConfig;
     private final MessageConfig messageConfig;
+
     private final OperationMessageLoader operationMessageLoader;
 
-    public PrepareMessageLoader(TransactionContext transactionContext, OperationMessageLoader operationMessageLoader) {
-        BrokerConfig brokerConfig = transactionContext.getBrokerConfig();
+    private final CheckService checkService;
+    private final DiscardService discardService;
+    private final MessageService messageService;
+
+    public PrepareMessageLoader(TransactionContext context, OperationMessageLoader operationMessageLoader) {
+        BrokerConfig brokerConfig = context.getBrokerConfig();
         this.transactionConfig = brokerConfig.getTransactionConfig();
         this.messageConfig = brokerConfig.getMessageConfig();
         this.operationMessageLoader = operationMessageLoader;
-        this.messageService = transactionContext.getMessageService();
+
+        this.checkService = context.getCheckService();
+        this.discardService = context.getDiscardService();
+        this.messageService = context.getMessageService();
     }
 
     public boolean check(CheckContext context) {
@@ -59,7 +68,7 @@ public class PrepareMessageLoader {
             return true;
         }
 
-        renewPrepareMessage(context, result);
+        checkPrepareMessage(context, result);
         return true;
     }
 
@@ -96,7 +105,7 @@ public class PrepareMessageLoader {
     }
 
     private void discardPrepareMessage(CheckContext context, DequeueResult result) {
-
+        discardService.discard(result.getMessage());
     }
 
     private boolean isExpired(DequeueResult result) {
@@ -175,7 +184,7 @@ public class PrepareMessageLoader {
         return message.getBornTimestamp() - context.getStartTime() > transactionConfig.getTransactionTimeout();
     }
 
-    private void renewPrepareMessage(CheckContext context, DequeueResult result) {
+    private void checkPrepareMessage(CheckContext context, DequeueResult result) {
         increaseRenewCount(context);
     }
 

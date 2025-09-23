@@ -1,5 +1,7 @@
 package cn.coderule.minimq.broker.domain.transaction.check.context;
 
+import cn.coderule.minimq.broker.domain.transaction.check.CheckService;
+import cn.coderule.minimq.broker.domain.transaction.check.DiscardService;
 import cn.coderule.minimq.broker.domain.transaction.service.MessageService;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import java.io.Serializable;
@@ -14,6 +16,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class TransactionContext implements Serializable {
     private BrokerConfig brokerConfig;
+
+    private CheckService checkService;
+    private DiscardService discardService;
     private MessageService messageService;
 
 }

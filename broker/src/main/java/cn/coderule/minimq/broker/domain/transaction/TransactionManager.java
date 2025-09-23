@@ -2,7 +2,9 @@ package cn.coderule.minimq.broker.domain.transaction;
 
 import cn.coderule.minimq.broker.api.TransactionController;
 import cn.coderule.common.convention.service.Lifecycle;
+import cn.coderule.minimq.broker.domain.transaction.check.CheckService;
 import cn.coderule.minimq.broker.domain.transaction.check.CheckerFactory;
+import cn.coderule.minimq.broker.domain.transaction.check.DiscardService;
 import cn.coderule.minimq.broker.domain.transaction.check.context.TransactionContext;
 import cn.coderule.minimq.broker.domain.transaction.receipt.ReceiptCleaner;
 import cn.coderule.minimq.broker.domain.transaction.receipt.ReceiptRegistry;
@@ -109,8 +111,13 @@ public class TransactionManager implements Lifecycle {
     }
 
     private void initChecker() {
+        DiscardService discardService = new DiscardService(messageService);
+        CheckService checkService = new CheckService();
+
         TransactionContext context = TransactionContext.builder()
             .brokerConfig(brokerConfig)
+            .checkService(checkService)
+            .discardService(discardService)
             .messageService(messageService)
             .build();
 
