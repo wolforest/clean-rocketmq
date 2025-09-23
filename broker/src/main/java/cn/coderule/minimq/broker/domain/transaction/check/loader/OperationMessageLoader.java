@@ -20,6 +20,13 @@ public class OperationMessageLoader {
         this.messageService = transactionContext.getMessageService();
     }
 
+    /**
+     * load operation message from operation queue
+     *
+     * @rocketmq original name: fillOpRemoveMap
+     * @param checkContext checkContext
+     * @return operation result{status, messageList}
+     */
     public DequeueResult load(CheckContext checkContext) {
         return load(checkContext, DEFAULT_PULL_NUM);
     }

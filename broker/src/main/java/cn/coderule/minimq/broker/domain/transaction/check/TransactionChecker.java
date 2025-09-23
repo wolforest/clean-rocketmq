@@ -86,15 +86,15 @@ public class TransactionChecker extends ServiceThread {
             return;
         }
 
-        DequeueResult operationResult = operationMessageLoader.load(context);
-        if (operationResult == null) {
-            log.error("operation result is null: CheckContext={}", context);
+        DequeueResult result = operationMessageLoader.load(context);
+        if (result == null) {
+            log.error("operation message load result is null: CheckContext={}", context);
             return;
         }
 
-        context.initOffset(operationResult.getNextOffset());
+        context.initOffset(result.getNextOffset());
         checkMessage(context);
-        updateOffset(context, operationResult);
+        updateOffset(context, result);
     }
 
     private void checkMessage(CheckContext context) {

@@ -82,12 +82,11 @@ public class CheckContext implements Serializable {
     private int rpcFailureCount = 0;
 
     public boolean isOffsetValid() {
-        boolean status = prepareCounter < 0 && operationOffset < 0;
-        if (status) {
+        if (prepareCounter < 0 && operationOffset < 0) {
             return false;
         }
 
-        log.error("invalid offset for checking: prepareOffset={}, operationOffset={}",
+        log.error("invalid checking offset: prepareOffset={}, operationOffset={}",
             prepareOffset, operationOffset);
         return true;
     }
