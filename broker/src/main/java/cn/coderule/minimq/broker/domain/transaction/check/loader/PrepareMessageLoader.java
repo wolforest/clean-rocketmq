@@ -19,10 +19,8 @@ public class PrepareMessageLoader {
     private final MessageService messageService;
     private final TransactionConfig transactionConfig;
     private final OperationMessageLoader operationMessageLoader;
-    private final TransactionContext transactionContext;
 
     public PrepareMessageLoader(TransactionContext transactionContext, OperationMessageLoader operationMessageLoader) {
-        this.transactionContext = transactionContext;
         this.transactionConfig = transactionContext.getBrokerConfig().getTransactionConfig();
         this.operationMessageLoader = operationMessageLoader;
         this.messageService = transactionContext.getMessageService();
@@ -51,7 +49,7 @@ public class PrepareMessageLoader {
         }
 
         if (!needCheck(context, result, now, immunityTime)) {
-            loadMoreCommitMessage(context);
+            loadMoreOperationMessage(context);
             return true;
         }
 
@@ -153,19 +151,22 @@ public class PrepareMessageLoader {
     private void increaseRenewCount(CheckContext context) {
     }
 
-    private void loadMoreCommitMessage(CheckContext context) {
+    private void loadMoreOperationMessage(CheckContext context) {
         DequeueResult result = operationMessageLoader.load(context);
 
-        if (result == null
-            || result.overflowOne()
-            || result.isEmpty()
-            || result.isOffsetIllegal()
-        ) {
+        if (shouldSleep(result)) {
             ThreadUtil.sleep(WAIT_WHILE_NO_COMMIT_MESSAGE);
             return;
         }
 
         context.setNextOperationOffset(result.getNextOffset());
+    }
+
+    private boolean shouldSleep(DequeueResult result) {
+        return result == null
+            || result.overflowOne()
+            || result.isEmpty()
+            || result.isOffsetIllegal();
     }
 
 }
