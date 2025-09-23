@@ -79,6 +79,7 @@ public class OperationMessageLoader {
             }
 
             Set<Long> prepareOffsetSet = getOperationOffset(context, message);
+
             if (prepareOffsetSet.isEmpty()) {
                 context.addOperationOffset(message.getQueueOffset());
                 continue;
