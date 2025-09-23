@@ -29,5 +29,10 @@ public class TransactionConfig implements Serializable {
     private int checkInterval = 30_000;
     private int maxCheckTimes = 15;
 
+    private int checkThreadNum = 2;
+    private int maxCheckThreadNum = 5;
+    private int keepAliveTime = 100_000;
+    private int checkQueueCapacity = 2_000;
+
     private int metricsFlushInterval = 3_000;
 }
