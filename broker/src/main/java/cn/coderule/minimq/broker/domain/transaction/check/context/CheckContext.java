@@ -4,6 +4,7 @@ import cn.coderule.minimq.domain.config.business.TransactionConfig;
 import cn.coderule.minimq.domain.domain.MessageQueue;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -145,5 +146,20 @@ public class CheckContext implements Serializable {
 
         this.operationMap.remove(commitOffset);
         this.operationOffsetList.add(commitOffset);
+    }
+
+    public long calculateOperationOffset() {
+        Collections.sort(this.operationOffsetList);
+        long tmpOffset = this.operationOffset;
+
+        for (Long offset : this.operationOffsetList) {
+            if (offset != tmpOffset) {
+                break;
+            }
+
+            tmpOffset++;
+        }
+
+        return tmpOffset;
     }
 }

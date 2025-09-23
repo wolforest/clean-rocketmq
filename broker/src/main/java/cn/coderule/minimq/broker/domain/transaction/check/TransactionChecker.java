@@ -115,8 +115,10 @@ public class TransactionChecker extends ServiceThread {
         }
     }
 
-    private void updateOffset(CheckContext checkContext, DequeueResult commitResult) {
-
+    private void updateOffset(CheckContext context, DequeueResult operationResult) {
+        if (context.getNextPrepareOffset() != context.getPrepareOffset()) {
+            messageService.updateConsumeOffset(context.getPrepareQueue(), context.getNextPrepareOffset());
+        }
     }
 
     private void removePrepareOffset(CheckContext context) {
