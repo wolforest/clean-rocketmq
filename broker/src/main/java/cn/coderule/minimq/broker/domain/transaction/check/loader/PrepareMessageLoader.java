@@ -53,7 +53,7 @@ public class PrepareMessageLoader {
 
         Long immunityTime = getImmunityTime(context, result, now);
         if (immunityTime == null) {
-            context.increasePrepareOffset();
+            context.increasePrepareCounter();
             return false;
         }
 
@@ -73,7 +73,7 @@ public class PrepareMessageLoader {
             return false;
         }
 
-        if (result.noNewMessage()) {
+        if (result.overflowOne()) {
             log.debug("No new prepare message, context={}", context);
             return false;
         }
@@ -155,7 +155,7 @@ public class PrepareMessageLoader {
         DequeueResult result = operationMessageLoader.load(context);
 
         if (result == null
-            || result.noNewMessage()
+            || result.overflowOne()
             || result.isEmpty()
             || result.isOffsetIllegal()
         ) {

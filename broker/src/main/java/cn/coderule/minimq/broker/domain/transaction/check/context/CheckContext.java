@@ -23,34 +23,52 @@ public class CheckContext implements Serializable {
     private TransactionContext transactionContext;
     private TransactionConfig transactionConfig;
 
+    @Builder.Default
+    private long startTime = System.currentTimeMillis();
+
     private MessageQueue prepareQueue;
     private MessageQueue operationQueue;
 
-    private long startPrepareOffset;
+    /**
+     * @rocketmq original name: counter
+     */
+    private long prepareCounter;
+    /**
+     * @rocketmq original name: halfOffset
+     */
     private long prepareOffset;
+    /**
+     * @rocketmq original name: newOffset
+     */
     private long nextPrepareOffset;
 
+    /**
+     * @rocketmq original name: opOffset
+     */
     private long operationOffset;
     private long nextOperationOffset;
 
-    @Builder.Default
-    private long startTime = System.currentTimeMillis();
     /**
-     * operation offset list
+     * @rocketmq original name: doneOpOffset
+     *  operation offset list
      * - if the body of message is null
      * - if the body contains no prepare offset
      */
     @Builder.Default
     private List<Long> operationOffsetList = new ArrayList<>();
-    // prepareOffset -> commitOffset
+    /**
+     * @rocketmq original name: removeMap
+     * prepare offset -> commit offset
+     */
     @Builder.Default
     private Map<Long, Long> offsetMap = new HashMap<>();
     /**
+     * @rocketmq original name: opMsgMap
      * prepare offset map, waiting for check
-     * commitOffset -> Set<PrepareOffset>
+     * operationOffset -> Set<PrepareOffset>
      */
     @Builder.Default
-    private Map<Long, Set<Long>> operationOffsetMap = new HashMap<>();
+    private Map<Long, Set<Long>> operationMap = new HashMap<>();
 
     @Builder.Default
     private int invalidPrepareMessageCount = 1;
@@ -61,13 +79,13 @@ public class CheckContext implements Serializable {
     private int rpcFailureCount = 0;
 
     public boolean isOffsetValid() {
-        boolean status = startPrepareOffset >= 0 && operationOffset >= 0;
+        boolean status = prepareCounter >= 0 && operationOffset >= 0;
         if (!status) {
             return false;
         }
 
         log.error("invalid offset for checking: prepareQueue={}, prepareOffset={}, commitOffset={}",
-            prepareQueue, startPrepareOffset, operationOffset);
+            prepareQueue, prepareCounter, operationOffset);
 
         return true;
     }
@@ -81,15 +99,15 @@ public class CheckContext implements Serializable {
         this.nextPrepareOffset = counter;
     }
 
-    public void increasePrepareOffset() {
-        this.prepareOffset++;
-        this.nextPrepareOffset = prepareOffset;
+    public void increasePrepareCounter() {
+        this.prepareCounter++;
+        this.nextPrepareOffset = prepareCounter;
     }
 
-    public void initOffset(long commitNextOffset) {
-        this.nextPrepareOffset = startPrepareOffset;
-        this.prepareOffset = startPrepareOffset;
-        this.nextOperationOffset = commitNextOffset;
+    public void initOffset(long nextOperationOffset) {
+        this.nextPrepareOffset = prepareOffset;
+        this.prepareCounter = prepareOffset;
+        this.nextOperationOffset = nextOperationOffset;
     }
 
     public boolean isTimeout(long maxTime) {
@@ -97,16 +115,16 @@ public class CheckContext implements Serializable {
         return elapsedTime > maxTime;
     }
 
-    public void addCommittedOffset(long offset) {
+    public void addOperationOffset(long offset) {
         this.operationOffsetList.add(offset);
     }
 
-    public void putOffsetMap(long commitOffset, Set<Long> prepareOffsetMap) {
-        this.operationOffsetMap.put(commitOffset, prepareOffsetMap);
+    public void putOffsetMap(long prepareOffset, Set<Long> prepareOffsetMap) {
+        this.operationMap.put(prepareOffset, prepareOffsetMap);
     }
 
-    public void linkOffset(long commitOffset, long prepareOffset) {
-        this.offsetMap.put(prepareOffset, commitOffset);
+    public void linkOffset(long prepareOffset, long operationOffset) {
+        this.offsetMap.put(prepareOffset, operationOffset);
     }
 
     public boolean containsPrepareOffset(long prepareOffset) {
@@ -119,7 +137,7 @@ public class CheckContext implements Serializable {
             return;
         }
 
-        Set<Long> prepareOffsetSet = this.operationOffsetMap.get(commitOffset);
+        Set<Long> prepareOffsetSet = this.operationMap.get(commitOffset);
         if (null == prepareOffsetSet) {
             return;
         }
@@ -129,7 +147,7 @@ public class CheckContext implements Serializable {
             return;
         }
 
-        this.operationOffsetMap.remove(commitOffset);
+        this.operationMap.remove(commitOffset);
         this.operationOffsetList.add(commitOffset);
     }
 }

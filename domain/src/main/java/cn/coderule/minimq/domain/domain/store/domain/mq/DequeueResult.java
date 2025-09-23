@@ -61,7 +61,7 @@ public class DequeueResult implements Serializable {
             : messageList.get(messageList.size() - 1);
     }
 
-    public boolean noNewMessage() {
+    public boolean overflowOne() {
         return MessageStatus.OFFSET_OVERFLOW_ONE.equals(status);
     }
 

@@ -86,15 +86,15 @@ public class TransactionChecker extends ServiceThread {
             return;
         }
 
-        DequeueResult commitResult = operationMessageLoader.load(context);
-        if (commitResult.isEmpty()) {
-            updateOffset(context, commitResult);
+        DequeueResult operationResult = operationMessageLoader.load(context);
+        if (operationResult == null) {
+            log.error("operation result is null: CheckContext={}", context);
             return;
         }
 
-        context.initOffset(commitResult.getNextOffset());
+        context.initOffset(operationResult.getNextOffset());
         checkMessage(context);
-        updateOffset(context, commitResult);
+        updateOffset(context, operationResult);
     }
 
     private void checkMessage(CheckContext context) {
@@ -107,7 +107,7 @@ public class TransactionChecker extends ServiceThread {
 
             if (context.containsPrepareOffset(context.getPrepareOffset())) {
                 removePrepareOffset(context);
-                context.increasePrepareOffset();
+                context.increasePrepareCounter();
                 continue;
             }
 
@@ -144,7 +144,7 @@ public class TransactionChecker extends ServiceThread {
     private void initCheckOffset(CheckContext checkContext) {
         MessageQueue prepareQueue = checkContext.getPrepareQueue();
         long prepareOffset = messageService.getConsumeOffset(prepareQueue);
-        checkContext.setStartPrepareOffset(prepareOffset);
+        checkContext.setPrepareCounter(prepareOffset);
 
         MessageQueue operationQueue = checkContext.getOperationQueue();
         long operationOffset = messageService.getConsumeOffset(operationQueue);

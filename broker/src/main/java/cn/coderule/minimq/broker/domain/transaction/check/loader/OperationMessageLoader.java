@@ -25,13 +25,14 @@ public class OperationMessageLoader {
     }
 
     public DequeueResult load(CheckContext context, int num) {
-        DequeueResult result = messageService.getMessage(context.getOperationQueue(), context.getOperationOffset(), num);
+        DequeueResult result = messageService.getMessage(
+            context.getOperationQueue(), context.getOperationOffset(), num);
+
         if (!validateResult(context, result)) {
             return result;
         }
 
         formatOperationResult(context, result);
-
         return result;
     }
 
@@ -56,23 +57,23 @@ public class OperationMessageLoader {
         return true;
     }
 
-    private void handleEmptyCommitMessage(CheckContext context, MessageBO message) {
+    private void handleNullBody(CheckContext context, MessageBO message) {
         log.error("body of operationMessage is null, queueId={}, offset={}",
             message.getQueueId(), message.getQueueOffset());
 
-        context.addCommittedOffset(message.getQueueOffset());
+        context.addOperationOffset(message.getQueueOffset());
     }
 
     private void formatOperationResult(CheckContext context, DequeueResult result) {
         for (MessageBO message : result.getMessageList()) {
             if (null == message.getBody()) {
-                handleEmptyCommitMessage(context, message);
+                handleNullBody(context, message);
                 continue;
             }
 
             Set<Long> prepareOffsetSet = getOperationOffset(context, message);
             if (prepareOffsetSet.isEmpty()) {
-                context.addCommittedOffset(message.getQueueOffset());
+                context.addOperationOffset(message.getQueueOffset());
                 continue;
             }
 
@@ -98,6 +99,10 @@ public class OperationMessageLoader {
 
     }
 
+    /**
+     *
+     * @rocketmq original name: handleMsgWithRemoveTag
+     */
     private Set<Long> getOperationOffset(CheckContext context, MessageBO message) {
         String body = message.getBodyString();
         Set<Long> set = new HashSet<>();
@@ -105,15 +110,15 @@ public class OperationMessageLoader {
             return set;
         }
 
-        String[] arr = body.split(TransactionUtil.OFFSET_SEPARATOR);
-        for (String offsetString : arr) {
-            Long offset = StringUtil.getLong(offsetString, -1);
-            if (offset < context.getStartPrepareOffset()) {
+        String[] offsetArr = body.split(TransactionUtil.OFFSET_SEPARATOR);
+        for (String offsetString : offsetArr) {
+            Long prepareOffset = StringUtil.getLong(offsetString, -1);
+            if (prepareOffset < context.getPrepareOffset()) {
                 continue;
             }
 
-            context.linkOffset(message.getQueueOffset(), offset);
-            set.add(offset);
+            context.linkOffset(prepareOffset, message.getQueueOffset());
+            set.add(prepareOffset);
         }
 
         return set;
