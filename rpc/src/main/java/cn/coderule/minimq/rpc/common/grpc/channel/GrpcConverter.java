@@ -1,5 +1,5 @@
 
-package cn.coderule.minimq.broker.server.grpc.converter;
+package cn.coderule.minimq.rpc.common.grpc.channel;
 
 import apache.rocketmq.v2.Broker;
 import apache.rocketmq.v2.DeadLetterQueue;
@@ -12,7 +12,6 @@ import apache.rocketmq.v2.MessageQueue;
 import apache.rocketmq.v2.MessageType;
 import apache.rocketmq.v2.Resource;
 import apache.rocketmq.v2.SystemProperties;
-import cn.coderule.common.util.encrypt.HashUtil;
 import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.common.util.net.NetworkUtil;
 import cn.coderule.minimq.domain.core.constant.MessageConst;

@@ -7,7 +7,7 @@ import apache.rocketmq.v2.ReceiveMessageResponse;
 import apache.rocketmq.v2.Settings;
 import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.minimq.broker.api.ConsumerController;
-import cn.coderule.minimq.broker.server.grpc.converter.GrpcConverter;
+import cn.coderule.minimq.rpc.common.grpc.channel.GrpcConverter;
 import cn.coderule.minimq.broker.server.grpc.service.channel.SettingManager;
 import cn.coderule.minimq.domain.config.network.GrpcConfig;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;

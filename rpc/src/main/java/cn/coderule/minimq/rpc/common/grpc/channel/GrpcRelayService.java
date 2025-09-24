@@ -1,14 +1,16 @@
 package cn.coderule.minimq.rpc.common.grpc.channel;
 
+import apache.rocketmq.v2.Message;
+import apache.rocketmq.v2.RecoverOrphanedTransactionCommand;
+import apache.rocketmq.v2.TelemetryCommand;
+import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.rpc.common.core.relay.RelayService;
 import cn.coderule.minimq.rpc.common.core.relay.request.ConsumeRequest;
 import cn.coderule.minimq.rpc.common.core.relay.request.ConsumerRequest;
 import cn.coderule.minimq.rpc.common.core.relay.request.TransactionRequest;
 import cn.coderule.minimq.rpc.common.core.relay.response.ConsumeResult;
 import cn.coderule.minimq.rpc.common.core.relay.response.ConsumerResult;
-import cn.coderule.minimq.rpc.common.core.relay.response.RelayResult;
 import cn.coderule.minimq.rpc.common.core.relay.response.Result;
-import cn.coderule.minimq.rpc.common.core.relay.response.TransactionResult;
 import java.util.concurrent.CompletableFuture;
 
 public class GrpcRelayService implements RelayService {
@@ -29,7 +31,30 @@ public class GrpcRelayService implements RelayService {
     }
 
     @Override
-    public RelayResult<TransactionResult, Void> checkTransaction(TransactionRequest request) {
-        return null;
+    public CompletableFuture<Void> checkTransaction(TransactionRequest request) {
+        CompletableFuture<Void> future = new CompletableFuture<>();
+        TelemetryCommand command = buildCommand(request.getMessageBO());
+
+        try {
+            channel.writeTelemetryCommand(command);
+        } catch (Throwable t) {
+            future.completeExceptionally(t);
+        }
+
+        return future;
+    }
+
+    private TelemetryCommand buildCommand(MessageBO messageBO) {
+        Message message = GrpcConverter.getInstance().buildMessage(messageBO);
+
+        RecoverOrphanedTransactionCommand transactionCommand = RecoverOrphanedTransactionCommand
+            .newBuilder()
+            .setTransactionId(messageBO.getTransactionId())
+            .setMessage(message)
+            .build();
+
+        return TelemetryCommand.newBuilder()
+            .setRecoverOrphanedTransactionCommand(transactionCommand)
+            .build();
     }
 }

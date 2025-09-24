@@ -20,7 +20,7 @@ public interface RelayService {
         ConsumeRequest request
     );
 
-    RelayResult<TransactionResult, Void> checkTransaction(
+    CompletableFuture<Void> checkTransaction(
         TransactionRequest request
     );
 }

@@ -9,7 +9,7 @@ import cn.coderule.minimq.broker.api.ConsumerController;
 import cn.coderule.minimq.broker.api.ProducerController;
 import cn.coderule.minimq.broker.api.RouteController;
 import cn.coderule.minimq.broker.api.TransactionController;
-import cn.coderule.minimq.broker.server.grpc.converter.GrpcConverter;
+import cn.coderule.minimq.rpc.common.grpc.channel.GrpcConverter;
 import cn.coderule.minimq.domain.core.constant.MQVersion;
 import cn.coderule.minimq.domain.domain.consumer.ConsumerInfo;
 import cn.coderule.minimq.domain.core.enums.code.InvalidCode;
