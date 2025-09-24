@@ -2,6 +2,7 @@ package cn.coderule.minimq.broker.domain.producer;
 
 import cn.coderule.common.lang.concurrent.atomic.PositiveAtomicCounter;
 import cn.coderule.common.util.lang.collection.MapUtil;
+import cn.coderule.minimq.broker.server.core.ClientChannel;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.core.enums.produce.ProducerEvent;
 import cn.coderule.minimq.domain.domain.cluster.ClientChannelInfo;
@@ -120,13 +121,24 @@ public class ProducerRegister {
         this.listenerList.add(listener);
     }
 
-    public Channel getAvailableChannel(String groupName) {
+    public ClientChannel getAvailableChannel(String groupName) {
         List<Channel> channelList = getChannelList(groupName);
         if (channelList.isEmpty()) {
             return null;
         }
 
-        return filterAvailableChannel(channelList);
+        Channel channel = filterAvailableChannel(channelList);
+        if (channel == null) {
+            log.error("no available channel in group:{}", groupName);
+            return null;
+        }
+
+        if (channel instanceof ClientChannel) {
+            return (ClientChannel) channel;
+        }
+
+        log.error("channel is not instance of ClientChannel, channel:{}", channel);
+        return null;
     }
 
     public int getGroupCount() {

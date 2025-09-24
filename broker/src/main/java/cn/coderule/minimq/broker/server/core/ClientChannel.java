@@ -2,6 +2,8 @@
 package cn.coderule.minimq.broker.server.core;
 
 import cn.coderule.common.util.net.NetworkUtil;
+import cn.coderule.minimq.broker.server.grpc.service.channel.ChannelManager;
+import cn.coderule.minimq.broker.server.grpc.service.channel.SettingManager;
 import cn.coderule.minimq.rpc.common.core.channel.mock.MockChannel;
 import cn.coderule.minimq.rpc.common.core.relay.RelayService;
 import io.netty.channel.Channel;
@@ -33,6 +35,8 @@ public abstract class ClientChannel extends MockChannel {
     }
 
     public abstract RelayService getRelayService();
+    public abstract ChannelManager getChannelManager();
+    public abstract SettingManager getSettingManager();
 
 //    @Override
 //    public ChannelFuture writeAndFlush(Object msg) {

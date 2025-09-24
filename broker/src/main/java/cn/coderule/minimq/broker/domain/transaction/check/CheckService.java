@@ -3,7 +3,10 @@ package cn.coderule.minimq.broker.domain.transaction.check;
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.lang.concurrent.thread.DefaultThreadFactory;
 import cn.coderule.common.util.lang.ThreadUtil;
+import cn.coderule.common.util.lang.string.StringUtil;
+import cn.coderule.minimq.broker.domain.producer.ProducerRegister;
 import cn.coderule.minimq.domain.config.business.TransactionConfig;
+import cn.coderule.minimq.domain.core.constant.MessageConst;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -14,11 +17,16 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class CheckService implements Lifecycle {
     private final TransactionConfig transactionConfig;
+
     private final ExecutorService executor;
 
-    public CheckService(TransactionConfig transactionConfig) {
+    private final ProducerRegister producerRegister;
+
+    public CheckService(TransactionConfig transactionConfig, ProducerRegister producerRegister) {
         this.transactionConfig = transactionConfig;
         this.executor = initExecutor();
+
+        this.producerRegister = producerRegister;
     }
 
     public void check(MessageBO messageBO) {
@@ -41,7 +49,11 @@ public class CheckService implements Lifecycle {
     }
 
     private void checkAsync(MessageBO messageBO) {
-
+        String producerGroup = messageBO.getProperty(MessageConst.PROPERTY_PRODUCER_GROUP);
+        if (StringUtil.isBlank(producerGroup)) {
+            log.error("message producer group is null, message: {}", messageBO);
+            return;
+        }
     }
 
     private ExecutorService initExecutor() {
