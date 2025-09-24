@@ -1,14 +1,13 @@
-package cn.coderule.minimq.broker.server.grpc.service.channel;
+package cn.coderule.minimq.rpc.common.grpc.channel;
 
 import apache.rocketmq.v2.Settings;
 import apache.rocketmq.v2.TelemetryCommand;
-import cn.coderule.minimq.broker.server.core.ChannelHelper;
+import cn.coderule.minimq.rpc.common.core.channel.ChannelHelper;
 import cn.coderule.minimq.domain.domain.cluster.RequestContext;
-import cn.coderule.minimq.broker.server.core.ClientChannel;
+import cn.coderule.minimq.rpc.common.core.channel.ClientChannel;
 import cn.coderule.minimq.rpc.common.core.channel.ChannelExtendAttributeGetter;
 import cn.coderule.minimq.rpc.common.core.channel.ChannelProtocolType;
 import cn.coderule.minimq.rpc.common.core.relay.RelayService;
-import cn.coderule.minimq.rpc.common.grpc.core.GrpcChannelId;
 import com.google.common.base.MoreObjects;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.TextFormat;
@@ -19,7 +18,6 @@ import io.netty.channel.Channel;
 import java.io.Serializable;
 import java.util.concurrent.atomic.AtomicReference;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -27,11 +25,7 @@ public class GrpcChannel extends ClientChannel implements Serializable {
     private final Object lock;
     private final String clientId;
     private final AtomicReference<StreamObserver<TelemetryCommand>> commandRef;
-    @Getter @Setter
-    private ChannelManager channelManager;
-    @Getter @Setter
-    private SettingManager settingManager;
-    @Getter @Setter
+    @Getter
     private RelayService relayService;
 
     public GrpcChannel(RequestContext ctx, String clientId) {
@@ -46,6 +40,7 @@ public class GrpcChannel extends ClientChannel implements Serializable {
 
         this.lock = new Object();
         this.commandRef = new AtomicReference<>();
+
     }
 
     public static Settings parseChannelExtendAttribute(Channel channel) {

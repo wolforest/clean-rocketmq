@@ -6,8 +6,8 @@ import cn.coderule.common.util.lang.ThreadUtil;
 import cn.coderule.minimq.domain.config.network.GrpcConfig;
 import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import cn.coderule.minimq.rpc.broker.grpc.ResultFuture;
-import cn.coderule.minimq.rpc.common.core.relay.RelayService;
 import cn.coderule.minimq.rpc.common.core.relay.response.Result;
+import cn.coderule.minimq.rpc.common.grpc.channel.GrpcChannel;
 import cn.coderule.minimq.rpc.common.rpc.protocol.code.ResponseCode;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
@@ -21,7 +21,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ChannelManager implements Lifecycle {
     private final GrpcConfig grpcConfig;
-    private final RelayService relayService;
     private final SettingManager settingManager;
 
     private final AtomicLong idGenerator;
@@ -30,9 +29,8 @@ public class ChannelManager implements Lifecycle {
 
     private final ScheduledExecutorService scheduler;
 
-    public ChannelManager(GrpcConfig grpcConfig, RelayService relayService, SettingManager settingManager) {
+    public ChannelManager(GrpcConfig grpcConfig, SettingManager settingManager) {
         this.grpcConfig = grpcConfig;
-        this.relayService = relayService;
         this.settingManager = settingManager;
 
         this.idGenerator = new AtomicLong(0);
@@ -67,13 +65,7 @@ public class ChannelManager implements Lifecycle {
     public GrpcChannel createChannel(RequestContext context, String clientId) {
         return this.channelMap.computeIfAbsent(
             clientId,
-            k -> {
-                GrpcChannel channel = new GrpcChannel(context, clientId);
-                channel.setChannelManager(this);
-                channel.setSettingManager(settingManager);
-                channel.setRelayService(relayService);
-                return channel;
-            }
+            k -> new GrpcChannel(context, clientId)
         );
     }
 

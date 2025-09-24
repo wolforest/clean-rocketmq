@@ -1,5 +1,5 @@
 
-package cn.coderule.minimq.broker.server.core;
+package cn.coderule.minimq.rpc.common.core.channel;
 
 import cn.coderule.common.util.net.NetworkUtil;
 import cn.coderule.minimq.broker.server.grpc.service.channel.ChannelManager;
@@ -34,8 +34,7 @@ public abstract class ClientChannel extends MockChannel {
         this.localSocketAddress = NetworkUtil.toSocketAddress(localAddress);
     }
 
-    public abstract ChannelManager getChannelManager();
-    public abstract SettingManager getSettingManager();
+    public abstract RelayService getRelayService();
 
 //    @Override
 //    public ChannelFuture writeAndFlush(Object msg) {

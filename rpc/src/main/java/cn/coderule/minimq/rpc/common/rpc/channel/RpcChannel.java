@@ -1,10 +1,10 @@
 
-package cn.coderule.minimq.broker.server.rpc;
+package cn.coderule.minimq.rpc.common.rpc.channel;
 
 import cn.coderule.common.util.net.NetworkUtil;
-import cn.coderule.minimq.broker.server.core.ChannelHelper;
+import cn.coderule.minimq.rpc.common.core.channel.ChannelHelper;
 import cn.coderule.minimq.domain.domain.cluster.server.heartbeat.SubscriptionData;
-import cn.coderule.minimq.broker.server.core.ClientChannel;
+import cn.coderule.minimq.rpc.common.core.channel.ClientChannel;
 import cn.coderule.minimq.rpc.common.core.channel.ChannelExtendAttributeGetter;
 import cn.coderule.minimq.rpc.common.core.channel.ChannelProtocolType;
 import cn.coderule.minimq.rpc.common.core.relay.RelayService;

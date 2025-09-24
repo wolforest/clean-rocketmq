@@ -14,7 +14,6 @@ import cn.coderule.minimq.broker.server.grpc.service.consume.InvisibleService;
 import cn.coderule.minimq.broker.server.grpc.service.consume.OffsetService;
 import cn.coderule.minimq.broker.server.grpc.service.consume.PopService;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
-import cn.coderule.minimq.rpc.common.core.relay.RelayService;
 import cn.coderule.minimq.rpc.common.grpc.RequestPipeline;
 import cn.coderule.minimq.rpc.common.grpc.activity.RejectActivity;
 import cn.coderule.minimq.broker.server.grpc.activity.TransactionActivity;
@@ -30,7 +29,6 @@ import cn.coderule.minimq.broker.server.grpc.activity.ProducerActivity;
 import cn.coderule.minimq.broker.server.grpc.activity.RouteActivity;
 import cn.coderule.minimq.broker.server.bootstrap.BrokerContext;
 import cn.coderule.minimq.domain.config.network.GrpcConfig;
-import cn.coderule.minimq.rpc.common.grpc.core.GrpcRelayService;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import lombok.Getter;
@@ -49,7 +47,6 @@ public class MessageManager implements Lifecycle {
     private TransactionActivity transactionActivity;
     private final RejectActivity rejectActivity = new RejectActivity();
 
-    private RelayService relayService;
     private SettingManager settingManager;
     private ChannelManager channelManager;
     private RegisterService registerService;
@@ -128,12 +125,11 @@ public class MessageManager implements Lifecycle {
 
     private void initChannelService() {
         this.settingManager = new SettingManager(grpcConfig);
-        this.relayService = new GrpcRelayService();
-        this.channelManager = new ChannelManager(grpcConfig, relayService, settingManager);
+        this.channelManager = new ChannelManager(grpcConfig, settingManager);
 
         this.registerService = new RegisterService(channelManager);
         this.heartbeatService = new HeartbeatService(settingManager, registerService);
-        this.telemetryService = new TelemetryService(settingManager, channelManager, relayService);
+        this.telemetryService = new TelemetryService(settingManager, channelManager);
         this.terminationService = new TerminationService(settingManager, channelManager);
     }
 

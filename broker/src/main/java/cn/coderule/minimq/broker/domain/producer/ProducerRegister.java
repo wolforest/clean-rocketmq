@@ -2,13 +2,14 @@ package cn.coderule.minimq.broker.domain.producer;
 
 import cn.coderule.common.lang.concurrent.atomic.PositiveAtomicCounter;
 import cn.coderule.common.util.lang.collection.MapUtil;
-import cn.coderule.minimq.broker.server.core.ClientChannel;
+import cn.coderule.minimq.rpc.common.core.channel.ClientChannel;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.core.enums.produce.ProducerEvent;
 import cn.coderule.minimq.domain.domain.cluster.ClientChannelInfo;
 import cn.coderule.minimq.domain.domain.producer.hook.ProducerListener;
 import cn.coderule.minimq.rpc.broker.rpc.protocol.body.ProducerInfo;
 import cn.coderule.minimq.rpc.broker.rpc.protocol.body.ProducerTableInfo;
+import cn.coderule.minimq.rpc.common.core.relay.RelayService;
 import cn.coderule.minimq.rpc.common.rpc.netty.service.helper.NettyHelper;
 import io.netty.channel.Channel;
 import java.util.ArrayList;
@@ -119,6 +120,15 @@ public class ProducerRegister {
 
     public void addListener(ProducerListener listener) {
         this.listenerList.add(listener);
+    }
+
+    public RelayService getRelayService(String groupName) {
+        ClientChannel channel = getAvailableChannel(groupName);
+        if (channel == null) {
+            return null;
+        }
+
+        return channel.getRelayService();
     }
 
     public ClientChannel getAvailableChannel(String groupName) {

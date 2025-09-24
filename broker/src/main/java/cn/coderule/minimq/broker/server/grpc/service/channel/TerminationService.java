@@ -13,6 +13,7 @@ import cn.coderule.minimq.domain.domain.consumer.ConsumerInfo;
 import cn.coderule.minimq.domain.core.enums.code.LanguageCode;
 import cn.coderule.minimq.domain.domain.cluster.ClientChannelInfo;
 import cn.coderule.minimq.domain.domain.cluster.RequestContext;
+import cn.coderule.minimq.rpc.common.grpc.channel.GrpcChannel;
 import cn.coderule.minimq.rpc.common.grpc.response.ResponseBuilder;
 import java.util.concurrent.CompletableFuture;
 import org.apache.commons.lang3.StringUtils;

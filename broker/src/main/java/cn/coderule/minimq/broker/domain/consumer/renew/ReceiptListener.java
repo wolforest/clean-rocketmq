@@ -1,6 +1,6 @@
 package cn.coderule.minimq.broker.domain.consumer.renew;
 
-import cn.coderule.minimq.broker.server.core.ChannelHelper;
+import cn.coderule.minimq.rpc.common.core.channel.ChannelHelper;
 import cn.coderule.minimq.domain.core.enums.consume.ConsumerEvent;
 import cn.coderule.minimq.domain.domain.cluster.ClientChannelInfo;
 import cn.coderule.minimq.domain.domain.consumer.receipt.ReceiptHandleGroupKey;

@@ -1,4 +1,4 @@
-package cn.coderule.minimq.rpc.common.grpc.core;
+package cn.coderule.minimq.rpc.common.grpc.channel;
 
 import cn.coderule.common.util.lang.bean.BeanUtil;
 import io.netty.channel.ChannelId;

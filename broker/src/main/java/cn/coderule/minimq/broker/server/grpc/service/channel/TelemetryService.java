@@ -14,9 +14,9 @@ import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import cn.coderule.minimq.rpc.broker.grpc.ContextStreamObserver;
 import cn.coderule.minimq.rpc.broker.rpc.protocol.body.ConsumeMessageDirectlyResult;
 import cn.coderule.minimq.rpc.broker.rpc.protocol.body.ConsumerRunningInfo;
-import cn.coderule.minimq.rpc.common.core.relay.RelayService;
 import cn.coderule.minimq.rpc.common.core.relay.response.Result;
 import cn.coderule.minimq.domain.core.exception.InvalidRequestException;
+import cn.coderule.minimq.rpc.common.grpc.channel.GrpcChannel;
 import cn.coderule.minimq.rpc.common.grpc.response.ResponseBuilder;
 import cn.coderule.minimq.rpc.common.rpc.protocol.code.ResponseCode;
 import io.grpc.Status;
@@ -31,7 +31,7 @@ public class TelemetryService {
     private final ChannelManager channelManager;
     private final RegisterService registerService;
 
-    public TelemetryService(SettingManager settingManager, ChannelManager channelManager, RelayService relayService) {
+    public TelemetryService(SettingManager settingManager, ChannelManager channelManager) {
         this.settingManager = settingManager;
         this.channelManager = channelManager;
 

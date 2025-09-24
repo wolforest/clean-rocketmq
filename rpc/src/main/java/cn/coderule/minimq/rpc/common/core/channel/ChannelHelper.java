@@ -1,10 +1,9 @@
 
-package cn.coderule.minimq.broker.server.core;
+package cn.coderule.minimq.rpc.common.core.channel;
 
-import cn.coderule.minimq.broker.server.grpc.service.channel.GrpcChannel;
-import cn.coderule.minimq.broker.server.rpc.RpcChannel;
 import cn.coderule.minimq.rpc.common.core.channel.remote.RemoteChannel;
-import cn.coderule.minimq.rpc.common.core.channel.ChannelProtocolType;
+import cn.coderule.minimq.rpc.common.grpc.channel.GrpcChannel;
+import cn.coderule.minimq.rpc.common.rpc.channel.RpcChannel;
 import io.netty.channel.Channel;
 
 public class ChannelHelper {

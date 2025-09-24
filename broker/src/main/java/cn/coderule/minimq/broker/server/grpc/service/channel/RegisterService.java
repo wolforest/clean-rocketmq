@@ -23,6 +23,7 @@ import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import cn.coderule.minimq.domain.domain.cluster.server.heartbeat.SubscriptionData;
 import cn.coderule.minimq.rpc.broker.core.FilterAPI;
 import cn.coderule.minimq.domain.core.exception.InvalidRequestException;
+import cn.coderule.minimq.rpc.common.grpc.channel.GrpcChannel;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
