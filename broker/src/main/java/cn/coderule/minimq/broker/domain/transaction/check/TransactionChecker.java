@@ -4,8 +4,8 @@ import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.minimq.broker.domain.transaction.check.context.CheckContext;
 import cn.coderule.minimq.broker.domain.transaction.check.context.TransactionContext;
-import cn.coderule.minimq.broker.domain.transaction.check.loader.OperationMessageLoader;
-import cn.coderule.minimq.broker.domain.transaction.check.loader.PrepareMessageLoader;
+import cn.coderule.minimq.broker.domain.transaction.check.service.OperationMessageLoader;
+import cn.coderule.minimq.broker.domain.transaction.check.service.PrepareMessageChecker;
 import cn.coderule.minimq.broker.domain.transaction.service.MessageService;
 import cn.coderule.minimq.domain.config.business.TransactionConfig;
 import cn.coderule.minimq.domain.domain.MessageQueue;
@@ -28,7 +28,7 @@ public class TransactionChecker extends ServiceThread {
 
     private final CheckBuffer checkBuffer;
     private final OperationMessageLoader operationMessageLoader;
-    private final PrepareMessageLoader prepareMessageLoader;
+    private final PrepareMessageChecker prepareMessageChecker;
 
 
     private final MessageService messageService;
@@ -40,7 +40,7 @@ public class TransactionChecker extends ServiceThread {
 
         this.checkBuffer = new CheckBuffer();
         this.operationMessageLoader = new OperationMessageLoader(transactionContext);
-        this.prepareMessageLoader = new PrepareMessageLoader(transactionContext, operationMessageLoader);
+        this.prepareMessageChecker = new PrepareMessageChecker(transactionContext, operationMessageLoader);
 
         this.messageService = context.getMessageService();
     }
@@ -110,7 +110,7 @@ public class TransactionChecker extends ServiceThread {
 
             if (context.containsPrepareOffset(context.getPrepareOffset())) {
                 removePrepareOffset(context);
-            } else if (!prepareMessageLoader.check(context)) {
+            } else if (!prepareMessageChecker.check(context)) {
                 break;
             }
 

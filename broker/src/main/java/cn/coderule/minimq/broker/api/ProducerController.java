@@ -101,13 +101,13 @@ public class ProducerController {
     }
 
     private void setMessageId(MessageBO messageBO) {
-        String messageId = messageBO.getProperty(MessageConst.PROPERTY_UNIQ_CLIENT_MESSAGE_ID_KEYIDX);
-        if (StringUtil.notBlank(messageId)) {
+        String key = messageBO.getUniqueKey();
+        if (StringUtil.notBlank(key)) {
             return;
         }
 
-        messageId = MessageIDSetter.createUniqID();
-        messageBO.putProperty(MessageConst.PROPERTY_UNIQ_CLIENT_MESSAGE_ID_KEYIDX, messageId);
+        key = MessageIDSetter.createUniqID();
+        messageBO.setUniqueKey(key);
     }
 
     public void cleanReservedProperty(MessageBO messageBO) {

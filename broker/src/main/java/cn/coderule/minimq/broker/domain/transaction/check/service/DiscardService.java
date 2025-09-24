@@ -1,4 +1,4 @@
-package cn.coderule.minimq.broker.domain.transaction.check;
+package cn.coderule.minimq.broker.domain.transaction.check.service;
 
 import cn.coderule.minimq.broker.domain.transaction.service.MessageService;
 import cn.coderule.minimq.domain.domain.message.MessageBO;

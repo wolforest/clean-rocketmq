@@ -1,9 +1,7 @@
-package cn.coderule.minimq.broker.domain.transaction.check.loader;
+package cn.coderule.minimq.broker.domain.transaction.check.service;
 
 import cn.coderule.common.util.lang.ThreadUtil;
 import cn.coderule.common.util.lang.time.DateUtil;
-import cn.coderule.minimq.broker.domain.transaction.check.CheckService;
-import cn.coderule.minimq.broker.domain.transaction.check.DiscardService;
 import cn.coderule.minimq.broker.domain.transaction.check.context.CheckContext;
 import cn.coderule.minimq.broker.domain.transaction.check.context.TransactionContext;
 import cn.coderule.minimq.broker.domain.transaction.service.MessageService;
@@ -16,7 +14,7 @@ import cn.coderule.minimq.domain.domain.message.MessageBO;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class PrepareMessageLoader {
+public class PrepareMessageChecker {
     private static final int DEFAULT_PULL_NUM = 1;
     private static final int WAIT_WHILE_NO_COMMIT_MESSAGE = 1_000;
     private static final int MAX_INVALID_PREPARE_MESSAGE_NUM = 1;
@@ -30,7 +28,7 @@ public class PrepareMessageLoader {
     private final DiscardService discardService;
     private final MessageService messageService;
 
-    public PrepareMessageLoader(TransactionContext context, OperationMessageLoader operationMessageLoader) {
+    public PrepareMessageChecker(TransactionContext context, OperationMessageLoader operationMessageLoader) {
         BrokerConfig brokerConfig = context.getBrokerConfig();
         this.transactionConfig = brokerConfig.getTransactionConfig();
         this.messageConfig = brokerConfig.getMessageConfig();

@@ -34,7 +34,6 @@ public abstract class ClientChannel extends MockChannel {
         this.localSocketAddress = NetworkUtil.toSocketAddress(localAddress);
     }
 
-    public abstract RelayService getRelayService();
     public abstract ChannelManager getChannelManager();
     public abstract SettingManager getSettingManager();
 

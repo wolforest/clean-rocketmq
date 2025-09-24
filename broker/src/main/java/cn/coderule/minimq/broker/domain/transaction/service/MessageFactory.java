@@ -29,7 +29,11 @@ public class MessageFactory {
     public MessageBO createPrepareMessage(MessageBO msg) {
         String uniqId = msg.getUniqueKey();
         if (uniqId != null && !uniqId.isEmpty()) {
-            msg.putProperty(TransactionUtil.TRANSACTION_ID, uniqId);
+            msg.setTransactionId(uniqId);
+        } else {
+            uniqId = MessageIDSetter.createUniqID();
+            msg.setUniqueKey(uniqId);
+            msg.setTransactionId(uniqId);
         }
 
         msg.putProperty(MessageConst.PROPERTY_REAL_TOPIC, msg.getTopic());

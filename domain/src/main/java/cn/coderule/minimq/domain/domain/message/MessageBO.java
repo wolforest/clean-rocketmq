@@ -8,6 +8,7 @@ import cn.coderule.minimq.domain.core.constant.MessageConst;
 import cn.coderule.minimq.domain.core.enums.message.MessageStatus;
 import cn.coderule.minimq.domain.core.enums.message.MessageVersion;
 import cn.coderule.minimq.domain.core.enums.message.TagType;
+import cn.coderule.minimq.domain.domain.transaction.TransactionUtil;
 import cn.coderule.minimq.domain.utils.message.MessageUtils;
 import java.io.Serializable;
 import java.net.SocketAddress;
@@ -252,6 +253,14 @@ public class MessageBO extends Message implements Serializable {
 
     public void setTags(String tags) {
         this.putProperty(MessageConst.PROPERTY_TAGS, tags);
+    }
+
+    public String getTransactionId() {
+        return this.getProperty(TransactionUtil.TRANSACTION_ID);
+    }
+
+    public void setTransactionId(String transactionId) {
+        this.putProperty(TransactionUtil.TRANSACTION_ID, transactionId);
     }
 
     public String getUniqueKey() {

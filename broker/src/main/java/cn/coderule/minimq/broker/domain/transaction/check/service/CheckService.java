@@ -1,4 +1,4 @@
-package cn.coderule.minimq.broker.domain.transaction.check;
+package cn.coderule.minimq.broker.domain.transaction.check.service;
 
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.lang.concurrent.thread.DefaultThreadFactory;
