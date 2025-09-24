@@ -46,7 +46,7 @@ public class PrepareMessageChecker {
         }
 
         if (isOverMaxCheckTimes(result) || isExpired(result)) {
-            discardService.discard(result.getMessage());
+            discardPrepareMessage(context, result);
             return true;
         }
 
@@ -100,6 +100,11 @@ public class PrepareMessageChecker {
 
         context.setPrepareCounter(result.getNextOffset());
         return true;
+    }
+
+    private void discardPrepareMessage(CheckContext context, DequeueResult result) {
+        discardService.discard(result.getMessage());
+        context.increasePrepareCounter();
     }
 
     private boolean isExpired(DequeueResult result) {
