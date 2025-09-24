@@ -1,6 +1,6 @@
 package cn.coderule.minimq.rpc.common.core.relay;
 
-import cn.coderule.minimq.domain.domain.cluster.RequestContext;
+import cn.coderule.minimq.rpc.common.core.relay.request.ConsumeRequest;
 import cn.coderule.minimq.rpc.common.core.relay.request.ConsumerRequest;
 import cn.coderule.minimq.rpc.common.core.relay.request.TransactionRequest;
 import cn.coderule.minimq.rpc.common.core.relay.response.ConsumeResult;
@@ -13,17 +13,14 @@ import java.util.concurrent.CompletableFuture;
 public interface RelayService {
 
     CompletableFuture<Result<ConsumerResult>> getConsumerInfo(
-        RequestContext context,
         ConsumerRequest request
     );
 
     CompletableFuture<Result<ConsumeResult>> consumeMessage(
-        RequestContext context,
-        ConsumerRequest request
+        ConsumeRequest request
     );
 
     RelayResult<TransactionResult, Void> checkTransaction(
-        RequestContext context,
         TransactionRequest request
     );
 }

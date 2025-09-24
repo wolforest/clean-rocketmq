@@ -8,6 +8,7 @@ import cn.coderule.minimq.broker.domain.producer.ProducerRegister;
 import cn.coderule.minimq.domain.config.business.TransactionConfig;
 import cn.coderule.minimq.domain.core.constant.MessageConst;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
+import cn.coderule.minimq.rpc.common.core.relay.RelayService;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -52,6 +53,12 @@ public class CheckService implements Lifecycle {
         String producerGroup = messageBO.getProperty(MessageConst.PROPERTY_PRODUCER_GROUP);
         if (StringUtil.isBlank(producerGroup)) {
             log.error("message producer group is null, message: {}", messageBO);
+            return;
+        }
+
+        RelayService relayService = producerRegister.getRelayService(producerGroup);
+        if (relayService == null) {
+            log.error("can't find RelayService by producerGroup: {}", producerGroup);
             return;
         }
     }
