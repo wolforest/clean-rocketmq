@@ -39,6 +39,7 @@ public class TransactionManager implements Lifecycle {
     private ReceiptCleaner receiptCleaner;
 
     private CheckerFactory checkerFactory;
+    private CheckService checkService;
 
     @Override
     public void initialize() throws Exception {
@@ -55,6 +56,7 @@ public class TransactionManager implements Lifecycle {
         batchCommitService.start();
 
         checkerFactory.start();
+        checkService.start();
     }
 
     @Override
@@ -63,6 +65,7 @@ public class TransactionManager implements Lifecycle {
         batchCommitService.shutdown();
 
         checkerFactory.shutdown();
+        checkService.shutdown();
     }
 
     private void initLibs() {
@@ -114,7 +117,7 @@ public class TransactionManager implements Lifecycle {
     private void initChecker() {
         DiscardService discardService = new DiscardService(messageService);
         ProducerRegister producerRegister = BrokerContext.getBean(ProducerRegister.class);
-        CheckService checkService = new CheckService(transactionConfig, producerRegister);
+        checkService = new CheckService(transactionConfig, producerRegister);
 
         TransactionContext context = TransactionContext.builder()
             .brokerConfig(brokerConfig)
