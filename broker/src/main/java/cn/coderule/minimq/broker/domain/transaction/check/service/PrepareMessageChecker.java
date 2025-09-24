@@ -51,11 +51,11 @@ public class PrepareMessageChecker {
         }
 
         long now = System.currentTimeMillis();
-        if (isInTime(context, result, now)) {
+        if (isBornBeforeCheck(context, result)) {
             return false;
         }
 
-        Long immunityTime = getImmunityTime(context, result, now);
+        Long immunityTime = checkImmunityTime(context, result, now);
         if (immunityTime == null) {
             context.increasePrepareCounter();
             return false;
@@ -151,7 +151,7 @@ public class PrepareMessageChecker {
     }
 
     private boolean isTransactionTimeout(CheckContext context, DequeueResult result, long now) {
-        return false;
+        return true;
     }
 
     private boolean isInTime(CheckContext context, DequeueResult result, long now) {
@@ -162,7 +162,7 @@ public class PrepareMessageChecker {
         return isTransactionTimeout(context, result, now);
     }
 
-    private Long getImmunityTime(CheckContext context, DequeueResult result, long now) {
+    private Long checkImmunityTime(CheckContext context, DequeueResult result, long now) {
         return null;
     }
 
@@ -184,10 +184,8 @@ public class PrepareMessageChecker {
     }
 
     private void checkPrepareMessage(CheckContext context, DequeueResult result) {
-        increaseRenewCount(context);
-    }
-
-    private void increaseRenewCount(CheckContext context) {
+        context.increaseMessageCheckCount();
+        checkService.check(result.getMessage());
     }
 
     private void loadMoreOperationMessage(CheckContext context) {

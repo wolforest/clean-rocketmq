@@ -76,9 +76,11 @@ public class CheckContext implements Serializable {
 
     @Builder.Default
     private int invalidPrepareMessageCount = 1;
-    // count of renewed prepare message
+    /**
+     * @rocketmq original name: putInQueueCount
+     */
     @Builder.Default
-    private int renewMessageCount = 0;
+    private int messageCheckCount = 0;
     @Builder.Default
     private int rpcFailureCount = 0;
 
@@ -90,6 +92,10 @@ public class CheckContext implements Serializable {
         log.error("invalid checking offset: prepareOffset={}, operationOffset={}",
             prepareOffset, operationOffset);
         return true;
+    }
+
+    public void increaseMessageCheckCount() {
+        this.messageCheckCount++;
     }
 
     public void increaseInvalidPrepareMessageCount() {
