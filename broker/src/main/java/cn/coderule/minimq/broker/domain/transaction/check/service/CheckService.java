@@ -9,6 +9,7 @@ import cn.coderule.minimq.domain.config.business.TransactionConfig;
 import cn.coderule.minimq.domain.core.constant.MessageConst;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.rpc.common.core.relay.RelayService;
+import cn.coderule.minimq.rpc.common.core.relay.request.TransactionRequest;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -61,6 +62,9 @@ public class CheckService implements Lifecycle {
             log.error("can't find RelayService by producerGroup: {}", producerGroup);
             return;
         }
+
+        TransactionRequest request = TransactionRequest.build(messageBO);
+        relayService.checkTransaction(request);
     }
 
     private ExecutorService initExecutor() {
