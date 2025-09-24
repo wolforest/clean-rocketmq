@@ -34,13 +34,32 @@ public class DiscardService {
         }
     }
 
-    private MessageBO createDiscardMessage(MessageBO prepareMessage, Topic topic, int queueId) {
-        return null;
-    }
-
     private int getQueueId() {
         int queueNum = brokerConfig.getTopicConfig().getDiscardQueueNum();
-
         return ThreadLocalRandom.current().nextInt(99999999) % queueNum;
     }
+
+    private MessageBO createDiscardMessage(MessageBO prepareMessage, Topic topic, int queueId) {
+        MessageBO discardMessage = MessageBO.builder()
+            .storeGroup(prepareMessage.getStoreGroup())
+            .topic(topic.getTopicName())
+            .queueId(queueId)
+            .body(prepareMessage.getBody())
+            .flag(prepareMessage.getFlag())
+            .tagsCode(prepareMessage.getTagsCode())
+            .sysFlag(prepareMessage.getSysFlag())
+            .bornHost(prepareMessage.getBornHost())
+            .bornTimestamp(prepareMessage.getBornTimestamp())
+            .storeHost(prepareMessage.getStoreHost())
+            .storeTimestamp(prepareMessage.getStoreTimestamp())
+            .reconsumeTimes(prepareMessage.getReconsumeTimes())
+            .messageId(prepareMessage.getMessageId())
+            .properties(prepareMessage.getProperties())
+            .build();
+
+        discardMessage.setWaitStore(false);
+        return discardMessage;
+    }
+
+
 }
