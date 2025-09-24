@@ -115,7 +115,7 @@ public class TransactionManager implements Lifecycle {
     }
 
     private void initChecker() {
-        DiscardService discardService = new DiscardService(messageService);
+        DiscardService discardService = new DiscardService(brokerConfig, messageService);
         ProducerRegister producerRegister = BrokerContext.getBean(ProducerRegister.class);
         checkService = new CheckService(transactionConfig, producerRegister);
 

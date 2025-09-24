@@ -23,6 +23,10 @@ public class TransactionUtil {
         return TopicValidator.RMQ_SYS_TRANS_HALF_TOPIC;
     }
 
+    public static String buildDiscardTopic() {
+        return TopicValidator.RMQ_SYS_TRANS_CHECK_MAX_TIME_TOPIC;
+    }
+
     public static String buildConsumerGroup() {
         return MQConstants.CID_SYS_RMQ_TRANS;
     }

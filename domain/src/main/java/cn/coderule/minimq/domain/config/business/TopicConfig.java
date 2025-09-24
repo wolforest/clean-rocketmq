@@ -20,6 +20,7 @@ public class TopicConfig implements Serializable {
     private int prepareQueueNum = 1;
     private int commitQueueNum = 1;
     private int checkQueueNum = 1;
+    private int discardQueueNum = 1;
 
     // read message from pop retry topic v1, for the compatibility, will be removed in the future version
     private boolean retrieveMessageFromPopRetryTopicV1 = true;
