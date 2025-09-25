@@ -51,7 +51,7 @@ public class PrepareMessageChecker {
         }
 
         long now = System.currentTimeMillis();
-        if (isBornBeforeCheck(context, result)) {
+        if (isInTime(context, result, now)) {
             return false;
         }
 
@@ -136,6 +136,14 @@ public class PrepareMessageChecker {
         return false;
     }
 
+    private boolean isInTime(CheckContext context, DequeueResult result, long now) {
+        if (isBornBeforeCheck(context, result)) {
+            return false;
+        }
+
+        return isTransactionTimeout(result, now);
+    }
+
     private boolean isBornBeforeCheck(CheckContext context, DequeueResult result) {
         MessageBO message = result.getMessage();
 
@@ -146,24 +154,51 @@ public class PrepareMessageChecker {
 
         log.debug("Fresh prepare message, check it later. offset={}, msgStoreTime={}",
             context.getPrepareOffset(), DateUtil.asLocalDateTime(message.getBornTimestamp()));
-
         return true;
     }
 
-    private boolean isTransactionTimeout(CheckContext context, DequeueResult result, long now) {
-        return true;
-    }
+    private boolean isTransactionTimeout(DequeueResult result, long now) {
+        MessageBO message = result.getMessage();
+        long messageAge = now - message.getBornTimestamp();
+        long checkTime = message.getTransactionCheckTime();
 
-    private boolean isInTime(CheckContext context, DequeueResult result, long now) {
-        if (isBornBeforeCheck(context, result)) {
+        if (checkTime >= 0) {
             return false;
         }
+        log.error("transaction check time is null: message={}", message);
 
-        return isTransactionTimeout(context, result, now);
+        if (messageAge < 0) {
+            return false;
+        }
+        log.error("message was just born: age={}, message={}", messageAge, message);
+
+        return messageAge < transactionConfig.getTransactionTimeout();
     }
 
     private Long checkImmunityTime(CheckContext context, DequeueResult result, long now) {
+        MessageBO message = result.getMessage();
+        long messageAge = now - message.getBornTimestamp();
+        long checkTime = message.getTransactionCheckTime();
+
+        if (checkTime < 0) {
+            return transactionConfig.getTransactionTimeout();
+        }
+
+        checkTime *= 1000;
+        if (messageAge >= checkTime) {
+            return checkTime;
+        }
+
+        if (!checkPrepareQueueOffset(context, checkTime)) {
+            return checkTime;
+        }
+
+        context.increasePrepareCounter();
         return null;
+    }
+
+    private boolean checkPrepareQueueOffset(CheckContext context, long checkTime) {
+        return false;
     }
 
     private boolean needCheck(CheckContext context, DequeueResult result, long now, long immunityTime) {
