@@ -59,12 +59,15 @@ public class PrepareMessageChecker {
 
         Long immunityTime = checkImmunityTime(context, result, now);
         if (immunityTime == null) {
-            context.increasePrepareCounter();
-            return false;
+            return true;
         }
 
         if (!needCheck(context, result, now, immunityTime)) {
-            loadMoreOperationMessage(context);
+            loadMoreOperationMessage(context, result);
+            return true;
+        }
+
+        if (!revivePrepareMessage(context, result)) {
             return true;
         }
 
@@ -270,20 +273,30 @@ public class PrepareMessageChecker {
         return message.getBornTimestamp() - context.getStartTime() > transactionConfig.getTransactionTimeout();
     }
 
+    private boolean revivePrepareMessage(CheckContext context, DequeueResult result) {
+        return true;
+    }
+
     private void checkPrepareMessage(CheckContext context, DequeueResult result) {
         context.increaseMessageCheckCount();
         checkService.check(result.getMessage());
     }
 
-    private void loadMoreOperationMessage(CheckContext context) {
+    private void resetNextOperationOffset(CheckContext context, DequeueResult lastResult) {
+        long tmpOffset = lastResult.hasNextOffset()
+            ? lastResult.getNextOffset()
+            : context.getNextOperationOffset();
+        context.setNextOperationOffset(tmpOffset);
+    }
+
+    private void loadMoreOperationMessage(CheckContext context, DequeueResult lastResult) {
+        resetNextOperationOffset(context, lastResult);
         DequeueResult result = operationMessageLoader.load(context);
+        context.setNextOperationOffset(result.getNextOffset());
 
         if (shouldSleep(result)) {
             ThreadUtil.sleep(WAIT_WHILE_NO_COMMIT_MESSAGE);
-            return;
         }
-
-        context.setNextOperationOffset(result.getNextOffset());
     }
 
     private boolean shouldSleep(DequeueResult result) {
