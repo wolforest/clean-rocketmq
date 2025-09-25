@@ -67,7 +67,7 @@ public class PrepareMessageChecker {
             return true;
         }
 
-        if (!revivePrepareMessage(context, result)) {
+        if (!revivePrepareMessage(result)) {
             return true;
         }
 
@@ -206,7 +206,7 @@ public class PrepareMessageChecker {
         MessageBO message = result.getMessage();
         String offsetString = message.getProperty(MessageConst.PROPERTY_TRANSACTION_PREPARED_QUEUE_OFFSET);
         if (null == offsetString) {
-            return revivePrepareMessage(message);
+            return revivePrepareMessage(message).isSuccess();
         }
 
         long prepareOffset = StringUtil.getLong(offsetString, -1);
@@ -215,18 +215,22 @@ public class PrepareMessageChecker {
         }
 
         if (!context.containsPrepareOffset(prepareOffset)) {
-            return revivePrepareMessage(message);
+            return revivePrepareMessage(message).isSuccess();
         }
 
         context.removePrepareOffset(prepareOffset);
         return true;
     }
 
-    private boolean revivePrepareMessage(MessageBO messageBO) {
-        MessageBO prepareMessage = recreatePrepareMessage(messageBO);
-        EnqueueResult result = messageService.enqueueMessage(prepareMessage);
+    private EnqueueResult revivePrepareMessage(MessageBO messageBO) {
+        try {
+            MessageBO prepareMessage = recreatePrepareMessage(messageBO);
+            return messageService.enqueueMessage(prepareMessage);
+        } catch (Exception e) {
+            log.warn("revive prepare message error", e);
+        }
 
-        return result.isSuccess();
+        return EnqueueResult.failure();
     }
 
     private MessageBO recreatePrepareMessage(MessageBO messageBO) {
@@ -273,7 +277,18 @@ public class PrepareMessageChecker {
         return message.getBornTimestamp() - context.getStartTime() > transactionConfig.getTransactionTimeout();
     }
 
-    private boolean revivePrepareMessage(CheckContext context, DequeueResult result) {
+    private boolean revivePrepareMessage(DequeueResult dequeueResult) {
+        MessageBO messageBO = dequeueResult.getMessage();
+
+        EnqueueResult enqueueResult = revivePrepareMessage(dequeueResult.getMessage());
+        if (!enqueueResult.isSuccess()) {
+            log.error("revive prepare message error: message={}, result={}", dequeueResult.getMessage(), enqueueResult);
+            return false;
+        }
+
+        messageBO.setQueueOffset(enqueueResult.getQueueOffset());
+        messageBO.setCommitOffset(enqueueResult.getCommitOffset());
+        messageBO.setMessageId(enqueueResult.getMessageId());
         return true;
     }
 
