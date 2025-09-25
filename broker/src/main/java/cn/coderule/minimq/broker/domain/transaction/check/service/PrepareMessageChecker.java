@@ -1,6 +1,7 @@
 package cn.coderule.minimq.broker.domain.transaction.check.service;
 
 import cn.coderule.common.util.lang.ThreadUtil;
+import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.common.util.lang.time.DateUtil;
 import cn.coderule.minimq.broker.domain.transaction.check.context.CheckContext;
 import cn.coderule.minimq.broker.domain.transaction.check.context.TransactionContext;
@@ -11,6 +12,7 @@ import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.core.constant.MessageConst;
 import cn.coderule.minimq.domain.domain.store.domain.mq.DequeueResult;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
+import cn.coderule.minimq.domain.domain.store.domain.mq.EnqueueResult;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -209,7 +211,9 @@ public class PrepareMessageChecker {
 
     private boolean renewImmunityPrepareMessage(MessageBO messageBO) {
         MessageBO prepareMessage = recreatePrepareMessage(messageBO);
-        return true;
+        EnqueueResult result = messageService.enqueueMessage(prepareMessage);
+
+        return result.isSuccess();
     }
 
     private MessageBO recreatePrepareMessage(MessageBO messageBO) {
@@ -226,7 +230,17 @@ public class PrepareMessageChecker {
             .build();
 
         newMsg.setTags(messageBO.getTags());
+        setQueueOffset(messageBO, newMsg);
         return newMsg;
+    }
+
+    private void setQueueOffset(MessageBO messageBO, MessageBO newMsg) {
+        String offsetStr = messageBO.getProperty(MessageConst.PROPERTY_TRANSACTION_PREPARED_QUEUE_OFFSET);
+        if (StringUtil.notBlank(offsetStr)) {
+            newMsg.putProperty(MessageConst.PROPERTY_TRANSACTION_PREPARED_QUEUE_OFFSET, offsetStr);
+        } else {
+            newMsg.putProperty(MessageConst.PROPERTY_TRANSACTION_PREPARED_QUEUE_OFFSET, String.valueOf(messageBO.getQueueOffset()));
+        }
     }
 
     private boolean needCheck(CheckContext context, DequeueResult result, long now, long immunityTime) {
