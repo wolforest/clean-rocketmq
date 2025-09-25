@@ -194,7 +194,7 @@ public class PrepareMessageChecker {
             return checkTime;
         }
 
-        if (!checkPrepareQueueOffset(context, result, checkTime)) {
+        if (!checkPrepareQueueOffset(context, result)) {
             return checkTime;
         }
 
@@ -202,7 +202,7 @@ public class PrepareMessageChecker {
         return null;
     }
 
-    private boolean checkPrepareQueueOffset(CheckContext context, DequeueResult result, long checkTime) {
+    private boolean checkPrepareQueueOffset(CheckContext context, DequeueResult result) {
         MessageBO message = result.getMessage();
         String offsetString = message.getProperty(MessageConst.PROPERTY_TRANSACTION_PREPARED_QUEUE_OFFSET);
         if (null == offsetString) {
