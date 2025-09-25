@@ -189,7 +189,7 @@ public class PrepareMessageChecker {
             return checkTime;
         }
 
-        if (!checkPrepareQueueOffset(context, checkTime)) {
+        if (!checkPrepareQueueOffset(context, result, checkTime)) {
             return checkTime;
         }
 
@@ -197,8 +197,36 @@ public class PrepareMessageChecker {
         return null;
     }
 
-    private boolean checkPrepareQueueOffset(CheckContext context, long checkTime) {
+    private boolean checkPrepareQueueOffset(CheckContext context, DequeueResult result, long checkTime) {
+        MessageBO message = result.getMessage();
+        long prepareQueueOffset = message.getLongProperty(MessageConst.PROPERTY_TRANSACTION_PREPARED_QUEUE_OFFSET);
+        if (prepareQueueOffset < 0) {
+            return renewImmunityPrepareMessage(message);
+        }
+
         return false;
+    }
+
+    private boolean renewImmunityPrepareMessage(MessageBO messageBO) {
+        MessageBO prepareMessage = recreatePrepareMessage(messageBO);
+        return true;
+    }
+
+    private MessageBO recreatePrepareMessage(MessageBO messageBO) {
+        MessageBO newMsg = MessageBO.builder()
+            .topic(messageBO.getTopic())
+            .body(messageBO.getBody())
+            .queueId(messageBO.getQueueId())
+            .messageId(messageBO.getMessageId())
+            .sysFlag(messageBO.getSysFlag())
+            .properties(messageBO.getProperties())
+            .bornTimestamp(messageBO.getBornTimestamp())
+            .bornHost(messageBO.getBornHost())
+            .storeHost(messageBO.getStoreHost())
+            .build();
+
+        newMsg.setTags(messageBO.getTags());
+        return newMsg;
     }
 
     private boolean needCheck(CheckContext context, DequeueResult result, long now, long immunityTime) {
