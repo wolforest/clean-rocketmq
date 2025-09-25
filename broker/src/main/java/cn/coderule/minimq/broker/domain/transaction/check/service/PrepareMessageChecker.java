@@ -201,15 +201,25 @@ public class PrepareMessageChecker {
 
     private boolean checkPrepareQueueOffset(CheckContext context, DequeueResult result, long checkTime) {
         MessageBO message = result.getMessage();
-        long prepareQueueOffset = message.getLongProperty(MessageConst.PROPERTY_TRANSACTION_PREPARED_QUEUE_OFFSET);
-        if (prepareQueueOffset < 0) {
-            return renewImmunityPrepareMessage(message);
+        String offsetString = message.getProperty(MessageConst.PROPERTY_TRANSACTION_PREPARED_QUEUE_OFFSET);
+        if (null == offsetString) {
+            return revivePrepareMessage(message);
         }
 
-        return false;
+        long prepareOffset = StringUtil.getLong(offsetString, -1);
+        if (prepareOffset < 0) {
+            return false;
+        }
+
+        if (!context.containsPrepareOffset(prepareOffset)) {
+            return revivePrepareMessage(message);
+        }
+
+        context.removePrepareOffset(prepareOffset);
+        return true;
     }
 
-    private boolean renewImmunityPrepareMessage(MessageBO messageBO) {
+    private boolean revivePrepareMessage(MessageBO messageBO) {
         MessageBO prepareMessage = recreatePrepareMessage(messageBO);
         EnqueueResult result = messageService.enqueueMessage(prepareMessage);
 

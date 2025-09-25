@@ -133,7 +133,7 @@ public class TransactionChecker extends ServiceThread {
 
     private void removePrepareOffset(CheckContext context) {
         log.debug("prepare offset has been committed/rollback: {}", context.getPrepareOffset());
-        context.removePrepareOffset(context.getPrepareOffset());
+        context.removePrepareCounter(context.getPrepareCounter());
     }
 
     private CheckContext buildCheckContext(MessageQueue prepareQueue) {

@@ -140,23 +140,32 @@ public class CheckContext implements Serializable {
     }
 
     public void removePrepareOffset(long prepareOffset) {
-        Long commitOffset = this.offsetMap.remove(prepareOffset);
-        if (commitOffset == null) {
+        Long operationOffset = this.offsetMap.remove(prepareOffset);
+        if (operationOffset == null) {
             return;
         }
 
-        Set<Long> prepareOffsetSet = this.operationMap.get(commitOffset);
+        this.operationOffsetList.add(operationOffset);
+    }
+
+    public void removePrepareCounter(long prepareCounter) {
+        Long operationOffset = this.offsetMap.remove(prepareCounter);
+        if (operationOffset == null) {
+            return;
+        }
+
+        Set<Long> prepareOffsetSet = this.operationMap.get(operationOffset);
         if (null == prepareOffsetSet) {
             return;
         }
 
-        prepareOffsetSet.remove(prepareOffset);
+        prepareOffsetSet.remove(prepareCounter);
         if (!prepareOffsetSet.isEmpty()) {
             return;
         }
 
-        this.operationMap.remove(commitOffset);
-        this.operationOffsetList.add(commitOffset);
+        this.operationMap.remove(operationOffset);
+        this.operationOffsetList.add(operationOffset);
     }
 
     public long calculateOperationOffset() {
