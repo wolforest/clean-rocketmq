@@ -38,9 +38,10 @@ public class PrepareService {
     }
 
     public EnqueueResult registerReceipt(MessageBO messageBO, EnqueueResult result) {
+        String topic = messageBO.getRealTopic();
         Receipt receipt = Receipt.builder()
-            .topic(messageBO.getTopic())
-            .producerGroup(messageBO.getTopic())
+            .topic(topic)
+            .producerGroup(topic)
 
             .storeGroup(result.getStoreGroup())
             .messageId(result.getMessageId())

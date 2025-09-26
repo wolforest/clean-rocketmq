@@ -19,7 +19,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Receipt implements Comparable<Receipt>, Serializable {
     private String storeGroup;
+    // topic of prepare message
     private String topic;
+    // producer group of prepare message
     private String producerGroup;
     private String transactionId;
     private String messageId;

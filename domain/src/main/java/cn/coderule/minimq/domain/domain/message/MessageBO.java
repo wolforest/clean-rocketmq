@@ -122,6 +122,10 @@ public class MessageBO extends Message implements Serializable {
         return this.bodyCRC;
     }
 
+    public String getRealTopic() {
+        return this.getProperty(MessageConst.PROPERTY_REAL_TOPIC);
+    }
+
     public void setSystemQueue(String systemTopic, int systemQueueId) {
         putProperty(MessageConst.PROPERTY_REAL_TOPIC, topic);
         putProperty(MessageConst.PROPERTY_REAL_QUEUE_ID, String.valueOf(queueId));
