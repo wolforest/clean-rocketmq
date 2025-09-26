@@ -26,7 +26,7 @@ public class MessageService {
     }
 
     public MessageResult getMessage(MessageRequest request) {
-        MessageBO message = commitLog.select(request.getOffset(), request.getSize());
+        MessageBO message = commitLog.select(request.getOffset());
         if (!message.isValid()) {
             return MessageResult.notFound();
         }
