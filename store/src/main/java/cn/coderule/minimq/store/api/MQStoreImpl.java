@@ -65,7 +65,7 @@ public class MQStoreImpl implements MQStore {
 
     @Override
     public MessageResult getMessage(MessageRequest request) {
-        return null;
+        return mqService.getMessage(request);
     }
 
     @Override
