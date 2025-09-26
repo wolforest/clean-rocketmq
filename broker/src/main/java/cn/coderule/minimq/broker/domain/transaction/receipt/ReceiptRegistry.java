@@ -12,6 +12,10 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * transaction receipt manager
+ * @rocketmq original name: TransactionDataManager(proxy)
+ */
 @Slf4j
 public class ReceiptRegistry {
     private final TransactionConfig transactionConfig;

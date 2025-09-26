@@ -9,6 +9,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * transaction receipt
+ * @rocketmq original name: TransactionData
+ */
 @Data
 @Builder
 @NoArgsConstructor
