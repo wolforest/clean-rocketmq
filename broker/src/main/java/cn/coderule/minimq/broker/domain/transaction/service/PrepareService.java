@@ -34,7 +34,7 @@ public class PrepareService {
             .build();
 
         return mqStore.enqueueAsync(request)
-            .thenApplyAsync(result -> registerReceipt(messageBO, result));
+            .thenApplyAsync(result -> registerReceipt(prepareMessage, result));
     }
 
     public EnqueueResult registerReceipt(MessageBO messageBO, EnqueueResult result) {

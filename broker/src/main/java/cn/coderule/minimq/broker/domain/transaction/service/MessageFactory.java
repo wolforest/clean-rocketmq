@@ -11,7 +11,6 @@ import cn.coderule.minimq.domain.config.business.TransactionConfig;
 import cn.coderule.minimq.domain.core.constant.MessageConst;
 import cn.coderule.minimq.domain.core.constant.flag.MessageSysFlag;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
-import cn.coderule.minimq.domain.utils.message.MessageUtils;
 import java.net.SocketAddress;
 import java.nio.charset.StandardCharsets;
 
@@ -43,7 +42,7 @@ public class MessageFactory {
         msg.setSysFlag(MessageSysFlag.resetTransactionType(msg.getSysFlag(), MessageSysFlag.NORMAL_MESSAGE));
         msg.setTopic(TransactionUtil.buildPrepareTopic());
         msg.setQueueId(0);
-        msg.setPropertiesString(MessageUtils.propertiesToString(msg.getProperties()));
+        msg.initPropertiesString();
         return msg;
     }
 

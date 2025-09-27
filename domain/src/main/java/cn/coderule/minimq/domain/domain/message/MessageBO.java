@@ -90,8 +90,14 @@ public class MessageBO extends Message implements Serializable {
     }
 
     public void setTopic(String topic) {
+        int oldLength = this.topicLength;
+
         this.topic = topic;
         this.topicLength = topic.getBytes(MQConstants.MQ_CHARSET).length;
+
+        if (messageLength > 0) {
+            this.messageLength += this.topicLength - oldLength;
+        }
     }
 
     public MessageVersion getVersion() {
@@ -130,11 +136,8 @@ public class MessageBO extends Message implements Serializable {
         putProperty(MessageConst.PROPERTY_REAL_TOPIC, topic);
         putProperty(MessageConst.PROPERTY_REAL_QUEUE_ID, String.valueOf(queueId));
 
-        this.topic = systemTopic;
         this.queueId = systemQueueId;
-
-        this.topicLength = systemTopic.getBytes(MQConstants.MQ_CHARSET).length;
-
+        this.setTopic(systemTopic);
     }
 
     public boolean isNormalOrCommitMessage(){
