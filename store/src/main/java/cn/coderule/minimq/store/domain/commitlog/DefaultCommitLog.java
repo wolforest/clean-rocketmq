@@ -3,6 +3,7 @@ package cn.coderule.minimq.store.domain.commitlog;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.domain.core.enums.code.InvalidCode;
 import cn.coderule.minimq.domain.core.exception.InvalidRequestException;
+import cn.coderule.minimq.domain.domain.message.MessageEncoder;
 import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitLogFlusher;
 import cn.coderule.minimq.store.domain.commitlog.vo.InsertContext;
 import cn.coderule.minimq.domain.config.store.CommitConfig;
@@ -203,16 +204,19 @@ public class DefaultCommitLog implements CommitLog {
     }
 
     private InsertContext initContext(MessageBO messageBO) {
+        MessageEncoder encoder = localEncoder.get().getEncoder();
+
         messageBO.setStoreHost(storeConfig.getHostAddress());
         messageBO.setStoreGroup(storeConfig.getGroup());
 
         long now = System.currentTimeMillis();
         messageBO.setStoreTimestamp(now);
 
+        encoder.calculate(messageBO);
         return InsertContext.builder()
             .now(now)
             .messageBO(messageBO)
-            .encoder(localEncoder.get().getEncoder())
+            .encoder(encoder)
             .build();
     }
 

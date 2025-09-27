@@ -42,6 +42,7 @@ public class MessageFactory {
         msg.setSysFlag(MessageSysFlag.resetTransactionType(msg.getSysFlag(), MessageSysFlag.NORMAL_MESSAGE));
         msg.setTopic(TransactionUtil.buildPrepareTopic());
         msg.setQueueId(0);
+
         msg.initPropertiesString();
         return msg;
     }
@@ -50,11 +51,11 @@ public class MessageFactory {
         MessageBO newMsg = new MessageBO();
         newMsg.setWaitStore(false);
 
-        newMsg.setTransactionId(prepareMessage.getProperty(MessageConst.PROPERTY_UNIQ_CLIENT_MESSAGE_ID_KEYIDX));
+        newMsg.setTransactionId(prepareMessage.getUniqueKey());
         newMsg.setBody(prepareMessage.getBody());
 
-        newMsg.setTopic(prepareMessage.getProperty(MessageConst.PROPERTY_REAL_TOPIC));
-        newMsg.setQueueId(prepareMessage.getIntProperty(MessageConst.PROPERTY_REAL_QUEUE_ID));
+        newMsg.setTopic(prepareMessage.getRealTopic());
+        newMsg.setQueueId(prepareMessage.getRealQueueId());
 
         newMsg.setFlag(prepareMessage.getFlag());
         newMsg.setTagsCode(prepareMessage.getTagsCode());
