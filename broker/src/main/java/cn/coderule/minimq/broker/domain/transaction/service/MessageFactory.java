@@ -38,7 +38,6 @@ public class MessageFactory {
         msg.putProperty(MessageConst.PROPERTY_REAL_TOPIC, msg.getTopic());
         msg.putProperty(MessageConst.PROPERTY_REAL_QUEUE_ID, String.valueOf(msg.getQueueId()));
 
-        //reset msg transaction type and set topic = TopicValidator.RMQ_SYS_TRANS_HALF_TOPIC
         msg.setSysFlag(MessageSysFlag.resetTransactionType(msg.getSysFlag(), MessageSysFlag.NORMAL_MESSAGE));
         msg.setTopic(TransactionUtil.buildPrepareTopic());
         msg.setQueueId(0);
@@ -75,7 +74,8 @@ public class MessageFactory {
         newMsg.setQueueOffset(request.getQueueOffset());
         newMsg.setPrepareOffset(request.getCommitOffset());
 
-        int sysFlag = MessageSysFlag.resetTransactionType(prepareMessage.getSysFlag(), request.getTransactionFlag());
+        // request.getTransactionFlag or MessageSysFlag.COMMIT_MESSAGE
+        int sysFlag = MessageSysFlag.resetTransactionType(prepareMessage.getSysFlag(), MessageSysFlag.COMMIT_MESSAGE);
         newMsg.setSysFlag(sysFlag);
 
         return newMsg;
