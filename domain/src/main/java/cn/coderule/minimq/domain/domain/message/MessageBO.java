@@ -90,13 +90,11 @@ public class MessageBO extends Message implements Serializable {
     }
 
     public void setTopic(String topic) {
-        int oldLength = this.topicLength;
-
         this.topic = topic;
         this.topicLength = topic.getBytes(MQConstants.MQ_CHARSET).length;
 
         if (messageLength > 0) {
-            this.messageLength += this.topicLength - oldLength;
+            this.messageLength = -1;
         }
     }
 
@@ -215,19 +213,10 @@ public class MessageBO extends Message implements Serializable {
 
     public void initPropertiesString() {
         this.propertiesString = MessageUtils.propertiesToString(this.getProperties());
-        resetPropertyLength();
-    }
-
-    private void resetPropertyLength() {
-        if (this.propertyLength < 0) {
-            return;
-        }
-
-        int oldLength = this.propertyLength;
         this.propertyLength = this.propertiesString.getBytes(MQConstants.MQ_CHARSET).length;
 
         if (messageLength > 0) {
-            this.messageLength = this.messageLength + this.propertyLength - oldLength;
+            this.messageLength = -1;
         }
     }
 

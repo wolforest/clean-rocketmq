@@ -58,7 +58,7 @@ public class MessageFactory {
         newMsg.setQueueId(prepareMessage.getRealQueueId());
 
         newMsg.setFlag(prepareMessage.getFlag());
-        newMsg.setTagsCode(prepareMessage.getTagsCode());
+        newMsg.setTags(prepareMessage.getTags());
 
         newMsg.setBornHost(prepareMessage.getBornHost());
         newMsg.setBornTimestamp(prepareMessage.getBornTimestamp());
