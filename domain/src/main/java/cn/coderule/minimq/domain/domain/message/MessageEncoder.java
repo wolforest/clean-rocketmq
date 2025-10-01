@@ -130,9 +130,7 @@ public class MessageEncoder {
 
         // init message length
         if (messageBO.getMessageLength() < 0) {
-            messageBO.setMessageLength(
-                calculateMessageLength(messageBO)
-            );
+            messageBO.setMessageLength(calculateMessageLength(messageBO));
         }
     }
 

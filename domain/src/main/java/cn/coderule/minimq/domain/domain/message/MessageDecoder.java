@@ -85,6 +85,7 @@ public class MessageDecoder {
 
             // 15 BODY
             int bodyLen = byteBuffer.getInt();
+            msg.setBodyLength(bodyLen);
             if (bodyLen > 0) {
                 byte[] body = new byte[bodyLen];
                 byteBuffer.get(body);
@@ -105,9 +106,11 @@ public class MessageDecoder {
             byte[] topic = new byte[topicLen];
             byteBuffer.get(topic);
             msg.setTopic(new String(topic, StandardCharsets.UTF_8));
+            msg.setTopicLength(topicLen);
 
             // 17 properties
             short propertiesLength = byteBuffer.getShort();
+            msg.setPropertyLength(propertiesLength);
             if (propertiesLength > 0) {
                 byte[] properties = new byte[propertiesLength];
                 byteBuffer.get(properties);

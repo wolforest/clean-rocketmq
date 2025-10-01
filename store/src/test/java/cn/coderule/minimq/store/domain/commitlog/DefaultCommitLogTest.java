@@ -47,6 +47,12 @@ class DefaultCommitLogTest {
         assertEquals(messageBO.getBody().length, newMessage.getBody().length);
         assertEquals(messageBO.getTopic(), newMessage.getTopic());
 
+
+        assertEquals(messageBO.getTopicLength(), newMessage.getTopicLength());
+        assertEquals(messageBO.getBodyLength(), newMessage.getBodyLength());
+        assertEquals(messageBO.getPropertyLength(), newMessage.getPropertyLength());
+        assertEquals(messageBO.getMessageLength(),newMessage.getMessageLength());
+
         commitLog.destroy();
     }
 
