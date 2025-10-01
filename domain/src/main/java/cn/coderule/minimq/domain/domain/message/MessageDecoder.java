@@ -22,7 +22,6 @@ public class MessageDecoder {
 
             // 1 TOTAL_SIZE
             int storeSize = byteBuffer.getInt();
-            msg.setMessageLength(storeSize);
 
             // 2 MAGIC_CODE
             int magicCode = byteBuffer.getInt();
@@ -125,6 +124,7 @@ public class MessageDecoder {
             String msgId = createMessageId(byteBufferMsgId, msg.getStoreHostBuffer(), msg.getCommitOffset());
             msg.setMessageId(msgId);
 
+            msg.setMessageLength(storeSize);
             msg.setStatus(MessageStatus.FOUND);
             return msg;
         } catch (Exception e) {
