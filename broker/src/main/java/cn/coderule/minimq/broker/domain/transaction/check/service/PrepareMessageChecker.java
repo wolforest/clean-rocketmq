@@ -263,12 +263,12 @@ public class PrepareMessageChecker {
 
     private boolean needCheck(CheckContext context, DequeueResult result, long now, long immunityTime) {
         MessageBO message = result.getFirstMessage();
-        long messageAge = now - message.getBornTimestamp();
-        if (messageAge <= -1) {
+        long firstMessageAge = now - message.getBornTimestamp();
+        if (firstMessageAge <= -1) {
             return true;
         }
 
-        if (result.isEmpty() && messageAge > immunityTime) {
+        if (result.isEmpty() && firstMessageAge > immunityTime) {
             return true;
         }
 
@@ -277,7 +277,8 @@ public class PrepareMessageChecker {
         }
 
         MessageBO lastMessage = result.getLastMessage();
-        return lastMessage.getBornTimestamp() - context.getStartTime() > transactionConfig.getTransactionTimeout();
+        long lastMessageAge = now - lastMessage.getBornTimestamp();
+        return lastMessageAge > transactionConfig.getTransactionTimeout();
     }
 
     private boolean revivePrepareMessage(DequeueResult dequeueResult) {
