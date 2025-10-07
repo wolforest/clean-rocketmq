@@ -168,16 +168,16 @@ public class PrepareMessageChecker {
         long checkTime = message.getTransactionCheckTime();
 
         if (checkTime >= 0) {
-            return true;
+            return false;
         }
         log.error("transaction check time is null: message={}", message);
 
         if (messageAge < 0) {
-            return true;
+            return false;
         }
         log.error("message was just born: age={}, message={}", messageAge, message);
 
-        return messageAge >= transactionConfig.getTransactionTimeout();
+        return messageAge < transactionConfig.getTransactionTimeout();
     }
 
     private Long checkImmunityTime(CheckContext context, DequeueResult result, long now) {
