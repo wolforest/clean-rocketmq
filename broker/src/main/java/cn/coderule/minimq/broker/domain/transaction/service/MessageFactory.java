@@ -49,7 +49,6 @@ public class MessageFactory {
     public MessageBO createCommitMessage(SubmitRequest request, MessageBO prepareMessage) {
         MessageBO newMsg = new MessageBO();
         newMsg.setWaitStore(false);
-        newMsg.setProperties(prepareMessage.getProperties());
 
         newMsg.setTransactionId(prepareMessage.getUniqueKey());
         newMsg.setBody(prepareMessage.getBody());
@@ -58,7 +57,7 @@ public class MessageFactory {
         newMsg.setQueueId(prepareMessage.getRealQueueId());
 
         newMsg.setFlag(prepareMessage.getFlag());
-        newMsg.setTags(prepareMessage.getTags());
+        //newMsg.setTags(prepareMessage.getTags());
 
         newMsg.setBornHost(prepareMessage.getBornHost());
         newMsg.setBornTimestamp(prepareMessage.getBornTimestamp());
@@ -67,6 +66,7 @@ public class MessageFactory {
 
         newMsg.setReconsumeTime(prepareMessage.getReconsumeTime());
 
+        newMsg.setProperties(prepareMessage.getProperties());
         newMsg.removeProperty(MessageConst.PROPERTY_REAL_TOPIC);
         newMsg.removeProperty(MessageConst.PROPERTY_REAL_QUEUE_ID);
         newMsg.removeProperty(MessageConst.PROPERTY_TRANSACTION_PREPARED);
