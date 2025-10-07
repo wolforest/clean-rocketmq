@@ -22,12 +22,14 @@ public class CheckService implements Lifecycle {
 
     private final ExecutorService executor;
 
-    private final ProducerRegister producerRegister;
+    private ProducerRegister producerRegister;
 
-    public CheckService(TransactionConfig transactionConfig, ProducerRegister producerRegister) {
+    public CheckService(TransactionConfig transactionConfig) {
         this.transactionConfig = transactionConfig;
         this.executor = initExecutor();
+    }
 
+    public void inject(ProducerRegister producerRegister) {
         this.producerRegister = producerRegister;
     }
 
