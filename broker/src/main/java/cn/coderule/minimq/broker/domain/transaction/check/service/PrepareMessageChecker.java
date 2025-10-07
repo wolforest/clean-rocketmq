@@ -186,10 +186,11 @@ public class PrepareMessageChecker {
         long checkTime = message.getTransactionCheckTime();
 
         if (checkTime < 0) {
-            return transactionConfig.getTransactionTimeout();
+            checkTime = transactionConfig.getTransactionTimeout();
+        } else {
+            checkTime *= 1000;
         }
 
-        checkTime *= 1000;
         if (messageAge >= checkTime) {
             return checkTime;
         }
