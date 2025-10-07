@@ -26,7 +26,7 @@ public class GrpcChannel extends ClientChannel implements Serializable {
     private final String clientId;
     private final AtomicReference<StreamObserver<TelemetryCommand>> commandRef;
     @Getter
-    private RelayService relayService;
+    private final RelayService relayService;
 
     public GrpcChannel(RequestContext ctx, String clientId) {
         super(
@@ -40,7 +40,7 @@ public class GrpcChannel extends ClientChannel implements Serializable {
 
         this.lock = new Object();
         this.commandRef = new AtomicReference<>();
-
+        this.relayService = new GrpcRelayService(this);
     }
 
     public static Settings parseChannelExtendAttribute(Channel channel) {
