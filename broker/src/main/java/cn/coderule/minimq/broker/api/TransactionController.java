@@ -4,6 +4,7 @@ import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.minimq.broker.domain.transaction.Transaction;
 import cn.coderule.minimq.domain.core.constant.flag.MessageSysFlag;
 import cn.coderule.minimq.domain.core.enums.code.InvalidCode;
+import cn.coderule.minimq.domain.core.exception.InvalidParameterException;
 import cn.coderule.minimq.domain.core.exception.InvalidRequestException;
 import cn.coderule.minimq.domain.domain.meta.topic.TopicValidator;
 import cn.coderule.minimq.domain.domain.transaction.SubmitRequest;

@@ -113,9 +113,9 @@ public class TopicValidator {
             throw new InvalidParameterException(InvalidCode.ILLEGAL_TOPIC, "topicName is illegal");
         }
 
-        if (TopicValidator.isSystemTopic(topicName)) {
-            throw new InvalidParameterException(InvalidCode.ILLEGAL_TOPIC, "topicName is system topic");
-        }
+//        if (TopicValidator.isSystemTopic(topicName)) {
+//            throw new InvalidParameterException(InvalidCode.ILLEGAL_TOPIC, "topicName is system topic");
+//        }
     }
 
     public static ValidateTopicResult validateAndReturn(String topic) {
