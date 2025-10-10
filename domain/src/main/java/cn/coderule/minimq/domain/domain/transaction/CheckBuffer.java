@@ -24,8 +24,13 @@ public class CheckBuffer {
      * @param prepareQueue prepareQueue
      * @return operationQueue
      */
-    public MessageQueue mapQueue(MessageQueue prepareQueue) {
-        MessageQueue operationQueue = MessageQueue.builder()
+    public MessageQueue getOrCreateOperationQueue(MessageQueue prepareQueue) {
+        MessageQueue operationQueue = getQueue(prepareQueue);
+        if (operationQueue != null) {
+            return operationQueue;
+        }
+
+        operationQueue = MessageQueue.builder()
                 .topicName(TransactionUtil.buildOperationTopic())
                 .groupName(prepareQueue.getGroupName())
                 .queueId(prepareQueue.getQueueId())
