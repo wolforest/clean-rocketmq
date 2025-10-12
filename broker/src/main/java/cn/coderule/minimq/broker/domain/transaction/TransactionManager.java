@@ -123,6 +123,7 @@ public class TransactionManager implements Lifecycle {
 
         TransactionContext context = TransactionContext.builder()
             .brokerConfig(brokerConfig)
+            .commitBuffer(commitBuffer)
             .checkService(checkService)
             .discardService(discardService)
             .messageService(messageService)

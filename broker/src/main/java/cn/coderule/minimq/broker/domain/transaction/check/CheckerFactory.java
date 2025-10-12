@@ -4,6 +4,7 @@ import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.minimq.broker.domain.transaction.check.context.TransactionContext;
 import cn.coderule.minimq.domain.domain.cluster.task.QueueTask;
 import cn.coderule.minimq.domain.domain.cluster.task.TaskFactory;
+import cn.coderule.minimq.domain.domain.transaction.CommitBuffer;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +21,8 @@ public class CheckerFactory implements TaskFactory, Lifecycle {
 
     @Override
     public void create(QueueTask task) {
+        initStoreGroup(task);
+
         checkerMap.computeIfAbsent(task.getQueueId(), queueId -> {
             TransactionChecker checker = new TransactionChecker(transactionContext, task);
             log.info("create transaction checker: storeGroup={}, queueId={}",
@@ -55,6 +58,11 @@ public class CheckerFactory implements TaskFactory, Lifecycle {
         for (TransactionChecker checker : checkerMap.values()) {
             checker.shutdown();
         }
+    }
+
+    private void initStoreGroup(QueueTask task) {
+        CommitBuffer commitBuffer = transactionContext.getCommitBuffer();
+        commitBuffer.setStoreGroup(task.getStoreGroup());
     }
 
     private void startChecker(TransactionChecker checker, QueueTask task) {
