@@ -53,7 +53,7 @@ public class PrepareMessageChecker {
         }
 
         long now = System.currentTimeMillis();
-        if (isInTime(context, result, now)) {
+        if (notTimeout(context, result, now)) {
             return false;
         }
 
@@ -141,19 +141,19 @@ public class PrepareMessageChecker {
         return false;
     }
 
-    private boolean isInTime(CheckContext context, DequeueResult result, long now) {
-        if (isBornBeforeCheck(context, result)) {
-            return false;
+    private boolean notTimeout(CheckContext context, DequeueResult result, long now) {
+        if (isStoreAfterCheck(context, result)) {
+            return true;
         }
 
         return isTransactionTimeout(result, now);
     }
 
-    private boolean isBornBeforeCheck(CheckContext context, DequeueResult result) {
+    private boolean isStoreAfterCheck(CheckContext context, DequeueResult result) {
         MessageBO message = result.getMessage();
 
-        long bornAt = message.getBornTimestamp();
-        if (bornAt < context.getStartTime()) {
+        long storeAt = message.getStoreTimestamp();
+        if (storeAt < context.getStartTime()) {
             return false;
         }
 
@@ -168,14 +168,14 @@ public class PrepareMessageChecker {
         long checkTime = message.getTransactionCheckTime();
 
         if (checkTime >= 0) {
+            log.debug("transaction check time is null: message={}", message);
             return false;
         }
-        log.error("transaction check time is null: message={}", message);
 
         if (messageAge < 0) {
+            log.debug("message was just born: age={}, message={}", messageAge, message);
             return false;
         }
-        log.error("message was just born: age={}, message={}", messageAge, message);
 
         return messageAge < transactionConfig.getTransactionTimeout();
     }
