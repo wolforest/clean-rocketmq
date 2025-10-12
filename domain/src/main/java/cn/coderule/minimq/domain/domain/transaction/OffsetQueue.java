@@ -57,10 +57,7 @@ public class OffsetQueue implements Serializable {
 
     public boolean offer(String data, long timeout) {
         try {
-            boolean result = queue.offer(data, timeout, TimeUnit.MILLISECONDS);
-            totalSize.addAndGet(data.length());
-
-            return result;
+            return queue.offer(data, timeout, TimeUnit.MILLISECONDS);
         } catch (InterruptedException ignore) {
         }
 
