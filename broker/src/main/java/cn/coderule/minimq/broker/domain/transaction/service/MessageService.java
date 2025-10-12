@@ -134,19 +134,25 @@ public class MessageService {
     public void deletePrepareMessage(SubmitRequest request, MessageBO messageBO) {
         OffsetQueue offsetQueue = commitBuffer.initOffsetQueue(messageBO.getQueueId());
 
-        boolean status = enqueueBatchCommitQueue(messageBO, offsetQueue);
-        if (status) {
+        if (enqueueBatchCommitQueue(messageBO, offsetQueue)) {
             return;
         }
 
-        MessageQueue operationQueue = commitBuffer.initOperationQueue(messageBO.getQueueId(), request.getStoreGroup());
-        MessageBO operationMessage = messageFactory.createOperationMessage(
-            offsetQueue, operationQueue, messageBO.getQueueOffset());
+        MessageBO operationMessage = createOperationMessage(request, messageBO, offsetQueue);
         if (operationMessage == null) {
             return;
         }
 
         enqueueOperationMessage(request, operationMessage);
+    }
+
+    private MessageBO createOperationMessage(SubmitRequest request, MessageBO messageBO, OffsetQueue offsetQueue) {
+        MessageQueue operationQueue = commitBuffer.initOperationQueue(
+            messageBO.getQueueId(), request.getStoreGroup()
+        );
+        return messageFactory.createOperationMessage(
+            offsetQueue, operationQueue, messageBO.getQueueOffset()
+        );
     }
 
     private void enqueueOperationMessage(SubmitRequest request, MessageBO operationMessage) {
