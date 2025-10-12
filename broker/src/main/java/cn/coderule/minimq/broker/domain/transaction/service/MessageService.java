@@ -134,7 +134,7 @@ public class MessageService {
     public void deletePrepareMessage(SubmitRequest request, MessageBO messageBO) {
         OffsetQueue offsetQueue = commitBuffer.initOffsetQueue(messageBO.getQueueId());
 
-        boolean status = wakeupBatchCommitService(messageBO, offsetQueue);
+        boolean status = enqueueBatchCommitQueue(messageBO, offsetQueue);
         if (status) {
             return;
         }
@@ -158,7 +158,7 @@ public class MessageService {
         mqStore.enqueue(enqueueRequest);
     }
 
-    private boolean wakeupBatchCommitService(MessageBO messageBO, OffsetQueue offsetQueue) {
+    private boolean enqueueBatchCommitQueue(MessageBO messageBO, OffsetQueue offsetQueue) {
         try {
             String offsetKey = TransactionUtil.buildOffsetKey(messageBO.getQueueOffset());
             boolean res = offsetQueue.offer(offsetKey, 100);
