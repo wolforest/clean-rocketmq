@@ -104,12 +104,7 @@ public class BatchCommitService extends ServiceThread {
             return;
         }
 
-        MessageQueue operationQueue = commitBuffer.getOperationQueue(queueId);
-        if (operationQueue == null) {
-            log.error("can't find operation queue: queueId: {}", queueId);
-            return;
-        }
-
+        MessageQueue operationQueue = commitBuffer.initOperationQueue(queueId);
         MessageBO messageBO = messageFactory.createOperationMessage(offsetQueue, operationQueue);
         if (messageBO == null) {
             return;

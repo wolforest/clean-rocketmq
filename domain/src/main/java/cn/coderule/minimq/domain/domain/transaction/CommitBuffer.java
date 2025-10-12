@@ -1,5 +1,6 @@
 package cn.coderule.minimq.domain.domain.transaction;
 
+import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.minimq.domain.config.business.TransactionConfig;
 import cn.coderule.minimq.domain.domain.MessageQueue;
 import java.util.Map;
@@ -7,7 +8,9 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class CommitBuffer {
     private static final int DEFAULT_QUEUE_LENGTH = 20_000;
 
@@ -46,6 +49,10 @@ public class CommitBuffer {
     }
 
     public MessageQueue initOperationQueue(int queueId) {
+        if (StringUtil.isBlank(this.storeGroup)) {
+            log.error("storeGroup is not set by CheckerFactory");
+        }
+
         return initOperationQueue(queueId, this.storeGroup);
     }
 
