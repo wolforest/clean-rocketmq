@@ -114,6 +114,7 @@ public class DefaultCommitLog implements CommitLog {
         }
 
         MessageBO messageBO = MessageDecoder.decode(buffer.getByteBuffer());
+        messageBO.setStoreGroup(storeConfig.getGroup());
         buffer.release();
 
         return messageBO;

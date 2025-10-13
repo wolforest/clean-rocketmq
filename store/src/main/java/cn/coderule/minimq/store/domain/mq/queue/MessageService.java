@@ -1,6 +1,7 @@
 package cn.coderule.minimq.store.domain.mq.queue;
 
 import cn.coderule.common.util.lang.collection.CollectionUtil;
+import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.domain.domain.store.domain.mq.DequeueResult;
 import cn.coderule.minimq.domain.domain.store.domain.mq.DequeueRequest;
 import cn.coderule.minimq.domain.domain.store.domain.consumequeue.QueueUnit;
@@ -20,13 +21,13 @@ public class MessageService {
         CommitLog commitLog,
         ConsumeQueueGateway consumeQueueGateway
     ) {
-
         this.commitLog = commitLog;
         this.consumeQueueGateway = consumeQueueGateway;
     }
 
     public MessageResult getMessage(MessageRequest request) {
         MessageBO message = commitLog.select(request.getOffset());
+
         if (!message.isValid()) {
             return MessageResult.notFound();
         }
