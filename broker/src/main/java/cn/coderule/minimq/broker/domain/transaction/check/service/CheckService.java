@@ -82,9 +82,12 @@ public class CheckService implements Lifecycle {
             .topic(prepareMessage.getRealTopic())
             .queueId(prepareMessage.getRealQueueId())
 
+            .body(prepareMessage.getBody())
+            .flag(prepareMessage.getFlag())
+            .transactionId(prepareMessage.getTransactionId())
+
             .storeGroup(prepareMessage.getStoreGroup())
             .messageId(prepareMessage.getMessageId())
-            .transactionId(prepareMessage.getTransactionId())
             .commitOffset(prepareMessage.getCommitOffset())
             .queueOffset(prepareMessage.getQueueOffset())
             .properties(prepareMessage.getProperties())
