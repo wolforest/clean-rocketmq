@@ -249,6 +249,7 @@ public class PrepareMessageChecker {
 
         newMsg.setTags(messageBO.getTags());
         setQueueOffset(messageBO, newMsg);
+        newMsg.setWaitStore(false);
         return newMsg;
     }
 

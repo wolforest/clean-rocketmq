@@ -37,10 +37,10 @@ public class CheckService implements Lifecycle {
         this.producerRegister = producerRegister;
     }
 
-    public void check(MessageBO messageBO) {
+    public void check(MessageBO prepareMessage) {
         executor.execute(() -> {
             try {
-                checkAsync(messageBO);
+                checkAsync(prepareMessage);
             } catch (Exception e) {
                 log.error("check message error", e);
             }
@@ -56,10 +56,12 @@ public class CheckService implements Lifecycle {
         executor.shutdown();
     }
 
-    private void checkAsync(MessageBO messageBO) {
-        String realTopic = messageBO.getRealTopic();
+    private void checkAsync(MessageBO prepareMessage) {
+        MessageBO checkMessage = createCheckMessage(prepareMessage);
+
+        String realTopic = checkMessage.getTopic();
         if (StringUtil.isBlank(realTopic)) {
-            log.error("message producer topic is null, message: {}", messageBO);
+            log.error("message producer topic is null, message: {}", checkMessage);
             return;
         }
 
@@ -69,23 +71,37 @@ public class CheckService implements Lifecycle {
             return;
         }
 
-        registerReceipt(messageBO);
+        registerReceipt(checkMessage);
 
-        TransactionRequest request = TransactionRequest.build(messageBO);
+        TransactionRequest request = TransactionRequest.build(checkMessage);
         relayService.checkTransaction(request);
     }
 
-    private void registerReceipt(MessageBO messageBO) {
-        String topic = messageBO.getTopic();
-        Receipt receipt = Receipt.builder()
-            .topic(topic)
-            .producerGroup(messageBO.getProducerGroup())
+    private MessageBO createCheckMessage(MessageBO prepareMessage) {
+        return MessageBO.builder()
+            .topic(prepareMessage.getRealTopic())
+            .queueId(prepareMessage.getRealQueueId())
 
-            .storeGroup(messageBO.getStoreGroup())
-            .messageId(messageBO.getMessageId())
-            .transactionId(messageBO.getTransactionId())
-            .commitOffset(messageBO.getCommitOffset())
-            .queueOffset(messageBO.getQueueOffset())
+            .storeGroup(prepareMessage.getStoreGroup())
+            .messageId(prepareMessage.getMessageId())
+            .transactionId(prepareMessage.getTransactionId())
+            .commitOffset(prepareMessage.getCommitOffset())
+            .queueOffset(prepareMessage.getQueueOffset())
+            .properties(prepareMessage.getProperties())
+
+            .build();
+    }
+
+    private void registerReceipt(MessageBO checkMessage) {
+        Receipt receipt = Receipt.builder()
+            .topic(checkMessage.getTopic())
+            .producerGroup(checkMessage.getProducerGroup())
+
+            .storeGroup(checkMessage.getStoreGroup())
+            .messageId(checkMessage.getMessageId())
+            .transactionId(checkMessage.getTransactionId())
+            .commitOffset(checkMessage.getCommitOffset())
+            .queueOffset(checkMessage.getQueueOffset())
 
             .checkTimestamp(System.currentTimeMillis())
             .expireMs(transactionConfig.getReceiptExpireTime())
