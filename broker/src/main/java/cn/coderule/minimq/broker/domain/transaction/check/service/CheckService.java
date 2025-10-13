@@ -78,10 +78,10 @@ public class CheckService implements Lifecycle {
     }
 
     private void registerReceipt(MessageBO messageBO) {
-        String topic = messageBO.getRealTopic();
+        String topic = messageBO.getTopic();
         Receipt receipt = Receipt.builder()
             .topic(topic)
-            .producerGroup(topic)
+            .producerGroup(messageBO.getProducerGroup())
 
             .storeGroup(messageBO.getStoreGroup())
             .messageId(messageBO.getMessageId())

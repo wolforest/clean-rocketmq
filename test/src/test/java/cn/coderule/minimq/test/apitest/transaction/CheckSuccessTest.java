@@ -128,7 +128,7 @@ public class CheckSuccessTest extends ApiBaseTest {
             return;
         }
 
-        ThreadUtil.sleep(50000);
+        ThreadUtil.sleep(40000);
         LOG.info("stop consumer");
 
         consumer.close();
@@ -140,7 +140,7 @@ public class CheckSuccessTest extends ApiBaseTest {
         }
 
         LOG.info("stop producer");
-        ThreadUtil.sleep(50000);
+        ThreadUtil.sleep(40000);
         producer.close();
     }
 

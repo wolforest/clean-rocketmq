@@ -151,6 +151,14 @@ public class MessageBO extends Message implements Serializable {
         this.setTopic(systemTopic);
     }
 
+    public String getProducerGroup() {
+        return this.getProperty(MessageConst.PROPERTY_PRODUCER_GROUP);
+    }
+
+    public void setProducerGroup(String producerGroup) {
+        putProperty(MessageConst.PROPERTY_PRODUCER_GROUP, producerGroup);
+    }
+
     public boolean isNormalOrCommitMessage(){
         int type = MessageSysFlag.getTransactionType(this.sysFlag);
         return MessageSysFlag.NORMAL_MESSAGE == type
