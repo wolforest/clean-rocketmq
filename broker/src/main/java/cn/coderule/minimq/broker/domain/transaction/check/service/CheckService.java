@@ -8,9 +8,7 @@ import cn.coderule.minimq.broker.domain.producer.ProducerRegister;
 import cn.coderule.minimq.broker.domain.transaction.receipt.Receipt;
 import cn.coderule.minimq.broker.domain.transaction.receipt.ReceiptRegistry;
 import cn.coderule.minimq.domain.config.business.TransactionConfig;
-import cn.coderule.minimq.domain.core.constant.MessageConst;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
-import cn.coderule.minimq.domain.domain.store.domain.mq.EnqueueResult;
 import cn.coderule.minimq.rpc.common.core.relay.RelayService;
 import cn.coderule.minimq.rpc.common.core.relay.request.TransactionRequest;
 import java.util.concurrent.ExecutorService;
@@ -59,15 +57,15 @@ public class CheckService implements Lifecycle {
     }
 
     private void checkAsync(MessageBO messageBO) {
-        String producerGroup = messageBO.getProperty(MessageConst.PROPERTY_PRODUCER_GROUP);
-        if (StringUtil.isBlank(producerGroup)) {
-            log.error("message producer group is null, message: {}", messageBO);
+        String realTopic = messageBO.getRealTopic();
+        if (StringUtil.isBlank(realTopic)) {
+            log.error("message producer topic is null, message: {}", messageBO);
             return;
         }
 
-        RelayService relayService = producerRegister.getRelayService(producerGroup);
+        RelayService relayService = producerRegister.getRelayService(realTopic);
         if (relayService == null) {
-            log.error("can't find RelayService by producerGroup: {}", producerGroup);
+            log.error("can't find RelayService by producerGroup: {}", realTopic);
             return;
         }
 

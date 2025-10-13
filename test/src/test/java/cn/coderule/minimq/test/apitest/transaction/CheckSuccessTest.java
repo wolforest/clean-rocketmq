@@ -139,8 +139,9 @@ public class CheckSuccessTest extends ApiBaseTest {
             return;
         }
 
-        LOG.info("stop producer");
         ThreadUtil.sleep(40000);
+        LOG.info("stop producer");
+
         producer.close();
     }
 
