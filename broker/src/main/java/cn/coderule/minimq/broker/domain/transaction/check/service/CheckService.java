@@ -59,15 +59,15 @@ public class CheckService implements Lifecycle {
     private void checkAsync(MessageBO prepareMessage) {
         MessageBO checkMessage = createCheckMessage(prepareMessage);
 
-        String realTopic = checkMessage.getTopic();
-        if (StringUtil.isBlank(realTopic)) {
+        String producerGroup = checkMessage.getProducerGroup();
+        if (StringUtil.isBlank(producerGroup)) {
             log.error("message producer topic is null, message: {}", checkMessage);
             return;
         }
 
-        RelayService relayService = producerRegister.getRelayService(realTopic);
+        RelayService relayService = producerRegister.getRelayService(producerGroup);
         if (relayService == null) {
-            log.error("can't find RelayService by producerGroup: {}", realTopic);
+            log.error("can't find RelayService by producerGroup: {}", producerGroup);
             return;
         }
 

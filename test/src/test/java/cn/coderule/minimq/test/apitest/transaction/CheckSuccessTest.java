@@ -128,7 +128,7 @@ public class CheckSuccessTest extends ApiBaseTest {
             return;
         }
 
-        ThreadUtil.sleep(40000);
+        ThreadUtil.sleep(50000);
         LOG.info("stop consumer");
 
         consumer.close();
