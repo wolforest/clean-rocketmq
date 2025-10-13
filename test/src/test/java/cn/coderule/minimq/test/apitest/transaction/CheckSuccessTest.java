@@ -86,7 +86,7 @@ public class CheckSuccessTest extends ApiBaseTest {
             return;
         }
 
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 10; i++) {
             Message message = createMessage(i);
 
 

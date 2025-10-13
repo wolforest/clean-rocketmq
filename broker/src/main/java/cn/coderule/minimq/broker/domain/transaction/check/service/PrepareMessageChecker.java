@@ -78,7 +78,7 @@ public class PrepareMessageChecker {
     private DequeueResult load(CheckContext context) {
         return messageService.getMessage(
             context.getPrepareQueue(),
-            context.getPrepareOffset(),
+            context.getPrepareCounter(),
             DEFAULT_PULL_NUM
         );
     }
