@@ -37,7 +37,7 @@ public class PrepareService {
             .thenApplyAsync(result -> registerReceipt(prepareMessage, result));
     }
 
-    public EnqueueResult registerReceipt(MessageBO messageBO, EnqueueResult result) {
+    private EnqueueResult registerReceipt(MessageBO messageBO, EnqueueResult result) {
         String topic = messageBO.getRealTopic();
         Receipt receipt = Receipt.builder()
             .topic(topic)

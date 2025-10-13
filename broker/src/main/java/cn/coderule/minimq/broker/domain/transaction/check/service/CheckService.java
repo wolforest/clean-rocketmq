@@ -5,9 +5,12 @@ import cn.coderule.common.lang.concurrent.thread.DefaultThreadFactory;
 import cn.coderule.common.util.lang.ThreadUtil;
 import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.minimq.broker.domain.producer.ProducerRegister;
+import cn.coderule.minimq.broker.domain.transaction.receipt.Receipt;
+import cn.coderule.minimq.broker.domain.transaction.receipt.ReceiptRegistry;
 import cn.coderule.minimq.domain.config.business.TransactionConfig;
 import cn.coderule.minimq.domain.core.constant.MessageConst;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
+import cn.coderule.minimq.domain.domain.store.domain.mq.EnqueueResult;
 import cn.coderule.minimq.rpc.common.core.relay.RelayService;
 import cn.coderule.minimq.rpc.common.core.relay.request.TransactionRequest;
 import java.util.concurrent.ExecutorService;
@@ -19,13 +22,16 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class CheckService implements Lifecycle {
     private final TransactionConfig transactionConfig;
+    private final ReceiptRegistry receiptRegistry;
 
     private final ExecutorService executor;
 
     private ProducerRegister producerRegister;
 
-    public CheckService(TransactionConfig transactionConfig) {
+    public CheckService(TransactionConfig transactionConfig, ReceiptRegistry receiptRegistry) {
         this.transactionConfig = transactionConfig;
+        this.receiptRegistry = receiptRegistry;
+
         this.executor = initExecutor();
     }
 
@@ -65,8 +71,28 @@ public class CheckService implements Lifecycle {
             return;
         }
 
+        registerReceipt(messageBO);
+
         TransactionRequest request = TransactionRequest.build(messageBO);
         relayService.checkTransaction(request);
+    }
+
+    private void registerReceipt(MessageBO messageBO) {
+        String topic = messageBO.getRealTopic();
+        Receipt receipt = Receipt.builder()
+            .topic(topic)
+            .producerGroup(topic)
+
+            .storeGroup(messageBO.getStoreGroup())
+            .messageId(messageBO.getMessageId())
+            .transactionId(messageBO.getTransactionId())
+            .commitOffset(messageBO.getCommitOffset())
+            .queueOffset(messageBO.getQueueOffset())
+
+            .checkTimestamp(System.currentTimeMillis())
+            .expireMs(transactionConfig.getReceiptExpireTime())
+            .build();
+        receiptRegistry.register(receipt);
     }
 
     private ExecutorService initExecutor() {
