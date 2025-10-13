@@ -119,7 +119,7 @@ public class TransactionManager implements Lifecycle {
 
     private void initChecker() {
         DiscardService discardService = new DiscardService(brokerConfig, messageService);
-        checkService = new CheckService(transactionConfig);
+        checkService = new CheckService(transactionConfig, receiptRegistry);
 
         TransactionContext context = TransactionContext.builder()
             .brokerConfig(brokerConfig)
