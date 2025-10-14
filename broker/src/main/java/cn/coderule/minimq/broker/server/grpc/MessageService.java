@@ -41,6 +41,14 @@ import io.grpc.Context;
 import io.grpc.stub.StreamObserver;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * rRPC protocol implementation
+ *
+ * <ul>
+ *   <li>execute pipeline</li>
+ *   <li>execute related activity</li>
+ * </ul>
+ */
 @Slf4j
 public class MessageService extends MessagingServiceGrpc.MessagingServiceImplBase {
     private final ClientActivity clientActivity;
@@ -68,6 +76,12 @@ public class MessageService extends MessagingServiceGrpc.MessagingServiceImplBas
         this.pipeline = pipeline;
     }
 
+    /**
+     * route query api, producer/consumer will call this api while starting.
+     *
+     * @param request request
+     * @param responseObserver gRPC response observer
+     */
     @Override
     public void queryRoute(QueryRouteRequest request, StreamObserver<QueryRouteResponse> responseObserver) {
         RequestContext context = RequestContext.create();
@@ -76,20 +90,26 @@ public class MessageService extends MessagingServiceGrpc.MessagingServiceImplBas
         routeActivity.getRoute(context, request, responseObserver);
     }
 
-    @Override
-    public void sendMessage(SendMessageRequest request, StreamObserver<SendMessageResponse> responseObserver) {
-        RequestContext context = RequestContext.create();
-        executePipeline(context, request);
-
-        producerActivity.produce(context, request, responseObserver);
-    }
-
+    /**
+     * assignment query api, consumer will call this api while starting.
+     *
+     * @param request request
+     * @param responseObserver gRPC response observer
+     */
     @Override
     public void queryAssignment(QueryAssignmentRequest request, StreamObserver<QueryAssignmentResponse> responseObserver) {
         RequestContext context = RequestContext.create();
         executePipeline(context, request);
 
         routeActivity.getAssignment(context, request, responseObserver);
+    }
+
+    @Override
+    public void sendMessage(SendMessageRequest request, StreamObserver<SendMessageResponse> responseObserver) {
+        RequestContext context = RequestContext.create();
+        executePipeline(context, request);
+
+        producerActivity.produce(context, request, responseObserver);
     }
 
     @Override
