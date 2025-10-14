@@ -178,6 +178,12 @@ public class MessageService extends MessagingServiceGrpc.MessagingServiceImplBas
         transactionActivity.submit(context, request, responseObserver);
     }
 
+    /**
+     * heartbeat api, register producer/consumer
+     *
+     * @param request request
+     * @param responseObserver responseObserver
+     */
     @Override
     public void heartbeat(HeartbeatRequest request, StreamObserver<HeartbeatResponse> responseObserver) {
         RequestContext context = RequestContext.create();
@@ -195,6 +201,15 @@ public class MessageService extends MessagingServiceGrpc.MessagingServiceImplBas
         clientActivity.notifyClientTermination(context, request, responseObserver);
     }
 
+    /**
+     * telemetry API
+     *
+     * <ul>
+     *   <li>register producer/consumer</li>
+     *   <li>process trace</li>
+     *   <li>verify message result</li>
+     * </ul>
+     */
     @Override
     public StreamObserver<TelemetryCommand> telemetry(StreamObserver<TelemetryCommand> responseObserver) {
         return clientActivity.telemetry(responseObserver, pipeline);
