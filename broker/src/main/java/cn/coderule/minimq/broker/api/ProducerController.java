@@ -80,10 +80,10 @@ public class ProducerController {
     }
 
     private void prepareMessage(MessageBO messageBO) {
-        initMessage(messageBO);
-
         messageValidator.validate(messageBO);
-        this.cleanReservedProperty(messageBO);
+
+        initMessage(messageBO);
+        cleanReservedProperty(messageBO);
     }
 
     private void initMessage(MessageBO messageBO) {
