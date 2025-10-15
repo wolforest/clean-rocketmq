@@ -41,6 +41,14 @@ public class ProducerActivity {
         this.executor = executor;
     }
 
+    /**
+     * produce message
+     *  - accept request
+     *  - submit async task to thread pool
+     *
+     * @param request request
+     * @param responseObserver response
+     */
     public void produce(RequestContext context, SendMessageRequest request, StreamObserver<SendMessageResponse> responseObserver) {
         ActivityHelper<SendMessageRequest, SendMessageResponse> helper
             = getProduceHelper(context, request, responseObserver);
@@ -79,6 +87,15 @@ public class ProducerActivity {
         return CompletableFuture.completedFuture(null);
     }
 
+    /**
+     * async produce message
+     *  - convert request to messageBO
+     *  - call producerController.produce
+     *  - convert messageBO to response
+     *
+     * @param request request
+     * @return response
+     */
     private CompletableFuture<SendMessageResponse> produceAsync(RequestContext context, SendMessageRequest request) {
         CompletableFuture<SendMessageResponse> future = new CompletableFuture<>();
 
