@@ -20,6 +20,7 @@ import java.util.concurrent.CompletableFuture;
 /**
  * ProducerController
  *  - accept RequestContext and MessageBO
+ *  - validate request
  *  - return EnqueueResult
  *  - for multi-protocol support
  */
@@ -62,10 +63,6 @@ public class ProducerController {
     }
 
     public CompletableFuture<List<EnqueueResult>> produce(RequestContext context, List<MessageBO> messageList) {
-        if (CollectionUtil.isEmpty(messageList)) {
-            throw new InvalidParameterException(InvalidCode.BAD_REQUEST, "messageList is empty");
-        }
-
         serverValidator.checkServerReady();
         prepareMessage(messageList);
 
@@ -73,6 +70,10 @@ public class ProducerController {
     }
 
     private void prepareMessage(List<MessageBO> messageList) {
+        if (CollectionUtil.isEmpty(messageList)) {
+            throw new InvalidParameterException(InvalidCode.BAD_REQUEST, "messageList is empty");
+        }
+
         for (MessageBO messageBO : messageList) {
             prepareMessage(messageBO);
         }
