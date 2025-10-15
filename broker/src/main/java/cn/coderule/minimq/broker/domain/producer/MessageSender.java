@@ -83,6 +83,14 @@ public class MessageSender implements Lifecycle {
         return future;
     }
 
+    /**
+     * send batch message
+     *  - async send message one by one
+     *  - combine send result
+     *
+     * @param context produce context
+     * @return future
+     */
     public CompletableFuture<List<EnqueueResult>> send(RequestContext context, List<MessageBO> messageList) {
         if (CollectionUtil.isEmpty(messageList)) {
             return CompletableFuture.completedFuture(List.of());
