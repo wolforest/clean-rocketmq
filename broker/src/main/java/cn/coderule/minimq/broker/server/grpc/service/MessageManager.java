@@ -36,6 +36,7 @@ import lombok.Getter;
 public class MessageManager implements Lifecycle {
     private final BrokerConfig brokerConfig;
     private final GrpcConfig grpcConfig;
+    private final RejectActivity rejectActivity = new RejectActivity();
 
     @Getter
     private MessageService messageService;
@@ -45,7 +46,6 @@ public class MessageManager implements Lifecycle {
     private ProducerActivity producerActivity;
     private ConsumerActivity consumerActivity;
     private TransactionActivity transactionActivity;
-    private final RejectActivity rejectActivity = new RejectActivity();
 
     private SettingManager settingManager;
     private ChannelManager channelManager;

@@ -20,6 +20,11 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.function.Function;
 import lombok.Setter;
 
+/**
+ * producer activity
+ *  - produce
+ *  - moveToDLQ
+ */
 public class ProducerActivity {
     private final ThreadPoolExecutor executor;
     /**
