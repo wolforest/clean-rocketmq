@@ -10,7 +10,12 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class FlushWatcher extends ServiceThread {
-    private final LinkedBlockingQueue<GroupCommitRequest> commitRequests = new LinkedBlockingQueue<>();
+    private final LinkedBlockingQueue<GroupCommitRequest> commitRequests;
+
+    public FlushWatcher() {
+        this.commitRequests = new LinkedBlockingQueue<>();
+        this.setDaemon(true);
+    }
 
     @Override
     public String getServiceName() {

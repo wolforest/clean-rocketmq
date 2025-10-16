@@ -19,6 +19,9 @@ import java.util.concurrent.CompletableFuture;
  *  - flush service: async/sync flusher
  *  - commit service: commit to cache
  *  - flush watcher: flush timeout watcher
+ * functions:
+ *  - flush
+ *  - start/shutdown
  */
 public class DefaultCommitLogFlusher implements CommitLogFlusher, Lifecycle {
     private final CommitConfig commitConfig;
@@ -35,13 +38,7 @@ public class DefaultCommitLogFlusher implements CommitLogFlusher, Lifecycle {
         this.commitConfig = commitConfig;
 
         this.flushWatcher = new FlushWatcher();
-
-        if (FlushType.SYNC.equals(commitConfig.getFlushType())) {
-            this.flusher = new GroupFlusher(mappedFileQueue, checkPoint);
-        } else {
-            this.flusher = new IntervalFlusher(commitConfig, mappedFileQueue, checkPoint);
-        }
-
+        this.flusher = initFlusher(mappedFileQueue, checkPoint);
         this.commitService = new IntervalCommitter(commitConfig, mappedFileQueue, flusher);
     }
 
@@ -56,28 +53,30 @@ public class DefaultCommitLogFlusher implements CommitLogFlusher, Lifecycle {
 
     @Override
     public void start() throws Exception {
-
         this.flusher.start();
-
-        this.flushWatcher.setDaemon(true);
         this.flushWatcher.start();
 
         if (commitConfig.isEnableWriteCache()) {
             this.commitService.start();
         }
-
     }
 
     @Override
     public void shutdown() throws Exception {
-
         this.flusher.shutdown();
         this.flushWatcher.shutdown();
 
         if (commitConfig.isEnableWriteCache()) {
             this.commitService.shutdown();
         }
+    }
 
+    private Flusher initFlusher(MappedFileQueue mappedFileQueue, CheckPoint checkPoint) {
+        if (FlushType.SYNC.equals(commitConfig.getFlushType())) {
+            return new GroupFlusher(mappedFileQueue, checkPoint);
+        }
+
+        return new IntervalFlusher(commitConfig, mappedFileQueue, checkPoint);
     }
 
     private EnqueueFuture syncFlush(InsertResult insertResult, MessageBO messageBO) {
