@@ -15,10 +15,10 @@ import cn.coderule.minimq.domain.domain.store.infra.MappedFileQueue;
 import java.util.concurrent.CompletableFuture;
 
 /**
- * depend on:
- *  - CommitLogConfig
- *  - MappedFileQueue
- *  - StoreCheckPoint
+ * commitlog flush service
+ *  - flush service: async/sync flusher
+ *  - commit service: commit to cache
+ *  - flush watcher: flush timeout watcher
  */
 public class DefaultCommitLogFlusher implements CommitLogFlusher, Lifecycle {
     private final CommitConfig commitConfig;
@@ -46,6 +46,15 @@ public class DefaultCommitLogFlusher implements CommitLogFlusher, Lifecycle {
     }
 
     @Override
+    public EnqueueFuture flush(InsertResult insertResult, MessageBO messageBO) {
+        if (FlushType.SYNC.equals(commitConfig.getFlushType())) {
+            return syncFlush(insertResult, messageBO);
+        }
+
+        return asyncFlush(insertResult, messageBO);
+    }
+
+    @Override
     public void start() throws Exception {
 
         this.flusher.start();
@@ -69,15 +78,6 @@ public class DefaultCommitLogFlusher implements CommitLogFlusher, Lifecycle {
             this.commitService.shutdown();
         }
 
-    }
-
-    @Override
-    public EnqueueFuture flush(InsertResult insertResult, MessageBO messageBO) {
-        if (FlushType.SYNC.equals(commitConfig.getFlushType())) {
-            return syncFlush(insertResult, messageBO);
-        }
-
-        return asyncFlush(insertResult, messageBO);
     }
 
     private EnqueueFuture syncFlush(InsertResult insertResult, MessageBO messageBO) {
