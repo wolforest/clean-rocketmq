@@ -21,25 +21,6 @@ import static org.junit.jupiter.api.Assertions.*;
 class DefaultConsumeQueueTest {
     public static int MMAP_FILE_SIZE = 20 * 1000;
 
-
-    @Test
-    void testRealFile() {
-        String dir = "/Users/wingle/mq";
-        StoreConfig storeConfig = ConfigMock.createStoreConfig(dir);
-        StoreCheckpoint checkpoint = new StoreCheckpoint(StorePath.getCheckpointPath());
-
-        ConsumeQueue queue = new DefaultConsumeQueue(
-            "MQT_8e16d78db3b54a2daa6c9cba381cd6f4",
-            0,
-            storeConfig.getConsumeQueueConfig(),
-            checkpoint
-        );
-
-        queue.load();
-        List<QueueUnit> units = queue.get(0, 20);
-        assertEquals(20, units.size());
-    }
-
     @Test
     void testInsertAndSelect(@TempDir Path tmpDir) {
         ConsumeQueue queue = createConsumeQueue(tmpDir.toString());
