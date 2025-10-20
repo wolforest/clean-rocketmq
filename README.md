@@ -6,7 +6,7 @@ RocketMQ核心代码约5万行，是最佳的<strong style="color:#D55F5B;">高�
 我们的目标是：
 1. :rocket: 完全兼容RocketMQ5.*协议
 2. :heart: <strong>更简洁的代码、更清晰的分层</strong>
-3. :brain: 先完成第二，相信第二是未来的基础
+3. :brain: 先完成第二条，相信第二条是未来的基础
 
 ## 当前项目进度
 RocketMQ默认配置下的功能，基本已实现。
