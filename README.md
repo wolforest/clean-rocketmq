@@ -20,7 +20,7 @@ RocketMQ默认配置下的功能，基本已实现。
 * [RocketMQ-wolf](https://github.com/wolforest/rocketmq-wolf) : 项目分支，基于RocketMQ5.2, 生产可用
 * [RocketMQ-comment](https://github.com/wolforest/rocketmq-comment) : 官方分支 + 注释
 
-另外是我们围绕RocketMQ的一系列书 库:
+另外是我们围绕RocketMQ的一系列『结构化书库』:
 ![RocketMQ书库](/docs/cn/img/rocketmq-books.png "RocketMQ书库")
 
 
