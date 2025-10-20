@@ -10,7 +10,8 @@ Clean-RocketMQ是300天后的第一次交付， 我们的 :dart: 目标是：
 3. 先完成第二，相信第二是未来的基础
 
 ## 当前项目进度
-
+RocketMQ默认配置下的功能，基本已实现。
+![项目进度](/docs/cn/img/wolfmq-progress.png "项目进度")
 
 
 
