@@ -5,9 +5,9 @@ RocketMQ核心代码不超过<strong>5万行</strong>，是最佳的<strong>高�
 RocketMQ2013年后内核少有改动, 历史包袱不算小。<br />
 与RocketMQ700多天的亲密接触后，我们开始<strong>重写</strong>RocketMQ。<br />
 Clean-RocketMQ是300天后的第一次交付， 我们的 :dart: 目标是：
-1. 完全兼容RocketMQ5.*协议
-2. <strong>更简洁的代码、更清晰的分层</strong>
-3. 先完成第二，相信第二是未来的基础
+1. :rocket: 完全兼容RocketMQ5.*协议
+2. :heart: <strong>更简洁的代码、更清晰的分层</strong>
+3. :brain: 先完成第二，相信第二是未来的基础
 
 ## 当前项目进度
 RocketMQ默认配置下的功能，基本已实现。
