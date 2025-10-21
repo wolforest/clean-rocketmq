@@ -1,7 +1,7 @@
 # Clean-RocketMQ: 7天能看懂的RocketMQ 
 RocketMQ是<strong style="color:#D55F5B;">最简单的</strong>、支持TCC的高性能消息队列，
 是最佳的<strong style="color:#D55F5B;">高并发学习项目</strong>。<br />
-RocketMQ核心代码约5万行，Clean-RocketMQ是磨合1000多天后的第一次交付.
+Clean-RocketMQ是完全重写的分支，是与RocketMQ磨合1000多天后的第一次交付.
 
 我们的目标是：
 1. :rocket: 兼容RocketMQ5.*协议，完全重写
