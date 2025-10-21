@@ -1,16 +1,19 @@
 # Clean-RocketMQ: 7天能看懂的RocketMQ 
-RocketMQ是<strong style="color:#D55F5B;">最简单的</strong>、支持TCC的高性能消息队列，
-是最佳的<strong style="color:#D55F5B;">高并发学习项目</strong>。<br />
-Clean-RocketMQ是完全重写的分支，是与RocketMQ磨合1000多天后的第一次交付.
+RocketMQ是<strong style="color:#D55F5B;">最简单的</strong>、支持TCC的高性能消息队列，是最佳的<strong style="color:#D55F5B;">高并发学习项目</strong>。<br />
+Clean-RocketMQ是从零重写的分支，是与RocketMQ磨合1000多天后的第一次交付.
 
 我们的目标是：
 1. :rocket: 兼容RocketMQ5.*协议，完全重写
 2. :heart: <strong>更简洁的代码、更清晰的分层</strong>
 3. :brain: 先完成第二条，相信第二条是未来的基础
 
-## 当前项目进度
+## 项目进度
 RocketMQ默认配置下的功能，基本已实现。
 ![项目进度](/docs/cn/img/wolfmq-progress.png "项目进度")
+
+## 项目起因
+RocketMQ是个宝库，核心代码约5万行，却实现众多功能，还扛下了双11的交易洪峰。
+> pulsar和kafka代码量都在百万以上，从学习的角度，RocketMQ确实更佳。
 
 
 ## 项目的结构
