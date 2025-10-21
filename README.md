@@ -14,14 +14,11 @@ RocketMQ默认配置下的功能，基本已实现。
 ## 项目起因
 RocketMQ是个宝库，核心代码约5万行，却实现众多功能，还扛下了双11的交易洪峰。
 > pulsar和kafka代码量都在百万以上，从学习的角度，RocketMQ确实更佳。
-> RocketMQ的5W行，是我们重写完后得出的数据。
 
-Clean-RocketMQ就是让这5万行的阅读体验更佳，举个例子让大家理解一下,
-下面的截图是发送消息代码，左边是官方实现，右边是Clean-RocketMQ实现。
+Clean-RocketMQ目的是更好的阅读体验，举个消息发送的例子:
 
-
-| 官方实现 | Clean-RocketMQ |
-|------|------|
+| [官方实现](https://github.com/apache/rocketmq/blob/develop/broker/src/main/java/org/apache/rocketmq/broker/processor/SendMessageProcessor.java)                                                | [Clean-RocketMQ实现](https://github.com/wolforest/clean-rocketmq/blob/main/broker/src/main/java/cn/coderule/minimq/broker/api/ProducerController.java)                                  |
+|---------------------------------------------------------|-------------------------------------------------------|
 | <img src="/docs/code/rocketmq-sendmsg.png" width="300"> | <img src="/docs/code/wolfmq-sendmsg.png" width="300"> |
 
 ## 项目的结构
