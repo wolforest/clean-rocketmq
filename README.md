@@ -18,8 +18,11 @@ RocketMQ是个宝库，核心代码约5万行，却实现众多功能，还扛�
 
 Clean-RocketMQ就是让这5万行的阅读体验更佳，举个例子让大家理解一下,
 下面的截图是发送消息代码，左边是官方实现，右边是Clean-RocketMQ实现。
-![send-message](/docs/code/wolfmq-rocketmq.png "send-message")
 
+
+| 官方实现 | Clean-RocketMQ |
+|------|------|
+| <img src="/docs/code/rocketmq-sendmsg.png" width="300"> | <img src="/docs/code/wolfmq-sendmsg.png" width="300"> |
 
 ## 项目的结构
 我们的项目包括开源项目和RocketMQ相关『书库』。<br />
