@@ -1,14 +1,14 @@
-# Clean-RocketMQ: 7天能看懂的RocketMQ 
-RocketMQ是<strong style="color:#D55F5B;">最简单的</strong>、支持TCC的高性能消息队列，是最佳的<strong style="color:#D55F5B;">高并发学习项目</strong>。<br />
-Clean-RocketMQ是从零重写的分支，是与RocketMQ磨合1000多天后的第一次交付.
+# Clean-RocketMQ: 7天看懂的RocketMQ 
+RocketMQ是最佳<strong style="color:#D55F5B;">高并发</strong>学习项目，其核心仅5万行，却扛下了双11，是<strong style="color:#D55F5B;">最简单</strong>的消息队列。<br />
+Clean-RocketMQ是从零重写的分支，目的是成为<strong style="color:#D55F5B;">7天看懂</strong>的RocketMQ。
 
 我们的目标是：
-1. :rocket: 兼容RocketMQ5.*协议，完全重写
+1. :rocket: 兼容RocketMQ5.*，完全重写
 2. :heart: <strong>更简洁的代码、更清晰的分层</strong>
 3. :brain: 先完成第二条，相信第二条是未来的基础
 
 ## 项目进度
-RocketMQ默认配置下的功能，基本已实现。
+这是1000天后的第一次交付，RocketMQ默认配置下的功能，基本已实现。
 ![项目进度](/docs/cn/img/wolfmq-progress.png "项目进度")
 
 ## 项目起因
@@ -17,9 +17,9 @@ RocketMQ是个宝库，核心代码约5万行，却实现众多功能，还扛�
 
 Clean-RocketMQ目的是更好的阅读体验，举个消息发送的例子:
 
-| [官方实现](https://github.com/apache/rocketmq/blob/develop/broker/src/main/java/org/apache/rocketmq/broker/processor/SendMessageProcessor.java)                                                | [Clean-RocketMQ实现](https://github.com/wolforest/clean-rocketmq/blob/main/broker/src/main/java/cn/coderule/minimq/broker/api/ProducerController.java)                                  |
-|---------------------------------------------------------|-------------------------------------------------------|
-| <img src="/docs/code/rocketmq-sendmsg.png" width="300"> | <img src="/docs/code/wolfmq-sendmsg.png" width="300"> |
+| [官方实现](https://github.com/apache/rocketmq/blob/develop/broker/src/main/java/org/apache/rocketmq/broker/processor/SendMessageProcessor.java) | [Clean-RocketMQ实现](https://github.com/wolforest/clean-rocketmq/blob/main/broker/src/main/java/cn/coderule/minimq/broker/api/ProducerController.java)                                  |
+|---------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------|
+| <img src="/docs/code/rocketmq-sendmsg.png" width="300">                                                                                     | <img src="/docs/code/wolfmq-sendmsg.png" width="300"> |
 
 ## 项目的结构
 我们的项目包括开源项目和RocketMQ相关『书库』。<br />
