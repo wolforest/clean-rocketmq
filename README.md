@@ -12,10 +12,7 @@ Clean-RocketMQ是从零重写的分支，目的是成为<strong style="color:#D5
 ![项目进度](/docs/cn/img/wolfmq-progress.png "项目进度")
 
 ## 项目起因
-RocketMQ是个宝库，核心代码约5万行，却实现众多功能，还扛下了双11的交易洪峰。
-> pulsar和kafka代码量都在百万以上，从学习的角度，RocketMQ确实更佳。
-
-Clean-RocketMQ目的是更好的阅读体验，举个消息发送的例子:
+先看个消息发送的例子吧:
 
 | [官方实现](https://github.com/apache/rocketmq/blob/develop/broker/src/main/java/org/apache/rocketmq/broker/processor/SendMessageProcessor.java) | [Clean-RocketMQ实现](https://github.com/wolforest/clean-rocketmq/blob/main/broker/src/main/java/cn/coderule/minimq/broker/api/ProducerController.java)                                  |
 |---------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------|
