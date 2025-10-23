@@ -1,6 +1,6 @@
 # Clean-RocketMQ: 7天看懂的RocketMQ 
 RocketMQ是最佳<strong style="color:#D55F5B;">高并发</strong>学习项目，其核心仅5万行，却扛下了双11，是<strong style="color:#D55F5B;">最简单</strong>的消息队列。<br />
-Clean-RocketMQ是从零重写的分支，目的是成为<strong style="color:#D55F5B;">7天看懂</strong>的RocketMQ。
+Clean-RocketMQ是从零重写的分支，第一步是成为<strong style="color:#D55F5B;">7天看懂</strong>的RocketMQ。
 
 我们的目标是：
 1. :rocket: 兼容RocketMQ5.*，完全重写
@@ -28,7 +28,13 @@ Clean是目标、方向，『7天看懂』是我们的第一个里程碑。
 |---------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------|
 | <img src="/docs/code/rocketmq-sendmsg.png" width="300">                                                                                     | <img src="/docs/code/wolfmq-sendmsg.png" width="300"> |
 
-### 阅读路线图
+### 300天的努力
+RocketMQ自2013年到现在，10多年的迭代后，包袱自然不算小。<br />
+我们希望成为RocketMQ的2.0，给我们10年，希望成为RocketMQ的主干。<br />
+重写并不容易，300天的努力只是我们的第一步，相信未来会来。
+
+### 7天路线图
+不熟悉RocketMQ的同学，可以参考下面的路线图
 ![阅读地图](/docs/cn/img/learn-map.jpg "阅读路线图")
 
 
