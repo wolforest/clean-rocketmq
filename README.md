@@ -7,7 +7,7 @@ Clean-RocketMQ是从零重写的分支，目的是成为<strong style="color:#D5
 2. :heart: <strong>更简洁的代码、更清晰的分层</strong>
 3. :brain: 先完成第二条，相信第二条是未来的基础
 
-## 项目进度
+### 项目进度
 这是1000天后的第一次交付，RocketMQ默认配置下的功能，基本已实现。
 ![项目进度](/docs/cn/img/wolfmq-progress.png "项目进度")
 
@@ -18,7 +18,14 @@ Clean-RocketMQ是从零重写的分支，目的是成为<strong style="color:#D5
 |---------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------|
 | <img src="/docs/code/rocketmq-sendmsg.png" width="300">                                                                                     | <img src="/docs/code/wolfmq-sendmsg.png" width="300"> |
 
-我们确实没做什么巨大变革，我们也是学习者，Clean-RocketMQ是我们1000天的学习笔记。
+### Clean Code：
+我们确实没做什么巨大变革，我们也是学习者，Clean-RocketMQ是我们1000天的学习笔记。<br />
+借用了Uncle Bob的Clean概念，不过我们相信，Clean是理想、是方向，并非标准。<br />
+回到Clean-RocketMQ，7天能看懂的实验已成功多次，包括几位没有JAVA基础的同学。
+
+### 阅读路线图
+![阅读地图](/docs/cn/img/learn-map.jpg "阅读路线图")
+
 
 ## 项目的结构
 我们的项目包括开源项目和RocketMQ相关『书库』。<br />
