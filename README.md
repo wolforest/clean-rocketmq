@@ -2,7 +2,7 @@
 RocketMQ是最佳<strong style="color:#D55F5B;">高并发</strong>学习项目，其核心仅5万行，却扛下了双11，是<strong style="color:#D55F5B;">最简单</strong>的消息队列。<br />
 Clean-RocketMQ是从零重写的分支，第一步是成为<strong style="color:#D55F5B;">7天看懂</strong>的RocketMQ。
 
-我们的目标是：
+### 项目目标：
 1. :rocket: 兼容RocketMQ5.*，完全重写
 2. :heart: <strong>更简洁的代码、更清晰的分层</strong>
 3. :brain: 先完成第二条，相信第二条是未来的基础
