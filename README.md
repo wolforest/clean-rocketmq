@@ -12,30 +12,37 @@ Clean-RocketMQ是从零重写的分支，目的是成为<strong style="color:#D5
 ![项目进度](/docs/cn/img/wolfmq-progress.png "项目进度")
 
 ## 项目起因
+我们确实没做什么，我们也是学习者，Clean-RocketMQ是我们1000天的学习笔记。<br />
+我们借用了Uncle Bob的Clean概念，希望这里成为Clean概念的实践场。<br />
+Clean是目标、方向，『7天看懂』是我们的第一个里程碑。
+
+### RocketMQ的价值
+相比pulsar、kafka超百万行的规模，RocketMQ5万行的极简架构，是更佳的学习起点。<br />
+如下是我们想深入学习的知识点，每一个小点都可深挖成一本书。
+![RocketMQ书库](/docs/cn/img/rocketmq-books.png "RocketMQ书库")
+
+### 为什么重写RocketMQ
 先看个消息发送的例子吧:
 
 | [官方实现](https://github.com/apache/rocketmq/blob/develop/broker/src/main/java/org/apache/rocketmq/broker/processor/SendMessageProcessor.java) | [Clean-RocketMQ实现](https://github.com/wolforest/clean-rocketmq/blob/main/broker/src/main/java/cn/coderule/minimq/broker/api/ProducerController.java)                                  |
 |---------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------|
 | <img src="/docs/code/rocketmq-sendmsg.png" width="300">                                                                                     | <img src="/docs/code/wolfmq-sendmsg.png" width="300"> |
 
-### Clean Code：
-我们确实没做什么巨大变革，我们也是学习者，Clean-RocketMQ是我们1000天的学习笔记。<br />
-借用了Uncle Bob的Clean概念，不过我们相信，Clean是理想、是方向，并非标准。<br />
-回到Clean-RocketMQ，7天能看懂的实验已成功多次，包括几位没有JAVA基础的同学。
-
 ### 阅读路线图
 ![阅读地图](/docs/cn/img/learn-map.jpg "阅读路线图")
 
 
-## 项目的结构
-我们的项目包括开源项目和RocketMQ相关『书库』。<br />
+## 开源商业模式
+我们坦白这是个商业化项目：
+* 代码开源免费，大家共同学习
+* 服务收费：3年10本深挖RocketMQ的电子书 + 知识社区
+
 先说开源项目，开源项目包括:
 * [Clean-RocketMQ](https://github.com/wolforest/clean-rocketmq) : 完全重写，兼容RocketMQ5.*
 * [RocketMQ-wolf](https://github.com/wolforest/rocketmq-wolf) : 项目分支，基于RocketMQ5.2, 生产可用
 * [RocketMQ-comment](https://github.com/wolforest/rocketmq-comment) : 官方分支 + 注释
 
-另外是我们围绕RocketMQ的一系列『结构化书库』:
-![RocketMQ书库](/docs/cn/img/rocketmq-books.png "RocketMQ书库")
+
 
 
 
