@@ -17,8 +17,8 @@ Bob大大叔的Clean是极高的标准，是我们的目标、是我们的方向
 这里便是Clean的实践场，『7天看懂』是我们的第一个里程碑。
 
 ### RocketMQ的价值
-相比pulsar、kafka超百万行的规模，RocketMQ5万行的极简架构，是更佳的学习起点。<br />
-如下是我们想深入学习的知识点，每一个小点都可深挖成一本书。
+相比pulsar、kafka超百万行的规模，RocketMQ5的万行，是更好的学习起点。<br />
+但扛下双11的绝对是大成之作，而我们的文字笔记，可以形成十多本的『<strong style="color:#D55F5B;">书库</strong>』。
 ![RocketMQ书库](/docs/cn/img/rocketmq-books.png "RocketMQ书库")
 
 ### 为什么重写RocketMQ
