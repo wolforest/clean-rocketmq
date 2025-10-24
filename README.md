@@ -12,9 +12,9 @@ Clean-RocketMQ是从零重写的分支，第一步是成为<strong style="color:
 ![项目进度](/docs/cn/img/wolfmq-progress.png "项目进度")
 
 ## 项目起因
-我们确实没做什么，我们也是学习者，Clean-RocketMQ是我们1000天的学习笔记。<br />
-我们借用了Uncle Bob的Clean概念，希望这里成为Clean概念的实践场。<br />
-Clean是目标、方向，『7天看懂』是我们的第一个里程碑。
+我们确实也只是学习者，Clean-RocketMQ是我们1000天的学习笔记。<br />
+Bob大大叔的Clean是极高的标准，是我们的目标、是我们的方向。<br />
+这里便是Clean的实践场，『7天看懂』是我们的第一个里程碑。
 
 ### RocketMQ的价值
 相比pulsar、kafka超百万行的规模，RocketMQ5万行的极简架构，是更佳的学习起点。<br />
