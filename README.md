@@ -29,9 +29,9 @@ Bob大大叔的Clean是极高的标准，是我们的目标、是我们的方向
 | <img src="/docs/code/rocketmq-sendmsg.png" width="300">                                                                                     | <img src="/docs/code/wolfmq-sendmsg.png" width="300"> |
 
 ### 300天的努力
-RocketMQ自2013年到现在，10多年的迭代后，包袱自然不算小。<br />
-我们希望成为RocketMQ的2.0，给我们10年，希望成为RocketMQ的主干。<br />
-重写并不容易，300天的努力只是我们的第一步，相信未来会来。
+RocketMQ自2013年后的10多年，内核更新很少，包袱自然不算小。<br />
+我们希望成为RocketMQ的2.0，以代码质量驱动的分支<br />
+300天的重写只是第一步，但我们相信代码质量、相信未来会来。
 
 ### 7天路线图
 不熟悉RocketMQ的同学，可以参考下面的路线图
