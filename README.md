@@ -22,31 +22,30 @@ Bob大大叔的Clean是极高的标准，是我们的目标、是我们的方向
 ![RocketMQ书库](/docs/cn/img/rocketmq-books.png "RocketMQ书库")
 
 ### 为什么重写RocketMQ
-先看个消息发送的例子吧:
+用消息发送的例子，来回答这个问题吧:
 
 | [官方实现](https://github.com/apache/rocketmq/blob/develop/broker/src/main/java/org/apache/rocketmq/broker/processor/SendMessageProcessor.java) | [Clean-RocketMQ实现](https://github.com/wolforest/clean-rocketmq/blob/main/broker/src/main/java/cn/coderule/minimq/broker/api/ProducerController.java)                                  |
 |---------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------|
 | <img src="/docs/code/rocketmq-sendmsg.png" width="300">                                                                                     | <img src="/docs/code/wolfmq-sendmsg.png" width="300"> |
 
-### 300天的努力
+### 1000天：从重构到重写
 RocketMQ自2013年后的10多年，内核更新很少，包袱自然不算小。<br />
 我们希望成为RocketMQ的2.0，以代码质量驱动的分支<br />
 300天的重写只是第一步，但我们相信代码质量、相信未来会来。
+
+* [Clean-RocketMQ](https://github.com/wolforest/clean-rocketmq) : 完全重写，兼容RocketMQ5.*
+* [RocketMQ-wolf](https://github.com/wolforest/rocketmq-wolf) : 重构分支，兼容RocketMQ5.2, 生产可用
+* [RocketMQ-comment](https://github.com/wolforest/rocketmq-comment) : 官方分支 + 注释
 
 ### 7天路线图
 不熟悉RocketMQ的同学，可以参考下面的路线图
 ![阅读地图](/docs/cn/img/learn-map.jpg "阅读路线图")
 
 
-## 开源商业模式
-我们坦白这是个商业化项目：
-* 代码开源免费，大家共同学习
-* 服务收费：3年10本深挖RocketMQ的电子书 + 知识社区
+## 左手代码，右手诗
+全职开源，我们是认真的。我们的模式是: 代码开源、服务收费。<br />
+开源是我们工程师的江湖，游走江湖，先付出、再收获的规矩得守。 <br />
 
-先说开源项目，开源项目包括:
-* [Clean-RocketMQ](https://github.com/wolforest/clean-rocketmq) : 完全重写，兼容RocketMQ5.*
-* [RocketMQ-wolf](https://github.com/wolforest/rocketmq-wolf) : 项目分支，基于RocketMQ5.2, 生产可用
-* [RocketMQ-comment](https://github.com/wolforest/rocketmq-comment) : 官方分支 + 注释
 
 
 
