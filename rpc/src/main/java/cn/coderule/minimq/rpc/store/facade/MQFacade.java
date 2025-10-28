@@ -14,6 +14,11 @@ import cn.coderule.minimq.domain.domain.store.domain.mq.EnqueueRequest;
 import cn.coderule.minimq.domain.domain.store.domain.mq.EnqueueResult;
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * RPC facade, switch storage between
+ *  - embed storage
+ *  - remote storage
+ */
 public interface MQFacade {
     EnqueueResult enqueue(EnqueueRequest request);
     CompletableFuture<EnqueueResult> enqueueAsync(EnqueueRequest request);
