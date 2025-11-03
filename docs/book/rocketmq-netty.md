@@ -4,9 +4,24 @@
   - [ ] 1.2 TCP/IP协议
   - [ ] 1.3 JAVA NIO
 - [ ] 2 Netty入门
-- [ ] 3 RocketMQ实战
-- [ ] 4 深入Netty
-- [ ] 5 深入学习
+  - [ ] 2.1 Netty简介
+  - [ ] 2.2 Hello Netty
+  - [ ] 2.3 TCP粘包/拆包
+  - [ ] 2.4 序列化
+- [ ] 3 RocketMQ网络框架
+  - [ ] 3.1 
+- [ ] 4 RocketMQ实战应用
+  - [ ] 4.1 Name Server
+  - [ ] 4.2 Broker
+  - [ ] 4.3 GRPC
+- [ ] 5 深入理解Netty
+  - [ ] 5.1 Netty核心概念
+  - [ ] 5.2 ByteBuf
+  - [ ] 5.3 Channel & Unsafe
+  - [ ] 5.4 Pipeline & Handler 
+  - [ ] 5.5 EventLoop & EventLoopGroup
+  - [ ] 5.6 Future & Promise
+- [ ] 6 深入学习
   - [ ] 5.1 软件架构分析
   - [ ] 5.2 软件依赖分析
   - [ ] 5.3 软件工程实践
