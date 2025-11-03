@@ -1,6 +1,8 @@
 # 进度
 - [ ] 1 网络基础
-  - [ ] 1.1 
+  - [ ] 1.1 Linux网络模型
+  - [ ] 1.2 TCP/IP协议
+  - [ ] 1.3 JAVA NIO
 - [ ] 2 Netty入门
 - [ ] 3 RocketMQ实战
 - [ ] 4 深入Netty
