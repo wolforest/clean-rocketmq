@@ -1,6 +1,6 @@
 # 进度
 - [x] 1 RocketMQ介绍
-    - [ ] 1.1 RocketMQ简介
+    - [x] 1.1 RocketMQ简介
     - [x] 1.2 RocketMQ应用场景
     - [x] 1.3 RocketMQ十维架构分析
         - [x] 1.3.1 领域模型分析
