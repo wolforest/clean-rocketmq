@@ -44,3 +44,25 @@ What kind of problems?
 * ... ...
 We can't think too much, we need to solve the problem, with or without solution.
 
+### Solution base on guess
+We don't know if the solution works, but we need to start. <br />
+So we start, then fail, then do some adjustments, then try again, then loop the process. <br />
+Yes, this is how we build software.
+
+### Back to the hardest part
+The hardest part of software is uncertainty. <br />
+We do everything with the uncertainty, and what we do bring more uncertainty. <br />
+At most time, we don't know what we are building, which problem we are solving. <br />
+But we have not choice, we can't stop, we need make another decision. 
+
+Bingo, Making decision is the hardest part.
+* Choose a name is a decision.
+* Choose a language is a decision.
+* Choose a framework is a decision.
+* ... ...
+A lot of decisions, make the software.
+
+## Can AI make decisions?
+Yes and No. 
+
+
