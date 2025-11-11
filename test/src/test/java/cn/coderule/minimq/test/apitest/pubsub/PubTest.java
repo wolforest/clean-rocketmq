@@ -43,7 +43,7 @@ public class PubTest extends ApiBaseTest {
     @BeforeMethod
     public void beforeMethod() {
         TopicManager.createTopic(TOPIC);
-        createProducer();
+        this.producer = ProducerManager.buildProducer(TOPIC);
     }
 
     @AfterMethod
@@ -77,10 +77,6 @@ public class PubTest extends ApiBaseTest {
         }
     }
 
-    private void createProducer() {
-        producer = ProducerManager.buildProducer(TOPIC);
-    }
-
     private void stopProducer() throws IOException {
         if (producer == null) {
             return;
@@ -94,8 +90,7 @@ public class PubTest extends ApiBaseTest {
         int i = 0;
         return ClientManager.getProvider()
             .newMessageBuilder()
-            .setTopic("testMQ")
-            //.setTopic(TOPIC)
+            .setTopic(TOPIC)
             .setKeys(MESSAGE_PREFIX + i)
             .setBody((MESSAGE_BODY + i).getBytes(StandardCharsets.UTF_8))
             .build();
