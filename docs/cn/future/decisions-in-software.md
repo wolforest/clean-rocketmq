@@ -42,3 +42,43 @@ Then we find the target users and try the software. <br />
 Then we make the software better based on the feedback.
 
 
+
+
+## Is software perfect?
+Not perfect at all, of course. <br />
+What is the problem?
+
+### Business guess is not clear.
+The boss is sure that he knows little about the guess. <br />
+He needs more information. <br />
+He needs the feedback from the users, who have used the software.
+
+### PRD is not clear.
+Nobody can read the boss's mind. <br />
+There is always something missing, after communicating with the boss. <br />
+But the PRD has a deadline. We must finish it first.
+
+### Software design is not clear.
+Software design is not easy. <br />
+Architecture diagram is just a picture. <br />
+But it is beautiful, isn't it?
+
+### Other engineers' code is not clear.
+I understand nobody is perfect, but your code is awful. <br />
+I have no idea what do you want to do. <br />
+You slow the process, You are an idiot. <br />
+You will finish your job if you are smart like me.
+
+### Feedback is not clear.
+What are your talking about? I will kick your ass if you are not the customer. <br />
+How can I fix the bug, if I don't know what is the bug? <br />
+Coding is perfect, but talking sucks.
+
+### What a mess?
+Who knows what happened? <br />
+Nobody knows, That's life. <br />
+Right or wrong? Good or bad?
+
+
+## Do you still love software?
+Yes, because We have no choice.
