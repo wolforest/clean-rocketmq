@@ -55,7 +55,7 @@ We do everything with the uncertainty, and what we do bring more uncertainty. <b
 At most time, we don't know what we are building, which problem we are solving. <br />
 But we have not choice, we can't stop, we need make another decision. 
 
-Bingo, Making decision is the hardest part.
+Bingo, Making decisions is the hardest part.
 * Choose a name is a decision.
 * Choose a language is a decision.
 * Choose a framework is a decision.
@@ -64,5 +64,17 @@ A lot of decisions, make the software.
 
 ## Can AI make decisions?
 Yes and No. 
+Yes if AI was trust by people.
+Yes if approved by people.
+
+## Principles of software with AI
+* People are responsible for the output of AI.
+* People make decisions.
+* AI helps people.
 
 
+
+## Some misunderstandings of software
+* Software with more code is more powerful.
+* Software needs adding more code.
+* Every line of code is useful.
