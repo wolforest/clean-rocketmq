@@ -55,6 +55,7 @@ public class OrderlyTest extends ApiBaseTest {
     private static final String CONSUMER_GROUP = GroupManager.createUniqueGroup();
     private static final String PRODUCE_GROUP = GroupManager.createUniqueGroup();
     private static final String MESSAGE_KEY_PREFIX = "MQM_DL_";
+    private static final String MESSAGE_GROUP_PREFIX = "MQM_GP_";
     private static final String MESSAGE_BODY = "orderly message body: ";
 
     private PushConsumer consumer;
@@ -91,7 +92,8 @@ public class OrderlyTest extends ApiBaseTest {
         }
 
         for (int i = 0; i < 100; i++) {
-            Message message = createMessage(i);
+            int groupIndex = i % 4;
+            Message message = createMessage(i, groupIndex);
 
             try {
                 SendReceipt sendReceipt = producer.send(message);
@@ -175,11 +177,12 @@ public class OrderlyTest extends ApiBaseTest {
         return Integer.parseInt(num);
     }
 
-    private Message createMessage(int i) {
+    private Message createMessage(int i, int groupIndex) {
         return ClientManager.getProvider()
                 .newMessageBuilder()
                 .setTopic(TOPIC)
-                .setMessageGroup(MESSAGE_KEY_PREFIX + i)
+                .setKeys(MESSAGE_KEY_PREFIX + i)
+                .setMessageGroup(MESSAGE_GROUP_PREFIX + groupIndex)
                 .setBody((MESSAGE_BODY + i).getBytes(StandardCharsets.UTF_8))
                 .build();
     }
