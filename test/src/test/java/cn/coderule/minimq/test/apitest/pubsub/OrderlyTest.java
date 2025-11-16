@@ -179,9 +179,8 @@ public class OrderlyTest extends ApiBaseTest {
         return ClientManager.getProvider()
                 .newMessageBuilder()
                 .setTopic(TOPIC)
-                .setKeys(MESSAGE_KEY_PREFIX + i)
+                .setMessageGroup(MESSAGE_KEY_PREFIX + i)
                 .setBody((MESSAGE_BODY + i).getBytes(StandardCharsets.UTF_8))
-                .setMessageGroup(PRODUCE_GROUP)
                 .build();
     }
 
