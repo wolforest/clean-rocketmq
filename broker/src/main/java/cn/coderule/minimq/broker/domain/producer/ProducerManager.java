@@ -11,7 +11,7 @@ import cn.coderule.minimq.domain.config.server.BrokerConfig;
 
 public class ProducerManager implements Lifecycle {
     private BrokerConfig brokerConfig;
-    private MessageSender messageSender;
+    private EnqueueService enqueueService;
 
     @Override
     public void initialize() throws Exception {
@@ -22,19 +22,19 @@ public class ProducerManager implements Lifecycle {
         ProducerRegister producerRegister = new ProducerRegister(brokerConfig);
         BrokerContext.register(producerRegister);
 
-        Producer producer = new Producer(messageSender, producerRegister);
+        Producer producer = new Producer(enqueueService, producerRegister);
         ProducerController controller = new ProducerController(brokerConfig, producer);
         BrokerContext.registerAPI(controller);
     }
 
     @Override
     public void start() throws Exception {
-        messageSender.start();
+        enqueueService.start();
     }
 
     @Override
     public void shutdown() throws Exception {
-        messageSender.shutdown();
+        enqueueService.shutdown();
     }
 
     private void initMessageSender() {
@@ -49,7 +49,7 @@ public class ProducerManager implements Lifecycle {
         TopicStore topicStore = BrokerContext.getBean(TopicStore.class);
         Transaction transaction = BrokerContext.getBean(Transaction.class);
 
-        this.messageSender = new MessageSender(
+        this.enqueueService = new EnqueueService(
             brokerConfig,
             hookManager,
             queueSelector,

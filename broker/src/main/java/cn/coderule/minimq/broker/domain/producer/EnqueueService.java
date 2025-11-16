@@ -32,8 +32,11 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * @renamed from MessageSender to EnqueueService
+ */
 @Slf4j
-public class MessageSender implements Lifecycle {
+public class EnqueueService implements Lifecycle {
     private final BrokerConfig brokerConfig;
     private final ThreadPoolExecutor callbackExecutor;
 
@@ -44,7 +47,7 @@ public class MessageSender implements Lifecycle {
     private final TopicFacade topicStore;
     private final Transaction transaction;
 
-    public MessageSender(
+    public EnqueueService(
         BrokerConfig brokerConfig,
         ProduceHookManager hookManager,
         QueueSelector queueSelector,
@@ -72,7 +75,7 @@ public class MessageSender implements Lifecycle {
      * @param messageBO message
      * @return future
      */
-    public CompletableFuture<EnqueueResult> send(RequestContext requestContext, MessageBO messageBO) {
+    public CompletableFuture<EnqueueResult> enqueue(RequestContext requestContext, MessageBO messageBO) {
         ProduceContext context = createContext(requestContext, messageBO);
 
         selectQueue(context);
@@ -91,14 +94,14 @@ public class MessageSender implements Lifecycle {
      * @param context produce context
      * @return future
      */
-    public CompletableFuture<List<EnqueueResult>> send(RequestContext context, List<MessageBO> messageList) {
+    public CompletableFuture<List<EnqueueResult>> enqueue(RequestContext context, List<MessageBO> messageList) {
         if (CollectionUtil.isEmpty(messageList)) {
             return CompletableFuture.completedFuture(List.of());
         }
 
         List<CompletableFuture<EnqueueResult>> futureList = new ArrayList<>();
         for (MessageBO messageBO : messageList) {
-            CompletableFuture<EnqueueResult> future = send(context, messageBO);
+            CompletableFuture<EnqueueResult> future = enqueue(context, messageBO);
             futureList.add(future);
         }
 

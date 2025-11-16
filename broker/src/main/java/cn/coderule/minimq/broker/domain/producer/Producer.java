@@ -13,12 +13,12 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class Producer {
-    private final MessageSender messageSender;
+    private final EnqueueService enqueueService;
 
     private final ProducerRegister producerRegister;
 
-    public Producer(MessageSender sender, ProducerRegister register) {
-        this.messageSender = sender;
+    public Producer(EnqueueService sender, ProducerRegister register) {
+        this.enqueueService = sender;
         this.producerRegister = register;
     }
 
@@ -35,11 +35,11 @@ public class Producer {
     }
 
     public CompletableFuture<EnqueueResult> produce(RequestContext context, MessageBO messageBO) {
-        return messageSender.send(context, messageBO);
+        return enqueueService.enqueue(context, messageBO);
     }
 
     public CompletableFuture<List<EnqueueResult>> produce(RequestContext context, List<MessageBO> messageList) {
-        return messageSender.send(context, messageList);
+        return enqueueService.enqueue(context, messageList);
     }
 
 
