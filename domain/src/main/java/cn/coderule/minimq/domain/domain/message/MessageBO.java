@@ -9,7 +9,7 @@ import cn.coderule.minimq.domain.core.enums.message.MessageStatus;
 import cn.coderule.minimq.domain.core.enums.message.MessageVersion;
 import cn.coderule.minimq.domain.core.enums.message.TagType;
 import cn.coderule.minimq.domain.domain.transaction.TransactionUtil;
-import cn.coderule.minimq.domain.utils.message.MessageUtils;
+import cn.coderule.minimq.domain.domain.message.utils.MessageUtils;
 import java.io.Serializable;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;

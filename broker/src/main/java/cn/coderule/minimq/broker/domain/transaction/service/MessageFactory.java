@@ -2,7 +2,7 @@ package cn.coderule.minimq.broker.domain.transaction.service;
 
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.domain.MessageQueue;
-import cn.coderule.minimq.domain.domain.message.MessageIDSetter;
+import cn.coderule.minimq.domain.domain.message.utils.MessageIDSetter;
 import cn.coderule.minimq.domain.domain.transaction.SubmitRequest;
 import cn.coderule.minimq.domain.domain.transaction.TransactionUtil;
 import cn.coderule.minimq.domain.domain.transaction.CommitBuffer;

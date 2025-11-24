@@ -4,7 +4,7 @@ import cn.coderule.common.util.encrypt.HashUtil;
 import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.minimq.domain.core.enums.message.MessageStatus;
 import cn.coderule.minimq.domain.core.enums.message.MessageVersion;
-import cn.coderule.minimq.domain.utils.message.MessageUtils;
+import cn.coderule.minimq.domain.domain.message.utils.MessageUtils;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;

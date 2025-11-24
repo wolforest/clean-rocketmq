@@ -17,7 +17,7 @@ import cn.coderule.minimq.domain.domain.consumer.receipt.ReceiptHandle;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.domain.meta.order.OrderRequest;
 import cn.coderule.minimq.domain.domain.meta.topic.KeyBuilder;
-import cn.coderule.minimq.domain.utils.message.MessageUtils;
+import cn.coderule.minimq.domain.domain.message.utils.MessageUtils;
 import com.alibaba.fastjson2.JSON;
 import java.net.SocketAddress;
 import java.nio.charset.StandardCharsets;

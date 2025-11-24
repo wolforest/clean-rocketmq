@@ -13,7 +13,7 @@ import cn.coderule.minimq.domain.domain.consumer.consume.pop.helper.PopKeyBuilde
 import cn.coderule.minimq.domain.domain.consumer.receipt.ReceiptHandle;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.domain.meta.order.OrderRequest;
-import cn.coderule.minimq.domain.utils.message.ExtraInfoUtils;
+import cn.coderule.minimq.domain.domain.message.utils.ExtraInfoUtils;
 import java.net.SocketAddress;
 
 public class AckConverter {

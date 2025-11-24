@@ -1,4 +1,4 @@
-package cn.coderule.minimq.domain.utils.message;
+package cn.coderule.minimq.domain.domain.message.utils;
 
 import cn.coderule.minimq.domain.core.constant.MQConstants;
 import cn.coderule.minimq.domain.core.constant.MessageConst;

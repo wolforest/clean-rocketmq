@@ -1,6 +1,5 @@
-package cn.coderule.minimq.domain.utils.message;
+package cn.coderule.minimq.domain.domain.message.utils;
 
-import cn.coderule.common.util.encrypt.HashUtil;
 import cn.coderule.common.util.lang.ByteUtil;
 import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.minimq.domain.core.enums.message.TagType;
@@ -11,7 +10,6 @@ import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

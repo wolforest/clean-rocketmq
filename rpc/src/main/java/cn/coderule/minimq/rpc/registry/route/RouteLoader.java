@@ -8,7 +8,7 @@ import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.minimq.domain.core.constant.MQConstants;
 import cn.coderule.minimq.domain.core.exception.RpcException;
 import cn.coderule.minimq.domain.domain.MessageQueue;
-import cn.coderule.minimq.domain.utils.message.NamespaceUtils;
+import cn.coderule.minimq.domain.domain.message.utils.NamespaceUtils;
 import cn.coderule.minimq.rpc.common.rpc.protocol.code.ResponseCode;
 import cn.coderule.minimq.rpc.registry.RegistryClient;
 import cn.coderule.minimq.domain.domain.cluster.route.PublishInfo;
