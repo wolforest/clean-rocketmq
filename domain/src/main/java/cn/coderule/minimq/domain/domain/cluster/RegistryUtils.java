@@ -1,4 +1,4 @@
-package cn.coderule.minimq.domain.utils;
+package cn.coderule.minimq.domain.domain.cluster;
 
 import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
