@@ -1,6 +1,6 @@
 package cn.coderule.minimq.domain.utils;
 
-import cn.coderule.minimq.domain.utils.store.OffsetUtils;
+import cn.coderule.minimq.domain.domain.store.utils.OffsetUtils;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

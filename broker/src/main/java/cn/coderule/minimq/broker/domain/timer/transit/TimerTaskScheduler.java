@@ -14,7 +14,7 @@ import cn.coderule.minimq.domain.domain.consumer.consume.mq.MessageResult;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.domain.timer.TimerEvent;
 import cn.coderule.minimq.domain.domain.timer.TimerQueue;
-import cn.coderule.minimq.domain.utils.store.TimerUtils;
+import cn.coderule.minimq.domain.domain.store.utils.TimerUtils;
 import java.util.List;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;

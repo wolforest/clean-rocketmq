@@ -1,4 +1,4 @@
-package cn.coderule.minimq.domain.utils.store;
+package cn.coderule.minimq.domain.domain.store.utils;
 
 import cn.coderule.common.util.lang.string.StringUtil;
 import java.text.NumberFormat;

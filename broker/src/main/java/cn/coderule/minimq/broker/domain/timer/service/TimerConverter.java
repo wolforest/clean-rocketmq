@@ -4,7 +4,7 @@ import cn.coderule.minimq.domain.core.constant.MessageConst;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.domain.timer.TimerConstants;
 import cn.coderule.minimq.domain.domain.timer.TimerEvent;
-import cn.coderule.minimq.domain.utils.store.TimerUtils;
+import cn.coderule.minimq.domain.domain.store.utils.TimerUtils;
 
 public class TimerConverter {
     public static TimerEvent toEvent(MessageBO messageBO, long enqueueTime, int magic) {
