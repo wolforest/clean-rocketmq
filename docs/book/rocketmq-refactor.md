@@ -1,5 +1,5 @@
 # 进度
-- [ ] 第1章 Clean-RocketMQ
+- [x] 第1章 Clean-RocketMQ
   - [ ] 1.1 站到巨人肩上
   - [ ] 1.2 To Clean
   - [ ] 1.3 With Clean
