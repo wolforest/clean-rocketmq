@@ -1,7 +1,7 @@
 # 进度
 - [x] 第1章 Clean-RocketMQ
   - [x] 1.1 站到巨人肩上
-  - [ ] 1.2 To Clean
+  - [x] 1.2 To Clean
   - [x] 1.3 With Clean
 - [x] 第2章 优化重构思考
   - [ ] 2.1 面向同事，简洁为本
