@@ -19,10 +19,10 @@ Suppose you already choose a title of your article.
 
 ## Review and recreate
 
-### match the outline with the title
+### Match the outline with the title
 
-### match the first level
+### Check first-level Headings
 
-### match the second level
+### Check second-level Headings
 
 ## Mission accomplished
