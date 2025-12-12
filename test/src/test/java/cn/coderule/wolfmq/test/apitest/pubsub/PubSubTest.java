@@ -102,11 +102,6 @@ public class PubSubTest extends ApiBaseTest {
         }
     }
 
-    private Map<String, FilterExpression> createFilter() {
-        FilterExpression expression = new FilterExpression("*");
-        return Collections.singletonMap(TOPIC, expression);
-    }
-
     private void createProducer() {
         producer = ProducerManager.buildProducer(TOPIC);
     }
@@ -114,6 +109,25 @@ public class PubSubTest extends ApiBaseTest {
     private void startConsumer() {
         LOG.info("create consumer");
         consumer = ConsumerManager.buildPushConsumer(CONSUMER_GROUP, createFilter(), createListener());
+    }
+
+    private Map<String, FilterExpression> createFilter() {
+        FilterExpression expression = new FilterExpression("*");
+        return Collections.singletonMap(TOPIC, expression);
+    }
+
+    private MessageListener createListener() {
+        LOG.info("create consume listener");
+        return message -> {
+            LOG.info("Consume message={}", message);
+            String messageId = message.getMessageId().toString();
+
+
+            Assert.assertEquals(TOPIC, message.getTopic());
+            Assert.assertFalse(messageIdSet.contains(messageId));
+
+            return ConsumeResult.SUCCESS;
+        };
     }
 
     private void stopConsumer() throws IOException {
@@ -136,19 +150,7 @@ public class PubSubTest extends ApiBaseTest {
         producer.close();
     }
 
-    private MessageListener createListener() {
-        LOG.info("create consume listener");
-        return message -> {
-            LOG.info("Consume message={}", message);
-            String messageId = message.getMessageId().toString();
 
-
-            Assert.assertEquals(TOPIC, message.getTopic());
-            Assert.assertFalse(messageIdSet.contains(messageId));
-
-            return ConsumeResult.SUCCESS;
-        };
-    }
 
     private Message createMessage(int i) {
         return ClientManager.getProvider()
