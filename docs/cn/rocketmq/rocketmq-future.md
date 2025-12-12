@@ -1,12 +1,12 @@
 # The Future of RocketMQ
 
-## To Clean, To Future
+## 1. To Clean, To Future
 
-## High Throughput
+## 2. High Throughput
 
-## Full Featured
+## 3. Full Featured
 
-## Cloud Native
+## 4. Cloud Native
 
-## Open Source, Open Community
+## 5. Open Source, Open Community
 
