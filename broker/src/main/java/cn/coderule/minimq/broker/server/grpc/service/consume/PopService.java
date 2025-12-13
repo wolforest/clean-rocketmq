@@ -15,15 +15,20 @@ import cn.coderule.minimq.domain.core.enums.consume.ConsumeStrategy;
 import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import cn.coderule.minimq.domain.domain.cluster.server.heartbeat.SubscriptionData;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.PopRequest;
-import cn.coderule.minimq.domain.domain.consumer.consume.pop.PopResult;
 import cn.coderule.minimq.rpc.broker.core.FilterAPI;
 import com.google.protobuf.util.Durations;
 import io.grpc.stub.StreamObserver;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Pop Message Service, just one public method: receive
+ *  - load settings from Grpc SettingManager
+ *  - build subscription data(filter)
+ *  - pop message
+ *  - write response
+ */
 @Slf4j
 public class PopService {
-    private final BrokerConfig brokerConfig;
     private final GrpcConfig grpcConfig;
     private final ConsumerController consumerController;
     private final SettingManager settingManager;
@@ -33,7 +38,6 @@ public class PopService {
         ConsumerController consumerController,
         SettingManager settingManager
     ) {
-        this.brokerConfig = brokerConfig;
         this.grpcConfig = brokerConfig.getGrpcConfig();
         this.consumerController = consumerController;
         this.settingManager = settingManager;
@@ -66,22 +70,6 @@ public class PopService {
         PopRequest popRequest = buildPopRequest(context, request, settings, pollTime, subscriptionData);
         consumerController.popMessage(popRequest)
             .whenComplete((result, e) -> response.writeResponse(context, result, e));
-    }
-
-    private void receiveMessage(PopResult result, PopRequest request, ConsumeResponse response) {
-        RequestContext context = request.getRequestContext();
-
-        if (!brokerConfig.getMessageConfig().isEnableAutoRenew() || !request.isAutoRenew()) {
-            response.writeResponse(context, result);
-            return;
-        }
-
-        if (!result.hasFound()) {
-            response.writeResponse(context, result);
-            return;
-        }
-
-        response.writeResponse(context, result);
     }
 
     private PopRequest buildPopRequest(
