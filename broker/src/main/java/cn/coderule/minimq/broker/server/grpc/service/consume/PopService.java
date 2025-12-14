@@ -48,28 +48,28 @@ public class PopService {
         ReceiveMessageRequest request,
         StreamObserver<ReceiveMessageResponse> responseObserver
     ) {
-        ConsumeResponse response = new ConsumeResponse(consumerController, responseObserver);
+        ConsumeResponseWriter responseWriter = new ConsumeResponseWriter(consumerController, responseObserver);
         Settings settings = settingManager.getSettings(context);
         if (settings == null) {
-            response.noSettings();
+            responseWriter.noSettings();
             return;
         }
 
         Long pollTime = getPollTime(context, request, settings);
         if (pollTime == null) {
-            response.notEnoughTime();
+            responseWriter.notEnoughTime();
             return;
         }
 
         SubscriptionData subscriptionData = buildSubscriptionData(request);
         if (subscriptionData == null) {
-            response.illegalFilter();
+            responseWriter.illegalFilter();
             return;
         }
 
         PopRequest popRequest = buildPopRequest(context, request, settings, pollTime, subscriptionData);
         consumerController.popMessage(popRequest)
-            .whenComplete((result, e) -> response.writeResponse(context, result, e));
+            .whenComplete((result, e) -> responseWriter.write(context, result, e));
     }
 
     private PopRequest buildPopRequest(

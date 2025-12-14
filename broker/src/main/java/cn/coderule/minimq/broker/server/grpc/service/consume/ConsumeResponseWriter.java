@@ -20,11 +20,11 @@ import java.util.Iterator;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class ConsumeResponse {
+public class ConsumeResponseWriter {
     private final ConsumerController consumerController;
     private final StreamObserver<ReceiveMessageResponse> streamObserver;
 
-    public ConsumeResponse(ConsumerController consumerController, StreamObserver<ReceiveMessageResponse> streamObserver) {
+    public ConsumeResponseWriter(ConsumerController consumerController, StreamObserver<ReceiveMessageResponse> streamObserver) {
         this.consumerController = consumerController;
         this.streamObserver = streamObserver;
     }
@@ -39,7 +39,7 @@ public class ConsumeResponse {
             .setStatus(status)
             .build();
 
-        writeResponse(response);
+        write(response);
         onComplete();
     }
 
@@ -53,7 +53,7 @@ public class ConsumeResponse {
             .setStatus(status)
             .build();
 
-        writeResponse(response);
+        write(response);
         onComplete();
     }
 
@@ -67,50 +67,50 @@ public class ConsumeResponse {
             .setStatus(status)
             .build();
 
-        writeResponse(response);
+        write(response);
         onComplete();
     }
 
-    public void writeResponse(RequestContext context, PopResult popResult) {
-        writeResponse(context, popResult, null);
+    public void write(RequestContext context, PopResult popResult) {
+        write(context, popResult, null);
     }
 
-    public void writeResponse(RequestContext context, PopResult popResult, Throwable e) {
+    public void write(RequestContext context, PopResult popResult, Throwable e) {
         if (e != null) {
-            writeResponse(context, e);
+            write(context, e);
             return;
         }
 
         try {
             writeByStatus(context, popResult);
         } catch (Throwable t) {
-            writeResponse(context, t);
+            write(context, t);
         } finally {
             onComplete();
         }
     }
 
-    public void writeResponse(RequestContext context, Code code, String message) {
+    public void write(RequestContext context, Code code, String message) {
         Status status = ResponseBuilder.getInstance().buildStatus(code, message);
         ReceiveMessageResponse response = ReceiveMessageResponse.newBuilder()
             .setStatus(status)
             .build();
 
-        writeResponse(response);
+        write(response);
         onComplete();
     }
 
-    public void writeResponse(RequestContext context, Throwable t) {
+    public void write(RequestContext context, Throwable t) {
         Status status = ResponseBuilder.getInstance().buildStatus(t);
         ReceiveMessageResponse response = ReceiveMessageResponse.newBuilder()
             .setStatus(status)
             .build();
 
-        writeResponse(response);
+        write(response);
         onComplete();
     }
 
-    private void writeResponse(ReceiveMessageResponse response) {
+    private void write(ReceiveMessageResponse response) {
         try {
             ResponseWriter.getInstance().writeResponse(streamObserver, response);
         } catch (Exception e) {
@@ -123,7 +123,7 @@ public class ConsumeResponse {
         ReceiveMessageResponse response = ReceiveMessageResponse.newBuilder()
             .setDeliveryTimestamp(timestamp)
             .build();
-        writeResponse(response);
+        write(response);
 
         try {
             streamObserver.onCompleted();
