@@ -19,6 +19,11 @@ import io.grpc.stub.StreamObserver;
 import java.util.Iterator;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Consume Response Writer
+ *  - write response
+ *  - change invisible time(TODO: should move to domain layer)
+ */
 @Slf4j
 public class ConsumeResponseWriter {
     private final ConsumerController consumerController;
