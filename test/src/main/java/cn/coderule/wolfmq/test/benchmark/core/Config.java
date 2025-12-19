@@ -4,7 +4,7 @@ import java.io.Serializable;
 import lombok.Data;
 
 @Data
-public class BenchmarkConfig implements Serializable {
+public class Config implements Serializable {
     private int concurrency = 1;
     private int requestNumber = 1;
     private int duration = 1;
