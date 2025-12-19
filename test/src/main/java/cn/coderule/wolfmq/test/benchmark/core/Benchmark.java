@@ -1,4 +1,4 @@
-package cn.coderule.wolfmq.test.benchmark;
+package cn.coderule.wolfmq.test.benchmark.core;
 
 public interface Benchmark {
     void prepare();

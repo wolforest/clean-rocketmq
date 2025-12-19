@@ -1,4 +1,4 @@
-package cn.coderule.wolfmq.test.benchmark;
+package cn.coderule.wolfmq.test.benchmark.core;
 
 import java.io.Serializable;
 import lombok.Data;
