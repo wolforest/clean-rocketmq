@@ -4,17 +4,26 @@ import cn.coderule.wolfmq.test.benchmark.core.Benchmark;
 import cn.coderule.wolfmq.test.benchmark.core.Config;
 import cn.coderule.wolfmq.test.benchmark.core.Report;
 import cn.coderule.wolfmq.test.benchmark.utils.TopicUtils;
+import cn.coderule.wolfmq.test.manager.ProducerManager;
+import java.io.IOException;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.client.apis.producer.Producer;
 
+@Slf4j
 public class ProduceBenchmark implements Benchmark {
+    private Config config;
     private TopicUtils topicUtils;
     private Producer producer;
 
     @Override
     public void prepare(Config config) {
+        this.config = config;
         this.topicUtils = new TopicUtils(config.getTopicNumber());
-
         topicUtils.createTopicList();
+
+        this.producer = ProducerManager.buildProducer(
+            topicUtils.getTopicList()
+        );
     }
 
     @Override
@@ -24,7 +33,20 @@ public class ProduceBenchmark implements Benchmark {
 
     @Override
     public void cleanup() {
-        topicUtils.deleteTopicList();
+        try {
+            stopProducer();
+            topicUtils.deleteTopicList();
+        } catch (IOException e) {
+            log.error("cleanup exception: ", e);
+        }
+    }
+
+    private void stopProducer() throws IOException {
+        if (producer == null) {
+            return;
+        }
+
+        producer.close();
     }
 
     @Override

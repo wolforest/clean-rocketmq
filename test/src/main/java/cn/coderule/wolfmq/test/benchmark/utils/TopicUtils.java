@@ -2,11 +2,14 @@ package cn.coderule.wolfmq.test.benchmark.utils;
 
 import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.wolfmq.test.manager.TopicManager;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
+import lombok.Data;
 
-public class TopicUtils {
+@Data
+public class TopicUtils implements Serializable {
     private final int number;
     private final List<String> topicList;
 

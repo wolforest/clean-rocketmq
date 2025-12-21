@@ -16,6 +16,7 @@
  */
 package cn.coderule.wolfmq.test.manager;
 
+import java.util.List;
 import org.apache.rocketmq.client.apis.ClientConfiguration;
 import org.apache.rocketmq.client.apis.producer.Producer;
 import org.apache.rocketmq.client.apis.producer.ProducerBuilder;
@@ -27,6 +28,9 @@ import org.apache.rocketmq.logging.org.slf4j.LoggerFactory;
 public class ProducerManager {
     private static final Logger LOG = LoggerFactory.getLogger(ProducerManager.class);
 
+    public static Producer buildProducer(List<String> topicList) {
+        return buildProducer(topicList.toArray(new String[0]));
+    }
     public static Producer buildProducer(String... topics) {
         return buildProducer(null, null, topics);
     }
