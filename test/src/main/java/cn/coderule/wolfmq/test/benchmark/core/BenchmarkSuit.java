@@ -40,14 +40,35 @@ public abstract class BenchmarkSuit implements Serializable {
         }
     }
 
+    private void calculateTime(Report report, Report benchmarkReport) {
+        if (0 == report.getStartTime()) {
+            report.setStartTime(benchmarkReport.getStartTime());
+        } else if (report.getStartTime() > benchmarkReport.getStartTime()) {
+            report.setStartTime(benchmarkReport.getStartTime());
+        }
+
+        if (0 == report.getEndTime()) {
+            report.setEndTime(benchmarkReport.getEndTime());
+        } else if (report.getEndTime() < benchmarkReport.getEndTime()) {
+            report.setEndTime(benchmarkReport.getEndTime());
+        }
+    }
+
+    private void calculateRequest(Report report, Report benchmarkReport) {
+        report.increaseSuccessCount(benchmarkReport.getSuccessCount());
+        report.increaseFailureCount(benchmarkReport.getFailureCount());
+    }
+
     private Report calculateReport() {
         Report report = new Report();
         for (Benchmark benchmark : benchmarkList) {
             Report benchmarkReport = benchmark.getReport();
-            // merge report
+
+            calculateTime(report, benchmarkReport);
+            calculateRequest(report, benchmarkReport);
         }
 
-        // calculate report
+        report.calculate();
 
         return report;
     }
