@@ -15,11 +15,18 @@ public class ProduceBenchmark implements Benchmark {
     public void prepare(Config config) {
         this.config = config;
         this.topicUtils = new TopicUtils(config.getTopicNumber());
+
+        topicUtils.createTopicList();
     }
 
     @Override
     public void benchmark() {
 
+    }
+
+    @Override
+    public void cleanup() {
+        topicUtils.deleteTopicList();
     }
 
     @Override

@@ -23,6 +23,12 @@ public class TopicUtils {
         }
     }
 
+    public void deleteTopicList() {
+        for (String topic : topicList) {
+            TopicManager.deleteTopic(topic);
+        }
+    }
+
     public String getTopic(int index) {
         if (index < 0 || index >= number) {
             return null;
