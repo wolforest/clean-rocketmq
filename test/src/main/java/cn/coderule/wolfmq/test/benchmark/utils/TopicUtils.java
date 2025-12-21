@@ -1,6 +1,7 @@
 package cn.coderule.wolfmq.test.benchmark.utils;
 
 import cn.coderule.common.util.lang.collection.CollectionUtil;
+import cn.coderule.wolfmq.test.manager.TopicManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
@@ -12,6 +13,14 @@ public class TopicUtils {
     public TopicUtils(int number) {
         this.number = number;
         topicList = new ArrayList<>(number);
+    }
+
+    public void createTopicList() {
+        for (int i = 0; i < number; i++) {
+            String topic = TopicManager.createUniqueTopic();
+            TopicManager.createTopic(topic);
+            topicList.add(topic);
+        }
     }
 
     public String getTopic(int index) {

@@ -7,6 +7,10 @@ import lombok.Data;
 public class Config implements Serializable {
     private int concurrency = 1;
     private int requestNumber = 1;
+
     private int duration = 1;
     private int timeout = 1000;
+
+    private int topicNumber = 10;
+    private int groupNumber = 10;
 }

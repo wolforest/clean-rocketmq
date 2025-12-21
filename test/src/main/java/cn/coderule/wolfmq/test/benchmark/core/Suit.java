@@ -8,5 +8,7 @@ import lombok.Data;
 public class Suit implements Serializable {
     private List<Config> configList;
     private List<Report> reportList;
-    private Benchmark benchmark;
+    private List<Benchmark> benchmarkList;
+
+
 }
