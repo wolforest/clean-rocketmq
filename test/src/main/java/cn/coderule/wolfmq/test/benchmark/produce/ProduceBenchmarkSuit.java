@@ -1,4 +1,4 @@
-package cn.coderule.wolfmq.test.benchmark;
+package cn.coderule.wolfmq.test.benchmark.produce;
 
 import cn.coderule.wolfmq.test.benchmark.core.Benchmark;
 import cn.coderule.wolfmq.test.benchmark.core.BenchmarkSuit;
@@ -21,14 +21,5 @@ public class ProduceBenchmarkSuit extends BenchmarkSuit {
 
             benchmark.prepare(config);
         }
-    }
-
-    public static void main(String[] args) {
-        ProduceBenchmarkSuit suit = new ProduceBenchmarkSuit();
-        suit.initConfig();
-        suit.initBenchmark();
-
-        suit.benchmark();
-        suit.showReport();
     }
 }
