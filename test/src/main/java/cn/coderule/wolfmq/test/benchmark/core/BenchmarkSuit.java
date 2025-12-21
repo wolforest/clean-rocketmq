@@ -4,9 +4,12 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Data;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Data
 public abstract class BenchmarkSuit implements Serializable {
+    private static final Logger log = LoggerFactory.getLogger(BenchmarkSuit.class);
     protected List<Config> configList = new ArrayList<>();
     protected List<Report> reportList = new ArrayList<>();
     protected List<Benchmark> benchmarkList = new ArrayList<>();
@@ -24,19 +27,30 @@ public abstract class BenchmarkSuit implements Serializable {
             this.concurrentBenchmark();
 
             Report report = this.calculateReport();
-            reportList.set(i, report);
+            reportList.add(report);
         }
 
     }
 
     private void concurrentBenchmark() {
+        List<Thread> threadList = new ArrayList<>();
         for (Benchmark benchmark : benchmarkList) {
             Runnable task = () -> {
                 benchmark.benchmark();
                 benchmark.cleanup();
             };
 
-            new Thread(task).start();
+            Thread thread = new Thread(task);
+            threadList.add(thread);
+            thread.start();
+        }
+
+        for (Thread thread : threadList) {
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                log.error("concurrentBenchmark exception: ", e);
+            }
         }
     }
 
@@ -80,7 +94,7 @@ public abstract class BenchmarkSuit implements Serializable {
             Config config = configList.get(i);
             Report report = reportList.get(i);
             System.out.printf(
-                "| %-12d | %-12d | %-4d  | %-4d | %-6.2f | %-9.2f |\n",
+                "| %-12d | %-12d | %-6.2f  | %-6.2f | %-6.2f | %-9.2f |\n",
                 config.getConcurrency(),
                 config.getRequestNumber(),
                 report.getTps(),

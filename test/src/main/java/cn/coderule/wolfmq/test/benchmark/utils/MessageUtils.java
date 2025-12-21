@@ -5,6 +5,8 @@ import cn.coderule.wolfmq.test.manager.ClientManager;
 import java.util.Arrays;
 
 public class MessageUtils {
+    private static final String MESSAGE_PREFIX = "MQT_";
+
     private static final byte[] K1 = new byte[1024];
     private static final byte[] K2 = new byte[1024 * 2];
     private static final byte[] K3 = new byte[1024 * 3];
@@ -33,6 +35,7 @@ public class MessageUtils {
         return ClientManager.getProvider()
             .newMessageBuilder()
             .setTopic(topic)
+            .setKeys(MESSAGE_PREFIX + System.currentTimeMillis())
             .setBody(getBody(messageSize))
             .build();
     }

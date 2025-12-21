@@ -1,0 +1,10 @@
+{
+  "proxyAddr": "127.0.0.1:8081",
+  "nameAddr": "127.0.0.1:9876",
+  "accounts": {
+    "default": {
+      "accessKey": "rocketmq2",
+      "secretKey": "12345678"
+    }
+  }
+}

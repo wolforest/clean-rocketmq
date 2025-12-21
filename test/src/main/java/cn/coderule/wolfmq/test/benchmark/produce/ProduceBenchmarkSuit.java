@@ -12,7 +12,7 @@ public class ProduceBenchmarkSuit extends BenchmarkSuit {
         int topicNumber = 10;
         int messageSize = 1024;
         List<Integer> concurrencyList = List.of(
-            50, 100, 200, 300, 400, 500
+            50, 100
         );
 
         this.configList = new ConfigBuilder()
@@ -26,7 +26,7 @@ public class ProduceBenchmarkSuit extends BenchmarkSuit {
     public void initBenchmark(Config config) {
         for (int i = 0; i < configList.size(); i++) {
             Benchmark benchmark = new ProduceBenchmark();
-            benchmarkList.set(i, benchmark);
+            benchmarkList.add(benchmark);
 
             benchmark.prepare(config);
         }
