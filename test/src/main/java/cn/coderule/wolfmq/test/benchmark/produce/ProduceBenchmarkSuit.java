@@ -10,12 +10,14 @@ public class ProduceBenchmarkSuit extends BenchmarkSuit {
     @Override
     public void initConfig() {
         int topicNumber = 10;
+        int messageSize = 1024;
         List<Integer> concurrencyList = List.of(
             50, 100, 200, 300, 400, 500
         );
 
         this.configList = new ConfigBuilder()
             .topicNumber(topicNumber)
+            .messageSize(messageSize)
             .concurrencyList(concurrencyList)
             .build();
     }

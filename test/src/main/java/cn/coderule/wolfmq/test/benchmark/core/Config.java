@@ -19,4 +19,6 @@ public class Config implements Serializable {
 
     private int topicNumber = 10;
     private int groupNumber = 10;
+
+    private int messageSize = 1024;
 }

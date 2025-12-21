@@ -10,6 +10,7 @@ public class ConfigBuilder implements Serializable {
     private int requestNumber = 10000;
     private int topicNumber = 10;
     private int groupNumber = 10;
+    private int messageSize = 1024;
 
     public ConfigBuilder concurrencyList(List<Integer> concurrencyList) {
         this.concurrencyList = concurrencyList;
@@ -35,6 +36,12 @@ public class ConfigBuilder implements Serializable {
         return this;
     }
 
+    public ConfigBuilder messageSize(int messageSize) {
+        this.messageSize = messageSize;
+
+        return this;
+    }
+
     public List<Config> build() {
         List<Config> configList = new ArrayList<>();
 
@@ -44,6 +51,7 @@ public class ConfigBuilder implements Serializable {
                 .requestNumber(requestNumber)
                 .topicNumber(topicNumber)
                 .groupNumber(groupNumber)
+                .messageSize(messageSize)
                 .build();
 
             configList.add(config);
