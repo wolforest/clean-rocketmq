@@ -8,21 +8,48 @@ import lombok.Data;
 @Data
 public abstract class BenchmarkSuit implements Serializable {
     protected List<Config> configList = new ArrayList<>();
-    protected final List<Report> reportList = new ArrayList<>();
-    protected final List<Benchmark> benchmarkList = new ArrayList<>();
+    protected List<Report> reportList = new ArrayList<>();
+    protected List<Benchmark> benchmarkList = new ArrayList<>();
 
     public abstract void initConfig();
-    public abstract void initBenchmark();
+    public abstract void initBenchmark(Config config);
 
     public void benchmark() {
-        for (int i = 0; i < benchmarkList.size(); i++) {
-            Benchmark benchmark = benchmarkList.get(i);
+        for (int i = 0; i < configList.size(); i++) {
+            Config config = configList.get(i);
 
-            benchmark.benchmark();
-            reportList.set(i, benchmark.getReport());
+            this.benchmarkList = new ArrayList<>();
+            this.initBenchmark(config);
 
-            benchmark.cleanup();
+            this.concurrentBenchmark();
+
+            Report report = this.calculateReport();
+            reportList.set(i, report);
         }
+
+    }
+
+    private void concurrentBenchmark() {
+        for (Benchmark benchmark : benchmarkList) {
+            Runnable task = () -> {
+                benchmark.benchmark();
+                benchmark.cleanup();
+            };
+
+            new Thread(task).start();
+        }
+    }
+
+    private Report calculateReport() {
+        Report report = new Report();
+        for (Benchmark benchmark : benchmarkList) {
+            Report benchmarkReport = benchmark.getReport();
+            // merge report
+        }
+
+        // calculate report
+
+        return report;
     }
 
     public void showReport() {

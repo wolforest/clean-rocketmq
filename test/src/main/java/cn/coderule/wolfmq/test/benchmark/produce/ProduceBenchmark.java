@@ -16,6 +16,7 @@ public class ProduceBenchmark implements Benchmark {
     private Config config;
     private TopicUtils topicUtils;
     private Producer producer;
+    private Report report;
 
     @Override
     public void prepare(Config config) {
@@ -26,10 +27,13 @@ public class ProduceBenchmark implements Benchmark {
         this.producer = ProducerManager.buildProducer(
             topicUtils.getTopicList()
         );
+        this.report = new Report();
     }
 
     @Override
     public void benchmark() {
+        report.start();
+
         for (int i = 0; i < config.getRequestNumber(); i++) {
             try {
                 Message message = MessageUtils.createMessage(
@@ -38,10 +42,14 @@ public class ProduceBenchmark implements Benchmark {
                 );
 
                 producer.send(message);
+                report.increaseSuccessCount();
             } catch (Throwable t) {
+                report.increaseFailureCount();
                 log.error("Failed to send message: ", t);
             }
         }
+
+        report.stop();
     }
 
     @Override
@@ -64,6 +72,6 @@ public class ProduceBenchmark implements Benchmark {
 
     @Override
     public Report getReport() {
-        return null;
+        return report;
     }
 }

@@ -23,10 +23,8 @@ public class ProduceBenchmarkSuit extends BenchmarkSuit {
     }
 
     @Override
-    public void initBenchmark() {
+    public void initBenchmark(Config config) {
         for (int i = 0; i < configList.size(); i++) {
-            Config config = configList.get(i);
-
             Benchmark benchmark = new ProduceBenchmark();
             benchmarkList.set(i, benchmark);
 
