@@ -3,10 +3,12 @@ package cn.coderule.wolfmq.test.benchmark.produce;
 import cn.coderule.wolfmq.test.benchmark.core.Benchmark;
 import cn.coderule.wolfmq.test.benchmark.core.Config;
 import cn.coderule.wolfmq.test.benchmark.core.Report;
+import cn.coderule.wolfmq.test.benchmark.utils.MessageUtils;
 import cn.coderule.wolfmq.test.benchmark.utils.TopicUtils;
 import cn.coderule.wolfmq.test.manager.ProducerManager;
 import java.io.IOException;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.rocketmq.client.apis.message.Message;
 import org.apache.rocketmq.client.apis.producer.Producer;
 
 @Slf4j
@@ -28,7 +30,18 @@ public class ProduceBenchmark implements Benchmark {
 
     @Override
     public void benchmark() {
+        for (int i = 0; i < config.getRequestNumber(); i++) {
+            try {
+                Message message = MessageUtils.createMessage(
+                    topicUtils.getRandomTopic(),
+                    config.getMessageSize()
+                );
 
+                producer.send(message);
+            } catch (Throwable t) {
+                log.error("Failed to send message: ", t);
+            }
+        }
     }
 
     @Override
