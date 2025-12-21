@@ -11,20 +11,28 @@ public class ConfigBuilder implements Serializable {
     private int topicNumber = 10;
     private int groupNumber = 10;
 
-    public void concurrencyList(List<Integer> concurrencyList) {
+    public ConfigBuilder concurrencyList(List<Integer> concurrencyList) {
         this.concurrencyList = concurrencyList;
+
+        return this;
     }
 
-    public void requestNumber(int requestNumber) {
+    public ConfigBuilder requestNumber(int requestNumber) {
         this.requestNumber = requestNumber;
+
+        return this;
     }
 
-    public void topicNumber(int topicNumber) {
+    public ConfigBuilder topicNumber(int topicNumber) {
         this.topicNumber = topicNumber;
+
+        return this;
     }
 
-    public void groupNumber(int groupNumber) {
+    public ConfigBuilder groupNumber(int groupNumber) {
         this.groupNumber = groupNumber;
+
+        return this;
     }
 
     public List<Config> build() {
