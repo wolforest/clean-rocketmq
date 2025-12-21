@@ -7,7 +7,7 @@ import lombok.Data;
 
 @Data
 public abstract class BenchmarkSuit implements Serializable {
-    protected final List<Config> configList = new ArrayList<>();
+    protected List<Config> configList = new ArrayList<>();
     protected final List<Report> reportList = new ArrayList<>();
     protected final List<Benchmark> benchmarkList = new ArrayList<>();
 
