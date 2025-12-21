@@ -32,9 +32,10 @@ public abstract class BenchmarkSuit implements Serializable {
             Config config = configList.get(i);
             Report report = reportList.get(i);
             System.out.printf(
-                "| %-12d | %-12d | %-4d | %-6.2f | %-9.2f |\n",
+                "| %-12d | %-12d | %-4d  | %-4d | %-6.2f | %-9.2f |\n",
                 config.getConcurrency(),
                 config.getRequestNumber(),
+                report.getTps(),
                 report.getQps(),
                 report.getMaxRT(),
                 report.getAverageRT()
@@ -43,8 +44,8 @@ public abstract class BenchmarkSuit implements Serializable {
     }
 
     private void showHeader() {
-        String header = "| concurrency | requestNumber | qps | maxRT | averageRT |";
-        String separator = "| ---------- | ------------ | --- | ----- | --------- |";
+        String header = "| concurrency | requestNumber | tps | qps | maxRT | averageRT |";
+        String separator = "| ---------- | ------------ | --- | --- | ----- | --------- |";
         System.out.println(header);
         System.out.println(separator);
     }
