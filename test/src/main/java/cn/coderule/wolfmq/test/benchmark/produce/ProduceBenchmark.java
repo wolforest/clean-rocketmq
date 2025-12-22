@@ -58,7 +58,7 @@ public class ProduceBenchmark implements Benchmark {
             stopProducer();
             topicUtils.deleteTopicList();
         } catch (IOException e) {
-            log.error("cleanup exception: ", e);
+            // log.error("cleanup exception: ", e);
         }
     }
 

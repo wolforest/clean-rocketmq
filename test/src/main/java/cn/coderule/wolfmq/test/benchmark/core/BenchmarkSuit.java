@@ -35,10 +35,7 @@ public abstract class BenchmarkSuit implements Serializable {
     private void concurrentBenchmark() {
         List<Thread> threadList = new ArrayList<>();
         for (Benchmark benchmark : benchmarkList) {
-            Runnable task = () -> {
-                benchmark.benchmark();
-                benchmark.cleanup();
-            };
+            Runnable task = benchmark::benchmark;
 
             Thread thread = new Thread(task);
             threadList.add(thread);
@@ -51,6 +48,10 @@ public abstract class BenchmarkSuit implements Serializable {
             } catch (InterruptedException e) {
                 log.error("concurrentBenchmark exception: ", e);
             }
+        }
+
+        for (Benchmark benchmark : benchmarkList) {
+            benchmark.cleanup();
         }
     }
 

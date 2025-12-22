@@ -57,6 +57,11 @@ public class PubTest extends ApiBaseTest {
     }
 
     @Test
+    public void TestOk() {
+        TopicManager.createTopic("testTopic");
+    }
+
+    @Test
     public void testSendOk() {
         if (producer == null) {
             return;
