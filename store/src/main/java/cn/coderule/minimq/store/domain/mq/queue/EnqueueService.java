@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class EnqueueService {
+    private final StoreConfig storeConfig;
     private final ConsumeQueueGateway consumeQueueGateway;
     private final CommitLog commitLog;
 
@@ -22,9 +23,11 @@ public class EnqueueService {
     private final EnqueueLock enqueueLock;
 
     public EnqueueService(
+        StoreConfig storeConfig,
         CommitLog commitLog,
         ConsumeQueueGateway consumeQueueGateway) {
 
+        this.storeConfig = storeConfig;
         this.consumeQueueGateway = consumeQueueGateway;
         this.commitLog = commitLog;
 
@@ -49,23 +52,56 @@ public class EnqueueService {
     }
 
     public CompletableFuture<EnqueueResult> enqueueAsync(MessageBO messageBO) {
-        enqueueLock.lock(messageBO.getTopic(), messageBO.getQueueId());
-        try {
-            long queueOffset = consumeQueueGateway.assignOffset(messageBO.getTopic(), messageBO.getQueueId());
-            messageBO.setQueueOffset(queueOffset);
+        lockMessageQueue(messageBO.getTopic(), messageBO.getQueueId());
 
+        try {
+            assignConsumeOffset(messageBO);
             EnqueueFuture result = commitLog.insert(messageBO);
 
             if (result.isInsertSuccess()) {
-                consumeQueueGateway.increaseOffset(messageBO.getTopic(), messageBO.getQueueId());
+                increaseConsumeOffset(messageBO);
             }
 
             return commitLogSynchronizer.sync(result);
         } catch (Exception e) {
             return CompletableFuture.completedFuture(EnqueueResult.failure());
         } finally {
-            enqueueLock.unlock(messageBO.getTopic(), messageBO.getQueueId());
+            unlockMessageQueue(messageBO.getTopic(), messageBO.getQueueId());
         }
+    }
+
+    private void assignConsumeOffset(MessageBO messageBO) {
+        if (!storeConfig.isAssignConsumeOffset()) {
+            messageBO.setQueueOffset(-1);
+            return;
+        }
+
+        long queueOffset = consumeQueueGateway.assignOffset(messageBO.getTopic(), messageBO.getQueueId());
+        messageBO.setQueueOffset(queueOffset);
+    }
+
+    private void increaseConsumeOffset(MessageBO messageBO) {
+        if (!storeConfig.isAssignConsumeOffset()) {
+            return;
+        }
+
+        consumeQueueGateway.increaseOffset(messageBO.getTopic(), messageBO.getQueueId());
+    }
+
+    private void lockMessageQueue(String topic, int queueId) {
+        if (!storeConfig.isAssignConsumeOffset()) {
+            return;
+        }
+
+        enqueueLock.lock(topic, queueId);
+    }
+
+    private void unlockMessageQueue(String topic, int queueId) {
+        if (!storeConfig.isAssignConsumeOffset()) {
+            return;
+        }
+
+        enqueueLock.unlock(topic, queueId);
     }
 
     private EnqueueResult waitForResult(CompletableFuture<EnqueueResult> future) {

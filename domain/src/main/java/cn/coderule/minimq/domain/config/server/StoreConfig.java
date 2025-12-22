@@ -92,6 +92,11 @@ public class StoreConfig extends ServerIdentity {
     private long maxSlaveDelayTime = 15_000;
     private int maxHaTransferSize = 32 * 1024;
 
+    /**
+     *
+     */
+    private boolean assignConsumeOffset = false;
+
     private MessageConfig messageConfig;
     private TopicConfig topicConfig;
 

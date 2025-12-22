@@ -79,9 +79,10 @@ public class DefaultMQManager implements MQManager {
 
     private void initPubService() {
         CommitLog commitLog = StoreContext.getBean(CommitLog.class);
+        StoreConfig storeConfig  = StoreContext.getBean(StoreConfig.class);
         ConsumeQueueGateway consumeQueue = StoreContext.getBean(ConsumeQueueGateway.class);
 
-        this.enqueueService = new EnqueueService(commitLog, consumeQueue);
+        this.enqueueService = new EnqueueService(storeConfig, commitLog, consumeQueue);
         this.messageService = new MessageService(commitLog, consumeQueue);
         StoreContext.register(this.enqueueService, EnqueueService.class);
         StoreContext.register(this.messageService, MessageService.class);
