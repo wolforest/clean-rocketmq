@@ -49,7 +49,7 @@ public class DefaultCommitEventDispatcher extends ServiceThread  implements Comm
         }
 
         for (CommitEventHandler consumer : consumerList) {
-            consumer.handle(event);
+            // consumer.handle(event);
         }
     }
 

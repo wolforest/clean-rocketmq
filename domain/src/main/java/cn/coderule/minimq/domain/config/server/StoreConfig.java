@@ -95,7 +95,7 @@ public class StoreConfig extends ServerIdentity {
     /**
      *
      */
-    private boolean assignConsumeOffset = false;
+    private boolean assignConsumeOffset = true;
 
     private MessageConfig messageConfig;
     private TopicConfig topicConfig;

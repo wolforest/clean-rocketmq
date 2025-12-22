@@ -18,7 +18,7 @@ public class MessageUtils {
     private static final byte[] K9 = new byte[1024 * 9];
     private static final byte[] K10 = new byte[1024 * 10];
 
-    {
+    static {
         Arrays.fill(K1, (byte) 1);
         Arrays.fill(K2, (byte) 2);
         Arrays.fill(K3, (byte) 3);
