@@ -12,5 +12,5 @@ public class ConfigAttribute {
     public static int HA_PORT = 10912;
 
     public static FlushType FLUSH_TYPE = FlushType.SYNC;
-    public static int MMAP_FILE_SIZE = 100 * 1024 * 1024;
+    public static int MMAP_FILE_SIZE = 1024 * 1024 * 1024;
 }

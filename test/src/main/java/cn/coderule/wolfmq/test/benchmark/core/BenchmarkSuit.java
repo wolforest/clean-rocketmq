@@ -4,12 +4,11 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Data;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 @Data
+@Slf4j
 public abstract class BenchmarkSuit implements Serializable {
-    private static final Logger log = LoggerFactory.getLogger(BenchmarkSuit.class);
     protected List<Config> configList = new ArrayList<>();
     protected List<Report> reportList = new ArrayList<>();
     protected List<Benchmark> benchmarkList = new ArrayList<>();
@@ -18,10 +17,7 @@ public abstract class BenchmarkSuit implements Serializable {
     public abstract void initBenchmark(Config config);
 
     public void benchmark() {
-        for (int i = 0; i < configList.size(); i++) {
-            Config config = configList.get(i);
-
-            this.benchmarkList = new ArrayList<>();
+        for (Config config : configList) {
             this.initBenchmark(config);
 
             this.concurrentBenchmark();
@@ -64,7 +60,7 @@ public abstract class BenchmarkSuit implements Serializable {
 
         if (0 == report.getEndTime()) {
             report.setEndTime(benchmarkReport.getEndTime());
-        } else if (report.getEndTime() < benchmarkReport.getEndTime()) {
+        } else if (report.getEndTime() > benchmarkReport.getEndTime()) {
             report.setEndTime(benchmarkReport.getEndTime());
         }
     }
@@ -78,12 +74,13 @@ public abstract class BenchmarkSuit implements Serializable {
         Report report = new Report();
         for (Benchmark benchmark : benchmarkList) {
             Report benchmarkReport = benchmark.getReport();
-
+            log.info("thread Report: {}", benchmarkReport);
             calculateTime(report, benchmarkReport);
             calculateRequest(report, benchmarkReport);
         }
 
         report.calculate();
+        log.info("benchmark Report: {}", report);
 
         return report;
     }

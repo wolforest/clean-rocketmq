@@ -4,6 +4,7 @@ import cn.coderule.wolfmq.test.benchmark.core.Benchmark;
 import cn.coderule.wolfmq.test.benchmark.core.BenchmarkSuit;
 import cn.coderule.wolfmq.test.benchmark.core.Config;
 import cn.coderule.wolfmq.test.benchmark.core.ConfigBuilder;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ProduceBenchmarkSuit extends BenchmarkSuit {
@@ -12,10 +13,11 @@ public class ProduceBenchmarkSuit extends BenchmarkSuit {
         int topicNumber = 10;
         int messageSize = 1024;
         List<Integer> concurrencyList = List.of(
-            100, 150, 200, 250, 300
+            5, 10, 12, 15, 18, 20
         );
 
         this.configList = new ConfigBuilder()
+            .requestNumber(20000)
             .topicNumber(topicNumber)
             .messageSize(messageSize)
             .concurrencyList(concurrencyList)
@@ -24,7 +26,9 @@ public class ProduceBenchmarkSuit extends BenchmarkSuit {
 
     @Override
     public void initBenchmark(Config config) {
-        for (int i = 0; i < configList.size(); i++) {
+        this.benchmarkList = new ArrayList<>();
+
+        for (int i = 0; i < config.getConcurrency(); i++) {
             Benchmark benchmark = new ProduceBenchmark();
             benchmarkList.add(benchmark);
 

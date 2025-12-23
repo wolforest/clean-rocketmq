@@ -4,6 +4,7 @@ import cn.coderule.common.lang.type.Pair;
 import cn.coderule.common.util.lang.SystemUtil;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.domain.config.store.CommitConfig;
+import cn.coderule.minimq.domain.core.lock.queue.EnqueueLock;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.domain.message.MessageEncoder;
 import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitLog;
@@ -17,11 +18,14 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 public class InsertBenchmark {
     public static int MMAP_FILE_SIZE = 2 * 1024 * 1024;
+
+
 
     @Test
     void singleThreadBenchmark(@TempDir Path tmpDir) {
@@ -39,12 +43,14 @@ public class InsertBenchmark {
         }
         long endTime = System.currentTimeMillis();
         System.out.println("Insert 1000000 messages cost " + (endTime - startTime) + " ms");
+        System.out.println("insert speed: " + 1000000 * 1000 / (endTime - startTime) + " msg/s");
+        System.out.println("\n\n\n\n");
 
         commitLog.destroy();
     }
 
     @Test
-    void singleMultiBenchmark(@TempDir Path tmpDir) {
+    void multiThreadBenchmark(@TempDir Path tmpDir) {
         String dir = tmpDir.toString();
         StoreConfig storeConfig = ConfigMock.createStoreConfig(dir);
         CommitLog commitLog = createCommitLog(dir, storeConfig);
@@ -85,6 +91,67 @@ public class InsertBenchmark {
         System.out.println("\n\n\n\n");
 
         commitLog.destroy();
+    }
+
+    @Test
+    void multiThreadWithEnqueueLockBenchmark(@TempDir Path tmpDir) {
+        String dir = tmpDir.toString();
+        StoreConfig storeConfig = ConfigMock.createStoreConfig(dir);
+        CommitLog commitLog = createCommitLog(dir, storeConfig);
+        EnqueueLock enqueueLock = new EnqueueLock();
+
+        MessageEncoder encoder = new MessageEncoder(storeConfig.getMessageConfig());
+        MessageBO messageBO = createMessage(encoder);
+
+        Runnable task = () -> {
+            for (int i = 0; i < 100000; i++) {
+                String topic = getTopic();
+                int queueId = getQueueId();
+                enqueueLock.lock(topic, queueId);
+
+                commitLog.assignCommitOffset(messageBO);
+                commitLog.insert(messageBO);
+
+                enqueueLock.unlock(topic, queueId);
+            }
+        };
+
+        int cpuNumber = SystemUtil.getProcessorNumber();
+        List<Thread> threads = new ArrayList<>();
+
+        long startTime = System.currentTimeMillis();
+
+        for (int i = 0; i < cpuNumber; i++) {
+            Thread thread = new Thread(task);
+            threads.add(thread);
+            thread.start();
+        }
+
+        for (Thread thread : threads) {
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        long endTime = System.currentTimeMillis();
+        System.out.println("cpu number: " + cpuNumber);
+        System.out.println("Insert 1000000 messages cost " + (endTime - startTime) + " ms");
+        System.out.println("insert speed: " + 1000000 * 1000 / (endTime - startTime) + " msg/s");
+        System.out.println("\n\n\n\n");
+
+        commitLog.destroy();
+    }
+
+
+    private String getTopic() {
+        int topicIndex = ThreadLocalRandom.current().nextInt(50);
+        return "topic-" + topicIndex;
+    }
+
+    private int getQueueId() {
+        return ThreadLocalRandom.current().nextInt(10);
     }
 
     private MessageBO createMessage(MessageEncoder encoder) {
