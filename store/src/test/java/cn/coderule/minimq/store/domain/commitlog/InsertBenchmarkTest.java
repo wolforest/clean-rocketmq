@@ -1,6 +1,7 @@
 package cn.coderule.minimq.store.domain.commitlog;
 
 import cn.coderule.common.lang.type.Pair;
+import cn.coderule.common.util.io.DirUtil;
 import cn.coderule.common.util.lang.SystemUtil;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.domain.config.store.CommitConfig;
@@ -19,13 +20,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-public class InsertBenchmark {
-    public static int MMAP_FILE_SIZE = 2 * 1024 * 1024;
-
-
+@Slf4j
+public class InsertBenchmarkTest {
+    public static int MMAP_FILE_SIZE = 1024 * 1024 * 1024;
 
     @Test
     void singleThreadBenchmark(@TempDir Path tmpDir) {
@@ -47,6 +48,56 @@ public class InsertBenchmark {
         System.out.println("\n\n\n\n");
 
         commitLog.destroy();
+    }
+
+    @Test
+    void partitionPerCoreBenchmark(@TempDir Path tmpDir) {
+        int cpuNumber = SystemUtil.getProcessorNumber();
+
+        List<Thread> threads = new ArrayList<>();
+
+        for (int i = 0; i < cpuNumber; i++) {
+            String dir = tmpDir.toString() + "/commitlog" + i;
+            DirUtil.createIfNotExists(dir);
+
+
+            StoreConfig storeConfig = ConfigMock.createStoreConfig(dir);
+            CommitLog commitLog = createCommitLog(dir, storeConfig);
+
+            MessageEncoder encoder = new MessageEncoder(storeConfig.getMessageConfig());
+            MessageBO messageBO = createMessage(encoder);
+
+            Runnable task = () -> {
+                for (int j = 0; j < 100000; j++) {
+                    commitLog.assignCommitOffset(messageBO);
+                    commitLog.insert(messageBO);
+                }
+            };
+
+            Thread thread = new Thread(task);
+            threads.add(thread);
+        }
+
+        long startTime = System.currentTimeMillis();
+        for (Thread thread : threads) {
+            thread.start();
+        }
+
+        for (Thread thread : threads) {
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                log.error("concurrentBenchmark exception: ", e);
+            }
+        }
+
+        long endTime = System.currentTimeMillis();
+        System.out.println("cpu number: " + cpuNumber);
+        System.out.println("Insert 1000000 messages cost " + (endTime - startTime) + " ms");
+        System.out.println("insert speed: " + 100000 * cpuNumber * 1000 / (endTime - startTime) + " msg/s");
+        System.out.println("\n\n\n\n");
+
+        DirUtil.delete(tmpDir);
     }
 
     @Test
