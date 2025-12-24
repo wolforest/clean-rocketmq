@@ -1,6 +1,6 @@
 # Clean-RocketMQ
 Clean-RocketMQ是一个RocketMQ从零重写的版本。<br />
-Clean-RocketMQ完全兼容RocketMQ5.*版本，是RocketMQ的传承与优化版本。
+完全兼容RocketMQ5.*接口，是RocketMQ的传承与优化版本。
 
 ### Clean-RocketMQ特征:
 1. **更简洁的代码：** 借鉴DDD、简洁架构思想，从零重写。
