@@ -68,4 +68,6 @@ Clean-RocketMQ改进了WAL机制，性能可以达到Kafka的量级。
 ![特性](/docs/architecture/rocketmq-feature.jpg "特性")
 
 最后云原生，借助云的存储能力，轻松实现高可用，<br />
-还可以有效地平衡性能与成本，为商业化铺平了道路。
+还可以有效地平衡性能与成本，为商业化铺平了道路。<br />
+如下图所示，云原生后，broker/NameServer都可以实现无状态化。
+![云原生](/docs/architecture/cloud-rocketmq.jpg "云原生")
