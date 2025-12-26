@@ -16,7 +16,7 @@ Clean-RocketMQ是一个RocketMQ从零重写的版本。<br />
 最后，重写之后，确实看到了更多的可能性。
 
 ## 架构
-![架构](/docs/architecture/clean-rocketmq.jpg "架构")
+<img src="/docs/architecture/clean-rocketmq.jpg" width="600" alt="架构" />
 
 > 备注：图中没有云原生，请稍候，让子弹飞会儿...
 
@@ -65,9 +65,9 @@ AI也没有强大到可生成万物，技术人依然有大量的机会...
 Clean-RocketMQ改进了WAL机制，性能可以达到Kafka的量级。
 
 再说全功能，RocketMQ基于多队列架构，很容易扩展出如下功能。
-![特性](/docs/architecture/rocketmq-feature.jpg "特性")
+<img src="/docs/architecture/rocketmq-feature.jpg" width="500" alt="特性" />
 
 最后云原生，借助云的存储能力，轻松实现高可用，<br />
 还可以有效地平衡性能与成本，为商业化铺平了道路。<br />
 如下图所示，云原生后，broker/NameServer都可以实现无状态化。
-![云原生](/docs/architecture/cloud-rocketmq.jpg "云原生")
+<img src="/docs/architecture/cloud-rocketmq.jpg" width="500" alt="云原生" />
