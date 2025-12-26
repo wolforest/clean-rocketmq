@@ -16,5 +16,6 @@ Clean-RocketMQ是一个RocketMQ从零重写的版本。<br />
 最后，重写之后，确实看到了更多的可能性。
 
 ## 架构
+![架构](/docs/architecture/clean-rocketmq.jpg "架构")
 
 
