@@ -10,6 +10,9 @@ public class CommitConfig implements Serializable {
     private boolean enableMultiPath = false;
     private boolean enableWriteCache = false;
 
+    private boolean enableSharding = false;
+    private int maxShardingNumber = 10;
+
     private FlushType flushType = ConfigAttribute.FLUSH_TYPE;
 
     private String dirName = "commitlog";
