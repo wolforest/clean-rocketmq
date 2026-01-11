@@ -10,6 +10,12 @@ public class TopicConfig implements Serializable {
 
     private boolean enableAutoCreation = true;
 
+    /**
+     * enable wal topic(kafka like topic)
+     */
+    private boolean enableWalTopic = false;
+    private int maxWalTopicNum = 10;
+
     private boolean enableMixedMessageType = false;
     private int defaultQueueNum = 1;
 
