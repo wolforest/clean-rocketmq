@@ -1,4 +1,4 @@
-package cn.coderule.minimq.hello.netty.pb;
+package cn.coderule.minimq.hello.middleware.netty.pb;
 
 public class HelloMain {
     public static void main(String[] args) {

@@ -32,6 +32,13 @@
             <artifactId>rocksdbjni</artifactId>
         </dependency>
 
+        <!-- Source: https://mvnrepository.com/artifact/com.rabbitmq/amqp-client -->
+        <dependency>
+            <groupId>com.rabbitmq</groupId>
+            <artifactId>amqp-client</artifactId>
+            <version>5.28.0</version>
+        </dependency>
+
         <dependency>
             <groupId>org.apache.rocketmq</groupId>
             <artifactId>rocketmq-client-java</artifactId>
