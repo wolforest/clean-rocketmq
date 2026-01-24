@@ -51,6 +51,7 @@ public class ConnectionManager {
             seconds,
             TimeUnit.SECONDS
         );
+        scheduler.shutdown();
     }
 
     public void close() {
@@ -61,6 +62,7 @@ public class ConnectionManager {
             if (this.connection != null && this.connection.isOpen()) {
                 this.connection.close();
             }
+            log.info("rabbitmq channel and connection were closed");
         } catch (Exception e) {
             log.error("close error: {}", e.getMessage(), e);
         }
