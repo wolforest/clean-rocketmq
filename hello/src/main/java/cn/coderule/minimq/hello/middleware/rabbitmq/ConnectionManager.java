@@ -4,6 +4,9 @@ package cn.coderule.minimq.hello.middleware.rabbitmq;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.Channel;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -12,12 +15,15 @@ import lombok.extern.slf4j.Slf4j;
 public class ConnectionManager {
     private static final int DEFAULT_PORT = 5672;
 
-    private ConnectionFactory factory;
+    private final ConnectionFactory factory;
+    private final ScheduledExecutorService scheduler;
+
     private Connection connection = null;
     private Channel channel = null;
 
     public ConnectionManager() {
         this.factory = new ConnectionFactory();
+        this.scheduler = Executors.newSingleThreadScheduledExecutor();
     }
 
     public Channel connect(String host) {
@@ -37,5 +43,26 @@ public class ConnectionManager {
         }
 
         return this.channel;
+    }
+
+    public void close(int seconds) {
+        scheduler.schedule(
+            () -> close(),
+            seconds,
+            TimeUnit.SECONDS
+        );
+    }
+
+    public void close() {
+        try {
+            if (this.channel != null && this.channel.isOpen()) {
+                this.channel.close();
+            }
+            if (this.connection != null && this.connection.isOpen()) {
+                this.connection.close();
+            }
+        } catch (Exception e) {
+            log.error("close error: {}", e.getMessage(), e);
+        }
     }
 }
