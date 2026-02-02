@@ -4,115 +4,370 @@ import cn.coderule.minimq.domain.core.enums.store.InsertStatus;
 import cn.coderule.minimq.domain.domain.store.infra.InsertResult;
 import cn.coderule.minimq.domain.domain.store.infra.SelectedMappedBuffer;
 import cn.coderule.minimq.domain.domain.store.utils.OffsetUtils;
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.file.Path;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
-class DefaultMappedFileTest {
+public class DefaultMappedFileTest {
 
     @TempDir
     Path tmpDir;
 
     @Test
-    void testCreateMappedFile() {
+    void testBasicInsertAndSelect() throws IOException {
         String fileName = createFileName(0);
-        int fileSize = 2 * 1024;
+        int fileSize = 1024;
+
+        DefaultMappedFile mappedFile = new DefaultMappedFile(fileName, fileSize);
 
         try {
-            DefaultMappedFile mappedFile = new DefaultMappedFile(fileName, fileSize);
+            // 测试插入数据
+            byte[] data = "Hello, World!".getBytes();
+            InsertResult result = mappedFile.insert(data);
 
-            assertEquals(0, mappedFile.getMinOffset());
-            assertEquals(fileSize, mappedFile.getMaxOffset());
-            assertEquals(0, mappedFile.getInsertPosition());
+            assertEquals(InsertStatus.PUT_OK, result.getStatus());
+            assertEquals(0, result.getWroteOffset());
+            assertEquals(data.length, result.getWroteBytes());
 
+            // 测试选择数据
+            SelectedMappedBuffer selected = mappedFile.select(0, data.length);
+            assertNotNull(selected);
+            assertEquals(data.length, selected.getSize());
+
+            ByteBuffer buffer = selected.getByteBuffer();
+            byte[] readData = new byte[data.length];
+            buffer.get(readData);
+            assertArrayEquals(data, readData);
+
+        } finally {
             mappedFile.destroy();
-        } catch (IOException e) {
-            log.error("create mappedFile exception", e);
         }
     }
 
     @Test
-    void testInsertByteBuffer() {
-        String fileName = createFileName(2);
-        int fileSize = 20 * 100;
+    void testMultipleInserts() throws IOException {
+        String fileName = createFileName(1000);
+        int fileSize = 2048;
+
+        DefaultMappedFile mappedFile = new DefaultMappedFile(fileName, fileSize);
 
         try {
-            DefaultMappedFile mappedFile = new DefaultMappedFile(fileName, fileSize);
+            byte[] data1 = "First".getBytes();
+            byte[] data2 = "Second".getBytes();
 
+            // 插入第一条数据
+            InsertResult result1 = mappedFile.insert(data1);
+            assertEquals(InsertStatus.PUT_OK, result1.getStatus());
+            assertEquals(0, result1.getWroteOffset());
 
-            ByteBuffer buffer = createByteBuffer();
-            mappedFile.insert(buffer);
+            // 插入第二条数据
+            InsertResult result2 = mappedFile.insert(data2);
+            assertEquals(InsertStatus.PUT_OK, result2.getStatus());
+            assertEquals(data1.length, result2.getWroteOffset());
 
-            SelectedMappedBuffer result = mappedFile.select(0, 20);
-            ByteBuffer resultBuffer = result.getByteBuffer();
-            assertEquals(50, resultBuffer.getLong());
-            assertEquals(30, resultBuffer.getInt());
-            assertEquals(8L, resultBuffer.getLong());
+            // 验证总位置
+            int totalPosition = mappedFile.getInsertPosition();
+            assertEquals(data1.length + data2.length, totalPosition);
 
+        } finally {
             mappedFile.destroy();
-        } catch (IOException e) {
-            log.error("create mappedFile exception", e);
         }
-    }
-
-    private ByteBuffer createByteBuffer() {
-        ByteBuffer buffer = ByteBuffer.allocate(20);
-
-        buffer.putLong(50);
-        buffer.putInt(30);
-        buffer.putLong(8L);
-
-        buffer.flip();
-        buffer.limit(20);
-
-        return buffer;
     }
 
     @Test
-    void testInsert() {
-        String fileName = createFileName(100);
-        int fileSize = 2 * 1024;
+    void testByteBufferInsert() throws IOException {
+        String fileName = createFileName(2000);
+        int fileSize = 1024;
+
+        DefaultMappedFile mappedFile = new DefaultMappedFile(fileName, fileSize);
 
         try {
-            DefaultMappedFile mappedFile = new DefaultMappedFile(fileName, fileSize);
+            ByteBuffer buffer = ByteBuffer.allocate(16);
+            buffer.putLong(12345L);
+            buffer.putInt(678);
+            buffer.flip();
 
-            assertEquals(100, mappedFile.getMinOffset());
-            assertEquals(fileSize + 100, mappedFile.getMaxOffset());
-            assertEquals(0, mappedFile.getInsertPosition());
+            InsertResult result = mappedFile.insert(buffer);
+            assertEquals(InsertStatus.PUT_OK, result.getStatus());
+            assertEquals(0, result.getWroteOffset());
+            assertEquals(16, result.getWroteBytes());
 
-            byte[] data = "0123456789".getBytes();
+            // 验证数据
+            SelectedMappedBuffer selected = mappedFile.select(0, 16);
+            ByteBuffer resultBuffer = selected.getByteBuffer();
+            assertEquals(12345L, resultBuffer.getLong());
+            assertEquals(678, resultBuffer.getInt());
 
-            InsertResult insertResult = mappedFile.insert(data);
-            assertEquals(InsertStatus.PUT_OK, insertResult.getStatus());
-            assertEquals(0, insertResult.getWroteOffset());
-            assertEquals(10, insertResult.getWroteBytes());
-            assertEquals(10, mappedFile.getInsertPosition());
-
-
-            insertResult = mappedFile.insert(data);
-            assertEquals(InsertStatus.PUT_OK, insertResult.getStatus());
-            assertEquals(10, insertResult.getWroteOffset());
-            assertEquals(10, insertResult.getWroteBytes());
-            assertEquals(20, mappedFile.getInsertPosition());
-
+        } finally {
             mappedFile.destroy();
-        } catch (IOException e) {
-            log.error("create mappedFile exception", e);
         }
-
     }
 
-    private String createFileName(int i) {
-        String fileName = OffsetUtils.offsetToFileName(i);
+    @Test
+    void testPartialInsert() throws IOException {
+        String fileName = createFileName(3000);
+        int fileSize = 1024;
 
+        DefaultMappedFile mappedFile = new DefaultMappedFile(fileName, fileSize);
+
+        try {
+            byte[] fullData = "0123456789ABCDEF".getBytes();
+
+            // 插入部分数据（从索引4开始，插入8个字节）
+            InsertResult result = mappedFile.insert(fullData, 4, 8);
+            assertEquals(InsertStatus.PUT_OK, result.getStatus());
+            assertEquals(0, result.getWroteOffset());
+            assertEquals(8, result.getWroteBytes());
+
+            // 验证插入的数据
+            SelectedMappedBuffer selected = mappedFile.select(0, 8);
+            ByteBuffer buffer = selected.getByteBuffer();
+            byte[] readData = new byte[8];
+            buffer.get(readData);
+
+            assertEquals("456789AB", new String(readData));
+
+        } finally {
+            mappedFile.destroy();
+        }
+    }
+
+    @Test
+    void testFileBoundary() throws IOException {
+        String fileName = createFileName(4000);
+        int fileSize = 50; // 小文件测试边界
+
+        DefaultMappedFile mappedFile = new DefaultMappedFile(fileName, fileSize);
+
+        try {
+            byte[] data20 = new byte[20];
+            byte[] data40 = new byte[40];
+
+            // 正常插入
+            InsertResult result1 = mappedFile.insert(data20);
+            assertEquals(InsertStatus.PUT_OK, result1.getStatus());
+
+            // 超出文件大小
+            InsertResult result2 = mappedFile.insert(data40);
+            assertEquals(InsertStatus.END_OF_FILE, result2.getStatus());
+
+            // 测试空间检查
+            assertTrue(mappedFile.hasSpace(30));
+            assertFalse(mappedFile.hasSpace(31));
+
+            // 填满文件
+            InsertResult result3 = mappedFile.insert(new byte[30]);
+            assertEquals(InsertStatus.PUT_OK, result3.getStatus());
+
+            assertTrue(mappedFile.isFull());
+            assertFalse(mappedFile.hasSpace(1));
+
+        } finally {
+            mappedFile.destroy();
+        }
+    }
+
+    @Test
+    void testSelectOperations() throws IOException {
+        String fileName = createFileName(5000);
+        int fileSize = 1024;
+
+        DefaultMappedFile mappedFile = new DefaultMappedFile(fileName, fileSize);
+
+        try {
+            byte[] data1 = "Data1".getBytes();
+            byte[] data2 = "Data2".getBytes();
+            byte[] data3 = "Data3".getBytes();
+
+            mappedFile.insert(data1);
+            mappedFile.insert(data2);
+            mappedFile.insert(data3);
+
+            // 测试指定大小选择
+            SelectedMappedBuffer result1 = mappedFile.select(0, data1.length);
+            assertNotNull(result1);
+            assertEquals(data1.length, result1.getSize());
+
+            // 测试从位置选择到结尾
+            SelectedMappedBuffer result2 = mappedFile.select(data1.length);
+            assertNotNull(result2);
+            assertEquals(data2.length + data3.length, result2.getSize());
+
+            // 测试超出范围选择
+            SelectedMappedBuffer result3 = mappedFile.select(1000, 100);
+            assertNull(result3);
+
+        } finally {
+            mappedFile.destroy();
+        }
+    }
+
+    @Test
+    void testPositionManagement() throws IOException {
+        String fileName = createFileName(6000);
+        int fileSize = 1024;
+
+        DefaultMappedFile mappedFile = new DefaultMappedFile(fileName, fileSize);
+
+        try {
+            // 初始位置
+            assertEquals(0, mappedFile.getWritePosition());
+            assertEquals(0, mappedFile.getCommitPosition());
+            assertEquals(0, mappedFile.getFlushPosition());
+
+            // 插入数据后
+            byte[] data = "Test".getBytes();
+            mappedFile.insert(data);
+            assertEquals(data.length, mappedFile.getWritePosition());
+
+            // 设置位置
+            mappedFile.setWritePosition(100);
+            assertEquals(100, mappedFile.getWritePosition());
+
+            mappedFile.setInsertPosition(200);
+            assertEquals(200, mappedFile.getWritePosition());
+            assertEquals(200, mappedFile.getCommitPosition());
+            assertEquals(200, mappedFile.getFlushPosition());
+
+        } finally {
+            mappedFile.destroy();
+        }
+    }
+
+    @Test
+    void testFlushAndCommit() throws IOException {
+        String fileName = createFileName(7000);
+        int fileSize = 1024;
+
+        DefaultMappedFile mappedFile = new DefaultMappedFile(fileName, fileSize);
+
+        try {
+            byte[] data = "FlushTest".getBytes();
+            mappedFile.insert(data);
+
+            // 测试刷新
+            int flushPos = mappedFile.flush(0);
+            assertEquals(data.length, flushPos);
+
+            // 测试提交
+            int commitPos = mappedFile.commit(0);
+            assertEquals(data.length, commitPos);
+
+        } finally {
+            mappedFile.destroy();
+        }
+    }
+
+    @Test
+    void testBufferOperations() throws IOException {
+        String fileName = createFileName(8000);
+        int fileSize = 1024;
+
+        DefaultMappedFile mappedFile = new DefaultMappedFile(fileName, fileSize);
+
+        try {
+            // 测试缓冲区获取
+            assertNotNull(mappedFile.getMappedByteBuffer());
+            assertNotNull(mappedFile.sliceByteBuffer());
+
+            // 测试内存检查
+            assertTrue(mappedFile.isInMemory(0, 100));
+
+            // 插入数据
+            byte[] data = "BufferTest".getBytes();
+            mappedFile.insert(data);
+
+            // 测试切片缓冲区
+            ByteBuffer slice = mappedFile.sliceByteBuffer();
+            assertNotNull(slice);
+            assertTrue(slice.remaining() >= data.length);
+
+        } finally {
+            mappedFile.destroy();
+        }
+    }
+
+    @Test
+    void testOffsetContainment() throws IOException {
+        String fileName = createFileName(9000);
+        int fileSize = 1024;
+
+        DefaultMappedFile mappedFile = new DefaultMappedFile(fileName, fileSize);
+
+        try {
+            // 测试偏移量包含（基于文件名推断最小偏移量）
+            long minOffset = Long.parseLong(fileName.substring(fileName.lastIndexOf('/') + 1));
+
+            assertTrue(mappedFile.containsOffset(minOffset));
+            assertTrue(mappedFile.containsOffset(minOffset + 100));
+            assertFalse(mappedFile.containsOffset(minOffset - 1));
+            assertFalse(mappedFile.containsOffset(minOffset + fileSize + 1));
+
+            // 测试设置插入偏移量
+            mappedFile.setInsertOffset(50);
+            assertEquals(50, mappedFile.getInsertPosition());
+
+        } finally {
+            mappedFile.destroy();
+        }
+    }
+
+    @Test
+    void testFileDestruction() throws IOException {
+        String fileName = createFileName(10000);
+        int fileSize = 1024;
+
+        DefaultMappedFile mappedFile = new DefaultMappedFile(fileName, fileSize);
+
+        try {
+            // 插入一些数据
+            byte[] data = "DestroyTest".getBytes();
+            mappedFile.insert(data);
+
+            // 验证文件存在
+            assertTrue(Files.exists(Path.of(fileName)));
+
+        } finally {
+            // 销毁文件
+            mappedFile.destroy();
+
+            // 验证文件被删除
+            assertFalse(Files.exists(Path.of(fileName)));
+        }
+    }
+
+    @Test
+    void testFileCreation() throws IOException {
+        String fileName = createFileName(11000);
+        int fileSize = 1024;
+
+        DefaultMappedFile mappedFile = new DefaultMappedFile(fileName, fileSize);
+
+        try {
+            // 验证文件创建
+            assertTrue(Files.exists(Path.of(fileName)));
+
+            // 验证初始状态
+            assertEquals(0, mappedFile.getInsertPosition());
+            assertFalse(mappedFile.isFull());
+            assertTrue(mappedFile.hasSpace(fileSize));
+            assertFalse(mappedFile.hasSpace(fileSize + 1));
+
+        } finally {
+            mappedFile.destroy();
+        }
+    }
+
+    private String createFileName(int offset) {
+        String fileName = OffsetUtils.offsetToFileName(offset);
         return tmpDir.resolve(fileName).toString();
     }
-
-
 }

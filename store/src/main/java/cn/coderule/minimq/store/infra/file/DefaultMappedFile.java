@@ -82,7 +82,7 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
 
     @Override
     public boolean hasSpace(int size) {
-        return WRITE_POSITION_UPDATER.get(this) + size < this.fileSize;
+        return WRITE_POSITION_UPDATER.get(this) + size <= this.fileSize;
     }
 
     @Override
