@@ -11,6 +11,9 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Thread-safe Direct Memory Pool
+ */
 @Slf4j
 public class TransientPool implements Lifecycle {
     private final int poolSize;

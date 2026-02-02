@@ -37,4 +37,8 @@ public class Hello {
         channel.basicConsume("hello", true, deliverCallback, consumerTag -> { });
         connection.close(10);
     }
+
+
+
+
 }
