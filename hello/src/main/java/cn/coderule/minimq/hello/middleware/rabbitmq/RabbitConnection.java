@@ -12,7 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Getter
 @Slf4j
-public class ConnectionManager {
+public class RabbitConnection {
     private static final int DEFAULT_PORT = 5672;
 
     private final ConnectionFactory factory;
@@ -21,7 +21,7 @@ public class ConnectionManager {
     private Connection connection = null;
     private Channel channel = null;
 
-    public ConnectionManager() {
+    public RabbitConnection() {
         this.factory = new ConnectionFactory();
         this.scheduler = Executors.newSingleThreadScheduledExecutor();
     }

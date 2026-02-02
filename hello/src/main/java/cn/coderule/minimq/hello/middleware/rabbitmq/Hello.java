@@ -11,23 +11,23 @@ public class Hello {
     }
 
     private static void produce() throws Exception {
-        ConnectionManager manager = new ConnectionManager();
+        RabbitConnection connection = new RabbitConnection();
 
         try {
-            Channel channel = manager.connect("127.0.0.1");
+            Channel channel = connection.connect("127.0.0.1");
             channel.queueDeclare("hello", false, false, false, null);
             String message = "Hello World!";
             channel.basicPublish("", "hello", null, message.getBytes());
             System.out.println(" [x] Sent '" + message + "'");
         } finally {
-            manager.close();
+            connection.close();
         }
     }
 
     private static void consume() throws Exception {
-        ConnectionManager manager = new ConnectionManager();
+        RabbitConnection connection = new RabbitConnection();
 
-        Channel channel = manager.connect("127.0.0.1");
+        Channel channel = connection.connect("127.0.0.1");
         channel.queueDeclare("hello", false, false, false, null);
 
         DeliverCallback deliverCallback = (consumerTag, delivery) -> {
@@ -35,6 +35,6 @@ public class Hello {
             System.out.println(" [x] Received '" + message + "'");
         };
         channel.basicConsume("hello", true, deliverCallback, consumerTag -> { });
-        manager.close(10);
+        connection.close(10);
     }
 }
