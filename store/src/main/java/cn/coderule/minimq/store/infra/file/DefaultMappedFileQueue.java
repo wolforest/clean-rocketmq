@@ -111,7 +111,7 @@ public class DefaultMappedFileQueue implements MappedFileQueue {
         if (isEmpty()) return createMappedFile(0);
 
         MappedFile last = getLastMappedFile();
-        if (last.hasSpace(messageSize)) {
+        if (last.canWrite(messageSize)) {
             return last;
         }
 

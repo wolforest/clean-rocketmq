@@ -37,10 +37,12 @@ public interface MappedFile {
 
     /**
      *
+     * @renamed from hasSpace to canWrite
+     *
      * @param size size needed
      * @return true if file has enough space
      */
-    boolean hasSpace(int size);
+    boolean canWrite(int size);
 
     boolean containsOffset(long offset);
 

@@ -160,15 +160,15 @@ public class DefaultMappedFileTest {
             assertEquals(InsertStatus.END_OF_FILE, result2.getStatus());
 
             // 测试空间检查
-            assertTrue(mappedFile.hasSpace(30));
-            assertFalse(mappedFile.hasSpace(31));
+            assertTrue(mappedFile.canWrite(30));
+            assertFalse(mappedFile.canWrite(31));
 
             // 填满文件
             InsertResult result3 = mappedFile.insert(new byte[30]);
             assertEquals(InsertStatus.PUT_OK, result3.getStatus());
 
             assertTrue(mappedFile.isFull());
-            assertFalse(mappedFile.hasSpace(1));
+            assertFalse(mappedFile.canWrite(1));
 
         } finally {
             mappedFile.destroy();
@@ -358,8 +358,8 @@ public class DefaultMappedFileTest {
             // 验证初始状态
             assertEquals(0, mappedFile.getInsertPosition());
             assertFalse(mappedFile.isFull());
-            assertTrue(mappedFile.hasSpace(fileSize));
-            assertFalse(mappedFile.hasSpace(fileSize + 1));
+            assertTrue(mappedFile.canWrite(fileSize));
+            assertFalse(mappedFile.canWrite(fileSize + 1));
 
         } finally {
             mappedFile.destroy();
