@@ -70,19 +70,4 @@ public class TransientPool implements Lifecycle {
     public int availableBufferNums() {
         return availableBuffers.size();
     }
-
-    @Override
-    public void initialize() throws Exception {
-
-    }
-
-    @Override
-    public void cleanup() throws Exception {
-
-    }
-
-    @Override
-    public State getState() {
-        return State.RUNNING;
-    }
 }
