@@ -50,10 +50,18 @@ public class TransientPool implements Lifecycle {
             long address = ByteUtil.directBufferAddress(byteBuffer);
             Pointer pointer = new Pointer(address);
             CLibrary.INSTANCE.munlock(pointer, new NativeLong(fileSize));
+
+            availableBuffers.remove(byteBuffer);
         }
+
+        enabled = false;
     }
 
     public void returnBuffer(ByteBuffer byteBuffer) {
+        if (byteBuffer == null) {
+            return;
+        }
+
         byteBuffer.position(0);
         byteBuffer.limit(fileSize);
         this.availableBuffers.offerFirst(byteBuffer);

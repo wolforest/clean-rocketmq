@@ -1,5 +1,6 @@
 package cn.coderule.minimq.store.infra.file;
 
+import cn.coderule.common.util.io.FileUtil;
 import cn.coderule.minimq.domain.core.enums.store.InsertStatus;
 import cn.coderule.minimq.domain.domain.store.infra.InsertResult;
 import cn.coderule.minimq.domain.domain.store.infra.SelectedMappedBuffer;
@@ -33,7 +34,7 @@ public class DefaultMappedFileTest {
             byte[] data = "Hello, World!".getBytes();
             InsertResult result = mappedFile.insert(data);
 
-            assertEquals(InsertStatus.PUT_OK, result.getStatus());
+            assertTrue(result.isSuccess());
             assertEquals(0, result.getWroteOffset());
             assertEquals(data.length, result.getWroteBytes());
 
@@ -153,11 +154,11 @@ public class DefaultMappedFileTest {
 
             // 正常插入
             InsertResult result1 = mappedFile.insert(data20);
-            assertEquals(InsertStatus.PUT_OK, result1.getStatus());
+            assertTrue(result1.isSuccess());
 
             // 超出文件大小
             InsertResult result2 = mappedFile.insert(data40);
-            assertEquals(InsertStatus.END_OF_FILE, result2.getStatus());
+            assertTrue(result2.isEndOfFile());
 
             // 测试空间检查
             assertTrue(mappedFile.canWrite(30));
@@ -165,7 +166,7 @@ public class DefaultMappedFileTest {
 
             // 填满文件
             InsertResult result3 = mappedFile.insert(new byte[30]);
-            assertEquals(InsertStatus.PUT_OK, result3.getStatus());
+            assertTrue(result3.isSuccess());
 
             assertTrue(mappedFile.isFull());
             assertFalse(mappedFile.canWrite(1));
@@ -333,14 +334,14 @@ public class DefaultMappedFileTest {
             mappedFile.insert(data);
 
             // 验证文件存在
-            assertTrue(Files.exists(Path.of(fileName)));
+            assertTrue(FileUtil.exists(fileName));
 
         } finally {
             // 销毁文件
             mappedFile.destroy();
 
             // 验证文件被删除
-            assertFalse(Files.exists(Path.of(fileName)));
+            assertFalse(FileUtil.exists(fileName));
         }
     }
 
@@ -353,7 +354,7 @@ public class DefaultMappedFileTest {
 
         try {
             // 验证文件创建
-            assertTrue(Files.exists(Path.of(fileName)));
+            assertTrue(FileUtil.exists(fileName));
 
             // 验证初始状态
             assertEquals(0, mappedFile.getInsertPosition());
