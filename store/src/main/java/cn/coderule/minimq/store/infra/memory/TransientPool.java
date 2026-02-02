@@ -16,11 +16,11 @@ public class TransientPool implements Lifecycle {
     private final int poolSize;
     private final int fileSize;
     private final Deque<ByteBuffer> availableBuffers;
+    /**
+     * @renamed from isRealCommit to enabled
+     */
     @Getter @Setter
-    private volatile boolean isRealCommit = true;
-
-    public static void main(String[] args) {
-    }
+    private volatile boolean enabled = true;
 
     public TransientPool(final int poolSize, final int fileSize) {
         this.poolSize = poolSize;

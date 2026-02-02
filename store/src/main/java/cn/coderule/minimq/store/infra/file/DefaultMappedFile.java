@@ -106,9 +106,9 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
 
     @Override
     public int getInsertPosition() {
-        return null == transientPool || !transientPool.isRealCommit()
-            ? WRITE_POSITION_UPDATER.get(this)
-            : COMMIT_POSITION_UPDATER.get(this);
+        return null != transientPool && transientPool.isEnabled()
+            ? COMMIT_POSITION_UPDATER.get(this)
+            : WRITE_POSITION_UPDATER.get(this);
     }
 
     @Override
@@ -272,7 +272,7 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
         }
 
         //no need to commit data to file channel, so just set committedPosition to wrotePosition.
-        if (transientPool != null && !transientPool.isRealCommit()) {
+        if (transientPool != null && !transientPool.isEnabled()) {
             COMMIT_POSITION_UPDATER.set(this, WRITE_POSITION_UPDATER.get(this));
         } else if (this.isAbleToCommit(minPages)) {
             if (this.hold()) {
