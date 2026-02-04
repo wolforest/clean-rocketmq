@@ -16,6 +16,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Default MappedFile Queue, Not thread-safe
+ */
 @Slf4j
 public class DefaultMappedFileQueue implements MappedFileQueue {
     private final String rootDir;
