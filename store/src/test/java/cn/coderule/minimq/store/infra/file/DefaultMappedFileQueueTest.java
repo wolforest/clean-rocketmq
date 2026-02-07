@@ -100,7 +100,45 @@ class DefaultMappedFileQueueTest {
         queue.destroy();
     }
 
+    @Test
+    void testGetMappedFileByOffset(@TempDir Path tmpDir) {
+        int fileSize = 1024;
+        MappedFileQueue queue = new DefaultMappedFileQueue(tmpDir.toString(), fileSize);
+        queue.load();
 
+        // 创建多个文件
+        MappedFile file1 = queue.createMappedFileForOffset(0);
+        MappedFile file2 = queue.createMappedFileForOffset(fileSize);
+        MappedFile file3 = queue.createMappedFileForOffset(fileSize * 2);
 
+        // 测试精确匹配
+        assertEquals(file1, queue.getMappedFileByOffset(0));
+        assertEquals(file2, queue.getMappedFileByOffset(fileSize));
+        assertEquals(file3, queue.getMappedFileByOffset(fileSize * 2));
 
+        // 测试范围匹配
+        assertEquals(file1, queue.getMappedFileByOffset(100));
+        assertEquals(file2, queue.getMappedFileByOffset(fileSize + 100));
+        assertEquals(file3, queue.getMappedFileByOffset(fileSize * 2 + 100));
+
+        // 测试超出范围
+        assertNull(queue.getMappedFileByOffset(fileSize * 3));
+
+        queue.destroy();
+    }
+
+    @Test
+    void testBoundaryConditions(@TempDir Path tmpDir) {
+        int fileSize = 1024;
+        MappedFileQueue queue = new DefaultMappedFileQueue(tmpDir.toString(), fileSize);
+        queue.load();
+
+        // 测试空队列的各种操作
+        assertTrue(queue.isEmpty());
+        assertEquals(0, queue.size());
+        assertNull(queue.getFirstMappedFile());
+        assertNull(queue.getLastMappedFile());
+
+        queue.destroy();
+    }
 }

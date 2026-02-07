@@ -69,7 +69,7 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
         this.fileSize = fileSize;
         this.file = new File(this.fileName);
         this.minOffset = Long.parseLong(this.file.getName());
-        this.maxOffset = this.minOffset + this.fileSize;
+        this.maxOffset = this.minOffset + this.fileSize - 1;
 
         DirUtil.createIfNotExists(this.file.getParent());
         this.initFile();
