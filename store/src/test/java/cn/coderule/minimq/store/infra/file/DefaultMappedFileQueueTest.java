@@ -40,7 +40,7 @@ class DefaultMappedFileQueueTest {
 
         // test empty mapped file
         assertEquals(0, mappedFile.getMinOffset());
-        assertEquals(fileSize, mappedFile.getMaxOffset());
+        assertEquals(fileSize - 1, mappedFile.getMaxOffset());
         assertEquals(0, mappedFile.getInsertPosition());
 
         byte[] data = "0123456789".getBytes();
