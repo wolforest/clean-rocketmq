@@ -84,7 +84,6 @@ class DefaultMappedFileQueueTest {
         assertEquals(1, queue.size());
         assertNotNull(queue.getFirstMappedFile());
 
-
         mappedFile = queue.createMappedFileForOffset(100 + fileSize);
         assertNotNull(mappedFile);
         assertEquals(2, queue.size());
@@ -141,4 +140,53 @@ class DefaultMappedFileQueueTest {
 
         queue.destroy();
     }
+
+    @Test
+    void testCreateMappedFileForOffset_EmptyQueue(@TempDir Path tmpDir) {
+        // Arrange
+        int fileSize = 1024;
+        DefaultMappedFileQueue queue = new DefaultMappedFileQueue(tmpDir.toString(), fileSize);
+
+        // Act
+        MappedFile mappedFile = queue.createMappedFileForOffset(0);
+
+        // Assert
+        assertNotNull(mappedFile);
+        assertEquals(0, mappedFile.getMinOffset());
+        assertEquals(fileSize - 1, mappedFile.getMaxOffset());
+        assertEquals(1, queue.size());
+    }
+
+    @Test
+    void testCreateMappedFileForOffset_OffsetInLastFileRange(@TempDir Path tmpDir) {
+        // Arrange
+        int fileSize = 1024;
+        DefaultMappedFileQueue queue = new DefaultMappedFileQueue(tmpDir.toString(), fileSize);
+        MappedFile firstFile = queue.createMappedFileForOffset(0);
+
+        // Act
+        MappedFile mappedFile = queue.createMappedFileForOffset(500);
+
+        // Assert
+        assertEquals(firstFile, mappedFile);
+        assertEquals(1, queue.size());
+    }
+
+    @Test
+    void testCreateMappedFileForOffset_OffsetBeyondLastFile_Full(@TempDir Path tmpDir) {
+        // Arrange
+        int fileSize = 1024;
+        DefaultMappedFileQueue queue = new DefaultMappedFileQueue(tmpDir.toString(), fileSize);
+        MappedFile firstFile = queue.createMappedFileForOffset(0);
+        firstFile.setInsertPosition(fileSize); // 模拟文件已满
+
+        // Act
+        MappedFile mappedFile = queue.createMappedFileForOffset(1500);
+
+        // Assert
+        assertNotEquals(firstFile, mappedFile);
+        assertEquals(2, queue.size());
+        assertEquals(fileSize, mappedFile.getMinOffset());
+    }
+
 }
