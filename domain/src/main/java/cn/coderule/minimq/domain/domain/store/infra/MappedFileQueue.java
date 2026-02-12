@@ -13,14 +13,14 @@ public interface MappedFileQueue {
 
     void setFileMode(int mode);
 
-    MappedFile createMappedFile(long createOffset);
-
     List<MappedFile> getMappedFiles();
 
     void removeMappedFile(MappedFile mappedFile);
     void removeMappedFiles(List<MappedFile> files);
 
     MappedFile getMappedFileByIndex(int index);
+
+    MappedFile createMappedFile(long createOffset);
 
     /**
      * get or create available MappedFile

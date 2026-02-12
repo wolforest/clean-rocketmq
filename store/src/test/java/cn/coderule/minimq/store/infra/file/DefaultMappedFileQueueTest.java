@@ -189,4 +189,92 @@ class DefaultMappedFileQueueTest {
         assertEquals(fileSize, mappedFile.getMinOffset());
     }
 
+    @Test
+    void testGetFirstMappedFile_EmptyQueue(@TempDir Path tmpDir) {
+        // Arrange
+        DefaultMappedFileQueue queue = new DefaultMappedFileQueue(tmpDir.toString(), 1024);
+
+        // Act
+        MappedFile firstFile = queue.getFirstMappedFile();
+
+        // Assert
+        assertNull(firstFile);
+    }
+
+    @Test
+    void testGetLastMappedFile_EmptyQueue(@TempDir Path tmpDir) {
+        // Arrange
+        DefaultMappedFileQueue queue = new DefaultMappedFileQueue(tmpDir.toString(), 1024);
+
+        // Act
+        MappedFile lastFile = queue.getLastMappedFile();
+
+        // Assert
+        assertNull(lastFile);
+    }
+
+    @Test
+    void testGetFirstAndLastMappedFile_SingleFile(@TempDir Path tmpDir) {
+        // Arrange
+        DefaultMappedFileQueue queue = new DefaultMappedFileQueue(tmpDir.toString(), 1024);
+        MappedFile file = queue.createMappedFileForOffset(0);
+
+        // Act
+        MappedFile firstFile = queue.getFirstMappedFile();
+        MappedFile lastFile = queue.getLastMappedFile();
+
+        // Assert
+        assertEquals(file, firstFile);
+        assertEquals(file, lastFile);
+    }
+
+    @Test
+    void testGetFirstAndLastMappedFile_MultipleFiles(@TempDir Path tmpDir) {
+        // Arrange
+        DefaultMappedFileQueue queue = new DefaultMappedFileQueue(tmpDir.toString(), 1024);
+        MappedFile firstFile = queue.createMappedFileForOffset(0);
+        MappedFile secondFile = queue.createMappedFileForOffset(1024);
+        MappedFile thirdFile = queue.createMappedFileForOffset(2048);
+
+        // Act
+        MappedFile retrievedFirstFile = queue.getFirstMappedFile();
+        MappedFile retrievedLastFile = queue.getLastMappedFile();
+
+        // Assert
+        assertEquals(firstFile, retrievedFirstFile);
+        assertEquals(thirdFile, retrievedLastFile);
+    }
+
+    @Test
+    void testGetFirstMappedFile_ExceptionHandling(@TempDir Path tmpDir) {
+        // Arrange
+        DefaultMappedFileQueue queue = new DefaultMappedFileQueue(tmpDir.toString(), 1024);
+        queue.createMappedFileForOffset(0);
+
+        // Mock异常情况：手动清空mappedFiles列表以触发异常
+        queue.getMappedFiles().clear();
+
+        // Act
+        MappedFile firstFile = queue.getFirstMappedFile();
+
+        // Assert
+        assertNull(firstFile);
+    }
+
+    @Test
+    void testGetLastMappedFile_ExceptionHandling(@TempDir Path tmpDir) {
+        // Arrange
+        DefaultMappedFileQueue queue = new DefaultMappedFileQueue(tmpDir.toString(), 1024);
+        queue.createMappedFileForOffset(0);
+
+        // Mock异常情况：手动清空mappedFiles列表以触发异常
+        queue.getMappedFiles().clear();
+
+        // Act
+        MappedFile lastFile = queue.getLastMappedFile();
+
+        // Assert
+        assertNull(lastFile);
+    }
+
 }
