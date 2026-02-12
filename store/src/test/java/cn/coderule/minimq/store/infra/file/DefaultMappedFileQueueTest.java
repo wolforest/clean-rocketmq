@@ -24,7 +24,7 @@ class DefaultMappedFileQueueTest {
         assertNull(queue.getLastMappedFile());
         assertNull(queue.getMappedFileByOffset(0));
 
-        assertNotNull(queue.createMappedFileForSize(10));
+        assertNotNull(queue.getOrCreateMappedFileForSize(10));
 
         queue.destroy();
     }

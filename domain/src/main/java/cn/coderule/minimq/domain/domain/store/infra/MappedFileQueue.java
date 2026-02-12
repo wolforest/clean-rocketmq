@@ -31,11 +31,12 @@ public interface MappedFileQueue {
 
     /**
      * get or create MappedFile which available space > messageSize
+     * @renamed from createMappedFileForSize to getOrCreateMappedFileForSize
      *
      * @param messageSize messageSize
      * @return mappedFile
      */
-    MappedFile createMappedFileForSize(int messageSize);
+    MappedFile getOrCreateMappedFileForSize(int messageSize);
 
     /**
      * get or create mappedFile contains offset

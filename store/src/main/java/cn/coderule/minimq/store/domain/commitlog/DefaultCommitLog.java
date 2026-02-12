@@ -3,7 +3,6 @@ package cn.coderule.minimq.store.domain.commitlog;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.domain.core.enums.code.InvalidCode;
 import cn.coderule.minimq.domain.core.exception.InvalidRequestException;
-import cn.coderule.minimq.domain.core.lock.commitlog.CommitLogSpinLock;
 import cn.coderule.minimq.domain.domain.message.MessageEncoder;
 import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitLogFlusher;
 import cn.coderule.minimq.store.domain.commitlog.vo.InsertContext;
@@ -223,7 +222,7 @@ public class DefaultCommitLog implements CommitLog {
     }
 
     private MappedFile getMappedFile(int size) {
-        MappedFile mappedFile = mappedFileQueue.createMappedFileForSize(size);
+        MappedFile mappedFile = mappedFileQueue.getOrCreateMappedFileForSize(size);
         mappedFile.setFileMode(CLibrary.MADV_RANDOM);
 
         return mappedFile;

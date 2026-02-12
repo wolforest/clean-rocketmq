@@ -51,8 +51,8 @@ public class DefaultMappedFileQueueComprehensiveTest {
     }
 
     @Test
-    void testCreateMappedFileForSize() throws IOException {
-        MappedFile file = queue.createMappedFileForSize(100);
+    void testGetOrCreateMappedFileForSize() throws IOException {
+        MappedFile file = queue.getOrCreateMappedFileForSize(100);
 
         assertNotNull(file);
         assertEquals(1, queue.size());
@@ -61,7 +61,7 @@ public class DefaultMappedFileQueueComprehensiveTest {
 
     @Test
     void testFileModeOperations() throws IOException {
-        MappedFile file = queue.createMappedFileForSize(100);
+        MappedFile file = queue.getOrCreateMappedFileForSize(100);
 
         // 默认应该是可写模式
         assertTrue(file.canWrite(50));
@@ -77,7 +77,7 @@ public class DefaultMappedFileQueueComprehensiveTest {
     void testCheckSelf() throws IOException {
         // 创建一些文件
         for (int i = 0; i < 3; i++) {
-            queue.createMappedFileForSize(100);
+            queue.getOrCreateMappedFileForSize(100);
         }
 
         // 测试自检
@@ -99,7 +99,7 @@ public class DefaultMappedFileQueueComprehensiveTest {
     void testShutdown() throws IOException {
         // 创建一些文件
         for (int i = 0; i < 3; i++) {
-            queue.createMappedFileForSize(100);
+            queue.getOrCreateMappedFileForSize(100);
         }
 
         // 测试关闭
@@ -115,7 +115,7 @@ public class DefaultMappedFileQueueComprehensiveTest {
         assertEquals(0, queue.getMaxOffset());
 
         // 测试单个文件
-        MappedFile singleFile = queue.createMappedFileForSize(100);
+        MappedFile singleFile = queue.getOrCreateMappedFileForSize(100);
         assertEquals(singleFile, queue.getFirstMappedFile());
         assertEquals(singleFile, queue.getLastMappedFile());
 
