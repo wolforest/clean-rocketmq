@@ -36,7 +36,7 @@ class DefaultMappedFileQueueTest {
         queue.load();
         assertTrue(queue.isEmpty());
 
-        MappedFile mappedFile = queue.createMappedFileForOffset(100);
+        MappedFile mappedFile = queue.getOrCreateMappedFileForOffset(100);
 
         // test empty mapped file
         assertEquals(0, mappedFile.getMinOffset());
@@ -78,21 +78,21 @@ class DefaultMappedFileQueueTest {
         queue.load();
         assertTrue(queue.isEmpty());
 
-        MappedFile mappedFile = queue.createMappedFileForOffset(100);
+        MappedFile mappedFile = queue.getOrCreateMappedFileForOffset(100);
         assertNotNull(mappedFile);
 
         assertEquals(1, queue.size());
         assertNotNull(queue.getFirstMappedFile());
 
-        mappedFile = queue.createMappedFileForOffset(100 + fileSize);
+        mappedFile = queue.getOrCreateMappedFileForOffset(100 + fileSize);
         assertNotNull(mappedFile);
         assertEquals(2, queue.size());
 
-        mappedFile = queue.createMappedFileForOffset(100 + fileSize * 2);
+        mappedFile = queue.getOrCreateMappedFileForOffset(100 + fileSize * 2);
         assertNotNull(mappedFile);
         assertEquals(3, queue.size());
 
-        mappedFile = queue.createMappedFileForOffset(100 + fileSize * 3);
+        mappedFile = queue.getOrCreateMappedFileForOffset(100 + fileSize * 3);
         assertNotNull(mappedFile);
         assertEquals(4, queue.size());
 
@@ -106,9 +106,9 @@ class DefaultMappedFileQueueTest {
         queue.load();
 
         // 创建多个文件
-        MappedFile file1 = queue.createMappedFileForOffset(0);
-        MappedFile file2 = queue.createMappedFileForOffset(fileSize);
-        MappedFile file3 = queue.createMappedFileForOffset(fileSize * 2);
+        MappedFile file1 = queue.getOrCreateMappedFileForOffset(0);
+        MappedFile file2 = queue.getOrCreateMappedFileForOffset(fileSize);
+        MappedFile file3 = queue.getOrCreateMappedFileForOffset(fileSize * 2);
 
         // 测试精确匹配
         assertEquals(file1, queue.getMappedFileByOffset(0));
@@ -142,13 +142,13 @@ class DefaultMappedFileQueueTest {
     }
 
     @Test
-    void testCreateMappedFileForOffset_EmptyQueue(@TempDir Path tmpDir) {
+    void testGetOrCreateMappedFileForOffset_EmptyQueue(@TempDir Path tmpDir) {
         // Arrange
         int fileSize = 1024;
         DefaultMappedFileQueue queue = new DefaultMappedFileQueue(tmpDir.toString(), fileSize);
 
         // Act
-        MappedFile mappedFile = queue.createMappedFileForOffset(0);
+        MappedFile mappedFile = queue.getOrCreateMappedFileForOffset(0);
 
         // Assert
         assertNotNull(mappedFile);
@@ -158,14 +158,14 @@ class DefaultMappedFileQueueTest {
     }
 
     @Test
-    void testCreateMappedFileForOffset_OffsetInLastFileRange(@TempDir Path tmpDir) {
+    void testGetOrCreateMappedFileForOffset_OffsetInLastFileRange(@TempDir Path tmpDir) {
         // Arrange
         int fileSize = 1024;
         DefaultMappedFileQueue queue = new DefaultMappedFileQueue(tmpDir.toString(), fileSize);
-        MappedFile firstFile = queue.createMappedFileForOffset(0);
+        MappedFile firstFile = queue.getOrCreateMappedFileForOffset(0);
 
         // Act
-        MappedFile mappedFile = queue.createMappedFileForOffset(500);
+        MappedFile mappedFile = queue.getOrCreateMappedFileForOffset(500);
 
         // Assert
         assertEquals(firstFile, mappedFile);
@@ -173,15 +173,15 @@ class DefaultMappedFileQueueTest {
     }
 
     @Test
-    void testCreateMappedFileForOffset_OffsetBeyondLastFile_Full(@TempDir Path tmpDir) {
+    void testGetOrCreateMappedFileForOffset_OffsetBeyondLastFile_Full(@TempDir Path tmpDir) {
         // Arrange
         int fileSize = 1024;
         DefaultMappedFileQueue queue = new DefaultMappedFileQueue(tmpDir.toString(), fileSize);
-        MappedFile firstFile = queue.createMappedFileForOffset(0);
+        MappedFile firstFile = queue.getOrCreateMappedFileForOffset(0);
         firstFile.setInsertPosition(fileSize); // 模拟文件已满
 
         // Act
-        MappedFile mappedFile = queue.createMappedFileForOffset(1500);
+        MappedFile mappedFile = queue.getOrCreateMappedFileForOffset(1500);
 
         // Assert
         assertNotEquals(firstFile, mappedFile);
@@ -217,7 +217,7 @@ class DefaultMappedFileQueueTest {
     void testGetFirstAndLastMappedFile_SingleFile(@TempDir Path tmpDir) {
         // Arrange
         DefaultMappedFileQueue queue = new DefaultMappedFileQueue(tmpDir.toString(), 1024);
-        MappedFile file = queue.createMappedFileForOffset(0);
+        MappedFile file = queue.getOrCreateMappedFileForOffset(0);
 
         // Act
         MappedFile firstFile = queue.getFirstMappedFile();
@@ -232,9 +232,9 @@ class DefaultMappedFileQueueTest {
     void testGetFirstAndLastMappedFile_MultipleFiles(@TempDir Path tmpDir) {
         // Arrange
         DefaultMappedFileQueue queue = new DefaultMappedFileQueue(tmpDir.toString(), 1024);
-        MappedFile firstFile = queue.createMappedFileForOffset(0);
-        MappedFile secondFile = queue.createMappedFileForOffset(1024);
-        MappedFile thirdFile = queue.createMappedFileForOffset(2048);
+        MappedFile firstFile = queue.getOrCreateMappedFileForOffset(0);
+        MappedFile secondFile = queue.getOrCreateMappedFileForOffset(1024);
+        MappedFile thirdFile = queue.getOrCreateMappedFileForOffset(2048);
 
         // Act
         MappedFile retrievedFirstFile = queue.getFirstMappedFile();
@@ -249,7 +249,7 @@ class DefaultMappedFileQueueTest {
     void testGetFirstMappedFile_ExceptionHandling(@TempDir Path tmpDir) {
         // Arrange
         DefaultMappedFileQueue queue = new DefaultMappedFileQueue(tmpDir.toString(), 1024);
-        queue.createMappedFileForOffset(0);
+        queue.getOrCreateMappedFileForOffset(0);
 
         // Mock异常情况：手动清空mappedFiles列表以触发异常
         queue.getMappedFiles().clear();
@@ -265,7 +265,7 @@ class DefaultMappedFileQueueTest {
     void testGetLastMappedFile_ExceptionHandling(@TempDir Path tmpDir) {
         // Arrange
         DefaultMappedFileQueue queue = new DefaultMappedFileQueue(tmpDir.toString(), 1024);
-        queue.createMappedFileForOffset(0);
+        queue.getOrCreateMappedFileForOffset(0);
 
         // Mock异常情况：手动清空mappedFiles列表以触发异常
         queue.getMappedFiles().clear();

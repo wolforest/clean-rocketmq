@@ -141,7 +141,7 @@ public class DefaultMappedFileQueue implements MappedFileQueue {
     }
 
     @Override
-    public MappedFile createMappedFileForOffset(long offset) {
+    public MappedFile getOrCreateMappedFileForOffset(long offset) {
         long fileOffset;
         MappedFile last = getLastMappedFile();
 

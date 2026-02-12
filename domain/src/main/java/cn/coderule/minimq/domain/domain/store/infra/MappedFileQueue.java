@@ -40,10 +40,12 @@ public interface MappedFileQueue {
 
     /**
      * get or create mappedFile contains offset
+     * @renamed from createMappedFileForOffset to getOrCreateMappedFileForOffset
+     *
      * @param offset offset
      * @return MappedFile
      */
-    MappedFile createMappedFileForOffset(long offset);
+    MappedFile getOrCreateMappedFileForOffset(long offset);
 
     /**
      * get the mappedFile contains the offset
