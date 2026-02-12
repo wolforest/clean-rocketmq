@@ -111,7 +111,7 @@ public class DefaultMappedFileQueue implements MappedFileQueue {
 
     @Override
     public MappedFile createMappedFileForSize(int messageSize) {
-        if (isEmpty()) return createMappedFile(0);
+        if (isEmpty()) return createMappedFileByStartOffset(0);
 
         MappedFile last = getLastMappedFile();
         if (last.canWrite(messageSize)) {
@@ -119,7 +119,7 @@ public class DefaultMappedFileQueue implements MappedFileQueue {
         }
 
         long nextOffset = last.getMinOffset() + this.fileSize;
-        return createMappedFile(nextOffset);
+        return createMappedFileByStartOffset(nextOffset);
     }
 
     @Override
@@ -149,7 +149,7 @@ public class DefaultMappedFileQueue implements MappedFileQueue {
         // this will cause service can't restart
         if (null == last || !last.containsOffset(offset)) {
             fileOffset = offset - offset % fileSize;
-            return createMappedFile(fileOffset);
+            return createMappedFileByStartOffset(fileOffset);
         }
 
         if (!last.isFull()) {
@@ -157,7 +157,7 @@ public class DefaultMappedFileQueue implements MappedFileQueue {
         }
 
         fileOffset = last.getMinOffset() + this.fileSize;
-        return createMappedFile(fileOffset);
+        return createMappedFileByStartOffset(fileOffset);
     }
 
     @Override
@@ -192,9 +192,9 @@ public class DefaultMappedFileQueue implements MappedFileQueue {
     }
 
     @Override
-    public MappedFile createMappedFile(long createOffset) {
-        String file = this.rootDir + File.separator + OffsetUtils.offsetToFileName(createOffset);
-        String nextFile = this.rootDir + File.separator + OffsetUtils.offsetToFileName(createOffset + this.fileSize);
+    public MappedFile createMappedFileByStartOffset(long startOffset) {
+        String file = this.rootDir + File.separator + OffsetUtils.offsetToFileName(startOffset);
+        String nextFile = this.rootDir + File.separator + OffsetUtils.offsetToFileName(startOffset + this.fileSize);
         MappedFile mappedFile;
 
         if (null != allocateMappedFileService) {

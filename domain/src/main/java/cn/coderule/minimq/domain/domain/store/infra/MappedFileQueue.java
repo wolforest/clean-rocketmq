@@ -20,11 +20,17 @@ public interface MappedFileQueue {
 
     MappedFile getMappedFileByIndex(int index);
 
-    MappedFile createMappedFile(long createOffset);
+    /**
+     * create mappedFile by startOffset
+     * @renamed from createMappedFile to createMappedFileByStartOffset
+     *
+     * @param startOffset startOffset of the mappedFile
+     * @return mappedFile
+     */
+    MappedFile createMappedFileByStartOffset(long startOffset);
 
     /**
-     * get or create available MappedFile
-     * which available space > messageSize
+     * get or create MappedFile which available space > messageSize
      *
      * @param messageSize messageSize
      * @return mappedFile

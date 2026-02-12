@@ -285,7 +285,7 @@ public class DefaultConsumeQueue implements ConsumeQueue {
 
         long fileOffset = queueOffset - queueOffset % config.getFileSize();
         boolean isQueueEmpty = mappedFileQueue.isEmpty();
-        MappedFile file = mappedFileQueue.createMappedFile(fileOffset);
+        MappedFile file = mappedFileQueue.createMappedFileByStartOffset(fileOffset);
         if (file == null) {
             return null;
         }

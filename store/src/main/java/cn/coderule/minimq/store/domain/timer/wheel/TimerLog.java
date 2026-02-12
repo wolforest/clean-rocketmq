@@ -136,9 +136,9 @@ public class TimerLog implements Flushable {
     private MappedFile chooseLastMappedFile(int len) {
         MappedFile mappedFile = this.mappedFileQueue.getLastMappedFile();
         if (mappedFile == null) {
-            mappedFile = this.mappedFileQueue.createMappedFile(0L);
+            mappedFile = this.mappedFileQueue.createMappedFileByStartOffset(0L);
         } else if (mappedFile.isFull()) {
-            mappedFile = this.mappedFileQueue.createMappedFile(mappedFile.getMaxOffset());
+            mappedFile = this.mappedFileQueue.createMappedFileByStartOffset(mappedFile.getMaxOffset());
         }
 
         if (null == mappedFile) {
@@ -165,7 +165,7 @@ public class TimerLog implements Flushable {
 
         mappedFile = this.mappedFileQueue.getLastMappedFile();
         if (mappedFile == null) {
-            mappedFile = this.mappedFileQueue.createMappedFile(0L);
+            mappedFile = this.mappedFileQueue.createMappedFileByStartOffset(0L);
         }
 
         if (null == mappedFile) {
