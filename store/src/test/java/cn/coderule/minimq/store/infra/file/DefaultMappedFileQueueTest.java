@@ -277,4 +277,65 @@ class DefaultMappedFileQueueTest {
         assertNull(lastFile);
     }
 
+    @Test
+    void testCreateMappedFileByStartOffset_NormalCase(@TempDir Path tmpDir) {
+        // Arrange
+        DefaultMappedFileQueue queue = new DefaultMappedFileQueue(tmpDir.toString(), 1024);
+        long startOffset = 0;
+
+        // Act
+        MappedFile mappedFile = queue.createMappedFileByStartOffset(startOffset);
+
+        // Assert
+        assertNotNull(mappedFile);
+        assertEquals(startOffset, mappedFile.getMinOffset());
+        assertEquals(1, queue.size());
+        assertTrue(queue.getMappedFiles().contains(mappedFile));
+    }
+
+    @Test
+    void testCreateMappedFileByStartOffset_DuplicateOffset(@TempDir Path tmpDir) {
+        // Arrange
+        DefaultMappedFileQueue queue = new DefaultMappedFileQueue(tmpDir.toString(), 1024);
+        long startOffset = 0;
+        queue.createMappedFileByStartOffset(startOffset);
+
+        // Act
+        MappedFile mappedFile = queue.createMappedFileByStartOffset(startOffset);
+
+        // Assert
+        assertNotNull(mappedFile);
+        assertEquals(2, queue.size()); // 应该创建新文件而不是重复使用
+    }
+
+    @Test
+    void testCreateMappedFileByStartOffset_BoundaryConditions(@TempDir Path tmpDir) {
+        // Arrange
+        DefaultMappedFileQueue queue = new DefaultMappedFileQueue(tmpDir.toString(), 1024);
+
+        // Test with zero offset
+        MappedFile file1 = queue.createMappedFileByStartOffset(0);
+        assertNotNull(file1);
+        assertEquals(0, file1.getMinOffset());
+
+        // Test with large offset
+        long largeOffset = Long.MAX_VALUE - 1024;
+        MappedFile file2 = queue.createMappedFileByStartOffset(largeOffset);
+        assertNotNull(file2);
+        assertEquals(largeOffset, file2.getMinOffset());
+    }
+
+    @Test
+    void testCreateMappedFileByStartOffset_ExceptionHandling(@TempDir Path tmpDir) {
+        // Arrange
+        DefaultMappedFileQueue queue = new DefaultMappedFileQueue("/invalid/path", 1024);
+
+        // Act
+        MappedFile mappedFile = queue.createMappedFileByStartOffset(0);
+
+        // Assert
+        assertNull(mappedFile); // 由于路径无效，应返回 null
+        assertEquals(0, queue.size());
+    }
+
 }
