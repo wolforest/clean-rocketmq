@@ -4,6 +4,8 @@ import cn.coderule.minimq.domain.core.enums.store.InsertStatus;
 import cn.coderule.minimq.domain.domain.store.infra.InsertResult;
 import cn.coderule.minimq.domain.domain.store.infra.MappedFile;
 import cn.coderule.minimq.domain.domain.store.infra.MappedFileQueue;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -336,6 +338,64 @@ class DefaultMappedFileQueueTest {
         // Assert
         assertNull(mappedFile); // 由于路径无效，应返回 null
         assertEquals(0, queue.size());
+    }
+
+
+    @Test
+    void testIsEmptyAndSize() {
+        // Arrange
+        DefaultMappedFileQueue queue = new DefaultMappedFileQueue("/tmp/test", 1024);
+
+        // Act & Assert
+        assertTrue(queue.isEmpty());
+        assertEquals(0, queue.size());
+
+        queue.createMappedFileByStartOffset(0);
+        assertFalse(queue.isEmpty());
+        assertEquals(1, queue.size());
+    }
+
+    @Test
+    void testGetFirstAndLastMappedFile() {
+        // Arrange
+        DefaultMappedFileQueue queue = new DefaultMappedFileQueue("/tmp/test", 1024);
+        MappedFile file1 = queue.createMappedFileByStartOffset(0);
+        MappedFile file2 = queue.createMappedFileByStartOffset(1024);
+
+        // Act & Assert
+        assertEquals(file1, queue.getFirstMappedFile());
+        assertEquals(file2, queue.getLastMappedFile());
+    }
+
+
+    @Test
+    void testRemoveMappedFile() {
+        // Arrange
+        DefaultMappedFileQueue queue = new DefaultMappedFileQueue("/tmp/test", 1024);
+        MappedFile file = queue.createMappedFileByStartOffset(0);
+
+        // Act
+        queue.removeMappedFile(file);
+
+        // Assert
+        assertTrue(queue.isEmpty());
+        assertEquals(0, queue.size());
+    }
+
+    @Test
+    void testLoadAndDestroy(@TempDir Path tmpDir) throws IOException {
+        // Arrange
+        DefaultMappedFileQueue queue = new DefaultMappedFileQueue(tmpDir.toString(), 1024);
+
+        // Act
+        queue.createMappedFileByStartOffset(0);
+        boolean loaded = queue.load();
+        queue.destroy();
+
+        // Assert
+        assertTrue(loaded);
+        assertTrue(queue.isEmpty());
+        assertFalse(Files.exists(tmpDir)); // 目录应被删除
     }
 
 }
