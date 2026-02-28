@@ -398,4 +398,61 @@ class DefaultMappedFileQueueTest {
         assertFalse(Files.exists(tmpDir)); // 目录应被删除
     }
 
+    @Test
+    void testFlush(@TempDir Path tmpDir) throws IOException {
+        DefaultMappedFileQueue queue = new DefaultMappedFileQueue(tmpDir.toString(), 1024);
+        queue.load();
+
+        MappedFile file = queue.getOrCreateMappedFileForSize(100);
+        file.insert("test data".getBytes());
+
+        assertEquals(0, queue.getFlushPosition());
+
+        boolean result = queue.flush(0);
+
+        assertTrue(result);
+        assertEquals(9, queue.getFlushPosition());
+        assertTrue(queue.getStoreTimestamp() > 0);
+
+        queue.destroy();
+    }
+
+    @Test
+    void testFlushEmptyQueue(@TempDir Path tmpDir) {
+        DefaultMappedFileQueue queue = new DefaultMappedFileQueue(tmpDir.toString(), 1024);
+        queue.load();
+
+        boolean result = queue.flush(0);
+
+        assertTrue(result);
+        assertEquals(0, queue.getFlushPosition());
+
+        queue.destroy();
+    }
+
+    @Test
+    void testFlushMultipleFiles(@TempDir Path tmpDir) {
+        DefaultMappedFileQueue queue = new DefaultMappedFileQueue(tmpDir.toString(), 1024);
+        queue.load();
+
+        MappedFile file = queue.getOrCreateMappedFileForOffset(0);
+        file.insert("data1".getBytes());
+
+        queue.flush(0);
+        assertEquals(5, queue.getFlushPosition());
+
+        queue.flush(0);
+        assertEquals(5, queue.getFlushPosition());
+
+        file.insert("data2".getBytes());
+
+        queue.flush(0);
+        assertEquals(5 + 5, queue.getFlushPosition());
+
+        queue.flush(0);
+        assertEquals(5 + 5, queue.getFlushPosition());
+
+        queue.destroy();
+    }
+
 }

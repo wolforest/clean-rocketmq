@@ -289,7 +289,10 @@ public class DefaultMappedFileQueue implements MappedFileQueue {
         int offset = mappedFile.flush(minPages);
         long position = mappedFile.getMinOffset() + offset;
 
-        boolean result = position == this.flushPosition;
+        // This is different from the official implementation
+        // official code is:
+        // boolean result = position == this.flushPosition;
+        boolean result = position >= this.flushPosition;
         this.flushPosition = position;
 
         if (0 == minPages) {
