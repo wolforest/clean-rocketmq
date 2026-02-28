@@ -10,7 +10,7 @@ import cn.coderule.minimq.domain.domain.store.domain.consumequeue.ConsumeQueueGa
 import cn.coderule.minimq.domain.domain.store.domain.meta.ConsumeOffsetService;
 import cn.coderule.minimq.domain.domain.store.domain.meta.TopicService;
 import cn.coderule.minimq.domain.domain.meta.topic.KeyBuilder;
-import cn.coderule.minimq.store.infra.StoreRegister;
+import cn.coderule.minimq.store.server.bootstrap.StoreRegister;
 import cn.coderule.minimq.store.server.bootstrap.StoreContext;
 import java.util.Map;
 import java.util.Set;

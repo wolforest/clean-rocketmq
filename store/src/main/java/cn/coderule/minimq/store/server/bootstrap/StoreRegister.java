@@ -1,4 +1,4 @@
-package cn.coderule.minimq.store.infra;
+package cn.coderule.minimq.store.server.bootstrap;
 
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.util.lang.string.StringUtil;
@@ -19,7 +19,6 @@ import cn.coderule.minimq.domain.domain.cluster.server.HeartBeat;
 import cn.coderule.minimq.domain.domain.cluster.server.ServerInfo;
 import cn.coderule.minimq.domain.domain.cluster.server.StoreInfo;
 import cn.coderule.minimq.domain.domain.cluster.route.TopicInfo;
-import cn.coderule.minimq.store.server.bootstrap.StoreContext;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 
