@@ -312,7 +312,10 @@ public class DefaultMappedFileQueue implements MappedFileQueue {
         int offset = mappedFile.commit(minPages);
         long position = mappedFile.getMinOffset() + offset;
 
-        boolean result = position == this.commitPosition;
+        // This is different from the official implementation
+        // official code is:
+        //    boolean result = position == this.commitPosition;
+        boolean result = position >= this.commitPosition;
         this.commitPosition = position;
 
         return result;

@@ -455,4 +455,76 @@ class DefaultMappedFileQueueTest {
         queue.destroy();
     }
 
+    @Test
+    void testCommitEmptyQueue(@TempDir Path tmpDir) {
+        DefaultMappedFileQueue queue = new DefaultMappedFileQueue(tmpDir.toString(), 1024);
+        queue.load();
+
+        boolean result = queue.commit(0);
+
+        assertTrue(result);
+        assertEquals(0, queue.getCommitPosition());
+
+        queue.destroy();
+    }
+
+    @Test
+    void testCommit(@TempDir Path tmpDir) throws IOException {
+        DefaultMappedFileQueue queue = new DefaultMappedFileQueue(tmpDir.toString(), 1024);
+        queue.load();
+
+        MappedFile file = queue.getOrCreateMappedFileForSize(100);
+        file.insert("test data".getBytes());
+
+        assertEquals(0, queue.getCommitPosition());
+
+        boolean result = queue.commit(0);
+
+        assertTrue(result);
+        assertEquals(9, queue.getCommitPosition());
+
+        queue.destroy();
+    }
+
+    @Test
+    void testCommitMultipleFiles(@TempDir Path tmpDir) throws IOException {
+        DefaultMappedFileQueue queue = new DefaultMappedFileQueue(tmpDir.toString(), 1024);
+        queue.load();
+
+        MappedFile file = queue.getOrCreateMappedFileForOffset(0);
+        file.insert("data1".getBytes());
+
+        queue.commit(0);
+        assertEquals(5, queue.getCommitPosition());
+
+        queue.commit(0);
+        assertEquals(5, queue.getCommitPosition());
+
+        file.insert("data1".getBytes());
+        queue.commit(0);
+        assertEquals(5 + 5, queue.getCommitPosition());
+
+        queue.commit(0);
+        assertEquals(5 + 5, queue.getCommitPosition());
+
+        queue.destroy();
+    }
+
+    @Test
+    void testCommitAndFlush(@TempDir Path tmpDir) throws IOException {
+        DefaultMappedFileQueue queue = new DefaultMappedFileQueue(tmpDir.toString(), 1024);
+        queue.load();
+
+        MappedFile file = queue.getOrCreateMappedFileForSize(100);
+        file.insert("test".getBytes());
+
+        queue.commit(0);
+        queue.flush(0);
+
+        assertEquals(4, queue.getCommitPosition());
+        assertEquals(4, queue.getFlushPosition());
+
+        queue.destroy();
+    }
+
 }
