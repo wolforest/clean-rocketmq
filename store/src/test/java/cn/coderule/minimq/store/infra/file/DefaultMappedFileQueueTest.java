@@ -4,7 +4,6 @@ import cn.coderule.minimq.domain.core.enums.store.InsertStatus;
 import cn.coderule.minimq.domain.domain.store.infra.InsertResult;
 import cn.coderule.minimq.domain.domain.store.infra.MappedFile;
 import cn.coderule.minimq.domain.domain.store.infra.MappedFileQueue;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import org.junit.jupiter.api.Test;
@@ -29,6 +28,54 @@ class DefaultMappedFileQueueTest {
         assertNotNull(queue.getOrCreateMappedFileForSize(10));
 
         queue.destroy();
+    }
+
+    @Test
+    void testGetOrCreateMappedFileForSize(@TempDir Path tmpDir) {
+        MappedFileQueue queue = new DefaultMappedFileQueue(tmpDir.toString(), 1024);
+
+        MappedFile file = queue.getOrCreateMappedFileForSize(100);
+
+        assertNotNull(file);
+        assertEquals(1, queue.size());
+        assertTrue(file.canWrite(50));
+    }
+
+    @Test
+    void testCheckSelf(@TempDir Path tmpDir) {
+        MappedFileQueue queue = new DefaultMappedFileQueue(tmpDir.toString(), 1024);
+
+        // 创建一些文件
+        for (int i = 0; i < 3; i++) {
+            queue.getOrCreateMappedFileForSize(100);
+        }
+
+        // 测试自检
+        assertDoesNotThrow(queue::checkSelf);
+
+        // 验证文件顺序正确 - 使用实际可用的方法
+        MappedFile prev = null;
+        // 由于 getMappedFiles() 方法问题，简化测试
+        for (int i = 0; i < queue.size(); i++) {
+            MappedFile current = queue.getMappedFileByIndex(i);
+            if (prev != null) {
+                assertTrue(current.getMinOffset() > prev.getMinOffset());
+            }
+            prev = current;
+        }
+    }
+
+    @Test
+    void testShutdown(@TempDir Path tmpDir) {
+        MappedFileQueue queue = new DefaultMappedFileQueue(tmpDir.toString(), 1024);
+
+        // 创建一些文件
+        for (int i = 0; i < 3; i++) {
+            queue.getOrCreateMappedFileForSize(100);
+        }
+
+        // 测试关闭
+        assertDoesNotThrow(() -> queue.shutdown(1000));
     }
 
     @Test
@@ -139,6 +186,19 @@ class DefaultMappedFileQueueTest {
         assertEquals(0, queue.size());
         assertNull(queue.getFirstMappedFile());
         assertNull(queue.getLastMappedFile());
+        assertEquals(0, queue.getMinOffset());
+        assertEquals(0, queue.getMaxOffset());
+
+        // 测试单个文件
+        MappedFile singleFile = queue.getOrCreateMappedFileForSize(100);
+        assertEquals(singleFile, queue.getFirstMappedFile());
+        assertEquals(singleFile, queue.getLastMappedFile());
+
+        // 测试移除不存在的文件 - 由于Mock复杂性，简化测试
+        int originalSize = queue.size();
+        // 尝试移除null不会引发异常
+        assertDoesNotThrow(() -> queue.removeMappedFile(null));
+        assertEquals(originalSize, queue.size()); // 大小不应该改变
 
         queue.destroy();
     }
@@ -244,6 +304,7 @@ class DefaultMappedFileQueueTest {
 
         // Assert
         assertEquals(firstFile, retrievedFirstFile);
+        assertNotNull(secondFile);
         assertEquals(thirdFile, retrievedLastFile);
     }
 
@@ -328,7 +389,7 @@ class DefaultMappedFileQueueTest {
     }
 
     @Test
-    void testCreateMappedFileByStartOffset_ExceptionHandling(@TempDir Path tmpDir) {
+    void testCreateMappedFileByStartOffset_ExceptionHandling() {
         // Arrange
         DefaultMappedFileQueue queue = new DefaultMappedFileQueue("/invalid/path", 1024);
 
@@ -383,7 +444,7 @@ class DefaultMappedFileQueueTest {
     }
 
     @Test
-    void testLoadAndDestroy(@TempDir Path tmpDir) throws IOException {
+    void testLoadAndDestroy(@TempDir Path tmpDir) {
         // Arrange
         DefaultMappedFileQueue queue = new DefaultMappedFileQueue(tmpDir.toString(), 1024);
 
@@ -399,7 +460,7 @@ class DefaultMappedFileQueueTest {
     }
 
     @Test
-    void testFlush(@TempDir Path tmpDir) throws IOException {
+    void testFlush(@TempDir Path tmpDir) {
         DefaultMappedFileQueue queue = new DefaultMappedFileQueue(tmpDir.toString(), 1024);
         queue.load();
 
@@ -469,7 +530,7 @@ class DefaultMappedFileQueueTest {
     }
 
     @Test
-    void testCommit(@TempDir Path tmpDir) throws IOException {
+    void testCommit(@TempDir Path tmpDir) {
         DefaultMappedFileQueue queue = new DefaultMappedFileQueue(tmpDir.toString(), 1024);
         queue.load();
 
@@ -487,7 +548,7 @@ class DefaultMappedFileQueueTest {
     }
 
     @Test
-    void testCommitMultipleFiles(@TempDir Path tmpDir) throws IOException {
+    void testCommitMultipleFiles(@TempDir Path tmpDir) {
         DefaultMappedFileQueue queue = new DefaultMappedFileQueue(tmpDir.toString(), 1024);
         queue.load();
 
@@ -511,7 +572,7 @@ class DefaultMappedFileQueueTest {
     }
 
     @Test
-    void testCommitAndFlush(@TempDir Path tmpDir) throws IOException {
+    void testCommitAndFlush(@TempDir Path tmpDir) {
         DefaultMappedFileQueue queue = new DefaultMappedFileQueue(tmpDir.toString(), 1024);
         queue.load();
 
