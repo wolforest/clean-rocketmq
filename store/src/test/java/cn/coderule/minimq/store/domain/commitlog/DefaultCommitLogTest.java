@@ -26,7 +26,7 @@ class DefaultCommitLogTest {
     public static int MMAP_FILE_SIZE = 1024 * 1024;
 
     @Test
-    void testInsertAndSelect(@TempDir Path tmpDir) throws ExecutionException, InterruptedException {
+    void testInsertAndSelectMessage(@TempDir Path tmpDir) throws ExecutionException, InterruptedException {
         String dir = tmpDir.toString();
         StoreConfig storeConfig = ConfigMock.createStoreConfig(dir);
         CommitLog commitLog = createCommitLog(dir, storeConfig);
@@ -94,7 +94,7 @@ class DefaultCommitLogTest {
     }
 
 
-    public MessageBO createMessage(MessageEncoder encoder) {
+    private MessageBO createMessage(MessageEncoder encoder) {
         MessageBO messageBO = MessageMock.createMessage();
 
         Pair<Boolean, Set<String>> validate = MessageEncoder.validate(messageBO);
