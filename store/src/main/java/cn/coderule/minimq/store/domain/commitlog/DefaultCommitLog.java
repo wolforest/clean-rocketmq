@@ -61,6 +61,19 @@ public class DefaultCommitLog implements CommitLog {
     }
 
     @Override
+    public void assignCommitOffset(MessageBO messageBO) {
+        if (messageBO.getMessageLength() < 0) {
+            throw new InvalidRequestException(
+                InvalidCode.MESSAGE_CORRUPTED,
+                "Message length can't be null, while assign commitOffset"
+            );
+        }
+
+        MappedFile mappedFile = getMappedFile(messageBO.getMessageLength());
+        assignCommitOffset(messageBO, mappedFile);
+    }
+
+    @Override
     public EnqueueFuture insert(MessageBO messageBO) {
         InsertContext context = initContext(messageBO);
 
@@ -173,19 +186,6 @@ public class DefaultCommitLog implements CommitLog {
     @Override
     public long getMaxOffset() {
         return mappedFileQueue.getMaxOffset();
-    }
-
-    @Override
-    public void assignCommitOffset(MessageBO messageBO) {
-        if (messageBO.getMessageLength() < 0) {
-            throw new InvalidRequestException(
-                InvalidCode.MESSAGE_CORRUPTED,
-                "Message length can't be null, while assign commitOffset"
-            );
-        }
-
-        MappedFile mappedFile = getMappedFile(messageBO.getMessageLength());
-        assignCommitOffset(messageBO, mappedFile);
     }
 
     @Override
