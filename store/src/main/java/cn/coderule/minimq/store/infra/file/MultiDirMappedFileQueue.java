@@ -51,6 +51,11 @@ public class MultiDirMappedFileQueue implements MappedFileQueue {
     // ==================== Lifecycle ====================
 
     @Override
+    public String getRootDir() {
+        return "";
+    }
+
+    @Override
     public boolean load() {
         for (DefaultMappedFileQueue queue : queues) {
             if (!queue.load()) {
