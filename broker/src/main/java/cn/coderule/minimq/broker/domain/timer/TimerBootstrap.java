@@ -19,7 +19,7 @@ import cn.coderule.minimq.domain.domain.timer.state.TimerState;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class TimerManager implements Lifecycle {
+public class TimerBootstrap implements Lifecycle {
     private BrokerConfig brokerConfig;
     private TimerConfig timerConfig;
 

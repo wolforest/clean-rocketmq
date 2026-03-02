@@ -17,7 +17,7 @@ import cn.coderule.minimq.rpc.registry.route.RouteLoader;
  *  - initialize meta servers
  *  - nothing to start/shutdown
  */
-public class MetaManager implements Lifecycle {
+public class MetaBootstrap implements Lifecycle {
     private BrokerConfig brokerConfig;
     @Override
     public void initialize() throws Exception {

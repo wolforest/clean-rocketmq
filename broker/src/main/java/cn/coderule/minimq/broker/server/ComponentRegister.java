@@ -2,16 +2,16 @@ package cn.coderule.minimq.broker.server;
 
 import cn.coderule.common.convention.service.LifecycleManager;
 import cn.coderule.common.util.lang.string.StringUtil;
-import cn.coderule.minimq.broker.domain.consumer.ConsumerManager;
-import cn.coderule.minimq.broker.domain.producer.ProducerManager;
-import cn.coderule.minimq.broker.domain.meta.MetaManager;
-import cn.coderule.minimq.broker.domain.timer.TimerManager;
-import cn.coderule.minimq.broker.domain.transaction.TransactionManager;
+import cn.coderule.minimq.broker.domain.consumer.ConsumerBootstrap;
+import cn.coderule.minimq.broker.domain.producer.ProducerBootstrap;
+import cn.coderule.minimq.broker.domain.meta.MetaBootstrap;
+import cn.coderule.minimq.broker.domain.timer.TimerBootstrap;
+import cn.coderule.minimq.broker.domain.transaction.TransactionBootstrap;
 import cn.coderule.minimq.broker.infra.BrokerRegister;
-import cn.coderule.minimq.broker.infra.store.StoreManager;
-import cn.coderule.minimq.broker.infra.task.TaskManager;
+import cn.coderule.minimq.broker.infra.store.StoreBootstrap;
+import cn.coderule.minimq.broker.infra.task.TaskBootstrap;
 import cn.coderule.minimq.broker.server.bootstrap.BrokerContext;
-import cn.coderule.minimq.broker.server.grpc.GrpcManager;
+import cn.coderule.minimq.broker.server.grpc.GrpcBootstrap;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.rpc.common.rpc.netty.NettyClient;
 import cn.coderule.minimq.rpc.registry.route.RouteLoader;
@@ -64,7 +64,7 @@ public class ComponentRegister {
     }
 
     private void registerGrpc() {
-        GrpcManager component = new GrpcManager();
+        GrpcBootstrap component = new GrpcBootstrap();
         manager.register(component);
     }
 
@@ -93,37 +93,37 @@ public class ComponentRegister {
     }
 
     private void registerTask() {
-        TaskManager component = new TaskManager();
+        TaskBootstrap component = new TaskBootstrap();
         manager.register(component);
     }
 
     private void registerStore() {
-        StoreManager component = new StoreManager();
+        StoreBootstrap component = new StoreBootstrap();
         manager.register(component);
     }
 
     private void registerRoute() {
-        MetaManager component = new MetaManager();
+        MetaBootstrap component = new MetaBootstrap();
         manager.register(component);
     }
 
     private void registerProducer() {
-        ProducerManager component = new ProducerManager();
+        ProducerBootstrap component = new ProducerBootstrap();
         manager.register(component);
     }
 
     private void registerConsumer() {
-        ConsumerManager component = new ConsumerManager();
+        ConsumerBootstrap component = new ConsumerBootstrap();
         manager.register(component);
     }
 
     private void registerTransaction() {
-        TransactionManager component = new TransactionManager();
+        TransactionBootstrap component = new TransactionBootstrap();
         manager.register(component);
     }
 
     private void registerTimer() {
-        TimerManager component = new TimerManager();
+        TimerBootstrap component = new TimerBootstrap();
         manager.register(component);
     }
 

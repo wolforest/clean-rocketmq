@@ -8,7 +8,7 @@ import cn.coderule.minimq.broker.server.bootstrap.BrokerContext;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.domain.consumer.receipt.ReceiptHandler;
 
-public class RenewManager implements Lifecycle {
+public class RenewBootstrap implements Lifecycle {
     private BrokerConfig brokerConfig;
 
     private RenewListener renewListener;

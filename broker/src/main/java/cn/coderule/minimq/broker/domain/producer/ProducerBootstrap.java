@@ -9,7 +9,7 @@ import cn.coderule.minimq.broker.infra.store.TopicStore;
 import cn.coderule.minimq.broker.server.bootstrap.BrokerContext;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 
-public class ProducerManager implements Lifecycle {
+public class ProducerBootstrap implements Lifecycle {
     private BrokerConfig brokerConfig;
     private EnqueueService enqueueService;
 

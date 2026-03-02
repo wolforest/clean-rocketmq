@@ -7,7 +7,7 @@ import cn.coderule.minimq.rpc.registry.route.RouteLoader;
 import cn.coderule.minimq.broker.server.bootstrap.BrokerContext;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 
-public class RemoteStoreManager implements Lifecycle {
+public class RemoteStoreBootstrap implements Lifecycle {
     private BrokerConfig brokerConfig;
     private RemoteLoadBalance loadBalance;
     private RpcClient rpcClient;

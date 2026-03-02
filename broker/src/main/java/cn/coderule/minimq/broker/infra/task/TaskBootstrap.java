@@ -5,7 +5,7 @@ import cn.coderule.minimq.broker.server.bootstrap.BrokerContext;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.domain.cluster.task.TaskLoader;
 
-public class TaskManager implements Lifecycle {
+public class TaskBootstrap implements Lifecycle {
     private TaskContext taskContext;
     private TaskLoader taskLoader;
 

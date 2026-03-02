@@ -3,27 +3,27 @@ package cn.coderule.minimq.broker.infra.store;
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.minimq.broker.infra.embed.EmbedConsumeOffsetStore;
 import cn.coderule.minimq.broker.infra.embed.EmbedMQStore;
-import cn.coderule.minimq.broker.infra.embed.EmbedStoreManager;
+import cn.coderule.minimq.broker.infra.embed.EmbedStoreBootstrap;
 import cn.coderule.minimq.broker.infra.embed.EmbedSubscriptionStore;
 import cn.coderule.minimq.broker.infra.embed.EmbedTimerStore;
 import cn.coderule.minimq.broker.infra.embed.EmbedTopicStore;
 import cn.coderule.minimq.broker.infra.remote.RemoteConsumeOffsetStore;
 import cn.coderule.minimq.broker.infra.remote.RemoteMQStore;
-import cn.coderule.minimq.broker.infra.remote.RemoteStoreManager;
+import cn.coderule.minimq.broker.infra.remote.RemoteStoreBootstrap;
 import cn.coderule.minimq.broker.infra.remote.RemoteSubscriptionStore;
 import cn.coderule.minimq.broker.infra.remote.RemoteTimerStore;
 import cn.coderule.minimq.broker.infra.remote.RemoteTopicStore;
 import cn.coderule.minimq.broker.server.bootstrap.BrokerContext;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 
-public class StoreManager implements Lifecycle {
+public class StoreBootstrap implements Lifecycle {
     private BrokerConfig brokerConfig;
-    private final EmbedStoreManager embedManager;
-    private final RemoteStoreManager remoteManager;
+    private final EmbedStoreBootstrap embedManager;
+    private final RemoteStoreBootstrap remoteManager;
 
-    public StoreManager() {
-        this.embedManager = new EmbedStoreManager();
-        this.remoteManager = new RemoteStoreManager();
+    public StoreBootstrap() {
+        this.embedManager = new EmbedStoreBootstrap();
+        this.remoteManager = new RemoteStoreBootstrap();
     }
 
     @Override

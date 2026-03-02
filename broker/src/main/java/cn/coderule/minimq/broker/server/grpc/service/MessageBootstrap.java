@@ -33,7 +33,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import lombok.Getter;
 
-public class MessageManager implements Lifecycle {
+public class MessageBootstrap implements Lifecycle {
     private final BrokerConfig brokerConfig;
     private final GrpcConfig grpcConfig;
     private final RejectActivity rejectActivity = new RejectActivity();
@@ -60,7 +60,7 @@ public class MessageManager implements Lifecycle {
     protected ThreadPoolExecutor clientThreadPoolExecutor;
     protected ThreadPoolExecutor transactionThreadPoolExecutor;
 
-    public MessageManager(BrokerConfig brokerConfig) {
+    public MessageBootstrap(BrokerConfig brokerConfig) {
         this.brokerConfig = brokerConfig;
         this.grpcConfig = brokerConfig.getGrpcConfig();
     }

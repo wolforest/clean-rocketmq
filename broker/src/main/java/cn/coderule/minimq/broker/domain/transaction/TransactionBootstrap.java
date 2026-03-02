@@ -25,7 +25,7 @@ import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.domain.cluster.task.TaskLoader;
 import cn.coderule.minimq.domain.domain.transaction.CommitBuffer;
 
-public class TransactionManager implements Lifecycle {
+public class TransactionBootstrap implements Lifecycle {
     private BrokerConfig brokerConfig;
     private TransactionConfig transactionConfig;
     private Transaction transaction;

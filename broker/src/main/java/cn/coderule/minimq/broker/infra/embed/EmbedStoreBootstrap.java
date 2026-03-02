@@ -13,7 +13,7 @@ import cn.coderule.minimq.store.Store;
 import cn.coderule.minimq.store.server.bootstrap.StoreContext;
 import cn.coderule.minimq.store.server.bootstrap.StoreArgument;
 
-public class EmbedStoreManager implements Lifecycle {
+public class EmbedStoreBootstrap implements Lifecycle {
     private BrokerConfig brokerConfig;
 
     private Store store;

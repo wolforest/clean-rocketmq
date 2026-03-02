@@ -2,27 +2,27 @@ package cn.coderule.minimq.broker.domain.consumer;
 
 import cn.coderule.minimq.broker.api.ConsumerController;
 import cn.coderule.common.convention.service.Lifecycle;
-import cn.coderule.minimq.broker.domain.consumer.ack.AckManager;
+import cn.coderule.minimq.broker.domain.consumer.ack.AckBootstrap;
 import cn.coderule.minimq.broker.domain.consumer.ack.AckService;
 import cn.coderule.minimq.broker.domain.consumer.ack.InvisibleService;
 import cn.coderule.minimq.broker.domain.consumer.consumer.ConsumeHookManager;
 import cn.coderule.minimq.broker.domain.consumer.consumer.ConsumerRegistry;
-import cn.coderule.minimq.broker.domain.consumer.pop.PopManager;
+import cn.coderule.minimq.broker.domain.consumer.pop.PopBootstrap;
 import cn.coderule.minimq.broker.domain.consumer.pop.PopService;
-import cn.coderule.minimq.broker.domain.consumer.renew.RenewManager;
-import cn.coderule.minimq.broker.domain.consumer.revive.ReviveManager;
+import cn.coderule.minimq.broker.domain.consumer.renew.RenewBootstrap;
+import cn.coderule.minimq.broker.domain.consumer.revive.ReviveBootstrap;
 import cn.coderule.minimq.broker.infra.store.SubscriptionStore;
 import cn.coderule.minimq.broker.server.bootstrap.BrokerContext;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 
-public class ConsumerManager implements Lifecycle {
+public class ConsumerBootstrap implements Lifecycle {
     private BrokerConfig brokerConfig;
     private Consumer consumer;
 
-    private PopManager popManager;
-    private AckManager ackManager;
-    private RenewManager renewManager;
-    private ReviveManager reviveManager;
+    private PopBootstrap popBootstrap;
+    private AckBootstrap ackBootstrap;
+    private RenewBootstrap renewBootstrap;
+    private ReviveBootstrap reviveBootstrap;
 
     @Override
     public void initialize() throws Exception {
@@ -40,18 +40,18 @@ public class ConsumerManager implements Lifecycle {
 
     @Override
     public void start() throws Exception {
-        renewManager.start();
-        ackManager.start();
-        popManager.start();
-        reviveManager.start();
+        renewBootstrap.start();
+        ackBootstrap.start();
+        popBootstrap.start();
+        reviveBootstrap.start();
     }
 
     @Override
     public void shutdown() throws Exception {
-        popManager.shutdown();
-        ackManager.shutdown();
-        reviveManager.shutdown();
-        renewManager.shutdown();
+        popBootstrap.shutdown();
+        ackBootstrap.shutdown();
+        reviveBootstrap.shutdown();
+        renewBootstrap.shutdown();
     }
 
     private void initTools() {
@@ -63,23 +63,23 @@ public class ConsumerManager implements Lifecycle {
     }
 
     private void initRenew() throws Exception {
-        renewManager = new RenewManager();
-        renewManager.initialize();
+        renewBootstrap = new RenewBootstrap();
+        renewBootstrap.initialize();
     }
 
     private void initAck() throws Exception {
-        ackManager = new AckManager();
-        ackManager.initialize();
+        ackBootstrap = new AckBootstrap();
+        ackBootstrap.initialize();
     }
 
     private void initPop() throws Exception {
-        popManager = new PopManager();
-        popManager.initialize();
+        popBootstrap = new PopBootstrap();
+        popBootstrap.initialize();
     }
 
     private void initRevive() throws Exception {
-        reviveManager = new ReviveManager();
-        reviveManager.initialize();
+        reviveBootstrap = new ReviveBootstrap();
+        reviveBootstrap.initialize();
     }
 
     private void initConsumer() {

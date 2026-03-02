@@ -10,7 +10,7 @@ import cn.coderule.minimq.domain.domain.consumer.receipt.ReceiptHandler;
 import cn.coderule.minimq.rpc.store.facade.MQFacade;
 import cn.coderule.minimq.rpc.store.facade.TopicFacade;
 
-public class AckManager implements Lifecycle {
+public class AckBootstrap implements Lifecycle {
     @Override
     public void initialize() throws Exception {
         BrokerConfig brokerConfig = BrokerContext.getBean(BrokerConfig.class);

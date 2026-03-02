@@ -14,7 +14,7 @@ import cn.coderule.minimq.store.server.bootstrap.StoreContext;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ReviveManager implements Lifecycle {
+public class ReviveBootstrap implements Lifecycle {
     private final List<ReviveThread> reviveThreadList = new ArrayList<>();
 
     @Override
