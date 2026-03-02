@@ -48,6 +48,11 @@ public class Topic implements Serializable {
     @Builder.Default
     private boolean order = false;
 
+    @Builder.Default
+    private boolean commitLogQueue = false;
+    @Builder.Default
+    private int commitLogNumber = 1;
+
     /**
      * Field attributes key should start with '+', and should not have ' ' char in key or value
      * topicType stored in attributes, key = '+message.type'

@@ -21,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class DefaultMappedFileQueue implements MappedFileQueue {
+    @Getter
     private final String rootDir;
     private final int fileSize;
 
