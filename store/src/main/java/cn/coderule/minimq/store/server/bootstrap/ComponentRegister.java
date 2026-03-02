@@ -3,26 +3,19 @@ package cn.coderule.minimq.store.server.bootstrap;
 import cn.coderule.common.convention.service.LifecycleManager;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.domain.core.event.ServerEventBus;
-import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitLogManager;
-import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitLogDispatcherManager;
-import cn.coderule.minimq.domain.domain.store.domain.consumequeue.ConsumeQueueManager;
-import cn.coderule.minimq.domain.domain.store.domain.index.IndexManager;
-import cn.coderule.minimq.domain.domain.store.domain.mq.MQManager;
-import cn.coderule.minimq.domain.domain.store.domain.meta.MetaManager;
-import cn.coderule.minimq.domain.domain.store.domain.timer.TimerManager;
 import cn.coderule.minimq.rpc.common.rpc.netty.NettyClient;
-import cn.coderule.minimq.store.domain.commitlog.DefaultCommitLogManager;
-import cn.coderule.minimq.store.domain.consumequeue.DefaultConsumeQueueManager;
-import cn.coderule.minimq.store.domain.dispatcher.DefaultCommitLogDispatcherManager;
-import cn.coderule.minimq.store.domain.index.DefaultIndexManager;
-import cn.coderule.minimq.store.domain.mq.DefaultMQManager;
-import cn.coderule.minimq.store.domain.meta.DefaultMetaManager;
-import cn.coderule.minimq.store.domain.timer.DefaultTimerManager;
+import cn.coderule.minimq.store.domain.commitlog.CommitLogBootstrap;
+import cn.coderule.minimq.store.domain.consumequeue.ConsumeQueueBootstrap;
+import cn.coderule.minimq.store.domain.dispatcher.CommitLogDispatcherBootstrap;
+import cn.coderule.minimq.store.domain.index.IndexBootstrap;
+import cn.coderule.minimq.store.domain.mq.MQBootstrap;
+import cn.coderule.minimq.store.domain.meta.MetaBootstrap;
+import cn.coderule.minimq.store.domain.timer.TimerBootstrap;
 import cn.coderule.minimq.store.infra.StoreScheduler;
 import cn.coderule.minimq.store.infra.file.AllocateMappedFileService;
 import cn.coderule.minimq.store.infra.memory.TransientPool;
-import cn.coderule.minimq.store.server.ha.HAManager;
-import cn.coderule.minimq.store.server.rpc.RpcManager;
+import cn.coderule.minimq.store.server.ha.HABootstrap;
+import cn.coderule.minimq.store.server.rpc.RpcBootstrap;
 
 public class ComponentRegister {
     private final LifecycleManager manager = new LifecycleManager();
@@ -87,37 +80,37 @@ public class ComponentRegister {
     }
 
     private void registerMeta() {
-        MetaManager component = new DefaultMetaManager();
+        MetaBootstrap component = new MetaBootstrap();
         manager.register(component);
     }
 
     private void registerCommitLog() {
-        CommitLogManager component = new DefaultCommitLogManager();
+        CommitLogBootstrap component = new CommitLogBootstrap();
         manager.register(component);
     }
 
     private void registerDispatcher() {
-        CommitLogDispatcherManager component = new DefaultCommitLogDispatcherManager();
+        CommitLogDispatcherBootstrap component = new CommitLogDispatcherBootstrap();
         manager.register(component);
     }
 
     private void registerConsumeQueue() {
-        ConsumeQueueManager component = new DefaultConsumeQueueManager();
+        ConsumeQueueBootstrap component = new ConsumeQueueBootstrap();
         manager.register(component);
     }
 
     private void registerMessageQueue() {
-        MQManager component = new DefaultMQManager();
+        MQBootstrap component = new MQBootstrap();
         manager.register(component);
     }
 
     private void registerIndexService() {
-        IndexManager component = new DefaultIndexManager();
+        IndexBootstrap component = new IndexBootstrap();
         manager.register(component);
     }
 
     private void registerTimer() {
-        TimerManager component = new DefaultTimerManager();
+        TimerBootstrap component = new TimerBootstrap();
         manager.register(component);
     }
 
@@ -145,12 +138,12 @@ public class ComponentRegister {
     }
 
     private void registerRpc() {
-        RpcManager component = new RpcManager();
+        RpcBootstrap component = new RpcBootstrap();
         manager.register(component);
     }
 
     private void registerHA() {
-        HAManager component = new HAManager();
+        HABootstrap component = new HABootstrap();
         manager.register(component);
     }
 

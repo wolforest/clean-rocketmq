@@ -1,13 +1,13 @@
 package cn.coderule.minimq.store.domain.dispatcher;
 
+import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitLog;
 import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitEventDispatcher;
-import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitLogDispatcherManager;
 import cn.coderule.minimq.domain.domain.store.server.CheckPoint;
 import cn.coderule.minimq.store.server.bootstrap.StoreContext;
 
-public class DefaultCommitLogDispatcherManager implements CommitLogDispatcherManager {
+public class CommitLogDispatcherBootstrap implements Lifecycle {
     private DefaultCommitEventDispatcher dispatcher;
 
     @Override

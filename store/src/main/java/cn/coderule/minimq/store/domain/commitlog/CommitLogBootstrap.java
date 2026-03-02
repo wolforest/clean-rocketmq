@@ -1,12 +1,12 @@
 package cn.coderule.minimq.store.domain.commitlog;
 
+import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.minimq.domain.config.store.CommitConfig;
 import cn.coderule.minimq.domain.config.business.MessageConfig;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.domain.domain.store.api.CommitLogStore;
 import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitLog;
 import cn.coderule.minimq.domain.domain.store.infra.MappedFileQueue;
-import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitLogManager;
 import cn.coderule.minimq.domain.domain.store.server.CheckPoint;
 import cn.coderule.minimq.store.api.CommitLogStoreImpl;
 import cn.coderule.minimq.store.domain.commitlog.flush.DefaultCommitLogFlusher;
@@ -21,7 +21,7 @@ import java.io.File;
  *  - StoreConfig
  *  - CommitLogConfig
  */
-public class DefaultCommitLogManager implements CommitLogManager {
+public class CommitLogBootstrap implements Lifecycle {
     private StoreConfig storeConfig;
     private CommitConfig commitConfig;
     private MessageConfig messageConfig;

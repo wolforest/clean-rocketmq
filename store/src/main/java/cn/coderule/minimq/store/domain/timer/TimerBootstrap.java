@@ -1,16 +1,16 @@
 package cn.coderule.minimq.store.domain.timer;
 
+import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.domain.config.store.StorePath;
 import cn.coderule.minimq.domain.domain.store.api.TimerStore;
-import cn.coderule.minimq.domain.domain.store.domain.timer.TimerManager;
 import cn.coderule.minimq.store.api.TimerStoreImpl;
 import cn.coderule.minimq.store.domain.mq.queue.MessageService;
 import cn.coderule.minimq.store.domain.timer.service.CheckpointService;
 import cn.coderule.minimq.store.domain.timer.service.TimerService;
 import cn.coderule.minimq.store.server.bootstrap.StoreContext;
 
-public class DefaultTimerManager implements TimerManager {
+public class TimerBootstrap implements Lifecycle {
     private TimerService timerService;
     @Override
     public void initialize() throws Exception {

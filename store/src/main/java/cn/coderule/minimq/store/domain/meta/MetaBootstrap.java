@@ -1,5 +1,6 @@
 package cn.coderule.minimq.store.domain.meta;
 
+import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.domain.domain.store.api.meta.ConsumeOffsetStore;
 import cn.coderule.minimq.domain.domain.store.api.meta.SubscriptionStore;
@@ -9,7 +10,6 @@ import cn.coderule.minimq.domain.domain.store.domain.meta.ConsumeOffsetService;
 import cn.coderule.minimq.domain.domain.store.domain.meta.ConsumeOrderService;
 import cn.coderule.minimq.domain.domain.store.domain.meta.SubscriptionService;
 import cn.coderule.minimq.domain.domain.store.domain.meta.TopicService;
-import cn.coderule.minimq.domain.domain.store.domain.meta.MetaManager;
 import cn.coderule.minimq.store.api.ConsumeOffsetStoreImpl;
 import cn.coderule.minimq.store.api.SubscriptionStoreImpl;
 import cn.coderule.minimq.store.api.TopicStoreImpl;
@@ -17,7 +17,7 @@ import cn.coderule.minimq.store.server.bootstrap.StoreContext;
 import cn.coderule.minimq.domain.config.store.StorePath;
 import cn.coderule.minimq.store.server.bootstrap.StoreRegister;
 
-public class DefaultMetaManager implements MetaManager {
+public class MetaBootstrap implements Lifecycle {
     private DefaultTopicService topicService;
     private SubscriptionService subscriptionService;
 

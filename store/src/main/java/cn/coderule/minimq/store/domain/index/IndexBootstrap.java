@@ -1,10 +1,10 @@
 package cn.coderule.minimq.store.domain.index;
 
+import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitEventDispatcher;
-import cn.coderule.minimq.domain.domain.store.domain.index.IndexManager;
 import cn.coderule.minimq.store.server.bootstrap.StoreContext;
 
-public class DefaultIndexManager implements IndexManager {
+public class IndexBootstrap implements Lifecycle {
     @Override
     public void initialize() throws Exception {
         CommitEventDispatcher dispatcher = StoreContext.getBean(CommitEventDispatcher.class);

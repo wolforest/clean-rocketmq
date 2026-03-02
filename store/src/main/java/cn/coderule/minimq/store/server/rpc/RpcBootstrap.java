@@ -19,7 +19,7 @@ import cn.coderule.minimq.store.server.rpc.server.ExecutorManager;
 import cn.coderule.minimq.store.server.rpc.server.StoreServer;
 import java.util.concurrent.ExecutorService;
 
-public class RpcManager implements Lifecycle {
+public class RpcBootstrap implements Lifecycle {
     private StoreConfig storeConfig;
     private ExecutorManager executorManager;
     private StoreServer storeServer;

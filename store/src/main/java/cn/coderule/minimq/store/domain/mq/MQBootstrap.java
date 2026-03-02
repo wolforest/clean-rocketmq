@@ -1,5 +1,6 @@
 package cn.coderule.minimq.store.domain.mq;
 
+import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.domain.core.lock.queue.DequeueLock;
 import cn.coderule.minimq.domain.domain.store.api.MQStore;
@@ -7,7 +8,6 @@ import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitLog;
 import cn.coderule.minimq.domain.domain.store.domain.consumequeue.ConsumeQueueGateway;
 import cn.coderule.minimq.domain.domain.store.domain.meta.ConsumeOffsetService;
 import cn.coderule.minimq.domain.domain.store.domain.meta.ConsumeOrderService;
-import cn.coderule.minimq.domain.domain.store.domain.mq.MQManager;
 import cn.coderule.minimq.domain.domain.store.domain.mq.MQService;
 import cn.coderule.minimq.domain.domain.consumer.consume.InflightCounter;
 import cn.coderule.minimq.store.api.MQStoreImpl;
@@ -23,7 +23,7 @@ import cn.coderule.minimq.store.server.ha.server.processor.CommitLogSynchronizer
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class DefaultMQManager implements MQManager {
+public class MQBootstrap implements Lifecycle {
     private DequeueLock dequeueLock;
     private InflightCounter inflightCounter;
 

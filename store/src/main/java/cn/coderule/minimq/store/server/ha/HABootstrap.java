@@ -7,7 +7,7 @@ import cn.coderule.minimq.store.server.bootstrap.StoreContext;
 import cn.coderule.minimq.store.server.ha.core.ClusterService;
 import cn.coderule.minimq.store.server.ha.server.processor.CommitLogSynchronizer;
 
-public class HAManager implements Lifecycle {
+public class HABootstrap implements Lifecycle {
     private StoreConfig storeConfig;
     private ClusterService clusterService;
 
