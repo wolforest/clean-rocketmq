@@ -15,23 +15,23 @@ import lombok.extern.slf4j.Slf4j;
 public class Producer {
     private final EnqueueService enqueueService;
 
-    private final ProducerRegister producerRegister;
+    private final ProducerRegistry producerRegistry;
 
-    public Producer(EnqueueService sender, ProducerRegister register) {
+    public Producer(EnqueueService sender, ProducerRegistry register) {
         this.enqueueService = sender;
-        this.producerRegister = register;
+        this.producerRegistry = register;
     }
 
     public void register(RequestContext context, String groupName, ClientChannelInfo channelInfo) {
-        producerRegister.register(groupName, channelInfo);
+        producerRegistry.register(groupName, channelInfo);
     }
 
     public void unregister(RequestContext context, String groupName, ClientChannelInfo channelInfo) {
-        producerRegister.unregister(groupName, channelInfo);
+        producerRegistry.unregister(groupName, channelInfo);
     }
 
     public void scanIdleChannels() {
-        producerRegister.scanIdleChannels();
+        producerRegistry.scanIdleChannels();
     }
 
     public CompletableFuture<EnqueueResult> produce(RequestContext context, MessageBO messageBO) {

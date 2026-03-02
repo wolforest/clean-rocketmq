@@ -19,10 +19,10 @@ public class ProducerManager implements Lifecycle {
 
         initMessageSender();
 
-        ProducerRegister producerRegister = new ProducerRegister(brokerConfig);
-        BrokerContext.register(producerRegister);
+        ProducerRegistry producerRegistry = new ProducerRegistry(brokerConfig);
+        BrokerContext.register(producerRegistry);
 
-        Producer producer = new Producer(enqueueService, producerRegister);
+        Producer producer = new Producer(enqueueService, producerRegistry);
         ProducerController controller = new ProducerController(brokerConfig, producer);
         BrokerContext.registerAPI(controller);
     }

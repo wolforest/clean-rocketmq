@@ -1,8 +1,7 @@
 package cn.coderule.minimq.broker.domain.consumer.ack;
 
 import cn.coderule.common.convention.service.Lifecycle;
-import cn.coderule.minimq.broker.domain.consumer.consumer.ConsumerRegister;
-import cn.coderule.minimq.broker.domain.consumer.renew.DefaultReceiptHandler;
+import cn.coderule.minimq.broker.domain.consumer.consumer.ConsumerRegistry;
 import cn.coderule.minimq.broker.infra.store.MQStore;
 import cn.coderule.minimq.broker.infra.store.TopicStore;
 import cn.coderule.minimq.broker.server.bootstrap.BrokerContext;
@@ -18,17 +17,17 @@ public class AckManager implements Lifecycle {
         MQFacade mqFacade = BrokerContext.getBean(MQStore.class);
         TopicFacade topicFacade = BrokerContext.getBean(TopicStore.class);
         ReceiptHandler receiptHandler = BrokerContext.getBean(ReceiptHandler.class);
-        ConsumerRegister consumerRegister = BrokerContext.getBean(ConsumerRegister.class);
+        ConsumerRegistry consumerRegistry = BrokerContext.getBean(ConsumerRegistry.class);
 
         AckValidator ackValidator = new AckValidator(mqFacade, topicFacade);
 
         AckService ackService = new AckService(
-            mqFacade, consumerRegister, receiptHandler, ackValidator
+            mqFacade, consumerRegistry, receiptHandler, ackValidator
         );
         BrokerContext.register(ackService);
 
         InvisibleService invisibleService = new InvisibleService(
-            brokerConfig, mqFacade, consumerRegister, receiptHandler, ackValidator
+            brokerConfig, mqFacade, consumerRegistry, receiptHandler, ackValidator
         );
         BrokerContext.register(invisibleService);
     }

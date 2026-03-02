@@ -1,11 +1,13 @@
 package cn.coderule.minimq.store.infra.file;
 
+import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.minimq.domain.domain.store.infra.MappedFile;
 import cn.coderule.minimq.domain.domain.store.infra.MappedFileQueue;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -22,9 +24,12 @@ import lombok.extern.slf4j.Slf4j;
 public class MultiDirMappedFileQueue implements MappedFileQueue {
     private final List<String> dirs;
     private final int fileSize;
-    private final AllocateMappedFileService allocateMappedFileService;
 
-    private final List<DefaultMappedFileQueue> queues;
+    /**
+     * -- GETTER --
+     *  Get the sub-queues (for testing or advanced usage).
+     */
+    @Getter private final List<DefaultMappedFileQueue> queues;
     private final AtomicInteger roundRobinIndex = new AtomicInteger(0);
 
     public MultiDirMappedFileQueue(List<String> dirs, int fileSize) {
@@ -40,7 +45,6 @@ public class MultiDirMappedFileQueue implements MappedFileQueue {
 
         this.dirs = dirs;
         this.fileSize = fileSize;
-        this.allocateMappedFileService = allocateMappedFileService;
 
         this.queues = new ArrayList<>(dirs.size());
         for (String dir : dirs) {
@@ -52,7 +56,7 @@ public class MultiDirMappedFileQueue implements MappedFileQueue {
 
     @Override
     public String getRootDir() {
-        return "";
+        return StringUtil.joinWith(StringUtil.COLON, dirs);
     }
 
     @Override
@@ -326,10 +330,4 @@ public class MultiDirMappedFileQueue implements MappedFileQueue {
         return queues.get(index);
     }
 
-    /**
-     * Get the sub-queues (for testing or advanced usage).
-     */
-    public List<DefaultMappedFileQueue> getQueues() {
-        return queues;
-    }
 }

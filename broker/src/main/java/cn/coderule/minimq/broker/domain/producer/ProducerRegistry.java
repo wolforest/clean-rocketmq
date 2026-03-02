@@ -24,7 +24,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class ProducerRegister {
+public class ProducerRegistry {
     private final long channelExpireTime;
     private final int maxChannelFetchTimes;
 
@@ -35,7 +35,7 @@ public class ProducerRegister {
     // groupName -> channel -> channelInfo
     private final ConcurrentMap<String, ConcurrentMap<Channel, ClientChannelInfo>> channelTree;
 
-    public ProducerRegister(BrokerConfig brokerConfig) {
+    public ProducerRegistry(BrokerConfig brokerConfig) {
         this.channelExpireTime = brokerConfig.getChannelExpireTime();
         this.maxChannelFetchTimes = brokerConfig.getMaxChannelFetchTimes();
 
@@ -263,15 +263,15 @@ public class ProducerRegister {
     }
 
     private Channel filterAvailableChannel(List<Channel> channelList) {
-        int count = 0;
         Channel lastActiveChannel = null;
-        int index = counter.incrementAndGet() % channelList.size();
 
+        int channelSize = channelList.size();
+        int index = counter.incrementAndGet() % channelSize;
+        Channel channel = channelList.get(index);
+        boolean isOk = channel.isActive() && channel.isWritable();
+
+        int count = 0;
         while (count++ < maxChannelFetchTimes) {
-            index = (++index) % channelList.size();
-            Channel channel = channelList.get(index);
-            boolean isOk = channel.isActive() && channel.isWritable();
-
             if (isOk) {
                 return channel;
             }
@@ -279,6 +279,10 @@ public class ProducerRegister {
             if (channel.isActive()) {
                 lastActiveChannel = channel;
             }
+
+            index = (++index) % channelSize;
+            channel = channelList.get(index);
+            isOk = channel.isActive() && channel.isWritable();
         }
 
         return lastActiveChannel;

@@ -4,7 +4,7 @@ import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.lang.concurrent.thread.DefaultThreadFactory;
 import cn.coderule.common.util.lang.ThreadUtil;
 import cn.coderule.common.util.lang.string.StringUtil;
-import cn.coderule.minimq.broker.domain.producer.ProducerRegister;
+import cn.coderule.minimq.broker.domain.producer.ProducerRegistry;
 import cn.coderule.minimq.broker.domain.transaction.receipt.Receipt;
 import cn.coderule.minimq.broker.domain.transaction.receipt.ReceiptRegistry;
 import cn.coderule.minimq.domain.config.business.TransactionConfig;
@@ -24,7 +24,7 @@ public class CheckService implements Lifecycle {
 
     private final ExecutorService executor;
 
-    private ProducerRegister producerRegister;
+    private ProducerRegistry producerRegistry;
 
     public CheckService(TransactionConfig transactionConfig, ReceiptRegistry receiptRegistry) {
         this.transactionConfig = transactionConfig;
@@ -33,8 +33,8 @@ public class CheckService implements Lifecycle {
         this.executor = initExecutor();
     }
 
-    public void inject(ProducerRegister producerRegister) {
-        this.producerRegister = producerRegister;
+    public void inject(ProducerRegistry producerRegistry) {
+        this.producerRegistry = producerRegistry;
     }
 
     public void check(MessageBO prepareMessage) {
@@ -65,7 +65,7 @@ public class CheckService implements Lifecycle {
             return;
         }
 
-        RelayService relayService = producerRegister.getRelayService(producerGroup);
+        RelayService relayService = producerRegistry.getRelayService(producerGroup);
         if (relayService == null) {
             log.error("can't find RelayService by producerGroup: {}", producerGroup);
             return;

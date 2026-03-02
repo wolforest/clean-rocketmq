@@ -6,7 +6,7 @@ import cn.coderule.minimq.broker.domain.consumer.ack.AckManager;
 import cn.coderule.minimq.broker.domain.consumer.ack.AckService;
 import cn.coderule.minimq.broker.domain.consumer.ack.InvisibleService;
 import cn.coderule.minimq.broker.domain.consumer.consumer.ConsumeHookManager;
-import cn.coderule.minimq.broker.domain.consumer.consumer.ConsumerRegister;
+import cn.coderule.minimq.broker.domain.consumer.consumer.ConsumerRegistry;
 import cn.coderule.minimq.broker.domain.consumer.pop.PopManager;
 import cn.coderule.minimq.broker.domain.consumer.pop.PopService;
 import cn.coderule.minimq.broker.domain.consumer.renew.RenewManager;
@@ -55,7 +55,7 @@ public class ConsumerManager implements Lifecycle {
     }
 
     private void initTools() {
-        ConsumerRegister register = new ConsumerRegister(brokerConfig);
+        ConsumerRegistry register = new ConsumerRegistry(brokerConfig);
         BrokerContext.register(register);
 
         ConsumeHookManager hookManager = new ConsumeHookManager();
@@ -86,7 +86,7 @@ public class ConsumerManager implements Lifecycle {
         consumer = new Consumer(
             BrokerContext.getBean(PopService.class),
             BrokerContext.getBean(AckService.class),
-            BrokerContext.getBean(ConsumerRegister.class),
+            BrokerContext.getBean(ConsumerRegistry.class),
             BrokerContext.getBean(InvisibleService.class),
             BrokerContext.getBean(SubscriptionStore.class)
         );

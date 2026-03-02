@@ -2,7 +2,7 @@ package cn.coderule.minimq.broker.domain.consumer.renew;
 
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.minimq.broker.domain.consumer.ack.InvisibleService;
-import cn.coderule.minimq.broker.domain.consumer.consumer.ConsumerRegister;
+import cn.coderule.minimq.broker.domain.consumer.consumer.ConsumerRegistry;
 import cn.coderule.minimq.broker.infra.store.SubscriptionStore;
 import cn.coderule.minimq.broker.server.bootstrap.BrokerContext;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
@@ -52,7 +52,7 @@ public class RenewManager implements Lifecycle {
             brokerConfig,
             receiptHandler,
             renewListener,
-            BrokerContext.getBean(ConsumerRegister.class),
+            BrokerContext.getBean(ConsumerRegistry.class),
             BrokerContext.getBean(SubscriptionStore.class)
         );
 
@@ -62,7 +62,7 @@ public class RenewManager implements Lifecycle {
     private void initReceiptListener() {
         ReceiptListener receiptListener = new ReceiptListener(receiptHandler);
 
-        ConsumerRegister register = BrokerContext.getBean(ConsumerRegister.class);
+        ConsumerRegistry register = BrokerContext.getBean(ConsumerRegistry.class);
         register.addListener(receiptListener);
     }
 
