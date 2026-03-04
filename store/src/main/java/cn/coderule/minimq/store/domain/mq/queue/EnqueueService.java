@@ -6,7 +6,7 @@ import cn.coderule.minimq.domain.domain.store.domain.mq.EnqueueFuture;
 import cn.coderule.minimq.domain.core.lock.queue.EnqueueLock;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitLog;
-import cn.coderule.minimq.domain.domain.store.domain.consumequeue.ConsumeQueueFacade;
+import cn.coderule.minimq.store.domain.consumequeue.DefaultConsumeQueueFacade;
 import cn.coderule.minimq.store.server.bootstrap.StoreContext;
 import cn.coderule.minimq.store.server.ha.server.processor.CommitLogSynchronizer;
 import java.util.concurrent.CompletableFuture;
@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class EnqueueService {
     private final StoreConfig storeConfig;
-    private final ConsumeQueueFacade consumeQueueFacade;
+    private final DefaultConsumeQueueFacade consumeQueueFacade;
     private final CommitLog commitLog;
 
     private CommitLogSynchronizer commitLogSynchronizer;
@@ -25,7 +25,7 @@ public class EnqueueService {
     public EnqueueService(
         StoreConfig storeConfig,
         CommitLog commitLog,
-        ConsumeQueueFacade consumeQueueFacade) {
+        DefaultConsumeQueueFacade consumeQueueFacade) {
 
         this.storeConfig = storeConfig;
         this.consumeQueueFacade = consumeQueueFacade;

@@ -3,12 +3,11 @@ package cn.coderule.minimq.store.domain.consumequeue;
 import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitEvent;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitEventHandler;
-import cn.coderule.minimq.domain.domain.store.domain.consumequeue.ConsumeQueueFacade;
 
 public class QueueCommitEventHandler implements CommitEventHandler {
-    private final ConsumeQueueFacade consumeQueueFacade;
+    private final DefaultConsumeQueueFacade consumeQueueFacade;
 
-    public QueueCommitEventHandler(ConsumeQueueFacade consumeQueueFacade) {
+    public QueueCommitEventHandler(DefaultConsumeQueueFacade consumeQueueFacade) {
         this.consumeQueueFacade = consumeQueueFacade;
     }
 

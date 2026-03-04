@@ -6,7 +6,7 @@ import cn.coderule.common.util.lang.string.JSONUtil;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.domain.domain.meta.topic.Topic;
 import cn.coderule.minimq.domain.domain.meta.topic.TopicMap;
-import cn.coderule.minimq.domain.domain.store.domain.consumequeue.ConsumeQueueFacade;
+import cn.coderule.minimq.store.domain.consumequeue.DefaultConsumeQueueFacade;
 import cn.coderule.minimq.domain.domain.store.domain.meta.ConsumeOffsetService;
 import cn.coderule.minimq.domain.domain.store.domain.meta.TopicService;
 import cn.coderule.minimq.domain.domain.meta.topic.KeyBuilder;
@@ -22,7 +22,7 @@ public class DefaultTopicService implements TopicService {
     private final ConsumeOffsetService consumeOffsetService;
 
     // dependency from other package, injected by module manager
-    private ConsumeQueueFacade consumeQueueFacade;
+    private DefaultConsumeQueueFacade consumeQueueFacade;
     private StoreRegister storeRegister;
 
     @Getter
@@ -40,7 +40,7 @@ public class DefaultTopicService implements TopicService {
         this.topicMap = new TopicMap();
     }
 
-    public void inject(ConsumeQueueFacade consumeQueueFacade, StoreRegister storeRegister) {
+    public void inject(DefaultConsumeQueueFacade consumeQueueFacade, StoreRegister storeRegister) {
         this.consumeQueueFacade = consumeQueueFacade;
         this.storeRegister = storeRegister;
     }

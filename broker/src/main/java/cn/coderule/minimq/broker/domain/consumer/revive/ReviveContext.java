@@ -7,7 +7,7 @@ import cn.coderule.minimq.rpc.store.facade.MQFacade;
 import cn.coderule.minimq.rpc.store.facade.ConsumeOffsetFacade;
 import cn.coderule.minimq.rpc.store.facade.SubscriptionFacade;
 import cn.coderule.minimq.rpc.store.facade.TopicFacade;
-import cn.coderule.minimq.domain.domain.store.domain.consumequeue.ConsumeQueueFacade;
+import cn.coderule.minimq.store.domain.consumequeue.DefaultConsumeQueueFacade;
 import cn.coderule.minimq.domain.domain.store.domain.meta.ConsumeOffsetService;
 import cn.coderule.minimq.domain.domain.store.domain.meta.SubscriptionService;
 import cn.coderule.minimq.domain.domain.store.domain.meta.TopicService;
@@ -36,7 +36,7 @@ public class ReviveContext implements Serializable {
     private ConsumeOffsetFacade consumeOffsetFacade;
 
     private MQService mqService;
-    private ConsumeQueueFacade consumeQueueFacade;;
+    private DefaultConsumeQueueFacade consumeQueueFacade;;
     private TopicService topicService;
     private SubscriptionService subscriptionService;
     private ConsumeOffsetService consumeOffsetService;

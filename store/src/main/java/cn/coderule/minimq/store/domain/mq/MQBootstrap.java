@@ -5,7 +5,7 @@ import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.domain.core.lock.queue.DequeueLock;
 import cn.coderule.minimq.domain.domain.store.api.MQStore;
 import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitLog;
-import cn.coderule.minimq.domain.domain.store.domain.consumequeue.ConsumeQueueFacade;
+import cn.coderule.minimq.store.domain.consumequeue.DefaultConsumeQueueFacade;
 import cn.coderule.minimq.domain.domain.store.domain.meta.ConsumeOffsetService;
 import cn.coderule.minimq.domain.domain.store.domain.meta.ConsumeOrderService;
 import cn.coderule.minimq.domain.domain.store.domain.mq.MQService;
@@ -66,7 +66,7 @@ public class MQBootstrap implements Lifecycle {
     private void initMQManager() {
         AckService ackService = StoreContext.getBean(AckService.class);
         InvisibleService invisibleService = StoreContext.getBean(InvisibleService.class);
-        ConsumeQueueFacade consumeQueueFacade = StoreContext.getBean(ConsumeQueueFacade.class);
+        DefaultConsumeQueueFacade consumeQueueFacade = StoreContext.getBean(DefaultConsumeQueueFacade.class);
 
         MQStore MQStore = new MQStoreImpl(mqService, ackService, invisibleService, consumeQueueFacade);
         StoreContext.registerAPI(MQStore, MQStore.class);
@@ -80,7 +80,7 @@ public class MQBootstrap implements Lifecycle {
     private void initPubService() {
         CommitLog commitLog = StoreContext.getBean(CommitLog.class);
         StoreConfig storeConfig  = StoreContext.getBean(StoreConfig.class);
-        ConsumeQueueFacade consumeQueue = StoreContext.getBean(ConsumeQueueFacade.class);
+        DefaultConsumeQueueFacade consumeQueue = StoreContext.getBean(DefaultConsumeQueueFacade.class);
 
         this.enqueueService = new EnqueueService(storeConfig, commitLog, consumeQueue);
         this.messageService = new MessageService(commitLog, consumeQueue);
@@ -92,7 +92,7 @@ public class MQBootstrap implements Lifecycle {
         StoreConfig storeConfig  = StoreContext.getBean(StoreConfig.class);
 
         CommitLog commitLog = StoreContext.getBean(CommitLog.class);
-        ConsumeQueueFacade consumeQueue = StoreContext.getBean(ConsumeQueueFacade.class);
+        DefaultConsumeQueueFacade consumeQueue = StoreContext.getBean(DefaultConsumeQueueFacade.class);
         ConsumeOffsetService consumeOffsetService = StoreContext.getBean(ConsumeOffsetService.class);
         ConsumeOrderService orderService = StoreContext.getBean(ConsumeOrderService.class);
 
