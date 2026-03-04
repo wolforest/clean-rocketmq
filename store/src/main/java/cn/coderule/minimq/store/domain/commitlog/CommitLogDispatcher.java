@@ -30,7 +30,8 @@ public class CommitLogDispatcher {
     }
 
     public EnqueueFuture insert(MessageBO messageBO) {
-        return null;
+        return selectByTopic(messageBO.getRealTopic())
+            .insert(messageBO);
     }
 
     public MessageBO select(String topic, long offset, int size) {
