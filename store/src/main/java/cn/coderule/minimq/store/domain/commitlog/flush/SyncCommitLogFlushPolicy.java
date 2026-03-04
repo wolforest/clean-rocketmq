@@ -3,7 +3,7 @@ package cn.coderule.minimq.store.domain.commitlog.flush;
 import cn.coderule.minimq.domain.domain.store.domain.mq.EnqueueFuture;
 import cn.coderule.minimq.domain.domain.store.infra.InsertResult;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
-import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitLogFlusher;
+import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitLogFlushPolicy;
 import cn.coderule.minimq.domain.domain.store.infra.MappedFileQueue;
 import lombok.extern.slf4j.Slf4j;
 
@@ -12,12 +12,12 @@ import lombok.extern.slf4j.Slf4j;
  * for testing
  */
 @Slf4j
-public class SyncCommitLogFlusher implements CommitLogFlusher {
+public class SyncCommitLogFlushPolicy implements CommitLogFlushPolicy {
     private static final int RETRY_TIMES = 10;
 
     private final MappedFileQueue mappedFileQueue;
 
-    public SyncCommitLogFlusher(MappedFileQueue mappedFileQueue) {
+    public SyncCommitLogFlushPolicy(MappedFileQueue mappedFileQueue) {
         this.mappedFileQueue = mappedFileQueue;
     }
 

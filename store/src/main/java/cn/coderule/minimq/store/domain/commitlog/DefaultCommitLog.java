@@ -4,7 +4,7 @@ import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.domain.core.enums.code.InvalidCode;
 import cn.coderule.minimq.domain.core.exception.InvalidRequestException;
 import cn.coderule.minimq.domain.domain.message.MessageEncoder;
-import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitLogFlusher;
+import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitLogFlushPolicy;
 import cn.coderule.minimq.store.domain.commitlog.vo.InsertContext;
 import cn.coderule.minimq.domain.config.store.CommitConfig;
 import cn.coderule.minimq.domain.config.business.MessageConfig;
@@ -37,7 +37,7 @@ public class DefaultCommitLog implements CommitLog {
     private final StoreConfig storeConfig;
     private final CommitConfig commitConfig;
     private final MessageConfig messageConfig;
-    private final CommitLogFlusher commitLogFlusher;
+    private final CommitLogFlushPolicy commitLogFlushPolicy;
 
     @Getter
     private final MappedFileQueue mappedFileQueue;
@@ -47,14 +47,14 @@ public class DefaultCommitLog implements CommitLog {
     public DefaultCommitLog(
         StoreConfig storeConfig,
         MappedFileQueue mappedFileQueue,
-        CommitLogFlusher commitLogFlusher
+        CommitLogFlushPolicy commitLogFlushPolicy
     ) {
         this.storeConfig = storeConfig;
         this.commitConfig = storeConfig.getCommitConfig();
         this.messageConfig = storeConfig.getMessageConfig();
 
         this.mappedFileQueue = mappedFileQueue;
-        this.commitLogFlusher = commitLogFlusher;
+        this.commitLogFlushPolicy = commitLogFlushPolicy;
 
         this.commitLogLock = new CommitLogReentrantLock();
         initLocalEncoder();
@@ -87,7 +87,7 @@ public class DefaultCommitLog implements CommitLog {
             InsertResult insertResult = mappedFile.insert(messageBuffer);
             handleInsertError(insertResult);
 
-            return commitLogFlusher.flush(insertResult, messageBO);
+            return commitLogFlushPolicy.flush(insertResult, messageBO);
         } catch (EnqueueException messageException) {
             return EnqueueFuture.failure(messageException.getStatus());
         } finally {

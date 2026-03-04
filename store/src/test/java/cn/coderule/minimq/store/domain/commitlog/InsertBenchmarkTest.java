@@ -9,11 +9,11 @@ import cn.coderule.minimq.domain.core.lock.queue.EnqueueLock;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.domain.message.MessageEncoder;
 import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitLog;
-import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitLogFlusher;
+import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitLogFlushPolicy;
 import cn.coderule.minimq.domain.domain.store.infra.MappedFileQueue;
 import cn.coderule.minimq.domain.test.ConfigMock;
 import cn.coderule.minimq.domain.test.MessageMock;
-import cn.coderule.minimq.store.domain.commitlog.flush.EmptyCommitLogFlusher;
+import cn.coderule.minimq.store.domain.commitlog.flush.EmptyCommitLogFlushPolicy;
 import cn.coderule.minimq.store.infra.file.DefaultMappedFileQueue;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -223,7 +223,7 @@ public class InsertBenchmarkTest {
         CommitConfig commitConfig = storeConfig.getCommitConfig();
         commitConfig.setFileSize(MMAP_FILE_SIZE);
 
-        CommitLogFlusher flusher = new EmptyCommitLogFlusher(queue);
+        CommitLogFlushPolicy flusher = new EmptyCommitLogFlushPolicy(queue);
         return new DefaultCommitLog(storeConfig, queue, flusher);
     }
 }

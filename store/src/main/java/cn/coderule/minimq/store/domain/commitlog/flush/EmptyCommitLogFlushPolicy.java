@@ -1,7 +1,7 @@
 package cn.coderule.minimq.store.domain.commitlog.flush;
 
 import cn.coderule.minimq.domain.domain.message.MessageBO;
-import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitLogFlusher;
+import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitLogFlushPolicy;
 import cn.coderule.minimq.domain.domain.store.domain.mq.EnqueueFuture;
 import cn.coderule.minimq.domain.domain.store.infra.InsertResult;
 import cn.coderule.minimq.domain.domain.store.infra.MappedFileQueue;
@@ -12,12 +12,12 @@ import lombok.extern.slf4j.Slf4j;
  * for testing
  */
 @Slf4j
-public class EmptyCommitLogFlusher implements CommitLogFlusher {
+public class EmptyCommitLogFlushPolicy implements CommitLogFlushPolicy {
     private static final int RETRY_TIMES = 10;
 
     private final MappedFileQueue mappedFileQueue;
 
-    public EmptyCommitLogFlusher(MappedFileQueue mappedFileQueue) {
+    public EmptyCommitLogFlushPolicy(MappedFileQueue mappedFileQueue) {
         this.mappedFileQueue = mappedFileQueue;
     }
 

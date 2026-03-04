@@ -9,7 +9,7 @@ import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitLog;
 import cn.coderule.minimq.domain.domain.store.infra.MappedFileQueue;
 import cn.coderule.minimq.domain.domain.store.server.CheckPoint;
 import cn.coderule.minimq.store.api.CommitLogStoreImpl;
-import cn.coderule.minimq.store.domain.commitlog.flush.DefaultCommitLogFlusher;
+import cn.coderule.minimq.store.domain.commitlog.flush.DefaultCommitLogFlushPolicy;
 import cn.coderule.minimq.store.infra.file.AllocateMappedFileService;
 import cn.coderule.minimq.store.infra.file.DefaultMappedFileQueue;
 import cn.coderule.minimq.store.infra.memory.CLibrary;
@@ -28,7 +28,7 @@ public class CommitLogBootstrap implements Lifecycle {
 
     private MappedFileQueue mappedFileQueue;
     private CommitLog commitLog;
-    private DefaultCommitLogFlusher defaultCommitFlusher;
+    private DefaultCommitLogFlushPolicy flushPolicy;
     private CheckPoint checkpoint;
 
     @Override
@@ -44,17 +44,17 @@ public class CommitLogBootstrap implements Lifecycle {
 
     @Override
     public void start() throws Exception {
-        defaultCommitFlusher.start();
+        flushPolicy.start();
     }
 
     @Override
     public void shutdown() throws Exception {
-        defaultCommitFlusher.shutdown();
+        flushPolicy.shutdown();
     }
 
     @Override
     public void cleanup() throws Exception {
-        defaultCommitFlusher.cleanup();
+        flushPolicy.cleanup();
     }
 
     private void initConfig() {
@@ -75,9 +75,9 @@ public class CommitLogBootstrap implements Lifecycle {
 
     private void initCommitLog() {
         checkpoint = StoreContext.getCheckPoint();
-        defaultCommitFlusher = new DefaultCommitLogFlusher(commitConfig, mappedFileQueue, checkpoint);
+        flushPolicy = new DefaultCommitLogFlushPolicy(commitConfig, mappedFileQueue, checkpoint);
 
-        commitLog = new DefaultCommitLog(storeConfig, mappedFileQueue, defaultCommitFlusher);
+        commitLog = new DefaultCommitLog(storeConfig, mappedFileQueue, flushPolicy);
         StoreContext.register(commitLog, CommitLog.class);
     }
 

@@ -10,13 +10,13 @@ import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.domain.message.MessageEncoder;
 import cn.coderule.minimq.domain.domain.store.domain.mq.EnqueueResult;
 import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitLog;
-import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitLogFlusher;
+import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitLogFlushPolicy;
 import cn.coderule.minimq.domain.domain.store.infra.InsertResult;
 import cn.coderule.minimq.domain.domain.store.infra.MappedFileQueue;
 import cn.coderule.minimq.domain.domain.store.infra.SelectedMappedBuffer;
 import cn.coderule.minimq.domain.test.ConfigMock;
 import cn.coderule.minimq.domain.test.MessageMock;
-import cn.coderule.minimq.store.domain.commitlog.flush.SyncCommitLogFlusher;
+import cn.coderule.minimq.store.domain.commitlog.flush.SyncCommitLogFlushPolicy;
 import cn.coderule.minimq.store.infra.file.DefaultMappedFileQueue;
 import java.nio.file.Path;
 import java.util.Set;
@@ -526,7 +526,7 @@ class DefaultCommitLogTest {
         CommitConfig commitConfig = storeConfig.getCommitConfig();
         commitConfig.setFileSize(MMAP_FILE_SIZE);
 
-        CommitLogFlusher flusher = new SyncCommitLogFlusher(queue);
+        CommitLogFlushPolicy flusher = new SyncCommitLogFlushPolicy(queue);
         return new DefaultCommitLog(storeConfig, queue, flusher);
     }
 

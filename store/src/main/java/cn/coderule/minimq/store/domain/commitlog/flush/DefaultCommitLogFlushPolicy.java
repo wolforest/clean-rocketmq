@@ -1,7 +1,7 @@
 package cn.coderule.minimq.store.domain.commitlog.flush;
 
 import cn.coderule.minimq.domain.core.enums.store.EnqueueStatus;
-import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitLogFlusher;
+import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitLogFlushPolicy;
 import cn.coderule.minimq.domain.domain.store.server.CheckPoint;
 import cn.coderule.minimq.store.domain.commitlog.vo.GroupCommitRequest;
 import cn.coderule.common.convention.service.Lifecycle;
@@ -23,14 +23,14 @@ import java.util.concurrent.CompletableFuture;
  *  - flush
  *  - start/shutdown
  */
-public class DefaultCommitLogFlusher implements CommitLogFlusher, Lifecycle {
+public class DefaultCommitLogFlushPolicy implements CommitLogFlushPolicy, Lifecycle {
     private final CommitConfig commitConfig;
 
-    private final Flusher commitService;
+    private final Flusher committer;
     private final Flusher flusher;
     private final FlushWatcher flushWatcher;
 
-    public DefaultCommitLogFlusher(
+    public DefaultCommitLogFlushPolicy(
         CommitConfig commitConfig,
         MappedFileQueue mappedFileQueue,
         CheckPoint checkPoint
@@ -39,7 +39,7 @@ public class DefaultCommitLogFlusher implements CommitLogFlusher, Lifecycle {
 
         this.flushWatcher = new FlushWatcher();
         this.flusher = initFlusher(mappedFileQueue, checkPoint);
-        this.commitService = new IntervalCommitter(commitConfig, mappedFileQueue, flusher);
+        this.committer = new IntervalCommitter(commitConfig, mappedFileQueue, flusher);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class DefaultCommitLogFlusher implements CommitLogFlusher, Lifecycle {
         this.flushWatcher.start();
 
         if (commitConfig.isEnableWriteCache()) {
-            this.commitService.start();
+            this.committer.start();
         }
     }
 
@@ -67,7 +67,7 @@ public class DefaultCommitLogFlusher implements CommitLogFlusher, Lifecycle {
         this.flushWatcher.shutdown();
 
         if (commitConfig.isEnableWriteCache()) {
-            this.commitService.shutdown();
+            this.committer.shutdown();
         }
     }
 
@@ -98,7 +98,7 @@ public class DefaultCommitLogFlusher implements CommitLogFlusher, Lifecycle {
         flusher.setMaxOffset(insertResult.getWroteOffset());
 
         if (commitConfig.isEnableWriteCache()) {
-            commitService.wakeup();
+            committer.wakeup();
         } else {
             flusher.wakeup();
         }
