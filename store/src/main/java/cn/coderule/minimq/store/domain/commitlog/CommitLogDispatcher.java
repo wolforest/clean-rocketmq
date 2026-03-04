@@ -1,5 +1,7 @@
 package cn.coderule.minimq.store.domain.commitlog;
 
+import cn.coderule.minimq.domain.core.enums.store.EnqueueStatus;
+import cn.coderule.minimq.domain.core.exception.EnqueueException;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitLog;
 import cn.coderule.minimq.domain.domain.store.domain.mq.EnqueueFuture;
@@ -9,7 +11,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class CommitLogDispatcher {
     private final List<CommitLog> commitLogList;
     private final Map<String, CommitLog> topicMap;
@@ -30,8 +34,12 @@ public class CommitLogDispatcher {
     }
 
     public EnqueueFuture insert(MessageBO messageBO) {
-        return selectByTopic(messageBO.getRealTopic())
-            .insert(messageBO);
+        try {
+            return selectByTopic(messageBO.getRealTopic())
+                .insert(messageBO);
+        } catch (EnqueueException e) {
+            return EnqueueFuture.failure(e.getStatus());
+        }
     }
 
     public MessageBO select(String topic, long offset, int size) {
@@ -59,8 +67,8 @@ public class CommitLogDispatcher {
         pathMap.put(rootDir, commitLog);
     }
 
-    private CommitLog selectByTopicOrRandom(String topic) {
-        CommitLog commitLog = null;
+    private CommitLog selectByTopic(String topic) {
+        CommitLog commitLog;
 
         commitLog = topicMap.get(topic);
         if (null != commitLog) {
@@ -68,16 +76,12 @@ public class CommitLogDispatcher {
         }
 
         if (commitLogList.isEmpty()) {
-            return null;
+            throw new EnqueueException(EnqueueStatus.COMMITLOG_NOT_FOUND);
         }
 
         int maxIndex = commitLogList.size() - 1;
         int randomIndex = (int) (Math.random() * maxIndex);
         return commitLogList.get(randomIndex);
-    }
-
-    private CommitLog selectByTopic(String topic) {
-        return topicMap.get(topic);
     }
 
     private CommitLog selectByPath(String path) {
