@@ -14,12 +14,12 @@ import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class CommitLogDispatcher {
+public class CommitLogFacade {
     private final List<CommitLog> commitLogList;
     private final Map<String, CommitLog> topicMap;
     private final Map<String, CommitLog> pathMap;
 
-    public CommitLogDispatcher() {
+    public CommitLogFacade() {
         commitLogList = new ArrayList<>();
         topicMap = new HashMap<>();
         pathMap = new HashMap<>();
@@ -27,10 +27,12 @@ public class CommitLogDispatcher {
 
     public void addCommitLog(CommitLog commitLog) {
         commitLogList.add(commitLog);
+        bindPath(commitLog);
     }
 
     public void bindTopic(String topic, CommitLog commitLog) {
         topicMap.put(topic, commitLog);
+        bindPath(commitLog);
     }
 
     public EnqueueFuture insert(MessageBO messageBO) {
@@ -43,23 +45,45 @@ public class CommitLogDispatcher {
     }
 
     public MessageBO select(String topic, long offset, int size) {
-        return null;
+        try {
+            CommitLog commitLog = selectByTopic(topic);
+            return commitLog.select(offset, size);
+        } catch (EnqueueException e) {
+            return MessageBO.notFound();
+        }
     }
 
     public MessageBO select(String topic, long offset) {
-        return null;
+        try {
+            CommitLog commitLog = selectByTopic(topic);
+            return commitLog.select(offset);
+        } catch (EnqueueException e) {
+            return MessageBO.notFound();
+        }
     }
 
     public InsertResult insert(String path, long offset, byte[] data, int start, int size) {
-        return null;
+        CommitLog commitLog = selectByPath(path);
+        if (commitLog == null) {
+            return InsertResult.failure();
+        }
+        return commitLog.insert(offset, data, start, size);
     }
 
     public SelectedMappedBuffer selectBuffer(String path, long offset) {
-        return null;
+        CommitLog commitLog = selectByPath(path);
+        if (commitLog == null) {
+            return null;
+        }
+        return commitLog.selectBuffer(offset);
     }
 
     public SelectedMappedBuffer selectBuffer(String path, long offset, int size) {
-        return null;
+        CommitLog commitLog = selectByPath(path);
+        if (commitLog == null) {
+            return null;
+        }
+        return commitLog.selectBuffer(offset, size);
     }
 
     private void bindPath(CommitLog commitLog) {

@@ -1,7 +1,6 @@
 package cn.coderule.minimq.store.domain.mq.queue;
 
 import cn.coderule.common.util.lang.collection.CollectionUtil;
-import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.domain.domain.store.domain.mq.DequeueResult;
 import cn.coderule.minimq.domain.domain.store.domain.mq.DequeueRequest;
 import cn.coderule.minimq.domain.domain.store.domain.consumequeue.QueueUnit;
@@ -9,20 +8,20 @@ import cn.coderule.minimq.domain.domain.consumer.consume.mq.MessageRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.MessageResult;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitLog;
-import cn.coderule.minimq.domain.domain.store.domain.consumequeue.ConsumeQueueGateway;
+import cn.coderule.minimq.domain.domain.store.domain.consumequeue.ConsumeQueueFacade;
 import java.util.List;
 import lombok.NonNull;
 
 public class MessageService {
     private final CommitLog commitLog;
-    private final ConsumeQueueGateway consumeQueueGateway;
+    private final ConsumeQueueFacade consumeQueueFacade;
 
     public MessageService(
         CommitLog commitLog,
-        ConsumeQueueGateway consumeQueueGateway
+        ConsumeQueueFacade consumeQueueFacade
     ) {
         this.commitLog = commitLog;
-        this.consumeQueueGateway = consumeQueueGateway;
+        this.consumeQueueFacade = consumeQueueFacade;
     }
 
     public MessageResult getMessage(MessageRequest request) {
@@ -46,7 +45,7 @@ public class MessageService {
     }
 
     public DequeueResult get(DequeueRequest request) {
-        List<QueueUnit> unitList = consumeQueueGateway.get(
+        List<QueueUnit> unitList = consumeQueueFacade.get(
             request.getTopicName(), request.getQueueId(), request.getOffset(), request.getNum()
         );
 

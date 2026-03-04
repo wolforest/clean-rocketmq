@@ -4,7 +4,7 @@ import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.domain.config.store.ConsumeQueueConfig;
 import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitEventDispatcher;
-import cn.coderule.minimq.domain.domain.store.domain.consumequeue.ConsumeQueueGateway;
+import cn.coderule.minimq.domain.domain.store.domain.consumequeue.ConsumeQueueFacade;
 import cn.coderule.minimq.domain.domain.store.domain.meta.TopicService;
 import cn.coderule.minimq.store.domain.consumequeue.queue.ConsumeQueueFactory;
 import cn.coderule.minimq.store.domain.consumequeue.service.ConsumeQueueFlusher;
@@ -19,7 +19,7 @@ public class ConsumeQueueBootstrap implements Lifecycle {
     private ConsumeQueueFlusher flusher;
     private ConsumeQueueLoader loader;
     private ConsumeQueueRecovery recovery;
-    private ConsumeQueueGateway consumeQueueGateway;
+    private ConsumeQueueFacade consumeQueueFacade;
 
     @Override
     public void initialize() throws Exception {
@@ -63,8 +63,8 @@ public class ConsumeQueueBootstrap implements Lifecycle {
         recovery = new ConsumeQueueRecovery(consumeQueueConfig, StoreContext.getCheckPoint());
 
         ConsumeQueueFactory consumeQueueFactory = initConsumeQueueFactory();
-        consumeQueueGateway = new DefaultConsumeQueueGateway(consumeQueueFactory);
-        StoreContext.register(consumeQueueGateway, ConsumeQueueGateway.class);
+        consumeQueueFacade = new DefaultConsumeQueueFacade(consumeQueueFactory);
+        StoreContext.register(consumeQueueFacade, ConsumeQueueFacade.class);
     }
 
     private ConsumeQueueFactory initConsumeQueueFactory() {
@@ -85,7 +85,7 @@ public class ConsumeQueueBootstrap implements Lifecycle {
 
     private void registerDispatchHandler() {
         CommitEventDispatcher dispatcher = StoreContext.getBean(CommitEventDispatcher.class);
-        QueueCommitEventHandler handler = new QueueCommitEventHandler(consumeQueueGateway);
+        QueueCommitEventHandler handler = new QueueCommitEventHandler(consumeQueueFacade);
         dispatcher.registerHandler(handler);
     }
 }

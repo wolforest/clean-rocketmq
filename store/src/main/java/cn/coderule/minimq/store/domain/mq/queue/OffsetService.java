@@ -9,7 +9,7 @@ import cn.coderule.minimq.domain.domain.store.domain.mq.DequeueResult;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.helper.PopConverter;
 import cn.coderule.minimq.domain.domain.meta.order.OrderRequest;
 import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitLog;
-import cn.coderule.minimq.domain.domain.store.domain.consumequeue.ConsumeQueueGateway;
+import cn.coderule.minimq.domain.domain.store.domain.consumequeue.ConsumeQueueFacade;
 import cn.coderule.minimq.domain.domain.store.domain.meta.ConsumeOffsetService;
 import cn.coderule.minimq.domain.domain.store.domain.meta.ConsumeOrderService;
 import cn.coderule.minimq.store.domain.mq.ack.AckService;
@@ -21,7 +21,7 @@ public class OffsetService {
 
     private final CommitLog commitLog;
     private final AckService ackService;
-    private final ConsumeQueueGateway consumeQueue;
+    private final ConsumeQueueFacade consumeQueue;
 
     private final ConsumeOffsetService consumeOffsetService;
     private final ConsumeOrderService consumeOrderService;
@@ -32,7 +32,7 @@ public class OffsetService {
         StoreConfig storeConfig,
         CommitLog commitLog,
         AckService ackService,
-        ConsumeQueueGateway consumeQueue,
+        ConsumeQueueFacade consumeQueue,
         ConsumeOffsetService consumeOffsetService,
         ConsumeOrderService consumeOrderService
     ) {

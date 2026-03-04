@@ -5,7 +5,7 @@ import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.domain.domain.store.api.meta.ConsumeOffsetStore;
 import cn.coderule.minimq.domain.domain.store.api.meta.SubscriptionStore;
 import cn.coderule.minimq.domain.domain.store.api.meta.TopicStore;
-import cn.coderule.minimq.domain.domain.store.domain.consumequeue.ConsumeQueueGateway;
+import cn.coderule.minimq.domain.domain.store.domain.consumequeue.ConsumeQueueFacade;
 import cn.coderule.minimq.domain.domain.store.domain.meta.ConsumeOffsetService;
 import cn.coderule.minimq.domain.domain.store.domain.meta.ConsumeOrderService;
 import cn.coderule.minimq.domain.domain.store.domain.meta.SubscriptionService;
@@ -46,10 +46,10 @@ public class MetaBootstrap implements Lifecycle {
     }
 
     private void injectDependency() {
-        ConsumeQueueGateway consumeQueueGateway = StoreContext.getBean(ConsumeQueueGateway.class);
+        ConsumeQueueFacade consumeQueueFacade = StoreContext.getBean(ConsumeQueueFacade.class);
         StoreRegister storeRegister = StoreContext.getBean(StoreRegister.class);
 
-        topicService.inject(consumeQueueGateway, storeRegister);
+        topicService.inject(consumeQueueFacade, storeRegister);
     }
 
     private void initConsumerOffset() {

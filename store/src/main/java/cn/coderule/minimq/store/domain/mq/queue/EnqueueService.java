@@ -6,7 +6,7 @@ import cn.coderule.minimq.domain.domain.store.domain.mq.EnqueueFuture;
 import cn.coderule.minimq.domain.core.lock.queue.EnqueueLock;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitLog;
-import cn.coderule.minimq.domain.domain.store.domain.consumequeue.ConsumeQueueGateway;
+import cn.coderule.minimq.domain.domain.store.domain.consumequeue.ConsumeQueueFacade;
 import cn.coderule.minimq.store.server.bootstrap.StoreContext;
 import cn.coderule.minimq.store.server.ha.server.processor.CommitLogSynchronizer;
 import java.util.concurrent.CompletableFuture;
@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class EnqueueService {
     private final StoreConfig storeConfig;
-    private final ConsumeQueueGateway consumeQueueGateway;
+    private final ConsumeQueueFacade consumeQueueFacade;
     private final CommitLog commitLog;
 
     private CommitLogSynchronizer commitLogSynchronizer;
@@ -25,10 +25,10 @@ public class EnqueueService {
     public EnqueueService(
         StoreConfig storeConfig,
         CommitLog commitLog,
-        ConsumeQueueGateway consumeQueueGateway) {
+        ConsumeQueueFacade consumeQueueFacade) {
 
         this.storeConfig = storeConfig;
-        this.consumeQueueGateway = consumeQueueGateway;
+        this.consumeQueueFacade = consumeQueueFacade;
         this.commitLog = commitLog;
 
         this.enqueueLock = new EnqueueLock();
@@ -76,7 +76,7 @@ public class EnqueueService {
             return;
         }
 
-        long queueOffset = consumeQueueGateway.assignOffset(messageBO.getTopic(), messageBO.getQueueId());
+        long queueOffset = consumeQueueFacade.assignOffset(messageBO.getTopic(), messageBO.getQueueId());
         messageBO.setQueueOffset(queueOffset);
     }
 
@@ -85,7 +85,7 @@ public class EnqueueService {
             return;
         }
 
-        consumeQueueGateway.increaseOffset(messageBO.getTopic(), messageBO.getQueueId());
+        consumeQueueFacade.increaseOffset(messageBO.getTopic(), messageBO.getQueueId());
     }
 
     private void lockMessageQueue(String topic, int queueId) {

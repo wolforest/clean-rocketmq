@@ -3,7 +3,7 @@ package cn.coderule.minimq.domain.domain.store.domain.consumequeue;
 import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitEvent;
 import java.util.List;
 
-public interface ConsumeQueueGateway {
+public interface ConsumeQueueFacade {
     void enqueue(CommitEvent event);
     QueueUnit get(String topic, int queueId, long offset);
     List<QueueUnit> get(String topic, int queueId, long offset, int num);
