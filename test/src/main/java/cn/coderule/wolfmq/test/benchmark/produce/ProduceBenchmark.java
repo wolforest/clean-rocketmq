@@ -27,6 +27,7 @@ public class ProduceBenchmark implements Benchmark {
         this.producer = ProducerManager.buildProducer(
             topicUtils.getTopicList()
         );
+        log.info("connect to producer: {}, topic: {}",  producer, topicUtils.getTopicList());
         this.report = new Report();
     }
 
@@ -55,8 +56,8 @@ public class ProduceBenchmark implements Benchmark {
     @Override
     public void cleanup() {
         try {
-            stopProducer();
             topicUtils.deleteTopicList();
+            stopProducer();
         } catch (IOException e) {
             log.error("cleanup exception: ", e);
         }

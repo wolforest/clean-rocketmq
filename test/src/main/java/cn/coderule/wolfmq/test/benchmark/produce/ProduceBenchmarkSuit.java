@@ -13,7 +13,7 @@ public class ProduceBenchmarkSuit extends BenchmarkSuit {
         int topicNumber = 10;
         int messageSize = 1024;
         List<Integer> concurrencyList = List.of(
-            5, 10, 12, 15, 18, 20
+            10, 15, 18, 20, 25
         );
 
         this.configList = new ConfigBuilder()

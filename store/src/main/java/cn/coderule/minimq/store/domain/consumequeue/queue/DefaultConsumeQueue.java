@@ -84,11 +84,11 @@ public class DefaultConsumeQueue implements ConsumeQueue {
 
     @Override
     public QueueUnit get(long index) {
-        long offset = index * config.getUnitSize();
-        if (offset < MIN_OFFSET_UPDATER.get(this)) {
+        if (index < MIN_OFFSET_UPDATER.get(this)) {
             return null;
         }
 
+        long offset = index * config.getUnitSize();
         SelectedMappedBuffer buffer = select(offset, config.getUnitSize());
         if (buffer == null) {
             return null;
@@ -128,7 +128,7 @@ public class DefaultConsumeQueue implements ConsumeQueue {
 
     @Override
     public long getMinOffset() {
-        return mappedFileQueue.getMinOffset();
+        return MIN_OFFSET_UPDATER.get(this);
     }
 
     @Override
@@ -162,6 +162,7 @@ public class DefaultConsumeQueue implements ConsumeQueue {
     @Override
     public void load() {
         mappedFileQueue.load();
+        // TODO: UPDATE minOffset/maxOffset while loading
     }
 
     @Override
@@ -233,6 +234,7 @@ public class DefaultConsumeQueue implements ConsumeQueue {
 
         setWriteBuffer(event);
         mappedFile.insert(this.writeBuffer);
+        setMaxOffset(messageBO.getQueueOffset());
         return true;
     }
 

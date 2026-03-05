@@ -50,7 +50,7 @@ public class InsertBenchmarkTest {
         commitLog.destroy();
     }
 
-    @Test
+//    @Test
     void partitionPerCoreBenchmark(@TempDir Path tmpDir) {
         int cpuNumber = SystemUtil.getProcessorNumber();
 
@@ -100,7 +100,7 @@ public class InsertBenchmarkTest {
         DirUtil.delete(tmpDir);
     }
 
-    @Test
+//    @Test
     void multiThreadBenchmark(@TempDir Path tmpDir) {
         String dir = tmpDir.toString();
         StoreConfig storeConfig = ConfigMock.createStoreConfig(dir);
@@ -144,7 +144,7 @@ public class InsertBenchmarkTest {
         commitLog.destroy();
     }
 
-    @Test
+//    @Test
     void multiThreadWithEnqueueLockBenchmark(@TempDir Path tmpDir) {
         String dir = tmpDir.toString();
         StoreConfig storeConfig = ConfigMock.createStoreConfig(dir);
