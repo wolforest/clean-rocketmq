@@ -5,9 +5,9 @@ import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitEventHandler;
 
 public class QueueCommitEventHandler implements CommitEventHandler {
-    private final DefaultConsumeQueueFacade consumeQueueFacade;
+    private final ConsumeQueueFacade consumeQueueFacade;
 
-    public QueueCommitEventHandler(DefaultConsumeQueueFacade consumeQueueFacade) {
+    public QueueCommitEventHandler(ConsumeQueueFacade consumeQueueFacade) {
         this.consumeQueueFacade = consumeQueueFacade;
     }
 

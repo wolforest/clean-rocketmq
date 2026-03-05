@@ -8,17 +8,17 @@ import cn.coderule.minimq.domain.domain.consumer.consume.mq.MessageRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.MessageResult;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitLog;
-import cn.coderule.minimq.store.domain.consumequeue.DefaultConsumeQueueFacade;
+import cn.coderule.minimq.store.domain.consumequeue.ConsumeQueueFacade;
 import java.util.List;
 import lombok.NonNull;
 
 public class MessageService {
     private final CommitLog commitLog;
-    private final DefaultConsumeQueueFacade consumeQueueFacade;
+    private final ConsumeQueueFacade consumeQueueFacade;
 
     public MessageService(
         CommitLog commitLog,
-        DefaultConsumeQueueFacade consumeQueueFacade
+        ConsumeQueueFacade consumeQueueFacade
     ) {
         this.commitLog = commitLog;
         this.consumeQueueFacade = consumeQueueFacade;
