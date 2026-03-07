@@ -119,7 +119,8 @@ public class ConsumeQueueRecovery implements ConsumeQueueRegistry {
         }
 
         if (null != lastValidFile && null != lastUnit) {
-            lastValidFile.setInsertOffset(lastUnit.getQueueOffset() + queue.getUnitSize());
+            // TODO: check insert offset calculation
+            lastValidFile.setInsertOffset(lastUnit.getQueueOffset() * queue.getUnitSize());
             queue.setMaxCommitLogOffset(lastUnit.getCommitOffset());
         }
 
