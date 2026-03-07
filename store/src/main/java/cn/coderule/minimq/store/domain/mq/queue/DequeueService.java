@@ -48,7 +48,7 @@ public class DequeueService {
 
     public CompletableFuture<DequeueResult> dequeueAsync(DequeueRequest request) {
         DequeueResult result = dequeue(request);
-        return CompletableFuture.supplyAsync(() -> result);
+        return CompletableFuture.completedFuture(result);
     }
 
     public DequeueResult dequeue(DequeueRequest request) {

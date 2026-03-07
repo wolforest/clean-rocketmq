@@ -11,6 +11,7 @@ import cn.coderule.minimq.store.domain.consumequeue.queue.ConsumeQueueRegistry;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 
@@ -45,7 +46,60 @@ public class ConsumeQueueRecovery implements ConsumeQueueRegistry {
     }
 
     private void recoverMinOffset(ConsumeQueue queue) {
+        Long minOffset = getMinOffsetFromCheckPoint(queue);
+        if (null != minOffset && checkPoint.isShutdownSuccessful()) {
+            recoverToMinOffset(queue, minOffset);
+            return;
+        }
 
+        if (null != minOffset) {
+            recoverFromMinOffset(queue, minOffset);
+            return;
+        }
+
+        recoverByFirstMappedFile(queue);
+    }
+
+    private void recoverToMinOffset(ConsumeQueue queue, long minOffset) {
+        queue.setMinOffset(minOffset);
+    }
+
+    private void recoverFromMinOffset(ConsumeQueue queue, long minOffset) {
+        long mappedFileMinOffset = getMappedFileMinOffset(queue);
+        queue.setMinOffset(Math.max(mappedFileMinOffset, minOffset));
+    }
+
+    private void recoverByFirstMappedFile(ConsumeQueue queue) {
+        queue.setMinOffset(getMappedFileMinOffset(queue));
+    }
+
+    private long getMappedFileMinOffset(ConsumeQueue queue) {
+        MappedFile mappedFile = queue.getMappedFileQueue().getFirstMappedFile();
+        if (null == mappedFile) {
+            log.error("[bug] consume queue mapped file is empty");
+            return 0;
+        }
+
+        return mappedFile.getMinOffset() / queue.getUnitSize();
+    }
+
+    private Long getMinOffsetFromCheckPoint(ConsumeQueue queue) {
+        Offset offset = checkPoint.getMinOffset();
+        if (null == offset) {
+            return null;
+        }
+
+        Map<String, ArrayList<Long>> topicOffsetMap = offset.getTopicOffsetMap();
+        if (null == topicOffsetMap || topicOffsetMap.isEmpty()) {
+            return null;
+        }
+
+        List<Long> queueOffsets = topicOffsetMap.get(queue.getTopic());
+        if (null == queueOffsets || queue.getQueueId() >= queueOffsets.size()) {
+            return null;
+        }
+
+        return queueOffsets.get(queue.getQueueId());
     }
 
     private void recoverMaxOffset(ConsumeQueue queue) {
