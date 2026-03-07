@@ -366,6 +366,102 @@ public class DefaultMappedFileTest {
         }
     }
 
+    @Test
+    void testContainsOffset_WithinRange() throws IOException {
+        String fileName = createFileName(1000);
+        int fileSize = 2048;
+
+        DefaultMappedFile mappedFile = new DefaultMappedFile(fileName, fileSize);
+
+        try {
+            // minOffset = 1000, maxOffset = 1000 + 2048 - 1 = 3047
+            assertEquals(1000, mappedFile.getMinOffset());
+            assertEquals(3047, mappedFile.getMaxOffset());
+
+            // Within range
+            assertTrue(mappedFile.containsOffset(1000));  // minOffset
+            assertTrue(mappedFile.containsOffset(2000));   // middle
+            assertTrue(mappedFile.containsOffset(3047));   // maxOffset
+
+        } finally {
+            mappedFile.destroy();
+        }
+    }
+
+    @Test
+    void testContainsOffset_OutOfRange() throws IOException {
+        String fileName = createFileName(1000);
+        int fileSize = 2048;
+
+        DefaultMappedFile mappedFile = new DefaultMappedFile(fileName, fileSize);
+
+        try {
+            // Below minOffset
+            assertFalse(mappedFile.containsOffset(999));
+            assertFalse(mappedFile.containsOffset(0));
+            assertFalse(mappedFile.containsOffset(-1));
+
+            // Above maxOffset
+            assertFalse(mappedFile.containsOffset(3048));
+            assertFalse(mappedFile.containsOffset(5000));
+            assertFalse(mappedFile.containsOffset(Long.MAX_VALUE));
+
+        } finally {
+            mappedFile.destroy();
+        }
+    }
+
+    @Test
+    void testContainsOffset_EmptyFile() throws IOException {
+        String fileName = createFileName(0);
+        int fileSize = 1024;
+
+        DefaultMappedFile mappedFile = new DefaultMappedFile(fileName, fileSize);
+
+        try {
+            // minOffset = 0, maxOffset = 0 + 1024 - 1 = 1023
+            assertEquals(0, mappedFile.getMinOffset());
+            assertEquals(1023, mappedFile.getMaxOffset());
+
+            // Within range even when empty
+            assertTrue(mappedFile.containsOffset(0));
+            assertTrue(mappedFile.containsOffset(500));
+            assertTrue(mappedFile.containsOffset(1023));
+
+            // Out of range
+            assertFalse(mappedFile.containsOffset(-1));
+            assertFalse(mappedFile.containsOffset(1024));
+
+        } finally {
+            mappedFile.destroy();
+        }
+    }
+
+    @Test
+    void testContainsOffset_LargeFile() throws IOException {
+        String fileName = createFileName(1000000);
+        int fileSize = 100 * 1024 * 1024; // 100MB
+
+        DefaultMappedFile mappedFile = new DefaultMappedFile(fileName, fileSize);
+
+        try {
+            long minOffset = mappedFile.getMinOffset();
+            long maxOffset = mappedFile.getMaxOffset();
+
+            assertEquals(1000000, minOffset);
+            assertEquals(1000000 + fileSize - 1, maxOffset);
+
+            // Boundary values
+            assertTrue(mappedFile.containsOffset(minOffset));
+            assertTrue(mappedFile.containsOffset(maxOffset));
+            assertFalse(mappedFile.containsOffset(minOffset - 1));
+            assertFalse(mappedFile.containsOffset(maxOffset + 1));
+
+        } finally {
+            mappedFile.destroy();
+        }
+    }
+
     private String createFileName(int offset) {
         String fileName = OffsetUtils.offsetToFileName(offset);
         return tmpDir.resolve(fileName).toString();

@@ -87,7 +87,7 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
 
     @Override
     public boolean containsOffset(long offset) {
-        return offset >= this.minOffset && offset < this.maxOffset;
+        return offset >= this.minOffset && offset <= this.maxOffset;
     }
 
     @Override
