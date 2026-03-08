@@ -19,7 +19,7 @@ package cn.coderule.wolfmq.test.manager;
 import org.apache.rocketmq.client.apis.ClientServiceProvider;
 
 public class ClientManager {
-    private static DefaultRPCClient client = null;
+    private static DefaultRpcClient client = null;
 
     private static final ClientServiceProvider PROVIDER = ClientServiceProvider.loadService();
 
@@ -27,7 +27,7 @@ public class ClientManager {
         return PROVIDER;
     }
 
-    public static DefaultRPCClient getClient() {
+    public static DefaultRpcClient getClient() {
         return client;
     }
 
@@ -37,7 +37,7 @@ public class ClientManager {
         }
 
         System.setProperty("rocketmq.namesrv.addr", ConfigManager.getConfig().getString("nameAddr"));
-        client = new DefaultRPCClient();
+        client = new DefaultRpcClient();
         client.start();
     }
 

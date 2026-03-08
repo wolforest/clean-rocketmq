@@ -154,8 +154,11 @@ import org.apache.rocketmq.remoting.rpchook.StreamTypeRPCHook;
 
 import static org.apache.rocketmq.remoting.protocol.RemotingSysResponseCode.SUCCESS;
 
-public class DefaultRPCClient {
-    protected static final Logger LOG = LoggerFactory.getLogger(DefaultRPCClient.class);
+/**
+ * @renamed from DefaultRPCClient to DefaultRpcClient
+ */
+public class DefaultRpcClient {
+    protected static final Logger LOG = LoggerFactory.getLogger(DefaultRpcClient.class);
 
     static {
         System.setProperty(RemotingCommand.REMOTING_VERSION_KEY, Integer.toString(MQVersion.CURRENT_VERSION));
@@ -164,11 +167,11 @@ public class DefaultRPCClient {
     protected final RemotingClient remotingClient;
     protected long timeoutMillis = 5000;
 
-    public DefaultRPCClient() {
+    public DefaultRpcClient() {
         this(null);
     }
 
-    public DefaultRPCClient(RPCHook hook) {
+    public DefaultRpcClient(RPCHook hook) {
         NettyClientConfig nettyClientConfig = new NettyClientConfig();
         this.remotingClient = new NettyRemotingClient(nettyClientConfig, null);
 
