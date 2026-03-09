@@ -21,7 +21,7 @@ public class AckBootstrap implements Lifecycle {
 
         AckValidator ackValidator = new AckValidator(mqFacade, topicFacade);
 
-        AckService ackService = new AckService(
+        BrokerAckService ackService = new BrokerAckService(
             mqFacade, consumerRegistry, receiptHandler, ackValidator
         );
         BrokerContext.register(ackService);

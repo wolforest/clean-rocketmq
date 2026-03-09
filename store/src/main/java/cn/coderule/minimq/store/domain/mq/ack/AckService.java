@@ -26,7 +26,7 @@ public class AckService {
     private final String reviveTopic;
 
     private final AckBuffer ackBuffer;
-    private final OffsetService offsetService;
+    private final AckOffset offsetService;
     private final EnqueueService enqueueService;
 
     public AckService(
@@ -34,7 +34,7 @@ public class AckService {
         String reviveTopic,
         AckBuffer ackBuffer,
         EnqueueService enqueueService,
-        OffsetService offsetService
+        AckOffset offsetService
     ) {
         this.storeConfig  = storeConfig;
         this.messageConfig  = storeConfig.getMessageConfig();

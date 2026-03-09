@@ -10,7 +10,7 @@ public class GrpcBootstrap implements Lifecycle {
     private BrokerConfig brokerConfig;
     private GrpcConfig grpcConfig;
     private MessageBootstrap messageBootstrap;
-    private MessageService messageService;
+    private GrpcMessageService messageService;
     private GrpcServer grpcServer;
 
     @Override

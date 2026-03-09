@@ -13,9 +13,9 @@ import apache.rocketmq.v2.ReceiveMessageResponse;
 import apache.rocketmq.v2.Status;
 import apache.rocketmq.v2.UpdateOffsetRequest;
 import apache.rocketmq.v2.UpdateOffsetResponse;
-import cn.coderule.minimq.broker.server.grpc.service.consume.AckService;
+import cn.coderule.minimq.broker.server.grpc.service.consume.GrpcAckService;
 import cn.coderule.minimq.broker.server.grpc.service.consume.InvisibleService;
-import cn.coderule.minimq.broker.server.grpc.service.consume.OffsetService;
+import cn.coderule.minimq.broker.server.grpc.service.consume.GrpcOffsetService;
 import cn.coderule.minimq.broker.server.grpc.service.consume.PopService;
 import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import cn.coderule.minimq.rpc.common.grpc.activity.ActivityHelper;
@@ -27,9 +27,9 @@ public class ConsumerActivity {
     private final ThreadPoolExecutor executor;
 
     private PopService popService;
-    private AckService ackService;
+    private GrpcAckService ackService;
     private InvisibleService invisibleService;
-    private OffsetService offsetService;
+    private GrpcOffsetService offsetService;
 
     public ConsumerActivity(ThreadPoolExecutor executor) {
         this.executor = executor;
@@ -37,9 +37,9 @@ public class ConsumerActivity {
 
     public void inject(
         PopService popService,
-        AckService ackService,
+        GrpcAckService ackService,
         InvisibleService invisibleService,
-        OffsetService offsetService
+        GrpcOffsetService offsetService
     ) {
         this.popService = popService;
         this.ackService = ackService;

@@ -3,7 +3,7 @@ package cn.coderule.minimq.broker.domain.consumer;
 import cn.coderule.minimq.broker.api.ConsumerController;
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.minimq.broker.domain.consumer.ack.AckBootstrap;
-import cn.coderule.minimq.broker.domain.consumer.ack.AckService;
+import cn.coderule.minimq.broker.domain.consumer.ack.BrokerAckService;
 import cn.coderule.minimq.broker.domain.consumer.ack.InvisibleService;
 import cn.coderule.minimq.broker.domain.consumer.consumer.ConsumeHookManager;
 import cn.coderule.minimq.broker.domain.consumer.consumer.ConsumerRegistry;
@@ -85,7 +85,7 @@ public class ConsumerBootstrap implements Lifecycle {
     private void initConsumer() {
         consumer = new Consumer(
             BrokerContext.getBean(PopService.class),
-            BrokerContext.getBean(AckService.class),
+            BrokerContext.getBean(BrokerAckService.class),
             BrokerContext.getBean(ConsumerRegistry.class),
             BrokerContext.getBean(InvisibleService.class),
             BrokerContext.getBean(SubscriptionStore.class)

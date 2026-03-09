@@ -9,7 +9,7 @@ import apache.rocketmq.v2.UpdateOffsetResponse;
 import cn.coderule.minimq.domain.domain.cluster.RequestContext;
 import java.util.concurrent.CompletableFuture;
 
-public class OffsetService {
+public class GrpcOffsetService {
 
     public CompletableFuture<GetOffsetResponse> getOffsetAsync(RequestContext context, GetOffsetRequest request) {
         return null;

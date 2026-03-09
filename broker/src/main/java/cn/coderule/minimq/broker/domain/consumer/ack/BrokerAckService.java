@@ -13,7 +13,7 @@ import java.util.concurrent.CompletableFuture;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class AckService {
+public class BrokerAckService {
 
     private final AckValidator ackValidator;
     private final ReceiptHandler receiptHandler;
@@ -21,7 +21,7 @@ public class AckService {
     private final MQFacade mqStore;
     private final ConsumerRegistry consumerRegistry;
 
-    public AckService(
+    public BrokerAckService(
         MQFacade mqStore,
         ConsumerRegistry consumerRegistry,
         ReceiptHandler receiptHandler,

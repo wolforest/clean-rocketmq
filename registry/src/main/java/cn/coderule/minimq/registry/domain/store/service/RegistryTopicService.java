@@ -21,10 +21,10 @@ import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class TopicService {
+public class RegistryTopicService {
     private final Route route;
 
-    public TopicService(RegistryConfig config, Route route) {
+    public RegistryTopicService(RegistryConfig config, Route route) {
         this.route = route;
     }
 

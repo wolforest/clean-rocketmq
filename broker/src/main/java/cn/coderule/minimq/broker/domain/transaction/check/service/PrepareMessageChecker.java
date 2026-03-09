@@ -5,7 +5,7 @@ import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.common.util.lang.time.DateUtil;
 import cn.coderule.minimq.broker.domain.transaction.check.context.CheckContext;
 import cn.coderule.minimq.broker.domain.transaction.check.context.TransactionContext;
-import cn.coderule.minimq.broker.domain.transaction.service.MessageService;
+import cn.coderule.minimq.broker.domain.transaction.service.TransactionMessageService;
 import cn.coderule.minimq.domain.config.business.MessageConfig;
 import cn.coderule.minimq.domain.config.business.TransactionConfig;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
@@ -28,7 +28,7 @@ public class PrepareMessageChecker {
 
     private final CheckService checkService;
     private final DiscardService discardService;
-    private final MessageService messageService;
+    private final TransactionMessageService messageService;
 
     public PrepareMessageChecker(TransactionContext context, OperationMessageLoader operationMessageLoader) {
         BrokerConfig brokerConfig = context.getBrokerConfig();

@@ -23,7 +23,7 @@ public class ReviveThread extends ServiceThread {
 
     private final Reviver reviver;
     private final ReviveConsumer consumer;
-    private final OffsetService offsetService;
+    private final ReviveOffsetService offsetService;
 
     private volatile boolean skipRevive = false;
 
@@ -34,7 +34,7 @@ public class ReviveThread extends ServiceThread {
 
         this.reviver = new Reviver(context, queueId, retryService);
         this.consumer = new ReviveConsumer(context, queueId);
-        this.offsetService = new OffsetService(context, queueId);
+        this.offsetService = new ReviveOffsetService(context, queueId);
     }
 
     public void setSkipRevive(boolean skip) {

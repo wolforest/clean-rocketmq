@@ -50,7 +50,7 @@ import lombok.extern.slf4j.Slf4j;
  * </ul>
  */
 @Slf4j
-public class MessageService extends MessagingServiceGrpc.MessagingServiceImplBase {
+public class GrpcMessageService extends MessagingServiceGrpc.MessagingServiceImplBase {
     private final ClientActivity clientActivity;
     private final ProducerActivity producerActivity;
     private final RouteActivity routeActivity;
@@ -59,7 +59,7 @@ public class MessageService extends MessagingServiceGrpc.MessagingServiceImplBas
 
     private final RequestPipeline pipeline;
 
-    public MessageService(
+    public GrpcMessageService(
         ClientActivity clientActivity,
         RouteActivity routeActivity,
         ProducerActivity producerActivity,

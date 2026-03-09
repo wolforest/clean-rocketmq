@@ -19,7 +19,7 @@ public class AckManager implements Lifecycle {
     private AckBuffer ackBuffer;
     private AckMerger ackMerger;
 
-    private OffsetService offsetService;
+    private AckOffset offsetService;
     private AckService ackService;
 
     @Override
@@ -52,8 +52,8 @@ public class AckManager implements Lifecycle {
         this.offsetService = initOffsetService();
     }
 
-    private OffsetService initOffsetService() {
-        return new OffsetService(
+    private AckOffset initOffsetService() {
+        return new AckOffset(
             StoreContext.getBean(DequeueLock.class),
             StoreContext.getBean(InflightCounter.class),
             StoreContext.getBean(DefaultConsumeOffsetService.class),

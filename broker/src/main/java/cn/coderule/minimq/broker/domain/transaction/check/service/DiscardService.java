@@ -1,6 +1,6 @@
 package cn.coderule.minimq.broker.domain.transaction.check.service;
 
-import cn.coderule.minimq.broker.domain.transaction.service.MessageService;
+import cn.coderule.minimq.broker.domain.transaction.service.TransactionMessageService;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.domain.meta.topic.Topic;
@@ -11,9 +11,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class DiscardService {
     private final BrokerConfig brokerConfig;
-    private final MessageService messageService;
+    private final TransactionMessageService messageService;
 
-    public DiscardService(BrokerConfig brokerConfig, MessageService messageService) {
+    public DiscardService(BrokerConfig brokerConfig, TransactionMessageService messageService) {
         this.brokerConfig = brokerConfig;
         this.messageService = messageService;
     }

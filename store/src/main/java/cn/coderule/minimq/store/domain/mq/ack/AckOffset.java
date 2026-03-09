@@ -12,13 +12,13 @@ import cn.coderule.minimq.domain.domain.meta.order.OrderRequest;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class OffsetService {
+public class AckOffset {
     private final DequeueLock dequeueLock;
     private final ConsumeOffsetService consumeOffsetService;
     private final ConsumeOrderService consumeOrderService;
     private final InflightCounter inflightCounter;
 
-    public OffsetService(
+    public AckOffset(
         DequeueLock dequeueLock,
         InflightCounter inflightCounter,
         ConsumeOffsetService consumeOffsetService,

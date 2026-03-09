@@ -12,7 +12,7 @@ import cn.coderule.minimq.broker.domain.transaction.receipt.ReceiptRegistry;
 import cn.coderule.minimq.broker.domain.transaction.service.BatchCommitService;
 import cn.coderule.minimq.broker.domain.transaction.service.CommitService;
 import cn.coderule.minimq.broker.domain.transaction.service.MessageFactory;
-import cn.coderule.minimq.broker.domain.transaction.service.MessageService;
+import cn.coderule.minimq.broker.domain.transaction.service.TransactionMessageService;
 import cn.coderule.minimq.broker.domain.transaction.service.PrepareService;
 import cn.coderule.minimq.broker.domain.transaction.service.RollbackService;
 import cn.coderule.minimq.broker.domain.transaction.service.SubscribeService;
@@ -32,7 +32,7 @@ public class TransactionBootstrap implements Lifecycle {
 
     private CommitBuffer commitBuffer;
     private BatchCommitService batchCommitService;
-    private MessageService messageService;
+    private TransactionMessageService messageService;
 
     private MessageFactory messageFactory;
     private ReceiptRegistry receiptRegistry;
@@ -95,7 +95,7 @@ public class TransactionBootstrap implements Lifecycle {
         PrepareService prepareService = new PrepareService(
             transactionConfig, messageFactory, mqStore, receiptRegistry);
 
-        messageService = new MessageService(
+        messageService = new TransactionMessageService(
             brokerConfig, commitBuffer, batchCommitService, messageFactory, mqStore, topicStore, consumeOffsetStore);
 
         SubscribeService subscribeService = new SubscribeService();

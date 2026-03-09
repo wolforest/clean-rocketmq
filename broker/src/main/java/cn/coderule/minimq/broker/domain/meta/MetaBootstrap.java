@@ -24,7 +24,7 @@ public class MetaBootstrap implements Lifecycle {
         brokerConfig = BrokerContext.getBean(BrokerConfig.class);
 
         RouteService routeService = initRouteService();
-        TopicService topicService = initTopicService();
+        BrokerTopicService topicService = initTopicService();
         SubscriptionService subscriptionService = initSubscriptionService();
 
         RouteController routeController = new RouteController(routeService, topicService, subscriptionService);
@@ -41,9 +41,9 @@ public class MetaBootstrap implements Lifecycle {
         // nothing to do
     }
 
-    private TopicService initTopicService() {
+    private BrokerTopicService initTopicService() {
         TopicStore topicStore = BrokerContext.getBean(TopicStore.class);
-        return new TopicService(topicStore);
+        return new BrokerTopicService(topicStore);
     }
 
     private SubscriptionService initSubscriptionService() {

@@ -30,7 +30,7 @@ import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class MessageService {
+public class TransactionMessageService {
     private final TopicConfig topicConfig;
     private final TransactionConfig transactionConfig;
 
@@ -43,7 +43,7 @@ public class MessageService {
     private final TopicStore topicStore;
     private final ConsumeOffsetStore consumeOffsetStore;
 
-    public MessageService(
+    public TransactionMessageService(
         BrokerConfig brokerConfig,
         CommitBuffer commitBuffer,
         BatchCommitService batchCommitService,

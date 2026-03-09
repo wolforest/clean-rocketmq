@@ -14,10 +14,10 @@ import java.util.concurrent.CompletableFuture;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class DequeueService {
+public class BrokerDequeueService {
     private final MQFacade mqStore;
 
-    public DequeueService(MQFacade mqStore) {
+    public BrokerDequeueService(MQFacade mqStore) {
         this.mqStore = mqStore;
     }
 

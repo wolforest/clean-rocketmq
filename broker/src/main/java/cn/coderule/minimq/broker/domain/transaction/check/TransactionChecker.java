@@ -6,7 +6,7 @@ import cn.coderule.minimq.broker.domain.transaction.check.context.CheckContext;
 import cn.coderule.minimq.broker.domain.transaction.check.context.TransactionContext;
 import cn.coderule.minimq.broker.domain.transaction.check.service.OperationMessageLoader;
 import cn.coderule.minimq.broker.domain.transaction.check.service.PrepareMessageChecker;
-import cn.coderule.minimq.broker.domain.transaction.service.MessageService;
+import cn.coderule.minimq.broker.domain.transaction.service.TransactionMessageService;
 import cn.coderule.minimq.domain.config.business.TransactionConfig;
 import cn.coderule.minimq.domain.domain.MessageQueue;
 import cn.coderule.minimq.domain.domain.cluster.task.QueueTask;
@@ -31,7 +31,7 @@ public class TransactionChecker extends ServiceThread {
     private final PrepareMessageChecker prepareMessageChecker;
 
 
-    private final MessageService messageService;
+    private final TransactionMessageService messageService;
 
     public TransactionChecker(TransactionContext context, QueueTask task) {
         this.task = task;

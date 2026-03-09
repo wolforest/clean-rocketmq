@@ -14,7 +14,7 @@ import cn.coderule.minimq.domain.domain.consumer.receipt.ReceiptHandler;
 public class PopBootstrap implements Lifecycle {
     private BrokerConfig brokerConfig;
     private QueueSelector queueSelector;
-    private DequeueService dequeueService;
+    private BrokerDequeueService dequeueService;
     private ContextBuilder contextBuilder;
 
     @Override
@@ -52,7 +52,7 @@ public class PopBootstrap implements Lifecycle {
     }
 
     private void initDequeueService() {
-        dequeueService = new DequeueService(
+        dequeueService = new BrokerDequeueService(
             BrokerContext.getBean(MQStore.class)
         );
     }

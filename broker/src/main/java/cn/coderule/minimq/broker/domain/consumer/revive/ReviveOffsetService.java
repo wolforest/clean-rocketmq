@@ -11,7 +11,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class OffsetService {
+public class ReviveOffsetService {
     private final String reviveTopic;
     private final int queueId;
 
@@ -26,7 +26,7 @@ public class OffsetService {
     private final MQFacade mqFacade;
     private final ConsumeOffsetFacade consumeOffsetFacade;
 
-    public OffsetService(ReviveContext context, int queueId) {
+    public ReviveOffsetService(ReviveContext context, int queueId) {
         this.reviveTopic = context.getReviveTopic();
         this.queueId = queueId;
 

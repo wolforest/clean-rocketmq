@@ -8,9 +8,9 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class RollbackService {
-    private final MessageService messageService;
+    private final TransactionMessageService messageService;
 
-    public RollbackService(MessageService messageService) {
+    public RollbackService(TransactionMessageService messageService) {
         this.messageService = messageService;
     }
 

@@ -9,10 +9,10 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class CommitService {
-    private final MessageService messageService;
+    private final TransactionMessageService messageService;
     private final MessageFactory messageFactory;
 
-    public CommitService(MessageService messageService, MessageFactory messageFactory) {
+    public CommitService(TransactionMessageService messageService, MessageFactory messageFactory) {
         this.messageService = messageService;
         this.messageFactory = messageFactory;
     }

@@ -3,7 +3,7 @@ package cn.coderule.minimq.broker.domain.transaction.check.service;
 import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.minimq.broker.domain.transaction.check.context.CheckContext;
 import cn.coderule.minimq.broker.domain.transaction.check.context.TransactionContext;
-import cn.coderule.minimq.broker.domain.transaction.service.MessageService;
+import cn.coderule.minimq.broker.domain.transaction.service.TransactionMessageService;
 import cn.coderule.minimq.domain.domain.store.domain.mq.DequeueResult;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.domain.transaction.TransactionUtil;
@@ -14,7 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class OperationMessageLoader {
     private static final int DEFAULT_PULL_NUM = 32;
-    private final MessageService messageService;
+    private final TransactionMessageService messageService;
 
     public OperationMessageLoader(TransactionContext transactionContext) {
         this.messageService = transactionContext.getMessageService();

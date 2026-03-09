@@ -2,7 +2,7 @@ package cn.coderule.minimq.registry.processor;
 
 import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.minimq.domain.config.server.RegistryConfig;
-import cn.coderule.minimq.registry.domain.store.service.TopicService;
+import cn.coderule.minimq.registry.domain.store.service.RegistryTopicService;
 import cn.coderule.minimq.rpc.common.rpc.RpcProcessor;
 import cn.coderule.minimq.rpc.common.rpc.core.exception.RemotingCommandException;
 import cn.coderule.minimq.rpc.common.rpc.core.invoke.RpcCommand;
@@ -20,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class TopicProcessor implements RpcProcessor {
     private final RegistryConfig config;
-    private final TopicService topicService;
+    private final RegistryTopicService topicService;
 
     @Getter
     private final ExecutorService executor;
@@ -36,7 +36,7 @@ public class TopicProcessor implements RpcProcessor {
         RequestCode.GET_HAS_UNIT_SUB_UNUNIT_TOPIC_LIST
     );
 
-    public TopicProcessor(RegistryConfig config, TopicService topicService, ExecutorService executor) {
+    public TopicProcessor(RegistryConfig config, RegistryTopicService topicService, ExecutorService executor) {
         this.config = config;
         this.topicService = topicService;
         this.executor = executor;

@@ -21,11 +21,11 @@ import java.util.concurrent.CompletableFuture;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class AckService {
+public class GrpcAckService {
     private final MessageConfig messageConfig;
     private final ConsumerController consumerController;
 
-    public AckService(
+    public GrpcAckService(
         BrokerConfig brokerConfig,
         ConsumerController consumerController
     ) {

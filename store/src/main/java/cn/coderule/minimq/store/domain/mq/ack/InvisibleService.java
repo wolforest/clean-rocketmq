@@ -16,7 +16,7 @@ public class InvisibleService {
     private final String reviveTopic;
 
     private final AckService ackService;
-    private final OffsetService offsetService;
+    private final AckOffset offsetService;
     private final EnqueueService enqueueService;
 
     public InvisibleService(
@@ -24,7 +24,7 @@ public class InvisibleService {
         String reviveTopic,
         AckService ackService,
         EnqueueService enqueueService,
-        OffsetService offsetService
+        AckOffset offsetService
     ) {
         this.storeConfig  = storeConfig;
         this.reviveTopic = reviveTopic;

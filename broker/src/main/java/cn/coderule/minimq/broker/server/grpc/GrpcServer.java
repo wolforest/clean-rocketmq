@@ -22,14 +22,14 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class GrpcServer implements Lifecycle {
     private final GrpcConfig config;
-    private final MessageService messageService;
+    private final GrpcMessageService messageService;
     private Server server;
 
     private ThreadPoolExecutor businessThreadPool;
 
     private NettyServerBuilder serverBuilder;
 
-    public GrpcServer(GrpcConfig config, MessageService messageService) {
+    public GrpcServer(GrpcConfig config, GrpcMessageService messageService) {
         this.config = config;
         this.messageService = messageService;
     }

@@ -1,7 +1,7 @@
 package cn.coderule.minimq.broker.server.grpc.service;
 
 import cn.coderule.minimq.broker.api.RouteController;
-import cn.coderule.minimq.broker.server.grpc.MessageService;
+import cn.coderule.minimq.broker.server.grpc.GrpcMessageService;
 import cn.coderule.minimq.broker.server.grpc.interceptor.ContextInitPipeline;
 import cn.coderule.minimq.broker.server.grpc.service.channel.ChannelManager;
 import cn.coderule.minimq.broker.server.grpc.service.channel.HeartbeatService;
@@ -9,9 +9,9 @@ import cn.coderule.minimq.broker.server.grpc.service.channel.RegisterService;
 import cn.coderule.minimq.broker.server.grpc.service.channel.SettingManager;
 import cn.coderule.minimq.broker.server.grpc.service.channel.TelemetryService;
 import cn.coderule.minimq.broker.server.grpc.service.channel.TerminationService;
-import cn.coderule.minimq.broker.server.grpc.service.consume.AckService;
+import cn.coderule.minimq.broker.server.grpc.service.consume.GrpcAckService;
 import cn.coderule.minimq.broker.server.grpc.service.consume.InvisibleService;
-import cn.coderule.minimq.broker.server.grpc.service.consume.OffsetService;
+import cn.coderule.minimq.broker.server.grpc.service.consume.GrpcOffsetService;
 import cn.coderule.minimq.broker.server.grpc.service.consume.PopService;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.rpc.common.grpc.RequestPipeline;
@@ -39,7 +39,7 @@ public class MessageBootstrap implements Lifecycle {
     private final RejectActivity rejectActivity = new RejectActivity();
 
     @Getter
-    private MessageService messageService;
+    private GrpcMessageService messageService;
 
     private ClientActivity clientActivity;
     private RouteActivity routeActivity;
@@ -237,7 +237,7 @@ public class MessageBootstrap implements Lifecycle {
 
         pipeline = pipeline.pipe(new ContextInitPipeline());
 
-        this.messageService = new MessageService(
+        this.messageService = new GrpcMessageService(
             this.clientActivity,
             this.routeActivity,
             this.producerActivity,
@@ -274,14 +274,14 @@ public class MessageBootstrap implements Lifecycle {
             consumerController,
             settingManager
         );
-        AckService ackService = new AckService(
+        GrpcAckService ackService = new GrpcAckService(
             brokerConfig,
             consumerController
         );
         InvisibleService invisibleService = new InvisibleService(
             consumerController
         );
-        OffsetService offsetService = new OffsetService();
+        GrpcOffsetService offsetService = new GrpcOffsetService();
 
         consumerActivity.inject(
             popService,

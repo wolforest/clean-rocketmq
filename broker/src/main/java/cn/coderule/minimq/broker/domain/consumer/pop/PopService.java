@@ -18,12 +18,12 @@ public class PopService {
     private final QueueSelector queueSelector;
     private final ContextBuilder contextBuilder;
     private final ReceiptHandler receiptHandler;
-    private final DequeueService dequeueService;
+    private final BrokerDequeueService dequeueService;
 
     public PopService(
         ContextBuilder contextBuilder,
         QueueSelector queueSelector,
-        DequeueService dequeueService,
+        BrokerDequeueService dequeueService,
         ReceiptHandler receiptHandler
     ) {
         this.queueSelector = queueSelector;

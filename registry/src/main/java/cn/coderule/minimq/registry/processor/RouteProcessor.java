@@ -2,7 +2,7 @@ package cn.coderule.minimq.registry.processor;
 
 import cn.coderule.minimq.domain.config.server.RegistryConfig;
 import cn.coderule.minimq.registry.domain.kv.KVService;
-import cn.coderule.minimq.registry.domain.store.service.TopicService;
+import cn.coderule.minimq.registry.domain.store.service.RegistryTopicService;
 import cn.coderule.minimq.rpc.common.rpc.RpcProcessor;
 import cn.coderule.minimq.rpc.common.rpc.core.exception.RemotingCommandException;
 import cn.coderule.minimq.rpc.common.rpc.core.invoke.RpcCommand;
@@ -23,7 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 public class RouteProcessor implements RpcProcessor {
     private final RegistryConfig registryConfig;
 
-    private final TopicService topicService;
+    private final RegistryTopicService topicService;
     private final KVService kvService;
 
     private final long startTime;
@@ -39,7 +39,7 @@ public class RouteProcessor implements RpcProcessor {
 
     public RouteProcessor(
         RegistryConfig registryConfig,
-        TopicService topicService,
+        RegistryTopicService topicService,
         KVService kvService,
         ExecutorService executor) {
         this.registryConfig = registryConfig;

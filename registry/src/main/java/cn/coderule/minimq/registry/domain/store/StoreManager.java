@@ -7,7 +7,7 @@ import cn.coderule.minimq.registry.domain.store.model.Route;
 import cn.coderule.minimq.registry.domain.store.service.ChannelCloser;
 import cn.coderule.minimq.registry.domain.store.service.ClusterService;
 import cn.coderule.minimq.registry.domain.store.service.IdleScanner;
-import cn.coderule.minimq.registry.domain.store.service.TopicService;
+import cn.coderule.minimq.registry.domain.store.service.RegistryTopicService;
 import cn.coderule.minimq.registry.processor.ClusterProcessor;
 import cn.coderule.minimq.registry.processor.RegistryProcessor;
 import cn.coderule.minimq.registry.processor.RouteProcessor;
@@ -24,7 +24,7 @@ public class StoreManager implements Lifecycle {
     private StoreRegistry storeRegistry;
     private IdleScanner idleScanner;
     private ClusterService clusterService;
-    private TopicService topicService;
+    private RegistryTopicService topicService;
 
     @Override
     public void initialize() throws Exception {
@@ -54,7 +54,7 @@ public class StoreManager implements Lifecycle {
 
         this.idleScanner = new IdleScanner(registryConfig, storeRegistry, route);
         this.clusterService = new ClusterService(registryConfig, route);
-        this.topicService = new TopicService(registryConfig, route);
+        this.topicService = new RegistryTopicService(registryConfig, route);
 
         ChannelCloser channelCloser = new ChannelCloser(storeRegistry, route);
         RegistryContext.register(channelCloser);

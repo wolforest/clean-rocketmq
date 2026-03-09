@@ -11,10 +11,10 @@ import java.util.concurrent.CompletableFuture;
  *  - create/get/save topic
  *  - support local/remote mode
  */
-public class TopicService implements TopicFacade {
+public class BrokerTopicService implements TopicFacade {
     private final TopicFacade store;
 
-    public TopicService(TopicFacade store) {
+    public BrokerTopicService(TopicFacade store) {
         this.store = store;
     }
 
