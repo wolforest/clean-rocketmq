@@ -7,7 +7,10 @@ import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitEventDispat
 import cn.coderule.minimq.domain.domain.store.server.CheckPoint;
 import cn.coderule.minimq.store.server.bootstrap.StoreContext;
 
-public class CommitLogDispatcherBootstrap implements Lifecycle {
+/**
+ * @renamed from CommitLogDispatcherBootstrap to DispatcherBootstrap
+ */
+public class DispatcherBootstrap implements Lifecycle {
     private DefaultCommitEventDispatcher dispatcher;
 
     @Override

@@ -6,7 +6,7 @@ import cn.coderule.minimq.domain.core.event.ServerEventBus;
 import cn.coderule.minimq.rpc.common.rpc.netty.NettyClient;
 import cn.coderule.minimq.store.domain.commitlog.CommitLogBootstrap;
 import cn.coderule.minimq.store.domain.consumequeue.ConsumeQueueBootstrap;
-import cn.coderule.minimq.store.domain.dispatcher.CommitLogDispatcherBootstrap;
+import cn.coderule.minimq.store.domain.dispatcher.DispatcherBootstrap;
 import cn.coderule.minimq.store.domain.index.IndexBootstrap;
 import cn.coderule.minimq.store.domain.mq.MQBootstrap;
 import cn.coderule.minimq.store.domain.meta.MetaBootstrap;
@@ -90,7 +90,7 @@ public class ComponentRegister {
     }
 
     private void registerDispatcher() {
-        CommitLogDispatcherBootstrap component = new CommitLogDispatcherBootstrap();
+        DispatcherBootstrap component = new DispatcherBootstrap();
         manager.register(component);
     }
 
