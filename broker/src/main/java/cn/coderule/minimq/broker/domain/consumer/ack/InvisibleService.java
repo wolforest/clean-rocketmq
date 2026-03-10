@@ -1,6 +1,6 @@
 package cn.coderule.minimq.broker.domain.consumer.ack;
 
-import cn.coderule.minimq.broker.domain.consumer.consumer.ConsumerRegistry;
+import cn.coderule.minimq.broker.domain.consumer.consumer.ConsumerManager;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.domain.cluster.ClientChannelInfo;
 import cn.coderule.minimq.domain.domain.consumer.ack.AckConverter;
@@ -16,21 +16,21 @@ public class InvisibleService {
     private final BrokerConfig brokerConfig;
     private final MQFacade mqStore;
 
-    private final ConsumerRegistry consumerRegistry;
+    private final ConsumerManager consumerManager;
     private final ReceiptHandler receiptHandler;
     private final AckValidator ackValidator;
 
     public InvisibleService(
         BrokerConfig brokerConfig,
         MQFacade mqStore,
-        ConsumerRegistry consumerRegistry,
+        ConsumerManager consumerManager,
         ReceiptHandler receiptHandler,
         AckValidator ackValidator
     ) {
         this.brokerConfig = brokerConfig;
 
         this.mqStore = mqStore;
-        this.consumerRegistry = consumerRegistry;
+        this.consumerManager = consumerManager;
 
         this.receiptHandler = receiptHandler;
         this.ackValidator = ackValidator;
@@ -61,7 +61,7 @@ public class InvisibleService {
     }
 
     private MessageReceipt buildRequestReceipt(InvisibleRequest request) {
-        ClientChannelInfo channelInfo = consumerRegistry.findChannel(
+        ClientChannelInfo channelInfo = consumerManager.findChannel(
             request.getGroupName(),
             request.getRequestContext().getClientID()
         );

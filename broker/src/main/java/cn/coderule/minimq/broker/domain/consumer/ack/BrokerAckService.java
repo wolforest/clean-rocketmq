@@ -1,6 +1,6 @@
 package cn.coderule.minimq.broker.domain.consumer.ack;
 
-import cn.coderule.minimq.broker.domain.consumer.consumer.ConsumerRegistry;
+import cn.coderule.minimq.broker.domain.consumer.consumer.ConsumerManager;
 import cn.coderule.minimq.domain.domain.cluster.ClientChannelInfo;
 import cn.coderule.minimq.domain.domain.consumer.ack.AckConverter;
 import cn.coderule.minimq.domain.domain.consumer.ack.broker.AckRequest;
@@ -19,17 +19,17 @@ public class BrokerAckService {
     private final ReceiptHandler receiptHandler;
 
     private final MQFacade mqStore;
-    private final ConsumerRegistry consumerRegistry;
+    private final ConsumerManager consumerManager;
 
     public BrokerAckService(
         MQFacade mqStore,
-        ConsumerRegistry consumerRegistry,
+        ConsumerManager consumerManager,
         ReceiptHandler receiptHandler,
         AckValidator ackValidator
     ) {
 
         this.mqStore = mqStore;
-        this.consumerRegistry = consumerRegistry;
+        this.consumerManager = consumerManager;
 
         this.receiptHandler = receiptHandler;
         this.ackValidator = ackValidator;
@@ -62,7 +62,7 @@ public class BrokerAckService {
     }
 
     private MessageReceipt buildRequestReceipt(AckRequest request) {
-        ClientChannelInfo channelInfo = consumerRegistry.findChannel(
+        ClientChannelInfo channelInfo = consumerManager.findChannel(
             request.getGroupName(),
             request.getRequestContext().getClientID()
         );

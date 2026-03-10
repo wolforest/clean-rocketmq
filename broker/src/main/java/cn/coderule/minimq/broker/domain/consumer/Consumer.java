@@ -2,7 +2,7 @@ package cn.coderule.minimq.broker.domain.consumer;
 
 import cn.coderule.minimq.broker.domain.consumer.ack.BrokerAckService;
 import cn.coderule.minimq.broker.domain.consumer.ack.InvisibleService;
-import cn.coderule.minimq.broker.domain.consumer.consumer.ConsumerRegistry;
+import cn.coderule.minimq.broker.domain.consumer.consumer.ConsumerManager;
 import cn.coderule.minimq.broker.domain.consumer.pop.PopService;
 import cn.coderule.minimq.domain.domain.consumer.ack.broker.AckResult;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.PopResult;
@@ -24,14 +24,14 @@ import java.util.concurrent.CompletableFuture;
 public class Consumer  {
     private final PopService popService;
     private final BrokerAckService ackService;
-    private final ConsumerRegistry register;
+    private final ConsumerManager register;
     private final InvisibleService invisibleService;
     private final SubscriptionFacade subscriptionStore;
 
     public Consumer(
         PopService popService,
         BrokerAckService ackService,
-        ConsumerRegistry register,
+        ConsumerManager register,
         InvisibleService invisibleService,
         SubscriptionFacade subscriptionStore
     ) {

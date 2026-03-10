@@ -1,7 +1,7 @@
 package cn.coderule.minimq.broker.domain.consumer.ack;
 
 import cn.coderule.common.convention.service.Lifecycle;
-import cn.coderule.minimq.broker.domain.consumer.consumer.ConsumerRegistry;
+import cn.coderule.minimq.broker.domain.consumer.consumer.ConsumerManager;
 import cn.coderule.minimq.broker.infra.store.MQStore;
 import cn.coderule.minimq.broker.infra.store.TopicStore;
 import cn.coderule.minimq.broker.server.bootstrap.BrokerContext;
@@ -17,17 +17,17 @@ public class AckBootstrap implements Lifecycle {
         MQFacade mqFacade = BrokerContext.getBean(MQStore.class);
         TopicFacade topicFacade = BrokerContext.getBean(TopicStore.class);
         ReceiptHandler receiptHandler = BrokerContext.getBean(ReceiptHandler.class);
-        ConsumerRegistry consumerRegistry = BrokerContext.getBean(ConsumerRegistry.class);
+        ConsumerManager consumerManager = BrokerContext.getBean(ConsumerManager.class);
 
         AckValidator ackValidator = new AckValidator(mqFacade, topicFacade);
 
         BrokerAckService ackService = new BrokerAckService(
-            mqFacade, consumerRegistry, receiptHandler, ackValidator
+            mqFacade, consumerManager, receiptHandler, ackValidator
         );
         BrokerContext.register(ackService);
 
         InvisibleService invisibleService = new InvisibleService(
-            brokerConfig, mqFacade, consumerRegistry, receiptHandler, ackValidator
+            brokerConfig, mqFacade, consumerManager, receiptHandler, ackValidator
         );
         BrokerContext.register(invisibleService);
     }

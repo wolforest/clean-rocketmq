@@ -5,7 +5,7 @@ import cn.coderule.common.lang.concurrent.thread.DefaultThreadFactory;
 import cn.coderule.common.lang.concurrent.thread.pool.ThreadPoolFactory;
 import cn.coderule.common.util.lang.ThreadUtil;
 import cn.coderule.common.util.lang.bean.ExceptionUtil;
-import cn.coderule.minimq.broker.domain.consumer.consumer.ConsumerRegistry;
+import cn.coderule.minimq.broker.domain.consumer.consumer.ConsumerManager;
 import cn.coderule.minimq.broker.infra.store.SubscriptionStore;
 import cn.coderule.minimq.domain.config.business.MessageConfig;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
@@ -38,7 +38,7 @@ public class RenewService implements Lifecycle {
     private final ThreadPoolExecutor executor;
     private final ScheduledExecutorService scheduler;
 
-    private final ConsumerRegistry consumerRegistry;
+    private final ConsumerManager consumerManager;
     private final ReceiptHandler receiptHandler;
 
     private final SubscriptionStore subscriptionStore;
@@ -48,12 +48,12 @@ public class RenewService implements Lifecycle {
         BrokerConfig brokerConfig,
         ReceiptHandler receiptHandler,
         RenewListener renewListener,
-        ConsumerRegistry consumerRegistry,
+        ConsumerManager consumerManager,
         SubscriptionStore subscriptionStore
     ) {
         this.messageConfig = brokerConfig.getMessageConfig();
 
-        this.consumerRegistry = consumerRegistry;
+        this.consumerManager = consumerManager;
         this.subscriptionStore = subscriptionStore;
 
         this.receiptHandler = receiptHandler;
@@ -282,7 +282,7 @@ public class RenewService implements Lifecycle {
     }
 
     private boolean isClientOffline(ReceiptHandleGroupKey key) {
-        ClientChannelInfo channelInfo = consumerRegistry.findChannel(
+        ClientChannelInfo channelInfo = consumerManager.findChannel(
             key.getGroup(), key.getChannel()
         );
 

@@ -1,7 +1,7 @@
 package cn.coderule.minimq.broker.domain.consumer.pop;
 
 import cn.coderule.common.convention.service.Lifecycle;
-import cn.coderule.minimq.broker.domain.consumer.consumer.ConsumerRegistry;
+import cn.coderule.minimq.broker.domain.consumer.consumer.ConsumerManager;
 import cn.coderule.minimq.broker.domain.consumer.renew.DefaultReceiptHandler;
 import cn.coderule.minimq.broker.domain.meta.RouteService;
 import cn.coderule.minimq.broker.infra.store.MQStore;
@@ -38,7 +38,7 @@ public class PopBootstrap implements Lifecycle {
     private void initContextBuilder() {
         contextBuilder = new ContextBuilder(
             brokerConfig,
-            BrokerContext.getBean(ConsumerRegistry.class),
+            BrokerContext.getBean(ConsumerManager.class),
             BrokerContext.getBean(TopicStore.class),
             BrokerContext.getBean(SubscriptionStore.class)
         );

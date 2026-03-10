@@ -1,6 +1,6 @@
 package cn.coderule.minimq.broker.domain.consumer.pop;
 
-import cn.coderule.minimq.broker.domain.consumer.consumer.ConsumerRegistry;
+import cn.coderule.minimq.broker.domain.consumer.consumer.ConsumerManager;
 import cn.coderule.minimq.domain.config.server.BrokerConfig;
 import cn.coderule.minimq.domain.core.constant.PermName;
 import cn.coderule.minimq.domain.core.enums.code.InvalidCode;
@@ -21,19 +21,19 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ContextBuilder {
     private final BrokerConfig brokerConfig;
-    private final ConsumerRegistry consumerRegistry;
+    private final ConsumerManager consumerManager;
 
     private final TopicFacade topicFacade;
     private final SubscriptionFacade subscriptionFacade;
 
     public ContextBuilder(
         BrokerConfig brokerConfig,
-        ConsumerRegistry consumerRegistry,
+        ConsumerManager consumerManager,
         TopicFacade topicFacade,
         SubscriptionFacade subscriptionFacade
     ) {
         this.brokerConfig = brokerConfig;
-        this.consumerRegistry = consumerRegistry;
+        this.consumerManager = consumerManager;
         this.topicFacade = topicFacade;
         this.subscriptionFacade = subscriptionFacade;
     }
@@ -107,7 +107,7 @@ public class ContextBuilder {
 
     private void  compensateSubscription(PopContext context) {
         PopRequest request = context.getRequest();
-        consumerRegistry.compensateSubscription(
+        consumerManager.compensateSubscription(
             request.getConsumerGroup(),
             request.getTopicName(),
             request.getSubscriptionData()
@@ -129,7 +129,7 @@ public class ContextBuilder {
                 request.getSubscriptionData().getExpressionType()
             );
 
-            consumerRegistry.compensateSubscription(
+            consumerManager.compensateSubscription(
                 request.getConsumerGroup(),
                 retryTopic,
                 retrySubscription
@@ -140,7 +140,7 @@ public class ContextBuilder {
     }
 
     private void findChannel(PopContext context) {
-        ClientChannelInfo channelInfo = consumerRegistry.findChannel(
+        ClientChannelInfo channelInfo = consumerManager.findChannel(
             context.getRequest().getConsumerGroup(),
             context.getRequest().getRequestContext().getClientID()
         );

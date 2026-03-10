@@ -19,8 +19,11 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * @renamed from ConsumerRegister to ConsumerManager
+ */
 @Slf4j
-public class ConsumerRegistry {
+public class ConsumerManager {
     private final long channelExpireTime;
     private final long subscriptionExpireTime;
 
@@ -28,7 +31,7 @@ public class ConsumerRegistry {
     private final ConcurrentMap<String, ConsumerGroupInfo> compensationMap;
     private final List<ConsumerListener> listeners;
 
-    public ConsumerRegistry(BrokerConfig brokerConfig) {
+    public ConsumerManager(BrokerConfig brokerConfig) {
         this.channelExpireTime = brokerConfig.getChannelExpireTime();
         this.subscriptionExpireTime = brokerConfig.getSubscriptionExpireTime();
 
