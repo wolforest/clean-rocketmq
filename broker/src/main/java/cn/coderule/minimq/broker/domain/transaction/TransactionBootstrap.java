@@ -2,7 +2,7 @@ package cn.coderule.minimq.broker.domain.transaction;
 
 import cn.coderule.minimq.broker.api.TransactionController;
 import cn.coderule.common.convention.service.Lifecycle;
-import cn.coderule.minimq.broker.domain.producer.ProducerRegistry;
+import cn.coderule.minimq.broker.domain.producer.ProducerManager;
 import cn.coderule.minimq.broker.domain.transaction.check.service.CheckService;
 import cn.coderule.minimq.broker.domain.transaction.check.CheckerFactory;
 import cn.coderule.minimq.broker.domain.transaction.check.service.DiscardService;
@@ -57,8 +57,8 @@ public class TransactionBootstrap implements Lifecycle {
 
         checkerFactory.start();
 
-        ProducerRegistry producerRegistry = BrokerContext.getBean(ProducerRegistry.class);
-        checkService.inject(producerRegistry);
+        ProducerManager producerManager = BrokerContext.getBean(ProducerManager.class);
+        checkService.inject(producerManager);
         checkService.start();
     }
 

@@ -19,10 +19,10 @@ public class ProducerBootstrap implements Lifecycle {
 
         initMessageSender();
 
-        ProducerRegistry producerRegistry = new ProducerRegistry(brokerConfig);
-        BrokerContext.register(producerRegistry);
+        ProducerManager producerManager = new ProducerManager(brokerConfig);
+        BrokerContext.register(producerManager);
 
-        Producer producer = new Producer(enqueueService, producerRegistry);
+        Producer producer = new Producer(enqueueService, producerManager);
         ProducerController controller = new ProducerController(brokerConfig, producer);
         BrokerContext.registerAPI(controller);
     }

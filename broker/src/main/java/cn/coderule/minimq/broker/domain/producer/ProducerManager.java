@@ -23,8 +23,11 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * @renamed from ProducerRegistry to ProducerManager
+ */
 @Slf4j
-public class ProducerRegistry {
+public class ProducerManager {
     private final long channelExpireTime;
     private final int maxChannelFetchTimes;
 
@@ -35,7 +38,7 @@ public class ProducerRegistry {
     // groupName -> channel -> channelInfo
     private final ConcurrentMap<String, ConcurrentMap<Channel, ClientChannelInfo>> channelTree;
 
-    public ProducerRegistry(BrokerConfig brokerConfig) {
+    public ProducerManager(BrokerConfig brokerConfig) {
         this.channelExpireTime = brokerConfig.getChannelExpireTime();
         this.maxChannelFetchTimes = brokerConfig.getMaxChannelFetchTimes();
 
