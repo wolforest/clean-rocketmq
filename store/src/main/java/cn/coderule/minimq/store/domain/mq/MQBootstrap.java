@@ -11,7 +11,7 @@ import cn.coderule.minimq.domain.domain.store.domain.meta.ConsumeOrderService;
 import cn.coderule.minimq.domain.domain.store.domain.mq.MQService;
 import cn.coderule.minimq.domain.domain.consumer.consume.InflightCounter;
 import cn.coderule.minimq.store.api.MQStoreImpl;
-import cn.coderule.minimq.store.domain.mq.ack.AckManager;
+import cn.coderule.minimq.store.domain.mq.ack.AckBootstrap;
 import cn.coderule.minimq.store.domain.mq.ack.AckService;
 import cn.coderule.minimq.store.domain.mq.ack.InvisibleService;
 import cn.coderule.minimq.store.domain.mq.queue.DequeueService;
@@ -27,7 +27,7 @@ public class MQBootstrap implements Lifecycle {
     private DequeueLock dequeueLock;
     private InflightCounter inflightCounter;
 
-    private AckManager ackManager;
+    private AckBootstrap ackBootstrap;
     private EnqueueService enqueueService;
     private DequeueService dequeueService;
     private MessageService messageService;
@@ -54,13 +54,13 @@ public class MQBootstrap implements Lifecycle {
         this.enqueueService.inject(commitLogSynchronizer);
 
         dequeueLock.start();
-        ackManager.start();
+        ackBootstrap.start();
     }
 
     @Override
     public void shutdown() throws Exception {
         dequeueLock.shutdown();
-        ackManager.shutdown();
+        ackBootstrap.shutdown();
     }
 
     private void initMQManager() {
@@ -73,8 +73,8 @@ public class MQBootstrap implements Lifecycle {
     }
 
     private void initAckManager() throws Exception {
-        ackManager = new AckManager();
-        ackManager.initialize();
+        ackBootstrap = new AckBootstrap();
+        ackBootstrap.initialize();
     }
 
     private void initPubService() {

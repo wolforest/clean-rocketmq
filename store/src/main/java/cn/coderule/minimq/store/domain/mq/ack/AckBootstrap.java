@@ -12,7 +12,10 @@ import cn.coderule.minimq.store.domain.meta.DefaultConsumeOrderService;
 import cn.coderule.minimq.store.domain.mq.queue.EnqueueService;
 import cn.coderule.minimq.store.server.bootstrap.StoreContext;
 
-public class AckManager implements Lifecycle {
+/**
+ * @renamed from AckManager to AckBootstrap
+ */
+public class AckBootstrap implements Lifecycle {
     private StoreConfig storeConfig;
 
     private String reviveTopic;
