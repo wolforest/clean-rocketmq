@@ -1,6 +1,7 @@
-# Clean-RocketMQ
+# 下一代RocketMQ分支
 Clean-RocketMQ是一个RocketMQ从零重写的版本。<br />
 完全兼容RocketMQ5.*接口，是RocketMQ的传承与优化版本。
+<img src="/docs/architecture/next-generation-mq.jpg" width="600" alt="架构" />
 
 ### Clean-RocketMQ特征:
 1. **更简洁的代码：** 借鉴DDD、简洁架构思想，从零重写。
