@@ -1,6 +1,4 @@
-# Clean-RocketMQ
-**Clean-RocketMQ是下一代、高性能、事务型消息队列。**
-
+# Clean-RocketMQ: 下一代、高性能、事务型消息队列
 <img src="/docs/architecture/next-generation-mq.jpg" alt="下一代消息队列" />
 
 Clean-RocketMQ源于、并兼容RocketMQ, 提供:
