@@ -7,16 +7,20 @@ Clean-RocketMQ源于、并兼容RocketMQ, 提供:
 3. **简洁代码：** 借鉴DDD、简洁思想，从零重写。
 
 RocketMQ核心不超过5万行，是个极其优秀的消息队列。<br />
-1000多天的学习优化后、我们开始重写RocketMQ。希望
+基于RocketMQ，提高性能、增加功能，并非难事。<br />
+真正有挑战的是: 如何保证代码的简洁与可维护。
+
+对抗复杂是软件的核心，AI时代也不会改变。<br />
 
 
 ## 架构
 <img src="/docs/architecture/clean-rocketmq.jpg" alt="架构" />
 
-<img src="/docs/architecture/cloud-rocketmq.jpg" alt="云原生" />
 
 
 <!-- 
+
+<img src="/docs/architecture/cloud-rocketmq.jpg" alt="云原生" />
 ## 开源 & 商业化
 开源我们是认真的，商业化是我们的策略。<br />
 代码开源 + 商业化运营，我们希望把技术创业这条路走通、走好、走长久...
