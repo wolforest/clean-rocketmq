@@ -1,24 +1,24 @@
 # Clean-RocketMQ
+**Clean-RocketMQ是下一代、高性能、事务型消息队列。**
+
 <img src="/docs/architecture/next-generation-mq.jpg" alt="下一代消息队列" />
 
-Clean-RocketMQ是面向未来、兼容RocketMQ、高性能、全功能、事务型消息队列。
-
-Clean-RocketMQ特征:
+Clean-RocketMQ源于、并兼容RocketMQ, 提供:
 1. **更高性能：** 5倍+性能提升(mac上测试) 
 2. **更全功能：** 存算分离、事务、调度、云原生、...
 3. **简洁代码：** 借鉴DDD、简洁思想，从零重写。
 
-## Why Rewrite?
-首先，参与了1000多天的重构后，才开始重写。<br />
-其次，Clean是重写的第一个目标，相信也是未来的基础。<br />
-最后，重写之后，确实看到了更多的可能性。
+RocketMQ核心不超过5万行，是个极其优秀的消息队列。<br />
+1000多天的学习优化后、我们开始重写RocketMQ。希望
+
 
 ## 架构
-<img src="/docs/architecture/clean-rocketmq.jpg" width="600" alt="架构" />
+<img src="/docs/architecture/clean-rocketmq.jpg" alt="架构" />
 
-> 备注：图中没有云原生，请稍候，让子弹飞会儿...
+<img src="/docs/architecture/cloud-rocketmq.jpg" alt="云原生" />
 
 
+<!-- 
 ## 开源 & 商业化
 开源我们是认真的，商业化是我们的策略。<br />
 代码开源 + 商业化运营，我们希望把技术创业这条路走通、走好、走长久...
@@ -34,7 +34,6 @@ RocketMQ核心不超过5万行，是最简单、最合适的学习项目。<br /
 ![社区](/docs/architecture/community.png "社区")
 
 
-<!-- 
 AI降低了知识获取的难度，也提高了知识人的生存下线。<br />
 **终身学习**是知识人愿意、或不愿意都要面对的**要求**。
 
@@ -54,7 +53,6 @@ AI降低了知识获取的难度，也提高了知识人的生存下线。<br />
 
 软件高手的比例不会超过10%，尤其在中国。<br />
 AI也没有强大到可生成万物，技术人依然有大量的机会...
--->
 
 
 
@@ -68,4 +66,5 @@ Clean-RocketMQ改进了WAL机制，性能可以达到Kafka的量级。
 最后云原生，借助云的存储能力，轻松实现高可用，<br />
 还可以有效地平衡性能与成本，为商业化铺平了道路。<br />
 如下图所示，云原生后，broker/NameServer都可以实现无状态化。
-<img src="/docs/architecture/cloud-rocketmq.jpg" width="500" alt="云原生" />
+
+-->
