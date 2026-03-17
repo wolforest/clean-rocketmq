@@ -1,7 +1,7 @@
 # Next Generation RocketMQ
 Clean-RocketMQ是下一代RocketMQ，从零重写。
 
-<img src="/docs/architecture/next-generation-mq.jpg" width="600" alt="架构" />
+<img src="/docs/architecture/next-generation-mq.jpg" alt="下一代消息队列" />
 
 ### Clean-RocketMQ特征:
 1. **简洁代码：** 借鉴DDD、简洁架构思想，从零重写。
