@@ -1,12 +1,12 @@
-# Next Generation RocketMQ
-Clean-RocketMQ是下一代RocketMQ，从零重写。
-
+# Clean-RocketMQ
 <img src="/docs/architecture/next-generation-mq.jpg" alt="下一代消息队列" />
 
-### Clean-RocketMQ特征:
-1. **简洁代码：** 借鉴DDD、简洁架构思想，从零重写。
-2. **更高性能：** 高性能模式比肩Kafka(Mac下2~5倍的pub性能提升).
-3. **更全功能：** 存算分离、更多事务、调度相关功能、云原生、...
+Clean-RocketMQ是面向未来、兼容RocketMQ、高性能、全功能、事务型消息队列。
+
+Clean-RocketMQ特征:
+1. **更高性能：** 5倍+性能提升(mac上测试) 
+2. **更全功能：** 存算分离、事务、调度、云原生、...
+3. **简洁代码：** 借鉴DDD、简洁思想，从零重写。
 
 ## Why Rewrite?
 首先，参与了1000多天的重构后，才开始重写。<br />
