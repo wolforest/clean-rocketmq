@@ -8,9 +8,9 @@ import java.util.concurrent.locks.LockSupport;
 public final class ConcurrentLinkedQueueBenchmark {
     private static final int DEFAULT_WARMUP_ROUNDS = 2;
     private static final int DEFAULT_MEASURE_ROUNDS = 3;
-    private static final int DEFAULT_OPS_PER_PRODUCER = 10_000_000;
+    private static final int DEFAULT_OPS_PER_PRODUCER = 1_000_000;
     private static final int DEFAULT_PRODUCERS = 5;
-    private static final int DEFAULT_CONSUMERS = 5;
+    private static final int DEFAULT_CONSUMERS = 10;
 
     public static void main(String[] args) throws Exception {
         int warmupRounds = intArg(args, 0, DEFAULT_WARMUP_ROUNDS);
