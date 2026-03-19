@@ -32,14 +32,17 @@ AI时代，软件还是软件，参与开源，还是软件人的捷径。
 * 写作锻炼表达能力，提高需求描述能力
 
 ## 社区
-社区是最高效的学习加速器。
+社区是最高效的学习加速器。我们那建了两个社区：
+* [软件读书会](https://github.com/Clean-RocketMQ/reading-community)
+* RocketMQ学习社区: 筹备中...
 
 <img src="/docs/architecture/software-reading-community.png" alt="软件读书会" />
 
-## 更多信息
 
 
 <!-- 
+
+## 更多信息
 
 AI时代，软件人并不轻松: 内卷、年龄危机、AI冲击.... <br />
 
