@@ -12,11 +12,15 @@ public class CommitConfig implements Serializable {
     private boolean enableMultiDir = false;
     private boolean enableWriteCache = false;
 
+    private boolean enableDisruptor = ConfigAttribute.ENABLE_DISRUPTOR;
+    private int defaultOfferTimeout = 3_000;
+    private int defaultPollTimeout = 30;
+
     private boolean enableSharding = false;
     private int maxShardingNumber = 10;
+    private int shardingNumber = 5;
 
     private String dirName = "commitlog";
-    private List<String> dirList = new ArrayList<>();
 
     private int fileSize = ConfigAttribute.MMAP_FILE_SIZE;
 
