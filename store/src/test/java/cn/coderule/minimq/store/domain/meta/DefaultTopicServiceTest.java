@@ -7,7 +7,7 @@ import cn.coderule.minimq.domain.domain.meta.topic.Topic;
 import cn.coderule.minimq.domain.domain.meta.topic.TopicValidator;
 import cn.coderule.minimq.domain.domain.store.domain.meta.ConsumeOffsetService;
 import cn.coderule.minimq.domain.test.ConfigMock;
-import cn.coderule.minimq.store.domain.consumequeue.ConsumeQueueFacade;
+import cn.coderule.minimq.store.domain.consumequeue.ConsumeQueueManager;
 import cn.coderule.minimq.store.server.bootstrap.StoreContext;
 import cn.coderule.minimq.store.server.bootstrap.StoreRegister;
 import java.nio.file.Path;
@@ -28,12 +28,12 @@ class DefaultTopicServiceTest {
         StoreContext.setStateMachineVersion(11L);
         StoreConfig storeConfig = ConfigMock.createStoreConfig(tempDir.toString());
         ConsumeOffsetService offsetService = mock(ConsumeOffsetService.class);
-        ConsumeQueueFacade consumeQueueFacade = mock(ConsumeQueueFacade.class);
+        ConsumeQueueManager consumeQueueManager = mock(ConsumeQueueManager.class);
         StoreRegister storeRegister = mock(StoreRegister.class);
         String storePath = tempDir.resolve("topic.json").toString();
 
         DefaultTopicService service = new DefaultTopicService(storeConfig, storePath, offsetService);
-        service.inject(consumeQueueFacade, storeRegister);
+        service.inject(consumeQueueManager, storeRegister);
 
         Topic topic = new Topic();
         topic.setTopicName("topic-save");
@@ -48,12 +48,12 @@ class DefaultTopicServiceTest {
         StoreContext.setStateMachineVersion(22L);
         StoreConfig storeConfig = ConfigMock.createStoreConfig(tempDir.toString());
         ConsumeOffsetService offsetService = mock(ConsumeOffsetService.class);
-        ConsumeQueueFacade consumeQueueFacade = mock(ConsumeQueueFacade.class);
+        ConsumeQueueManager consumeQueueManager = mock(ConsumeQueueManager.class);
         StoreRegister storeRegister = mock(StoreRegister.class);
         String storePath = tempDir.resolve("topic.json").toString();
 
         DefaultTopicService service = new DefaultTopicService(storeConfig, storePath, offsetService);
-        service.inject(consumeQueueFacade, storeRegister);
+        service.inject(consumeQueueManager, storeRegister);
 
         Topic mainTopic = new Topic();
         mainTopic.setTopicName("topic-main");
@@ -70,8 +70,8 @@ class DefaultTopicServiceTest {
         assertFalse(service.exists(retryTopic.getTopicName()));
         verify(offsetService).deleteByTopic("topic-main");
         verify(offsetService).deleteByTopic(retryTopic.getTopicName());
-        verify(consumeQueueFacade).deleteByTopic("topic-main");
-        verify(consumeQueueFacade).deleteByTopic(retryTopic.getTopicName());
+        verify(consumeQueueManager).deleteByTopic("topic-main");
+        verify(consumeQueueManager).deleteByTopic(retryTopic.getTopicName());
     }
 
     @Test
@@ -83,7 +83,7 @@ class DefaultTopicServiceTest {
             tempDir.resolve("topic.json").toString(),
             offsetService
         );
-        service.inject(mock(ConsumeQueueFacade.class), mock(StoreRegister.class));
+        service.inject(mock(ConsumeQueueManager.class), mock(StoreRegister.class));
 
         service.load();
 

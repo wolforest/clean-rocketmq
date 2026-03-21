@@ -5,10 +5,10 @@ import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitEventHandler;
 
 public class QueueCommitEventHandler implements CommitEventHandler {
-    private final ConsumeQueueFacade consumeQueueFacade;
+    private final ConsumeQueueManager consumeQueueManager;
 
-    public QueueCommitEventHandler(ConsumeQueueFacade consumeQueueFacade) {
-        this.consumeQueueFacade = consumeQueueFacade;
+    public QueueCommitEventHandler(ConsumeQueueManager consumeQueueManager) {
+        this.consumeQueueManager = consumeQueueManager;
     }
 
     @Override
@@ -18,6 +18,6 @@ public class QueueCommitEventHandler implements CommitEventHandler {
             return;
         }
 
-        consumeQueueFacade.enqueue(event);
+        consumeQueueManager.enqueue(event);
     }
 }

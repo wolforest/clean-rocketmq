@@ -8,20 +8,20 @@ import cn.coderule.minimq.domain.domain.consumer.consume.mq.MessageRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.MessageResult;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitLog;
-import cn.coderule.minimq.store.domain.consumequeue.ConsumeQueueFacade;
+import cn.coderule.minimq.store.domain.consumequeue.ConsumeQueueManager;
 import java.util.List;
 import lombok.NonNull;
 
 public class MessageService {
     private final CommitLog commitLog;
-    private final ConsumeQueueFacade consumeQueueFacade;
+    private final ConsumeQueueManager consumeQueueManager;
 
     public MessageService(
         CommitLog commitLog,
-        ConsumeQueueFacade consumeQueueFacade
+        ConsumeQueueManager consumeQueueManager
     ) {
         this.commitLog = commitLog;
-        this.consumeQueueFacade = consumeQueueFacade;
+        this.consumeQueueManager = consumeQueueManager;
     }
 
     public MessageResult getMessage(MessageRequest request) {
@@ -45,7 +45,7 @@ public class MessageService {
     }
 
     public DequeueResult get(DequeueRequest request) {
-        List<QueueUnit> unitList = consumeQueueFacade.get(
+        List<QueueUnit> unitList = consumeQueueManager.get(
             request.getTopicName(), request.getQueueId(), request.getOffset(), request.getNum()
         );
 

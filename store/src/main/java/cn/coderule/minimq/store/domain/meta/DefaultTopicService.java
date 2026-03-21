@@ -6,7 +6,7 @@ import cn.coderule.common.util.lang.string.JSONUtil;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.domain.domain.meta.topic.Topic;
 import cn.coderule.minimq.domain.domain.meta.topic.TopicMap;
-import cn.coderule.minimq.store.domain.consumequeue.ConsumeQueueFacade;
+import cn.coderule.minimq.store.domain.consumequeue.ConsumeQueueManager;
 import cn.coderule.minimq.domain.domain.store.domain.meta.ConsumeOffsetService;
 import cn.coderule.minimq.domain.domain.store.domain.meta.TopicService;
 import cn.coderule.minimq.domain.domain.meta.topic.KeyBuilder;
@@ -22,7 +22,7 @@ public class DefaultTopicService implements TopicService {
     private final ConsumeOffsetService consumeOffsetService;
 
     // dependency from other package, injected by module manager
-    private ConsumeQueueFacade consumeQueueFacade;
+    private ConsumeQueueManager consumeQueueManager;
     private StoreRegister storeRegister;
 
     @Getter
@@ -40,8 +40,8 @@ public class DefaultTopicService implements TopicService {
         this.topicMap = new TopicMap();
     }
 
-    public void inject(ConsumeQueueFacade consumeQueueFacade, StoreRegister storeRegister) {
-        this.consumeQueueFacade = consumeQueueFacade;
+    public void inject(ConsumeQueueManager consumeQueueManager, StoreRegister storeRegister) {
+        this.consumeQueueManager = consumeQueueManager;
         this.storeRegister = storeRegister;
     }
 
@@ -127,7 +127,7 @@ public class DefaultTopicService implements TopicService {
 
     private void cleanTopicInfo(String topicName) {
         consumeOffsetService.deleteByTopic(topicName);
-        consumeQueueFacade.deleteByTopic(topicName);
+        consumeQueueManager.deleteByTopic(topicName);
 
         topicMap.deleteTopic(topicName, StoreContext.getStateMachineVersion());
         this.store();

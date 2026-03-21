@@ -14,13 +14,13 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
-class ConsumeQueueFacadeTest {
+class ConsumeQueueManagerTest {
 
     @Test
     void enqueue_ShouldRouteByTopicAndQueueId() {
         ConsumeQueueFactory factory = mock(ConsumeQueueFactory.class);
         ConsumeQueue queue = mock(ConsumeQueue.class);
-        ConsumeQueueFacade facade = new ConsumeQueueFacade(factory);
+        ConsumeQueueManager facade = new ConsumeQueueManager(factory);
 
         String topic = "TOPIC_A";
         int queueId = 3;
@@ -37,7 +37,7 @@ class ConsumeQueueFacadeTest {
     void get_ShouldDelegateToQueue() {
         ConsumeQueueFactory factory = mock(ConsumeQueueFactory.class);
         ConsumeQueue queue = mock(ConsumeQueue.class);
-        ConsumeQueueFacade facade = new ConsumeQueueFacade(factory);
+        ConsumeQueueManager facade = new ConsumeQueueManager(factory);
 
         String topic = "TOPIC_B";
         int queueId = 1;
@@ -57,7 +57,7 @@ class ConsumeQueueFacadeTest {
     void getBatch_ShouldDelegateToQueue() {
         ConsumeQueueFactory factory = mock(ConsumeQueueFactory.class);
         ConsumeQueue queue = mock(ConsumeQueue.class);
-        ConsumeQueueFacade facade = new ConsumeQueueFacade(factory);
+        ConsumeQueueManager facade = new ConsumeQueueManager(factory);
 
         String topic = "TOPIC_C";
         int queueId = 5;
@@ -81,7 +81,7 @@ class ConsumeQueueFacadeTest {
     void offsetMethods_ShouldDelegateToQueue() {
         ConsumeQueueFactory factory = mock(ConsumeQueueFactory.class);
         ConsumeQueue queue = mock(ConsumeQueue.class);
-        ConsumeQueueFacade facade = new ConsumeQueueFacade(factory);
+        ConsumeQueueManager facade = new ConsumeQueueManager(factory);
 
         String topic = "TOPIC_D";
         int queueId = 0;
@@ -107,7 +107,7 @@ class ConsumeQueueFacadeTest {
     @Test
     void existsQueue_ShouldDelegateToFactory() {
         ConsumeQueueFactory factory = mock(ConsumeQueueFactory.class);
-        ConsumeQueueFacade facade = new ConsumeQueueFacade(factory);
+        ConsumeQueueManager facade = new ConsumeQueueManager(factory);
 
         when(factory.exists("TOPIC_E", 2)).thenReturn(true);
         when(factory.exists("TOPIC_E", 9)).thenReturn(false);
@@ -122,7 +122,7 @@ class ConsumeQueueFacadeTest {
     void methods_ShouldUseEventTopicAndQueueId() {
         ConsumeQueueFactory factory = mock(ConsumeQueueFactory.class);
         ConsumeQueue queue = mock(ConsumeQueue.class);
-        ConsumeQueueFacade facade = new ConsumeQueueFacade(factory);
+        ConsumeQueueManager facade = new ConsumeQueueManager(factory);
 
         CommitEvent event = createEvent("TOPIC_F", 6);
         when(factory.getOrCreate("TOPIC_F", 6)).thenReturn(queue);

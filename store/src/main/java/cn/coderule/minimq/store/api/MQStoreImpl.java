@@ -13,7 +13,7 @@ import cn.coderule.minimq.domain.domain.consumer.consume.mq.QueueResult;
 import cn.coderule.minimq.domain.domain.store.domain.mq.EnqueueRequest;
 import cn.coderule.minimq.domain.domain.store.domain.mq.EnqueueResult;
 import cn.coderule.minimq.domain.domain.store.api.MQStore;
-import cn.coderule.minimq.store.domain.consumequeue.ConsumeQueueFacade;
+import cn.coderule.minimq.store.domain.consumequeue.ConsumeQueueManager;
 import cn.coderule.minimq.domain.domain.store.domain.mq.MQService;
 import cn.coderule.minimq.store.domain.mq.ack.AckService;
 import cn.coderule.minimq.store.domain.mq.ack.InvisibleService;
@@ -23,19 +23,19 @@ public class MQStoreImpl implements MQStore {
     private final MQService mqService;
     private final AckService ackService;
     private final InvisibleService invisibleService;
-    private final ConsumeQueueFacade consumeQueueFacade;
+    private final ConsumeQueueManager consumeQueueManager;
 
     public MQStoreImpl(
         MQService mqService,
         AckService ackService,
         InvisibleService invisibleService,
-        ConsumeQueueFacade consumeQueueFacade
+        ConsumeQueueManager consumeQueueManager
     ) {
         this.ackService = ackService;
         this.invisibleService = invisibleService;
 
         this.mqService = mqService;
-        this.consumeQueueFacade = consumeQueueFacade;
+        this.consumeQueueManager = consumeQueueManager;
     }
 
     @Override
@@ -100,7 +100,7 @@ public class MQStoreImpl implements MQStore {
 
     @Override
     public QueueResult getMinOffset(QueueRequest request) {
-        long minOffset = consumeQueueFacade.getMinOffset(
+        long minOffset = consumeQueueManager.getMinOffset(
             request.getTopicName(),
             request.getQueueId()
         );
@@ -110,7 +110,7 @@ public class MQStoreImpl implements MQStore {
 
     @Override
     public QueueResult getMaxOffset(QueueRequest request) {
-        long maxOffset = consumeQueueFacade.getMaxOffset(
+        long maxOffset = consumeQueueManager.getMaxOffset(
             request.getTopicName(),
             request.getQueueId()
         );

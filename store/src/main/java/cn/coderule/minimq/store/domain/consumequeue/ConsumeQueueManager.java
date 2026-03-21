@@ -6,10 +6,14 @@ import cn.coderule.minimq.domain.domain.store.domain.consumequeue.ConsumeQueue;
 import cn.coderule.minimq.store.domain.consumequeue.queue.ConsumeQueueFactory;
 import java.util.List;
 
-public class ConsumeQueueFacade {
+/**
+ * @renamed from ConsumeQueueFacade to ConsumeQueueManager
+ * @renamed from ConsumeQueueGateway to ConsumeQueueFacade
+ */
+public class ConsumeQueueManager {
     private final ConsumeQueueFactory consumeQueueFactory;
 
-    public ConsumeQueueFacade(ConsumeQueueFactory consumeQueueFactory) {
+    public ConsumeQueueManager(ConsumeQueueFactory consumeQueueFactory) {
         this.consumeQueueFactory = consumeQueueFactory;
     }
 

@@ -18,7 +18,7 @@ public class ConsumeQueueBootstrap implements Lifecycle {
     private ConsumeQueueFlusher flusher;
     private ConsumeQueueLoader loader;
     private ConsumeQueueRecovery recovery;
-    private ConsumeQueueFacade consumeQueueFacade;
+    private ConsumeQueueManager consumeQueueManager;
 
     @Override
     public void initialize() throws Exception {
@@ -62,8 +62,8 @@ public class ConsumeQueueBootstrap implements Lifecycle {
         recovery = new ConsumeQueueRecovery(consumeQueueConfig, StoreContext.getCheckPoint());
 
         ConsumeQueueFactory consumeQueueFactory = initConsumeQueueFactory();
-        consumeQueueFacade = new ConsumeQueueFacade(consumeQueueFactory);
-        StoreContext.register(consumeQueueFacade, ConsumeQueueFacade.class);
+        consumeQueueManager = new ConsumeQueueManager(consumeQueueFactory);
+        StoreContext.register(consumeQueueManager, ConsumeQueueManager.class);
     }
 
     private ConsumeQueueFactory initConsumeQueueFactory() {
@@ -84,7 +84,7 @@ public class ConsumeQueueBootstrap implements Lifecycle {
 
     private void registerDispatchHandler() {
         CommitEventDispatcher dispatcher = StoreContext.getBean(CommitEventDispatcher.class);
-        QueueCommitEventHandler handler = new QueueCommitEventHandler(consumeQueueFacade);
+        QueueCommitEventHandler handler = new QueueCommitEventHandler(consumeQueueManager);
         dispatcher.registerHandler(handler);
     }
 }

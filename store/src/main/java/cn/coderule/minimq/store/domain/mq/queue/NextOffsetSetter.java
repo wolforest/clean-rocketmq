@@ -6,13 +6,13 @@ import cn.coderule.minimq.domain.core.enums.message.MessageStatus;
 import cn.coderule.minimq.domain.domain.store.domain.mq.DequeueRequest;
 import cn.coderule.minimq.domain.domain.store.domain.mq.DequeueResult;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
-import cn.coderule.minimq.store.domain.consumequeue.ConsumeQueueFacade;
+import cn.coderule.minimq.store.domain.consumequeue.ConsumeQueueManager;
 
 public class NextOffsetSetter {
     private final StoreConfig storeConfig;
-    private final ConsumeQueueFacade consumeQueue;
+    private final ConsumeQueueManager consumeQueue;
 
-    public NextOffsetSetter(StoreConfig storeConfig, ConsumeQueueFacade consumeQueue) {
+    public NextOffsetSetter(StoreConfig storeConfig, ConsumeQueueManager consumeQueue) {
         this.storeConfig = storeConfig;
         this.consumeQueue = consumeQueue;
     }

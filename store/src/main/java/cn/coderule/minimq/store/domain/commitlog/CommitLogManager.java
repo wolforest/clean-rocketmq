@@ -13,13 +13,16 @@ import java.util.List;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * @renamed from CommitLogFacade to CommitLogManager
+ */
 @Slf4j
-public class CommitLogFacade {
+public class CommitLogManager {
     private final List<CommitLog> commitLogList;
     private final Map<String, CommitLog> topicMap;
     private final Map<String, CommitLog> pathMap;
 
-    public CommitLogFacade() {
+    public CommitLogManager() {
         commitLogList = new ArrayList<>();
         topicMap = new HashMap<>();
         pathMap = new HashMap<>();
