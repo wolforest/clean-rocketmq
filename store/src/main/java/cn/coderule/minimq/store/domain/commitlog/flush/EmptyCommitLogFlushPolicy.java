@@ -25,4 +25,14 @@ public class EmptyCommitLogFlushPolicy implements CommitLogFlushPolicy {
     public EnqueueFuture flush(InsertResult insertResult, MessageBO messageBO) {
         return EnqueueFuture.success(insertResult, messageBO);
     }
+
+    @Override
+    public void start() throws Exception {
+
+    }
+
+    @Override
+    public void shutdown() throws Exception {
+
+    }
 }

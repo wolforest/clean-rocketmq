@@ -41,4 +41,14 @@ public class SyncCommitLogFlushPolicy implements CommitLogFlushPolicy {
 
         return result;
     }
+
+    @Override
+    public void start() throws Exception {
+
+    }
+
+    @Override
+    public void shutdown() throws Exception {
+
+    }
 }

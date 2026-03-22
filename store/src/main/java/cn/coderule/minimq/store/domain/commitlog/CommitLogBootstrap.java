@@ -6,6 +6,7 @@ import cn.coderule.minimq.domain.config.business.MessageConfig;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.domain.domain.store.api.CommitLogStore;
 import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitLog;
+import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitLogFlushPolicy;
 import cn.coderule.minimq.domain.domain.store.infra.MappedFileQueue;
 import cn.coderule.minimq.domain.domain.store.server.CheckPoint;
 import cn.coderule.minimq.store.api.CommitLogStoreImpl;
@@ -28,7 +29,7 @@ public class CommitLogBootstrap implements Lifecycle {
 
     private MappedFileQueue mappedFileQueue;
     private CommitLog commitLog;
-    private DefaultCommitLogFlushPolicy flushPolicy;
+    private CommitLogFlushPolicy flushPolicy;
     private CheckPoint checkpoint;
 
     @Override

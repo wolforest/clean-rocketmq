@@ -4,7 +4,6 @@ import cn.coderule.minimq.domain.core.enums.store.EnqueueStatus;
 import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitLogFlushPolicy;
 import cn.coderule.minimq.domain.domain.store.server.CheckPoint;
 import cn.coderule.minimq.store.domain.commitlog.vo.GroupCommitRequest;
-import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.minimq.domain.config.store.CommitConfig;
 import cn.coderule.minimq.domain.core.enums.store.FlushType;
 import cn.coderule.minimq.domain.domain.store.domain.mq.EnqueueResult;
@@ -23,7 +22,7 @@ import java.util.concurrent.CompletableFuture;
  *  - flush
  *  - start/shutdown
  */
-public class DefaultCommitLogFlushPolicy implements CommitLogFlushPolicy, Lifecycle {
+public class DefaultCommitLogFlushPolicy implements CommitLogFlushPolicy {
     private final CommitConfig commitConfig;
 
     private final Flusher committer;
