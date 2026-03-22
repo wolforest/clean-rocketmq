@@ -34,6 +34,9 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class DefaultCommitLog implements CommitLog {
+    @Getter
+    private final int shardId;
+
     private final StoreConfig storeConfig;
     private final CommitConfig commitConfig;
     private final MessageConfig messageConfig;
@@ -49,6 +52,16 @@ public class DefaultCommitLog implements CommitLog {
         MappedFileQueue mappedFileQueue,
         CommitLogFlushPolicy commitLogFlushPolicy
     ) {
+        this(0, storeConfig, mappedFileQueue, commitLogFlushPolicy);
+    }
+
+    public DefaultCommitLog(
+        int shardId,
+        StoreConfig storeConfig,
+        MappedFileQueue mappedFileQueue,
+        CommitLogFlushPolicy commitLogFlushPolicy
+    ) {
+        this.shardId = shardId;
         this.storeConfig = storeConfig;
         this.commitConfig = storeConfig.getCommitConfig();
         this.messageConfig = storeConfig.getMessageConfig();
@@ -244,5 +257,4 @@ public class DefaultCommitLog implements CommitLog {
             default -> throw new EnqueueException(EnqueueStatus.UNKNOWN_ERROR);
         }
     }
-
 }

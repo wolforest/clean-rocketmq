@@ -14,6 +14,20 @@ public class Offset implements Serializable {
     private volatile long indexOffset = -1;
 
     /**
+     * shardId -> offset
+     */
+    @Setter
+    private ConcurrentMap<Integer, Long> commitOffsetMap
+        = new ConcurrentHashMap<>(16);
+
+    /**
+     * shardId -> offset
+     */
+    @Setter
+    private ConcurrentMap<Integer, Long> dispatchedOffsetMap
+        = new ConcurrentHashMap<>(16);
+
+    /**
      * topic -> [ queueId : offset ]
      */
     @Setter
@@ -84,16 +98,49 @@ public class Offset implements Serializable {
         tmp.setCommitLogOffset(commitLogOffset);
         tmp.setDispatchedOffset(dispatchedOffset);
         tmp.setIndexOffset(indexOffset);
-        ConcurrentMap<String, ArrayList<Long>> tmpMap = new ConcurrentHashMap<>(topicOffsetMap.size());
+
+        deepCopyTopicOffsetMap(tmp);
+        deepCopyCommitOffsetMap(tmp);
+        deepCopyDispatchedOffsetMap(tmp);
+
+        return tmp;
+    }
+
+    private void deepCopyTopicOffsetMap(Offset tmp) {
+        ConcurrentMap<String, ArrayList<Long>> topicMap
+            = new ConcurrentHashMap<>(topicOffsetMap.size());
 
         for (String topic : topicOffsetMap.keySet()) {
             ArrayList<Long> queueOffsets = topicOffsetMap.get(topic);
             ArrayList<Long> tmpQueueOffsets = new ArrayList<>(queueOffsets);
-            tmpMap.put(topic, tmpQueueOffsets);
+            topicMap.put(topic, tmpQueueOffsets);
         }
 
-        tmp.setTopicOffsetMap(tmpMap);
-
-        return tmp;
+        tmp.setTopicOffsetMap(topicMap);
     }
+
+    private void deepCopyCommitOffsetMap(Offset tmp) {
+        ConcurrentMap<Integer, Long> commitOffsetMap
+            = new ConcurrentHashMap<>(this.commitOffsetMap.size());
+
+        for (Integer shardId : this.commitOffsetMap.keySet()) {
+            Long offset = this.commitOffsetMap.get(shardId);
+            commitOffsetMap.put(shardId, offset);
+        }
+
+        tmp.setCommitOffsetMap(commitOffsetMap);
+    }
+
+    private void deepCopyDispatchedOffsetMap(Offset tmp) {
+        ConcurrentMap<Integer, Long> dispatchedOffsetMap
+            = new ConcurrentHashMap<>(this.dispatchedOffsetMap.size());
+
+        for (Integer shardId : this.dispatchedOffsetMap.keySet()) {
+            Long offset = this.dispatchedOffsetMap.get(shardId);
+            dispatchedOffsetMap.put(shardId, offset);
+        }
+
+        tmp.setDispatchedOffsetMap(dispatchedOffsetMap);
+    }
+
 }

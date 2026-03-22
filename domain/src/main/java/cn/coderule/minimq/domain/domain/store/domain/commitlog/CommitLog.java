@@ -7,6 +7,8 @@ import cn.coderule.minimq.domain.domain.store.infra.InsertResult;
 import cn.coderule.minimq.domain.domain.store.infra.SelectedMappedBuffer;
 
 public interface CommitLog {
+    int getShardId();
+
     MappedFileQueue getMappedFileQueue();
 
     EnqueueFuture insert(MessageBO messageBO);
