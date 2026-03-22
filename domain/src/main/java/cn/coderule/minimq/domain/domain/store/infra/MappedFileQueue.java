@@ -3,8 +3,6 @@ package cn.coderule.minimq.domain.domain.store.infra;
 import java.util.List;
 
 public interface MappedFileQueue {
-    String getRootDir();
-
     boolean load();
     void checkSelf();
     void shutdown(long interval);

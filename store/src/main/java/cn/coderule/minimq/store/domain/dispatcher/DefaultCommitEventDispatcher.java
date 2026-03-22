@@ -90,6 +90,7 @@ public class DefaultCommitEventDispatcher extends ServiceThread  implements Comm
 
     private void saveDispatchedOffset(int size) {
         this.dispatchedOffset += size;
+        checkPoint.getMaxOffset().setDispatchedOffset(commitLog.getShardId(), dispatchedOffset);
         checkPoint.getMaxOffset().setDispatchedOffset(dispatchedOffset);
     }
 

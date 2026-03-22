@@ -1,5 +1,6 @@
 package cn.coderule.minimq.store.domain.commitlog.flush;
 
+import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitLog;
 import cn.coderule.minimq.domain.domain.store.server.CheckPoint;
 import cn.coderule.minimq.store.domain.commitlog.vo.GroupCommitRequest;
 import cn.coderule.common.util.lang.ThreadUtil;

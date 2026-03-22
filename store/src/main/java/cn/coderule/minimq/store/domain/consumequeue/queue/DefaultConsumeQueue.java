@@ -41,7 +41,7 @@ public class DefaultConsumeQueue implements ConsumeQueue {
     private final ByteBuffer writeBuffer;
 
     @Getter @Setter
-    private long maxCommitLogOffset = 0L;
+    private long maxCommitOffset = 0L;
 
     private volatile long minOffset = 0;
     private volatile long maxOffset = 0;
@@ -163,6 +163,8 @@ public class DefaultConsumeQueue implements ConsumeQueue {
     public void load() {
         mappedFileQueue.load();
         // TODO: UPDATE minOffset/maxOffset while loading
+        setMinOffset(mappedFileQueue.getMinOffset());
+        setMaxOffset(mappedFileQueue.getMaxOffset());
     }
 
     @Override
@@ -342,9 +344,11 @@ public class DefaultConsumeQueue implements ConsumeQueue {
      * @param event commitLogEvent
      */
     private void postEnqueue(CommitEvent event) {
-        long offset = event.getMessageBO().getCommitOffset() + event.getMessageBO().getMessageLength();
-        if (offset > maxCommitLogOffset) {
-            maxCommitLogOffset = offset;
+        long offset = event.getMessageBO().getCommitOffset()
+            + event.getMessageBO().getMessageLength();
+
+        if (offset > maxCommitOffset) {
+            maxCommitOffset = offset;
         }
 
         // save checkpoint

@@ -20,22 +20,22 @@ import lombok.extern.slf4j.Slf4j;
 public class CommitLogManager {
     private final List<CommitLog> commitLogList;
     private final Map<String, CommitLog> topicMap;
-    private final Map<String, CommitLog> pathMap;
+    private final Map<Integer, CommitLog> shardMap;
 
     public CommitLogManager() {
         commitLogList = new ArrayList<>();
         topicMap = new HashMap<>();
-        pathMap = new HashMap<>();
+        shardMap = new HashMap<>();
     }
 
     public void addCommitLog(CommitLog commitLog) {
         commitLogList.add(commitLog);
-        bindPath(commitLog);
+        bindShard(commitLog);
     }
 
     public void bindTopic(String topic, CommitLog commitLog) {
         topicMap.put(topic, commitLog);
-        bindPath(commitLog);
+        bindShard(commitLog);
     }
 
     public EnqueueFuture insert(MessageBO messageBO) {
@@ -89,9 +89,8 @@ public class CommitLogManager {
         return commitLog.selectBuffer(offset, size);
     }
 
-    private void bindPath(CommitLog commitLog) {
-        String rootDir = commitLog.getMappedFileQueue().getRootDir();
-        pathMap.put(rootDir, commitLog);
+    private void bindShard(CommitLog commitLog) {
+        shardMap.put(commitLog.getShardId(), commitLog);
     }
 
     private CommitLog selectByTopic(String topic) {
@@ -112,7 +111,7 @@ public class CommitLogManager {
     }
 
     private CommitLog selectByPath(String path) {
-        return pathMap.get(path);
+        return shardMap.get(path);
     }
 
 }

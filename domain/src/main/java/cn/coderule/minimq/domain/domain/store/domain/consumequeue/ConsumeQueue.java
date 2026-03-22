@@ -21,8 +21,8 @@ public interface ConsumeQueue {
     void setMaxOffset(long maxOffset);
 
     long rollToOffset(long offset);
-    long getMaxCommitLogOffset();
-    void setMaxCommitLogOffset(long maxCommitLogOffset);
+    long getMaxCommitOffset();
+    void setMaxCommitOffset(long maxCommitOffset);
     long increaseOffset();
 
     MappedFileQueue getMappedFileQueue();

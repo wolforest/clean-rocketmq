@@ -231,14 +231,14 @@ class DefaultConsumeQueueTest {
     void testGetMaxCommitLogOffset(@TempDir Path tmpDir) {
         DefaultConsumeQueue queue = (DefaultConsumeQueue) createConsumeQueue(tmpDir.toString());
 
-        assertEquals(0L, queue.getMaxCommitLogOffset());
+        assertEquals(0L, queue.getMaxCommitOffset());
 
         for (int i = 0; i < 3; i++) {
             CommitEvent event = createCommitEventWithCommitOffset(queue, 100L + i * 50);
             queue.enqueue(event);
         }
 
-        assertEquals(100L + 2 * 50 + 30, queue.getMaxCommitLogOffset());
+        assertEquals(100L + 2 * 50 + 30, queue.getMaxCommitOffset());
 
         queue.destroy();
     }
@@ -247,11 +247,11 @@ class DefaultConsumeQueueTest {
     void testSetMaxCommitLogOffset(@TempDir Path tmpDir) {
         DefaultConsumeQueue queue = (DefaultConsumeQueue) createConsumeQueue(tmpDir.toString());
 
-        queue.setMaxCommitLogOffset(500L);
-        assertEquals(500L, queue.getMaxCommitLogOffset());
+        queue.setMaxCommitOffset(500L);
+        assertEquals(500L, queue.getMaxCommitOffset());
 
-        queue.setMaxCommitLogOffset(100L);
-        assertEquals(100L, queue.getMaxCommitLogOffset());
+        queue.setMaxCommitOffset(100L);
+        assertEquals(100L, queue.getMaxCommitOffset());
 
         queue.destroy();
     }

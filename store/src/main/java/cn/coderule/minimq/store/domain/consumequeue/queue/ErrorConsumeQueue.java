@@ -78,12 +78,12 @@ public class ErrorConsumeQueue implements ConsumeQueue {
     }
 
     @Override
-    public long getMaxCommitLogOffset() {
+    public long getMaxCommitOffset() {
         return 0;
     }
 
     @Override
-    public void setMaxCommitLogOffset(long maxCommitLogOffset) {
+    public void setMaxCommitOffset(long maxCommitOffset) {
 
     }
 
