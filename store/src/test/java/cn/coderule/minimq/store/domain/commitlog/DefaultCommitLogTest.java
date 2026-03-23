@@ -527,7 +527,7 @@ class DefaultCommitLogTest {
         commitConfig.setFileSize(MMAP_FILE_SIZE);
 
         CommitLogFlushPolicy flusher = new SyncCommitLogFlushPolicy(queue);
-        return new DefaultCommitLog(storeConfig, queue, flusher);
+        return new DefaultCommitLog(storeConfig, 0, queue, flusher);
     }
 
     private MessageBO createMessage(MessageEncoder encoder) {

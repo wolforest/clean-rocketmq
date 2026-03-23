@@ -5,6 +5,7 @@ import cn.coderule.minimq.domain.core.enums.code.InvalidCode;
 import cn.coderule.minimq.domain.core.exception.InvalidRequestException;
 import cn.coderule.minimq.domain.domain.message.MessageEncoder;
 import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitLogFlushPolicy;
+import cn.coderule.minimq.domain.domain.store.server.CheckPoint;
 import cn.coderule.minimq.store.domain.commitlog.vo.InsertContext;
 import cn.coderule.minimq.domain.config.store.CommitConfig;
 import cn.coderule.minimq.domain.config.business.MessageConfig;
@@ -40,7 +41,9 @@ public class DefaultCommitLog implements CommitLog {
     private final StoreConfig storeConfig;
     private final CommitConfig commitConfig;
     private final MessageConfig messageConfig;
-    private final CommitLogFlushPolicy commitLogFlushPolicy;
+
+    private final CommitLogFlushPolicy flushPolicy;
+    private final CheckPoint checkPoint;
 
     @Getter
     private final MappedFileQueue mappedFileQueue;
@@ -49,25 +52,28 @@ public class DefaultCommitLog implements CommitLog {
 
     public DefaultCommitLog(
         StoreConfig storeConfig,
+        int shardId,
         MappedFileQueue mappedFileQueue,
-        CommitLogFlushPolicy commitLogFlushPolicy
+        CommitLogFlushPolicy flushPolicy
     ) {
-        this(0, storeConfig, mappedFileQueue, commitLogFlushPolicy);
+        this(storeConfig, shardId, mappedFileQueue, flushPolicy, null);
     }
 
     public DefaultCommitLog(
-        int shardId,
         StoreConfig storeConfig,
+        int shardId,
         MappedFileQueue mappedFileQueue,
-        CommitLogFlushPolicy commitLogFlushPolicy
+        CommitLogFlushPolicy flushPolicy,
+        CheckPoint checkPoint
     ) {
         this.shardId = shardId;
         this.storeConfig = storeConfig;
         this.commitConfig = storeConfig.getCommitConfig();
         this.messageConfig = storeConfig.getMessageConfig();
 
+        this.checkPoint = checkPoint;
         this.mappedFileQueue = mappedFileQueue;
-        this.commitLogFlushPolicy = commitLogFlushPolicy;
+        this.flushPolicy = flushPolicy;
 
         this.commitLogLock = new CommitLogReentrantLock();
         initLocalEncoder();
@@ -100,7 +106,7 @@ public class DefaultCommitLog implements CommitLog {
             InsertResult insertResult = mappedFile.insert(messageBuffer);
             handleInsertError(insertResult);
 
-            return commitLogFlushPolicy.flush(insertResult, messageBO);
+            return flushPolicy.flush(insertResult, messageBO);
         } catch (EnqueueException messageException) {
             return EnqueueFuture.failure(messageException.getStatus());
         } finally {
@@ -186,6 +192,8 @@ public class DefaultCommitLog implements CommitLog {
         return mappedFile.select(position, size);
     }
 
+
+
     @Override
     public void destroy() {
         mappedFileQueue.destroy();
@@ -256,5 +264,32 @@ public class DefaultCommitLog implements CommitLog {
             case MESSAGE_SIZE_EXCEEDED, PROPERTIES_SIZE_EXCEEDED -> throw new EnqueueException(EnqueueStatus.MESSAGE_ILLEGAL);
             default -> throw new EnqueueException(EnqueueStatus.UNKNOWN_ERROR);
         }
+    }
+
+    @Override
+    public void start() throws Exception {
+        flushPolicy.start();
+    }
+
+    @Override
+    public void shutdown() throws Exception {
+        flushPolicy.shutdown();
+    }
+
+    @Override
+    public void initialize() throws Exception {
+        load();
+        recover();
+    }
+
+    private void load() {
+        mappedFileQueue.load();
+        mappedFileQueue.setFileMode(CLibrary.MADV_RANDOM);
+        mappedFileQueue.checkSelf();
+    }
+
+    private void recover() {
+        CommitLogRecovery commitLogRecovery = new CommitLogRecovery(this, checkPoint);
+        commitLogRecovery.recover();
     }
 }

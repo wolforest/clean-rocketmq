@@ -16,6 +16,8 @@ public class CommitLogReceiver implements Lifecycle {
     private final SlaveOffsetReporter slaveOffsetReporter;
     private final CommitLogStore commitLogStore;
 
+    private final int shardId = 0;
+
     /**
      * last time that slave reads date from master.
      */
@@ -133,7 +135,7 @@ public class CommitLogReceiver implements Lifecycle {
     }
 
     private boolean validateSlaveOffset(long masterOffset) {
-        long slaveOffset = commitLogStore.getMaxOffset();
+        long slaveOffset = commitLogStore.getMaxOffset(shardId);
         if (slaveOffset == 0) {
             return true;
         }

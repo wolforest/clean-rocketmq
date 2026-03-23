@@ -1,12 +1,13 @@
 package cn.coderule.minimq.domain.domain.store.domain.commitlog;
 
+import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.minimq.domain.domain.store.infra.MappedFileQueue;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.domain.store.domain.mq.EnqueueFuture;
 import cn.coderule.minimq.domain.domain.store.infra.InsertResult;
 import cn.coderule.minimq.domain.domain.store.infra.SelectedMappedBuffer;
 
-public interface CommitLog {
+public interface CommitLog extends Lifecycle {
     int getShardId();
 
     MappedFileQueue getMappedFileQueue();

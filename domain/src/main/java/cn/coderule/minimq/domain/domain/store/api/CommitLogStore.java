@@ -10,9 +10,9 @@ public interface CommitLogStore {
     SelectedMappedBuffer select(long offset);
     InsertResult insert(long offset, byte[] data, int start, int size);
 
-    long getMinOffset();
-    long getMaxOffset();
+    long getMinOffset(int shardId);
+    long getMaxOffset(int shardId);
 
-    long getFlushedOffset();
-    long getUnFlushedSize();
+    long getFlushedOffset(int shardId);
+    long getUnFlushedSize(int shardId);
 }

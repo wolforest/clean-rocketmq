@@ -25,6 +25,8 @@ import java.util.concurrent.CompletableFuture;
 public class DefaultCommitLogFlushPolicy implements CommitLogFlushPolicy {
     private final CommitConfig commitConfig;
 
+
+    private final int shardId;
     private final Flusher committer;
     private final Flusher flusher;
     private final FlushWatcher flushWatcher;
@@ -34,6 +36,16 @@ public class DefaultCommitLogFlushPolicy implements CommitLogFlushPolicy {
         MappedFileQueue mappedFileQueue,
         CheckPoint checkPoint
     ) {
+        this(0, commitConfig, mappedFileQueue, checkPoint);
+    }
+
+    public DefaultCommitLogFlushPolicy(
+        int shardId,
+        CommitConfig commitConfig,
+        MappedFileQueue mappedFileQueue,
+        CheckPoint checkPoint
+    ) {
+        this.shardId = shardId;
         this.commitConfig = commitConfig;
 
         this.flushWatcher = new FlushWatcher();

@@ -29,6 +29,8 @@ public class CommitLogTransfer extends ServiceThread implements Lifecycle {
     private final FlowMonitor flowMonitor;
     private final WakeupCoordinator wakeupCoordinator;
 
+    private final int shardId = 0;
+
     private final Selector selector;
     private final SocketChannel socketChannel;
     private final ByteBuffer headerBuffer;
@@ -157,7 +159,7 @@ public class CommitLogTransfer extends ServiceThread implements Lifecycle {
 
     private long getMasterOffset() {
         CommitConfig commitConfig = storeConfig.getCommitConfig();
-        long masterOffset = commitLogStore.getMaxOffset();
+        long masterOffset = commitLogStore.getMaxOffset(shardId);
         long fileSize = commitConfig.getFileSize();
 
         masterOffset = masterOffset - (masterOffset % fileSize);

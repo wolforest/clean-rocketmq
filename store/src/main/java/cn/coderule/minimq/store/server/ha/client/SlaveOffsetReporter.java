@@ -17,6 +17,8 @@ public class SlaveOffsetReporter implements Lifecycle {
     private final DefaultHAClient haClient;
     private final CommitLogStore commitLogStore;
 
+    private final int shardId = 0;
+
     private long lastWriteTime;
     private long reportedOffset = 0;
     private final ByteBuffer reportBuffer = ByteBuffer.allocate(REPORT_HEADER_SIZE);
@@ -38,7 +40,7 @@ public class SlaveOffsetReporter implements Lifecycle {
     }
 
     public boolean report() {
-        long currentPhyOffset = commitLogStore.getMaxOffset();
+        long currentPhyOffset = commitLogStore.getMaxOffset(shardId);
         if (currentPhyOffset <= this.reportedOffset) {
             return true;
         }
@@ -95,7 +97,7 @@ public class SlaveOffsetReporter implements Lifecycle {
 
     @Override
     public void initialize() throws Exception {
-        this.reportedOffset = commitLogStore.getMaxOffset();
+        this.reportedOffset = commitLogStore.getMaxOffset(shardId);
     }
 
     private boolean isTimeToHeartbeat() {
