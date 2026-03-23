@@ -110,19 +110,19 @@ public class CommitLogManager implements Lifecycle {
     }
 
     public long getMinOffset(int shardId) {
-        return 0;
+        return selectByShardId(shardId).getMinOffset();
     }
 
     public long getMaxOffset(int shardId) {
-        return 0;
+        return selectByShardId(shardId).getMaxOffset();
     }
 
     public long getFlushedOffset(int shardId) {
-        return 0;
+        return selectByShardId(shardId).getFlushedOffset();
     }
 
     public long getUnFlushedSize(int shardId) {
-        return 0;
+        return selectByShardId(shardId).getUnFlushedSize();
     }
 
     public int offsetToShardId(long offset) {
