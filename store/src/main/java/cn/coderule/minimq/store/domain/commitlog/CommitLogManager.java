@@ -21,12 +21,14 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class CommitLogManager implements Lifecycle {
     private final CommitConfig config;
+    private final TopicPartitioner partitioner;
 
     private final List<CommitLog> commitLogList;
     private final Map<Integer, CommitLog> shardMap;
 
-    public CommitLogManager(CommitConfig config) {
+    public CommitLogManager(CommitConfig config, TopicPartitioner partitioner) {
         this.config = config;
+        this.partitioner = partitioner;
 
         commitLogList = new ArrayList<>();
         shardMap = new HashMap<>();
@@ -47,7 +49,9 @@ public class CommitLogManager implements Lifecycle {
 
     public EnqueueFuture insert(MessageBO messageBO) {
         try {
-            return selectByTopic(messageBO.getRealTopic())
+            int shardId = partitioner.partitionByTopic(messageBO.getTopic());
+
+            return selectByShardId(shardId)
                 .insert(messageBO);
         } catch (EnqueueException e) {
             return EnqueueFuture.failure(e.getStatus());
@@ -94,10 +98,6 @@ public class CommitLogManager implements Lifecycle {
 
     private void bindShard(CommitLog commitLog) {
         shardMap.put(commitLog.getShardId(), commitLog);
-    }
-
-    private CommitLog selectByTopic(String topic) {
-        return null;
     }
 
     private CommitLog selectByShardId(Integer shardId) {
