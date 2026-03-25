@@ -34,6 +34,8 @@ public class Offset implements Serializable {
     private ConcurrentMap<String, ArrayList<Long>> topicOffsetMap
         = new ConcurrentHashMap<>(16);
 
+
+
     public void setCommitLogOffset(long commitLogOffset) {
         if (commitLogOffset < this.commitLogOffset) {
             return;
