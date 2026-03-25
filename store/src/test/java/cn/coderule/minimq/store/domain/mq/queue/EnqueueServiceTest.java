@@ -8,7 +8,7 @@ import cn.coderule.minimq.domain.domain.store.domain.mq.EnqueueFuture;
 import cn.coderule.minimq.domain.domain.store.domain.mq.EnqueueResult;
 import cn.coderule.minimq.domain.domain.store.infra.InsertResult;
 import cn.coderule.minimq.domain.test.MessageMock;
-import cn.coderule.minimq.store.domain.consumequeue.ConsumeQueueManager;
+import cn.coderule.minimq.store.domain.consumequeue.queue.ConsumeQueueManager;
 import cn.coderule.minimq.store.server.ha.server.processor.CommitLogSynchronizer;
 import java.util.concurrent.CompletableFuture;
 import org.junit.jupiter.api.Test;

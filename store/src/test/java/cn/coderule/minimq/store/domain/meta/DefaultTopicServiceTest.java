@@ -7,7 +7,7 @@ import cn.coderule.minimq.domain.domain.meta.topic.Topic;
 import cn.coderule.minimq.domain.domain.meta.topic.TopicValidator;
 import cn.coderule.minimq.domain.domain.store.domain.meta.ConsumeOffsetService;
 import cn.coderule.minimq.domain.test.ConfigMock;
-import cn.coderule.minimq.store.domain.consumequeue.ConsumeQueueManager;
+import cn.coderule.minimq.store.domain.consumequeue.queue.ConsumeQueueManager;
 import cn.coderule.minimq.store.server.bootstrap.StoreContext;
 import cn.coderule.minimq.store.server.bootstrap.StoreRegister;
 import java.nio.file.Path;

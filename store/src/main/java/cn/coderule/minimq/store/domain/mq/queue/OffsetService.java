@@ -9,7 +9,7 @@ import cn.coderule.minimq.domain.domain.store.domain.mq.DequeueResult;
 import cn.coderule.minimq.domain.domain.consumer.consume.pop.helper.PopConverter;
 import cn.coderule.minimq.domain.domain.meta.order.OrderRequest;
 import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitLog;
-import cn.coderule.minimq.store.domain.consumequeue.ConsumeQueueManager;
+import cn.coderule.minimq.store.domain.consumequeue.queue.ConsumeQueueManager;
 import cn.coderule.minimq.domain.domain.store.domain.meta.ConsumeOffsetService;
 import cn.coderule.minimq.domain.domain.store.domain.meta.ConsumeOrderService;
 import cn.coderule.minimq.store.domain.mq.ack.AckService;

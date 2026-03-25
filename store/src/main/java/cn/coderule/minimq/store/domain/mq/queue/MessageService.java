@@ -8,7 +8,7 @@ import cn.coderule.minimq.domain.domain.consumer.consume.mq.MessageRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.MessageResult;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitLog;
-import cn.coderule.minimq.store.domain.consumequeue.ConsumeQueueManager;
+import cn.coderule.minimq.store.domain.consumequeue.queue.ConsumeQueueManager;
 import java.util.List;
 import lombok.NonNull;
 

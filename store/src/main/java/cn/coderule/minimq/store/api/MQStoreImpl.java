@@ -13,7 +13,7 @@ import cn.coderule.minimq.domain.domain.consumer.consume.mq.QueueResult;
 import cn.coderule.minimq.domain.domain.store.domain.mq.EnqueueRequest;
 import cn.coderule.minimq.domain.domain.store.domain.mq.EnqueueResult;
 import cn.coderule.minimq.domain.domain.store.api.MQStore;
-import cn.coderule.minimq.store.domain.consumequeue.ConsumeQueueManager;
+import cn.coderule.minimq.store.domain.consumequeue.queue.ConsumeQueueManager;
 import cn.coderule.minimq.domain.domain.store.domain.mq.MQService;
 import cn.coderule.minimq.store.domain.mq.ack.AckService;
 import cn.coderule.minimq.store.domain.mq.ack.InvisibleService;

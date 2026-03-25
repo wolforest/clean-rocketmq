@@ -5,6 +5,7 @@ import cn.coderule.minimq.domain.domain.store.domain.consumequeue.ConsumeQueue;
 import cn.coderule.minimq.domain.domain.store.domain.consumequeue.QueueUnit;
 import cn.coderule.minimq.domain.test.MessageMock;
 import cn.coderule.minimq.store.domain.consumequeue.queue.ConsumeQueueFactory;
+import cn.coderule.minimq.store.domain.consumequeue.queue.ConsumeQueueManager;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 

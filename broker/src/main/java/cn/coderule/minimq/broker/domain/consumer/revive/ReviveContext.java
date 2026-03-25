@@ -7,7 +7,7 @@ import cn.coderule.minimq.rpc.store.facade.MQFacade;
 import cn.coderule.minimq.rpc.store.facade.ConsumeOffsetFacade;
 import cn.coderule.minimq.rpc.store.facade.SubscriptionFacade;
 import cn.coderule.minimq.rpc.store.facade.TopicFacade;
-import cn.coderule.minimq.store.domain.consumequeue.ConsumeQueueManager;
+import cn.coderule.minimq.store.domain.consumequeue.queue.ConsumeQueueManager;
 import cn.coderule.minimq.domain.domain.store.domain.meta.ConsumeOffsetService;
 import cn.coderule.minimq.domain.domain.store.domain.meta.SubscriptionService;
 import cn.coderule.minimq.domain.domain.store.domain.meta.TopicService;

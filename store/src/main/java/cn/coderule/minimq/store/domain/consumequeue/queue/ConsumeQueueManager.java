@@ -1,9 +1,8 @@
-package cn.coderule.minimq.store.domain.consumequeue;
+package cn.coderule.minimq.store.domain.consumequeue.queue;
 
 import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitEvent;
 import cn.coderule.minimq.domain.domain.store.domain.consumequeue.QueueUnit;
 import cn.coderule.minimq.domain.domain.store.domain.consumequeue.ConsumeQueue;
-import cn.coderule.minimq.store.domain.consumequeue.queue.ConsumeQueueFactory;
 import java.util.List;
 
 /**
