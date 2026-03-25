@@ -1,4 +1,4 @@
-package cn.coderule.minimq.store.domain.commitlog;
+package cn.coderule.minimq.store.domain.commitlog.log;
 
 import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitLog;

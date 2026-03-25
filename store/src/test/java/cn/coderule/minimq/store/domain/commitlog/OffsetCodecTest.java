@@ -1,5 +1,6 @@
 package cn.coderule.minimq.store.domain.commitlog;
 
+import cn.coderule.minimq.store.domain.commitlog.sharding.OffsetCodec;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

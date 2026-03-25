@@ -17,6 +17,7 @@ import cn.coderule.minimq.domain.domain.store.infra.SelectedMappedBuffer;
 import cn.coderule.minimq.domain.test.ConfigMock;
 import cn.coderule.minimq.domain.test.MessageMock;
 import cn.coderule.minimq.store.domain.commitlog.flush.SyncCommitLogFlushPolicy;
+import cn.coderule.minimq.store.domain.commitlog.log.DefaultCommitLog;
 import cn.coderule.minimq.store.infra.file.DefaultMappedFileQueue;
 import java.nio.file.Path;
 import java.util.Set;

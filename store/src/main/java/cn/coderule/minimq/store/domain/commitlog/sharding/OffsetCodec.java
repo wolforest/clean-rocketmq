@@ -1,4 +1,4 @@
-package cn.coderule.minimq.store.domain.commitlog;
+package cn.coderule.minimq.store.domain.commitlog.sharding;
 
 public class OffsetCodec {
     private final int shardId;

@@ -1,6 +1,7 @@
 package cn.coderule.minimq.store.domain.commitlog;
 
 import cn.coderule.minimq.domain.config.store.CommitConfig;
+import cn.coderule.minimq.store.domain.commitlog.sharding.TopicPartitioner;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

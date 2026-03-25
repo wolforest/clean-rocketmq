@@ -8,6 +8,9 @@ import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitLog;
 import cn.coderule.minimq.domain.domain.store.domain.meta.TopicService;
 import cn.coderule.minimq.domain.domain.store.server.CheckPoint;
 import cn.coderule.minimq.store.api.CommitLogStoreImpl;
+import cn.coderule.minimq.store.domain.commitlog.log.CommitLogFactory;
+import cn.coderule.minimq.store.domain.commitlog.log.CommitLogManager;
+import cn.coderule.minimq.store.domain.commitlog.sharding.TopicPartitioner;
 import cn.coderule.minimq.store.server.bootstrap.StoreContext;
 import java.util.List;
 

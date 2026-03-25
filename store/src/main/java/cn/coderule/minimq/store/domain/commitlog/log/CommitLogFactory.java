@@ -1,4 +1,4 @@
-package cn.coderule.minimq.store.domain.commitlog;
+package cn.coderule.minimq.store.domain.commitlog.log;
 
 import cn.coderule.common.util.io.DirUtil;
 import cn.coderule.minimq.domain.config.server.StoreConfig;
@@ -28,7 +28,6 @@ public class CommitLogFactory {
         this.shardNumber = commitConfig.getShardingNumber();
 
         this.checkpoint = checkpoint;
-
     }
 
     public List<CommitLog> createByConfig() {

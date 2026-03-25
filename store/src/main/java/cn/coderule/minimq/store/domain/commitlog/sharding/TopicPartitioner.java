@@ -1,4 +1,4 @@
-package cn.coderule.minimq.store.domain.commitlog;
+package cn.coderule.minimq.store.domain.commitlog.sharding;
 
 import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.minimq.domain.config.store.CommitConfig;

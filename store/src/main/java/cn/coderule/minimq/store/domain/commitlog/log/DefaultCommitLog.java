@@ -1,4 +1,4 @@
-package cn.coderule.minimq.store.domain.commitlog;
+package cn.coderule.minimq.store.domain.commitlog.log;
 
 import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.domain.core.enums.code.InvalidCode;
