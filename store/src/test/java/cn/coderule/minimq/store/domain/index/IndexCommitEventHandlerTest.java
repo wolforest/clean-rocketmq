@@ -7,7 +7,7 @@ class IndexCommitEventHandlerTest {
 
     @Test
     void handleDoesNotThrow() {
-        IndexCommitEventHandler handler = new IndexCommitEventHandler();
+        IndexCommitHandler handler = new IndexCommitHandler();
         handler.handle(new CommitEvent());
     }
 }

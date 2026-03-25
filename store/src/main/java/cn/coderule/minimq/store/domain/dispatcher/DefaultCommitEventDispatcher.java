@@ -5,7 +5,7 @@ import cn.coderule.common.util.lang.ThreadUtil;
 import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitEvent;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitLog;
-import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitEventHandler;
+import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitHandler;
 import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitEventDispatcher;
 import cn.coderule.minimq.domain.domain.store.server.CheckPoint;
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ public class DefaultCommitEventDispatcher extends ServiceThread  implements Comm
     @Getter @Setter
     private volatile long dispatchedOffset = -1;
 
-    private final ArrayList<CommitEventHandler> consumerList = new ArrayList<>();
+    private final ArrayList<CommitHandler> consumerList = new ArrayList<>();
 
     private final CommitLog commitLog;
     private final CheckPoint checkPoint;
@@ -33,7 +33,7 @@ public class DefaultCommitEventDispatcher extends ServiceThread  implements Comm
     }
 
     @Override
-    public void registerHandler(CommitEventHandler handler) {
+    public void registerHandler(CommitHandler handler) {
         consumerList.add(handler);
     }
 
@@ -48,7 +48,7 @@ public class DefaultCommitEventDispatcher extends ServiceThread  implements Comm
             return;
         }
 
-        for (CommitEventHandler consumer : consumerList) {
+        for (CommitHandler consumer : consumerList) {
              consumer.handle(event);
         }
     }

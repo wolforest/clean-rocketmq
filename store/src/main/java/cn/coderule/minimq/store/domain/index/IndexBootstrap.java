@@ -8,7 +8,7 @@ public class IndexBootstrap implements Lifecycle {
     @Override
     public void initialize() throws Exception {
         CommitEventDispatcher dispatcher = StoreContext.getBean(CommitEventDispatcher.class);
-        IndexCommitEventHandler handler = new IndexCommitEventHandler();
+        IndexCommitHandler handler = new IndexCommitHandler();
         dispatcher.registerHandler(handler);
 
 

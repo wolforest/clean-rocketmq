@@ -2,7 +2,7 @@ package cn.coderule.minimq.store.domain.dispatcher;
 
 import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitEvent;
-import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitEventHandler;
+import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitHandler;
 import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitLog;
 import cn.coderule.minimq.domain.domain.store.server.CheckPoint;
 import cn.coderule.minimq.domain.test.MessageMock;
@@ -20,7 +20,7 @@ class DefaultCommitEventDispatcherTest {
         CheckPoint checkPoint = mock(CheckPoint.class);
         DefaultCommitEventDispatcher dispatcher = new DefaultCommitEventDispatcher(commitLog, checkPoint);
 
-        CommitEventHandler handler = mock(CommitEventHandler.class);
+        CommitHandler handler = mock(CommitHandler.class);
         dispatcher.registerHandler(handler);
 
         MessageBO message = MessageMock.createMessage("TOPIC_A", 0, 1);
@@ -37,7 +37,7 @@ class DefaultCommitEventDispatcherTest {
         CheckPoint checkPoint = mock(CheckPoint.class);
         DefaultCommitEventDispatcher dispatcher = new DefaultCommitEventDispatcher(commitLog, checkPoint);
 
-        CommitEventHandler handler = mock(CommitEventHandler.class);
+        CommitHandler handler = mock(CommitHandler.class);
         CommitEvent event = CommitEvent.of(MessageMock.createMessage("TOPIC_B", 0, 1));
 
         dispatcher.dispatch(event);
