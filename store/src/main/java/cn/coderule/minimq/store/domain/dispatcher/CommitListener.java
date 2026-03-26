@@ -78,6 +78,18 @@ public class CommitListener extends ServiceThread {
         log.info("{} service end", this.getServiceName());
     }
 
+    public long getDispatchedOffset() {
+        return dispatchedOffset.get();
+    }
+
+    public void setDispatchedOffset(long value) {
+        this.dispatchedOffset.set(value);
+    }
+
+    public long increaseDispatchedOffset(long delta) {
+        return this.dispatchedOffset.addAndGet(delta);
+    }
+
     private void listen() {
         MessageBO messageBO = commitLog.select(this.dispatchedOffset.get());
         if (isOverflow(messageBO.getMessageLength())) {
