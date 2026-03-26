@@ -5,6 +5,8 @@ import cn.coderule.common.util.lang.ThreadUtil;
 import cn.coderule.minimq.domain.config.store.CommitConfig;
 import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitLog;
 import cn.coderule.minimq.domain.domain.store.server.CheckPoint;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -20,6 +22,8 @@ public class CommitListener extends ServiceThread {
     private final CheckPoint checkPoint;
 
     private final int shardId;
+    @Getter @Setter
+    private volatile long dispatchedOffset = -1;
 
     public CommitListener(
         CommitConfig config,
@@ -33,6 +37,18 @@ public class CommitListener extends ServiceThread {
         this.commitLog = commitLog;
         this.checkPoint = checkPoint;
         this.shardId = commitLog.getShardId();
+
+        initDispatchedOffset();
+    }
+
+    private void initDispatchedOffset() {
+        Long checkpointOffset = checkPoint.getMaxOffset().getDispatchedOffset(shardId);
+        if (null != checkpointOffset && checkpointOffset > -1) {
+            this.dispatchedOffset = checkpointOffset;
+            return;
+        }
+
+        this.dispatchedOffset = commitLog.getMinOffset();
     }
 
     @Override
@@ -46,8 +62,13 @@ public class CommitListener extends ServiceThread {
 
         while (!this.isStopped()) {
             try {
-                ThreadUtil.sleep(1);
+                if (dispatchedOffset < 0) {
+                    return;
+                }
+
                 this.listen();
+
+                ThreadUtil.sleep(1);
             } catch (Exception e) {
                 log.error("{} service has exception. ", this.getServiceName(), e);
             }

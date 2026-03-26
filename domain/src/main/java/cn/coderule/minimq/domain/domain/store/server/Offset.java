@@ -54,6 +54,14 @@ public class Offset implements Serializable {
 
     }
 
+    public Long getCommitOffset(int shardId) {
+        return commitOffsetMap.get(shardId);
+    }
+
+    public Long getDispatchedOffset(int shardId) {
+        return dispatchedOffsetMap.get(shardId);
+    }
+
     public void setDispatchedOffset(int shardId, long dispatchedOffset) {
         Long old = dispatchedOffsetMap.get(shardId);
         if (old == null || old > dispatchedOffset) {
