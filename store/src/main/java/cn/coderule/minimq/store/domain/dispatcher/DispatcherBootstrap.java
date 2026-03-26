@@ -21,6 +21,10 @@ public class DispatcherBootstrap implements Lifecycle {
         dispatcher = new DefaultCommitEventDispatcher(commitLog, checkPoint);
 
         StoreContext.register(dispatcher, CommitEventDispatcher.class);
+
+
+        CommitHandlerManager handlerManager = new CommitHandlerManager();
+        StoreContext.register(handlerManager);
     }
 
     @Override

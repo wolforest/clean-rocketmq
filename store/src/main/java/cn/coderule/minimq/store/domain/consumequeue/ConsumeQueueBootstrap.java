@@ -10,6 +10,7 @@ import cn.coderule.minimq.store.domain.consumequeue.queue.ConsumeQueueManager;
 import cn.coderule.minimq.store.domain.consumequeue.service.ConsumeQueueFlusher;
 import cn.coderule.minimq.store.domain.consumequeue.service.ConsumeQueueLoader;
 import cn.coderule.minimq.store.domain.consumequeue.service.ConsumeQueueRecovery;
+import cn.coderule.minimq.store.domain.dispatcher.CommitHandlerManager;
 import cn.coderule.minimq.store.server.bootstrap.StoreContext;
 import lombok.extern.slf4j.Slf4j;
 
@@ -84,8 +85,8 @@ public class ConsumeQueueBootstrap implements Lifecycle {
     }
 
     private void registerDispatchHandler() {
-        CommitEventDispatcher dispatcher = StoreContext.getBean(CommitEventDispatcher.class);
+        CommitHandlerManager handlerManager = StoreContext.getBean(CommitHandlerManager.class);
         ConsumeQueueCommitHandler handler = new ConsumeQueueCommitHandler(consumeQueueManager);
-        dispatcher.registerHandler(handler);
+        handlerManager.registerHandler(handler);
     }
 }
