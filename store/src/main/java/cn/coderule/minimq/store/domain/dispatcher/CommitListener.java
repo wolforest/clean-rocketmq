@@ -16,14 +16,14 @@ public class CommitListener extends ServiceThread {
     private final CommitConfig config;
 
     private final CommitLog commitLog;
-    private final CommitQueue queue;
+    private final DispatchQueue queue;
     private final CheckPoint checkPoint;
 
     private final int shardId;
 
     public CommitListener(
         CommitConfig config,
-        CommitQueue queue,
+        DispatchQueue queue,
         CommitLog commitLog,
         CheckPoint checkPoint
     ) {

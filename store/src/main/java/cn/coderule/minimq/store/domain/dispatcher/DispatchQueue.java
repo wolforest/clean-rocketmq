@@ -8,16 +8,17 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * @renamed from CommitQueue to DispatchQueue
  * @renamed from CommitEventQueue to CommitQueue
  */
-public class CommitQueue {
+public class DispatchQueue {
     public static final int DEFAULT_CAPACITY = 5_000;
     private static final TimeUnit DEFAULT_TIME_UNIT = TimeUnit.MILLISECONDS;
 
     private final CommitConfig config;
     private final BlockingQueue<CommitEvent> queue;
 
-    public CommitQueue(CommitConfig config) {
+    public DispatchQueue(CommitConfig config) {
         this.config = config;
 
         if (config.isEnableDisruptor()) {
