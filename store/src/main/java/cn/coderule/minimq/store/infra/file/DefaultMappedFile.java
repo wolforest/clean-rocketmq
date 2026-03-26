@@ -175,8 +175,8 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
 
     @Override
     public SelectedMappedBuffer select(int pos, int size) {
-        int dataPosition = getInsertPosition();
-        if ((pos + size) > dataPosition) {
+        int insertPosition = getInsertPosition();
+        if ((pos + size) > insertPosition) {
             return null;
         }
 
@@ -200,12 +200,12 @@ public class DefaultMappedFile extends ReferenceResource implements MappedFile {
 
     @Override
     public SelectedMappedBuffer select(int pos) {
-        int dataPosition = getInsertPosition();
-        if (pos >= dataPosition || pos < 0) {
+        int insertPosition = getInsertPosition();
+        if (pos >= insertPosition || pos < 0) {
             return null;
         }
 
-        int size = dataPosition - pos;
+        int size = insertPosition - pos;
         return select(pos, size);
     }
 

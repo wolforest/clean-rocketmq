@@ -33,6 +33,17 @@ public class CommitLogTransfer extends ServiceThread implements Lifecycle {
 
     private final Selector selector;
     private final SocketChannel socketChannel;
+    /**
+     * header buffer
+     * <pre>
+     * ┌───────────────────────────────────────────────┬───────────────────────┐
+     * │                  CommitOffset                 │         bodySize      │
+     * │                    (8bytes)                   │         (4bytes)      │
+     * ├───────────────────────────────────────────────┴───────────────────────┤
+     * │                                                                       │
+     * │                           Transfer Header                             │
+     * </pre>
+     */
     private final ByteBuffer headerBuffer;
     private SelectedMappedBuffer selectedBuffer;
 
