@@ -19,6 +19,7 @@ public class CommitConfig implements Serializable {
     private boolean enableSharding = false;
     private int maxShardingNumber = 10;
     private int shardingNumber = 5;
+    private int dispatchThreads = 5;
 
     private String dirName = "commitlog";
 

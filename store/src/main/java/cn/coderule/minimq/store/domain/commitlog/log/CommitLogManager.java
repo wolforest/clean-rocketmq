@@ -101,7 +101,7 @@ public class CommitLogManager implements Lifecycle {
         shardMap.put(commitLog.getShardId(), commitLog);
     }
 
-    private CommitLog selectByShardId(Integer shardId) {
+    public CommitLog selectByShardId(Integer shardId) {
         CommitLog commitLog = shardMap.get(shardId);
         if (commitLog == null) {
             throw new IllegalArgumentException("shardId of commitLog not found: " + shardId);
