@@ -7,7 +7,7 @@ import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitLog;
 import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitLogFlushPolicy;
 import cn.coderule.minimq.domain.domain.store.infra.MappedFileQueue;
 import cn.coderule.minimq.domain.domain.store.server.CheckPoint;
-import cn.coderule.minimq.store.domain.commitlog.flush.DefaultCommitLogFlushPolicy;
+import cn.coderule.minimq.store.domain.commitlog.flush.policy.DefaultCommitLogFlushPolicy;
 import cn.coderule.minimq.store.infra.file.AllocateMappedFileService;
 import cn.coderule.minimq.store.infra.file.DefaultMappedFileQueue;
 import cn.coderule.minimq.store.server.bootstrap.StoreContext;

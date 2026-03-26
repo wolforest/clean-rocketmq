@@ -13,7 +13,7 @@ import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitLogFlushPol
 import cn.coderule.minimq.domain.domain.store.infra.MappedFileQueue;
 import cn.coderule.minimq.domain.test.ConfigMock;
 import cn.coderule.minimq.domain.test.MessageMock;
-import cn.coderule.minimq.store.domain.commitlog.flush.EmptyCommitLogFlushPolicy;
+import cn.coderule.minimq.store.domain.commitlog.flush.policy.EmptyCommitLogFlushPolicy;
 import cn.coderule.minimq.store.domain.commitlog.log.DefaultCommitLog;
 import cn.coderule.minimq.store.infra.file.DefaultMappedFileQueue;
 import java.nio.file.Path;

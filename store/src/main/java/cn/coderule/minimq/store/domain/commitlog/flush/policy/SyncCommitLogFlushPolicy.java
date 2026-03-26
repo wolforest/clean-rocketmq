@@ -1,4 +1,4 @@
-package cn.coderule.minimq.store.domain.commitlog.flush;
+package cn.coderule.minimq.store.domain.commitlog.flush.policy;
 
 import cn.coderule.minimq.domain.domain.store.domain.mq.EnqueueFuture;
 import cn.coderule.minimq.domain.domain.store.infra.InsertResult;
