@@ -8,6 +8,7 @@ import cn.coderule.common.convention.service.Lifecycle;
  * @renamed from DispatcherManager to DispatchManager
  */
 public class DispatchManager implements Lifecycle {
+
     @Override
     public void start() throws Exception {
 
@@ -20,6 +21,6 @@ public class DispatchManager implements Lifecycle {
 
     @Override
     public void initialize() throws Exception {
-        Lifecycle.super.initialize();
+
     }
 }

@@ -2,7 +2,6 @@ package cn.coderule.minimq.store.domain.dispatcher;
 
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 import cn.coderule.common.util.lang.ThreadUtil;
-import cn.coderule.minimq.domain.config.store.CommitConfig;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitEvent;
 import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitLog;
@@ -16,8 +15,6 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class CommitListener extends ServiceThread {
-    private final CommitConfig config;
-
     private final CommitLog commitLog;
     private final DispatchQueue queue;
     private final CheckPoint checkPoint;
@@ -26,12 +23,10 @@ public class CommitListener extends ServiceThread {
     private final AtomicLong dispatchedOffset = new AtomicLong(-1L);
 
     public CommitListener(
-        CommitConfig config,
         DispatchQueue queue,
         CommitLog commitLog,
         CheckPoint checkPoint
     ) {
-        this.config = config;
 
         this.queue = queue;
         this.commitLog = commitLog;

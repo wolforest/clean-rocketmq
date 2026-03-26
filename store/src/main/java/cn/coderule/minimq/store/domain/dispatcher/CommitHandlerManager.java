@@ -14,6 +14,10 @@ public class CommitHandlerManager implements CommitHandler {
         handlerList.add(handler);
     }
 
+    public boolean isEmpty() {
+        return handlerList.isEmpty();
+    }
+
     @Override
     public void handle(CommitEvent event) {
         if (handlerList.isEmpty()) return;
