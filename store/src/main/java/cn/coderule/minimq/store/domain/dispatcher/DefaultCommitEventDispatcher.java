@@ -14,6 +14,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@Deprecated
 public class DefaultCommitEventDispatcher extends ServiceThread  implements CommitEventDispatcher {
     /**
      * startOffset (confirmOffset in RocketMQ)
