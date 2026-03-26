@@ -206,7 +206,7 @@ public class MessageBO extends Message implements Serializable {
     }
 
     public boolean isValid() {
-        return MessageStatus.FOUND.equals(status);
+        return MessageStatus.FOUND.equals(status) && !this.isEmpty();
     }
 
     public boolean isEmpty() {
