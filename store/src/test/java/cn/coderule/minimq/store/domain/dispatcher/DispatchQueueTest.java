@@ -11,12 +11,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class DispatchQueueTest {
 
-    private CommitConfig config;
     private DispatchQueue queue;
 
     @BeforeEach
     void setUp() {
-        config = new CommitConfig();
+        CommitConfig config = new CommitConfig();
         queue = new DispatchQueue(config);
     }
 
@@ -87,7 +86,7 @@ class DispatchQueueTest {
     @Test
     void testFifoOrder() throws InterruptedException {
         for (int i = 0; i < 5; i++) {
-            MessageBO message = MessageMock.createMessage("TEST", 100);
+            MessageBO message = MessageMock.createMessage("TEST", 1, i);
             queue.put(CommitEvent.of(message));
         }
 
@@ -95,8 +94,8 @@ class DispatchQueueTest {
         for (int i = 0; i < 5; i++) {
             CommitEvent polled = queue.poll();
             assertNotNull(polled);
-            assertTrue(polled.getMessageBO().getCommitOffset() > lastOffset);
-            lastOffset = polled.getMessageBO().getCommitOffset();
+            assertTrue(polled.getMessageBO().getQueueOffset() > lastOffset);
+            lastOffset = polled.getMessageBO().getQueueOffset();
         }
     }
 
