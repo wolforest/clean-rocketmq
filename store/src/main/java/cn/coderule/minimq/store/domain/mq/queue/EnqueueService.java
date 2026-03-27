@@ -5,7 +5,7 @@ import cn.coderule.minimq.domain.domain.store.domain.mq.EnqueueResult;
 import cn.coderule.minimq.domain.domain.store.domain.mq.EnqueueFuture;
 import cn.coderule.minimq.domain.core.lock.queue.EnqueueLock;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
-import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitLog;
+import cn.coderule.minimq.store.domain.commitlog.log.CommitLogManager;
 import cn.coderule.minimq.store.domain.consumequeue.queue.ConsumeQueueManager;
 import cn.coderule.minimq.store.server.bootstrap.StoreContext;
 import cn.coderule.minimq.store.server.ha.server.processor.CommitLogSynchronizer;
@@ -17,19 +17,19 @@ import lombok.extern.slf4j.Slf4j;
 public class EnqueueService {
     private final StoreConfig storeConfig;
     private final ConsumeQueueManager consumeQueueManager;
-    private final CommitLog commitLog;
+    private final CommitLogManager commitLogManager;
 
     private CommitLogSynchronizer commitLogSynchronizer;
     private final EnqueueLock enqueueLock;
 
     public EnqueueService(
         StoreConfig storeConfig,
-        CommitLog commitLog,
+        CommitLogManager commitLogManager,
         ConsumeQueueManager consumeQueueManager) {
 
         this.storeConfig = storeConfig;
+        this.commitLogManager = commitLogManager;
         this.consumeQueueManager = consumeQueueManager;
-        this.commitLog = commitLog;
 
         this.enqueueLock = new EnqueueLock();
     }
@@ -56,7 +56,7 @@ public class EnqueueService {
 
         try {
             assignConsumeOffset(messageBO);
-            EnqueueFuture result = commitLog.insert(messageBO);
+            EnqueueFuture result = commitLogManager.insert(messageBO);
 
             if (result.isInsertSuccess()) {
                 increaseConsumeOffset(messageBO);

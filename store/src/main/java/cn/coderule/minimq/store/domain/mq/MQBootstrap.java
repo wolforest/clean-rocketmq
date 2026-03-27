@@ -5,6 +5,7 @@ import cn.coderule.minimq.domain.config.server.StoreConfig;
 import cn.coderule.minimq.domain.core.lock.queue.DequeueLock;
 import cn.coderule.minimq.domain.domain.store.api.MQStore;
 import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitLog;
+import cn.coderule.minimq.store.domain.commitlog.log.CommitLogManager;
 import cn.coderule.minimq.store.domain.consumequeue.queue.ConsumeQueueManager;
 import cn.coderule.minimq.domain.domain.store.domain.meta.ConsumeOffsetService;
 import cn.coderule.minimq.domain.domain.store.domain.meta.ConsumeOrderService;
@@ -78,12 +79,12 @@ public class MQBootstrap implements Lifecycle {
     }
 
     private void initPubService() {
-        CommitLog commitLog = StoreContext.getBean(CommitLog.class);
+        CommitLogManager commitLogManager = StoreContext.getBean(CommitLogManager.class);
         StoreConfig storeConfig  = StoreContext.getBean(StoreConfig.class);
         ConsumeQueueManager consumeQueue = StoreContext.getBean(ConsumeQueueManager.class);
 
-        this.enqueueService = new EnqueueService(storeConfig, commitLog, consumeQueue);
-        this.messageService = new MessageService(commitLog, consumeQueue);
+        this.enqueueService = new EnqueueService(storeConfig, commitLogManager, consumeQueue);
+        this.messageService = new MessageService(commitLogManager, consumeQueue);
         StoreContext.register(this.enqueueService, EnqueueService.class);
         StoreContext.register(this.messageService, MessageService.class);
     }

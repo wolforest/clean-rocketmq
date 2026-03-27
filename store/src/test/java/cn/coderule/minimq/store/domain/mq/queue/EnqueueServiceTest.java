@@ -8,6 +8,7 @@ import cn.coderule.minimq.domain.domain.store.domain.mq.EnqueueFuture;
 import cn.coderule.minimq.domain.domain.store.domain.mq.EnqueueResult;
 import cn.coderule.minimq.domain.domain.store.infra.InsertResult;
 import cn.coderule.minimq.domain.test.MessageMock;
+import cn.coderule.minimq.store.domain.commitlog.log.CommitLogManager;
 import cn.coderule.minimq.store.domain.consumequeue.queue.ConsumeQueueManager;
 import cn.coderule.minimq.store.server.ha.server.processor.CommitLogSynchronizer;
 import java.util.concurrent.CompletableFuture;
@@ -25,7 +26,7 @@ class EnqueueServiceTest {
     @Test
     void enqueueAsyncAssignsAndIncreasesOffsetWhenInsertSuccess() {
         StoreConfig storeConfig = new StoreConfig();
-        CommitLog commitLog = mock(CommitLog.class);
+        CommitLogManager commitLog = mock(CommitLogManager.class);
         ConsumeQueueManager consumeQueueManager = mock(ConsumeQueueManager.class);
         CommitLogSynchronizer synchronizer = mock(CommitLogSynchronizer.class);
 
@@ -55,7 +56,7 @@ class EnqueueServiceTest {
         StoreConfig storeConfig = new StoreConfig();
         storeConfig.setAssignConsumeOffset(false);
 
-        CommitLog commitLog = mock(CommitLog.class);
+        CommitLogManager commitLog = mock(CommitLogManager.class);
         ConsumeQueueManager consumeQueueManager = mock(ConsumeQueueManager.class);
         CommitLogSynchronizer synchronizer = mock(CommitLogSynchronizer.class);
 

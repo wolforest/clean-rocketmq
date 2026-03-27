@@ -7,25 +7,25 @@ import cn.coderule.minimq.domain.domain.store.domain.consumequeue.QueueUnit;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.MessageRequest;
 import cn.coderule.minimq.domain.domain.consumer.consume.mq.MessageResult;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
-import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitLog;
+import cn.coderule.minimq.store.domain.commitlog.log.CommitLogManager;
 import cn.coderule.minimq.store.domain.consumequeue.queue.ConsumeQueueManager;
 import java.util.List;
 import lombok.NonNull;
 
 public class MessageService {
-    private final CommitLog commitLog;
+    private final CommitLogManager commitLogManager;
     private final ConsumeQueueManager consumeQueueManager;
 
     public MessageService(
-        CommitLog commitLog,
+        CommitLogManager commitLogManager,
         ConsumeQueueManager consumeQueueManager
     ) {
-        this.commitLog = commitLog;
+        this.commitLogManager = commitLogManager;
         this.consumeQueueManager = consumeQueueManager;
     }
 
     public MessageResult getMessage(MessageRequest request) {
-        MessageBO message = commitLog.select(request.getOffset());
+        MessageBO message = commitLogManager.select(request.getOffset());
 
         if (!message.isValid()) {
             return MessageResult.notFound();
@@ -61,7 +61,7 @@ public class MessageService {
         MessageBO messageBO;
 
         for (QueueUnit unit : unitList) {
-            messageBO = commitLog.select(unit.getCommitOffset(), unit.getMessageSize());
+            messageBO = commitLogManager.select(unit.getCommitOffset(), unit.getMessageSize());
             if (messageBO == null) {
                 continue;
             }

@@ -62,7 +62,7 @@ public class CommitListener extends ServiceThread {
                     return;
                 }
 
-                this.listen();
+                // this.listen();
 
                 ThreadUtil.sleep(1);
             } catch (Exception e) {

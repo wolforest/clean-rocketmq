@@ -7,6 +7,7 @@ import cn.coderule.minimq.domain.domain.store.domain.mq.DequeueResult;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.test.MessageMock;
 import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitLog;
+import cn.coderule.minimq.store.domain.commitlog.log.CommitLogManager;
 import cn.coderule.minimq.store.domain.consumequeue.queue.ConsumeQueueManager;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -21,7 +22,7 @@ class MessageServiceTest {
 
     @Test
     void getMessageReturnsNotFoundWhenInvalid() {
-        CommitLog commitLog = mock(CommitLog.class);
+        CommitLogManager commitLog = mock(CommitLogManager.class);
         ConsumeQueueManager consumeQueueManager = mock(ConsumeQueueManager.class);
         MessageService service = new MessageService(commitLog, consumeQueueManager);
 
@@ -35,7 +36,7 @@ class MessageServiceTest {
 
     @Test
     void getSkipsNullMessagesAndSetsStatus() {
-        CommitLog commitLog = mock(CommitLog.class);
+        CommitLogManager commitLog = mock(CommitLogManager.class);
         ConsumeQueueManager consumeQueueManager = mock(ConsumeQueueManager.class);
         MessageService service = new MessageService(commitLog, consumeQueueManager);
 

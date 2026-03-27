@@ -55,6 +55,7 @@ public class CommitLogManager implements Lifecycle {
             return selectByShardId(shardId)
                 .insert(messageBO);
         } catch (EnqueueException e) {
+            log.error("[CommitLogManager]insert message failed: {}",  e.getMessage());
             return EnqueueFuture.failure(e.getStatus());
         }
     }
@@ -65,6 +66,7 @@ public class CommitLogManager implements Lifecycle {
             CommitLog commitLog = selectByShardId(shardId);
             return commitLog.select(offset, size);
         } catch (EnqueueException e) {
+            log.error("[CommitLogManager]select message failed: {}",  e.getMessage());
             return MessageBO.notFound();
         }
     }
@@ -104,6 +106,7 @@ public class CommitLogManager implements Lifecycle {
     public CommitLog selectByShardId(Integer shardId) {
         CommitLog commitLog = shardMap.get(shardId);
         if (commitLog == null) {
+            log.error("[CommitLogManager]shardId of commitLog not found: {}", shardId);
             throw new IllegalArgumentException("shardId of commitLog not found: " + shardId);
         }
 
