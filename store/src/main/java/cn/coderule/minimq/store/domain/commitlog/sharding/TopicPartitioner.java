@@ -28,7 +28,7 @@ public class TopicPartitioner {
             throw new IllegalArgumentException("topic can't be blank");
         }
 
-        return Math.abs(topic.hashCode()) % maxShardingNumber % shardingNumber;
+        return Math.abs(topic.hashCode()) % shardingNumber;
     }
 
     public int partitionByOffset(long offset) {

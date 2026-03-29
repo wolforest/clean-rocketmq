@@ -51,7 +51,7 @@ public class InsertBenchmarkTest {
         commitLog.destroy();
     }
 
-//    @Test
+    @Test
     void partitionPerCoreBenchmark(@TempDir Path tmpDir) {
         int cpuNumber = SystemUtil.getProcessorNumber();
 
@@ -69,8 +69,7 @@ public class InsertBenchmarkTest {
             MessageBO messageBO = createMessage(encoder);
 
             Runnable task = () -> {
-                for (int j = 0; j < 100000; j++) {
-                    commitLog.assignCommitOffset(messageBO);
+                for (int j = 0; j < 500000; j++) {
                     commitLog.insert(messageBO);
                 }
             };
@@ -101,7 +100,7 @@ public class InsertBenchmarkTest {
         DirUtil.delete(tmpDir);
     }
 
-//    @Test
+    @Test
     void multiThreadBenchmark(@TempDir Path tmpDir) {
         String dir = tmpDir.toString();
         StoreConfig storeConfig = ConfigMock.createStoreConfig(dir);
@@ -111,8 +110,7 @@ public class InsertBenchmarkTest {
         MessageBO messageBO = createMessage(encoder);
 
         Runnable task = () -> {
-            for (int i = 0; i < 100000; i++) {
-                commitLog.assignCommitOffset(messageBO);
+            for (int i = 0; i < 500000; i++) {
                 commitLog.insert(messageBO);
             }
         };

@@ -4,16 +4,14 @@ import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.minimq.domain.config.store.CommitConfig;
 import cn.coderule.minimq.domain.core.exception.EnqueueException;
+import cn.coderule.minimq.domain.core.exception.InvalidConfigException;
 import cn.coderule.minimq.domain.domain.message.MessageBO;
 import cn.coderule.minimq.domain.domain.store.domain.commitlog.CommitLog;
 import cn.coderule.minimq.domain.domain.store.domain.mq.EnqueueFuture;
 import cn.coderule.minimq.domain.domain.store.infra.InsertResult;
 import cn.coderule.minimq.domain.domain.store.infra.SelectedMappedBuffer;
 import cn.coderule.minimq.store.domain.commitlog.sharding.TopicPartitioner;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -24,15 +22,37 @@ public class CommitLogManager implements Lifecycle {
     private final CommitConfig config;
     private final TopicPartitioner partitioner;
 
-    private final List<CommitLog> commitLogList;
-    private final Map<Integer, CommitLog> shardMap;
+    private final CommitLog[] commitLogList;
+    private final ThreadLocal<CommitLog> localCommitLog = new ThreadLocal<>();
 
     public CommitLogManager(CommitConfig config, TopicPartitioner partitioner) {
         this.config = config;
         this.partitioner = partitioner;
 
-        commitLogList = new ArrayList<>();
-        shardMap = new HashMap<>();
+        commitLogList = new CommitLog[config.getMaxShardingNumber()];
+    }
+
+    public void bindShardingWithCpu() {
+        bindShardingWithCpu(false);
+    }
+
+    public void bindShardingWithCpu(boolean forceBinding) {
+        if (!config.isBindShardingWithCpu()) return;
+
+        for (int i = 0; i < commitLogList.length; i++) {
+            CommitLog commitLog = commitLogList[i];
+            if (commitLog == null) continue;
+
+            localCommitLog.set(commitLog);
+            commitLogList[i] = null;
+        }
+
+        throw new InvalidConfigException("invalid config: bindShardingWithCpu"
+            + " number of commitLog does not match number of cpu");
+    }
+
+    public void addCommitLog(CommitLog commitLog) {
+        commitLogList[commitLog.getShardId()] = commitLog;
     }
 
     public void addCommitLog(List<CommitLog> logList) {
@@ -43,15 +63,13 @@ public class CommitLogManager implements Lifecycle {
         }
     }
 
-    public void addCommitLog(CommitLog commitLog) {
-        commitLogList.add(commitLog);
-        bindShard(commitLog);
-    }
-
     public EnqueueFuture insert(MessageBO messageBO) {
         try {
-            int shardId = partitioner.partitionByTopic(messageBO.getTopic());
+            if (localCommitLog.get() != null) {
+                return localCommitLog.get().insert(messageBO);
+            }
 
+            int shardId = partitioner.partitionByTopic(messageBO.getTopic());
             return selectByShardId(shardId)
                 .insert(messageBO);
         } catch (EnqueueException e) {
@@ -99,12 +117,8 @@ public class CommitLogManager implements Lifecycle {
         return commitLog.selectBuffer(offset, size);
     }
 
-    private void bindShard(CommitLog commitLog) {
-        shardMap.put(commitLog.getShardId(), commitLog);
-    }
-
-    public CommitLog selectByShardId(Integer shardId) {
-        CommitLog commitLog = shardMap.get(shardId);
+    public CommitLog selectByShardId(int shardId) {
+        CommitLog commitLog = commitLogList[shardId];
         if (commitLog == null) {
             log.error("[CommitLogManager]shardId of commitLog not found: {}", shardId);
             throw new IllegalArgumentException("shardId of commitLog not found: " + shardId);
@@ -140,6 +154,10 @@ public class CommitLogManager implements Lifecycle {
     @Override
     public void start() throws Exception {
         for (CommitLog commitLog : commitLogList) {
+            if (commitLog == null) {
+                continue;
+            }
+
             commitLog.start();
         }
     }
@@ -147,6 +165,10 @@ public class CommitLogManager implements Lifecycle {
     @Override
     public void shutdown() throws Exception {
         for (CommitLog commitLog : commitLogList) {
+            if (commitLog == null) {
+                continue;
+            }
+
             commitLog.shutdown();
         }
     }
@@ -154,6 +176,10 @@ public class CommitLogManager implements Lifecycle {
     @Override
     public void initialize() throws Exception {
         for (CommitLog commitLog : commitLogList) {
+            if (commitLog == null) {
+                continue;
+            }
+
             commitLog.initialize();
         }
     }

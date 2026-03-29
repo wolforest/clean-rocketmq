@@ -33,17 +33,16 @@ public class CommitLogFactory {
     public List<CommitLog> createByConfig() {
         List<CommitLog> logList = new ArrayList<>();
         for (int i = 0; i < shardNumber; i++) {
-            logList.add(i, createByShardId(i));
+            logList.add(createByShardId(i));
         }
 
         return logList;
     }
 
-
     public CommitLog createByShardId(int shardId) {
         MappedFileQueue fileQueue = initMappedFileQueue(shardId);
         CommitLogFlushPolicy flushPolicy = initFlushPolicy(shardId, fileQueue);
-        return new DefaultCommitLog( storeConfig, shardId, fileQueue, flushPolicy, checkpoint);
+        return new DefaultCommitLog(storeConfig, shardId, fileQueue, flushPolicy, checkpoint);
     }
 
     private DefaultMappedFileQueue initMappedFileQueue(int shardId) {

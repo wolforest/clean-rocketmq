@@ -27,7 +27,7 @@ public class ProduceBenchmark implements Benchmark {
         this.producer = ProducerManager.buildProducer(
             topicUtils.getTopicList()
         );
-        log.info("connect to producer: {}, topic: {}",  producer, topicUtils.getTopicList());
+
         this.report = new Report();
     }
 
@@ -36,18 +36,7 @@ public class ProduceBenchmark implements Benchmark {
         report.start();
 
         for (int i = 0; i < config.getRequestNumber(); i++) {
-            try {
-                Message message = MessageUtils.createMessage(
-                    topicUtils.getRandomTopic(),
-                    config.getMessageSize()
-                );
-
-                producer.send(message);
-                report.increaseSuccessCount();
-            } catch (Throwable t) {
-                report.increaseFailureCount();
-                log.error("Failed to send message: ", t);
-            }
+            sendMessage();
         }
 
         report.stop();
@@ -63,6 +52,26 @@ public class ProduceBenchmark implements Benchmark {
         }
     }
 
+    @Override
+    public Report getReport() {
+        return report;
+    }
+
+    private void sendMessage() {
+        try {
+            Message message = MessageUtils.createMessage(
+                topicUtils.getRandomTopic(),
+                config.getMessageSize()
+            );
+
+            producer.send(message);
+            report.increaseSuccessCount();
+        } catch (Throwable t) {
+            report.increaseFailureCount();
+            log.error("Failed to send message: ", t);
+        }
+    }
+
     private void stopProducer() throws IOException {
         if (producer == null) {
             return;
@@ -71,8 +80,4 @@ public class ProduceBenchmark implements Benchmark {
         producer.close();
     }
 
-    @Override
-    public Report getReport() {
-        return report;
-    }
 }

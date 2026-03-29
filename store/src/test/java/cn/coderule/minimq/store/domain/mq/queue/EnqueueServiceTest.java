@@ -26,6 +26,7 @@ class EnqueueServiceTest {
     @Test
     void enqueueAsyncAssignsAndIncreasesOffsetWhenInsertSuccess() {
         StoreConfig storeConfig = new StoreConfig();
+        storeConfig.setAssignConsumeOffset(true);
         CommitLogManager commitLog = mock(CommitLogManager.class);
         ConsumeQueueManager consumeQueueManager = mock(ConsumeQueueManager.class);
         CommitLogSynchronizer synchronizer = mock(CommitLogSynchronizer.class);

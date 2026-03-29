@@ -17,8 +17,8 @@ public class Config implements Serializable {
     private int duration = 1;
     private int timeout = 1000;
 
-    private int topicNumber = 10;
-    private int groupNumber = 10;
+    private int topicNumber = 100;
+    private int groupNumber = 100;
 
     private int messageSize = 1024;
 }

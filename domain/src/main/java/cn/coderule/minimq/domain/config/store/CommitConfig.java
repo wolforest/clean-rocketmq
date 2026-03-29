@@ -1,5 +1,6 @@
 package cn.coderule.minimq.domain.config.store;
 
+import cn.coderule.common.util.lang.SystemUtil;
 import cn.coderule.minimq.domain.config.ConfigAttribute;
 import cn.coderule.minimq.domain.core.enums.store.FlushType;
 import java.io.Serializable;
@@ -17,8 +18,11 @@ public class CommitConfig implements Serializable {
     private int defaultPollTimeout = 30;
 
     private boolean enableSharding = false;
-    private int maxShardingNumber = 10;
-    private int shardingNumber = 5;
+    private boolean bindShardingWithCpu = false;
+    private int maxShardingNumber = 100;
+    private int shardingNumber = SystemUtil.getProcessorNumber();
+
+
     private int dispatchThreads = 5;
 
     private String dirName = "commitlog";
