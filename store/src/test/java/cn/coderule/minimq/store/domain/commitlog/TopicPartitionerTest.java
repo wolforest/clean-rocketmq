@@ -10,6 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class TopicPartitionerTest {
 
     private static final int MAX_SHARDING = 100;
+    private static final int SHARDING = 5;
 
     private CommitConfig commitConfig;
     private TopicPartitioner partitioner;
@@ -18,6 +19,7 @@ class TopicPartitionerTest {
     void setUp() {
         commitConfig = new CommitConfig();
         commitConfig.setMaxShardingNumber(MAX_SHARDING);
+        commitConfig.setShardingNumber(SHARDING);
         partitioner = new TopicPartitioner(commitConfig);
     }
 
@@ -39,9 +41,9 @@ class TopicPartitionerTest {
         int partition2 = partitioner.partitionByTopic("topic2");
 
         assertTrue(partition1 >= 0);
-        assertTrue(partition1 < MAX_SHARDING);
+        assertTrue(partition1 < SHARDING);
         assertTrue(partition2 >= 0);
-        assertTrue(partition2 < MAX_SHARDING);
+        assertTrue(partition2 < SHARDING);
     }
 
     @Test
@@ -57,8 +59,8 @@ class TopicPartitionerTest {
         int partition1 = partitioner.partitionByTopic("TOPIC_A");
         int partition2 = partitioner.partitionByTopic("TOPIC_B");
 
-        assertTrue(partition1 >= 0 && partition1 < MAX_SHARDING);
-        assertTrue(partition2 >= 0 && partition2 < MAX_SHARDING);
+        assertTrue(partition1 >= 0 && partition1 < SHARDING);
+        assertTrue(partition2 >= 0 && partition2 < SHARDING);
     }
 
     @Test
@@ -153,7 +155,7 @@ class TopicPartitionerTest {
     @Test
     void testPartitionByTopic_ConsistentWithHashCode() {
         String topic = "CONSISTENT_TOPIC";
-        int expectedPartition = topic.hashCode() % MAX_SHARDING;
+        int expectedPartition = Math.abs(topic.hashCode()) % MAX_SHARDING % SHARDING;
 
         int actualPartition = partitioner.partitionByTopic(topic);
         assertEquals(expectedPartition, actualPartition);
@@ -176,7 +178,7 @@ class TopicPartitionerTest {
     @Test
     void testPartitionByTopic_UnicodeTopic() {
         int partition = partitioner.partitionByTopic("中文主题");
-        assertTrue(partition >= 0 && partition < MAX_SHARDING);
+        assertTrue(partition >= 0 && partition < SHARDING);
     }
 
     @Test
@@ -184,12 +186,36 @@ class TopicPartitionerTest {
         String longTopic = "LONG_TOPIC_PART_".repeat(1000);
 
         int partition = partitioner.partitionByTopic(longTopic);
-        assertTrue(partition >= 0 && partition < MAX_SHARDING);
+        assertTrue(partition >= 0 && partition < SHARDING);
     }
 
     @Test
     void testPartitionByTopic_SpecialCharacters() {
         int partition = partitioner.partitionByTopic("topic-with-special!@#$%");
-        assertTrue(partition >= 0 && partition < MAX_SHARDING);
+        assertTrue(partition >= 0 && partition < SHARDING);
+    }
+
+    @Test
+    void testPartitionByTopic_WithDifferentShardingNumber() {
+        commitConfig.setShardingNumber(3);
+        TopicPartitioner p = new TopicPartitioner(commitConfig);
+
+        for (int i = 0; i < 100; i++) {
+            int partition = p.partitionByTopic("TOPIC_" + i);
+            assertTrue(partition >= 0 && partition < 3,
+                "Partition out of range: " + partition);
+        }
+    }
+
+    @Test
+    void testPartitionByOffset_WithDifferentMaxShardingNumber() {
+        commitConfig.setMaxShardingNumber(50);
+        TopicPartitioner partitionerWith50 = new TopicPartitioner(commitConfig);
+
+        for (long offset = 0; offset < 1000; offset++) {
+            int partition = partitionerWith50.partitionByOffset(offset);
+            assertTrue(partition >= 0 && partition < 50,
+                "Partition out of range: " + partition);
+        }
     }
 }
