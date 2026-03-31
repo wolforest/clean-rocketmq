@@ -38,13 +38,11 @@ public class CommitLogManager implements Lifecycle {
 
     public synchronized CommitLog bindShardingWithCpu() {
         if (!config.isBindShardingWithCpu()) return null;
-        if (null == commitLogList) {
-            commitLogList = new ArrayList<>(List.of(commitLogArray));
-        }
+
+        initCommitLogList();
 
         if (commitLogList.isEmpty()) {
-            throw new InvalidConfigException("invalid config: bindShardingWithCpu"
-                + " number of commitLog does not match number of cpu");
+            return bindRandomCommitLog();
         }
 
         CommitLog commitLog = commitLogList.remove(0);
@@ -52,8 +50,7 @@ public class CommitLogManager implements Lifecycle {
             return commitLog;
         }
 
-        throw new InvalidConfigException("invalid config: bindShardingWithCpu"
-            + " number of commitLog does not match number of cpu");
+        return bindRandomCommitLog();
     }
 
     public void addCommitLog(CommitLog commitLog) {
@@ -188,4 +185,23 @@ public class CommitLogManager implements Lifecycle {
             commitLog.initialize();
         }
     }
+
+    private void initCommitLogList() {
+        if (null != commitLogList) {
+            return;
+        }
+
+        if (commitLogArray.length == 0) {
+            throw new InvalidConfigException("invalid config: bindShardingWithCpu"
+                + " empty commitLog list");
+        }
+
+        commitLogList = new ArrayList<>(List.of(commitLogArray));
+    }
+
+    private CommitLog bindRandomCommitLog() {
+        int index = (int) (Math.random() * commitLogArray.length);
+        return commitLogArray[index];
+    }
+
 }
