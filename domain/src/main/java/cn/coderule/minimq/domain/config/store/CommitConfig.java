@@ -18,7 +18,7 @@ public class CommitConfig implements Serializable {
     private int defaultPollTimeout = 30;
 
     private boolean enableSharding = false;
-    private boolean bindShardingWithCpu = false;
+    private boolean bindShardingWithCpu = true;
     private int maxShardingNumber = 100;
     private int shardingNumber = SystemUtil.getProcessorNumber();
 

@@ -11,6 +11,7 @@ import cn.coderule.minimq.domain.domain.store.domain.mq.EnqueueFuture;
 import cn.coderule.minimq.domain.domain.store.infra.InsertResult;
 import cn.coderule.minimq.domain.domain.store.infra.SelectedMappedBuffer;
 import cn.coderule.minimq.store.domain.commitlog.sharding.TopicPartitioner;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 
@@ -22,29 +23,33 @@ public class CommitLogManager implements Lifecycle {
     private final CommitConfig config;
     private final TopicPartitioner partitioner;
 
-    private final CommitLog[] commitLogList;
-    private final ThreadLocal<CommitLog> localCommitLog = new ThreadLocal<>();
+    private final CommitLog[] commitLogArray;
+    private final ThreadLocal<CommitLog> localCommitLog;
+
+    private List<CommitLog> commitLogList = null;
 
     public CommitLogManager(CommitConfig config, TopicPartitioner partitioner) {
         this.config = config;
         this.partitioner = partitioner;
 
-        commitLogList = new CommitLog[config.getMaxShardingNumber()];
+        commitLogArray = new CommitLog[config.getShardingNumber()];
+        localCommitLog = ThreadLocal.withInitial(this::bindShardingWithCpu);
     }
 
-    public void bindShardingWithCpu() {
-        bindShardingWithCpu(false);
-    }
+    public synchronized CommitLog bindShardingWithCpu() {
+        if (!config.isBindShardingWithCpu()) return null;
+        if (null == commitLogList) {
+            commitLogList = new ArrayList<>(List.of(commitLogArray));
+        }
 
-    public void bindShardingWithCpu(boolean forceBinding) {
-        if (!config.isBindShardingWithCpu()) return;
+        if (commitLogList.isEmpty()) {
+            throw new InvalidConfigException("invalid config: bindShardingWithCpu"
+                + " number of commitLog does not match number of cpu");
+        }
 
-        for (int i = 0; i < commitLogList.length; i++) {
-            CommitLog commitLog = commitLogList[i];
-            if (commitLog == null) continue;
-
-            localCommitLog.set(commitLog);
-            commitLogList[i] = null;
+        CommitLog commitLog = commitLogList.remove(0);
+        if (commitLog != null) {
+            return commitLog;
         }
 
         throw new InvalidConfigException("invalid config: bindShardingWithCpu"
@@ -52,7 +57,7 @@ public class CommitLogManager implements Lifecycle {
     }
 
     public void addCommitLog(CommitLog commitLog) {
-        commitLogList[commitLog.getShardId()] = commitLog;
+        commitLogArray[commitLog.getShardId()] = commitLog;
     }
 
     public void addCommitLog(List<CommitLog> logList) {
@@ -118,7 +123,7 @@ public class CommitLogManager implements Lifecycle {
     }
 
     public CommitLog selectByShardId(int shardId) {
-        CommitLog commitLog = commitLogList[shardId];
+        CommitLog commitLog = commitLogArray[shardId];
         if (commitLog == null) {
             log.error("[CommitLogManager]shardId of commitLog not found: {}", shardId);
             throw new IllegalArgumentException("shardId of commitLog not found: " + shardId);
@@ -153,7 +158,7 @@ public class CommitLogManager implements Lifecycle {
 
     @Override
     public void start() throws Exception {
-        for (CommitLog commitLog : commitLogList) {
+        for (CommitLog commitLog : commitLogArray) {
             if (commitLog == null) {
                 continue;
             }
@@ -164,7 +169,7 @@ public class CommitLogManager implements Lifecycle {
 
     @Override
     public void shutdown() throws Exception {
-        for (CommitLog commitLog : commitLogList) {
+        for (CommitLog commitLog : commitLogArray) {
             if (commitLog == null) {
                 continue;
             }
@@ -175,7 +180,7 @@ public class CommitLogManager implements Lifecycle {
 
     @Override
     public void initialize() throws Exception {
-        for (CommitLog commitLog : commitLogList) {
+        for (CommitLog commitLog : commitLogArray) {
             if (commitLog == null) {
                 continue;
             }

@@ -52,7 +52,6 @@ public class CommitLogBootstrap implements Lifecycle {
         TopicPartitioner partitioner = new TopicPartitioner(commitConfig, topicService);
         commitLogManager = new CommitLogManager(commitConfig, partitioner);
         commitLogManager.addCommitLog(logList);
-        commitLogManager.bindShardingWithCpu();
 
         StoreContext.register(partitioner);
         StoreContext.register(commitLogManager);
