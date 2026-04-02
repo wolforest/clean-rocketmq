@@ -72,7 +72,7 @@ public class EnqueueService {
 
     private void assignConsumeOffset(MessageBO messageBO) {
         if (!storeConfig.isAssignConsumeOffset()) {
-            messageBO.setQueueOffset(-1);
+            messageBO.setQueueOffset(0L);
             return;
         }
 

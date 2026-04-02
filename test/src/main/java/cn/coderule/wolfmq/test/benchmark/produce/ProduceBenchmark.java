@@ -67,6 +67,7 @@ public class ProduceBenchmark implements Benchmark {
             producer.send(message);
             report.increaseSuccessCount();
         } catch (Throwable t) {
+            t.printStackTrace();
             report.increaseFailureCount();
             log.error("Failed to send message: ", t);
         }

@@ -13,6 +13,7 @@ import cn.coderule.minimq.domain.domain.store.infra.SelectedMappedBuffer;
 import cn.coderule.minimq.store.domain.commitlog.sharding.TopicPartitioner;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -42,7 +43,7 @@ public class CommitLogManager implements Lifecycle {
         initCommitLogList();
 
         if (commitLogList.isEmpty()) {
-            return bindRandomCommitLog();
+            return selectByRandom();
         }
 
         CommitLog commitLog = commitLogList.remove(0);
@@ -50,7 +51,7 @@ public class CommitLogManager implements Lifecycle {
             return commitLog;
         }
 
-        return bindRandomCommitLog();
+        return selectByRandom();
     }
 
     public void addCommitLog(CommitLog commitLog) {
@@ -67,12 +68,7 @@ public class CommitLogManager implements Lifecycle {
 
     public EnqueueFuture insert(MessageBO messageBO) {
         try {
-            if (localCommitLog.get() != null) {
-                return localCommitLog.get().insert(messageBO);
-            }
-
-            int shardId = partitioner.partitionByTopic(messageBO.getTopic());
-            return selectByShardId(shardId)
+            return selectByMessage(messageBO)
                 .insert(messageBO);
         } catch (EnqueueException e) {
             log.error("[CommitLogManager]insert message failed: {}",  e.getMessage());
@@ -186,6 +182,21 @@ public class CommitLogManager implements Lifecycle {
         }
     }
 
+    private CommitLog selectByMessage(MessageBO messageBO) {
+        if (config.isBindShardingWithCpu()) {
+            return selectByThreadId();
+        }
+
+        return selectByRandom();
+
+//        if (localCommitLog.get() != null) {
+//            return localCommitLog.get();
+//        }
+//
+//        int shardId = partitioner.partitionByTopic(messageBO.getTopic());
+//        return selectByShardId(shardId);
+    }
+
     private void initCommitLogList() {
         if (null != commitLogList) {
             return;
@@ -199,8 +210,14 @@ public class CommitLogManager implements Lifecycle {
         commitLogList = new ArrayList<>(List.of(commitLogArray));
     }
 
-    private CommitLog bindRandomCommitLog() {
-        int index = (int) (Math.random() * commitLogArray.length);
+    private CommitLog selectByThreadId() {
+        String threadName = Thread.currentThread().getName();
+        int index = Integer.parseInt(threadName.substring(threadName.length() -1 ));
+        return commitLogArray[index];
+    }
+
+    private CommitLog selectByRandom() {
+        int index = ThreadLocalRandom.current().nextInt(commitLogArray.length);
         return commitLogArray[index];
     }
 
