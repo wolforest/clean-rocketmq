@@ -227,6 +227,10 @@ public class CommitLogManager implements Lifecycle {
     private int calculateThreadId() {
         String threadName = Thread.currentThread().getName();
         int length = threadName.length();
+        if (length < 1) {
+            return -1;
+        }
+
         char one = threadName.charAt(length - 1);
 
         if (one < '0' || one > '9') {
@@ -234,6 +238,10 @@ public class CommitLogManager implements Lifecycle {
         }
 
         int index = one - '0';
+        if (length < 2) {
+            return index;
+        }
+
         char ten = threadName.charAt(length - 2);
         if (ten >= '0' && ten <= '9') {
             index = (ten - '0') * 10 + index;
