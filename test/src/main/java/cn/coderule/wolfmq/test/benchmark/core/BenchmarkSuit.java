@@ -74,7 +74,7 @@ public abstract class BenchmarkSuit implements Serializable {
         Report report = new Report();
         for (Benchmark benchmark : benchmarkList) {
             Report benchmarkReport = benchmark.getReport();
-            log.info("thread Report: {}", benchmarkReport);
+            // log.info("thread Report: {}", benchmarkReport);
             calculateTime(report, benchmarkReport);
             calculateRequest(report, benchmarkReport);
         }

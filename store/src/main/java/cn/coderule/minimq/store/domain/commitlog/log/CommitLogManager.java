@@ -183,6 +183,10 @@ public class CommitLogManager implements Lifecycle {
     }
 
     private CommitLog selectByMessage(MessageBO messageBO) {
+        if (1 == commitLogArray.length) {
+            return commitLogArray[0];
+        }
+
         if (config.isBindShardingWithCpu()) {
             return selectByThreadId();
         }
@@ -211,9 +215,31 @@ public class CommitLogManager implements Lifecycle {
     }
 
     private CommitLog selectByThreadId() {
-        String threadName = Thread.currentThread().getName();
-        int index = Integer.parseInt(threadName.substring(threadName.length() -1 ));
+        int index = calculateThreadId();
+        if (index < 0) {
+            return selectByRandom();
+        }
+
+        index = index % commitLogArray.length;
         return commitLogArray[index];
+    }
+
+    private int calculateThreadId() {
+        String threadName = Thread.currentThread().getName();
+        int length = threadName.length();
+        char one = threadName.charAt(length - 1);
+
+        if (one < '0' || one > '9') {
+            return -1;
+        }
+
+        int index = one - '0';
+        char ten = threadName.charAt(length - 2);
+        if (ten >= '0' && ten <= '9') {
+            index = (ten - '0') * 10 + index;
+        }
+
+        return index;
     }
 
     private CommitLog selectByRandom() {

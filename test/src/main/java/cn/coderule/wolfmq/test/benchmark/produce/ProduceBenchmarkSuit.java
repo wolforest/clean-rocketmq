@@ -17,7 +17,7 @@ public class ProduceBenchmarkSuit extends BenchmarkSuit {
         );
 
         this.configList = new ConfigBuilder()
-            .requestNumber(20000)
+            .requestNumber(30000)
             .topicNumber(topicNumber)
             .messageSize(messageSize)
             .concurrencyList(concurrencyList)

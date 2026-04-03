@@ -20,7 +20,7 @@ public class CommitConfig implements Serializable {
     private boolean enableSharding = false;
     private boolean bindShardingWithCpu = true;
     private int maxShardingNumber = 100;
-    private int shardingNumber = SystemUtil.getProcessorNumber();
+    private int shardingNumber = 2;
 
 
     private int dispatchThreads = 5;

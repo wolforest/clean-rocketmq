@@ -31,9 +31,9 @@ public class GrpcConfig implements Serializable {
     private int routeThreadNum = SystemUtil.getProcessorNumber();
 //    private int routeThreadNum = 1;
     private int routeQueueCapacity = 100000;
-    private int producerThreadNum = SystemUtil.getProcessorNumber();
+    private int producerThreadNum = 2 * SystemUtil.getProcessorNumber();
 //    private int producerThreadNum = 1;
-    private int producerQueueCapacity = 100000;
+    private int producerQueueCapacity = 10000;
     private int consumerThreadNum = SystemUtil.getProcessorNumber();
 //    private int consumerThreadNum = 1;
     private int consumerQueueCapacity = 10000;
