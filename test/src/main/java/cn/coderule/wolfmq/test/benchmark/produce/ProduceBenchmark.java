@@ -7,6 +7,7 @@ import cn.coderule.wolfmq.test.benchmark.utils.MessageUtils;
 import cn.coderule.wolfmq.test.benchmark.utils.TopicUtils;
 import cn.coderule.wolfmq.test.manager.ProducerManager;
 import java.io.IOException;
+import java.util.concurrent.CountDownLatch;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.client.apis.message.Message;
 import org.apache.rocketmq.client.apis.producer.Producer;
@@ -17,6 +18,7 @@ public class ProduceBenchmark implements Benchmark {
     private TopicUtils topicUtils;
     private Producer producer;
     private Report report;
+    private CountDownLatch startLatch;
 
     @Override
     public void prepare(Config config) {
@@ -33,9 +35,18 @@ public class ProduceBenchmark implements Benchmark {
 
     @Override
     public void benchmark() {
+        if (startLatch != null) {
+            try {
+                startLatch.await();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+
         report.start();
 
-        for (int i = 0; i < config.getRequestNumber(); i++) {
+        int requestsPerThread = config.getRequestNumber() / config.getConcurrency();
+        for (int i = 0; i < requestsPerThread; i++) {
             sendMessage();
         }
 
@@ -57,6 +68,11 @@ public class ProduceBenchmark implements Benchmark {
         return report;
     }
 
+    @Override
+    public void setStartLatch(CountDownLatch latch) {
+        this.startLatch = latch;
+    }
+
     private void sendMessage() {
         try {
             Message message = MessageUtils.createMessage(
@@ -67,7 +83,6 @@ public class ProduceBenchmark implements Benchmark {
             producer.send(message);
             report.increaseSuccessCount();
         } catch (Throwable t) {
-            t.printStackTrace();
             report.increaseFailureCount();
             log.error("Failed to send message: ", t);
         }

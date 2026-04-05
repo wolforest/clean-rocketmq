@@ -3,6 +3,8 @@ package cn.coderule.wolfmq.test.benchmark.core;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicLong;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
@@ -29,8 +31,11 @@ public abstract class BenchmarkSuit implements Serializable {
     }
 
     private void concurrentBenchmark() {
+        CountDownLatch startLatch = new CountDownLatch(1);
         List<Thread> threadList = new ArrayList<>();
+
         for (Benchmark benchmark : benchmarkList) {
+            benchmark.setStartLatch(startLatch);
             Runnable task = benchmark::benchmark;
 
             Thread thread = new Thread(task);
@@ -38,12 +43,22 @@ public abstract class BenchmarkSuit implements Serializable {
             thread.start();
         }
 
+        long globalStartTime = System.currentTimeMillis();
+        startLatch.countDown();
+
         for (Thread thread : threadList) {
             try {
                 thread.join();
             } catch (InterruptedException e) {
                 log.error("concurrentBenchmark exception: ", e);
             }
+        }
+        long globalEndTime = System.currentTimeMillis();
+
+        for (Benchmark benchmark : benchmarkList) {
+            Report report = benchmark.getReport();
+            report.setStartTime(globalStartTime);
+            report.setEndTime(globalEndTime);
         }
 
         for (Benchmark benchmark : benchmarkList) {
