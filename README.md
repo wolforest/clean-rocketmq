@@ -1,5 +1,5 @@
 # Clean-RocketMQ: 下一代、高性能、事务型消息队列
-<img src="/docs/architecture/next-generation-mq.jpg" alt="下一代消息队列" />
+<img src="/docs/cn/img/architecture/next-generation-mq.jpg" alt="下一代消息队列" />
 
 **Clean-RocketMQ 是在RocketMQ肩上的下一代消息队列。**<br />
 提供Kafka级别的高性能、完善的消息调度、分布式事务体系。<br />
@@ -36,7 +36,7 @@ AI时代，软件还是软件，参与开源，还是软件人的捷径。
 * [软件读书会](https://github.com/Clean-RocketMQ/reading-community)
 * RocketMQ学习社区: 筹备中...
 
-<img src="/docs/architecture/software-reading-community.png" alt="软件读书会" />
+<img src="/docs/cn/img/architecture/software-reading-community.png" alt="软件读书会" />
 
 
 
