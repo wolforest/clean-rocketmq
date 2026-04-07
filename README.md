@@ -1,18 +1,25 @@
-# Clean-RocketMQ: 下一代、高性能、事务型消息队列
+# Clean-RocketMQ
 <img src="/docs/cn/img/architecture/next-generation-mq.jpg" alt="下一代消息队列" />
 
-**Clean-RocketMQ 是在RocketMQ肩上的下一代消息队列。**<br />
-提供Kafka级别的高性能、完善的消息调度、分布式事务体系。<br />
-未来提供云原生支持，高效平衡高可用、高性能与低成本。
+**Clean-RocketMQ 是最快的事务型消息队列。**<br />
+1. **兼容RocketMQ：** 可完全或部分替换RocketMQ。 
+2. **高性能：** RocketMQ5倍吞吐量提升(Mac上5.7倍)。
+3. **事务型：** 分布式事务(TCC)支持，保障消息发送及调度的一致性。
+4. **更完善：** 更完善的延时、过期、周期、循环等消息调度支持。
+5. **存算分离：** 更合理的领域层与存储层切分, 也是云原生的基础。
+6. **CLEAN: ** 引入微框架、DDD思想, 易读易懂。
 
-Clean-RocketMQ源于、并兼容RocketMQ, 提供:
-1. **更高性能：** 5倍+ 性能提升(mac上测试) 
-2. **更全功能：** 存算分离、事务、调度、云原生、...
-3. **简洁代码：** 借鉴DDD与简洁思想，从零重写
-
+Clean-RocketMQ继承了RocketMQ的优秀设计。<br />
 RocketMQ核心不足5万行，是一个极其优秀的消息队列。<br />
 在其基础上提升性能、扩展功能，并不困难。真正的挑战在于: 
 > 如何持续保持代码的简洁与可维护?
+
+
+** 兄弟项目 **
+* [RocketMQ-wolf](https://github.com/wolforest/rocketmq-wolf) : 重构分支, 生产可用，已维护1200+天。
+* [RocketMQ-comment](https://github.com/wolforest/rocketmq-comment) : 官方分支 + 纯注释版。
+* [Clean-RocketMQ](https://github.com/wolforest/clean-rocketmq) : 从零重写，兼容并升级RocketMQ。
+
 
 ## AI & 软件人
 AI极其强大，但也绝非银弹。<br />
