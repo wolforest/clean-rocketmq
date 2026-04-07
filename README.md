@@ -28,16 +28,20 @@ AI已扑面而来，避无可避。好在软件还是软件 —— 手写或是V
 我们相信：软件依然是软件人的立身之本, AI时代也不例外。
 
 AI时代充满不确定性。开源、读书、写作，是为数不多、可积累、可复利的确定性:
-* 读书拓展知识边界，提高AI提问能力
+* 参与顶级开源项目，提高解决方案能力 
 * 读书沉淀知识体系，提高AI应用能力 
 * 写作锻炼表达能力，提高需求描述能力
 
 ## 社区
-社区是最高效的学习加速器。我们那建了两个社区：
-* [软件读书会](https://github.com/Clean-RocketMQ/reading-community)
-* RocketMQ学习社区: 筹备中...
+社区是高效的学习加速器，有兴趣的可以加入我们：
+* [RocketMQ学习圈](https://wx.zsxq.com/group/28882125582281): 学透RocketMQ, 掌握高并发。
+* [软件读书会](https://wx.zsxq.com/group/28851142528481): 每周一点，点滴是福。
 
+### RocketMQ学习圈
+
+### 软件读书会
 <img src="/docs/cn/img/architecture/software-reading-community.png" alt="软件读书会" />
+
 
 
 
