@@ -3,17 +3,16 @@
 
 **Clean-RocketMQ 是最快的事务型消息队列。**<br />
 1. **兼容RocketMQ：** 可完全或部分替换RocketMQ。 
-2. **高性能：** RocketMQ5倍吞吐量提升(Mac上5.7倍)。
+2. **高性能：** 支持CommitLog分片，RocketMQ5倍+吞吐量提升。
 3. **事务型：** 分布式事务(TCC)支持，保障消息发送及调度的一致性。
 4. **更完善：** 更完善的延时、过期、周期、循环等消息调度支持。
 5. **存算分离：** 更合理的领域层与存储层切分, 也是云原生的基础。
 6. **CLEAN:** 引入微框架、DDD思想, 易读易懂。
 
-Clean-RocketMQ继承了RocketMQ的优秀设计。<br />
-RocketMQ核心不足5万行，是一个极其优秀的消息队列。<br />
-在其基础上提升性能、扩展功能，并不困难。真正的挑战在于: 
+> Clean-RocketMQ是RocketMQ的传承与优化。<br />
+> RocketMQ核心不足5万行，是一个极其优秀的消息队列。<br />
+> 在其基础上提升性能、扩展功能，并不困难。真正的挑战在于: <br />
 > 如何持续保持代码的简洁与可维护?
-
 
 ** 兄弟项目 **
 * [RocketMQ-wolf](https://github.com/wolforest/rocketmq-wolf) : 重构分支, 生产可用，已维护1200+天。
