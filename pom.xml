@@ -9,12 +9,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>cn.coderule</groupId>
-    <artifactId>minimq</artifactId>
+    <artifactId>wolfmq</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <name>mini-mq</name>
-    <description>mini-mq</description>
+    <name>wolfmq</name>
+    <description>wolfmq</description>
 
     <modules>
         <module>hello</module>
@@ -27,35 +27,35 @@
     </modules>
 
     <properties>
-        <mini-mq.version>1.0.0-SNAPSHOT</mini-mq.version>
+        <wolfmq.version>1.0.0-SNAPSHOT</wolfmq.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>cn.coderule.minimq</groupId>
+                <groupId>cn.coderule.wolfmq</groupId>
                 <artifactId>domain</artifactId>
-                <version>${mini-mq.version}</version>
+                <version>${wolfmq.version}</version>
             </dependency>
             <dependency>
-                <groupId>cn.coderule.minimq</groupId>
+                <groupId>cn.coderule.wolfmq</groupId>
                 <artifactId>rpc</artifactId>
-                <version>${mini-mq.version}</version>
+                <version>${wolfmq.version}</version>
             </dependency>
             <dependency>
-                <groupId>cn.coderule.minimq</groupId>
+                <groupId>cn.coderule.wolfmq</groupId>
                 <artifactId>registry</artifactId>
-                <version>${mini-mq.version}</version>
+                <version>${wolfmq.version}</version>
             </dependency>
             <dependency>
-                <groupId>cn.coderule.minimq</groupId>
+                <groupId>cn.coderule.wolfmq</groupId>
                 <artifactId>broker</artifactId>
-                <version>${mini-mq.version}</version>
+                <version>${wolfmq.version}</version>
             </dependency>
             <dependency>
-                <groupId>cn.coderule.minimq</groupId>
+                <groupId>cn.coderule.wolfmq</groupId>
                 <artifactId>store</artifactId>
-                <version>${mini-mq.version}</version>
+                <version>${wolfmq.version}</version>
             </dependency>
 
         </dependencies>

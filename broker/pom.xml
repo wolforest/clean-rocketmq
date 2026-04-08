@@ -3,27 +3,27 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>minimq</artifactId>
+        <artifactId>wolfmq</artifactId>
         <groupId>cn.coderule</groupId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>cn.coderule.minimq</groupId>
+    <groupId>cn.coderule.wolfmq</groupId>
     <artifactId>broker</artifactId>
     <version>1.0.0-SNAPSHOT</version>
 
     <dependencies>
         <dependency>
-            <groupId>cn.coderule.minimq</groupId>
+            <groupId>cn.coderule.wolfmq</groupId>
             <artifactId>domain</artifactId>
         </dependency>
         <dependency>
-            <groupId>cn.coderule.minimq</groupId>
+            <groupId>cn.coderule.wolfmq</groupId>
             <artifactId>rpc</artifactId>
         </dependency>
         <dependency>
-            <groupId>cn.coderule.minimq</groupId>
+            <groupId>cn.coderule.wolfmq</groupId>
             <artifactId>store</artifactId>
         </dependency>
 
