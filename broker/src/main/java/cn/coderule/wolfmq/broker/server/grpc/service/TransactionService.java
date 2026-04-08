@@ -1,0 +1,97 @@
+package cn.coderule.wolfmq.broker.server.grpc.service;
+
+import apache.rocketmq.v2.Code;
+import apache.rocketmq.v2.EndTransactionRequest;
+import apache.rocketmq.v2.EndTransactionResponse;
+import apache.rocketmq.v2.Status;
+import apache.rocketmq.v2.TransactionResolution;
+import apache.rocketmq.v2.TransactionSource;
+import cn.coderule.wolfmq.broker.api.TransactionController;
+import cn.coderule.wolfmq.domain.core.constant.flag.MessageSysFlag;
+import cn.coderule.wolfmq.domain.core.enums.TransactionType;
+import cn.coderule.wolfmq.domain.domain.cluster.RequestContext;
+import cn.coderule.wolfmq.domain.domain.transaction.SubmitRequest;
+import cn.coderule.wolfmq.rpc.common.grpc.response.ResponseBuilder;
+import java.util.concurrent.CompletableFuture;
+
+public class TransactionService {
+    private final TransactionController transactionController;
+
+    public TransactionService(TransactionController transactionController) {
+        this.transactionController = transactionController;
+    }
+
+    public CompletableFuture<EndTransactionResponse> submit(RequestContext context, EndTransactionRequest request) {
+        try {
+            SubmitRequest submitRequest = buildSubmitRequest(context, request);
+
+            return transactionController.submit(submitRequest)
+                .thenApply(result -> success());
+
+        } catch (Throwable t) {
+            return failure(t);
+        }
+    }
+
+    private CompletableFuture<EndTransactionResponse> failure(Throwable t) {
+        CompletableFuture<EndTransactionResponse> future = new CompletableFuture<>();
+        future.completeExceptionally(t);
+        return future;
+    }
+
+    private EndTransactionResponse success() {
+        Status status = ResponseBuilder.getInstance()
+            .buildStatus(Code.OK, Code.OK.name());
+
+        return EndTransactionResponse.newBuilder()
+            .setStatus(status)
+            .build();
+    }
+
+    private SubmitRequest buildSubmitRequest(
+        RequestContext context,
+        EndTransactionRequest request
+    ) {
+        boolean fromCheck = request.getSource().equals(TransactionSource.SOURCE_SERVER_CHECK);
+        TransactionType status = getTransactionStatus(request);
+        int transactionFlag = buildCommitOrRollback(status);
+        String topicName = request.getTopic().getName();
+
+        return SubmitRequest.builder()
+            .requestContext(context)
+            .transactionId(request.getTransactionId())
+            .messageId(request.getMessageId())
+            .topicName(topicName)
+            .producerGroup(topicName)
+            .fromCheck(fromCheck)
+            .transactionType(status)
+            .transactionFlag(transactionFlag)
+            .build();
+    }
+
+    protected int buildCommitOrRollback(TransactionType transactionType) {
+        return switch (transactionType) {
+            case COMMIT -> MessageSysFlag.COMMIT_MESSAGE;
+            case ROLLBACK -> MessageSysFlag.ROLLBACK_MESSAGE;
+            default -> MessageSysFlag.NORMAL_MESSAGE;
+        };
+    }
+
+
+    private TransactionType getTransactionStatus(EndTransactionRequest request) {
+        TransactionType transactionType = TransactionType.UNKNOWN;
+        TransactionResolution transactionResolution = request.getResolution();
+        switch (transactionResolution) {
+            case COMMIT:
+                transactionType = TransactionType.COMMIT;
+                break;
+            case ROLLBACK:
+                transactionType = TransactionType.ROLLBACK;
+                break;
+            default:
+                break;
+        }
+
+        return transactionType;
+    }
+}

@@ -1,0 +1,40 @@
+
+package cn.coderule.wolfmq.domain.domain.meta.topic;
+
+import cn.coderule.wolfmq.domain.domain.meta.DataVersion;
+import java.io.Serializable;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+
+public class TopicConfigSerializeWrapper implements Serializable {
+    private ConcurrentMap<String, Topic> topicConfigTable = new ConcurrentHashMap<>();
+    private DataVersion dataVersion = new DataVersion();
+
+    public ConcurrentMap<String, Topic> getTopicConfigTable() {
+        return topicConfigTable;
+    }
+
+    public boolean isEmpty() {
+        return topicConfigTable.isEmpty();
+    }
+
+    public boolean hasOne() {
+        return topicConfigTable.size() == 1;
+    }
+
+    public boolean moreThanOne() {
+        return topicConfigTable.size() > 1;
+    }
+
+    public void setTopicConfigTable(ConcurrentMap<String, Topic> topicConfigTable) {
+        this.topicConfigTable = topicConfigTable;
+    }
+
+    public DataVersion getDataVersion() {
+        return dataVersion;
+    }
+
+    public void setDataVersion(DataVersion dataVersion) {
+        this.dataVersion = dataVersion;
+    }
+}

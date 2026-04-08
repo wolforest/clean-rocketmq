@@ -1,0 +1,47 @@
+package cn.coderule.wolfmq.broker.infra.embed;
+
+import cn.coderule.wolfmq.domain.domain.meta.subscription.SubscriptionGroup;
+import cn.coderule.wolfmq.domain.domain.meta.subscription.SubscriptionRequest;
+import cn.coderule.wolfmq.rpc.store.facade.SubscriptionFacade;
+import cn.coderule.wolfmq.domain.domain.store.api.meta.SubscriptionStore;
+import java.util.concurrent.CompletableFuture;
+
+public class EmbedSubscriptionStore extends AbstractEmbedStore implements SubscriptionFacade {
+    private final SubscriptionStore subscriptionStore;
+
+    public EmbedSubscriptionStore(SubscriptionStore subscriptionStore, EmbedLoadBalance loadBalance) {
+        super(loadBalance);
+        this.subscriptionStore = subscriptionStore;
+    }
+
+    public boolean existsGroup(String topicName, String groupName) {
+        return subscriptionStore.existsGroup(groupName);
+    }
+
+    public SubscriptionGroup getGroup(String topicName, String groupName) {
+        return subscriptionStore.getGroup(groupName);
+    }
+
+    @Override
+    public CompletableFuture<SubscriptionGroup> getGroupAsync(String topicName, String groupName) {
+        return CompletableFuture.completedFuture(
+            subscriptionStore.getGroup(groupName)
+        );
+    }
+
+    @Override
+    public void putGroup(SubscriptionRequest request) {
+        subscriptionStore.saveGroup(request);
+    }
+
+    @Override
+    public void saveGroup(SubscriptionRequest request) {
+        subscriptionStore.saveGroup(request);
+    }
+
+    @Override
+    public void deleteGroup(SubscriptionRequest request) {
+        subscriptionStore.deleteGroup(request);
+    }
+
+}

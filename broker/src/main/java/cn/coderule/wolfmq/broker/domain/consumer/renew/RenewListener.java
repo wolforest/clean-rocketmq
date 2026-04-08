@@ -1,0 +1,115 @@
+package cn.coderule.wolfmq.broker.domain.consumer.renew;
+
+import cn.coderule.wolfmq.broker.domain.consumer.ack.InvisibleService;
+import cn.coderule.wolfmq.domain.core.EventListener;
+import cn.coderule.wolfmq.domain.domain.cluster.RequestContext;
+import cn.coderule.wolfmq.domain.domain.consumer.ack.broker.AckResult;
+import cn.coderule.wolfmq.domain.domain.consumer.ack.broker.InvisibleRequest;
+import cn.coderule.wolfmq.domain.domain.consumer.receipt.MessageReceipt;
+import cn.coderule.wolfmq.domain.domain.consumer.receipt.ReceiptHandleGroupKey;
+import cn.coderule.wolfmq.domain.domain.consumer.revive.RenewEvent;
+import java.util.concurrent.CompletableFuture;
+
+public class RenewListener implements EventListener<RenewEvent> {
+    private final InvisibleService invisibleService;
+
+    public RenewListener(InvisibleService invisibleService) {
+        this.invisibleService = invisibleService;
+    }
+
+    @Override
+    public void fire(RenewEvent event) {
+        RequestContext context = createContext(event);
+        InvisibleRequest request = createInvisibleRequest(event, context);
+
+        invisibleService.changeInvisible(request)
+            .whenComplete((ackResult, throwable) -> {
+                if (throwable != null) {
+                    event.getFuture().completeExceptionally(throwable);
+                    return;
+                }
+
+                event.getFuture().complete(ackResult);
+            });
+    }
+
+    public void fireClearEvent(
+        long renewTime,
+        MessageReceipt receipt,
+        ReceiptHandleGroupKey key
+    ) {
+        fireClearEvent(renewTime, receipt, key, new CompletableFuture<>());
+    }
+
+    public void fireClearEvent(
+        long renewTime,
+        MessageReceipt receipt,
+        ReceiptHandleGroupKey key,
+        CompletableFuture<AckResult> future
+    ) {
+        RenewEvent event = RenewEvent.builder()
+            .key(key)
+            .messageReceipt(receipt)
+            .future(new CompletableFuture<>())
+            .eventType(RenewEvent.EventType.CLEAR_GROUP)
+            .renewTime(renewTime)
+            .build();
+
+        this.fire(event);
+    }
+
+    public void fireRenewEvent(
+        long renewTime,
+        MessageReceipt receipt,
+        ReceiptHandleGroupKey key,
+        CompletableFuture<AckResult> future
+    ) {
+        RenewEvent event = RenewEvent.builder()
+            .key(key)
+            .future(future)
+            .renewTime(renewTime)
+            .messageReceipt(receipt)
+            .eventType(RenewEvent.EventType.RENEW)
+            .build();
+
+        this.fire(event);
+    }
+
+    public void fireStopRenewEvent(
+        long renewTime,
+        MessageReceipt receipt,
+        ReceiptHandleGroupKey key,
+        CompletableFuture<AckResult> future
+    ) {
+        RenewEvent event = RenewEvent.builder()
+            .key(key)
+            .future(future)
+            .renewTime(renewTime)
+            .messageReceipt(receipt)
+            .eventType(RenewEvent.EventType.STOP_RENEW)
+            .build();
+
+        this.fire(event);
+    }
+
+    private InvisibleRequest createInvisibleRequest(RenewEvent event, RequestContext context) {
+        MessageReceipt receipt = event.getMessageReceiptHandle();
+
+        return InvisibleRequest.builder()
+            .requestContext(context)
+            .messageId(receipt.getMessageId())
+            .topicName(receipt.getTopic())
+            .groupName(receipt.getGroup())
+            .invisibleTime(event.getRenewTime())
+            .build();
+    }
+
+    private RequestContext createContext(RenewEvent event) {
+        RequestContext context = RequestContext.create(
+            event.getEventType().name()
+        );
+        context.setChannel(event.getKey().getChannel());
+
+        return context;
+    }
+}

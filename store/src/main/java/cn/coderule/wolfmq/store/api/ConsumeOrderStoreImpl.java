@@ -1,0 +1,38 @@
+package cn.coderule.wolfmq.store.api;
+
+import cn.coderule.wolfmq.domain.domain.meta.order.OrderRequest;
+import cn.coderule.wolfmq.domain.domain.store.api.meta.ConsumeOrderStore;
+import cn.coderule.wolfmq.domain.domain.store.domain.meta.ConsumeOrderService;
+
+public class ConsumeOrderStoreImpl implements ConsumeOrderStore {
+    private final ConsumeOrderService consumeOrderService;
+
+    public ConsumeOrderStoreImpl(ConsumeOrderService consumeOrderService) {
+        this.consumeOrderService = consumeOrderService;
+    }
+
+    @Override
+    public boolean isLocked(OrderRequest request) {
+        return consumeOrderService.isLocked(request);
+    }
+
+    @Override
+    public void lock(OrderRequest request) {
+        consumeOrderService.lock(request);
+    }
+
+    @Override
+    public void unlock(OrderRequest request) {
+        consumeOrderService.unlock(request);
+    }
+
+    @Override
+    public long commit(OrderRequest request) {
+        return consumeOrderService.commit(request);
+    }
+
+    @Override
+    public void updateInvisible(OrderRequest request) {
+        consumeOrderService.updateInvisible(request);
+    }
+}

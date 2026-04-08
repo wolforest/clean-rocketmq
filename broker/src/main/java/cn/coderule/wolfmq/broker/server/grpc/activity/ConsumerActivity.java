@@ -1,0 +1,272 @@
+package cn.coderule.wolfmq.broker.server.grpc.activity;
+
+import apache.rocketmq.v2.AckMessageRequest;
+import apache.rocketmq.v2.AckMessageResponse;
+import apache.rocketmq.v2.ChangeInvisibleDurationRequest;
+import apache.rocketmq.v2.ChangeInvisibleDurationResponse;
+import apache.rocketmq.v2.GetOffsetRequest;
+import apache.rocketmq.v2.GetOffsetResponse;
+import apache.rocketmq.v2.QueryOffsetRequest;
+import apache.rocketmq.v2.QueryOffsetResponse;
+import apache.rocketmq.v2.ReceiveMessageRequest;
+import apache.rocketmq.v2.ReceiveMessageResponse;
+import apache.rocketmq.v2.Status;
+import apache.rocketmq.v2.UpdateOffsetRequest;
+import apache.rocketmq.v2.UpdateOffsetResponse;
+import cn.coderule.wolfmq.broker.server.grpc.service.consume.GrpcAckService;
+import cn.coderule.wolfmq.broker.server.grpc.service.consume.InvisibleService;
+import cn.coderule.wolfmq.broker.server.grpc.service.consume.GrpcOffsetService;
+import cn.coderule.wolfmq.broker.server.grpc.service.consume.PopService;
+import cn.coderule.wolfmq.domain.domain.cluster.RequestContext;
+import cn.coderule.wolfmq.rpc.common.grpc.activity.ActivityHelper;
+import io.grpc.stub.StreamObserver;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.function.Function;
+
+public class ConsumerActivity {
+    private final ThreadPoolExecutor executor;
+
+    private PopService popService;
+    private GrpcAckService ackService;
+    private InvisibleService invisibleService;
+    private GrpcOffsetService offsetService;
+
+    public ConsumerActivity(ThreadPoolExecutor executor) {
+        this.executor = executor;
+    }
+
+    public void inject(
+        PopService popService,
+        GrpcAckService ackService,
+        InvisibleService invisibleService,
+        GrpcOffsetService offsetService
+    ) {
+        this.popService = popService;
+        this.ackService = ackService;
+        this.invisibleService = invisibleService;
+        this.offsetService = offsetService;
+    }
+
+    public void receiveMessage(
+        RequestContext context,
+        ReceiveMessageRequest request,
+        StreamObserver<ReceiveMessageResponse> responseObserver
+    ) {
+        ActivityHelper<ReceiveMessageRequest, ReceiveMessageResponse> helper
+            = getReceiveHelper(context, request, responseObserver);
+
+        try {
+            Runnable task = ()
+                -> popService.receive(context, request, responseObserver);
+
+            this.executor.submit(helper.createTask(task));
+        } catch (Throwable t) {
+            helper.writeResponse(null, t);
+        }
+    }
+
+    public void ackMessage(
+        RequestContext context,
+        AckMessageRequest request,
+        StreamObserver<AckMessageResponse> responseObserver
+    ) {
+        ActivityHelper<AckMessageRequest, AckMessageResponse> helper
+            = getAckHelper(context, request, responseObserver);
+
+        try {
+            Runnable task = ()
+                -> ackService.ack(context, request)
+                .whenComplete(helper::writeResponse);
+
+            this.executor.submit(helper.createTask(task));
+        } catch (Throwable t) {
+            helper.writeResponse(null, t);
+        }
+    }
+
+    public void changeInvisibleDuration(
+        RequestContext context,
+        ChangeInvisibleDurationRequest request,
+        StreamObserver<ChangeInvisibleDurationResponse> responseObserver
+    ) {
+        ActivityHelper<ChangeInvisibleDurationRequest, ChangeInvisibleDurationResponse> helper
+            = getInvisibleHelper(context, request, responseObserver);
+
+        try {
+            Runnable task = ()
+                -> invisibleService.changeInvisible(context, request)
+                .whenComplete(helper::writeResponse);
+
+            this.executor.submit(helper.createTask(task));
+        } catch (Throwable t) {
+            helper.writeResponse(null, t);
+        }
+    }
+
+    public void updateOffset(
+        RequestContext context,
+        UpdateOffsetRequest request,
+        StreamObserver<UpdateOffsetResponse> responseObserver
+    ) {
+        ActivityHelper<UpdateOffsetRequest, UpdateOffsetResponse> helper
+            = getUpdateOffsetHelper(context, request, responseObserver);
+
+        try {
+            Runnable task = ()
+                -> offsetService.updateOffsetAsync(context, request)
+                .whenComplete(helper::writeResponse);
+            this.executor.submit(helper.createTask(task));
+        } catch (Throwable t) {
+            helper.writeResponse(null, t);
+        }
+    }
+
+    public void getOffset(RequestContext context, GetOffsetRequest request, StreamObserver<GetOffsetResponse> responseObserver) {
+        ActivityHelper<GetOffsetRequest, GetOffsetResponse> helper = getOffsetHelper(context, request, responseObserver);
+
+        try {
+            Runnable task = ()
+                -> offsetService.getOffsetAsync(context, request)
+                .whenComplete(helper::writeResponse);
+
+            this.executor.submit(helper.createTask(task));
+        } catch (Throwable t) {
+            helper.writeResponse(null, t);
+        }
+    }
+
+    public void queryOffset(RequestContext context, QueryOffsetRequest request, StreamObserver<QueryOffsetResponse> responseObserver) {
+        ActivityHelper<QueryOffsetRequest, QueryOffsetResponse> helper = queryOffsetHelper(context, request, responseObserver);
+
+        try {
+            Runnable task = ()
+                -> offsetService.queryOffsetAsync(context, request)
+                .whenComplete(helper::writeResponse);
+
+            this.executor.submit(helper.createTask(task));
+        } catch (Throwable t) {
+            helper.writeResponse(null, t);
+        }
+    }
+
+    private ActivityHelper<ReceiveMessageRequest, ReceiveMessageResponse> getReceiveHelper(
+        RequestContext context,
+        ReceiveMessageRequest request,
+        StreamObserver<ReceiveMessageResponse> responseObserver
+    ) {
+        Function<Status, ReceiveMessageResponse> statusToResponse = receiveStatusToResponse();
+        return new ActivityHelper<>(
+            context,
+            request,
+            responseObserver,
+            statusToResponse
+        );
+    }
+
+    private Function<Status, ReceiveMessageResponse> receiveStatusToResponse() {
+        return status -> ReceiveMessageResponse.newBuilder()
+            .setStatus(status)
+            .build();
+    }
+
+    private ActivityHelper<AckMessageRequest, AckMessageResponse> getAckHelper(
+        RequestContext context,
+        AckMessageRequest request,
+        StreamObserver<AckMessageResponse> responseObserver
+    ) {
+        Function<Status, AckMessageResponse> statusToResponse = ackStatusToResponse();
+        return new ActivityHelper<>(
+            context,
+            request,
+            responseObserver,
+            statusToResponse
+        );
+    }
+
+    private Function<Status, AckMessageResponse> ackStatusToResponse() {
+        return status -> AckMessageResponse.newBuilder()
+            .setStatus(status)
+            .build();
+    }
+
+    private ActivityHelper<ChangeInvisibleDurationRequest, ChangeInvisibleDurationResponse> getInvisibleHelper(
+        RequestContext context,
+        ChangeInvisibleDurationRequest request,
+        StreamObserver<ChangeInvisibleDurationResponse> responseObserver
+    ) {
+        Function<Status, ChangeInvisibleDurationResponse> statusToResponse = invisibleStatusToResponse();
+        return new ActivityHelper<>(
+            context,
+            request,
+            responseObserver,
+            statusToResponse
+        );
+    }
+
+    private Function<Status, ChangeInvisibleDurationResponse> invisibleStatusToResponse() {
+        return status -> ChangeInvisibleDurationResponse.newBuilder()
+            .setStatus(status)
+            .build();
+    }
+
+    private ActivityHelper<UpdateOffsetRequest, UpdateOffsetResponse> getUpdateOffsetHelper(
+        RequestContext context,
+        UpdateOffsetRequest request,
+        StreamObserver<UpdateOffsetResponse> responseObserver
+    ) {
+        Function<Status, UpdateOffsetResponse> statusToResponse = updateOffsetStatusToResponse();
+        return new ActivityHelper<>(
+            context,
+            request,
+            responseObserver,
+            statusToResponse
+        );
+    }
+
+    private Function<Status, UpdateOffsetResponse> updateOffsetStatusToResponse() {
+        return status -> UpdateOffsetResponse.newBuilder()
+            .setStatus(status)
+            .build();
+    }
+
+    private ActivityHelper<GetOffsetRequest, GetOffsetResponse> getOffsetHelper(
+        RequestContext context,
+        GetOffsetRequest request,
+        StreamObserver<GetOffsetResponse> responseObserver
+    ) {
+        Function<Status, GetOffsetResponse> statusToResponse = getOffsetStatusToResponse();
+        return new ActivityHelper<>(
+            context,
+            request,
+            responseObserver,
+            statusToResponse
+        );
+    }
+
+    private Function<Status, GetOffsetResponse> getOffsetStatusToResponse() {
+        return status -> GetOffsetResponse.newBuilder()
+            .setStatus(status)
+            .build();
+    }
+
+    private ActivityHelper<QueryOffsetRequest, QueryOffsetResponse> queryOffsetHelper(
+        RequestContext context,
+        QueryOffsetRequest request,
+        StreamObserver<QueryOffsetResponse> responseObserver
+    ) {
+        Function<Status, QueryOffsetResponse> statusToResponse = queryOffsetStatusToResponse();
+        return new ActivityHelper<>(
+            context,
+            request,
+            responseObserver,
+            statusToResponse
+        );
+    }
+
+    private Function<Status, QueryOffsetResponse> queryOffsetStatusToResponse() {
+        return status -> QueryOffsetResponse.newBuilder()
+            .setStatus(status)
+            .build();
+    }
+
+}

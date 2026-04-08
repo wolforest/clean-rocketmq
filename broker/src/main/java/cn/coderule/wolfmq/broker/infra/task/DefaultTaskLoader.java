@@ -1,0 +1,61 @@
+package cn.coderule.wolfmq.broker.infra.task;
+
+import cn.coderule.wolfmq.broker.infra.task.strategy.BindingStrategy;
+import cn.coderule.wolfmq.broker.infra.task.strategy.EmbedStrategy;
+import cn.coderule.wolfmq.broker.infra.task.strategy.ShardingStrategy;
+import cn.coderule.wolfmq.domain.config.server.BrokerConfig;
+import cn.coderule.wolfmq.domain.config.business.TaskConfig;
+import cn.coderule.wolfmq.domain.domain.cluster.task.TaskFactory;
+import cn.coderule.wolfmq.domain.domain.cluster.task.TaskLoader;
+import cn.coderule.wolfmq.domain.domain.cluster.task.TaskStrategy;
+
+public class DefaultTaskLoader implements TaskLoader {
+    private final TaskContext taskContext;
+
+    public DefaultTaskLoader(TaskContext taskContext) {
+        this.taskContext = taskContext;
+    }
+
+    @Override
+    public void registerTimerFactory(TaskFactory factory) {
+        taskContext.setTimerFactory(factory);
+    }
+
+    @Override
+    public void registerReviveFactory(TaskFactory factory) {
+        taskContext.setReviveFactory(factory);
+    }
+
+    @Override
+    public void registerTransactionFactory(TaskFactory factory) {
+        taskContext.setTransactionFactory(factory);
+    }
+
+    @Override
+    public void load() {
+        TaskStrategy strategy = getStrategy();
+        if (strategy != null) {
+            strategy.load();
+        }
+    }
+
+    private TaskStrategy getStrategy() {
+        TaskStrategy strategy = null;
+
+        BrokerConfig brokerConfig = taskContext.getBrokerConfig();
+        if (brokerConfig.isEnableEmbedStore()) {
+            strategy = new EmbedStrategy(taskContext);
+        }
+
+        TaskConfig taskConfig = brokerConfig.getTaskConfig();
+        if ("binding".equalsIgnoreCase(taskConfig.getTaskMode())) {
+            strategy = new BindingStrategy(taskContext);
+        }
+
+        if ("sharding".equalsIgnoreCase(taskConfig.getTaskMode())) {
+            strategy = new ShardingStrategy(taskContext);
+        }
+
+        return strategy;
+    }
+}

@@ -1,0 +1,79 @@
+package cn.coderule.wolfmq.broker.domain.consumer.ack;
+
+import cn.coderule.wolfmq.broker.domain.consumer.consumer.ConsumerManager;
+import cn.coderule.wolfmq.domain.config.server.BrokerConfig;
+import cn.coderule.wolfmq.domain.domain.cluster.ClientChannelInfo;
+import cn.coderule.wolfmq.domain.domain.consumer.ack.AckConverter;
+import cn.coderule.wolfmq.domain.domain.consumer.ack.broker.InvisibleRequest;
+import cn.coderule.wolfmq.domain.domain.consumer.ack.broker.AckResult;
+import cn.coderule.wolfmq.domain.domain.consumer.ack.store.AckMessage;
+import cn.coderule.wolfmq.domain.domain.consumer.receipt.MessageReceipt;
+import cn.coderule.wolfmq.domain.domain.consumer.receipt.ReceiptHandler;
+import cn.coderule.wolfmq.rpc.store.facade.MQFacade;
+import java.util.concurrent.CompletableFuture;
+
+public class InvisibleService {
+    private final BrokerConfig brokerConfig;
+    private final MQFacade mqStore;
+
+    private final ConsumerManager consumerManager;
+    private final ReceiptHandler receiptHandler;
+    private final AckValidator ackValidator;
+
+    public InvisibleService(
+        BrokerConfig brokerConfig,
+        MQFacade mqStore,
+        ConsumerManager consumerManager,
+        ReceiptHandler receiptHandler,
+        AckValidator ackValidator
+    ) {
+        this.brokerConfig = brokerConfig;
+
+        this.mqStore = mqStore;
+        this.consumerManager = consumerManager;
+
+        this.receiptHandler = receiptHandler;
+        this.ackValidator = ackValidator;
+    }
+
+    public CompletableFuture<AckResult> changeInvisible(InvisibleRequest request) {
+        removeReceipt(request);
+
+        AckMessage ackMessage = AckConverter.toAckMessage(request);
+        ackValidator.validate(ackMessage);
+
+        AckResult result = mqStore.changeInvisible(ackMessage);
+        return CompletableFuture.completedFuture(result);
+    }
+
+    private void removeReceipt(InvisibleRequest request) {
+        MessageReceipt requestReceipt =  buildRequestReceipt(request);
+        if (requestReceipt == null) {
+            return;
+        }
+
+        MessageReceipt receipt = receiptHandler.removeReceipt(requestReceipt);
+        if (receipt == null) {
+            return;
+        }
+
+        request.setReceiptStr(receipt.getReceiptHandleStr());
+    }
+
+    private MessageReceipt buildRequestReceipt(InvisibleRequest request) {
+        ClientChannelInfo channelInfo = consumerManager.findChannel(
+            request.getGroupName(),
+            request.getRequestContext().getClientID()
+        );
+        if (channelInfo == null) {
+            return null;
+        }
+
+        return MessageReceipt.builder()
+            .group(request.getGroupName())
+            .messageId(request.getMessageId())
+            .receiptHandleStr(request.getReceiptStr())
+            .channel(channelInfo.getChannel())
+            .build();
+    }
+}

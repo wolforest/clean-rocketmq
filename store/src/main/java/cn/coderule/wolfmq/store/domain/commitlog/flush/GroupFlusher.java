@@ -1,0 +1,135 @@
+package cn.coderule.wolfmq.store.domain.commitlog.flush;
+
+import cn.coderule.wolfmq.domain.domain.store.domain.commitlog.CommitLog;
+import cn.coderule.wolfmq.domain.domain.store.server.CheckPoint;
+import cn.coderule.wolfmq.store.domain.commitlog.vo.GroupCommitRequest;
+import cn.coderule.common.util.lang.ThreadUtil;
+import cn.coderule.wolfmq.domain.core.enums.store.EnqueueStatus;
+import cn.coderule.wolfmq.domain.domain.store.infra.MappedFileQueue;
+import cn.coderule.wolfmq.domain.core.lock.commitlog.CommitLogLock;
+import cn.coderule.wolfmq.domain.core.lock.commitlog.CommitLogSpinLock;
+import java.util.LinkedList;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+public class GroupFlusher extends Flusher {
+    private static final long FLUSH_JOIN_TIME = 5 * 60 * 1000;
+
+    private final MappedFileQueue mappedFileQueue;
+    private final CheckPoint checkPoint;
+
+    private volatile LinkedList<GroupCommitRequest> requestsWrite = new LinkedList<>();
+    private volatile LinkedList<GroupCommitRequest> requestsRead = new LinkedList<>();
+
+    private final CommitLogLock lock = new CommitLogSpinLock();
+
+    public GroupFlusher(MappedFileQueue mappedFileQueue, CheckPoint checkPoint) {
+        this.mappedFileQueue = mappedFileQueue;
+        this.checkPoint = checkPoint;
+    }
+
+    @Override
+    public String getServiceName() {
+        return GroupFlusher.class.getSimpleName();
+    }
+
+    @Override
+    public long getJoinTime() {
+        return FLUSH_JOIN_TIME;
+    }
+
+    @Override
+    public void addRequest(GroupCommitRequest request) {
+        lock.lock();
+        try {
+            this.requestsWrite.add(request);
+        } finally {
+            lock.unlock();
+        }
+        this.wakeup();
+    }
+
+    @Override
+    public void run() {
+        while (!this.isStopped()) {
+            try {
+                await(10);
+                swapRequests();
+                flush();
+            } catch (Exception e) {
+                log.warn("{} service has exception. ", this.getServiceName(), e);
+            }
+        }
+
+        ThreadUtil.sleep(10, "GroupCommitService Exception, ");
+
+        swapRequests();
+        flush();
+    }
+
+    private void swapRequests() {
+        lock.lock();
+        try {
+            LinkedList<GroupCommitRequest> tmp = this.requestsWrite;
+            this.requestsWrite = this.requestsRead;
+            this.requestsRead = tmp;
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    private void forceFlush() {
+        // Because of individual messages is set to not sync flush, it
+        // will come to this process
+        mappedFileQueue.flush(0);
+        checkPoint.getMaxOffset().setCommitLogOffset(maxOffset);
+    }
+
+    private void flush() {
+        if (this.requestsRead.isEmpty()) {
+            forceFlush();
+            return;
+        }
+
+        long tmpOffset = this.maxOffset;
+        for (GroupCommitRequest req : this.requestsRead) {
+            boolean flushOK = flushFileQueue(req);
+            wakeupRequest(req, flushOK);
+
+            if (flushOK && req.getOffset() > tmpOffset) {
+                tmpOffset = req.getOffset();
+            }
+        }
+
+        // write check point
+        checkPoint.getMaxOffset().setCommitLogOffset(tmpOffset);
+        this.requestsRead = new LinkedList<>();
+    }
+
+    /**
+     * @renamed from flush to flushFileQueue
+     * @param request group commit request
+     * @return flush status
+     */
+    private boolean flushFileQueue(GroupCommitRequest request) {
+        boolean flushOK = mappedFileQueue.getFlushPosition() >= request.getNextOffset();
+
+        // There may be a message in the next file, so a maximum of
+        // two times the flush
+        for (int i = 0; i < 2 && !flushOK; i++) {
+            mappedFileQueue.flush(0);
+            flushOK = mappedFileQueue.getFlushPosition() >= request.getNextOffset();
+        }
+
+        return flushOK;
+    }
+
+    private void wakeupRequest(GroupCommitRequest request, boolean flushOK) {
+        EnqueueStatus status = flushOK
+            ? EnqueueStatus.PUT_OK :
+            EnqueueStatus.FLUSH_DISK_TIMEOUT;
+
+        request.wakeup(status);
+    }
+
+}

@@ -1,0 +1,28 @@
+package cn.coderule.wolfmq.rpc.registry.protocol.header;
+
+import cn.coderule.wolfmq.rpc.common.rpc.core.annotation.CFNotNull;
+import cn.coderule.wolfmq.rpc.common.rpc.core.annotation.RocketMQAction;
+import cn.coderule.wolfmq.rpc.common.rpc.core.enums.Action;
+import cn.coderule.wolfmq.rpc.common.rpc.core.enums.ResourceType;
+import cn.coderule.wolfmq.rpc.common.rpc.core.exception.RemotingCommandException;
+import cn.coderule.wolfmq.rpc.common.rpc.protocol.code.RequestCode;
+import cn.coderule.wolfmq.rpc.common.rpc.protocol.header.CommandHeader;
+
+@RocketMQAction(value = RequestCode.ADD_WRITE_PERM_OF_BROKER, resource = ResourceType.CLUSTER, action = Action.UPDATE)
+public class AddWritePermOfBrokerRequestHeader implements CommandHeader {
+    @CFNotNull
+    private String brokerName;
+
+    @Override
+    public void checkFields() throws RemotingCommandException {
+
+    }
+
+    public String getBrokerName() {
+        return brokerName;
+    }
+
+    public void setBrokerName(String brokerName) {
+        this.brokerName = brokerName;
+    }
+}
