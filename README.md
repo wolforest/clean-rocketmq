@@ -49,7 +49,12 @@ AI时代，软件人并不轻松: 内卷、年龄危机、AI冲击.... <br />
 
 
 ## 更多信息
+**Clean-RocketMQ:**
+* [Clean-RocketMQ架构](/docs/cn/architecture/logical.md)
 
+**图书目录及进度:**
+* [RocketMQ源码解析与优化(上)](/docs/book/rocketmq-analyze.md)
+* [RocketMQ源码解析与优化(下)](/docs/book/rocketmq-refactor.md)
 
 <!-- 
 
