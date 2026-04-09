@@ -1,4 +1,4 @@
-package cn.coderule.wolfmq.store.domain.commitlog;
+package cn.coderule.wolfmq.store.domain.commitlog.benchmark;
 
 import cn.coderule.common.lang.type.Pair;
 import cn.coderule.common.util.io.DirUtil;
@@ -19,10 +19,7 @@ import cn.coderule.wolfmq.store.domain.commitlog.sharding.TopicPartitioner;
 import cn.coderule.wolfmq.store.infra.file.DefaultMappedFileQueue;
 import java.util.concurrent.ExecutionException;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
 
-import java.nio.file.Path;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ThreadLocalRandom;
@@ -35,9 +32,28 @@ public class CommitLogManagerBenchmarkTest {
     public static int WARMUP_ITERATIONS = 1000;
     public static int BENCHMARK_ITERATIONS = 5000000;
 
-    @Test
-    void benchmarkSingleThread_DefaultCommitLog(@TempDir Path tmpDir) {
-        String dir = tmpDir.toString();
+    public static void main(String[] args) {
+        try {
+            benchmarkSingleThread_DefaultCommitLog();
+            benchmarkSingleThread_CommitLogManager_1Shard();
+            benchmarkMultiThread_CommitLogManager_1Shard();
+            benchmarkDefaultCommitLog_6Threads();
+            benchmarkMultiThread_CommitLogManager_10Shard();
+            benchmarkMultiThread_CommitLogManager_2Shard();
+            benchmarkMultiThread_CommitLogManager_5Shards();
+            benchmarkMultiThread_CommitLogManager_10Shards();
+            benchmarkShardScaling_4Threads();
+            benchmarkDefaultCommitLog_MultiThread();
+            benchmarkComparison_1ShardVs2Shards();
+            benchmarkComparison_1ShardVs5Shards();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void benchmarkSingleThread_DefaultCommitLog() {
+        String dir = System.getProperty("java.io.tmpdir") + "/benchmark-default-" + System.currentTimeMillis();
+        DirUtil.createIfNotExists(dir);
         StoreConfig storeConfig = ConfigMock.createStoreConfig(dir);
         CommitLog commitLog = createCommitLog(dir, storeConfig, 0);
 
@@ -55,11 +71,12 @@ public class CommitLogManagerBenchmarkTest {
         printResult("SingleThread-DefaultCommitLog", 1, 1, BENCHMARK_ITERATIONS, endTime - startTime);
 
         commitLog.destroy();
+        DirUtil.delete(dir);
     }
 
-    @Test
-    void benchmarkSingleThread_CommitLogManager_1Shard(@TempDir Path tmpDir) {
-        String dir = tmpDir.toString();
+    public static void benchmarkSingleThread_CommitLogManager_1Shard() {
+        String dir = System.getProperty("java.io.tmpdir") + "/benchmark-manager1-" + System.currentTimeMillis();
+        DirUtil.createIfNotExists(dir);
         CommitLogManager manager = createCommitLogManager(dir, 1, 1);
 
         MessageEncoder encoder = new MessageEncoder(createStoreConfig(dir).getMessageConfig());
@@ -76,15 +93,15 @@ public class CommitLogManagerBenchmarkTest {
         printResult("SingleThread-CommitLogManager-1Shard", 1, 1, BENCHMARK_ITERATIONS, endTime - startTime);
 
         shutdown(manager);
+        DirUtil.delete(dir);
     }
 
-    @Test
-    void benchmarkMultiThread_CommitLogManager_1Shard(@TempDir Path tmpDir) {
+    public static void benchmarkMultiThread_CommitLogManager_1Shard() {
         int[] threadCounts = {1, 4, 8, 10, 12};
         int shardCount = 1;
 
         for (int threads : threadCounts) {
-            String dir = tmpDir.toString() + "/shard1-" + threads;
+            String dir = System.getProperty("java.io.tmpdir") + "/benchmark-shard1-" + threads + "-" + System.currentTimeMillis();
             DirUtil.createIfNotExists(dir);
             CommitLogManager manager = createCommitLogManager(dir, shardCount, 1);
 
@@ -96,59 +113,54 @@ public class CommitLogManagerBenchmarkTest {
                 "MultiThread-CommitLogManager-1Shard-" + threads + "threads");
 
             shutdown(manager);
+            DirUtil.delete(dir);
         }
     }
 
-    @Test
-    void benchmarkDefaultCommitLog_6Threads(@TempDir Path tmpDir) {
+    public static void benchmarkDefaultCommitLog_6Threads() {
         int[] threadCounts = {10, 10, 10, 10, 10};
 
         for (int threads : threadCounts) {
-            String dir = tmpDir.toString() + "/default-" + threads;
+            String dir = System.getProperty("java.io.tmpdir") + "/benchmark-default-" + threads + "-" + System.currentTimeMillis();
             DirUtil.createIfNotExists(dir);
             StoreConfig storeConfig = ConfigMock.createStoreConfig(dir);
             CommitLog commitLog = createCommitLog(dir, storeConfig, 0);
 
             MessageEncoder encoder = new MessageEncoder(storeConfig.getMessageConfig());
 
-            // warmup(commitLog, encoder);
-
             runDefaultCommitLogMultiThreadBenchmark(commitLog, encoder, threads, BENCHMARK_ITERATIONS,
                 "MultiThread-DefaultCommitLog-" + threads + "threads");
 
             commitLog.destroy();
+            DirUtil.delete(dir);
         }
     }
 
-    @Test
-    void benchmarkMultiThread_CommitLogManager_10Shard(@TempDir Path tmpDir) {
+    public static void benchmarkMultiThread_CommitLogManager_10Shard() {
         int[] threadCounts = {10, 10, 10, 10, 10, 10, 10, 10, 10, 10};
         int shardCount = 10;
 
         for (int threads : threadCounts) {
-            String dir = tmpDir.toString() + "/shard1-" + threads;
+            String dir = System.getProperty("java.io.tmpdir") + "/benchmark-shard10-" + threads + "-" + System.currentTimeMillis();
             DirUtil.createIfNotExists(dir);
             CommitLogManager manager = createCommitLogManager(dir, shardCount, shardCount);
 
             MessageEncoder encoder = new MessageEncoder(createStoreConfig(dir).getMessageConfig());
 
-            // warmup(manager, encoder, shardCount);
-
             runMultiThreadBenchmark(manager, encoder, threads, shardCount, BENCHMARK_ITERATIONS,
                 "CommitLogManager-" + shardCount + "shards");
 
             shutdown(manager);
+            DirUtil.delete(dir);
         }
-
     }
 
-    @Test
-    void benchmarkMultiThread_CommitLogManager_2Shard(@TempDir Path tmpDir) {
+    public static void benchmarkMultiThread_CommitLogManager_2Shard() {
         int[] threadCounts = {1, 4, 8, 10, 12};
         int shardCount = 2;
 
         for (int threads : threadCounts) {
-            String dir = tmpDir.toString() + "/shard1-" + threads;
+            String dir = System.getProperty("java.io.tmpdir") + "/benchmark-shard2-" + threads + "-" + System.currentTimeMillis();
             DirUtil.createIfNotExists(dir);
             CommitLogManager manager = createCommitLogManager(dir, shardCount, shardCount);
 
@@ -160,17 +172,17 @@ public class CommitLogManagerBenchmarkTest {
                 "MultiThread-CommitLogManager-2Shard-" + threads + "threads");
 
             shutdown(manager);
+            DirUtil.delete(dir);
         }
     }
 
-    @Test
-    void benchmarkMultiThread_CommitLogManager_5Shards(@TempDir Path tmpDir) {
+    public static void benchmarkMultiThread_CommitLogManager_5Shards() {
         int[] threadCounts = {1, 4, 8, 10, 12};
         int shardCount = 5;
         int topicCount = 50;
 
         for (int threads : threadCounts) {
-            String dir = tmpDir.toString() + "/shard5-" + threads;
+            String dir = System.getProperty("java.io.tmpdir") + "/benchmark-shard5-" + threads + "-" + System.currentTimeMillis();
             DirUtil.createIfNotExists(dir);
             CommitLogManager manager = createCommitLogManager(dir, shardCount, shardCount);
 
@@ -182,17 +194,17 @@ public class CommitLogManagerBenchmarkTest {
                 "MultiThread-CommitLogManager-5Shards-" + threads + "threads");
 
             shutdown(manager);
+            DirUtil.delete(dir);
         }
     }
 
-    @Test
-    void benchmarkMultiThread_CommitLogManager_10Shards(@TempDir Path tmpDir) {
+    public static void benchmarkMultiThread_CommitLogManager_10Shards() {
         int[] threadCounts = {1, 2, 4, 8};
         int shardCount = 10;
         int topicCount = 100;
 
         for (int threads : threadCounts) {
-            String dir = tmpDir.toString() + "/shard10-" + threads;
+            String dir = System.getProperty("java.io.tmpdir") + "/benchmark-shard10-" + threads + "-" + System.currentTimeMillis();
             DirUtil.createIfNotExists(dir);
             CommitLogManager manager = createCommitLogManager(dir, shardCount, shardCount);
 
@@ -204,17 +216,17 @@ public class CommitLogManagerBenchmarkTest {
                 "MultiThread-CommitLogManager-10Shards-" + threads + "threads");
 
             shutdown(manager);
+            DirUtil.delete(dir);
         }
     }
 
-    @Test
-    void benchmarkShardScaling_4Threads(@TempDir Path tmpDir) {
+    public static void benchmarkShardScaling_4Threads() {
         int threads = 4;
         int[] shardCounts = {1, 2, 5, 10};
         int topicCount = 100;
 
         for (int shardCount : shardCounts) {
-            String dir = tmpDir.toString() + "/scale-" + shardCount;
+            String dir = System.getProperty("java.io.tmpdir") + "/benchmark-scale-" + shardCount + "-" + System.currentTimeMillis();
             DirUtil.createIfNotExists(dir);
             CommitLogManager manager = createCommitLogManager(dir, shardCount, shardCount);
 
@@ -226,15 +238,15 @@ public class CommitLogManagerBenchmarkTest {
                 "ShardScaling-4Threads-" + shardCount + "Shards");
 
             shutdown(manager);
+            DirUtil.delete(dir);
         }
     }
 
-    @Test
-    void benchmarkDefaultCommitLog_MultiThread(@TempDir Path tmpDir) {
+    public static void benchmarkDefaultCommitLog_MultiThread() {
         int[] threadCounts = {1, 4, 8, 10, 12};
 
         for (int threads : threadCounts) {
-            String dir = tmpDir.toString() + "/default-" + threads;
+            String dir = System.getProperty("java.io.tmpdir") + "/benchmark-defaultmt-" + threads + "-" + System.currentTimeMillis();
             DirUtil.createIfNotExists(dir);
             StoreConfig storeConfig = ConfigMock.createStoreConfig(dir);
             CommitLog commitLog = createCommitLog(dir, storeConfig, 0);
@@ -247,15 +259,15 @@ public class CommitLogManagerBenchmarkTest {
                 "MultiThread-DefaultCommitLog-" + threads + "threads");
 
             commitLog.destroy();
+            DirUtil.delete(dir);
         }
     }
 
-    @Test
-    void benchmarkComparison_1ShardVs2Shards(@TempDir Path tmpDir) {
+    public static void benchmarkComparison_1ShardVs2Shards() {
         int threads = 8;
         int topicCount = 50;
 
-        String dir1 = tmpDir.toString() + "/compare-1shard";
+        String dir1 = System.getProperty("java.io.tmpdir") + "/benchmark-compare-1shard-" + System.currentTimeMillis();
         DirUtil.createIfNotExists(dir1);
         CommitLogManager manager1 = createCommitLogManager(dir1, 1, 1);
         MessageEncoder encoder1 = new MessageEncoder(createStoreConfig(dir1).getMessageConfig());
@@ -263,8 +275,9 @@ public class CommitLogManagerBenchmarkTest {
         runMultiThreadBenchmarkWithTopics(manager1, encoder1, threads, 1, topicCount, BENCHMARK_ITERATIONS,
             "Compare-1Shard-8Threads");
         shutdown(manager1);
+        DirUtil.delete(dir1);
 
-        String dir5 = tmpDir.toString() + "/compare-2shards";
+        String dir5 = System.getProperty("java.io.tmpdir") + "/benchmark-compare-2shards-" + System.currentTimeMillis();
         DirUtil.createIfNotExists(dir5);
         CommitLogManager manager5 = createCommitLogManager(dir5, 2, 2);
         MessageEncoder encoder5 = new MessageEncoder(createStoreConfig(dir5).getMessageConfig());
@@ -272,33 +285,35 @@ public class CommitLogManagerBenchmarkTest {
         runMultiThreadBenchmarkWithTopics(manager5, encoder5, threads, 2, topicCount, BENCHMARK_ITERATIONS,
             "Compare-2Shards-8Threads");
         shutdown(manager5);
+        DirUtil.delete(dir5);
     }
 
-    @Test
-    void benchmarkComparison_1ShardVs5Shards(@TempDir Path tmpDir) {
+    public static void benchmarkComparison_1ShardVs5Shards() {
         int threads = 4;
         int topicCount = 50;
 
-        String dir1 = tmpDir.toString() + "/compare-1shard";
+        String dir1 = System.getProperty("java.io.tmpdir") + "/benchmark-compare-1shard-" + System.currentTimeMillis();
         DirUtil.createIfNotExists(dir1);
         CommitLogManager manager1 = createCommitLogManager(dir1, 1, 1);
         MessageEncoder encoder1 = new MessageEncoder(createStoreConfig(dir1).getMessageConfig());
         warmup(manager1, encoder1, 1);
         runMultiThreadBenchmarkWithTopics(manager1, encoder1, threads, 1, topicCount, BENCHMARK_ITERATIONS,
-            "Compare-1Shard-8Threads");
+            "Compare-1Shard-4Threads");
         shutdown(manager1);
+        DirUtil.delete(dir1);
 
-        String dir5 = tmpDir.toString() + "/compare-5shards";
+        String dir5 = System.getProperty("java.io.tmpdir") + "/benchmark-compare-5shards-" + System.currentTimeMillis();
         DirUtil.createIfNotExists(dir5);
         CommitLogManager manager5 = createCommitLogManager(dir5, 5, 5);
         MessageEncoder encoder5 = new MessageEncoder(createStoreConfig(dir5).getMessageConfig());
         warmup(manager5, encoder5, 5);
         runMultiThreadBenchmarkWithTopics(manager5, encoder5, threads, 5, topicCount, BENCHMARK_ITERATIONS,
-            "Compare-5Shards-8Threads");
+            "Compare-5Shards-4Threads");
         shutdown(manager5);
+        DirUtil.delete(dir5);
     }
 
-    private void warmup(CommitLog commitLog, MessageEncoder encoder) {
+    private static void warmup(CommitLog commitLog, MessageEncoder encoder) {
         for (int i = 0; i < WARMUP_ITERATIONS; i++) {
             MessageBO message = createMessage(encoder, "topic-0");
             commitLog.assignCommitOffset(message);
@@ -306,19 +321,19 @@ public class CommitLogManagerBenchmarkTest {
         }
     }
 
-    private void warmup(CommitLogManager manager, MessageEncoder encoder, int shardCount) {
+    private static void warmup(CommitLogManager manager, MessageEncoder encoder, int shardCount) {
         for (int i = 0; i < WARMUP_ITERATIONS; i++) {
             MessageBO message = createMessage(encoder, "topic-" + (i % Math.max(10, shardCount * 2)));
             manager.insert(message);
         }
     }
 
-    private void runMultiThreadBenchmark(CommitLogManager manager, MessageEncoder encoder,
+    private static void runMultiThreadBenchmark(CommitLogManager manager, MessageEncoder encoder,
         int threadCount, int shardCount, int iterations, String name) {
         runMultiThreadBenchmark(manager, encoder, threadCount, shardCount, iterations, name, false);
     }
 
-    private void runMultiThreadBenchmark(CommitLogManager manager, MessageEncoder encoder,
+    private static void runMultiThreadBenchmark(CommitLogManager manager, MessageEncoder encoder,
                                         int threadCount, int shardCount, int iterations, String name, boolean bindCpu) {
         int iterationsPerThread = iterations / threadCount;
         CountDownLatch latch = new CountDownLatch(threadCount);
@@ -352,7 +367,7 @@ public class CommitLogManagerBenchmarkTest {
         printResult(name, threadCount, shardCount, iterations, totalTimeMs);
     }
 
-    private void runMultiThreadBenchmarkWithTopics(CommitLogManager manager, MessageEncoder encoder,
+    private static void runMultiThreadBenchmarkWithTopics(CommitLogManager manager, MessageEncoder encoder,
                                                    int threadCount, int shardCount, int topicCount,
                                                    int iterations, String name) {
         int iterationsPerThread = iterations / threadCount;
@@ -383,7 +398,7 @@ public class CommitLogManagerBenchmarkTest {
         printResult(name, threadCount, shardCount, iterations, totalTimeMs);
     }
 
-    private void runDefaultCommitLogMultiThreadBenchmark(CommitLog commitLog, MessageEncoder encoder,
+    private static void runDefaultCommitLogMultiThreadBenchmark(CommitLog commitLog, MessageEncoder encoder,
                                                         int threadCount, int iterations, String name) {
         int iterationsPerThread = iterations / threadCount;
         CountDownLatch latch = new CountDownLatch(threadCount);
@@ -417,24 +432,17 @@ public class CommitLogManagerBenchmarkTest {
         printResult(name, threadCount, 1, iterations, totalTimeMs);
     }
 
-    private void printResult(String name, int threads, int shards, int totalMessages, long timeMs) {
+    private static void printResult(String name, int threads, int shards, int totalMessages, long timeMs) {
         double throughput = totalMessages * 1000.0 / timeMs;
-        //log.info("===========================================");
-        //log.info("Benchmark: {}", name);
-        //log.info("Threads: {}, Shards: {}", threads, shards);
-        //log.info("Total Messages: {}", totalMessages);
-        //log.info("Total Time: {} ms", timeMs);
-        //log.info("Throughput: {:.2f} msg/s", throughput);
-        //log.info("===========================================\n");
         System.out.println(name + " | threads=" + threads + " | shards=" + shards +
             " | time=" + timeMs + "ms | throughput=" + String.format("%.2f", throughput) + " msg/s");
     }
 
-    private CommitLogManager createCommitLogManager(String baseDir, int maxSharding, int shardCount) {
+    private static CommitLogManager createCommitLogManager(String baseDir, int maxSharding, int shardCount) {
         return createCommitLogManager(baseDir, maxSharding, shardCount, false);
     }
 
-    private CommitLogManager createCommitLogManager(String baseDir, int maxSharding, int shardCount, boolean bindCpu) {
+    private static CommitLogManager createCommitLogManager(String baseDir, int maxSharding, int shardCount, boolean bindCpu) {
         StoreConfig storeConfig = createStoreConfig(baseDir);
         CommitConfig commitConfig = storeConfig.getCommitConfig();
         commitConfig.setMaxShardingNumber(maxSharding);
@@ -453,19 +461,19 @@ public class CommitLogManagerBenchmarkTest {
         return manager;
     }
 
-    private StoreConfig createStoreConfig(String dir) {
+    private static StoreConfig createStoreConfig(String dir) {
         StoreConfig storeConfig = ConfigMock.createStoreConfig(dir);
         storeConfig.getCommitConfig().setFileSize(MMAP_FILE_SIZE);
         return storeConfig;
     }
 
-    private CommitLog createCommitLog(String dir, StoreConfig storeConfig, int shardId) {
+    private static CommitLog createCommitLog(String dir, StoreConfig storeConfig, int shardId) {
         MappedFileQueue queue = new DefaultMappedFileQueue(dir, MMAP_FILE_SIZE);
         CommitLogFlushPolicy flusher = new EmptyCommitLogFlushPolicy(queue);
         return new DefaultCommitLog(storeConfig, shardId, queue, flusher);
     }
 
-    private MessageBO createMessage(MessageEncoder encoder, String topic) {
+    private static MessageBO createMessage(MessageEncoder encoder, String topic) {
         MessageBO messageBO = MessageMock.createMessage(MESSAGE_SIZE);
         messageBO.setTopic(topic);
 
@@ -478,11 +486,11 @@ public class CommitLogManagerBenchmarkTest {
         return messageBO;
     }
 
-    private void shutdown(CommitLogManager manager) {
+    private static void shutdown(CommitLogManager manager) {
         try {
             manager.shutdown();
         } catch (Exception e) {
-            log.error("Failed to shutdown manager", e);
+            System.err.println("Failed to shutdown manager: " + e);
         }
     }
 }

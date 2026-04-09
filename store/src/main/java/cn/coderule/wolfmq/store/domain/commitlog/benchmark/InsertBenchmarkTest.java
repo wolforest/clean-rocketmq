@@ -1,4 +1,4 @@
-package cn.coderule.wolfmq.store.domain.commitlog;
+package cn.coderule.wolfmq.store.domain.commitlog.benchmark;
 
 import cn.coderule.common.lang.type.Pair;
 import cn.coderule.common.util.io.DirUtil;
@@ -16,22 +16,30 @@ import cn.coderule.wolfmq.domain.test.MessageMock;
 import cn.coderule.wolfmq.store.domain.commitlog.flush.policy.EmptyCommitLogFlushPolicy;
 import cn.coderule.wolfmq.store.domain.commitlog.log.DefaultCommitLog;
 import cn.coderule.wolfmq.store.infra.file.DefaultMappedFileQueue;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
 
 @Slf4j
 public class InsertBenchmarkTest {
     public static int MMAP_FILE_SIZE = 1024 * 1024 * 1024;
 
-    @Test
-    void singleThreadBenchmark(@TempDir Path tmpDir) {
-        String dir = tmpDir.toString();
+    public static void main(String[] args) {
+        try {
+            singleThreadBenchmark();
+            partitionPerCoreBenchmark();
+            multiThreadBenchmark();
+            multiThreadWithEnqueueLockBenchmark();
+        } catch (Exception e) {
+            log.error("main error", e);
+        }
+    }
+
+    public static void singleThreadBenchmark() {
+        String dir = System.getProperty("java.io.tmpdir") + "/benchmark-insert-single-" + System.currentTimeMillis();
+        DirUtil.createIfNotExists(dir);
         StoreConfig storeConfig = ConfigMock.createStoreConfig(dir);
         CommitLog commitLog = createCommitLog(dir, storeConfig);
 
@@ -49,18 +57,18 @@ public class InsertBenchmarkTest {
         System.out.println("\n\n\n\n");
 
         commitLog.destroy();
+        DirUtil.delete(dir);
     }
 
-    @Test
-    void partitionPerCoreBenchmark(@TempDir Path tmpDir) {
+    public static void partitionPerCoreBenchmark() {
         int cpuNumber = SystemUtil.getProcessorNumber();
+        String baseDir = System.getProperty("java.io.tmpdir") + "/benchmark-insert-core-" + System.currentTimeMillis();
 
         List<Thread> threads = new ArrayList<>();
 
         for (int i = 0; i < cpuNumber; i++) {
-            String dir = tmpDir.toString() + "/commitlog" + i;
+            String dir = baseDir + "/commitlog" + i;
             DirUtil.createIfNotExists(dir);
-
 
             StoreConfig storeConfig = ConfigMock.createStoreConfig(dir);
             CommitLog commitLog = createCommitLog(dir, storeConfig);
@@ -87,22 +95,22 @@ public class InsertBenchmarkTest {
             try {
                 thread.join();
             } catch (InterruptedException e) {
-                log.error("concurrentBenchmark exception: ", e);
+                System.err.println("concurrentBenchmark exception: " + e);
             }
         }
 
         long endTime = System.currentTimeMillis();
         System.out.println("cpu number: " + cpuNumber);
         System.out.println("Insert 1000000 messages cost " + (endTime - startTime) + " ms");
-        System.out.println("insert speed: " + 100000 * cpuNumber * 1000 / (endTime - startTime) + " msg/s");
+        System.out.println("insert speed: " + 100000L * cpuNumber * 1000 / (endTime - startTime) + " msg/s");
         System.out.println("\n\n\n\n");
 
-        DirUtil.delete(tmpDir);
+        DirUtil.delete(baseDir);
     }
 
-    @Test
-    void multiThreadBenchmark(@TempDir Path tmpDir) {
-        String dir = tmpDir.toString();
+    public static void multiThreadBenchmark() {
+        String dir = System.getProperty("java.io.tmpdir") + "/benchmark-insert-multi-" + System.currentTimeMillis();
+        DirUtil.createIfNotExists(dir);
         StoreConfig storeConfig = ConfigMock.createStoreConfig(dir);
         CommitLog commitLog = createCommitLog(dir, storeConfig);
 
@@ -130,7 +138,7 @@ public class InsertBenchmarkTest {
             try {
                 thread.join();
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                log.error("multiThreadBenchmark exception", e);
             }
         }
 
@@ -141,11 +149,12 @@ public class InsertBenchmarkTest {
         System.out.println("\n\n\n\n");
 
         commitLog.destroy();
+        DirUtil.delete(dir);
     }
 
-//    @Test
-    void multiThreadWithEnqueueLockBenchmark(@TempDir Path tmpDir) {
-        String dir = tmpDir.toString();
+    public static void multiThreadWithEnqueueLockBenchmark() {
+        String dir = System.getProperty("java.io.tmpdir") + "/benchmark-insert-lock-" + System.currentTimeMillis();
+        DirUtil.createIfNotExists(dir);
         StoreConfig storeConfig = ConfigMock.createStoreConfig(dir);
         CommitLog commitLog = createCommitLog(dir, storeConfig);
         EnqueueLock enqueueLock = new EnqueueLock();
@@ -181,7 +190,7 @@ public class InsertBenchmarkTest {
             try {
                 thread.join();
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                log.error("multiThreadWithEnqueueLockBenchmark exception", e);
             }
         }
 
@@ -192,19 +201,19 @@ public class InsertBenchmarkTest {
         System.out.println("\n\n\n\n");
 
         commitLog.destroy();
+        DirUtil.delete(dir);
     }
 
-
-    private String getTopic() {
+    private static String getTopic() {
         int topicIndex = ThreadLocalRandom.current().nextInt(50);
         return "topic-" + topicIndex;
     }
 
-    private int getQueueId() {
+    private static int getQueueId() {
         return ThreadLocalRandom.current().nextInt(10);
     }
 
-    private MessageBO createMessage(MessageEncoder encoder) {
+    private static MessageBO createMessage(MessageEncoder encoder) {
         MessageBO messageBO = MessageMock.createMessage(1024);
 
         Pair<Boolean, Set<String>> validate = MessageEncoder.validate(messageBO);
@@ -216,7 +225,7 @@ public class InsertBenchmarkTest {
         return messageBO;
     }
 
-    private CommitLog createCommitLog(String dir, StoreConfig storeConfig) {
+    private static CommitLog createCommitLog(String dir, StoreConfig storeConfig) {
         MappedFileQueue queue = new DefaultMappedFileQueue(dir, MMAP_FILE_SIZE);
 
         CommitConfig commitConfig = storeConfig.getCommitConfig();
