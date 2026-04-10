@@ -10,8 +10,8 @@
 6. **CLEAN：** 引入微框架、DDD思想, 易读易懂。
 
 > Clean-RocketMQ是RocketMQ的传承与优化。<br />
-> RocketMQ核心不足5万行，在其基础上提升性能、扩展功能，并不困难。真正的挑战在于: <br />
-> 如何持续保持代码的简洁与可维护?
+> RocketMQ核心不足5万行，在其基础上提升性能、扩展功能，并不困难。<br />
+> 真正的挑战在于: 如何持续保持代码的简洁与可维护?
 
 **兄弟项目:**
 * [RocketMQ-wolf](https://github.com/wolforest/rocketmq-wolf) : 重构分支, 生产可用，10W+优化，已维护1200+天。
