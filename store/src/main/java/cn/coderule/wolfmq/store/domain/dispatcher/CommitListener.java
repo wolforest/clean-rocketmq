@@ -96,7 +96,7 @@ public class CommitListener extends ServiceThread {
         }
 
         try {
-            CommitEvent event = CommitEvent.of(messageBO);
+            CommitEvent event = CommitEvent.of(messageBO, shardId);
             this.queue.offer(event);
         } catch (InterruptedException e) {
             log.info("{} offer CommitEvent exception. ", this.getServiceName(), e);
