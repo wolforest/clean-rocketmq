@@ -40,7 +40,7 @@ public class CommitListener extends ServiceThread {
         Long checkpointOffset = checkPoint.getMaxOffset().getDispatchedOffset(shardId);
 
         if (null != checkpointOffset && checkpointOffset > -1) {
-            this.dispatchedOffset.set(checkpointOffset);;
+            this.dispatchedOffset.set(checkpointOffset);
             return;
         }
 
@@ -62,7 +62,7 @@ public class CommitListener extends ServiceThread {
                     return;
                 }
 
-                // this.listen();
+                this.listen();
 
                 ThreadUtil.sleep(1);
             } catch (Exception e) {

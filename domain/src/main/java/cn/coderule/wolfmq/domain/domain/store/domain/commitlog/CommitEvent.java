@@ -38,6 +38,7 @@ public class CommitEvent implements Serializable {
     public static CommitEvent of(MessageBO messageBO, int shardId) {
         return CommitEvent.builder()
             .messageBO(messageBO)
+            .shardId(shardId)
             .build();
     }
 }
