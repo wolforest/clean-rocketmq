@@ -156,6 +156,16 @@ public class DefaultConsumeQueue implements ConsumeQueue {
     }
 
     @Override
+    public Long getCommitOffsetByShardId(int shardId) {
+        return commitOffsetMap.get(shardId);
+    }
+
+    @Override
+    public void setCommitOffsetByShardId(int shardId, long offset) {
+        commitOffsetMap.put(shardId, offset);
+    }
+
+    @Override
     public long getMaxOffset() {
         return MAX_OFFSET_UPDATER.get(this);
     }

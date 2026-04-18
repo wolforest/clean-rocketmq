@@ -6,6 +6,8 @@ import cn.coderule.wolfmq.domain.domain.store.domain.consumequeue.QueueUnit;
 import cn.coderule.wolfmq.domain.domain.store.domain.consumequeue.ConsumeQueue;
 import cn.coderule.wolfmq.domain.domain.store.infra.MappedFileQueue;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentMap;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -75,6 +77,26 @@ public class ErrorConsumeQueue implements ConsumeQueue {
     @Override
     public long rollToOffset(long offset) {
         return 0;
+    }
+
+    @Override
+    public void setCommitOffsetMap(ConcurrentMap<Integer, Long> map) {
+
+    }
+
+    @Override
+    public Map<Integer, Long> getCommitOffsetMap() {
+        return Map.of();
+    }
+
+    @Override
+    public Long getCommitOffsetByShardId(int shardId) {
+        return null;
+    }
+
+    @Override
+    public void setCommitOffsetByShardId(int shardId, long offset) {
+
     }
 
     @Override

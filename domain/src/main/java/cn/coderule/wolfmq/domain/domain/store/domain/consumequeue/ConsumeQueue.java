@@ -4,6 +4,8 @@ import cn.coderule.wolfmq.domain.core.enums.store.QueueType;
 import cn.coderule.wolfmq.domain.domain.store.domain.commitlog.CommitEvent;
 import cn.coderule.wolfmq.domain.domain.store.infra.MappedFileQueue;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentMap;
 
 public interface ConsumeQueue {
     QueueType getQueueType();
@@ -20,10 +22,16 @@ public interface ConsumeQueue {
     long getMaxOffset();
     void setMaxOffset(long maxOffset);
 
+    long increaseOffset();
     long rollToOffset(long offset);
+
+    void setCommitOffsetMap(ConcurrentMap<Integer, Long> map);
+    Map<Integer, Long> getCommitOffsetMap();
+    Long getCommitOffsetByShardId(int shardId);
+    void setCommitOffsetByShardId(int shardId, long offset);
+
     long getMaxCommitOffset();
     void setMaxCommitOffset(long maxCommitOffset);
-    long increaseOffset();
 
     MappedFileQueue getMappedFileQueue();
 
