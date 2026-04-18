@@ -74,6 +74,8 @@ public class DefaultConsumeQueue implements ConsumeQueue {
 
     @Override
     public void enqueue(CommitEvent event) {
+        if (!preEnqueue(event)) return;
+
         for (int i = 0; i < config.getMaxEnqueueRetry(); i++) {
             boolean success = insert(event);
             if (success) {
@@ -355,6 +357,10 @@ public class DefaultConsumeQueue implements ConsumeQueue {
 
         this.writeBuffer.flip();
         this.writeBuffer.limit(config.getUnitSize());
+    }
+
+    private boolean preEnqueue(CommitEvent event) {
+        return true;
     }
 
     /**
