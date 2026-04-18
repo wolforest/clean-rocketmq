@@ -165,6 +165,8 @@ public class DefaultConsumeQueue implements ConsumeQueue {
         commitOffsetMap.put(shardId, offset);
     }
 
+
+
     @Override
     public long getMaxOffset() {
         return MAX_OFFSET_UPDATER.get(this);
@@ -363,11 +365,23 @@ public class DefaultConsumeQueue implements ConsumeQueue {
         long offset = event.getMessageBO().getCommitOffset()
             + event.getMessageBO().getMessageLength();
 
+        updateCommitOffsetByShardId(event.getShardId(), offset);
+
+        // save checkpoint
+    }
+
+    private void updateCommitOffsetByShardId(int shardId, long offset) {
+        // to be deleted
         if (offset > maxCommitOffset) {
             maxCommitOffset = offset;
         }
 
-        // save checkpoint
+        Long oldOffset = commitOffsetMap.get(shardId);
+        if (oldOffset != null && oldOffset >  offset) {
+            return;
+        }
+
+        commitOffsetMap.put(shardId, offset);
     }
 
 }
