@@ -362,20 +362,29 @@ public class DefaultConsumeQueue implements ConsumeQueue {
      * @param event commitLogEvent
      */
     private void postEnqueue(CommitEvent event) {
+        updateCommitOffset(event);
+        saveOffsetToCheckpoint(event);
+    }
+
+    private void saveOffsetToCheckpoint(CommitEvent event) {
+        long offset = event.getMessageBO().getQueueOffset();
+        long oldOffset = checkpoint.getMaxOffset().getQueueOffset(topic, queueId);
+
+        if (oldOffset < offset) {
+            checkpoint.getMaxOffset().setQueueOffset(topic, queueId, offset);
+        }
+    }
+
+    private void updateCommitOffset(CommitEvent event) {
         long offset = event.getMessageBO().getCommitOffset()
             + event.getMessageBO().getMessageLength();
 
-        updateCommitOffsetByShardId(event.getShardId(), offset);
-
-        // save checkpoint
-    }
-
-    private void updateCommitOffsetByShardId(int shardId, long offset) {
         // to be deleted
         if (offset > maxCommitOffset) {
             maxCommitOffset = offset;
         }
 
+        int shardId = event.getShardId();
         Long oldOffset = commitOffsetMap.get(shardId);
         if (oldOffset != null && oldOffset >  offset) {
             return;
