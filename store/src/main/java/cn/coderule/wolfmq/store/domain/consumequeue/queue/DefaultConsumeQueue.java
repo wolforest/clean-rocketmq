@@ -17,6 +17,8 @@ import java.io.File;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicLongFieldUpdater;
 import lombok.Getter;
 import lombok.Setter;
@@ -42,6 +44,8 @@ public class DefaultConsumeQueue implements ConsumeQueue {
 
     @Getter @Setter
     private long maxCommitOffset = 0L;
+    @Getter @Setter
+    private ConcurrentMap<Integer, Long> commitOffsetMap;
 
     private volatile long minOffset = 0;
     private volatile long maxOffset = 0;
@@ -53,6 +57,8 @@ public class DefaultConsumeQueue implements ConsumeQueue {
         this.checkpoint = checkpoint;
 
         this.writeBuffer = ByteBuffer.allocate(config.getUnitSize());
+        this.commitOffsetMap = new ConcurrentHashMap<>();
+
         initMappedFileQueue();
     }
 
