@@ -7,17 +7,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/**
- * Async CommitLog dispatching core object
- * created By ReputMessageService
- * dispatch to :
- *     1. CommitLogDispatcherBuildConsumeQueue
- *          -> ConsumeQueueStore.putMessagePositionInfoWrapper()
- *     2. CommitLogDispatcherBuildIndex
- *          -> IndexService.buildIndex()
- *     3. CommitLogDispatcherCompaction
- *          -> CompactionService.putRequest()
- */
 @Data
 @Builder
 @AllArgsConstructor
