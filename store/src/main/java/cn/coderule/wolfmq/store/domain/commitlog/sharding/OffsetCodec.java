@@ -4,6 +4,10 @@ public class OffsetCodec {
     private final int shardId;
     private final int maxShardingNumber;
 
+    public OffsetCodec(int maxShardingNumber) {
+        this(0, maxShardingNumber);
+    }
+
     public OffsetCodec(int shardId, int maxShardingNumber) {
         this.shardId = shardId;
         this.maxShardingNumber = maxShardingNumber;
@@ -22,6 +26,10 @@ public class OffsetCodec {
             throw new IllegalArgumentException("offset can't be negative");
         }
 
-        return (offset - shardId) / maxShardingNumber;
+        return offset / maxShardingNumber;
+    }
+
+    public int getShardId(long offset) {
+        return (int) (offset % maxShardingNumber);
     }
 }
