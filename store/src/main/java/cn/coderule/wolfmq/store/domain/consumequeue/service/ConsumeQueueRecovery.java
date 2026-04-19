@@ -7,6 +7,7 @@ import cn.coderule.wolfmq.domain.domain.store.infra.MappedFile;
 import cn.coderule.wolfmq.domain.domain.store.infra.MappedFileQueue;
 import cn.coderule.wolfmq.domain.domain.store.server.CheckPoint;
 import cn.coderule.wolfmq.domain.domain.store.server.Offset;
+import cn.coderule.wolfmq.store.domain.commitlog.sharding.OffsetCodec;
 import cn.coderule.wolfmq.store.domain.consumequeue.queue.ConsumeQueueRegistry;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -19,12 +20,14 @@ import lombok.extern.slf4j.Slf4j;
 public class ConsumeQueueRecovery implements ConsumeQueueRegistry {
     private final ConsumeQueueConfig config;
     private final CheckPoint checkPoint;
+    private final OffsetCodec offsetCodec;
 
     private final Set<ConsumeQueue> queueSet = new LinkedHashSet<>(128);
 
-    public ConsumeQueueRecovery(ConsumeQueueConfig config, CheckPoint checkPoint) {
+    public ConsumeQueueRecovery(ConsumeQueueConfig config, CheckPoint checkPoint, OffsetCodec offsetCodec) {
         this.config = config;
         this.checkPoint = checkPoint;
+        this.offsetCodec = offsetCodec;
     }
     @Override
     public void register(ConsumeQueue queue) {

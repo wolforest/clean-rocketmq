@@ -2,9 +2,11 @@ package cn.coderule.wolfmq.store.domain.consumequeue;
 
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.wolfmq.domain.config.server.StoreConfig;
+import cn.coderule.wolfmq.domain.config.store.CommitConfig;
 import cn.coderule.wolfmq.domain.config.store.ConsumeQueueConfig;
 import cn.coderule.wolfmq.domain.domain.store.domain.commitlog.CommitEventDispatcher;
 import cn.coderule.wolfmq.domain.domain.store.domain.meta.TopicService;
+import cn.coderule.wolfmq.store.domain.commitlog.sharding.OffsetCodec;
 import cn.coderule.wolfmq.store.domain.consumequeue.queue.ConsumeQueueFactory;
 import cn.coderule.wolfmq.store.domain.consumequeue.queue.ConsumeQueueManager;
 import cn.coderule.wolfmq.store.domain.consumequeue.service.ConsumeQueueFlusher;
@@ -43,16 +45,6 @@ public class ConsumeQueueBootstrap implements Lifecycle {
         flusher.shutdown();
     }
 
-    @Override
-    public void cleanup() throws Exception {
-
-    }
-
-    @Override
-    public State getState() {
-        return State.RUNNING;
-    }
-
     private void initConfig() {
         StoreConfig storeConfig = StoreContext.getBean(StoreConfig.class);
         consumeQueueConfig = storeConfig.getConsumeQueueConfig();
@@ -61,7 +53,10 @@ public class ConsumeQueueBootstrap implements Lifecycle {
     private void initConsumeQueue() {
         flusher = new ConsumeQueueFlusher(consumeQueueConfig, StoreContext.getCheckPoint());
         loader = new ConsumeQueueLoader(consumeQueueConfig);
-        recovery = new ConsumeQueueRecovery(consumeQueueConfig, StoreContext.getCheckPoint());
+
+        CommitConfig commitConfig = StoreContext.getBean(CommitConfig.class);
+        OffsetCodec offsetCodec = new OffsetCodec(commitConfig.getMaxShardingNumber());
+        recovery = new ConsumeQueueRecovery(consumeQueueConfig, StoreContext.getCheckPoint(), offsetCodec);
 
         ConsumeQueueFactory consumeQueueFactory = initConsumeQueueFactory();
         consumeQueueManager = new ConsumeQueueManager(consumeQueueFactory);
