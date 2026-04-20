@@ -7,8 +7,17 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class SubscriptionGroup implements Serializable {
 
     private String groupName;
@@ -37,126 +46,6 @@ public class SubscriptionGroup implements Serializable {
     private Set<SimpleSubscriptionData> subscriptionDataSet;
 
     private Map<String, String> attributes = new HashMap<>();
-
-    public String getGroupName() {
-        return groupName;
-    }
-
-    public void setGroupName(String groupName) {
-        this.groupName = groupName;
-    }
-
-    public boolean isConsumeEnable() {
-        return consumeEnable;
-    }
-
-    public void setConsumeEnable(boolean consumeEnable) {
-        this.consumeEnable = consumeEnable;
-    }
-
-    public boolean isConsumeFromMinEnable() {
-        return consumeFromMinEnable;
-    }
-
-    public void setConsumeFromMinEnable(boolean consumeFromMinEnable) {
-        this.consumeFromMinEnable = consumeFromMinEnable;
-    }
-
-    public boolean isConsumeBroadcastEnable() {
-        return consumeBroadcastEnable;
-    }
-
-    public void setConsumeBroadcastEnable(boolean consumeBroadcastEnable) {
-        this.consumeBroadcastEnable = consumeBroadcastEnable;
-    }
-
-    public boolean isConsumeMessageOrderly() {
-        return consumeMessageOrderly;
-    }
-
-    public void setConsumeMessageOrderly(boolean consumeMessageOrderly) {
-        this.consumeMessageOrderly = consumeMessageOrderly;
-    }
-
-    public int getRetryQueueNums() {
-        return retryQueueNums;
-    }
-
-    public void setRetryQueueNums(int retryQueueNums) {
-        this.retryQueueNums = retryQueueNums;
-    }
-
-    public int getRetryMaxTimes() {
-        return retryMaxTimes;
-    }
-
-    public void setRetryMaxTimes(int retryMaxTimes) {
-        this.retryMaxTimes = retryMaxTimes;
-    }
-
-    public GroupRetryPolicy getGroupRetryPolicy() {
-        return groupRetryPolicy;
-    }
-
-    public void setGroupRetryPolicy(GroupRetryPolicy groupRetryPolicy) {
-        this.groupRetryPolicy = groupRetryPolicy;
-    }
-
-    public long getBrokerId() {
-        return brokerId;
-    }
-
-    public void setBrokerId(long brokerId) {
-        this.brokerId = brokerId;
-    }
-
-    public long getWhichBrokerWhenConsumeSlowly() {
-        return whichBrokerWhenConsumeSlowly;
-    }
-
-    public void setWhichBrokerWhenConsumeSlowly(long whichBrokerWhenConsumeSlowly) {
-        this.whichBrokerWhenConsumeSlowly = whichBrokerWhenConsumeSlowly;
-    }
-
-    public boolean isNotifyConsumerIdsChangedEnable() {
-        return notifyConsumerIdsChangedEnable;
-    }
-
-    public void setNotifyConsumerIdsChangedEnable(final boolean notifyConsumerIdsChangedEnable) {
-        this.notifyConsumerIdsChangedEnable = notifyConsumerIdsChangedEnable;
-    }
-
-    public int getGroupSysFlag() {
-        return groupSysFlag;
-    }
-
-    public void setGroupSysFlag(int groupSysFlag) {
-        this.groupSysFlag = groupSysFlag;
-    }
-
-    public int getConsumeTimeoutMinute() {
-        return consumeTimeoutMinute;
-    }
-
-    public void setConsumeTimeoutMinute(int consumeTimeoutMinute) {
-        this.consumeTimeoutMinute = consumeTimeoutMinute;
-    }
-
-    public Set<SimpleSubscriptionData> getSubscriptionDataSet() {
-        return subscriptionDataSet;
-    }
-
-    public void setSubscriptionDataSet(Set<SimpleSubscriptionData> subscriptionDataSet) {
-        this.subscriptionDataSet = subscriptionDataSet;
-    }
-
-    public Map<String, String> getAttributes() {
-        return attributes;
-    }
-
-    public void setAttributes(Map<String, String> attributes) {
-        this.attributes = attributes;
-    }
 
     @Override
     public int hashCode() {

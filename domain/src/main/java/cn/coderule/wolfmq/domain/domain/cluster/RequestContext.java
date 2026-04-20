@@ -4,9 +4,15 @@ import io.netty.channel.Channel;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class RequestContext implements Serializable {
     public static final String REMOTE_ADDRESS = "remote-address";
     public static final String LOCAL_ADDRESS = "local-address";

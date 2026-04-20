@@ -14,6 +14,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentMap;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -92,13 +93,13 @@ public class ConsumeQueueRecovery implements ConsumeQueueRegistry {
             return null;
         }
 
-        Map<String, ArrayList<Long>> topicOffsetMap = offset.getTopicOffsetMap();
+        Map<String, ConcurrentMap<Integer, Long>> topicOffsetMap = offset.getTopicOffsetMap();
         if (null == topicOffsetMap || topicOffsetMap.isEmpty()) {
             return null;
         }
 
-        List<Long> queueOffsets = topicOffsetMap.get(queue.getTopic());
-        if (null == queueOffsets || queue.getQueueId() >= queueOffsets.size()) {
+        ConcurrentMap<Integer, Long> queueOffsets = topicOffsetMap.get(queue.getTopic());
+        if (null == queueOffsets) {
             return null;
         }
 
