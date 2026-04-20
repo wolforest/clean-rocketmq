@@ -32,8 +32,11 @@ public class ConsumerInfo implements Serializable {
     private ClientChannelInfo channelInfo;
     @Builder.Default
     private boolean enableNotification = false;
+    /**
+     * enable modification of subscription
+     */
     @Builder.Default
-    private boolean enableSubscriptionModification = false;
+    private boolean enableModification = false;
 
     public Set<String> getTopicSet() {
         return subscriptionSet.stream()

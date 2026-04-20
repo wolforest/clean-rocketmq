@@ -68,7 +68,7 @@ public class RegisterService {
             .channelInfo(channelInfo)
             .subscriptionSet(subscriptionDataSet)
             .enableNotification(false)
-            .enableSubscriptionModification(updateSubscription)
+            .enableModification(updateSubscription)
             .build();
 
         consumerController.register(consumerInfo);

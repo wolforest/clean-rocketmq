@@ -42,9 +42,7 @@ public class ConsumerManager {
 
     public boolean register(ConsumerInfo consumerInfo) {
         ConsumerGroupInfo groupInfo = initGroupInfo(consumerInfo);
-
-        boolean updated = updateChannel(consumerInfo, groupInfo)
-            || updateSubscription(consumerInfo, groupInfo);
+        boolean updated = updateChannelAndSubscription(consumerInfo, groupInfo);
 
         if (updated && consumerInfo.isEnableNotification()) {
             invokeListeners(
@@ -63,6 +61,8 @@ public class ConsumerManager {
 
         return updated;
     }
+
+
 
     public void unregister(ConsumerInfo consumerInfo) {
         ConsumerGroupInfo groupInfo = groupMap.get(consumerInfo.getGroupName());
@@ -310,11 +310,18 @@ public class ConsumerManager {
     }
 
     private boolean updateSubscription(ConsumerInfo consumerInfo, ConsumerGroupInfo groupInfo) {
-        if (!consumerInfo.isEnableSubscriptionModification()) {
+        if (!consumerInfo.isEnableModification()) {
             return false;
         }
 
         return groupInfo.updateSubscription(consumerInfo.getSubscriptionSet());
+    }
+
+    private boolean updateChannelAndSubscription(ConsumerInfo consumerInfo, ConsumerGroupInfo groupInfo) {
+        boolean channelUpdated = updateChannel(consumerInfo, groupInfo);
+        boolean subscriptionUpdated = updateSubscription(consumerInfo, groupInfo);
+
+        return channelUpdated || subscriptionUpdated;
     }
 
 }
