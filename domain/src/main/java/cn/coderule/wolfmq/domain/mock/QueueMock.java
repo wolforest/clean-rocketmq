@@ -1,4 +1,4 @@
-package cn.coderule.wolfmq.domain.test;
+package cn.coderule.wolfmq.domain.mock;
 
 import cn.coderule.common.util.lang.string.StringUtil;
 import java.util.concurrent.ThreadLocalRandom;

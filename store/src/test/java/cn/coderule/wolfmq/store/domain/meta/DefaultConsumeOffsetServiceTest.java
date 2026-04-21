@@ -1,7 +1,7 @@
 package cn.coderule.wolfmq.store.domain.meta;
 
 import cn.coderule.wolfmq.domain.config.server.StoreConfig;
-import cn.coderule.wolfmq.domain.test.ConfigMock;
+import cn.coderule.wolfmq.domain.mock.ConfigMock;
 import java.nio.file.Path;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;

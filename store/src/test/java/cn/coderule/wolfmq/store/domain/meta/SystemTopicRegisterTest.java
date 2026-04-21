@@ -7,7 +7,7 @@ import cn.coderule.wolfmq.domain.domain.meta.topic.Topic;
 import cn.coderule.wolfmq.domain.domain.meta.topic.TopicValidator;
 import cn.coderule.wolfmq.domain.domain.store.domain.meta.TopicService;
 import cn.coderule.wolfmq.domain.domain.timer.TimerConstants;
-import cn.coderule.wolfmq.domain.test.ConfigMock;
+import cn.coderule.wolfmq.domain.mock.ConfigMock;
 import java.nio.file.Path;
 import java.util.List;
 import org.junit.jupiter.api.Test;

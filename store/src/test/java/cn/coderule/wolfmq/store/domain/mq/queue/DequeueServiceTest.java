@@ -9,7 +9,7 @@ import cn.coderule.wolfmq.domain.domain.message.MessageBO;
 import cn.coderule.wolfmq.domain.domain.store.domain.mq.DequeueRequest;
 import cn.coderule.wolfmq.domain.domain.store.domain.mq.DequeueResult;
 import cn.coderule.wolfmq.domain.domain.store.domain.meta.ConsumeOrderService;
-import cn.coderule.wolfmq.domain.test.MessageMock;
+import cn.coderule.wolfmq.domain.mock.MessageMock;
 import cn.coderule.wolfmq.store.domain.mq.ack.AckService;
 import java.util.List;
 import org.junit.jupiter.api.Test;

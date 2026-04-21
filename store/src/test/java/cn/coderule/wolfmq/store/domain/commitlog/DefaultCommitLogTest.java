@@ -14,8 +14,8 @@ import cn.coderule.wolfmq.domain.domain.store.domain.commitlog.CommitLogFlushPol
 import cn.coderule.wolfmq.domain.domain.store.infra.InsertResult;
 import cn.coderule.wolfmq.domain.domain.store.infra.MappedFileQueue;
 import cn.coderule.wolfmq.domain.domain.store.infra.SelectedMappedBuffer;
-import cn.coderule.wolfmq.domain.test.ConfigMock;
-import cn.coderule.wolfmq.domain.test.MessageMock;
+import cn.coderule.wolfmq.domain.mock.ConfigMock;
+import cn.coderule.wolfmq.domain.mock.MessageMock;
 import cn.coderule.wolfmq.store.domain.commitlog.flush.policy.SyncCommitLogFlushPolicy;
 import cn.coderule.wolfmq.store.domain.commitlog.log.DefaultCommitLog;
 import cn.coderule.wolfmq.store.infra.file.DefaultMappedFileQueue;

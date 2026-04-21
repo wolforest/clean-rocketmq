@@ -5,8 +5,6 @@ import cn.coderule.wolfmq.domain.domain.store.server.CheckPoint;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-import cn.coderule.wolfmq.domain.config.server.StoreConfig;
-import cn.coderule.wolfmq.domain.test.ConfigMock;
 import cn.coderule.wolfmq.store.server.bootstrap.StoreCheckpoint;
 
 import java.nio.file.Path;

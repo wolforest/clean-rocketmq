@@ -5,7 +5,7 @@ import cn.coderule.wolfmq.domain.config.store.ConsumeQueueConfig;
 import cn.coderule.wolfmq.domain.config.store.StorePath;
 import cn.coderule.wolfmq.domain.domain.store.domain.consumequeue.ConsumeQueue;
 import cn.coderule.wolfmq.domain.domain.store.domain.meta.TopicService;
-import cn.coderule.wolfmq.domain.test.ConfigMock;
+import cn.coderule.wolfmq.domain.mock.ConfigMock;
 import cn.coderule.wolfmq.store.server.bootstrap.StoreCheckpoint;
 import java.nio.file.Path;
 import java.util.Set;

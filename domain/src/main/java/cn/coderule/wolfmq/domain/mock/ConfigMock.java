@@ -1,4 +1,4 @@
-package cn.coderule.wolfmq.domain.test;
+package cn.coderule.wolfmq.domain.mock;
 
 import cn.coderule.wolfmq.domain.config.business.MessageConfig;
 import cn.coderule.wolfmq.domain.config.business.TaskConfig;

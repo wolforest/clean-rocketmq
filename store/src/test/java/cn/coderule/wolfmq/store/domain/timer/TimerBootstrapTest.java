@@ -3,7 +3,7 @@ package cn.coderule.wolfmq.store.domain.timer;
 import cn.coderule.wolfmq.domain.config.server.StoreConfig;
 import cn.coderule.wolfmq.domain.config.store.StorePath;
 import cn.coderule.wolfmq.domain.domain.store.api.TimerStore;
-import cn.coderule.wolfmq.domain.test.ConfigMock;
+import cn.coderule.wolfmq.domain.mock.ConfigMock;
 import cn.coderule.wolfmq.store.domain.mq.queue.MessageService;
 import cn.coderule.wolfmq.store.domain.timer.service.TimerService;
 import cn.coderule.wolfmq.store.server.bootstrap.StoreContext;

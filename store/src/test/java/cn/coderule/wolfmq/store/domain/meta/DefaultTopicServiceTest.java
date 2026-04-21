@@ -6,7 +6,7 @@ import cn.coderule.wolfmq.domain.domain.meta.topic.KeyBuilder;
 import cn.coderule.wolfmq.domain.domain.meta.topic.Topic;
 import cn.coderule.wolfmq.domain.domain.meta.topic.TopicValidator;
 import cn.coderule.wolfmq.domain.domain.store.domain.meta.ConsumeOffsetService;
-import cn.coderule.wolfmq.domain.test.ConfigMock;
+import cn.coderule.wolfmq.domain.mock.ConfigMock;
 import cn.coderule.wolfmq.store.domain.consumequeue.queue.ConsumeQueueManager;
 import cn.coderule.wolfmq.store.server.bootstrap.StoreContext;
 import cn.coderule.wolfmq.store.server.bootstrap.StoreRegister;
