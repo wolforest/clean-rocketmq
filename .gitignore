@@ -11,6 +11,7 @@ rpc/src/main/java/apache/
 
 .wolf
 .lingma
+.sisyphus
 
 # Log file
 *.log
