@@ -1,4 +1,4 @@
-package cn.coderule.wolfmq.store.domain.commitlog;
+package cn.coderule.wolfmq.store.domain.commitlog.log;
 
 import cn.coderule.wolfmq.domain.config.store.CommitConfig;
 import cn.coderule.wolfmq.domain.domain.message.MessageBO;
@@ -7,7 +7,6 @@ import cn.coderule.wolfmq.domain.domain.store.domain.mq.EnqueueFuture;
 import cn.coderule.wolfmq.domain.domain.store.infra.InsertResult;
 import cn.coderule.wolfmq.domain.domain.store.infra.SelectedMappedBuffer;
 import cn.coderule.wolfmq.domain.mock.MessageMock;
-import cn.coderule.wolfmq.store.domain.commitlog.log.CommitLogManager;
 import cn.coderule.wolfmq.store.domain.commitlog.sharding.TopicPartitioner;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

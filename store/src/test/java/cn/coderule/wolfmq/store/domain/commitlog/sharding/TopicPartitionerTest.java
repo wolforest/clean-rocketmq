@@ -1,7 +1,6 @@
-package cn.coderule.wolfmq.store.domain.commitlog;
+package cn.coderule.wolfmq.store.domain.commitlog.sharding;
 
 import cn.coderule.wolfmq.domain.config.store.CommitConfig;
-import cn.coderule.wolfmq.store.domain.commitlog.sharding.TopicPartitioner;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

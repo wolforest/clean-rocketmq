@@ -1,6 +1,5 @@
-package cn.coderule.wolfmq.store.domain.commitlog;
+package cn.coderule.wolfmq.store.domain.commitlog.sharding;
 
-import cn.coderule.wolfmq.store.domain.commitlog.sharding.OffsetCodec;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
