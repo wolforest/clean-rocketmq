@@ -12,6 +12,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -78,8 +80,9 @@ class ContextInitPipelineTest {
     void execute_withDeadline_setsRemainingMs() {
         headers.put(GrpcConstants.CLIENT_ID, "client-with-deadline");
 
+        ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
         Deadline deadline = Deadline.after(5000, TimeUnit.MILLISECONDS);
-        Context deadlineContext = Context.current().withDeadline(deadline);
+        Context deadlineContext = Context.current().withDeadline(deadline, scheduler);
 
         Context previous = deadlineContext.attach();
         try {

@@ -8,6 +8,7 @@ import cn.coderule.wolfmq.broker.api.ProducerController;
 import cn.coderule.wolfmq.domain.core.exception.InvalidRequestException;
 import cn.coderule.wolfmq.domain.domain.cluster.RequestContext;
 import cn.coderule.wolfmq.domain.domain.message.MessageBO;
+import cn.coderule.wolfmq.domain.domain.store.domain.mq.EnqueueResult;
 import io.grpc.stub.StreamObserver;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -121,10 +122,10 @@ class ProducerActivityTest {
         RequestContext context = RequestContext.builder().build();
         SendMessageRequest request = SendMessageRequest.newBuilder().build();
 
-        List<MessageBO> messageBOList = List.of();
-        CompletableFuture<List<MessageBO>> produceFuture = CompletableFuture.completedFuture(messageBOList);
+        List<EnqueueResult> enqueueResults = List.of();
+        CompletableFuture<List<EnqueueResult>> produceFuture = CompletableFuture.completedFuture(enqueueResults);
 
-        when(producerController.produce(any(), any())).thenReturn(produceFuture);
+        when(producerController.produce(any(RequestContext.class), any(List.class))).thenReturn(produceFuture);
 
         doAnswer(inv -> {
             Runnable r = inv.getArgument(0);

@@ -44,12 +44,9 @@ class RouteConverterTest {
     }
 
     private GroupInfo createGroupInfo(String brokerName, long brokerId, String address) {
-        GroupInfo gi = new GroupInfo();
-        gi.setBrokerName(brokerName);
-        gi.setCluster("DefaultCluster");
-        Map<Long, String> addrs = new HashMap<>();
+        HashMap<Long, String> addrs = new HashMap<>();
         addrs.put(brokerId, address);
-        gi.setBrokerAddrs(addrs);
+        GroupInfo gi = new GroupInfo("DefaultCluster", brokerName, addrs);
         return gi;
     }
 

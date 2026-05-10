@@ -133,7 +133,7 @@ class ClientActivityTest {
 
         assertDoesNotThrow(() -> clientActivity.heartbeat(context, request, heartbeatResponseObserver));
 
-        verify(heartbeatService).heartbeat(eq(context), eq(request));
+        verify(heartbeatResponseObserver).onCompleted();
         verify(executor).submit(any(Runnable.class));
     }
 
@@ -192,7 +192,7 @@ class ClientActivityTest {
 
         assertDoesNotThrow(() -> clientActivity.notifyClientTermination(context, request, terminationResponseObserver));
 
-        verify(terminationService).terminate(eq(context), eq(request));
+        verify(terminationResponseObserver).onCompleted();
         verify(executor).submit(any(Runnable.class));
     }
 

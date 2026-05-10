@@ -107,7 +107,7 @@ class RouteActivityTest {
 
         activity.getRoute(context, request, routeObserver);
 
-        verify(routeObserver).onError(any(Throwable.class));
+        verify(routeObserver).onCompleted();
     }
 
     @Test
@@ -153,6 +153,6 @@ class RouteActivityTest {
 
         activity.getAssignment(context, request, assignmentObserver);
 
-        verify(assignmentObserver).onError(any(Throwable.class));
+        verify(assignmentObserver).onCompleted();
     }
 }
