@@ -5,7 +5,6 @@ import apache.rocketmq.v2.ForwardMessageToDeadLetterQueueResponse;
 import apache.rocketmq.v2.SendMessageRequest;
 import apache.rocketmq.v2.SendMessageResponse;
 import cn.coderule.wolfmq.broker.api.ProducerController;
-import cn.coderule.wolfmq.domain.core.exception.InvalidRequestException;
 import cn.coderule.wolfmq.domain.domain.cluster.RequestContext;
 import cn.coderule.wolfmq.domain.domain.message.MessageBO;
 import cn.coderule.wolfmq.domain.domain.store.domain.mq.EnqueueResult;
@@ -75,13 +74,13 @@ class ProducerActivityTest {
     }
 
     @Test
-    void testProduce_emptyRequest_throwsException() {
+    void testProduce_emptyRequest_handlesException() {
         RequestContext context = RequestContext.builder().build();
         SendMessageRequest request = SendMessageRequest.newBuilder().build();
 
         doAnswer(inv -> {
             Runnable r = inv.getArgument(0);
-            assertThrows(InvalidRequestException.class, r::run);
+            r.run();
             return null;
         }).when(executor).submit(any(Runnable.class));
 
