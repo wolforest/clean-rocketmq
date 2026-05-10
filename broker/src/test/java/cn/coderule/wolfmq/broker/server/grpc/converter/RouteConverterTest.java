@@ -1,7 +1,5 @@
 package cn.coderule.wolfmq.broker.server.grpc.converter;
 
-import apache.rocketmq.v2.AddressScheme;
-import apache.rocketmq.v2.Assignment;
 import apache.rocketmq.v2.MessageQueue;
 import apache.rocketmq.v2.MessageType;
 import apache.rocketmq.v2.Permission;
@@ -10,13 +8,11 @@ import apache.rocketmq.v2.QueryAssignmentResponse;
 import apache.rocketmq.v2.QueryRouteRequest;
 import apache.rocketmq.v2.QueryRouteResponse;
 import apache.rocketmq.v2.Resource;
-import cn.coderule.wolfmq.domain.core.enums.message.MessageType;
 import cn.coderule.wolfmq.domain.domain.cluster.route.QueueInfo;
 import cn.coderule.wolfmq.domain.domain.cluster.route.RouteInfo;
 import cn.coderule.wolfmq.domain.domain.cluster.server.GroupInfo;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

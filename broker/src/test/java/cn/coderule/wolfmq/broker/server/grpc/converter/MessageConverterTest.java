@@ -26,8 +26,8 @@ class MessageConverterTest {
 
     private RequestContext createContext(String remoteAddress) {
         return RequestContext.builder()
-            .remoteAddress(remoteAddress)
-            .build();
+            .build()
+            .setRemoteAddress(remoteAddress);
     }
 
     private Message buildMessage(String topic, String messageId, byte[] body) {
