@@ -9,6 +9,7 @@ import cn.coderule.wolfmq.domain.config.business.TopicConfig;
 import cn.coderule.wolfmq.domain.config.network.RpcClientConfig;
 import cn.coderule.wolfmq.domain.config.store.CommitConfig;
 import cn.coderule.wolfmq.domain.config.store.ConsumeQueueConfig;
+import cn.coderule.wolfmq.domain.config.store.IndexConfig;
 import cn.coderule.wolfmq.domain.config.store.MetaConfig;
 import cn.coderule.wolfmq.domain.core.constant.PermName;
 import java.io.File;
@@ -102,6 +103,7 @@ public class StoreConfig extends ServerIdentity {
 
     private CommitConfig commitConfig;
     private ConsumeQueueConfig consumeQueueConfig;
+    private IndexConfig indexConfig;
     private TimerConfig timerConfig;
     private MetaConfig metaConfig;
 
