@@ -61,7 +61,18 @@ public class PopCheckPoint implements Comparable<PopCheckPoint>, Serializable {
     @JSONField(name = "ro")
     private long reviveOffset;
     /**
+     * Per-message offset differences from {@link #startOffset}.
+     * queueOffsetDiff will not be null or empty in 5.*
      *
+     * <p>When a batch of messages is popped, the queue offsets of the messages may not
+     * be contiguous (e.g. batch messages, ConsumeQueue compaction, filter mismatch gaps).
+     * This list records {@code actualQueueOffset - startOffset} for each message in the
+     * batch, so that the system can correctly map an ack offset back to its index within
+     * the checkpoint via {@link #indexOfAck}, and reconstruct the original offset via
+     * {@link #ackOffsetByIndex}.
+     *
+     * <p>When this field is null or empty (old-version CK), offsets are assumed to be
+     * {@code startOffset + index}.
      */
     @JSONField(name = "d")
     private List<Integer> queueOffsetDiff;
