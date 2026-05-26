@@ -17,7 +17,15 @@ public class PopCheckPointWrapper {
     private final String lockKey;
     private final String mergeKey;
     /**
-     * with default config, this property is useless
+     * Whether this checkpoint should be written to the revive topic directly.
+     *
+     * <p>When {@code true}:
+     * <ul>
+     *   <li>The CK has already been or will be written to the revive topic directly</li>
+     *   <li>No Ack merging is needed — rejects these entries</li>
+     *   <li>The wrapper exists solely to maintain FIFO offset commit order</li>
+     * </ul>
+     *
      */
     private final boolean justOffset;
     /**
