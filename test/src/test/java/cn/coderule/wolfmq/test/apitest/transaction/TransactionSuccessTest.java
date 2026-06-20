@@ -89,9 +89,9 @@ public class TransactionSuccessTest extends ApiBaseTest {
         for (int i = 0; i < 100; i++) {
             Message message = createMessage(i);
 
-
+            Transaction transaction = null;
             try {
-                Transaction transaction = producer.beginTransaction();
+                transaction = producer.beginTransaction();
 
                 SendReceipt sendReceipt = producer.send(message, transaction);
                 Assert.assertNotNull(sendReceipt);
@@ -104,8 +104,21 @@ public class TransactionSuccessTest extends ApiBaseTest {
 
                 transaction.commit();
             } catch (Throwable t) {
+                rollbackTransaction(transaction);
                 LOG.error("Failed to send message: {}", i, t);
             }
+        }
+    }
+
+    private void rollbackTransaction(Transaction transaction) {
+        if (transaction == null) {
+            return;
+        }
+
+        try {
+            transaction.rollback();
+        } catch (Throwable e) {
+            LOG.error("Failed to rollback transaction", e);
         }
     }
 
