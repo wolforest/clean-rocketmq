@@ -27,6 +27,11 @@
             <artifactId>rpc</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.rocksdb</groupId>
+            <artifactId>rocksdbjni</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>
