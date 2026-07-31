@@ -9,6 +9,24 @@ public class TopicConfig implements Serializable {
     private int maxTopicLength = 127;
 
     private boolean enableAutoCreation = true;
+    /**
+     * enable tag sharding. if true:
+     * message in consume queue will be sharded by tag.
+     * message with same tag will be stored in same consume queue.
+     * this will improve performance when filter message by tag.
+     */
+    private boolean enableTagSharding = false;
+    /**
+     * enable tag index. if true:
+     * message in consume queue will be indexed by tag.
+     * if consume queue if file based:
+     *    A tag index will be created for each consume queue.
+     *    And the index will be stored in rocksdb.
+     * if consume queue is rocksdb based:
+     *    The key of rocksdb will be:
+     *    %topicName%queueId%tag
+     */
+    private boolean enableTagIndex = false;
 
     /**
      * enable wal topic(kafka like topic)
