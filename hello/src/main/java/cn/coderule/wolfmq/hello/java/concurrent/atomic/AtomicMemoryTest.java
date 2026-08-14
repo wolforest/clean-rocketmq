@@ -1,6 +1,6 @@
 package cn.coderule.wolfmq.hello.java.concurrent.atomic;
 
-import cn.coderule.common.util.test.MemoryRecoder;
+import cn.coderule.common.test.MemoryRecoder;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
 import lombok.extern.slf4j.Slf4j;
