@@ -1,6 +1,6 @@
 package cn.coderule.wolfmq.hello.java.concurrent.atomic;
 
-import cn.coderule.common.util.test.Timer;
+import cn.coderule.common.test.Timer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
