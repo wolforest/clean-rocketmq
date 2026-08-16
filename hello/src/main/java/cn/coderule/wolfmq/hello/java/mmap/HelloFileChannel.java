@@ -1,7 +1,7 @@
 package cn.coderule.wolfmq.hello.java.mmap;
 
 import cn.coderule.common.util.lang.number.RandomUtil;
-import cn.coderule.common.util.test.Timer;
+import cn.coderule.common.test.Timer;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
