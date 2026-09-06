@@ -6,14 +6,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class IntervalFlusherTest {
 
-    @Test
-    void testFlush() {
-        // TODO: 2023/10/23
-    }
-
-    @Test
-    void testTimeout() {
-        // TODO: 2023/10/23
-    }
+   
 
 }
