@@ -1,7 +1,6 @@
 package cn.coderule.wolfmq.store.server.bootstrap;
 
 import cn.coderule.wolfmq.domain.config.server.StoreConfig;
-import cn.coderule.wolfmq.domain.config.store.StorePath;
 import cn.coderule.wolfmq.domain.mock.ConfigMock;
 import java.nio.file.Path;
 import org.junit.jupiter.api.AfterEach;
@@ -11,10 +10,6 @@ import org.junit.jupiter.api.io.TempDir;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ContextInitializerTest {
-
-    @TempDir
-    Path tempDir;
-
     @AfterEach
     void tearDown() {
         StoreContext.APPLICATION.getObjectMap().clear();
