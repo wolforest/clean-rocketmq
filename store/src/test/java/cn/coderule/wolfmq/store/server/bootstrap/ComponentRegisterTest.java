@@ -5,17 +5,6 @@ import cn.coderule.wolfmq.domain.config.server.StoreConfig;
 import cn.coderule.wolfmq.domain.config.store.StorePath;
 import cn.coderule.wolfmq.domain.mock.ConfigMock;
 import cn.coderule.wolfmq.rpc.common.rpc.netty.NettyClient;
-import cn.coderule.wolfmq.store.domain.commitlog.CommitLogBootstrap;
-import cn.coderule.wolfmq.store.domain.consumequeue.ConsumeQueueBootstrap;
-import cn.coderule.wolfmq.store.domain.dispatcher.DispatcherBootstrap;
-import cn.coderule.wolfmq.store.domain.index.IndexBootstrap;
-import cn.coderule.wolfmq.store.domain.mq.MQBootstrap;
-import cn.coderule.wolfmq.store.domain.meta.MetaBootstrap;
-import cn.coderule.wolfmq.store.domain.timer.TimerBootstrap;
-import cn.coderule.wolfmq.store.infra.StoreScheduler;
-import cn.coderule.wolfmq.store.infra.file.AllocateMappedFileService;
-import cn.coderule.wolfmq.store.server.ha.HABootstrap;
-import cn.coderule.wolfmq.store.server.rpc.RpcBootstrap;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -41,7 +30,7 @@ class ComponentRegisterTest {
     }
 
     @AfterEach
-    void tearDown() throws Exception {
+    void tearDown() {
         StoreContext.APPLICATION.getObjectMap().clear();
         StoreContext.API.getObjectMap().clear();
         StoreContext.CHECK_POINT = null;
@@ -54,8 +43,7 @@ class ComponentRegisterTest {
         StoreContext.register(storeConfig);
         StoreContext.register(mock(NettyClient.class));
 
-        StoreCheckpoint checkpoint = new StoreCheckpoint(tempDir.toString());
-        StoreContext.CHECK_POINT = checkpoint;
+        StoreContext.CHECK_POINT = new StoreCheckpoint(tempDir.toString());
 
         LifecycleManager manager = ComponentRegister.register();
         assertNotNull(manager);
