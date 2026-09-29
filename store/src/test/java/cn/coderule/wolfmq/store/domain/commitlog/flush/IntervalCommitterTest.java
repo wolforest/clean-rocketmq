@@ -10,16 +10,13 @@ import static org.mockito.Mockito.*;
 
 public class IntervalCommitterTest {
 
-    private CommitConfig config;
-    private MappedFileQueue mappedFileQueue;
-    private Flusher flusher;
     private IntervalCommitter committer;
 
     @BeforeEach
     void setUp() {
-        config = new CommitConfig();
-        mappedFileQueue = mock(MappedFileQueue.class);
-        flusher = mock(Flusher.class);
+        CommitConfig config = new CommitConfig();
+        MappedFileQueue mappedFileQueue = mock(MappedFileQueue.class);
+        Flusher flusher = mock(Flusher.class);
         committer = new IntervalCommitter(config, mappedFileQueue, flusher);
     }
 
