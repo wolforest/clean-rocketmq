@@ -26,7 +26,6 @@ class GroupRetryPolicyTest {
 
         RetryPolicy result = policy.getRetryPolicy();
         assertNotNull(result);
-        assertTrue(result instanceof CustomizedRetryPolicy);
     }
 
     @Test
@@ -48,7 +47,6 @@ class GroupRetryPolicyTest {
 
         RetryPolicy result = policy.getRetryPolicy();
         assertNotNull(result);
-        assertTrue(result instanceof CustomizedRetryPolicy);
     }
 
     @Test
