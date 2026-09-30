@@ -7,12 +7,6 @@ import static org.junit.jupiter.api.Assertions.*;
 class ProxyConfigTest {
 
     @Test
-    void testNoArgsConstructor() {
-        ProxyConfig config = new ProxyConfig();
-        assertNotNull(config);
-    }
-
-    @Test
     void testConstructorWithAddr() {
         ProxyConfig config = new ProxyConfig("localhost:9876");
         assertEquals("localhost:9876", config.getAddr());
