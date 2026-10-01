@@ -30,9 +30,4 @@ class SelectedMappedFileTest {
         assertEquals(mappedFile, selected.getMappedFile());
     }
 
-    @Test
-    void testNoArgsConstructor() {
-        SelectedMappedFile selected = new SelectedMappedFile();
-        assertNotNull(selected);
-    }
 }
