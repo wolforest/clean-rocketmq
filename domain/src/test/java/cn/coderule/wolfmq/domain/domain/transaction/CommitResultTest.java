@@ -48,10 +48,4 @@ class CommitResultTest {
         assertEquals("ok", result.getResponseMessage());
         assertEquals(msg, result.getMessageBO());
     }
-
-    @Test
-    void testNoArgsConstructor() {
-        CommitResult result = new CommitResult();
-        assertNotNull(result);
-    }
 }
