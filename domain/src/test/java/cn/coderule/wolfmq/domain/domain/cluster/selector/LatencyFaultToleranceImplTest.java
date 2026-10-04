@@ -1,7 +1,5 @@
 package cn.coderule.wolfmq.domain.domain.cluster.selector;
 
-import cn.coderule.wolfmq.domain.domain.MessageQueue;
-import cn.coderule.wolfmq.domain.domain.cluster.route.PublishInfo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
