@@ -12,7 +12,6 @@ import cn.coderule.wolfmq.store.domain.commitlog.log.CommitLogManager;
 import cn.coderule.wolfmq.store.domain.commitlog.sharding.TopicPartitioner;
 import cn.coderule.wolfmq.store.domain.dispatcher.CommitHandlerManager;
 import cn.coderule.wolfmq.store.domain.dispatcher.CommitListener;
-import cn.coderule.wolfmq.store.domain.dispatcher.DispatchManager;
 import cn.coderule.wolfmq.store.domain.dispatcher.DispatchQueue;
 import cn.coderule.wolfmq.store.infra.file.AllocateMappedFileService;
 import cn.coderule.wolfmq.store.server.bootstrap.StoreCheckpoint;
