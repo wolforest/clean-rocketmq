@@ -4,7 +4,6 @@ import cn.coderule.wolfmq.domain.config.store.CommitConfig;
 import cn.coderule.wolfmq.domain.core.enums.store.FlushType;
 import cn.coderule.wolfmq.domain.domain.message.MessageBO;
 import cn.coderule.wolfmq.domain.domain.store.domain.mq.EnqueueFuture;
-import cn.coderule.wolfmq.domain.domain.store.domain.mq.EnqueueResult;
 import cn.coderule.wolfmq.domain.domain.store.infra.InsertResult;
 import cn.coderule.wolfmq.domain.domain.store.infra.MappedFileQueue;
 import cn.coderule.wolfmq.domain.domain.store.server.CheckPoint;
