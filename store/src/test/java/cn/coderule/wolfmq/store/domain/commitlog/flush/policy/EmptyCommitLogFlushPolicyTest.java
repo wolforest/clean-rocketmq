@@ -12,12 +12,11 @@ import static org.mockito.Mockito.*;
 
 public class EmptyCommitLogFlushPolicyTest {
 
-    private MappedFileQueue mappedFileQueue;
     private EmptyCommitLogFlushPolicy policy;
 
     @BeforeEach
     void setUp() {
-        mappedFileQueue = mock(MappedFileQueue.class);
+        MappedFileQueue mappedFileQueue = mock(MappedFileQueue.class);
         policy = new EmptyCommitLogFlushPolicy(mappedFileQueue);
     }
 
