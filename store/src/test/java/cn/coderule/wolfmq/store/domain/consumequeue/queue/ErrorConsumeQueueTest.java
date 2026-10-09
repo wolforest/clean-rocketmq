@@ -15,14 +15,14 @@ public class ErrorConsumeQueueTest {
     void testSingleton() {
         ErrorConsumeQueue instance1 = ErrorConsumeQueue.singleton("test");
         ErrorConsumeQueue instance2 = ErrorConsumeQueue.singleton("test2");
-        
+
         assertSame(instance1, instance2);
     }
 
     @Test
     void testGetInstance() {
         ErrorConsumeQueue instance = ErrorConsumeQueue.INSTANCE;
-        
+
         assertNotNull(instance);
     }
 
@@ -59,7 +59,7 @@ public class ErrorConsumeQueueTest {
     @Test
     void testGetListReturnsEmptyList() {
         List<QueueUnit> result = ErrorConsumeQueue.INSTANCE.get(0, 10);
-        
+
         assertNotNull(result);
         assertTrue(result.isEmpty());
     }
@@ -89,7 +89,7 @@ public class ErrorConsumeQueueTest {
     @Test
     void testGetCommitOffsetMapReturnsEmptyMap() {
         Map<Integer, Long> map = ErrorConsumeQueue.INSTANCE.getCommitOffsetMap();
-        
+
         assertNotNull(map);
         assertTrue(map.isEmpty());
     }
@@ -106,8 +106,8 @@ public class ErrorConsumeQueueTest {
 
     @Test
     void testLifecycleMethodsDoNotThrow() {
-        assertDoesNotThrow(() -> ErrorConsumeQueue.INSTANCE.load());
+        assertDoesNotThrow(ErrorConsumeQueue.INSTANCE::load);
         assertDoesNotThrow(() -> ErrorConsumeQueue.INSTANCE.flush(0));
-        assertDoesNotThrow(() -> ErrorConsumeQueue.INSTANCE.destroy());
+        assertDoesNotThrow(ErrorConsumeQueue.INSTANCE::destroy);
     }
 }
