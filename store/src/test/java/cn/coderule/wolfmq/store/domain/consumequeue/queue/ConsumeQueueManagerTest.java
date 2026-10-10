@@ -51,7 +51,7 @@ public class ConsumeQueueManagerTest {
         ConsumeQueue queue = factory.getOrCreate("TOPIC_A", 0);
         if (!(queue instanceof ErrorConsumeQueue)) {
             long offset = manager.getMinOffset("TOPIC_A", 0);
-            assertNotNull(offset);
+            assertTrue(offset >= 0L);
         }
     }
 
@@ -61,7 +61,7 @@ public class ConsumeQueueManagerTest {
         ConsumeQueue queue = factory.getOrCreate("TOPIC_A", 0);
         if (!(queue instanceof ErrorConsumeQueue)) {
             long offset = manager.getMaxOffset("TOPIC_A", 0);
-            assertNotNull(offset);
+            assertTrue(offset >= 0L);
         }
     }
 }
