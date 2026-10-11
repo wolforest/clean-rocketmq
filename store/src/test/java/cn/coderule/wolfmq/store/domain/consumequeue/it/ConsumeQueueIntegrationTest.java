@@ -171,7 +171,7 @@ class ConsumeQueueIntegrationTest extends BaseConsumeQueueIntegrationTest {
     }
 
     @Test
-    void testFlushAndDestroy() throws Exception {
+    void testFlushAndDestroy() {
         ConsumeQueue queue = consumeQueueFactory.getOrCreate(TEST_TOPIC, TEST_QUEUE_ID);
         queue.load();
 
