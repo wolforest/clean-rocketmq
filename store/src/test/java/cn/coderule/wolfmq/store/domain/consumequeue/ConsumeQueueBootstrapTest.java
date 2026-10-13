@@ -37,7 +37,7 @@ class ConsumeQueueBootstrapTest {
     }
 
     @Test
-    void initialize_ShouldRegisterConsumeQueueManager(@TempDir Path anotherDir) throws Exception {
+    void initialize_ShouldRegisterConsumeQueueManager(@TempDir Path anotherDir) {
         StoreConfig storeConfig = ConfigMock.createStoreConfig(anotherDir.toString());
         StorePath.initPath(anotherDir.toString());
         storeConfig.setCommitConfig(new CommitConfig());
@@ -53,7 +53,7 @@ class ConsumeQueueBootstrapTest {
         StoreContext.register(handlerManager);
 
         ConsumeQueueBootstrap bootstrap = new ConsumeQueueBootstrap();
-        assertDoesNotThrow(() -> bootstrap.initialize());
+        assertDoesNotThrow(bootstrap::initialize);
 
         ConsumeQueueManager manager = StoreContext.getBean(ConsumeQueueManager.class);
         assertNotNull(manager);
