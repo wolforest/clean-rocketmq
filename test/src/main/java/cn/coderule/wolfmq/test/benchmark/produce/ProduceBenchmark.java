@@ -1,5 +1,6 @@
 package cn.coderule.wolfmq.test.benchmark.produce;
 
+import cn.coderule.common.util.lang.ThreadUtil;
 import cn.coderule.wolfmq.test.benchmark.core.Benchmark;
 import cn.coderule.wolfmq.test.benchmark.core.Config;
 import cn.coderule.wolfmq.test.benchmark.core.Report;
@@ -25,6 +26,8 @@ public class ProduceBenchmark implements Benchmark {
         this.config = config;
         this.topicUtils = new TopicUtils(config.getTopicNumber());
         topicUtils.createTopicList();
+
+        ThreadUtil.sleep(3000);
 
         this.producer = ProducerManager.buildProducer(
             topicUtils.getTopicList()
@@ -79,6 +82,10 @@ public class ProduceBenchmark implements Benchmark {
                 topicUtils.getRandomTopic(),
                 config.getMessageSize()
             );
+
+            if (null == producer) {
+                log.error("producer is null, msg={}", message);
+            }
 
             producer.send(message);
             report.increaseSuccessCount();
