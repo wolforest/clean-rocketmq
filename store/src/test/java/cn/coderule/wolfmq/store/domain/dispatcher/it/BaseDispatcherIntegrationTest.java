@@ -129,7 +129,7 @@ public abstract class BaseDispatcherIntegrationTest {
 
     protected CommitListener createCommitListener() {
         CommitLog commitLog = commitLogManager.selectByShardId(0);
-        return new CommitListener(dispatchQueue, commitLog, StoreContext.getCheckPoint());
+        return new CommitListener(dispatchQueue, commitLog, StoreContext.getCheckPoint(), storeConfig.getCommitConfig());
     }
 
     protected AtomicInteger registerCountingHandler() {
