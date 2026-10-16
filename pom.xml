@@ -17,13 +17,13 @@
     <description>wolfmq</description>
 
     <modules>
-        <module>hello</module>
         <module>domain</module>
         <module>rpc</module>
         <module>registry</module>
         <module>store</module>
         <module>broker</module>
         <module>test</module>
+        <module>learn</module>
     </modules>
 
     <properties>
