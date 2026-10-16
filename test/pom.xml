@@ -12,33 +12,14 @@
     <groupId>cn.coderule.wolfmq</groupId>
     <artifactId>test</artifactId>
     <version>1.0.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>apitest</module>
+    </modules>
 
     <properties>
         <project.root>${basedir}/..</project.root>
     </properties>
-
-    <dependencies>
-        <dependency>
-            <groupId>cn.coderule</groupId>
-            <artifactId>common</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.rocketmq</groupId>
-            <artifactId>rocketmq-client-java</artifactId>
-            <version>5.0.5</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.rocketmq</groupId>
-            <artifactId>rocketmq-remoting</artifactId>
-            <version>5.2.1-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
-        </dependency>
-    </dependencies>
 
 </project>
