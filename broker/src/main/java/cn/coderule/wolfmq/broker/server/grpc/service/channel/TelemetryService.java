@@ -5,6 +5,7 @@ import apache.rocketmq.v2.Code;
 import apache.rocketmq.v2.Resource;
 import apache.rocketmq.v2.Settings;
 import apache.rocketmq.v2.TelemetryCommand;
+import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.wolfmq.broker.api.ConsumerController;
 import cn.coderule.wolfmq.broker.api.ProducerController;
 import cn.coderule.wolfmq.broker.api.RouteController;
@@ -49,9 +50,12 @@ public class TelemetryService {
 
     public ContextStreamObserver<TelemetryCommand> telemetry(StreamObserver<TelemetryCommand> responseObserver) {
         return new ContextStreamObserver<>() {
+            private RequestContext requestContext;
 
             @Override
             public void onNext(RequestContext ctx, TelemetryCommand value) {
+                this.requestContext = ctx;
+
                 try {
                     process(ctx, value, responseObserver);
                 } catch (Throwable t) {
@@ -62,6 +66,7 @@ public class TelemetryService {
             @Override
             public void onError(Throwable t) {
                 log.error("telemetry error", t);
+                offlineLiteSubscription(requestContext, t);
             }
 
             @Override
@@ -69,6 +74,26 @@ public class TelemetryService {
                 responseObserver.onCompleted();
             }
         };
+    }
+
+    private void offlineLiteSubscription(RequestContext ctx, Throwable t) {
+        String clientId = ctx.getClientID();
+        if (StringUtil.isBlank(clientId)) {
+            return;
+        }
+
+        if (!(t instanceof StatusRuntimeException statusException)) {
+            return;
+        }
+
+        log.warn("handle handleGrpcCancel, clientId:{}", clientId, t);
+
+        Status.Code statusCode = statusException.getStatus().getCode();
+        if (Status.CANCELLED.getCode() == statusCode
+            || Status.UNAVAILABLE.getCode() == statusCode) {
+
+        }
+
     }
 
     private void process(RequestContext ctx, TelemetryCommand command, StreamObserver<TelemetryCommand> responseObserver) {
