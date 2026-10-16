@@ -3,6 +3,7 @@ package cn.coderule.wolfmq.broker.server.grpc.service;
 import cn.coderule.wolfmq.broker.api.RouteController;
 import cn.coderule.wolfmq.broker.server.grpc.GrpcMessageService;
 import cn.coderule.wolfmq.broker.server.grpc.interceptor.ContextInitPipeline;
+import cn.coderule.wolfmq.broker.server.grpc.interceptor.PipelineExecutor;
 import cn.coderule.wolfmq.broker.server.grpc.service.channel.ChannelManager;
 import cn.coderule.wolfmq.broker.server.grpc.service.channel.HeartbeatService;
 import cn.coderule.wolfmq.broker.server.grpc.service.channel.RegisterService;
@@ -53,6 +54,7 @@ public class MessageBootstrap implements Lifecycle {
     private HeartbeatService heartbeatService;
     private TelemetryService telemetryService;
     private TerminationService terminationService;
+    private PipelineExecutor pipelineExecutor;
 
     protected ThreadPoolExecutor routeThreadPoolExecutor;
     protected ThreadPoolExecutor producerThreadPoolExecutor;
@@ -67,6 +69,7 @@ public class MessageBootstrap implements Lifecycle {
 
     @Override
     public void initialize() throws Exception {
+        initPipelineExecutor();
         initChannelService();
 
         initClientActivity();
@@ -119,7 +122,8 @@ public class MessageBootstrap implements Lifecycle {
             this.clientThreadPoolExecutor,
             heartbeatService,
             telemetryService,
-            terminationService
+            terminationService,
+            pipelineExecutor
         );
     }
 
@@ -176,7 +180,8 @@ public class MessageBootstrap implements Lifecycle {
 
         this.routeActivity = new RouteActivity(
             this.grpcConfig,
-            this.routeThreadPoolExecutor
+            this.routeThreadPoolExecutor,
+            this.pipelineExecutor
         );
     }
 
@@ -193,7 +198,8 @@ public class MessageBootstrap implements Lifecycle {
         this.producerThreadPoolExecutor.setRejectedExecutionHandler(rejectActivity);
 
         this.producerActivity = new ProducerActivity(
-            this.producerThreadPoolExecutor
+            this.producerThreadPoolExecutor,
+            this.pipelineExecutor
         );
     }
 
@@ -210,7 +216,8 @@ public class MessageBootstrap implements Lifecycle {
         this.consumerThreadPoolExecutor.setRejectedExecutionHandler(rejectActivity);
 
         this.consumerActivity = new ConsumerActivity(
-            this.consumerThreadPoolExecutor
+            this.consumerThreadPoolExecutor,
+            this.pipelineExecutor
         );
     }
 
@@ -227,23 +234,26 @@ public class MessageBootstrap implements Lifecycle {
         this.transactionThreadPoolExecutor.setRejectedExecutionHandler(rejectActivity);
 
         this.transactionActivity = new TransactionActivity(
-            this.transactionThreadPoolExecutor
+            this.transactionThreadPoolExecutor,
+            this.pipelineExecutor
         );
     }
 
-    private void initMessageService() {
+    private void initPipelineExecutor() {
         RequestPipeline pipeline = (context, headers, request) -> {
         };
 
         pipeline = pipeline.pipe(new ContextInitPipeline());
+        pipelineExecutor = new PipelineExecutor(pipeline);
+    }
 
+    private void initMessageService() {
         this.messageService = new GrpcMessageService(
             this.clientActivity,
             this.routeActivity,
             this.producerActivity,
             this.consumerActivity,
-            this.transactionActivity,
-            pipeline
+            this.transactionActivity
         );
     }
 
