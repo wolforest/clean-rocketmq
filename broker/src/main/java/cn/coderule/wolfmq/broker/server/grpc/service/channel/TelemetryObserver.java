@@ -2,12 +2,10 @@ package cn.coderule.wolfmq.broker.server.grpc.service.channel;
 
 import apache.rocketmq.v2.Status;
 import apache.rocketmq.v2.TelemetryCommand;
+import cn.coderule.wolfmq.broker.server.grpc.interceptor.PipelineExecutor;
 import cn.coderule.wolfmq.domain.domain.cluster.RequestContext;
 import cn.coderule.wolfmq.rpc.broker.grpc.ContextStreamObserver;
-import cn.coderule.wolfmq.rpc.common.grpc.RequestPipeline;
 import cn.coderule.wolfmq.rpc.common.grpc.activity.ActivityHelper;
-import cn.coderule.wolfmq.rpc.common.grpc.core.constants.GrpcConstants;
-import io.grpc.Context;
 import io.grpc.stub.StreamObserver;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.function.Function;
@@ -16,20 +14,20 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class TelemetryObserver implements StreamObserver<TelemetryCommand> {
     private final ThreadPoolExecutor executor;
-    private final RequestPipeline pipeline;
+    private final PipelineExecutor pipelineExecutor;
     private final StreamObserver<TelemetryCommand> responseObserver;
 
     private final ContextStreamObserver<TelemetryCommand> response;
     private final Function<Status, TelemetryCommand> statusToResponse;
 
     public TelemetryObserver(
-        RequestPipeline pipeline,
+        PipelineExecutor pipelineExecutor,
         ThreadPoolExecutor executor,
         TelemetryService telemetryService,
         StreamObserver<TelemetryCommand> responseObserver
     ) {
         this.executor = executor;
-        this.pipeline = pipeline;
+        this.pipelineExecutor = pipelineExecutor;
         this.responseObserver = responseObserver;
 
         this.statusToResponse = telemetryStatueToResponse();
@@ -39,7 +37,6 @@ public class TelemetryObserver implements StreamObserver<TelemetryCommand> {
     @Override
     public void onNext(TelemetryCommand command) {
         RequestContext context = RequestContext.create();
-        executePipeline(context, pipeline, command);
 
         ActivityHelper<TelemetryCommand, TelemetryCommand> helper = getTelemetryHelper(
             context,
@@ -67,20 +64,13 @@ public class TelemetryObserver implements StreamObserver<TelemetryCommand> {
         ActivityHelper<TelemetryCommand, TelemetryCommand> helper
     ) {
         try {
+            pipelineExecutor.execute(context, command);
+
             Runnable task = () -> response.onNext(context, command);
             executor.submit(helper.createTask(task));
         } catch (Throwable t) {
             helper.writeResponse(null, t);
         }
-    }
-
-    private void executePipeline(RequestContext context, RequestPipeline pipeline, TelemetryCommand request) {
-        if (request != null) {
-            pipeline.execute(context, GrpcConstants.METADATA.get(Context.current()), request);
-            return;
-        }
-
-        log.error("[BUG] grpc request pipeline is not executed.");
     }
 
     private ActivityHelper<TelemetryCommand, TelemetryCommand> getTelemetryHelper(
