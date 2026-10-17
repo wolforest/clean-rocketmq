@@ -9,6 +9,7 @@ import apache.rocketmq.v2.Status;
 import cn.coderule.common.util.net.Address;
 import cn.coderule.wolfmq.broker.api.RouteController;
 import cn.coderule.wolfmq.broker.server.grpc.converter.RouteConverter;
+import cn.coderule.wolfmq.broker.server.grpc.interceptor.PipelineExecutor;
 import cn.coderule.wolfmq.domain.config.network.GrpcConfig;
 import cn.coderule.wolfmq.domain.core.enums.message.MessageType;
 import cn.coderule.wolfmq.domain.domain.cluster.RequestContext;
@@ -24,19 +25,24 @@ import lombok.Setter;
 public class RouteActivity {
     private final GrpcConfig grpcConfig;
     private final ThreadPoolExecutor executor;
+    private final PipelineExecutor pipelineExecutor;
 
     @Setter
     private RouteController routeController;
 
-    public RouteActivity(GrpcConfig grpcConfig, ThreadPoolExecutor executor) {
+
+    public RouteActivity(GrpcConfig grpcConfig, ThreadPoolExecutor executor, PipelineExecutor pipelineExecutor) {
         this.grpcConfig = grpcConfig;
         this.executor = executor;
+        this.pipelineExecutor = pipelineExecutor;
     }
 
     public void getRoute(RequestContext context, QueryRouteRequest request, StreamObserver<QueryRouteResponse> responseObserver) {
         ActivityHelper<QueryRouteRequest, QueryRouteResponse> helper = getRouteHelper(context, request, responseObserver);
 
         try {
+            pipelineExecutor.execute(context, request);
+
             Runnable task = () -> getRouteAsync(context, request)
                 .whenComplete(helper::writeResponse);
 
@@ -50,6 +56,8 @@ public class RouteActivity {
         ActivityHelper<QueryAssignmentRequest, QueryAssignmentResponse> helper = getAssignmentHelper(context, request, responseObserver);
 
         try {
+            pipelineExecutor.execute(context, request);
+
             Runnable task = () -> getAssignmentAsync(context, request)
                 .whenComplete(helper::writeResponse);
 
