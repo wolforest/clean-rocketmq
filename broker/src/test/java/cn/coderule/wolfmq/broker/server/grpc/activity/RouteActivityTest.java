@@ -8,6 +8,7 @@ import apache.rocketmq.v2.QueryRouteRequest;
 import apache.rocketmq.v2.QueryRouteResponse;
 import apache.rocketmq.v2.Resource;
 import cn.coderule.wolfmq.broker.api.RouteController;
+import cn.coderule.wolfmq.broker.server.grpc.interceptor.PipelineExecutor;
 import cn.coderule.wolfmq.domain.config.network.GrpcConfig;
 import cn.coderule.wolfmq.domain.core.enums.message.MessageType;
 import cn.coderule.wolfmq.domain.domain.cluster.RequestContext;
@@ -46,13 +47,16 @@ class RouteActivityTest {
     @Mock
     private StreamObserver<QueryAssignmentResponse> assignmentObserver;
 
+    @Mock
+    private PipelineExecutor pipelineExecutor;
+
     private RouteActivity activity;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
         when(grpcConfig.getPort()).thenReturn(8080);
-        activity = new RouteActivity(grpcConfig, executor);
+        activity = new RouteActivity(grpcConfig, executor, pipelineExecutor);
         activity.setRouteController(routeController);
     }
 
@@ -63,7 +67,7 @@ class RouteActivityTest {
 
     @Test
     void testSetRouteController() {
-        RouteActivity newActivity = new RouteActivity(grpcConfig, executor);
+        RouteActivity newActivity = new RouteActivity(grpcConfig, executor, pipelineExecutor);
         newActivity.setRouteController(routeController);
         assertNotNull(newActivity);
     }
