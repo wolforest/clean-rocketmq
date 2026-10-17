@@ -13,6 +13,7 @@ import apache.rocketmq.v2.ReceiveMessageResponse;
 import apache.rocketmq.v2.Status;
 import apache.rocketmq.v2.UpdateOffsetRequest;
 import apache.rocketmq.v2.UpdateOffsetResponse;
+import cn.coderule.wolfmq.broker.server.grpc.interceptor.PipelineExecutor;
 import cn.coderule.wolfmq.broker.server.grpc.service.consume.GrpcAckService;
 import cn.coderule.wolfmq.broker.server.grpc.service.consume.GrpcOffsetService;
 import cn.coderule.wolfmq.broker.server.grpc.service.consume.InvisibleService;
@@ -87,12 +88,15 @@ class ConsumerActivityTest {
     @Mock
     private QueryOffsetRequest queryOffsetRequest;
 
+    @Mock
+    private PipelineExecutor pipelineExecutor;
+
     private ConsumerActivity consumerActivity;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        consumerActivity = new ConsumerActivity(executor);
+        consumerActivity = new ConsumerActivity(executor, pipelineExecutor);
         consumerActivity.inject(popService, ackService, invisibleService, offsetService);
     }
 
@@ -103,7 +107,7 @@ class ConsumerActivityTest {
 
     @Test
     void testInject_storesAllServices() {
-        ConsumerActivity activity = new ConsumerActivity(executor);
+        ConsumerActivity activity = new ConsumerActivity(executor, pipelineExecutor);
         activity.inject(popService, ackService, invisibleService, offsetService);
         assertNotNull(activity);
     }
