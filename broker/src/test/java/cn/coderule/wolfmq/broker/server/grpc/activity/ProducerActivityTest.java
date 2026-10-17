@@ -5,6 +5,7 @@ import apache.rocketmq.v2.ForwardMessageToDeadLetterQueueResponse;
 import apache.rocketmq.v2.SendMessageRequest;
 import apache.rocketmq.v2.SendMessageResponse;
 import cn.coderule.wolfmq.broker.api.ProducerController;
+import cn.coderule.wolfmq.broker.server.grpc.interceptor.PipelineExecutor;
 import cn.coderule.wolfmq.domain.domain.cluster.RequestContext;
 import cn.coderule.wolfmq.domain.domain.message.MessageBO;
 import cn.coderule.wolfmq.domain.domain.store.domain.mq.EnqueueResult;
@@ -36,12 +37,15 @@ class ProducerActivityTest {
     @Mock
     private StreamObserver<ForwardMessageToDeadLetterQueueResponse> dlqObserver;
 
+    @Mock
+    private PipelineExecutor pipelineExecutor;
+
     private ProducerActivity activity;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        activity = new ProducerActivity(executor);
+        activity = new ProducerActivity(executor, pipelineExecutor);
         activity.setProducerController(producerController);
     }
 
@@ -52,7 +56,7 @@ class ProducerActivityTest {
 
     @Test
     void testSetProducerController() {
-        ProducerActivity newActivity = new ProducerActivity(executor);
+        ProducerActivity newActivity = new ProducerActivity(executor, pipelineExecutor);
         newActivity.setProducerController(producerController);
         assertNotNull(newActivity);
     }
