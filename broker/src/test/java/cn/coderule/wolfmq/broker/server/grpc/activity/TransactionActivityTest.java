@@ -2,6 +2,7 @@ package cn.coderule.wolfmq.broker.server.grpc.activity;
 
 import apache.rocketmq.v2.EndTransactionRequest;
 import apache.rocketmq.v2.EndTransactionResponse;
+import cn.coderule.wolfmq.broker.server.grpc.interceptor.PipelineExecutor;
 import cn.coderule.wolfmq.broker.server.grpc.service.TransactionService;
 import cn.coderule.wolfmq.domain.domain.cluster.RequestContext;
 import io.grpc.stub.StreamObserver;
@@ -28,12 +29,15 @@ class TransactionActivityTest {
     @Mock
     private StreamObserver<EndTransactionResponse> responseObserver;
 
+    @Mock
+    private PipelineExecutor pipelineExecutor;
+
     private TransactionActivity activity;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        activity = new TransactionActivity(executor);
+        activity = new TransactionActivity(executor, pipelineExecutor);
         activity.inject(transactionService);
     }
 
@@ -44,7 +48,7 @@ class TransactionActivityTest {
 
     @Test
     void testInject_setsTransactionService() {
-        TransactionActivity newActivity = new TransactionActivity(executor);
+        TransactionActivity newActivity = new TransactionActivity(executor, pipelineExecutor);
         newActivity.inject(transactionService);
         assertNotNull(newActivity);
     }
@@ -99,7 +103,7 @@ class TransactionActivityTest {
 
     @Test
     void testSubmit_withNullTransactionService_doesNotThrow() {
-        TransactionActivity newActivity = new TransactionActivity(executor);
+        TransactionActivity newActivity = new TransactionActivity(executor, pipelineExecutor);
         RequestContext context = RequestContext.builder().build();
         EndTransactionRequest request = EndTransactionRequest.newBuilder().build();
 
