@@ -8,6 +8,7 @@ import apache.rocketmq.v2.Status;
 import cn.coderule.wolfmq.broker.api.ProducerController;
 import cn.coderule.wolfmq.broker.server.grpc.converter.MessageConverter;
 import cn.coderule.wolfmq.broker.server.grpc.converter.ProducerConverter;
+import cn.coderule.wolfmq.broker.server.grpc.interceptor.PipelineExecutor;
 import cn.coderule.wolfmq.domain.core.enums.code.InvalidCode;
 import cn.coderule.wolfmq.domain.domain.cluster.RequestContext;
 import cn.coderule.wolfmq.domain.domain.message.MessageBO;
@@ -35,10 +36,12 @@ public class ProducerActivity {
      */
     @Setter
     private ProducerController producerController;
+    private final PipelineExecutor pipelineExecutor;
 
 
-    public ProducerActivity(ThreadPoolExecutor executor) {
+    public ProducerActivity(ThreadPoolExecutor executor, PipelineExecutor pipelineExecutor) {
         this.executor = executor;
+        this.pipelineExecutor = pipelineExecutor;
     }
 
     /**
@@ -54,6 +57,8 @@ public class ProducerActivity {
             = getProduceHelper(context, request, responseObserver);
 
         try {
+            pipelineExecutor.execute(context, request);
+
             Runnable task = ()
                 -> produceAsync(context, request)
                 .whenComplete(helper::writeResponse);
@@ -73,6 +78,8 @@ public class ProducerActivity {
             = getMoveToDLQHelper(context, request, responseObserver);
 
         try {
+            pipelineExecutor.execute(context, request);
+
             Runnable task = ()
                 -> moveToDLQAsync(context, request)
                 .whenComplete(helper::writeResponse);
