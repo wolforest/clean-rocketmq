@@ -13,6 +13,7 @@ import apache.rocketmq.v2.ReceiveMessageResponse;
 import apache.rocketmq.v2.Status;
 import apache.rocketmq.v2.UpdateOffsetRequest;
 import apache.rocketmq.v2.UpdateOffsetResponse;
+import cn.coderule.wolfmq.broker.server.grpc.interceptor.PipelineExecutor;
 import cn.coderule.wolfmq.broker.server.grpc.service.consume.GrpcAckService;
 import cn.coderule.wolfmq.broker.server.grpc.service.consume.InvisibleService;
 import cn.coderule.wolfmq.broker.server.grpc.service.consume.GrpcOffsetService;
@@ -25,14 +26,16 @@ import java.util.function.Function;
 
 public class ConsumerActivity {
     private final ThreadPoolExecutor executor;
+    private final PipelineExecutor pipelineExecutor;
 
     private PopService popService;
     private GrpcAckService ackService;
     private InvisibleService invisibleService;
     private GrpcOffsetService offsetService;
 
-    public ConsumerActivity(ThreadPoolExecutor executor) {
+    public ConsumerActivity(ThreadPoolExecutor executor, PipelineExecutor pipelineExecutor) {
         this.executor = executor;
+        this.pipelineExecutor = pipelineExecutor;
     }
 
     public void inject(
@@ -56,6 +59,8 @@ public class ConsumerActivity {
             = getReceiveHelper(context, request, responseObserver);
 
         try {
+            pipelineExecutor.execute(context, request);
+
             Runnable task = ()
                 -> popService.receive(context, request, responseObserver);
 
@@ -74,6 +79,8 @@ public class ConsumerActivity {
             = getAckHelper(context, request, responseObserver);
 
         try {
+            pipelineExecutor.execute(context, request);
+
             Runnable task = ()
                 -> ackService.ack(context, request)
                 .whenComplete(helper::writeResponse);
@@ -93,6 +100,8 @@ public class ConsumerActivity {
             = getInvisibleHelper(context, request, responseObserver);
 
         try {
+            pipelineExecutor.execute(context, request);
+
             Runnable task = ()
                 -> invisibleService.changeInvisible(context, request)
                 .whenComplete(helper::writeResponse);
@@ -112,6 +121,8 @@ public class ConsumerActivity {
             = getUpdateOffsetHelper(context, request, responseObserver);
 
         try {
+            pipelineExecutor.execute(context, request);
+
             Runnable task = ()
                 -> offsetService.updateOffsetAsync(context, request)
                 .whenComplete(helper::writeResponse);
@@ -125,6 +136,8 @@ public class ConsumerActivity {
         ActivityHelper<GetOffsetRequest, GetOffsetResponse> helper = getOffsetHelper(context, request, responseObserver);
 
         try {
+            pipelineExecutor.execute(context, request);
+
             Runnable task = ()
                 -> offsetService.getOffsetAsync(context, request)
                 .whenComplete(helper::writeResponse);
@@ -139,6 +152,8 @@ public class ConsumerActivity {
         ActivityHelper<QueryOffsetRequest, QueryOffsetResponse> helper = queryOffsetHelper(context, request, responseObserver);
 
         try {
+            pipelineExecutor.execute(context, request);
+
             Runnable task = ()
                 -> offsetService.queryOffsetAsync(context, request)
                 .whenComplete(helper::writeResponse);
