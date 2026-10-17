@@ -20,11 +20,10 @@ class GrpcMessageServiceTest {
         RouteActivity routeActivity = mock(RouteActivity.class);
         ConsumerActivity consumerActivity = mock(ConsumerActivity.class);
         TransactionActivity transactionActivity = mock(TransactionActivity.class);
-        RequestPipeline pipeline = (ctx, headers, request) -> {};
 
         GrpcMessageService service = new GrpcMessageService(
             clientActivity, routeActivity, producerActivity,
-            consumerActivity, transactionActivity, pipeline
+            consumerActivity, transactionActivity
         );
         assertNotNull(service);
     }
