@@ -5,6 +5,7 @@ import apache.rocketmq.v2.HeartbeatResponse;
 import apache.rocketmq.v2.NotifyClientTerminationRequest;
 import apache.rocketmq.v2.NotifyClientTerminationResponse;
 import apache.rocketmq.v2.TelemetryCommand;
+import cn.coderule.wolfmq.broker.server.grpc.interceptor.PipelineExecutor;
 import cn.coderule.wolfmq.broker.server.grpc.service.channel.HeartbeatService;
 import cn.coderule.wolfmq.broker.server.grpc.service.channel.TelemetryService;
 import cn.coderule.wolfmq.broker.server.grpc.service.channel.TerminationService;
@@ -48,6 +49,8 @@ class ClientActivityTest {
 
     @Mock
     private RequestPipeline pipeline;
+    @Mock
+    private PipelineExecutor pipelineExecutor;
 
     private ClientActivity clientActivity;
 
@@ -58,7 +61,8 @@ class ClientActivityTest {
             executor,
             heartbeatService,
             telemetryService,
-            terminationService
+            terminationService,
+            pipelineExecutor
         );
     }
 
@@ -73,7 +77,8 @@ class ClientActivityTest {
             executor,
             heartbeatService,
             telemetryService,
-            terminationService
+            terminationService,
+            pipelineExecutor
         );
         assertNotNull(activity);
     }
@@ -200,21 +205,21 @@ class ClientActivityTest {
 
     @Test
     void testTelemetry_returnsTelemetryObserver() {
-        StreamObserver<TelemetryCommand> result = clientActivity.telemetry(telemetryResponseObserver, pipeline);
+        StreamObserver<TelemetryCommand> result = clientActivity.telemetry(telemetryResponseObserver);
 
         assertNotNull(result);
     }
 
     @Test
     void testTelemetry_delegatesToTelemetryService() {
-        clientActivity.telemetry(telemetryResponseObserver, pipeline);
+        clientActivity.telemetry(telemetryResponseObserver);
 
         verify(telemetryService).telemetry(eq(telemetryResponseObserver));
     }
 
     @Test
     void testTelemetry_withNullPipeline_stillCreatesObserver() {
-        StreamObserver<TelemetryCommand> result = clientActivity.telemetry(telemetryResponseObserver, null);
+        StreamObserver<TelemetryCommand> result = clientActivity.telemetry(telemetryResponseObserver);
 
         assertNotNull(result);
     }
