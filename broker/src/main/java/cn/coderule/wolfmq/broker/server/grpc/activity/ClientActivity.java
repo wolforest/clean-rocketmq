@@ -6,12 +6,12 @@ import apache.rocketmq.v2.NotifyClientTerminationRequest;
 import apache.rocketmq.v2.NotifyClientTerminationResponse;
 import apache.rocketmq.v2.Status;
 import apache.rocketmq.v2.TelemetryCommand;
+import cn.coderule.wolfmq.broker.server.grpc.interceptor.PipelineExecutor;
 import cn.coderule.wolfmq.broker.server.grpc.service.channel.HeartbeatService;
 import cn.coderule.wolfmq.broker.server.grpc.service.channel.TelemetryObserver;
 import cn.coderule.wolfmq.broker.server.grpc.service.channel.TelemetryService;
 import cn.coderule.wolfmq.broker.server.grpc.service.channel.TerminationService;
 import cn.coderule.wolfmq.domain.domain.cluster.RequestContext;
-import cn.coderule.wolfmq.rpc.common.grpc.RequestPipeline;
 import cn.coderule.wolfmq.rpc.common.grpc.activity.ActivityHelper;
 import io.grpc.stub.StreamObserver;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -25,24 +25,29 @@ public class ClientActivity {
     private final HeartbeatService heartbeatService;
     private final TelemetryService telemetryService;
     private final TerminationService terminationService;
+    private final PipelineExecutor pipelineExecutor;
 
     public ClientActivity(
         ThreadPoolExecutor executor,
         HeartbeatService heartbeatService,
         TelemetryService telemetryService,
-        TerminationService terminationService
+        TerminationService terminationService,
+        PipelineExecutor pipelineExecutor
     ) {
         this.executor = executor;
 
         this.heartbeatService = heartbeatService;
         this.telemetryService = telemetryService;
         this.terminationService = terminationService;
+        this.pipelineExecutor = pipelineExecutor;
     }
 
     public void heartbeat(RequestContext context, HeartbeatRequest request, StreamObserver<HeartbeatResponse> responseObserver) {
         ActivityHelper<HeartbeatRequest, HeartbeatResponse> helper = getHeartbeatHelper(context, request, responseObserver);
 
         try {
+            pipelineExecutor.execute(context, request);
+
             Runnable task = () -> heartbeatService.heartbeat(context, request)
                 .whenComplete(helper::writeResponse);
 
@@ -55,6 +60,8 @@ public class ClientActivity {
     public void notifyClientTermination(RequestContext context, NotifyClientTerminationRequest request, StreamObserver<NotifyClientTerminationResponse> responseObserver) {
         ActivityHelper<NotifyClientTerminationRequest, NotifyClientTerminationResponse> helper = getTerminateHelper(context, request, responseObserver);
         try {
+            pipelineExecutor.execute(context, request);
+
             Runnable task = () -> terminationService.terminate(context, request)
                 .whenComplete(helper::writeResponse);
 
@@ -64,9 +71,9 @@ public class ClientActivity {
         }
     }
 
-    public StreamObserver<TelemetryCommand> telemetry(StreamObserver<TelemetryCommand> responseObserver, RequestPipeline pipeline) {
+    public StreamObserver<TelemetryCommand> telemetry(StreamObserver<TelemetryCommand> responseObserver) {
         return new TelemetryObserver(
-            pipeline,
+            pipelineExecutor,
             executor,
             telemetryService,
             responseObserver
