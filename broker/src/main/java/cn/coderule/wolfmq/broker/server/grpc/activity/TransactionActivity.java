@@ -3,6 +3,7 @@ package cn.coderule.wolfmq.broker.server.grpc.activity;
 import apache.rocketmq.v2.EndTransactionRequest;
 import apache.rocketmq.v2.EndTransactionResponse;
 import apache.rocketmq.v2.Status;
+import cn.coderule.wolfmq.broker.server.grpc.interceptor.PipelineExecutor;
 import cn.coderule.wolfmq.broker.server.grpc.service.TransactionService;
 import cn.coderule.wolfmq.domain.domain.cluster.RequestContext;
 import cn.coderule.wolfmq.rpc.common.grpc.activity.ActivityHelper;
@@ -12,11 +13,13 @@ import java.util.function.Function;
 
 public class TransactionActivity {
     private final ThreadPoolExecutor executor;
+    private final PipelineExecutor pipelineExecutor;
 
     private TransactionService transactionService;
 
-    public TransactionActivity(ThreadPoolExecutor executor) {
+    public TransactionActivity(ThreadPoolExecutor executor, PipelineExecutor pipelineExecutor) {
         this.executor = executor;
+        this.pipelineExecutor = pipelineExecutor;
     }
 
     public void inject(TransactionService transactionService) {
@@ -32,6 +35,8 @@ public class TransactionActivity {
             = getActivityHelper(context, request, responseObserver);
 
         try {
+            pipelineExecutor.execute(context, request);
+
             Runnable task = ()
                 -> transactionService.submit(context, request)
                 .whenComplete(helper::writeResponse);
