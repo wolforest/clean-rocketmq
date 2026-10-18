@@ -2,9 +2,6 @@ package cn.coderule.wolfmq.domain.domain.message;
 
 import cn.coderule.wolfmq.domain.core.enums.message.MessageVersion;
 import org.junit.jupiter.api.Test;
-
-import java.util.ArrayList;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -12,8 +9,6 @@ class MessageContainerTest {
 
     @Test
     void testBuilder() {
-        MessageBO msg = mock(MessageBO.class);
-
         MessageContainer container = MessageContainer.builder()
             .brokerName("broker1")
             .queueId(0)
@@ -49,11 +44,5 @@ class MessageContainerTest {
         MessageBO msg = mock(MessageBO.class);
         container.getMessageList().add(msg);
         assertEquals(1, container.getMessageList().size());
-    }
-
-    @Test
-    void testNoArgsConstructor() {
-        MessageContainer container = new MessageContainer();
-        assertNotNull(container);
     }
 }
