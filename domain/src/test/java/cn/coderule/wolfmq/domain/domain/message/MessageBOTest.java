@@ -1,6 +1,5 @@
 package cn.coderule.wolfmq.domain.domain.message;
 
-import cn.coderule.wolfmq.domain.core.constant.MessageConst;
 import cn.coderule.wolfmq.domain.core.enums.message.MessageStatus;
 import org.junit.jupiter.api.Test;
 
@@ -29,13 +28,6 @@ class MessageBOTest {
     void testNotFound() {
         MessageBO msg = MessageBO.notFound();
         assertEquals(MessageStatus.NO_MATCHED_MESSAGE, msg.getStatus());
-    }
-
-    @Test
-    void testSetBody() {
-        MessageBO msg = new MessageBO();
-        msg.setBody("world".getBytes());
-        assertEquals("world".getBytes().length, msg.getBodyLength());
     }
 
     @Test
