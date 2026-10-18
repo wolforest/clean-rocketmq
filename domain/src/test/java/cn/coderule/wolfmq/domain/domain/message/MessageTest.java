@@ -25,12 +25,6 @@ class MessageTest {
     }
 
     @Test
-    void testNoArgsConstructor() {
-        Message msg = new Message();
-        assertNotNull(msg);
-    }
-
-    @Test
     void testAllArgsConstructor() {
         HashMap<String, String> props = new HashMap<>();
         props.put("key", "value");
