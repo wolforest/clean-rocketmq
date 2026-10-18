@@ -1,5 +1,6 @@
 package cn.coderule.wolfmq.store.domain.dispatcher;
 
+import cn.coderule.wolfmq.domain.config.store.CommitConfig;
 import cn.coderule.wolfmq.domain.domain.store.domain.commitlog.CommitLog;
 import cn.coderule.wolfmq.domain.domain.store.server.CheckPoint;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,11 +21,13 @@ class CommitListenerTest {
     private CommitLog commitLog;
     private DispatchQueue queue;
     private CheckPoint checkPoint;
-    private int shardId = 5;
+    private final int shardId = 5;
+    private CommitConfig commitConfig;
 
     @BeforeEach
     void setUp() {
-        queue = new DispatchQueue(new cn.coderule.wolfmq.domain.config.store.CommitConfig());
+        commitConfig = new CommitConfig();
+        queue = new DispatchQueue(commitConfig);
 
         commitLog = mock(CommitLog.class);
         when(commitLog.getShardId()).thenReturn(shardId);
@@ -37,7 +40,7 @@ class CommitListenerTest {
 
     @Test
     void testGetServiceName() {
-        CommitListener listener = new CommitListener(queue, commitLog, checkPoint);
+        CommitListener listener = new CommitListener(queue, commitLog, checkPoint, commitConfig);
 
         String serviceName = listener.getServiceName();
         assertEquals("CommitListener-" + shardId, serviceName);
@@ -45,14 +48,14 @@ class CommitListenerTest {
 
     @Test
     void testGetDispatchedOffset_Initial() {
-        CommitListener listener = new CommitListener(queue, commitLog, checkPoint);
+        CommitListener listener = new CommitListener(queue, commitLog, checkPoint, commitConfig);
 
         assertEquals(0, listener.getDispatchedOffset());
     }
 
     @Test
     void testSetDispatchedOffset() {
-        CommitListener listener = new CommitListener(queue, commitLog, checkPoint);
+        CommitListener listener = new CommitListener(queue, commitLog, checkPoint, commitConfig);
 
         listener.setDispatchedOffset(1000);
 
@@ -61,7 +64,7 @@ class CommitListenerTest {
 
     @Test
     void testIncreaseDispatchedOffset() {
-        CommitListener listener = new CommitListener(queue, commitLog, checkPoint);
+        CommitListener listener = new CommitListener(queue, commitLog, checkPoint, commitConfig);
 
         listener.setDispatchedOffset(0);
         long newOffset = listener.increaseDispatchedOffset(500);
@@ -72,7 +75,7 @@ class CommitListenerTest {
 
     @Test
     void testIncreaseDispatchedOffset_Multiple() {
-        CommitListener listener = new CommitListener(queue, commitLog, checkPoint);
+        CommitListener listener = new CommitListener(queue, commitLog, checkPoint, commitConfig);
 
         listener.setDispatchedOffset(0);
         listener.increaseDispatchedOffset(100);
@@ -84,7 +87,7 @@ class CommitListenerTest {
 
     @Test
     void testLifecycle() throws Exception {
-        CommitListener listener = new CommitListener(queue, commitLog, checkPoint);
+        CommitListener listener = new CommitListener(queue, commitLog, checkPoint, commitConfig);
 
         listener.start();
         Thread.sleep(50);
@@ -101,7 +104,7 @@ class CommitListenerTest {
     void testServiceNameFormat() {
         for (int id = 0; id < 10; id++) {
             when(commitLog.getShardId()).thenReturn(id);
-            CommitListener listener = new CommitListener(queue, commitLog, checkPoint);
+            CommitListener listener = new CommitListener(queue, commitLog, checkPoint, commitConfig);
             assertEquals("CommitListener-" + id, listener.getServiceName());
         }
     }
