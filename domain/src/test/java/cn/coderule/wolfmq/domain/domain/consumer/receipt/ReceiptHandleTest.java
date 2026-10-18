@@ -38,10 +38,15 @@ class ReceiptHandleTest {
 
     @Test
     void decode_withoutCommitLogOffset() {
-        String str = "100" + MessageConst.KEY_SEPARATOR + "2000" + MessageConst.KEY_SEPARATOR + "30000"
-            + MessageConst.KEY_SEPARATOR + "1" + MessageConst.KEY_SEPARATOR + "0"
-            + MessageConst.KEY_SEPARATOR + "brokerA" + MessageConst.KEY_SEPARATOR + "3"
+        String str = "100"
+            + MessageConst.KEY_SEPARATOR + "2000"
+            + MessageConst.KEY_SEPARATOR + "30000"
+            + MessageConst.KEY_SEPARATOR + "1"
+            + MessageConst.KEY_SEPARATOR + "0"
+            + MessageConst.KEY_SEPARATOR + "brokerA"
+            + MessageConst.KEY_SEPARATOR + "3"
             + MessageConst.KEY_SEPARATOR + "500";
+
         ReceiptHandle decoded = ReceiptHandle.decode(str);
         assertEquals(100L, decoded.getStartOffset());
         assertEquals(-1L, decoded.getCommitLogOffset());
@@ -50,7 +55,10 @@ class ReceiptHandleTest {
     @Test
     void decode_tooFewElements_throws() {
         String str = "100" + MessageConst.KEY_SEPARATOR + "2000";
-        assertThrows(IllegalArgumentException.class, () -> ReceiptHandle.decode(str));
+        assertThrows(
+            IllegalArgumentException.class,
+            () -> ReceiptHandle.decode(str)
+        );
     }
 
     @Test
