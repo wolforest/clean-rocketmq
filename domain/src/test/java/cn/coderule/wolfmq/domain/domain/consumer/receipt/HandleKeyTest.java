@@ -1,6 +1,5 @@
 package cn.coderule.wolfmq.domain.domain.consumer.receipt;
 
-import cn.coderule.wolfmq.domain.core.constant.MessageConst;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
