@@ -1,9 +1,7 @@
 package cn.coderule.wolfmq.domain.domain.message;
 
 import org.junit.jupiter.api.Test;
-
 import java.net.InetSocketAddress;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class MessageIdTest {
@@ -23,7 +21,6 @@ class MessageIdTest {
         MessageId messageId = new MessageId(null, 0L);
 
         messageId.setAddress(address);
-
         assertEquals(address, messageId.getAddress());
     }
 
@@ -32,7 +29,6 @@ class MessageIdTest {
         MessageId messageId = new MessageId(null, 0L);
 
         messageId.setOffset(500L);
-
         assertEquals(500L, messageId.getOffset());
     }
 
