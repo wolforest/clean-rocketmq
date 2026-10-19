@@ -46,12 +46,18 @@ class AttributeParserTest {
 
     @Test
     void toMap_addWithoutPlusThrows() {
-        assertThrows(RuntimeException.class, () -> AttributeParser.toMap("key1=value1"));
+        assertThrows(
+            RuntimeException.class,
+            () -> AttributeParser.toMap("key1=value1")
+        );
     }
 
     @Test
     void toMap_deleteWithoutMinusThrows() {
-        assertThrows(RuntimeException.class, () -> AttributeParser.toMap("key1"));
+        assertThrows(
+            RuntimeException.class,
+            () -> AttributeParser.toMap("key1")
+        );
     }
 
     @Test
