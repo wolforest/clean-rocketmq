@@ -37,11 +37,7 @@ class TopicValidatorTest {
 
     @Test
     void validateTopic_tooLongThrows() {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < 128; i++) {
-            sb.append("a");
-        }
-        assertThrows(InvalidParameterException.class, () -> TopicValidator.validateTopic(sb.toString()));
+        assertThrows(InvalidParameterException.class, () -> TopicValidator.validateTopic("a".repeat(128)));
     }
 
     @Test
@@ -70,9 +66,7 @@ class TopicValidatorTest {
 
     @Test
     void validateAndReturn_tooLong() {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < 128; i++) sb.append("a");
-        TopicValidator.ValidateTopicResult result = TopicValidator.validateAndReturn(sb.toString());
+        TopicValidator.ValidateTopicResult result = TopicValidator.validateAndReturn("a".repeat(128));
         assertFalse(result.isValid());
     }
 
