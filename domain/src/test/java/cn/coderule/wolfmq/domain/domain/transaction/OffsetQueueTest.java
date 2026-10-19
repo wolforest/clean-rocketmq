@@ -1,15 +1,12 @@
 package cn.coderule.wolfmq.domain.domain.transaction;
 
 import org.junit.jupiter.api.Test;
-
-import java.util.concurrent.TimeUnit;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class OffsetQueueTest {
 
     @Test
-    void offer_and_poll() throws InterruptedException {
+    void offer_and_poll() {
         OffsetQueue queue = new OffsetQueue(System.currentTimeMillis(), 100);
         assertTrue(queue.offer("100", 1000));
         String result = queue.poll();
@@ -23,7 +20,7 @@ class OffsetQueueTest {
     }
 
     @Test
-    void isEmpty_afterOfferAndAdd() throws InterruptedException {
+    void isEmpty_afterOfferAndAdd() {
         OffsetQueue queue = new OffsetQueue(System.currentTimeMillis(), 100);
         queue.offer("100", 1000);
         queue.addAndGet(1);
@@ -31,7 +28,7 @@ class OffsetQueueTest {
     }
 
     @Test
-    void isEmpty_afterPoll() throws InterruptedException {
+    void isEmpty_afterPoll() {
         OffsetQueue queue = new OffsetQueue(System.currentTimeMillis(), 100);
         queue.offer("100", 1000);
         queue.poll();
@@ -55,7 +52,7 @@ class OffsetQueueTest {
     }
 
     @Test
-    void offer_fullQueue_returnsFalse() throws InterruptedException {
+    void offer_fullQueue_returnsFalse() {
         OffsetQueue queue = new OffsetQueue(System.currentTimeMillis(), 2);
         assertTrue(queue.offer("1", 1000));
         assertTrue(queue.offer("2", 1000));
@@ -69,7 +66,7 @@ class OffsetQueueTest {
     }
 
     @Test
-    void fifo_order() throws InterruptedException {
+    void fifo_order() {
         OffsetQueue queue = new OffsetQueue(System.currentTimeMillis(), 100);
         queue.offer("first", 1000);
         queue.offer("second", 1000);
