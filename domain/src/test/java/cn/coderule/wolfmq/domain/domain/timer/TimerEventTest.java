@@ -4,8 +4,6 @@ import cn.coderule.wolfmq.domain.domain.cluster.RequestContext;
 import cn.coderule.wolfmq.domain.domain.message.MessageBO;
 import org.junit.jupiter.api.Test;
 
-import java.util.concurrent.CountDownLatch;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -15,7 +13,7 @@ class TimerEventTest {
     void testBuilder() {
         RequestContext ctx = RequestContext.builder().build();
         MessageBO msg = mock(MessageBO.class);
-        
+
         TimerEvent event = TimerEvent.builder()
             .requestContext(ctx)
             .storeGroup("store1")
@@ -42,16 +40,9 @@ class TimerEventTest {
     }
 
     @Test
-    void testNoArgsConstructor() {
-        TimerEvent event = new TimerEvent();
-        assertNotNull(event);
-    }
-
-    @Test
     void testAllArgsConstructor() {
         RequestContext ctx = RequestContext.builder().build();
-        MessageBO msg = mock(MessageBO.class);
-        
+
         TimerEvent event = new TimerEvent();
         event.setRequestContext(ctx);
         event.setStoreGroup("store1");
