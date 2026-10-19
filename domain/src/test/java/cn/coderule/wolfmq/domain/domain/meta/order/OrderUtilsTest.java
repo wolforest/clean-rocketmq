@@ -12,7 +12,10 @@ class OrderUtilsTest {
 
     @Test
     void buildKey() {
-        assertEquals("myTopic@myGroup", OrderUtils.buildKey("myTopic", "myGroup"));
+        assertEquals(
+            "myTopic@myGroup",
+            OrderUtils.buildKey("myTopic", "myGroup")
+        );
     }
 
     @Test
