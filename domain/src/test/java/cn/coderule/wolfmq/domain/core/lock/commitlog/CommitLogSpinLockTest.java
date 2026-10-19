@@ -9,8 +9,12 @@ class CommitLogSpinLockTest {
     @Test
     void lock_and_unlock() {
         CommitLogSpinLock lock = new CommitLogSpinLock();
+
         lock.lock();
+        assertTrue(lock.isLocked());
+
         lock.unlock();
+        assertFalse(lock.isLocked());
     }
 
     @Test
