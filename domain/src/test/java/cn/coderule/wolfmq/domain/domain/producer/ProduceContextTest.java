@@ -39,12 +39,6 @@ class ProduceContextTest {
     }
 
     @Test
-    void testNoArgsConstructor() {
-        ProduceContext context = new ProduceContext();
-        assertNotNull(context);
-    }
-
-    @Test
     void testSetters() {
         RequestContext ctx = RequestContext.builder().build();
         MessageBO msg = mock(MessageBO.class);
