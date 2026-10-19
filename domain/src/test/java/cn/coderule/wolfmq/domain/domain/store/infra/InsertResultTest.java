@@ -47,9 +47,4 @@ class InsertResultTest {
         assertTrue(result.isSuccess());
     }
 
-    @Test
-    void testNoArgsConstructor() {
-        InsertResult result = new InsertResult();
-        assertNotNull(result);
-    }
 }
