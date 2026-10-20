@@ -1,4 +1,4 @@
-package cn.coderule.wolfmq.domain.config.server;
+package cn.coderule.wolfmq.domain.config.base;
 
 import cn.coderule.common.util.lang.bean.BeanUtil;
 import cn.coderule.wolfmq.domain.core.constant.MQConstants;
