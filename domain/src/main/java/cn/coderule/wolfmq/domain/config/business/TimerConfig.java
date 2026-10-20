@@ -1,6 +1,6 @@
 package cn.coderule.wolfmq.domain.config.business;
 
-import cn.coderule.wolfmq.domain.config.ConfigAttribute;
+import cn.coderule.wolfmq.domain.config.base.ConfigAttribute;
 import java.io.Serializable;
 import lombok.Data;
 
