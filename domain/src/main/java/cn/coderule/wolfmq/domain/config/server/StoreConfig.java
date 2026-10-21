@@ -2,7 +2,9 @@ package cn.coderule.wolfmq.domain.config.server;
 
 import cn.coderule.common.util.lang.SystemUtil;
 import cn.coderule.common.util.net.NetworkUtil;
-import cn.coderule.wolfmq.domain.config.ConfigAttribute;
+import cn.coderule.wolfmq.domain.config.base.Common;
+import cn.coderule.wolfmq.domain.config.base.ConfigAttribute;
+import cn.coderule.wolfmq.domain.config.base.ServerIdentity;
 import cn.coderule.wolfmq.domain.config.business.MessageConfig;
 import cn.coderule.wolfmq.domain.config.business.TimerConfig;
 import cn.coderule.wolfmq.domain.config.business.TopicConfig;
@@ -98,16 +100,17 @@ public class StoreConfig extends ServerIdentity {
      */
     private boolean assignConsumeOffset = false;
 
-    private MessageConfig messageConfig;
-    private TopicConfig topicConfig;
+    private Common common;
+    private MessageConfig messageConfig = new MessageConfig();
+    private TopicConfig topicConfig = new TopicConfig();
 
-    private CommitConfig commitConfig;
-    private ConsumeQueueConfig consumeQueueConfig;
-    private IndexConfig indexConfig;
-    private TimerConfig timerConfig;
-    private MetaConfig metaConfig;
+    private CommitConfig commitConfig = new CommitConfig();
+    private ConsumeQueueConfig consumeQueueConfig = new ConsumeQueueConfig();
+    private IndexConfig indexConfig = new IndexConfig();
+    private TimerConfig timerConfig = new TimerConfig();
+    private MetaConfig metaConfig = new MetaConfig();
 
-    private RpcClientConfig rpcClientConfig;
+    private RpcClientConfig rpcClientConfig = new RpcClientConfig();
 
     public SocketAddress getHostAddress() {
         return new InetSocketAddress(host, port);
