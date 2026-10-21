@@ -9,6 +9,11 @@ public class CommitLogReentrantLock implements CommitLogLock {
     private final ReentrantLock lock = new ReentrantLock(); // NonFairSync
 
     @Override
+    public boolean isLocked() {
+        return lock.isLocked();
+    }
+
+    @Override
     public void lock() {
         lock.lock();
     }
