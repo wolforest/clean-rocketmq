@@ -6,6 +6,8 @@ package cn.coderule.wolfmq.domain.core.lock.commitlog;
  * used by CommitLog
  */
 public interface CommitLogLock {
+    boolean isLocked();
+
     void lock();
 
     void unlock();
