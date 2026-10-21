@@ -56,10 +56,6 @@ public class RequestContext implements Serializable {
         return createForInner(clazz.getSimpleName());
     }
 
-    public Map<String, Object> getMap() {
-        return this.map;
-    }
-
     public RequestContext set(String key, Object val) {
         this.map.put(key, val);
         return this;
