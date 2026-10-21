@@ -1,29 +1,27 @@
 package cn.coderule.wolfmq.domain.config.store;
 
-import cn.coderule.common.util.lang.SystemUtil;
-import cn.coderule.wolfmq.domain.config.ConfigAttribute;
+import cn.coderule.wolfmq.domain.config.base.ConfigAttribute;
 import cn.coderule.wolfmq.domain.core.enums.store.FlushType;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.Data;
 
 @Data
 public class CommitConfig implements Serializable {
     private boolean enableMultiDir = false;
-    private boolean enableWriteCache = false;
+    private boolean enableWriteCache = ConfigAttribute.ENABLE_COMMITLOG_CACHE;
 
     private boolean enableDisruptor = ConfigAttribute.ENABLE_DISRUPTOR;
     private int defaultOfferTimeout = 3_000;
     private int defaultPollTimeout = 30;
 
-    private boolean enableSharding = false;
+    private boolean enableSharding = ConfigAttribute.ENABLE_COMMITLOG_SHARDING;
     private boolean bindShardingWithCpu = true;
     private int maxShardingNumber = 100;
-    private int shardingNumber = 2;
+    private int shardingNumber = ConfigAttribute.COMMITLOG_SHARDING_NUM;
 
 
     private int dispatchThreads = 5;
+    private int dispatchInterval = 10;
 
     private String dirName = "commitlog";
 
@@ -37,7 +35,8 @@ public class CommitConfig implements Serializable {
     private int ThroughFlushInterval = 10_000;
 
     private int minCommitPages = 4;
+
     private int commitInterval = 200;
-    private int ThroughCommitInterval = 200;
+    private int throughCommitInterval = 200;
 
 }
