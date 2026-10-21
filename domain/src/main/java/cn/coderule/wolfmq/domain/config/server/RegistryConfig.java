@@ -1,5 +1,6 @@
 package cn.coderule.wolfmq.domain.config.server;
 
+import cn.coderule.wolfmq.domain.config.base.Common;
 import cn.coderule.wolfmq.domain.core.constant.MQConstants;
 import java.io.File;
 import java.io.Serializable;
@@ -36,10 +37,11 @@ public class RegistryConfig implements Serializable {
     private volatile boolean waitServerStartup = false;
 
     /**
-     * If enable this flag, the topics that don't exist in broker registration payload will be deleted from name server.
-     *
+     * If enable this flag, the topics that don't exist in broker registration payload
+     * will be deleted from name server.
      * WARNING:
-     * 1. Enable this flag and "enableSingleTopicRegister" of broker config meanwhile to avoid losing topic route info unexpectedly.
+     * 1. Enable this flag and "enableSingleTopicRegister" of broker config meanwhile
+     *    to avoid losing topic route info unexpectedly.
      * 2. This flag does not support static topic currently.
      */
     private boolean deleteTopicWhileRegistration = false;
@@ -52,4 +54,6 @@ public class RegistryConfig implements Serializable {
      * Try to update configures in black list by restart process.
      */
     private String configBlackList = "configBlackList;configStorePath;kvConfigPath";
+
+    private Common common;
 }
