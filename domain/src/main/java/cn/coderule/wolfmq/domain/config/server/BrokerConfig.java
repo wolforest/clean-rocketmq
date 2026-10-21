@@ -3,7 +3,9 @@ package cn.coderule.wolfmq.domain.config.server;
 import cn.coderule.common.util.lang.SystemUtil;
 import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.common.util.net.NetworkUtil;
-import cn.coderule.wolfmq.domain.config.ConfigAttribute;
+import cn.coderule.wolfmq.domain.config.base.Common;
+import cn.coderule.wolfmq.domain.config.base.ConfigAttribute;
+import cn.coderule.wolfmq.domain.config.base.ServerIdentity;
 import cn.coderule.wolfmq.domain.config.business.MessageConfig;
 import cn.coderule.wolfmq.domain.config.business.TaskConfig;
 import cn.coderule.wolfmq.domain.config.business.TimerConfig;
@@ -26,9 +28,14 @@ public class BrokerConfig extends ServerIdentity implements Serializable {
     private String host = NetworkUtil.getLocalAddress();
     private Integer port = ConfigAttribute.GRPC_PORT;
 
+    private boolean enableGrpc = true;
+    private boolean enableRpc = false;
+    private boolean enableAmqp10 = false;
+    private boolean enableAmqp091 = false;
+
     private boolean enableTrace = false;
     private boolean enableEmbedStore = true;
-    private boolean enableRemoteStore = true;
+    private boolean enableRemoteStore = false;
 
     private long channelExpireTime = 120_000;
     private long subscriptionExpireTime = 600_000;
@@ -59,15 +66,16 @@ public class BrokerConfig extends ServerIdentity implements Serializable {
 
     private long serverReadyTime = 0L;
 
-    private MessageConfig messageConfig;
-    private TopicConfig topicConfig;
-    private TimerConfig timerConfig;
-    private TransactionConfig transactionConfig;
-    private TaskConfig taskConfig;
+    private Common common;
+    private MessageConfig messageConfig = new MessageConfig();
+    private TopicConfig topicConfig = new TopicConfig();
+    private TimerConfig timerConfig = new TimerConfig();
+    private TransactionConfig transactionConfig = new TransactionConfig();
+    private TaskConfig taskConfig = new TaskConfig();
 
-    private GrpcConfig grpcConfig;
-    private RpcClientConfig rpcClientConfig;
-    private RpcServerConfig rpcServerConfig;
+    private GrpcConfig grpcConfig = new GrpcConfig();
+    private RpcClientConfig rpcClientConfig = new RpcClientConfig();
+    private RpcServerConfig rpcServerConfig = new RpcServerConfig();
 
     public SocketAddress getHostAddress() {
         return new InetSocketAddress(host, port);
