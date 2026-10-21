@@ -10,6 +10,11 @@ public class CommitLogSpinLock implements CommitLogLock {
     private final AtomicBoolean putMessageSpinLock = new AtomicBoolean(true);
 
     @Override
+    public boolean isLocked() {
+        return !putMessageSpinLock.get();
+    }
+
+    @Override
     public void lock() {
         boolean flag;
         do {
