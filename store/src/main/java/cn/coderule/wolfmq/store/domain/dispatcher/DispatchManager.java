@@ -68,7 +68,7 @@ public class DispatchManager implements Lifecycle {
     private void createListeners() {
         for (int i = 0; i < config.getShardingNumber(); i++) {
             CommitLog commitLog = commitLogManager.selectByShardId(i);
-            CommitListener listener = new CommitListener(queue, commitLog, checkPoint);
+            CommitListener listener = new CommitListener(queue, commitLog, checkPoint, config);
             listenerList.add(listener);
         }
     }
