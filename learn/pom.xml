@@ -6,16 +6,18 @@
     <parent>
         <groupId>cn.coderule</groupId>
         <artifactId>wolfmq</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>${revision}</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <groupId>cn.coderule.wolfmq</groupId>
     <artifactId>learn</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>${revision}</version>
     <packaging>pom</packaging>
 
     <modules>
         <module>hello</module>
+        <module>minimq</module>
     </modules>
 
     <properties>
