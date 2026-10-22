@@ -54,7 +54,7 @@ public class ConsumeQueueBootstrap implements Lifecycle {
         flusher = new ConsumeQueueFlusher(consumeQueueConfig, StoreContext.getCheckPoint());
         loader = new ConsumeQueueLoader(consumeQueueConfig);
 
-        CommitConfig commitConfig = StoreContext.getBean(CommitConfig.class);
+        CommitConfig commitConfig = StoreContext.getBean(StoreConfig.class).getCommitConfig();
         OffsetCodec offsetCodec = new OffsetCodec(commitConfig.getMaxShardingNumber());
         recovery = new ConsumeQueueRecovery(consumeQueueConfig, StoreContext.getCheckPoint(), offsetCodec);
 
