@@ -7,6 +7,7 @@ import cn.coderule.wolfmq.domain.config.business.MessageConfig;
 import cn.coderule.wolfmq.domain.config.server.StoreConfig;
 import cn.coderule.wolfmq.domain.config.business.TimerConfig;
 import cn.coderule.wolfmq.domain.config.business.TopicConfig;
+import cn.coderule.wolfmq.domain.config.store.IndexConfig;
 import cn.coderule.wolfmq.domain.config.store.MetaConfig;
 import cn.coderule.wolfmq.domain.config.store.StorePath;
 
@@ -38,6 +39,7 @@ public class ContextInitializer {
         storeConfig.setTimerConfig(new TimerConfig());
         storeConfig.setMetaConfig(new MetaConfig());
         storeConfig.setRpcClientConfig(new RpcClientConfig());
+        storeConfig.setIndexConfig(new IndexConfig());
 
         StorePath.initPath(storeConfig.getRootDir());
 
