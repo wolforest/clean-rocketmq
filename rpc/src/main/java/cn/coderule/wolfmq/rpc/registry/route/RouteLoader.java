@@ -93,7 +93,19 @@ public class RouteLoader implements Lifecycle {
     }
 
     public RouteInfo getRoute(String topicName) {
-        return route.getRoute(topicName);
+        RouteInfo routeInfo = route.getRoute(topicName);
+        if (routeInfo != null) {
+            return routeInfo;
+        }
+
+        updateRouteInfo(topicName, true, true);
+
+        routeInfo = route.getRoute(topicName);
+        if (routeInfo == null) {
+            log.error("topic not found, topic: {}", topicName);
+        }
+
+        return routeInfo;
     }
 
     public PublishInfo getPublishInfo(String topicName) {
