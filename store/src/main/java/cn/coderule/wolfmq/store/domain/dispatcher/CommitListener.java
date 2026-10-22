@@ -2,6 +2,7 @@ package cn.coderule.wolfmq.store.domain.dispatcher;
 
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 import cn.coderule.common.util.lang.ThreadUtil;
+import cn.coderule.wolfmq.domain.config.store.CommitConfig;
 import cn.coderule.wolfmq.domain.domain.message.MessageBO;
 import cn.coderule.wolfmq.domain.domain.store.domain.commitlog.CommitEvent;
 import cn.coderule.wolfmq.domain.domain.store.domain.commitlog.CommitLog;
@@ -15,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class CommitListener extends ServiceThread {
+    private final CommitConfig commitConfig;
     private final CommitLog commitLog;
     private final DispatchQueue queue;
     private final CheckPoint checkPoint;
@@ -25,13 +27,15 @@ public class CommitListener extends ServiceThread {
     public CommitListener(
         DispatchQueue queue,
         CommitLog commitLog,
-        CheckPoint checkPoint
+        CheckPoint checkPoint,
+        CommitConfig commitConfig
     ) {
 
         this.queue = queue;
         this.commitLog = commitLog;
         this.checkPoint = checkPoint;
         this.shardId = commitLog.getShardId();
+        this.commitConfig = commitConfig;
 
         initDispatchedOffset();
     }
@@ -58,8 +62,8 @@ public class CommitListener extends ServiceThread {
 
         while (!this.isStopped()) {
             try {
-                if (hasNewEvent()) {
-                    return;
+                if (!hasNewEvent()) {
+                    await(commitConfig.getDispatchInterval());
                 }
 
                 this.listen();
@@ -87,11 +91,7 @@ public class CommitListener extends ServiceThread {
 
     private void listen() {
         MessageBO messageBO = commitLog.select(this.dispatchedOffset.get());
-        if (isOverflow(messageBO.getMessageLength())) {
-            return;
-        }
-
-        if (!messageBO.isValid()) {
+        if (!isValid(messageBO)) {
             return;
         }
 
@@ -104,6 +104,18 @@ public class CommitListener extends ServiceThread {
         }
 
         this.dispatchedOffset.addAndGet(messageBO.getMessageLength());
+    }
+
+    private boolean isValid(MessageBO messageBO) {
+        if (null == messageBO) {
+            return false;
+        }
+
+        if (isOverflow(messageBO.getMessageLength())) {
+            return false;
+        }
+
+        return messageBO.isValid();
     }
 
     private boolean hasNewEvent() {
