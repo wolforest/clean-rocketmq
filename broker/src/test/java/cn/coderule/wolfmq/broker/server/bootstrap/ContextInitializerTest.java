@@ -1,6 +1,6 @@
 package cn.coderule.wolfmq.broker.server.bootstrap;
 
-import cn.coderule.wolfmq.domain.core.event.ServerEventBus;
+import cn.coderule.common.convention.container.EventBus;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -11,7 +11,7 @@ class ContextInitializerTest {
     void testConstructor() {
         String[] args = {"-c", "config.properties"};
         ContextInitializer initializer = new ContextInitializer(args);
-        
+
         assertNotNull(initializer);
     }
 
@@ -19,10 +19,10 @@ class ContextInitializerTest {
     void testInitialize() {
         String[] args = {};
         ContextInitializer initializer = new ContextInitializer(args);
-        
+
         // Initialize should not throw
-        assertDoesNotThrow(() -> initializer.initialize());
-        
+        assertDoesNotThrow(initializer::initialize);
+
         // Verify config was loaded
         assertNotNull(BrokerContext.getBean(cn.coderule.wolfmq.domain.config.server.BrokerConfig.class));
     }
@@ -30,7 +30,7 @@ class ContextInitializerTest {
     @Test
     void testStaticInit() {
         String[] args = {};
-        
+
         // Static init should not throw
         assertDoesNotThrow(() -> ContextInitializer.init(args));
     }
@@ -40,9 +40,9 @@ class ContextInitializerTest {
         String[] args = {};
         ContextInitializer initializer = new ContextInitializer(args);
         initializer.initialize();
-        
+
         // Verify ServerEventBus was registered
-        ServerEventBus eventBus = BrokerContext.getBean(ServerEventBus.class);
+        EventBus eventBus = BrokerContext.getBean(EventBus.class);
         assertNotNull(eventBus);
     }
 }
