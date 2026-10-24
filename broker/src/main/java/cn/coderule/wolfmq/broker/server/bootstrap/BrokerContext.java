@@ -8,7 +8,12 @@ import cn.coderule.common.convention.container.ApplicationContext;
 public class BrokerContext {
     public static final ApplicationContext APPLICATION = new ApplicationContext();
     public static final ApplicationContext API = new ApplicationContext();
+
     public static final ApplicationContext MONITOR = new ApplicationContext();
+
+    public static final ApplicationContext GRPC = new ApplicationContext();
+    public static final ApplicationContext RPC = new ApplicationContext();
+    public static final ApplicationContext AMQP = new ApplicationContext();
 
     public static void registerContext(ApplicationContext context) {
         APPLICATION.registerContext(context);
