@@ -1,5 +1,6 @@
 package cn.coderule.wolfmq.broker.domain.consumer.revive;
 
+import cn.coderule.common.convention.container.EventBus;
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.wolfmq.broker.infra.store.ConsumeOffsetStore;
 import cn.coderule.wolfmq.broker.infra.store.MQStore;
@@ -9,7 +10,6 @@ import cn.coderule.wolfmq.broker.server.bootstrap.BrokerContext;
 import cn.coderule.wolfmq.domain.config.server.BrokerConfig;
 import cn.coderule.wolfmq.domain.domain.meta.topic.KeyBuilder;
 import cn.coderule.wolfmq.domain.core.event.ServerEvent;
-import cn.coderule.wolfmq.domain.core.event.ServerEventBus;
 import cn.coderule.wolfmq.store.server.bootstrap.StoreContext;
 import java.util.ArrayList;
 import java.util.List;
@@ -65,7 +65,7 @@ public class ReviveBootstrap implements Lifecycle {
     private ReviveThread createReviveThread(ReviveContext context, int queueId, RetryService retryService) {
         ReviveThread reviveThread = new ReviveThread(context, queueId, retryService);
 
-        ServerEventBus eventBus = StoreContext.getBean(ServerEventBus.class);
+        EventBus eventBus = StoreContext.getBean(EventBus.class);
         eventBus.on(
             ServerEvent.BECOME_MASTER, (arg) -> reviveThread.setSkipRevive(false)
         );
