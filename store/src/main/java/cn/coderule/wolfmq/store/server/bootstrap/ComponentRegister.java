@@ -1,8 +1,8 @@
 package cn.coderule.wolfmq.store.server.bootstrap;
 
+import cn.coderule.common.convention.container.EventBus;
 import cn.coderule.common.convention.service.LifecycleManager;
 import cn.coderule.wolfmq.domain.config.server.StoreConfig;
-import cn.coderule.wolfmq.domain.core.event.ServerEventBus;
 import cn.coderule.wolfmq.rpc.common.rpc.netty.NettyClient;
 import cn.coderule.wolfmq.store.domain.commitlog.CommitLogBootstrap;
 import cn.coderule.wolfmq.store.domain.consumequeue.ConsumeQueueBootstrap;
@@ -37,8 +37,8 @@ public class ComponentRegister {
     }
 
     private void registerLib() {
-        ServerEventBus manager = new ServerEventBus();
-        StoreContext.register(manager);
+        EventBus eventBus = new EventBus();
+        StoreContext.register(eventBus);
     }
 
     private void registerInfra() {
