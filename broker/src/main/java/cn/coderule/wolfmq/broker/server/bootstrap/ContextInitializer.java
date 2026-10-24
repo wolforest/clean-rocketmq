@@ -1,6 +1,6 @@
 package cn.coderule.wolfmq.broker.server.bootstrap;
 
-import cn.coderule.wolfmq.domain.core.event.ServerEventBus;
+import cn.coderule.common.convention.container.EventBus;
 
 /**
  * context initializer
@@ -28,8 +28,8 @@ public class ContextInitializer {
     }
 
     private void initLibs() {
-        ServerEventBus manager = new ServerEventBus();
-        BrokerContext.register(manager);
+        EventBus eventBus = new EventBus();
+        BrokerContext.register(eventBus);
     }
 
 }
