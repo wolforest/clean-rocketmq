@@ -1,7 +1,7 @@
 package cn.coderule.wolfmq.broker.infra.embed;
 
 import cn.coderule.wolfmq.domain.domain.meta.topic.Topic;
-import cn.coderule.wolfmq.domain.domain.store.api.meta.TopicStore;
+import cn.coderule.wolfmq.domain.server.store.api.meta.TopicStore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

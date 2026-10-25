@@ -2,7 +2,7 @@ package cn.coderule.wolfmq.domain.domain.message.utils;
 
 import cn.coderule.common.util.lang.ByteUtil;
 import cn.coderule.common.util.lang.string.StringUtil;
-import cn.coderule.wolfmq.domain.core.enums.message.TagType;
+import cn.coderule.wolfmq.domain.domain.message.enums.TagType;
 import cn.coderule.wolfmq.domain.domain.message.MessageId;
 import java.net.Inet4Address;
 import java.net.InetAddress;

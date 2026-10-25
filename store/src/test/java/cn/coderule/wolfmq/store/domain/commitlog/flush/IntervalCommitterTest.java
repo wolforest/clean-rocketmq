@@ -1,7 +1,7 @@
 package cn.coderule.wolfmq.store.domain.commitlog.flush;
 
 import cn.coderule.wolfmq.domain.config.store.CommitConfig;
-import cn.coderule.wolfmq.domain.domain.store.infra.MappedFileQueue;
+import cn.coderule.wolfmq.domain.core.mmap.MappedFileQueue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

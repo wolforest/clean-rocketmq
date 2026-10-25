@@ -1,8 +1,8 @@
 package cn.coderule.wolfmq.store.domain.consumequeue.queue;
 
 import cn.coderule.wolfmq.domain.config.store.ConsumeQueueConfig;
-import cn.coderule.wolfmq.domain.domain.store.domain.consumequeue.ConsumeQueue;
-import cn.coderule.wolfmq.domain.domain.store.domain.meta.TopicService;
+import cn.coderule.wolfmq.domain.domain.consumequeue.ConsumeQueue;
+import cn.coderule.wolfmq.domain.domain.meta.service.TopicService;
 import cn.coderule.wolfmq.store.server.bootstrap.StoreCheckpoint;
 import java.util.ArrayList;
 import java.util.List;

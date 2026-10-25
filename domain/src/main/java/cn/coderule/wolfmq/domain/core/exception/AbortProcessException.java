@@ -1,7 +1,7 @@
 package cn.coderule.wolfmq.domain.core.exception;
 
 import cn.coderule.common.lang.exception.BusinessException;
-import cn.coderule.wolfmq.domain.core.enums.code.InvalidCode;
+import cn.coderule.wolfmq.domain.core.constant.code.InvalidCode;
 
 public class AbortProcessException extends BusinessException {
     private static final String DEFAULT_MESSAGE = "Abort process";

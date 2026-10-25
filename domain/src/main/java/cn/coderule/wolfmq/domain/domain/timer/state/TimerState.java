@@ -1,7 +1,7 @@
 package cn.coderule.wolfmq.domain.domain.timer.state;
 
 import cn.coderule.wolfmq.domain.config.business.TimerConfig;
-import cn.coderule.wolfmq.domain.domain.timer.TimerConstants;
+import cn.coderule.wolfmq.domain.domain.timer.model.TimerConstants;
 import java.io.Serializable;
 import lombok.Data;
 

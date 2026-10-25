@@ -5,7 +5,7 @@ import cn.coderule.wolfmq.rpc.common.rpc.core.exception.RemotingCommandException
 import cn.coderule.wolfmq.rpc.common.rpc.protocol.header.CommandHeader;
 import cn.coderule.wolfmq.rpc.common.rpc.core.annotation.CFNotNull;
 import cn.coderule.wolfmq.rpc.common.rpc.core.enums.BoundaryType;
-import cn.coderule.wolfmq.domain.core.enums.code.LanguageCode;
+import cn.coderule.wolfmq.domain.core.constant.code.LanguageCode;
 import cn.coderule.wolfmq.rpc.common.rpc.core.enums.RemotingCommandType;
 import cn.coderule.wolfmq.rpc.common.rpc.protocol.code.ResponseCode;
 import cn.coderule.wolfmq.rpc.common.rpc.protocol.header.FastCodesHeader;

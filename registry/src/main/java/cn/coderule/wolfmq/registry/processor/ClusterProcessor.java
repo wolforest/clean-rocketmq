@@ -11,7 +11,7 @@ import cn.coderule.wolfmq.rpc.common.rpc.protocol.code.RequestCode;
 import cn.coderule.wolfmq.rpc.common.rpc.protocol.codec.RpcSerializable;
 import cn.coderule.wolfmq.rpc.registry.protocol.body.BrokerMemberGroup;
 import cn.coderule.wolfmq.rpc.registry.protocol.body.GetBrokerMemberGroupResponseBody;
-import cn.coderule.wolfmq.domain.domain.cluster.server.StoreInfo;
+import cn.coderule.wolfmq.domain.server.registry.StoreInfo;
 import cn.coderule.wolfmq.rpc.registry.protocol.header.AddWritePermOfBrokerResponseHeader;
 import cn.coderule.wolfmq.rpc.registry.protocol.header.BrokerHeartbeatRequestHeader;
 import cn.coderule.wolfmq.rpc.registry.protocol.header.GetBrokerMemberGroupRequestHeader;

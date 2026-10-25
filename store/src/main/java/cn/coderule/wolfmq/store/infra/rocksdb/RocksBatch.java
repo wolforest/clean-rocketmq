@@ -1,6 +1,6 @@
 package cn.coderule.wolfmq.store.infra.rocksdb;
 
-import cn.coderule.wolfmq.domain.domain.store.infra.kv.KVBatch;
+import cn.coderule.wolfmq.domain.core.kv.KVBatch;
 import java.nio.ByteBuffer;
 import org.rocksdb.WriteBatch;
 

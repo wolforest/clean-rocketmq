@@ -1,9 +1,9 @@
 package cn.coderule.wolfmq.store.domain.commitlog.vo;
 
 import cn.coderule.wolfmq.domain.domain.message.MessageBO;
-import cn.coderule.wolfmq.domain.domain.store.domain.mq.EnqueueResult;
-import cn.coderule.wolfmq.domain.domain.store.infra.MappedFile;
-import cn.coderule.wolfmq.domain.domain.message.MessageEncoder;
+import cn.coderule.wolfmq.domain.domain.mq.dto.EnqueueResult;
+import cn.coderule.wolfmq.domain.core.mmap.MappedFile;
+import cn.coderule.wolfmq.domain.domain.message.codec.MessageEncoder;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

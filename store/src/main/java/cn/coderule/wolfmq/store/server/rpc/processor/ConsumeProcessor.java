@@ -2,7 +2,7 @@ package cn.coderule.wolfmq.store.server.rpc.processor;
 
 import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.wolfmq.domain.core.constant.MQConstants;
-import cn.coderule.wolfmq.domain.domain.store.api.meta.ConsumeOffsetStore;
+import cn.coderule.wolfmq.domain.server.store.api.meta.ConsumeOffsetStore;
 import cn.coderule.wolfmq.rpc.common.rpc.RpcProcessor;
 import cn.coderule.wolfmq.rpc.common.rpc.core.exception.RemotingCommandException;
 import cn.coderule.wolfmq.rpc.common.rpc.core.invoke.RpcCommand;

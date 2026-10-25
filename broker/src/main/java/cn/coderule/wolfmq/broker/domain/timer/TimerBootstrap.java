@@ -13,8 +13,8 @@ import cn.coderule.wolfmq.broker.infra.store.TimerStore;
 import cn.coderule.wolfmq.broker.server.bootstrap.BrokerContext;
 import cn.coderule.wolfmq.domain.config.business.TimerConfig;
 import cn.coderule.wolfmq.domain.config.server.BrokerConfig;
-import cn.coderule.wolfmq.domain.domain.cluster.task.TaskLoader;
-import cn.coderule.wolfmq.domain.domain.timer.TimerQueue;
+import cn.coderule.wolfmq.domain.server.task.TaskLoader;
+import cn.coderule.wolfmq.domain.domain.timer.model.TimerQueue;
 import cn.coderule.wolfmq.domain.domain.timer.state.TimerState;
 import lombok.extern.slf4j.Slf4j;
 

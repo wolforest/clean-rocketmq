@@ -1,6 +1,6 @@
 package cn.coderule.wolfmq.domain.core.lock.queue;
 
-import cn.coderule.wolfmq.domain.domain.MessageQueue;
+import cn.coderule.wolfmq.domain.domain.mq.MessageQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 

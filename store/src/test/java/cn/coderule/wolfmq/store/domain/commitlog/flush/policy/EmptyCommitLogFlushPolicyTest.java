@@ -1,9 +1,9 @@
 package cn.coderule.wolfmq.store.domain.commitlog.flush.policy;
 
 import cn.coderule.wolfmq.domain.domain.message.MessageBO;
-import cn.coderule.wolfmq.domain.domain.store.infra.InsertResult;
-import cn.coderule.wolfmq.domain.domain.store.infra.MappedFileQueue;
-import cn.coderule.wolfmq.domain.domain.store.domain.mq.EnqueueFuture;
+import cn.coderule.wolfmq.domain.core.mmap.InsertResult;
+import cn.coderule.wolfmq.domain.core.mmap.MappedFileQueue;
+import cn.coderule.wolfmq.domain.domain.mq.dto.EnqueueFuture;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

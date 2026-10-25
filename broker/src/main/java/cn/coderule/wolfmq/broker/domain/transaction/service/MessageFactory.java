@@ -1,8 +1,8 @@
 package cn.coderule.wolfmq.broker.domain.transaction.service;
 
 import cn.coderule.wolfmq.domain.config.server.BrokerConfig;
-import cn.coderule.wolfmq.domain.domain.MessageQueue;
-import cn.coderule.wolfmq.domain.domain.message.utils.MessageIDSetter;
+import cn.coderule.wolfmq.domain.domain.mq.MessageQueue;
+import cn.coderule.wolfmq.domain.domain.message.codec.MessageIDSetter;
 import cn.coderule.wolfmq.domain.domain.transaction.SubmitRequest;
 import cn.coderule.wolfmq.domain.domain.transaction.TransactionUtil;
 import cn.coderule.wolfmq.domain.domain.transaction.CommitBuffer;

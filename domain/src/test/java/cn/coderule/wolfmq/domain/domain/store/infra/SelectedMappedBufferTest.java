@@ -1,5 +1,7 @@
 package cn.coderule.wolfmq.domain.domain.store.infra;
 
+import cn.coderule.wolfmq.domain.core.mmap.MappedFile;
+import cn.coderule.wolfmq.domain.core.mmap.SelectedMappedBuffer;
 import org.junit.jupiter.api.Test;
 
 import java.nio.ByteBuffer;

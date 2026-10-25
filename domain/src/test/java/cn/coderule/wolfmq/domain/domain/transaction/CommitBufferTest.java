@@ -1,7 +1,7 @@
 package cn.coderule.wolfmq.domain.domain.transaction;
 
 import cn.coderule.wolfmq.domain.config.business.TransactionConfig;
-import cn.coderule.wolfmq.domain.domain.MessageQueue;
+import cn.coderule.wolfmq.domain.domain.mq.MessageQueue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

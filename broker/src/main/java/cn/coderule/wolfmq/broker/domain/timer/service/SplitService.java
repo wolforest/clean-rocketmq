@@ -1,7 +1,7 @@
 package cn.coderule.wolfmq.broker.domain.timer.service;
 
 import cn.coderule.common.util.lang.collection.CollectionUtil;
-import cn.coderule.wolfmq.domain.domain.timer.TimerEvent;
+import cn.coderule.wolfmq.domain.domain.timer.model.TimerEvent;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedList;

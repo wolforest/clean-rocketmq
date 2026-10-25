@@ -2,8 +2,8 @@ package cn.coderule.wolfmq.broker.server.grpc.converter;
 
 import apache.rocketmq.v2.Code;
 import apache.rocketmq.v2.SendMessageResponse;
-import cn.coderule.wolfmq.domain.core.enums.store.EnqueueStatus;
-import cn.coderule.wolfmq.domain.domain.store.domain.mq.EnqueueResult;
+import cn.coderule.wolfmq.domain.domain.mq.dto.EnqueueStatus;
+import cn.coderule.wolfmq.domain.domain.mq.dto.EnqueueResult;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collections;

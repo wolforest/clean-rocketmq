@@ -3,7 +3,7 @@ package cn.coderule.wolfmq.broker.infra.embed;
 import cn.coderule.wolfmq.domain.config.server.BrokerConfig;
 import cn.coderule.wolfmq.domain.domain.meta.offset.OffsetRequest;
 import cn.coderule.wolfmq.domain.domain.meta.offset.OffsetResult;
-import cn.coderule.wolfmq.domain.domain.store.api.meta.ConsumeOffsetStore;
+import cn.coderule.wolfmq.domain.server.store.api.meta.ConsumeOffsetStore;
 import cn.coderule.wolfmq.domain.mock.ConfigMock;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

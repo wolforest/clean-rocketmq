@@ -1,7 +1,7 @@
 package cn.coderule.wolfmq.store.infra.rocksdb;
 
-import cn.coderule.wolfmq.domain.domain.store.infra.kv.KVBatch;
-import cn.coderule.wolfmq.domain.domain.store.infra.kv.KVTable;
+import cn.coderule.wolfmq.domain.core.kv.KVBatch;
+import cn.coderule.wolfmq.domain.core.kv.KVTable;
 import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.function.BiConsumer;

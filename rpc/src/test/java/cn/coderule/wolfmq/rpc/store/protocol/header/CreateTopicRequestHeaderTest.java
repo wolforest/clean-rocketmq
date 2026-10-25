@@ -1,6 +1,6 @@
 package cn.coderule.wolfmq.rpc.store.protocol.header;
 
-import cn.coderule.wolfmq.domain.core.enums.message.TagType;
+import cn.coderule.wolfmq.domain.domain.message.enums.TagType;
 import cn.coderule.wolfmq.domain.domain.meta.topic.Topic;
 import cn.coderule.wolfmq.rpc.common.rpc.core.exception.RemotingCommandException;
 import org.junit.jupiter.api.Test;
@@ -12,7 +12,7 @@ public class CreateTopicRequestHeaderTest {
     @Test
     void testDefaultConstructor() {
         CreateTopicRequestHeader header = new CreateTopicRequestHeader();
-        
+
         assertNotNull(header);
         assertNull(header.getTopic());
         assertNull(header.getDefaultTopic());
@@ -30,7 +30,7 @@ public class CreateTopicRequestHeaderTest {
     @Test
     void testSettersAndGetters() {
         CreateTopicRequestHeader header = new CreateTopicRequestHeader();
-        
+
         header.setTopic("test-topic");
         header.setDefaultTopic("TBW102");
         header.setReadQueueNums(8);
@@ -42,7 +42,7 @@ public class CreateTopicRequestHeaderTest {
         header.setAttributes("key=value");
         header.setForce(true);
         header.setLo(true);
-        
+
         assertEquals("test-topic", header.getTopic());
         assertEquals("TBW102", header.getDefaultTopic());
         assertEquals(8, header.getReadQueueNums());
@@ -66,9 +66,9 @@ public class CreateTopicRequestHeaderTest {
         header.setOrder(true);
         header.setTopicSysFlag(1);
         header.setAttributes("+cleanup.policy=delete");
-        
+
         Topic topic = header.toTopic();
-        
+
         assertNotNull(topic);
         assertEquals("test-topic", topic.getTopicName());
         assertEquals(16, topic.getReadQueueNums());
@@ -88,9 +88,9 @@ public class CreateTopicRequestHeaderTest {
         header.setPerm(6);
         header.setOrder(false);
         header.setTopicSysFlag(null);
-        
+
         Topic topic = header.toTopic();
-        
+
         assertEquals(0, topic.getTopicSysFlag());
     }
 
@@ -98,7 +98,7 @@ public class CreateTopicRequestHeaderTest {
     void testCheckFieldsWithValidTagType() {
         CreateTopicRequestHeader header = new CreateTopicRequestHeader();
         header.setTopicFilterType("SINGLE_TAG");
-        
+
         assertDoesNotThrow(() -> header.checkFields());
     }
 
@@ -106,7 +106,7 @@ public class CreateTopicRequestHeaderTest {
     void testCheckFieldsWithInvalidTagType() {
         CreateTopicRequestHeader header = new CreateTopicRequestHeader();
         header.setTopicFilterType("INVALID_TYPE");
-        
+
         assertThrows(RemotingCommandException.class, () -> header.checkFields());
     }
 
@@ -114,9 +114,9 @@ public class CreateTopicRequestHeaderTest {
     void testGetTopicFilterTypeEnum() {
         CreateTopicRequestHeader header = new CreateTopicRequestHeader();
         header.setTopicFilterType("MULTI_TAG");
-        
+
         TagType type = header.getTopicFilterTypeEnum();
-        
+
         assertEquals(TagType.MULTI_TAG, type);
     }
 
@@ -125,9 +125,9 @@ public class CreateTopicRequestHeaderTest {
         CreateTopicRequestHeader header = new CreateTopicRequestHeader();
         header.setTopic("test-topic");
         header.setDefaultTopic("TBW102");
-        
+
         String str = header.toString();
-        
+
         assertNotNull(str);
         assertTrue(str.contains("test-topic"));
         assertTrue(str.contains("TBW102"));

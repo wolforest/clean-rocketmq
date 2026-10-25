@@ -5,7 +5,7 @@ import cn.coderule.wolfmq.broker.infra.remote.RemoteAckStore;
 import cn.coderule.wolfmq.domain.config.server.BrokerConfig;
 import cn.coderule.wolfmq.domain.domain.consumer.ack.AckInfo;
 import cn.coderule.wolfmq.domain.domain.consumer.consume.pop.checkpoint.PopCheckPoint;
-import cn.coderule.wolfmq.domain.domain.store.api.meta.AckStore;
+import cn.coderule.wolfmq.domain.server.store.api.meta.AckStore;
 
 @Deprecated
 public class AckFacade implements AckStore {

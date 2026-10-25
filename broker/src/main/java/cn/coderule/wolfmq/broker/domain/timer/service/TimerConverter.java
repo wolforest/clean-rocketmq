@@ -2,9 +2,9 @@ package cn.coderule.wolfmq.broker.domain.timer.service;
 
 import cn.coderule.wolfmq.domain.core.constant.MessageConst;
 import cn.coderule.wolfmq.domain.domain.message.MessageBO;
-import cn.coderule.wolfmq.domain.domain.timer.TimerConstants;
-import cn.coderule.wolfmq.domain.domain.timer.TimerEvent;
-import cn.coderule.wolfmq.domain.domain.store.utils.TimerUtils;
+import cn.coderule.wolfmq.domain.domain.timer.model.TimerConstants;
+import cn.coderule.wolfmq.domain.domain.timer.model.TimerEvent;
+import cn.coderule.wolfmq.domain.domain.timer.wheel.TimerUtils;
 
 public class TimerConverter {
     public static TimerEvent toEvent(MessageBO messageBO, long enqueueTime, int magic) {

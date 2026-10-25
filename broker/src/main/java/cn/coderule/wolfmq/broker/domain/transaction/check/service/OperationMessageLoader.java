@@ -4,7 +4,7 @@ import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.wolfmq.broker.domain.transaction.check.context.CheckContext;
 import cn.coderule.wolfmq.broker.domain.transaction.check.context.TransactionContext;
 import cn.coderule.wolfmq.broker.domain.transaction.service.TransactionMessageService;
-import cn.coderule.wolfmq.domain.domain.store.domain.mq.DequeueResult;
+import cn.coderule.wolfmq.domain.domain.mq.dto.DequeueResult;
 import cn.coderule.wolfmq.domain.domain.message.MessageBO;
 import cn.coderule.wolfmq.domain.domain.transaction.TransactionUtil;
 import java.util.HashSet;

@@ -4,14 +4,14 @@ import cn.coderule.wolfmq.domain.domain.consumer.ack.broker.AckResult;
 import cn.coderule.wolfmq.domain.domain.consumer.ack.store.AckMessage;
 import cn.coderule.wolfmq.domain.domain.consumer.ack.store.CheckPointRequest;
 import cn.coderule.wolfmq.domain.domain.consumer.ack.store.OffsetRequest;
-import cn.coderule.wolfmq.domain.domain.store.domain.mq.DequeueRequest;
-import cn.coderule.wolfmq.domain.domain.store.domain.mq.DequeueResult;
+import cn.coderule.wolfmq.domain.domain.mq.dto.DequeueRequest;
+import cn.coderule.wolfmq.domain.domain.mq.dto.DequeueResult;
 import cn.coderule.wolfmq.domain.domain.consumer.consume.mq.MessageRequest;
 import cn.coderule.wolfmq.domain.domain.consumer.consume.mq.MessageResult;
 import cn.coderule.wolfmq.domain.domain.consumer.consume.mq.QueueRequest;
 import cn.coderule.wolfmq.domain.domain.consumer.consume.mq.QueueResult;
-import cn.coderule.wolfmq.domain.domain.store.domain.mq.EnqueueRequest;
-import cn.coderule.wolfmq.domain.domain.store.domain.mq.EnqueueResult;
+import cn.coderule.wolfmq.domain.domain.mq.dto.EnqueueRequest;
+import cn.coderule.wolfmq.domain.domain.mq.dto.EnqueueResult;
 import java.util.concurrent.CompletableFuture;
 
 /**

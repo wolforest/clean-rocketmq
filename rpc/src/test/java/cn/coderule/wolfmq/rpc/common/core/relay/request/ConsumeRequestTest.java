@@ -1,6 +1,6 @@
 package cn.coderule.wolfmq.rpc.common.core.relay.request;
 
-import cn.coderule.wolfmq.domain.domain.cluster.RequestContext;
+import cn.coderule.wolfmq.domain.server.RequestContext;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -11,7 +11,7 @@ public class ConsumeRequestTest {
     @Test
     void testDefaultConstructor() {
         ConsumeRequest request = new ConsumeRequest();
-        
+
         assertNotNull(request);
         assertNull(request.getContext());
     }
@@ -20,16 +20,16 @@ public class ConsumeRequestTest {
     void testSettersAndGetters() {
         ConsumeRequest request = new ConsumeRequest();
         RequestContext context = mock(RequestContext.class);
-        
+
         request.setContext(context);
-        
+
         assertSame(context, request.getContext());
     }
 
     @Test
     void testSerializable() {
         ConsumeRequest request = new ConsumeRequest();
-        
+
         assertTrue(request instanceof java.io.Serializable);
     }
 }

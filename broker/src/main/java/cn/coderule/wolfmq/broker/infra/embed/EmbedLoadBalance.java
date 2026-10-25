@@ -2,8 +2,8 @@ package cn.coderule.wolfmq.broker.infra.embed;
 
 import cn.coderule.wolfmq.domain.config.server.BrokerConfig;
 import cn.coderule.wolfmq.domain.domain.meta.topic.TopicValidator;
-import cn.coderule.wolfmq.domain.domain.store.api.meta.SubscriptionStore;
-import cn.coderule.wolfmq.domain.domain.store.api.meta.TopicStore;
+import cn.coderule.wolfmq.domain.server.store.api.meta.SubscriptionStore;
+import cn.coderule.wolfmq.domain.server.store.api.meta.TopicStore;
 
 public class EmbedLoadBalance {
     private final BrokerConfig brokerConfig;

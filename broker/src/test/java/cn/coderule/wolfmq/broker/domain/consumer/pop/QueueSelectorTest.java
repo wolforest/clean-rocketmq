@@ -4,10 +4,10 @@ import cn.coderule.wolfmq.broker.domain.meta.RouteService;
 import cn.coderule.wolfmq.domain.config.business.TopicConfig;
 import cn.coderule.wolfmq.domain.config.server.BrokerConfig;
 import cn.coderule.wolfmq.domain.core.exception.BrokerException;
-import cn.coderule.wolfmq.domain.domain.MessageQueue;
-import cn.coderule.wolfmq.domain.domain.cluster.RequestContext;
-import cn.coderule.wolfmq.domain.domain.cluster.selector.MessageQueueSelector;
-import cn.coderule.wolfmq.domain.domain.cluster.selector.MessageQueueView;
+import cn.coderule.wolfmq.domain.domain.mq.MessageQueue;
+import cn.coderule.wolfmq.domain.server.RequestContext;
+import cn.coderule.wolfmq.domain.server.selector.MessageQueueSelector;
+import cn.coderule.wolfmq.domain.server.selector.MessageQueueView;
 import cn.coderule.wolfmq.domain.domain.consumer.consume.pop.PopContext;
 import cn.coderule.wolfmq.domain.domain.consumer.consume.pop.PopRequest;
 import cn.coderule.wolfmq.domain.domain.meta.topic.KeyBuilder;
@@ -50,7 +50,7 @@ class QueueSelectorTest {
     void testSelectWithStoreGroup() {
         String topicName = "TestTopic";
         String storeGroup = "broker1";
-        
+
         PopRequest request = PopRequest.builder()
             .topicName(topicName)
             .storeGroup(storeGroup)
@@ -77,7 +77,7 @@ class QueueSelectorTest {
     @Test
     void testSelectWithoutStoreGroup() {
         String topicName = "TestTopic";
-        
+
         PopRequest request = PopRequest.builder()
             .topicName(topicName)
             .requestContext(new RequestContext())
@@ -102,7 +102,7 @@ class QueueSelectorTest {
     @Test
     void testSelectQueueNotFound() {
         String topicName = "NonExistentTopic";
-        
+
         PopRequest request = PopRequest.builder()
             .topicName(topicName)
             .requestContext(new RequestContext())
@@ -118,7 +118,7 @@ class QueueSelectorTest {
     @Test
     void testSelectNoReadableQueue() {
         String topicName = "TestTopic";
-        
+
         PopRequest request = PopRequest.builder()
             .topicName(topicName)
             .requestContext(new RequestContext())
@@ -136,7 +136,7 @@ class QueueSelectorTest {
     @Test
     void testSelectReviveQueueFifo() {
         String topicName = "TestTopic";
-        
+
         PopRequest request = PopRequest.builder()
             .topicName(topicName)
             .fifo(true)
@@ -162,7 +162,7 @@ class QueueSelectorTest {
     @Test
     void testSelectReviveQueueNonFifo() {
         String topicName = "TestTopic";
-        
+
         PopRequest request = PopRequest.builder()
             .topicName(topicName)
             .fifo(false)

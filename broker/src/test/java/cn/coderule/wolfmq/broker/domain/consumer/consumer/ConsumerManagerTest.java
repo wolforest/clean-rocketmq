@@ -1,10 +1,10 @@
 package cn.coderule.wolfmq.broker.domain.consumer.consumer;
 
 import cn.coderule.wolfmq.domain.config.server.BrokerConfig;
-import cn.coderule.wolfmq.domain.domain.cluster.ClientChannelInfo;
+import cn.coderule.wolfmq.domain.server.ClientChannelInfo;
 import cn.coderule.wolfmq.domain.domain.consumer.ConsumerInfo;
 import cn.coderule.wolfmq.domain.domain.consumer.running.ConsumerGroupInfo;
-import cn.coderule.wolfmq.domain.domain.cluster.server.heartbeat.SubscriptionData;
+import cn.coderule.wolfmq.domain.server.heartbeat.SubscriptionData;
 import io.netty.channel.Channel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -2,9 +2,9 @@ package cn.coderule.wolfmq.store.infra.file;
 
 import cn.coderule.common.util.io.FileUtil;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
-import cn.coderule.wolfmq.domain.domain.store.infra.MappedFile;
-import cn.coderule.wolfmq.domain.domain.store.infra.MappedFileQueue;
-import cn.coderule.wolfmq.domain.domain.store.utils.OffsetUtils;
+import cn.coderule.wolfmq.domain.core.mmap.MappedFile;
+import cn.coderule.wolfmq.domain.core.mmap.MappedFileQueue;
+import cn.coderule.wolfmq.domain.domain.meta.offset.OffsetUtils;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;

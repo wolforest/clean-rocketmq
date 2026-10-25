@@ -1,7 +1,7 @@
 package cn.coderule.wolfmq.store.domain.mq;
 
-import cn.coderule.wolfmq.domain.domain.store.domain.mq.DequeueRequest;
-import cn.coderule.wolfmq.domain.domain.store.domain.mq.DequeueResult;
+import cn.coderule.wolfmq.domain.domain.mq.dto.DequeueRequest;
+import cn.coderule.wolfmq.domain.domain.mq.dto.DequeueResult;
 import cn.coderule.wolfmq.domain.domain.message.MessageBO;
 import cn.coderule.wolfmq.domain.mock.MessageMock;
 import cn.coderule.wolfmq.store.domain.mq.queue.DequeueService;

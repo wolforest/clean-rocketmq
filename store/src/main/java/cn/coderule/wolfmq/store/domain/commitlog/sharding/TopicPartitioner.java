@@ -2,7 +2,7 @@ package cn.coderule.wolfmq.store.domain.commitlog.sharding;
 
 import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.wolfmq.domain.config.store.CommitConfig;
-import cn.coderule.wolfmq.domain.domain.store.domain.meta.TopicService;
+import cn.coderule.wolfmq.domain.domain.meta.service.TopicService;
 
 public class TopicPartitioner {
     private final CommitConfig commitConfig;

@@ -1,8 +1,8 @@
 package cn.coderule.wolfmq.store.infra;
 
 import cn.coderule.common.convention.service.Lifecycle;
-import cn.coderule.wolfmq.domain.domain.store.infra.kv.KVDatabase;
-import cn.coderule.wolfmq.domain.domain.store.infra.kv.KVException;
+import cn.coderule.wolfmq.domain.core.kv.KVDatabase;
+import cn.coderule.wolfmq.domain.core.kv.KVException;
 import java.util.HashMap;
 import java.util.Map;
 

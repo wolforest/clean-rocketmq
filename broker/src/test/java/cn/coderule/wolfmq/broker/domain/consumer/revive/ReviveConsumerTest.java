@@ -1,6 +1,7 @@
 package cn.coderule.wolfmq.broker.domain.consumer.revive;
 
 import cn.coderule.wolfmq.domain.config.business.MessageConfig;
+import cn.coderule.wolfmq.domain.domain.mq.dto.DequeueResult;
 import cn.coderule.wolfmq.rpc.store.facade.MQFacade;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -52,7 +53,7 @@ class ReviveConsumerTest {
     @Test
     void testConsume() {
         when(mqFacade.get(any())).thenReturn(
-            cn.coderule.wolfmq.domain.domain.store.domain.mq.DequeueResult.builder()
+            DequeueResult.builder()
                 .messageList(java.util.Collections.emptyList())
                 .build()
         );

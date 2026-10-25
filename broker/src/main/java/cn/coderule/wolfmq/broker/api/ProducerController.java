@@ -7,13 +7,13 @@ import cn.coderule.wolfmq.broker.api.validator.ServerValidator;
 import cn.coderule.wolfmq.broker.domain.producer.Producer;
 import cn.coderule.wolfmq.domain.config.server.BrokerConfig;
 import cn.coderule.wolfmq.domain.core.constant.MessageConst;
-import cn.coderule.wolfmq.domain.core.enums.code.InvalidCode;
+import cn.coderule.wolfmq.domain.core.constant.code.InvalidCode;
 import cn.coderule.wolfmq.domain.core.exception.InvalidParameterException;
-import cn.coderule.wolfmq.domain.domain.cluster.ClientChannelInfo;
-import cn.coderule.wolfmq.domain.domain.cluster.RequestContext;
+import cn.coderule.wolfmq.domain.server.ClientChannelInfo;
+import cn.coderule.wolfmq.domain.server.RequestContext;
 import cn.coderule.wolfmq.domain.domain.message.MessageBO;
-import cn.coderule.wolfmq.domain.domain.store.domain.mq.EnqueueResult;
-import cn.coderule.wolfmq.domain.domain.message.utils.MessageIDSetter;
+import cn.coderule.wolfmq.domain.domain.mq.dto.EnqueueResult;
+import cn.coderule.wolfmq.domain.domain.message.codec.MessageIDSetter;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 

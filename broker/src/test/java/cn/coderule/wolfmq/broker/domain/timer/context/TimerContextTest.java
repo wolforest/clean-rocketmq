@@ -1,7 +1,7 @@
 package cn.coderule.wolfmq.broker.domain.timer.context;
 
 import cn.coderule.wolfmq.domain.config.server.BrokerConfig;
-import cn.coderule.wolfmq.domain.domain.cluster.task.QueueTask;
+import cn.coderule.wolfmq.domain.server.task.QueueTask;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

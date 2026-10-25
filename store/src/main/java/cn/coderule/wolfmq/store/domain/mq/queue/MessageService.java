@@ -1,9 +1,9 @@
 package cn.coderule.wolfmq.store.domain.mq.queue;
 
 import cn.coderule.common.util.lang.collection.CollectionUtil;
-import cn.coderule.wolfmq.domain.domain.store.domain.mq.DequeueResult;
-import cn.coderule.wolfmq.domain.domain.store.domain.mq.DequeueRequest;
-import cn.coderule.wolfmq.domain.domain.store.domain.consumequeue.QueueUnit;
+import cn.coderule.wolfmq.domain.domain.mq.dto.DequeueResult;
+import cn.coderule.wolfmq.domain.domain.mq.dto.DequeueRequest;
+import cn.coderule.wolfmq.domain.domain.consumequeue.QueueUnit;
 import cn.coderule.wolfmq.domain.domain.consumer.consume.mq.MessageRequest;
 import cn.coderule.wolfmq.domain.domain.consumer.consume.mq.MessageResult;
 import cn.coderule.wolfmq.domain.domain.message.MessageBO;

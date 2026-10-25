@@ -1,6 +1,6 @@
 package cn.coderule.wolfmq.domain.config.base;
 
-import cn.coderule.wolfmq.domain.core.enums.store.FlushType;
+import cn.coderule.wolfmq.domain.domain.commitlog.FlushType;
 
 /**
  * static attribute for config

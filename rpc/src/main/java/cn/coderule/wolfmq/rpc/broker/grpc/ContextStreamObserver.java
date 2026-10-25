@@ -17,7 +17,7 @@
 
 package cn.coderule.wolfmq.rpc.broker.grpc;
 
-import cn.coderule.wolfmq.domain.domain.cluster.RequestContext;
+import cn.coderule.wolfmq.domain.server.RequestContext;
 
 public interface ContextStreamObserver<V> {
 

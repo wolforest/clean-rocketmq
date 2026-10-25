@@ -1,6 +1,6 @@
 package cn.coderule.wolfmq.store.domain.index;
 
-import cn.coderule.wolfmq.domain.domain.store.infra.MappedFile;
+import cn.coderule.wolfmq.domain.core.mmap.MappedFile;
 import cn.coderule.wolfmq.store.infra.file.DefaultMappedFile;
 import java.nio.MappedByteBuffer;
 import java.util.ArrayList;

@@ -2,9 +2,9 @@ package cn.coderule.wolfmq.store.domain.mq.queue;
 
 import cn.coderule.wolfmq.domain.config.server.StoreConfig;
 import cn.coderule.wolfmq.domain.config.store.MetaConfig;
-import cn.coderule.wolfmq.domain.core.enums.message.MessageStatus;
-import cn.coderule.wolfmq.domain.domain.store.domain.mq.DequeueRequest;
-import cn.coderule.wolfmq.domain.domain.store.domain.mq.DequeueResult;
+import cn.coderule.wolfmq.domain.domain.message.enums.MessageStatus;
+import cn.coderule.wolfmq.domain.domain.mq.dto.DequeueRequest;
+import cn.coderule.wolfmq.domain.domain.mq.dto.DequeueResult;
 import cn.coderule.wolfmq.domain.domain.message.MessageBO;
 import cn.coderule.wolfmq.store.domain.consumequeue.queue.ConsumeQueueManager;
 

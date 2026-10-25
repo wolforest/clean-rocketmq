@@ -1,11 +1,10 @@
 package cn.coderule.wolfmq.store.server.ha;
 
 import cn.coderule.wolfmq.domain.config.server.StoreConfig;
-import cn.coderule.wolfmq.domain.domain.store.domain.mq.EnqueueFuture;
-import cn.coderule.wolfmq.domain.domain.store.domain.mq.EnqueueResult;
+import cn.coderule.wolfmq.domain.domain.mq.dto.EnqueueFuture;
+import cn.coderule.wolfmq.domain.domain.mq.dto.EnqueueResult;
 import cn.coderule.wolfmq.store.server.ha.client.HAClient;
 import cn.coderule.wolfmq.store.server.ha.core.HAContext;
-import cn.coderule.wolfmq.store.server.ha.core.monitor.StateMonitor;
 import cn.coderule.wolfmq.store.server.ha.server.ConnectionPool;
 import cn.coderule.wolfmq.store.server.ha.server.HAServer;
 import cn.coderule.wolfmq.store.server.ha.server.processor.CommitLogSynchronizer;

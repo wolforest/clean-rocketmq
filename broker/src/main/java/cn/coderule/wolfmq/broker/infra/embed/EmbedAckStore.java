@@ -2,7 +2,7 @@ package cn.coderule.wolfmq.broker.infra.embed;
 
 import cn.coderule.wolfmq.domain.domain.consumer.ack.AckInfo;
 import cn.coderule.wolfmq.domain.domain.consumer.consume.pop.checkpoint.PopCheckPoint;
-import cn.coderule.wolfmq.domain.domain.store.api.meta.AckStore;
+import cn.coderule.wolfmq.domain.server.store.api.meta.AckStore;
 
 @Deprecated
 public class EmbedAckStore extends AbstractEmbedStore implements AckStore {

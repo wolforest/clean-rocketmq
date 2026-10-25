@@ -1,7 +1,7 @@
 package cn.coderule.wolfmq.registry.domain.store.model;
 
-import cn.coderule.wolfmq.domain.domain.cluster.server.GroupInfo;
-import cn.coderule.wolfmq.domain.domain.cluster.server.StoreInfo;
+import cn.coderule.wolfmq.domain.server.registry.GroupInfo;
+import cn.coderule.wolfmq.domain.server.registry.StoreInfo;
 import cn.coderule.wolfmq.domain.domain.meta.topic.Topic;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,7 +34,7 @@ public class RouteTest {
     @Test
     void testGetOrCreateGroup() {
         GroupInfo groupInfo = route.getOrCreateGroup("zone1", "cluster1", "broker-a", false);
-        
+
         assertNotNull(groupInfo);
         assertEquals("broker-a", groupInfo.getBrokerName());
         assertTrue(route.containsGroup("broker-a"));
@@ -44,7 +44,7 @@ public class RouteTest {
     void testGetOrCreateGroupReturnsExisting() {
         GroupInfo group1 = route.getOrCreateGroup("zone1", "cluster1", "broker-a", false);
         GroupInfo group2 = route.getOrCreateGroup("zone1", "cluster1", "broker-a", false);
-        
+
         assertSame(group1, group2);
     }
 
@@ -52,7 +52,7 @@ public class RouteTest {
     void testAddGroupToCluster() {
         route.addGroupToCluster("cluster1", "broker-a");
         route.addGroupToCluster("cluster1", "broker-b");
-        
+
         Set<String> groups = route.getGroupInCluster("cluster1");
         assertNotNull(groups);
         assertEquals(2, groups.size());
@@ -63,11 +63,11 @@ public class RouteTest {
     @Test
     void testRemoveGroup() {
         route.getOrCreateGroup("zone1", "cluster1", "broker-a", false);
-        
+
         assertTrue(route.containsGroup("broker-a"));
-        
+
         GroupInfo removed = route.removeGroup("broker-a");
-        
+
         assertNotNull(removed);
         assertFalse(route.containsGroup("broker-a"));
     }
@@ -82,9 +82,9 @@ public class RouteTest {
     void testRemoveGroupInCluster() {
         route.addGroupToCluster("cluster1", "broker-a");
         route.addGroupToCluster("cluster1", "broker-b");
-        
+
         route.removeGroupInCluster("cluster1", "broker-a");
-        
+
         Set<String> groups = route.getGroupInCluster("cluster1");
         assertEquals(1, groups.size());
         assertFalse(groups.contains("broker-a"));
@@ -93,9 +93,9 @@ public class RouteTest {
     @Test
     void testRemoveGroupInClusterRemovesClusterWhenEmpty() {
         route.addGroupToCluster("cluster1", "broker-a");
-        
+
         route.removeGroupInCluster("cluster1", "broker-a");
-        
+
         assertNull(route.getGroupInCluster("cluster1"));
     }
 
@@ -106,9 +106,9 @@ public class RouteTest {
         topic.setReadQueueNums(8);
         topic.setWriteQueueNums(8);
         topic.setPerm(6);
-        
+
         route.saveTopic("broker-a", topic);
-        
+
         Topic retrieved = route.getTopic("broker-a", "test-topic");
         assertNotNull(retrieved);
         assertEquals("test-topic", retrieved.getTopicName());
@@ -126,7 +126,7 @@ public class RouteTest {
         Topic topic = new Topic();
         topic.setTopicName("test-topic");
         route.saveTopic("broker-a", topic);
-        
+
         assertTrue(route.containsTopic("broker-a", "test-topic"));
         assertFalse(route.containsTopic("broker-b", "test-topic"));
         assertFalse(route.containsTopic("broker-a", "non-existent"));
@@ -137,9 +137,9 @@ public class RouteTest {
         Topic topic = new Topic();
         topic.setTopicName("test-topic");
         route.saveTopic("broker-a", topic);
-        
+
         route.removeTopic("test-topic");
-        
+
         assertFalse(route.containsTopic("broker-a", "test-topic"));
         assertTrue(route.isTopicEmpty());
     }
@@ -149,9 +149,9 @@ public class RouteTest {
         Topic topic = new Topic();
         topic.setTopicName("test-topic");
         route.saveTopic("broker-a", topic);
-        
+
         route.removeTopic("broker-a", "test-topic");
-        
+
         assertFalse(route.containsTopic("broker-a", "test-topic"));
     }
 
@@ -161,9 +161,9 @@ public class RouteTest {
         topic.setTopicName("test-topic");
         route.saveTopic("broker-a", topic);
         route.saveTopic("broker-b", topic);
-        
+
         Set<String> groups = route.getGroupByTopic("test-topic");
-        
+
         assertEquals(2, groups.size());
         assertTrue(groups.contains("broker-a"));
         assertTrue(groups.contains("broker-b"));
@@ -174,13 +174,13 @@ public class RouteTest {
         Topic topic1 = new Topic();
         topic1.setTopicName("topic1");
         route.saveTopic("broker-a", topic1);
-        
+
         Topic topic2 = new Topic();
         topic2.setTopicName("topic2");
         route.saveTopic("broker-a", topic2);
-        
+
         Set<String> topics = route.getTopicByGroup("broker-a");
-        
+
         assertEquals(2, topics.size());
         assertTrue(topics.contains("topic1"));
         assertTrue(topics.contains("topic2"));
@@ -202,10 +202,10 @@ public class RouteTest {
             .groupName("broker-a")
             .address("127.0.0.1:10911")
             .build();
-        
+
         List<String> filterList = List.of("filter1", "filter2");
         route.saveFilter(storeInfo, filterList);
-        
+
         List<String> retrieved = route.getFilter(storeInfo);
         assertNotNull(retrieved);
         assertEquals(2, retrieved.size());
@@ -219,27 +219,27 @@ public class RouteTest {
             .groupName("broker-a")
             .address("127.0.0.1:10911")
             .build();
-        
+
         List<String> filterList = List.of("filter1", "filter2");
         route.saveFilter(storeInfo, filterList);
-        
+
         route.removeFilter(storeInfo);
-        
+
         assertNull(route.getFilter(storeInfo));
         assertTrue(route.isFilterEmpty());
     }
 
     @Test
     void testSaveQueueMap() {
-        cn.coderule.wolfmq.domain.domain.meta.statictopic.TopicQueueMappingInfo mappingInfo = 
+        cn.coderule.wolfmq.domain.domain.meta.statictopic.TopicQueueMappingInfo mappingInfo =
             new cn.coderule.wolfmq.domain.domain.meta.statictopic.TopicQueueMappingInfo();
         mappingInfo.setBname("broker-a");
-        
+
         route.saveQueueMap("test-topic", mappingInfo);
-        
-        Map<String, cn.coderule.wolfmq.domain.domain.meta.statictopic.TopicQueueMappingInfo> queueMap = 
+
+        Map<String, cn.coderule.wolfmq.domain.domain.meta.statictopic.TopicQueueMappingInfo> queueMap =
             route.getQueueMap("test-topic");
-        
+
         assertNotNull(queueMap);
         assertTrue(queueMap.containsKey("broker-a"));
         assertFalse(route.isQueueMapEmpty());

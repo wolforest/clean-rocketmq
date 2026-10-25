@@ -33,7 +33,7 @@ import cn.coderule.wolfmq.broker.server.grpc.activity.ConsumerActivity;
 import cn.coderule.wolfmq.broker.server.grpc.activity.ProducerActivity;
 import cn.coderule.wolfmq.broker.server.grpc.activity.RouteActivity;
 import cn.coderule.wolfmq.broker.server.grpc.activity.TransactionActivity;
-import cn.coderule.wolfmq.domain.domain.cluster.RequestContext;
+import cn.coderule.wolfmq.domain.server.RequestContext;
 import io.grpc.stub.StreamObserver;
 import lombok.extern.slf4j.Slf4j;
 

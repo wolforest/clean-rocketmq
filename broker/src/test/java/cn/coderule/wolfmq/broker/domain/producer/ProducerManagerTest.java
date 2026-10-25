@@ -1,7 +1,7 @@
 package cn.coderule.wolfmq.broker.domain.producer;
 
 import cn.coderule.wolfmq.domain.config.server.BrokerConfig;
-import cn.coderule.wolfmq.domain.domain.cluster.ClientChannelInfo;
+import cn.coderule.wolfmq.domain.server.ClientChannelInfo;
 import io.netty.channel.Channel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

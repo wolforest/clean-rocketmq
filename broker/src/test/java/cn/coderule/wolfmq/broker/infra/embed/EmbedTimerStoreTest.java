@@ -1,6 +1,6 @@
 package cn.coderule.wolfmq.broker.infra.embed;
 
-import cn.coderule.wolfmq.domain.domain.store.api.TimerStore;
+import cn.coderule.wolfmq.domain.server.store.api.TimerStore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

@@ -1,9 +1,9 @@
 package cn.coderule.wolfmq.domain.domain.meta.topic;
 
 import cn.coderule.wolfmq.domain.core.constant.MQConstants;
-import cn.coderule.wolfmq.domain.domain.cluster.server.GroupInfo;
-import cn.coderule.wolfmq.domain.domain.cluster.route.QueueInfo;
-import cn.coderule.wolfmq.domain.domain.cluster.route.RouteInfo;
+import cn.coderule.wolfmq.domain.server.registry.GroupInfo;
+import cn.coderule.wolfmq.domain.server.route.QueueInfo;
+import cn.coderule.wolfmq.domain.server.route.RouteInfo;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

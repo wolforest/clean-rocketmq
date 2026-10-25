@@ -1,6 +1,6 @@
 package cn.coderule.wolfmq.domain.domain.message.utils;
 
-import cn.coderule.wolfmq.domain.core.enums.message.CleanupPolicy;
+import cn.coderule.wolfmq.domain.server.store.CleanupPolicy;
 import cn.coderule.wolfmq.domain.domain.meta.topic.Topic;
 import cn.coderule.wolfmq.domain.domain.meta.topic.TopicAttributes;
 import java.util.Map;

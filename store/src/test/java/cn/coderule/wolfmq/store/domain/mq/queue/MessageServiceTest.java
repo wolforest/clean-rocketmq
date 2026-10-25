@@ -2,8 +2,9 @@ package cn.coderule.wolfmq.store.domain.mq.queue;
 
 import cn.coderule.wolfmq.domain.domain.consumer.consume.mq.MessageRequest;
 import cn.coderule.wolfmq.domain.domain.consumer.consume.mq.MessageResult;
-import cn.coderule.wolfmq.domain.domain.store.domain.consumequeue.QueueUnit;
-import cn.coderule.wolfmq.domain.domain.store.domain.mq.DequeueResult;
+import cn.coderule.wolfmq.domain.domain.message.enums.MessageStatus;
+import cn.coderule.wolfmq.domain.domain.consumequeue.QueueUnit;
+import cn.coderule.wolfmq.domain.domain.mq.dto.DequeueResult;
 import cn.coderule.wolfmq.domain.domain.message.MessageBO;
 import cn.coderule.wolfmq.domain.mock.MessageMock;
 import cn.coderule.wolfmq.store.domain.commitlog.log.CommitLogManager;
@@ -51,7 +52,7 @@ class MessageServiceTest {
         when(consumeQueueManager.get("TOPIC_A", 0, 1, 2)).thenReturn(List.of(first, second));
 
         MessageBO message = MessageMock.createMessage("TOPIC_A", 0, 1);
-        message.setStatus(cn.coderule.wolfmq.domain.core.enums.message.MessageStatus.FOUND);
+        message.setStatus(MessageStatus.FOUND);
         when(commitLog.select(10L, 5)).thenReturn(message);
         when(commitLog.select(20L, 7)).thenReturn(null);
 
@@ -59,6 +60,6 @@ class MessageServiceTest {
 
         assertEquals(1, result.countMessage());
         assertTrue(result.getMessageList().contains(message));
-        assertEquals(cn.coderule.wolfmq.domain.core.enums.message.MessageStatus.FOUND, result.getStatus());
+        assertEquals(MessageStatus.FOUND, result.getStatus());
     }
 }

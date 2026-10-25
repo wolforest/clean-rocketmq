@@ -1,7 +1,7 @@
 package cn.coderule.wolfmq.broker.api.validator;
 
 import cn.coderule.wolfmq.domain.config.server.BrokerConfig;
-import cn.coderule.wolfmq.domain.core.enums.code.InvalidCode;
+import cn.coderule.wolfmq.domain.core.constant.code.InvalidCode;
 import cn.coderule.wolfmq.domain.core.exception.InvalidParameterException;
 
 public class ServerValidator {

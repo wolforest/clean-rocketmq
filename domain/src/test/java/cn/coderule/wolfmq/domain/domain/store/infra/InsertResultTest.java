@@ -1,6 +1,7 @@
 package cn.coderule.wolfmq.domain.domain.store.infra;
 
-import cn.coderule.wolfmq.domain.core.enums.store.InsertStatus;
+import cn.coderule.wolfmq.domain.core.mmap.InsertResult;
+import cn.coderule.wolfmq.domain.core.mmap.InsertStatus;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

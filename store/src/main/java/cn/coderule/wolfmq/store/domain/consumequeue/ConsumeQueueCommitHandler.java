@@ -1,8 +1,8 @@
 package cn.coderule.wolfmq.store.domain.consumequeue;
 
 import cn.coderule.wolfmq.domain.domain.message.MessageBO;
-import cn.coderule.wolfmq.domain.domain.store.domain.commitlog.CommitEvent;
-import cn.coderule.wolfmq.domain.domain.store.domain.commitlog.CommitHandler;
+import cn.coderule.wolfmq.domain.domain.commitlog.CommitEvent;
+import cn.coderule.wolfmq.domain.domain.commitlog.CommitHandler;
 import cn.coderule.wolfmq.store.domain.consumequeue.queue.ConsumeQueueManager;
 
 /**

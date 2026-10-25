@@ -1,6 +1,6 @@
 package cn.coderule.wolfmq.broker.server.grpc.interceptor;
 
-import cn.coderule.wolfmq.domain.domain.cluster.RequestContext;
+import cn.coderule.wolfmq.domain.server.RequestContext;
 import cn.coderule.wolfmq.rpc.common.grpc.core.constants.GrpcConstants;
 import com.google.protobuf.GeneratedMessage;
 import io.grpc.Context;
@@ -17,7 +17,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 class ContextInitPipelineTest {
 

@@ -1,9 +1,9 @@
 package cn.coderule.wolfmq.broker.server.grpc.interceptor;
 
 import cn.coderule.common.util.lang.string.StringUtil;
-import cn.coderule.wolfmq.domain.core.enums.code.InvalidCode;
+import cn.coderule.wolfmq.domain.core.constant.code.InvalidCode;
 import cn.coderule.wolfmq.domain.core.exception.InvalidRequestException;
-import cn.coderule.wolfmq.domain.domain.cluster.RequestContext;
+import cn.coderule.wolfmq.domain.server.RequestContext;
 import cn.coderule.wolfmq.rpc.common.grpc.RequestPipeline;
 import cn.coderule.wolfmq.rpc.common.grpc.core.constants.GrpcConstants;
 import com.google.protobuf.GeneratedMessage;

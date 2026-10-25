@@ -18,7 +18,7 @@ import cn.coderule.wolfmq.broker.server.grpc.service.consume.GrpcAckService;
 import cn.coderule.wolfmq.broker.server.grpc.service.consume.GrpcOffsetService;
 import cn.coderule.wolfmq.broker.server.grpc.service.consume.InvisibleService;
 import cn.coderule.wolfmq.broker.server.grpc.service.consume.PopService;
-import cn.coderule.wolfmq.domain.domain.cluster.RequestContext;
+import cn.coderule.wolfmq.domain.server.RequestContext;
 import io.grpc.stub.StreamObserver;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

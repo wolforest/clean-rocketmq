@@ -2,10 +2,11 @@ package cn.coderule.wolfmq.store.domain.mq;
 
 import cn.coderule.wolfmq.domain.config.server.StoreConfig;
 import cn.coderule.wolfmq.domain.config.store.StorePath;
-import cn.coderule.wolfmq.domain.domain.store.domain.commitlog.CommitLog;
-import cn.coderule.wolfmq.domain.domain.store.domain.meta.ConsumeOffsetService;
-import cn.coderule.wolfmq.domain.domain.store.domain.meta.ConsumeOrderService;
-import cn.coderule.wolfmq.domain.domain.store.domain.mq.MQService;
+import cn.coderule.wolfmq.domain.server.store.api.MQStore;
+import cn.coderule.wolfmq.domain.domain.commitlog.CommitLog;
+import cn.coderule.wolfmq.domain.domain.meta.service.ConsumeOffsetService;
+import cn.coderule.wolfmq.domain.domain.meta.service.ConsumeOrderService;
+import cn.coderule.wolfmq.domain.domain.mq.MQService;
 import cn.coderule.wolfmq.domain.domain.consumer.consume.InflightCounter;
 import cn.coderule.wolfmq.domain.core.lock.queue.DequeueLock;
 import cn.coderule.wolfmq.domain.mock.ConfigMock;
@@ -84,6 +85,6 @@ class MQBootstrapTest {
         MQBootstrap bootstrap = new MQBootstrap();
         bootstrap.initialize();
 
-        assertNotNull(StoreContext.getAPI(cn.coderule.wolfmq.domain.domain.store.api.MQStore.class));
+        assertNotNull(StoreContext.getAPI(MQStore.class));
     }
 }

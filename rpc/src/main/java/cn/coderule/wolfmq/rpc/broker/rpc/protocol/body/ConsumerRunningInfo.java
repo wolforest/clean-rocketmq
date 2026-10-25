@@ -1,12 +1,12 @@
 
 package cn.coderule.wolfmq.rpc.broker.rpc.protocol.body;
 
-import cn.coderule.wolfmq.domain.domain.MessageQueue;
-import cn.coderule.wolfmq.domain.core.enums.consume.ConsumeType;
+import cn.coderule.wolfmq.domain.domain.mq.MessageQueue;
+import cn.coderule.wolfmq.domain.domain.consumer.consume.ConsumeType;
 import cn.coderule.wolfmq.domain.domain.consumer.running.ConsumeStatus;
 import cn.coderule.wolfmq.domain.domain.consumer.running.PopProcessQueueInfo;
 import cn.coderule.wolfmq.domain.domain.consumer.running.ProcessQueueInfo;
-import cn.coderule.wolfmq.domain.domain.cluster.server.heartbeat.SubscriptionData;
+import cn.coderule.wolfmq.domain.server.heartbeat.SubscriptionData;
 import cn.coderule.wolfmq.rpc.common.rpc.protocol.codec.RpcSerializable;
 import java.util.Iterator;
 import java.util.Map.Entry;

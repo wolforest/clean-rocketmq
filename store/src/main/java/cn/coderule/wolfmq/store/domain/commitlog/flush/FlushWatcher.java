@@ -3,7 +3,7 @@ package cn.coderule.wolfmq.store.domain.commitlog.flush;
 import cn.coderule.wolfmq.store.domain.commitlog.vo.GroupCommitRequest;
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 import cn.coderule.common.util.lang.ThreadUtil;
-import cn.coderule.wolfmq.domain.core.enums.store.EnqueueStatus;
+import cn.coderule.wolfmq.domain.domain.mq.dto.EnqueueStatus;
 import java.util.concurrent.LinkedBlockingQueue;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;

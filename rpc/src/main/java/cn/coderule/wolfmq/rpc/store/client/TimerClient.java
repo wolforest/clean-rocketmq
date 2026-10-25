@@ -1,8 +1,8 @@
 package cn.coderule.wolfmq.rpc.store.client;
 
-import cn.coderule.wolfmq.domain.domain.cluster.RequestContext;
-import cn.coderule.wolfmq.domain.domain.timer.ScanResult;
-import cn.coderule.wolfmq.domain.domain.timer.TimerEvent;
+import cn.coderule.wolfmq.domain.server.RequestContext;
+import cn.coderule.wolfmq.domain.domain.timer.model.ScanResult;
+import cn.coderule.wolfmq.domain.domain.timer.model.TimerEvent;
 import cn.coderule.wolfmq.domain.domain.timer.state.TimerCheckpoint;
 import cn.coderule.wolfmq.rpc.common.rpc.RpcClient;
 import cn.coderule.wolfmq.rpc.store.StoreClient;

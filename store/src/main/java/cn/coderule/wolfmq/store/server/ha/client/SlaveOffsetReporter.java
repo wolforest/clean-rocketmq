@@ -2,7 +2,7 @@ package cn.coderule.wolfmq.store.server.ha.client;
 
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.wolfmq.domain.config.server.StoreConfig;
-import cn.coderule.wolfmq.domain.domain.store.api.CommitLogStore;
+import cn.coderule.wolfmq.domain.server.store.api.CommitLogStore;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import lombok.extern.slf4j.Slf4j;

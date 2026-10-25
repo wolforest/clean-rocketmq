@@ -1,7 +1,8 @@
 package cn.coderule.wolfmq.domain.domain.message;
 
 import cn.coderule.wolfmq.domain.config.business.MessageConfig;
-import cn.coderule.wolfmq.domain.core.enums.message.MessageVersion;
+import cn.coderule.wolfmq.domain.domain.message.codec.MessageEncoder;
+import cn.coderule.wolfmq.domain.domain.message.enums.MessageVersion;
 import cn.coderule.wolfmq.domain.mock.MessageMock;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;

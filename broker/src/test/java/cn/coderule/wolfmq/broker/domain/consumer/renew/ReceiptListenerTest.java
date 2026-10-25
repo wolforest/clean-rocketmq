@@ -1,6 +1,6 @@
 package cn.coderule.wolfmq.broker.domain.consumer.renew;
 
-import cn.coderule.wolfmq.domain.core.enums.consume.ConsumerEvent;
+import cn.coderule.wolfmq.domain.core.event.ConsumerEvent;
 import cn.coderule.wolfmq.domain.domain.consumer.receipt.ReceiptHandler;
 import org.junit.jupiter.api.Test;
 

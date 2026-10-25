@@ -1,6 +1,7 @@
 package cn.coderule.wolfmq.domain.domain.message;
 
-import cn.coderule.wolfmq.domain.core.enums.message.MessageVersion;
+import cn.coderule.wolfmq.domain.domain.message.enums.MessageVersion;
+import cn.coderule.wolfmq.domain.domain.message.utils.MessageContainer;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;

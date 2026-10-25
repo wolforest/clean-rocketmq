@@ -1,7 +1,7 @@
 package cn.coderule.wolfmq.store.api;
 
-import cn.coderule.wolfmq.domain.domain.store.infra.InsertResult;
-import cn.coderule.wolfmq.domain.domain.store.infra.SelectedMappedBuffer;
+import cn.coderule.wolfmq.domain.core.mmap.InsertResult;
+import cn.coderule.wolfmq.domain.core.mmap.SelectedMappedBuffer;
 import cn.coderule.wolfmq.store.domain.commitlog.log.CommitLogManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

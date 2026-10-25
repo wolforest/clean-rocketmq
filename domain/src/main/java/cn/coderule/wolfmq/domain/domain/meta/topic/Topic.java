@@ -1,12 +1,12 @@
 package cn.coderule.wolfmq.domain.domain.meta.topic;
 
 import cn.coderule.common.util.lang.collection.MapUtil;
-import cn.coderule.wolfmq.domain.core.enums.message.MessageType;
-import cn.coderule.wolfmq.domain.domain.MessageQueue;
+import cn.coderule.wolfmq.domain.domain.message.enums.MessageType;
+import cn.coderule.wolfmq.domain.domain.mq.MessageQueue;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.TypeReference;
 import com.alibaba.fastjson2.annotation.JSONField;
-import cn.coderule.wolfmq.domain.core.enums.message.TagType;
+import cn.coderule.wolfmq.domain.domain.message.enums.TagType;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;

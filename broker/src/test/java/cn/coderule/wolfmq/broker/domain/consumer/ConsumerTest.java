@@ -4,7 +4,7 @@ import cn.coderule.wolfmq.broker.domain.consumer.ack.BrokerAckService;
 import cn.coderule.wolfmq.broker.domain.consumer.ack.InvisibleService;
 import cn.coderule.wolfmq.broker.domain.consumer.consumer.ConsumerManager;
 import cn.coderule.wolfmq.broker.domain.consumer.pop.PopService;
-import cn.coderule.wolfmq.domain.domain.cluster.RequestContext;
+import cn.coderule.wolfmq.domain.server.RequestContext;
 import cn.coderule.wolfmq.domain.domain.consumer.ConsumerInfo;
 import cn.coderule.wolfmq.rpc.store.facade.SubscriptionFacade;
 import org.junit.jupiter.api.BeforeEach;
@@ -87,7 +87,7 @@ class ConsumerTest {
 
     @Test
     void testPopMessage() {
-        cn.coderule.wolfmq.domain.domain.consumer.consume.pop.PopRequest request = 
+        cn.coderule.wolfmq.domain.domain.consumer.consume.pop.PopRequest request =
             cn.coderule.wolfmq.domain.domain.consumer.consume.pop.PopRequest.builder()
                 .topicName("TestTopic")
                 .build();
@@ -99,7 +99,7 @@ class ConsumerTest {
 
     @Test
     void testAck() {
-        cn.coderule.wolfmq.domain.domain.consumer.ack.broker.AckRequest request = 
+        cn.coderule.wolfmq.domain.domain.consumer.ack.broker.AckRequest request =
             cn.coderule.wolfmq.domain.domain.consumer.ack.broker.AckRequest.builder()
                 .messageId("msg123")
                 .build();
@@ -111,7 +111,7 @@ class ConsumerTest {
 
     @Test
     void testChangeInvisible() {
-        cn.coderule.wolfmq.domain.domain.consumer.ack.broker.InvisibleRequest request = 
+        cn.coderule.wolfmq.domain.domain.consumer.ack.broker.InvisibleRequest request =
             cn.coderule.wolfmq.domain.domain.consumer.ack.broker.InvisibleRequest.builder()
                 .messageId("msg123")
                 .build();

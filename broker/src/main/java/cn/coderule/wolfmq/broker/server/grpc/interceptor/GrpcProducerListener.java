@@ -2,8 +2,8 @@ package cn.coderule.wolfmq.broker.server.grpc.interceptor;
 
 import cn.coderule.wolfmq.broker.server.grpc.service.channel.ChannelManager;
 import cn.coderule.wolfmq.broker.server.grpc.service.channel.SettingManager;
-import cn.coderule.wolfmq.domain.core.enums.produce.ProducerEvent;
-import cn.coderule.wolfmq.domain.domain.cluster.ClientChannelInfo;
+import cn.coderule.wolfmq.domain.core.event.ProducerEvent;
+import cn.coderule.wolfmq.domain.server.ClientChannelInfo;
 import cn.coderule.wolfmq.domain.domain.producer.hook.ProducerListener;
 import lombok.extern.slf4j.Slf4j;
 

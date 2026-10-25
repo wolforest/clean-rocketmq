@@ -2,7 +2,7 @@ package cn.coderule.wolfmq.rpc.common.grpc.activity;
 
 import apache.rocketmq.v2.Code;
 import apache.rocketmq.v2.Status;
-import cn.coderule.wolfmq.domain.domain.cluster.RequestContext;
+import cn.coderule.wolfmq.domain.server.RequestContext;
 import cn.coderule.wolfmq.rpc.common.grpc.core.GrpcTask;
 import cn.coderule.wolfmq.rpc.common.grpc.response.ResponseBuilder;
 import cn.coderule.wolfmq.rpc.common.grpc.response.ResponseWriter;

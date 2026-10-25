@@ -1,7 +1,7 @@
 package cn.coderule.wolfmq.store.server.rpc.processor;
 
 import cn.coderule.wolfmq.domain.config.business.TopicConfig;
-import cn.coderule.wolfmq.domain.domain.store.api.meta.TopicStore;
+import cn.coderule.wolfmq.domain.server.store.api.meta.TopicStore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

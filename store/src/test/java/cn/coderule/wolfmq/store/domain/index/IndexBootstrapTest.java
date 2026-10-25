@@ -3,7 +3,6 @@ package cn.coderule.wolfmq.store.domain.index;
 import cn.coderule.wolfmq.domain.config.server.StoreConfig;
 import cn.coderule.wolfmq.domain.config.store.IndexConfig;
 import cn.coderule.wolfmq.domain.config.store.StorePath;
-import cn.coderule.wolfmq.domain.domain.store.domain.index.IndexService;
 import cn.coderule.wolfmq.domain.mock.ConfigMock;
 import cn.coderule.wolfmq.store.domain.dispatcher.CommitHandlerManager;
 import cn.coderule.wolfmq.store.server.bootstrap.StoreContext;

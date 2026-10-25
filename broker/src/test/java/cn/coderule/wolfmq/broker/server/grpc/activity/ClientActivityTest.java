@@ -9,7 +9,7 @@ import cn.coderule.wolfmq.broker.server.grpc.interceptor.PipelineExecutor;
 import cn.coderule.wolfmq.broker.server.grpc.service.channel.HeartbeatService;
 import cn.coderule.wolfmq.broker.server.grpc.service.channel.TelemetryService;
 import cn.coderule.wolfmq.broker.server.grpc.service.channel.TerminationService;
-import cn.coderule.wolfmq.domain.domain.cluster.RequestContext;
+import cn.coderule.wolfmq.domain.server.RequestContext;
 import cn.coderule.wolfmq.rpc.common.grpc.RequestPipeline;
 import io.grpc.stub.StreamObserver;
 import org.junit.jupiter.api.BeforeEach;

@@ -2,14 +2,14 @@ package cn.coderule.wolfmq.store.domain.timer.it;
 
 import cn.coderule.wolfmq.domain.config.business.TimerConfig;
 import cn.coderule.wolfmq.domain.config.server.StoreConfig;
-import cn.coderule.wolfmq.domain.core.constant.MessageConst;
-import cn.coderule.wolfmq.domain.domain.timer.ScanResult;
-import cn.coderule.wolfmq.domain.domain.timer.TimerConstants;
-import cn.coderule.wolfmq.domain.domain.timer.TimerEvent;
+import cn.coderule.wolfmq.domain.domain.timer.model.ScanResult;
+import cn.coderule.wolfmq.domain.domain.timer.model.TimerConstants;
+import cn.coderule.wolfmq.domain.domain.timer.model.TimerEvent;
 import cn.coderule.wolfmq.domain.domain.timer.wheel.Block;
 import cn.coderule.wolfmq.domain.domain.timer.wheel.Slot;
 import cn.coderule.wolfmq.domain.mock.ConfigMock;
 import cn.coderule.wolfmq.domain.mock.MessageMock;
+import cn.coderule.wolfmq.domain.core.mmap.SelectedMappedBuffer;
 import cn.coderule.wolfmq.store.domain.timer.service.CheckpointService;
 import cn.coderule.wolfmq.store.domain.timer.wheel.DefaultTimer;
 import cn.coderule.wolfmq.store.domain.timer.wheel.TaskAdder;
@@ -31,9 +31,9 @@ import cn.coderule.wolfmq.store.server.bootstrap.StoreCheckpoint;
 import cn.coderule.wolfmq.store.server.bootstrap.StoreContext;
 import cn.coderule.wolfmq.domain.config.store.CommitConfig;
 import cn.coderule.wolfmq.domain.config.store.ConsumeQueueConfig;
-import cn.coderule.wolfmq.domain.domain.store.domain.commitlog.CommitLog;
-import cn.coderule.wolfmq.domain.domain.store.domain.meta.TopicService;
-import cn.coderule.wolfmq.domain.domain.store.server.CheckPoint;
+import cn.coderule.wolfmq.domain.domain.commitlog.CommitLog;
+import cn.coderule.wolfmq.domain.domain.meta.service.TopicService;
+import cn.coderule.wolfmq.domain.server.store.CheckPoint;
 import cn.coderule.wolfmq.domain.domain.message.MessageBO;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -195,7 +195,7 @@ class TimerIntegrationTest {
         long offset = timerLog.append(block, 0, Block.SIZE);
         assertTrue(offset >= 0, "timerLog append should return non-negative offset");
 
-        cn.coderule.wolfmq.domain.domain.store.infra.SelectedMappedBuffer buffer = timerLog.getTimerMessage(offset);
+        SelectedMappedBuffer buffer = timerLog.getTimerMessage(offset);
         assertNotNull(buffer, "should be able to read timer message at appended offset");
         buffer.release();
     }

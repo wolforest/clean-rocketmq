@@ -1,9 +1,9 @@
 package cn.coderule.wolfmq.broker.domain.producer;
 
-import cn.coderule.wolfmq.domain.domain.cluster.ClientChannelInfo;
-import cn.coderule.wolfmq.domain.domain.cluster.RequestContext;
+import cn.coderule.wolfmq.domain.server.ClientChannelInfo;
+import cn.coderule.wolfmq.domain.server.RequestContext;
 import cn.coderule.wolfmq.domain.domain.message.MessageBO;
-import cn.coderule.wolfmq.domain.domain.store.domain.mq.EnqueueResult;
+import cn.coderule.wolfmq.domain.domain.mq.dto.EnqueueResult;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import lombok.extern.slf4j.Slf4j;

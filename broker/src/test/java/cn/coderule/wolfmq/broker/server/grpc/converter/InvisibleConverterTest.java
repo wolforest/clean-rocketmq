@@ -4,7 +4,7 @@ import apache.rocketmq.v2.ChangeInvisibleDurationRequest;
 import apache.rocketmq.v2.ChangeInvisibleDurationResponse;
 import apache.rocketmq.v2.Code;
 import apache.rocketmq.v2.Resource;
-import cn.coderule.wolfmq.domain.domain.cluster.RequestContext;
+import cn.coderule.wolfmq.domain.server.RequestContext;
 import cn.coderule.wolfmq.domain.domain.consumer.ack.broker.AckResult;
 import cn.coderule.wolfmq.domain.domain.consumer.ack.broker.InvisibleRequest;
 import com.google.protobuf.Duration;

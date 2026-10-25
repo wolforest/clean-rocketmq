@@ -3,7 +3,7 @@ package cn.coderule.wolfmq.broker.infra.task;
 import cn.coderule.wolfmq.domain.config.business.TaskConfig;
 import cn.coderule.wolfmq.domain.config.business.TopicConfig;
 import cn.coderule.wolfmq.domain.config.server.BrokerConfig;
-import cn.coderule.wolfmq.domain.domain.cluster.task.TaskFactory;
+import cn.coderule.wolfmq.domain.server.task.TaskFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -45,7 +45,7 @@ class DefaultTaskLoaderTest {
         when(topicConfig.getReviveQueueNum()).thenReturn(8);
         when(topicConfig.getTimerQueueNum()).thenReturn(4);
         when(topicConfig.getPrepareQueueNum()).thenReturn(2);
-        
+
         taskContext = new TaskContext(brokerConfig);
         taskLoader = new DefaultTaskLoader(taskContext);
     }
@@ -76,7 +76,7 @@ class DefaultTaskLoaderTest {
     @Test
     void testLoadWithEmbedStrategy() {
         when(brokerConfig.isEnableEmbedStore()).thenReturn(true);
-        
+
         // Should not throw
         assertDoesNotThrow(() -> taskLoader.load());
     }
@@ -85,7 +85,7 @@ class DefaultTaskLoaderTest {
     void testLoadWithBindingStrategy() {
         when(brokerConfig.isEnableEmbedStore()).thenReturn(false);
         when(taskConfig.getTaskMode()).thenReturn("binding");
-        
+
         // Should not throw
         assertDoesNotThrow(() -> taskLoader.load());
     }
@@ -94,7 +94,7 @@ class DefaultTaskLoaderTest {
     void testLoadWithShardingStrategy() {
         when(brokerConfig.isEnableEmbedStore()).thenReturn(false);
         when(taskConfig.getTaskMode()).thenReturn("sharding");
-        
+
         // Should not throw
         assertDoesNotThrow(() -> taskLoader.load());
     }
@@ -103,7 +103,7 @@ class DefaultTaskLoaderTest {
     void testLoadWithNoStrategy() {
         when(brokerConfig.isEnableEmbedStore()).thenReturn(false);
         when(taskConfig.getTaskMode()).thenReturn("unknown");
-        
+
         // Should not throw even with no matching strategy
         assertDoesNotThrow(() -> taskLoader.load());
     }

@@ -1,5 +1,7 @@
 package cn.coderule.wolfmq.domain.domain.store.infra;
 
+import cn.coderule.wolfmq.domain.core.mmap.MappedFile;
+import cn.coderule.wolfmq.domain.core.mmap.SelectedMappedFile;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

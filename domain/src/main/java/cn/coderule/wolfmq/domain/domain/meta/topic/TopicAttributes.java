@@ -1,6 +1,6 @@
 package cn.coderule.wolfmq.domain.domain.meta.topic;
 
-import cn.coderule.wolfmq.domain.core.enums.message.MessageType;
+import cn.coderule.wolfmq.domain.domain.message.enums.MessageType;
 import cn.coderule.wolfmq.domain.core.attribute.Attribute;
 import cn.coderule.wolfmq.domain.core.attribute.EnumAttribute;
 import java.util.HashMap;

@@ -1,7 +1,6 @@
 package cn.coderule.wolfmq.domain.domain.transaction;
 
-import cn.coderule.wolfmq.domain.core.enums.TransactionType;
-import cn.coderule.wolfmq.domain.domain.cluster.RequestContext;
+import cn.coderule.wolfmq.domain.server.RequestContext;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;

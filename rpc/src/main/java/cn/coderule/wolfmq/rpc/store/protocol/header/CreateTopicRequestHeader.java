@@ -4,7 +4,7 @@
  * $Id: CreateTopicRequestHeader.java 1835 2013-05-16 02:00:50Z vintagewang@apache.org $
  */package cn.coderule.wolfmq.rpc.store.protocol.header;
 
-import cn.coderule.wolfmq.domain.core.enums.message.TagType;
+import cn.coderule.wolfmq.domain.domain.message.enums.TagType;
 import cn.coderule.wolfmq.domain.domain.meta.topic.Topic;
 import cn.coderule.wolfmq.domain.core.attribute.AttributeParser;
 import cn.coderule.wolfmq.rpc.common.rpc.core.annotation.CFNotNull;

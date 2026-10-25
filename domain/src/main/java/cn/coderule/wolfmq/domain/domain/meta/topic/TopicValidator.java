@@ -1,7 +1,7 @@
 package cn.coderule.wolfmq.domain.domain.meta.topic;
 
 import cn.coderule.common.util.lang.string.StringUtil;
-import cn.coderule.wolfmq.domain.core.enums.code.InvalidCode;
+import cn.coderule.wolfmq.domain.core.constant.code.InvalidCode;
 import cn.coderule.wolfmq.domain.core.exception.InvalidParameterException;
 import java.util.HashSet;
 import java.util.Set;

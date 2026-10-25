@@ -1,6 +1,6 @@
 package cn.coderule.wolfmq.rpc.broker.rpc.protocol.body;
 
-import cn.coderule.wolfmq.domain.core.enums.code.LanguageCode;
+import cn.coderule.wolfmq.domain.core.constant.code.LanguageCode;
 import cn.coderule.wolfmq.rpc.common.rpc.protocol.codec.RpcSerializable;
 
 public class ProducerInfo extends RpcSerializable {

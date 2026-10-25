@@ -1,8 +1,8 @@
 package cn.coderule.wolfmq.broker.infra.embed;
 
-import cn.coderule.wolfmq.domain.domain.store.api.MQStore;
-import cn.coderule.wolfmq.domain.domain.store.domain.mq.EnqueueRequest;
-import cn.coderule.wolfmq.domain.domain.store.domain.mq.EnqueueResult;
+import cn.coderule.wolfmq.domain.server.store.api.MQStore;
+import cn.coderule.wolfmq.domain.domain.mq.dto.EnqueueRequest;
+import cn.coderule.wolfmq.domain.domain.mq.dto.EnqueueResult;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

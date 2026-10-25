@@ -1,6 +1,6 @@
 package cn.coderule.wolfmq.rpc.common.rpc.core.invoke;
 
-import cn.coderule.wolfmq.domain.core.enums.code.LanguageCode;
+import cn.coderule.wolfmq.domain.core.constant.code.LanguageCode;
 import cn.coderule.wolfmq.rpc.common.rpc.core.enums.RemotingCommandType;
 import cn.coderule.wolfmq.rpc.common.rpc.core.enums.SerializeType;
 import cn.coderule.wolfmq.rpc.common.rpc.core.exception.RemotingCommandException;
@@ -21,7 +21,7 @@ public class RpcCommandTest {
     @Test
     void testDefaultConstructor() {
         RpcCommand cmd = new RpcCommand();
-        
+
         assertNotNull(cmd);
         assertEquals(LanguageCode.JAVA, cmd.getLanguage());
         assertEquals(0, cmd.getVersion());
@@ -32,7 +32,7 @@ public class RpcCommandTest {
     void testOpaqueIncrement() {
         RpcCommand cmd1 = new RpcCommand();
         RpcCommand cmd2 = new RpcCommand();
-        
+
         assertNotEquals(cmd1.getOpaque(), cmd2.getOpaque());
         assertTrue(cmd2.getOpaque() > cmd1.getOpaque());
     }
@@ -41,7 +41,7 @@ public class RpcCommandTest {
     void testCreateRequestCommand() {
         int code = 100;
         RpcCommand cmd = RpcCommand.createRequestCommand(code);
-        
+
         assertNotNull(cmd);
         assertEquals(code, cmd.getCode());
         assertEquals(RemotingCommandType.REQUEST_COMMAND, cmd.getType());
@@ -53,9 +53,9 @@ public class RpcCommandTest {
         int code = 100;
         TestCommandHeader header = new TestCommandHeader();
         header.setTestField("test");
-        
+
         RpcCommand cmd = RpcCommand.createRequestCommand(code, header);
-        
+
         assertNotNull(cmd);
         assertEquals(code, cmd.getCode());
         assertNotNull(cmd.readCustomHeader());
@@ -64,7 +64,7 @@ public class RpcCommandTest {
     @Test
     void testCreateResponseCommand() {
         RpcCommand cmd = RpcCommand.createResponseCommand(TestCommandHeader.class);
-        
+
         assertNotNull(cmd);
         assertTrue(cmd.isResponseType());
         assertEquals(SystemResponseCode.SYSTEM_ERROR, cmd.getCode());
@@ -75,9 +75,9 @@ public class RpcCommandTest {
     void testCreateResponseCommandWithCodeAndRemark() {
         int code = ResponseCode.SUCCESS;
         String remark = "Success";
-        
+
         RpcCommand cmd = RpcCommand.createResponseCommand(code, remark);
-        
+
         assertNotNull(cmd);
         assertTrue(cmd.isResponseType());
         assertEquals(code, cmd.getCode());
@@ -88,9 +88,9 @@ public class RpcCommandTest {
     void testCreateResponseCommandWithHeader() {
         int code = ResponseCode.SUCCESS;
         String remark = "Success";
-        
+
         RpcCommand cmd = RpcCommand.createResponseCommand(code, remark, TestCommandHeader.class);
-        
+
         assertNotNull(cmd);
         assertTrue(cmd.isResponseType());
         assertEquals(code, cmd.getCode());
@@ -102,9 +102,9 @@ public class RpcCommandTest {
     void testBuildErrorResponse() {
         int code = ResponseCode.SYSTEM_ERROR;
         String remark = "Error occurred";
-        
+
         RpcCommand cmd = RpcCommand.buildErrorResponse(code, remark);
-        
+
         assertNotNull(cmd);
         assertEquals(code, cmd.getCode());
         assertEquals(remark, cmd.getRemark());
@@ -113,12 +113,12 @@ public class RpcCommandTest {
     @Test
     void testSuccessAndFailure() {
         RpcCommand cmd = new RpcCommand();
-        
+
         RpcCommand successCmd = cmd.success();
         assertNotNull(successCmd);
         assertEquals(ResponseCode.SUCCESS, successCmd.getCode());
         assertTrue(successCmd.isSuccess());
-        
+
         RpcCommand failureCmd = cmd.failure(ResponseCode.SYSTEM_ERROR, "Failed");
         assertNotNull(failureCmd);
         assertEquals(ResponseCode.SYSTEM_ERROR, failureCmd.getCode());
@@ -129,7 +129,7 @@ public class RpcCommandTest {
     void testMarkResponseType() {
         RpcCommand cmd = new RpcCommand();
         assertFalse(cmd.isResponseType());
-        
+
         cmd.markResponseType();
         assertTrue(cmd.isResponseType());
         assertEquals(RemotingCommandType.RESPONSE_COMMAND, cmd.getType());
@@ -139,7 +139,7 @@ public class RpcCommandTest {
     void testMarkOnewayRPC() {
         RpcCommand cmd = new RpcCommand();
         assertFalse(cmd.isOnewayRPC());
-        
+
         cmd.markOnewayRPC();
         assertTrue(cmd.isOnewayRPC());
     }
@@ -147,10 +147,10 @@ public class RpcCommandTest {
     @Test
     void testAddExtField() {
         RpcCommand cmd = new RpcCommand();
-        
+
         cmd.addExtField("key1", "value1");
         assertEquals("value1", cmd.getExtFields().get("key1"));
-        
+
         cmd.addExtField("key2", "value2");
         assertEquals("value2", cmd.getExtFields().get("key2"));
     }
@@ -159,10 +159,10 @@ public class RpcCommandTest {
     void testAddExtFieldIfNotExist() {
         RpcCommand cmd = new RpcCommand();
         cmd.addExtField("key", "original");
-        
+
         cmd.addExtFieldIfNotExist("key", "new");
         assertEquals("original", cmd.getExtFields().get("key"));
-        
+
         cmd.addExtFieldIfNotExist("newKey", "newValue");
         assertEquals("newValue", cmd.getExtFields().get("newKey"));
     }
@@ -172,7 +172,7 @@ public class RpcCommandTest {
         RpcCommand original = RpcCommand.createRequestCommand(100);
         original.setRemark("test remark");
         original.addExtField("extKey", "extValue");
-        
+
         ByteBuffer encoded = original.encodeHeader();
         assertNotNull(encoded);
         assertTrue(encoded.remaining() > 0);
@@ -185,12 +185,12 @@ public class RpcCommandTest {
         header.setIntField(42);
         header.setLongField(123456L);
         header.setBooleanField(true);
-        
+
         RpcCommand cmd = RpcCommand.createRequestCommand(100, header);
         cmd.makeCustomHeaderToNet();
-        
+
         TestCommandHeader decoded = cmd.decodeHeader(TestCommandHeader.class);
-        
+
         assertNotNull(decoded);
         assertEquals("testValue", decoded.getTestField());
         assertEquals(42, decoded.getIntField());
@@ -202,9 +202,9 @@ public class RpcCommandTest {
     void testMarkProtocolType() {
         int source = 100;
         SerializeType type = SerializeType.JSON;
-        
+
         int result = RpcCommand.markProtocolType(source, type);
-        
+
         assertEquals(SerializeType.JSON, RpcCommand.getProtocolType(result));
         assertEquals(source, RpcCommand.getHeaderLength(result));
     }
@@ -213,16 +213,16 @@ public class RpcCommandTest {
     void testCreateNewRequestId() {
         int id1 = RpcCommand.createNewRequestId();
         int id2 = RpcCommand.createNewRequestId();
-        
+
         assertTrue(id2 > id1);
     }
 
     @Test
     void testSetCodeAndRemark() {
         RpcCommand cmd = new RpcCommand();
-        
+
         RpcCommand result = cmd.setCodeAndRemark(200, "OK");
-        
+
         assertSame(cmd, result);
         assertEquals(200, cmd.getCode());
         assertEquals("OK", cmd.getRemark());
@@ -233,9 +233,9 @@ public class RpcCommandTest {
         RpcCommand cmd = new RpcCommand();
         TestCommandHeader header = new TestCommandHeader();
         header.setTestField("test");
-        
+
         cmd.writeHeader(header);
-        
+
         CommandHeader read = cmd.readCustomHeader();
         assertNotNull(read);
         assertTrue(read instanceof TestCommandHeader);
@@ -246,7 +246,7 @@ public class RpcCommandTest {
     void testEncodeHeader() {
         RpcCommand cmd = RpcCommand.createRequestCommand(100);
         cmd.setRemark("test");
-        
+
         ByteBuffer headerBuffer = cmd.encodeHeader();
         assertNotNull(headerBuffer);
         assertTrue(headerBuffer.remaining() > 0);
@@ -256,10 +256,10 @@ public class RpcCommandTest {
     void testFastEncodeHeader() {
         RpcCommand cmd = RpcCommand.createRequestCommand(100);
         cmd.setBody("test".getBytes());
-        
+
         ByteBuf out = Unpooled.buffer();
         cmd.fastEncodeHeader(out);
-        
+
         assertTrue(out.readableBytes() > 0);
     }
 
@@ -267,9 +267,9 @@ public class RpcCommandTest {
     void testToString() {
         RpcCommand cmd = RpcCommand.createRequestCommand(100);
         cmd.setRemark("test");
-        
+
         String str = cmd.toString();
-        
+
         assertNotNull(str);
         assertTrue(str.contains("code=100"));
         assertTrue(str.contains("remark=test"));

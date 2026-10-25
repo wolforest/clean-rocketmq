@@ -2,8 +2,8 @@ package cn.coderule.wolfmq.broker.infra.task;
 
 import cn.coderule.wolfmq.domain.config.business.TaskConfig;
 import cn.coderule.wolfmq.domain.config.server.BrokerConfig;
-import cn.coderule.wolfmq.domain.domain.cluster.task.StoreTask;
-import cn.coderule.wolfmq.domain.domain.cluster.task.TaskFactory;
+import cn.coderule.wolfmq.domain.server.task.StoreTask;
+import cn.coderule.wolfmq.domain.server.task.TaskFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;

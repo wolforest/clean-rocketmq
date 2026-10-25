@@ -1,7 +1,7 @@
 package cn.coderule.wolfmq.store.domain.dispatcher.it;
 
 import cn.coderule.wolfmq.domain.config.store.CommitConfig;
-import cn.coderule.wolfmq.domain.domain.store.domain.commitlog.CommitEvent;
+import cn.coderule.wolfmq.domain.domain.commitlog.CommitEvent;
 import cn.coderule.wolfmq.domain.domain.message.MessageBO;
 import cn.coderule.wolfmq.domain.mock.MessageMock;
 import cn.coderule.wolfmq.store.domain.dispatcher.CommitListener;

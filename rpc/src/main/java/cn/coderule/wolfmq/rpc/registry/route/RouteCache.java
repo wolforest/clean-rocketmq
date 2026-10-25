@@ -1,9 +1,9 @@
 package cn.coderule.wolfmq.rpc.registry.route;
 
-import cn.coderule.wolfmq.domain.domain.MessageQueue;
-import cn.coderule.wolfmq.domain.domain.cluster.server.GroupInfo;
-import cn.coderule.wolfmq.domain.domain.cluster.route.PublishInfo;
-import cn.coderule.wolfmq.domain.domain.cluster.route.RouteInfo;
+import cn.coderule.wolfmq.domain.domain.mq.MessageQueue;
+import cn.coderule.wolfmq.domain.server.registry.GroupInfo;
+import cn.coderule.wolfmq.domain.server.route.PublishInfo;
+import cn.coderule.wolfmq.domain.server.route.RouteInfo;
 import com.google.common.collect.Sets;
 import java.io.Serializable;
 import java.util.Map;

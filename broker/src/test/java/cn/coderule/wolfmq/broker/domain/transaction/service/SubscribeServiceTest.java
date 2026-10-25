@@ -1,6 +1,6 @@
 package cn.coderule.wolfmq.broker.domain.transaction.service;
 
-import cn.coderule.wolfmq.domain.domain.cluster.RequestContext;
+import cn.coderule.wolfmq.domain.server.RequestContext;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

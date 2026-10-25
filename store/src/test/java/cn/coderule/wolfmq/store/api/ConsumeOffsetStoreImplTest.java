@@ -5,7 +5,7 @@ import cn.coderule.wolfmq.domain.domain.meta.offset.OffsetFilter;
 import cn.coderule.wolfmq.domain.domain.meta.offset.OffsetRequest;
 import cn.coderule.wolfmq.domain.domain.meta.offset.OffsetResult;
 import cn.coderule.wolfmq.domain.domain.meta.offset.TopicResult;
-import cn.coderule.wolfmq.domain.domain.store.domain.meta.ConsumeOffsetService;
+import cn.coderule.wolfmq.domain.domain.meta.service.ConsumeOffsetService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

@@ -1,8 +1,8 @@
 package cn.coderule.wolfmq.broker.domain.consumer.pop;
 
-import cn.coderule.wolfmq.domain.domain.cluster.RequestContext;
-import cn.coderule.wolfmq.domain.domain.store.domain.mq.DequeueRequest;
-import cn.coderule.wolfmq.domain.domain.store.domain.mq.DequeueResult;
+import cn.coderule.wolfmq.domain.server.RequestContext;
+import cn.coderule.wolfmq.domain.domain.mq.dto.DequeueRequest;
+import cn.coderule.wolfmq.domain.domain.mq.dto.DequeueResult;
 import cn.coderule.wolfmq.domain.domain.consumer.consume.mq.QueueRequest;
 import cn.coderule.wolfmq.domain.domain.consumer.consume.pop.PopContext;
 import cn.coderule.wolfmq.domain.domain.consumer.consume.pop.PopRequest;

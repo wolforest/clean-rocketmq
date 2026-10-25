@@ -1,9 +1,9 @@
 package cn.coderule.wolfmq.store.domain.dispatcher;
 
-import cn.coderule.wolfmq.domain.domain.store.domain.commitlog.CommitEvent;
-import cn.coderule.wolfmq.domain.domain.store.domain.commitlog.CommitHandler;
-import cn.coderule.wolfmq.domain.domain.store.domain.commitlog.CommitLog;
-import cn.coderule.wolfmq.domain.domain.store.server.CheckPoint;
+import cn.coderule.wolfmq.domain.domain.commitlog.CommitEvent;
+import cn.coderule.wolfmq.domain.domain.commitlog.CommitHandler;
+import cn.coderule.wolfmq.domain.domain.commitlog.CommitLog;
+import cn.coderule.wolfmq.domain.server.store.CheckPoint;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -31,19 +31,19 @@ public class DefaultCommitEventDispatcherTest {
     @Test
     void testRegisterHandler() {
         CommitHandler handler = mock(CommitHandler.class);
-        
+
         dispatcher.registerHandler(handler);
-        
+
         CommitEvent event = mock(CommitEvent.class);
         dispatcher.dispatch(event);
-        
+
         verify(handler).handle(event);
     }
 
     @Test
     void testDispatchWithNoHandlers() {
         CommitEvent event = mock(CommitEvent.class);
-        
+
         assertDoesNotThrow(() -> dispatcher.dispatch(event));
     }
 
@@ -51,13 +51,13 @@ public class DefaultCommitEventDispatcherTest {
     void testDispatchWithMultipleHandlers() {
         CommitHandler handler1 = mock(CommitHandler.class);
         CommitHandler handler2 = mock(CommitHandler.class);
-        
+
         dispatcher.registerHandler(handler1);
         dispatcher.registerHandler(handler2);
-        
+
         CommitEvent event = mock(CommitEvent.class);
         dispatcher.dispatch(event);
-        
+
         verify(handler1).handle(event);
         verify(handler2).handle(event);
     }
@@ -65,7 +65,7 @@ public class DefaultCommitEventDispatcherTest {
     @Test
     void testSetAndGetDispatchedOffset() {
         dispatcher.setDispatchedOffset(100L);
-        
+
         assertEquals(100L, dispatcher.getDispatchedOffset());
     }
 

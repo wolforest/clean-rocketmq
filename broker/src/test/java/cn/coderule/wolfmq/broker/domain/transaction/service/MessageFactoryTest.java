@@ -4,7 +4,7 @@ import cn.coderule.wolfmq.domain.config.business.TransactionConfig;
 import cn.coderule.wolfmq.domain.config.server.BrokerConfig;
 import cn.coderule.wolfmq.domain.core.constant.MessageConst;
 import cn.coderule.wolfmq.domain.core.constant.flag.MessageSysFlag;
-import cn.coderule.wolfmq.domain.domain.MessageQueue;
+import cn.coderule.wolfmq.domain.domain.mq.MessageQueue;
 import cn.coderule.wolfmq.domain.domain.message.MessageBO;
 import cn.coderule.wolfmq.domain.domain.transaction.CommitBuffer;
 import cn.coderule.wolfmq.domain.domain.transaction.OffsetQueue;

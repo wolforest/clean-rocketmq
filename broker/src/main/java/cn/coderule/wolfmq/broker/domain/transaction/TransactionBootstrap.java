@@ -22,7 +22,7 @@ import cn.coderule.wolfmq.broker.infra.store.TopicStore;
 import cn.coderule.wolfmq.broker.server.bootstrap.BrokerContext;
 import cn.coderule.wolfmq.domain.config.business.TransactionConfig;
 import cn.coderule.wolfmq.domain.config.server.BrokerConfig;
-import cn.coderule.wolfmq.domain.domain.cluster.task.TaskLoader;
+import cn.coderule.wolfmq.domain.server.task.TaskLoader;
 import cn.coderule.wolfmq.domain.domain.transaction.CommitBuffer;
 
 public class TransactionBootstrap implements Lifecycle {

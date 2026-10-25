@@ -1,6 +1,6 @@
 package cn.coderule.wolfmq.domain.core.exception;
 
-import cn.coderule.wolfmq.domain.core.enums.code.BrokerExceptionCode;
+import cn.coderule.wolfmq.domain.core.constant.code.BrokerExceptionCode;
 
 public class BrokerException extends RuntimeException {
 

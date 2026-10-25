@@ -5,10 +5,10 @@ import cn.coderule.wolfmq.domain.config.server.BrokerConfig;
 import cn.coderule.wolfmq.rpc.common.rpc.netty.NettyClient;
 import cn.coderule.wolfmq.rpc.registry.RegistryClient;
 import cn.coderule.wolfmq.rpc.registry.client.DefaultRegistryClient;
-import cn.coderule.wolfmq.domain.domain.cluster.server.BrokerInfo;
-import cn.coderule.wolfmq.domain.domain.cluster.server.HeartBeat;
-import cn.coderule.wolfmq.domain.domain.cluster.server.ServerInfo;
-import cn.coderule.wolfmq.domain.domain.cluster.route.RouteInfo;
+import cn.coderule.wolfmq.domain.server.registry.BrokerInfo;
+import cn.coderule.wolfmq.domain.server.heartbeat.HeartBeat;
+import cn.coderule.wolfmq.domain.server.registry.ServerInfo;
+import cn.coderule.wolfmq.domain.server.route.RouteInfo;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 

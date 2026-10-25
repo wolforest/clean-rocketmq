@@ -1,10 +1,10 @@
 package cn.coderule.wolfmq.store.domain.consumequeue.queue;
 
-import cn.coderule.wolfmq.domain.core.enums.store.QueueType;
-import cn.coderule.wolfmq.domain.domain.store.domain.commitlog.CommitEvent;
-import cn.coderule.wolfmq.domain.domain.store.domain.consumequeue.QueueUnit;
-import cn.coderule.wolfmq.domain.domain.store.domain.consumequeue.ConsumeQueue;
-import cn.coderule.wolfmq.domain.domain.store.infra.MappedFileQueue;
+import cn.coderule.wolfmq.domain.domain.consumequeue.QueueType;
+import cn.coderule.wolfmq.domain.domain.commitlog.CommitEvent;
+import cn.coderule.wolfmq.domain.domain.consumequeue.QueueUnit;
+import cn.coderule.wolfmq.domain.domain.consumequeue.ConsumeQueue;
+import cn.coderule.wolfmq.domain.core.mmap.MappedFileQueue;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentMap;

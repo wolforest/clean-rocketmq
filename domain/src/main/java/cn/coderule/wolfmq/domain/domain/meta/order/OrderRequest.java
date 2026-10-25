@@ -1,6 +1,6 @@
 package cn.coderule.wolfmq.domain.domain.meta.order;
 
-import cn.coderule.wolfmq.domain.domain.cluster.RequestContext;
+import cn.coderule.wolfmq.domain.server.RequestContext;
 import java.io.Serializable;
 import java.util.List;
 import lombok.AllArgsConstructor;

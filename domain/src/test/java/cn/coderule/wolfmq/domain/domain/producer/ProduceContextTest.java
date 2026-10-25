@@ -1,9 +1,9 @@
 package cn.coderule.wolfmq.domain.domain.producer;
 
-import cn.coderule.wolfmq.domain.domain.cluster.RequestContext;
+import cn.coderule.wolfmq.domain.server.RequestContext;
 import cn.coderule.wolfmq.domain.domain.message.MessageBO;
 import cn.coderule.wolfmq.domain.domain.meta.topic.Topic;
-import cn.coderule.wolfmq.domain.domain.MessageQueue;
+import cn.coderule.wolfmq.domain.domain.mq.MessageQueue;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

@@ -1,6 +1,5 @@
 package cn.coderule.wolfmq.rpc.registry.protocol.body;
 
-import cn.coderule.wolfmq.domain.domain.cluster.server.BrokerInfo;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

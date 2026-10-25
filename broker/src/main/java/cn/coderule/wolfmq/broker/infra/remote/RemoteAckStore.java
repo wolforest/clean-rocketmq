@@ -2,7 +2,7 @@ package cn.coderule.wolfmq.broker.infra.remote;
 
 import cn.coderule.wolfmq.domain.domain.consumer.ack.AckInfo;
 import cn.coderule.wolfmq.domain.domain.consumer.consume.pop.checkpoint.PopCheckPoint;
-import cn.coderule.wolfmq.domain.domain.store.api.meta.AckStore;
+import cn.coderule.wolfmq.domain.server.store.api.meta.AckStore;
 
 @Deprecated
 public class RemoteAckStore extends AbstractRemoteStore implements AckStore {

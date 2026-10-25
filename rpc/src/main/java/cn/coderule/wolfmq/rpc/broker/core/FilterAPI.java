@@ -1,7 +1,7 @@
 package cn.coderule.wolfmq.rpc.broker.core;
 
-import cn.coderule.wolfmq.domain.core.enums.consume.ExpressionType;
-import cn.coderule.wolfmq.domain.domain.cluster.server.heartbeat.SubscriptionData;
+import cn.coderule.wolfmq.domain.domain.consumer.consume.ExpressionType;
+import cn.coderule.wolfmq.domain.server.heartbeat.SubscriptionData;
 import java.util.Arrays;
 import org.apache.commons.lang3.StringUtils;
 

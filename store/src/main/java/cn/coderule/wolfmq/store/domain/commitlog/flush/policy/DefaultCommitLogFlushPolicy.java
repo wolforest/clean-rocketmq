@@ -1,8 +1,8 @@
 package cn.coderule.wolfmq.store.domain.commitlog.flush.policy;
 
-import cn.coderule.wolfmq.domain.core.enums.store.EnqueueStatus;
-import cn.coderule.wolfmq.domain.domain.store.domain.commitlog.CommitLogFlushPolicy;
-import cn.coderule.wolfmq.domain.domain.store.server.CheckPoint;
+import cn.coderule.wolfmq.domain.domain.mq.dto.EnqueueStatus;
+import cn.coderule.wolfmq.domain.domain.commitlog.CommitLogFlushPolicy;
+import cn.coderule.wolfmq.domain.server.store.CheckPoint;
 import cn.coderule.wolfmq.store.domain.commitlog.flush.FlushWatcher;
 import cn.coderule.wolfmq.store.domain.commitlog.flush.Flusher;
 import cn.coderule.wolfmq.store.domain.commitlog.flush.GroupFlusher;
@@ -10,12 +10,12 @@ import cn.coderule.wolfmq.store.domain.commitlog.flush.IntervalCommitter;
 import cn.coderule.wolfmq.store.domain.commitlog.flush.IntervalFlusher;
 import cn.coderule.wolfmq.store.domain.commitlog.vo.GroupCommitRequest;
 import cn.coderule.wolfmq.domain.config.store.CommitConfig;
-import cn.coderule.wolfmq.domain.core.enums.store.FlushType;
-import cn.coderule.wolfmq.domain.domain.store.domain.mq.EnqueueResult;
-import cn.coderule.wolfmq.domain.domain.store.domain.mq.EnqueueFuture;
-import cn.coderule.wolfmq.domain.domain.store.infra.InsertResult;
+import cn.coderule.wolfmq.domain.domain.commitlog.FlushType;
+import cn.coderule.wolfmq.domain.domain.mq.dto.EnqueueResult;
+import cn.coderule.wolfmq.domain.domain.mq.dto.EnqueueFuture;
+import cn.coderule.wolfmq.domain.core.mmap.InsertResult;
 import cn.coderule.wolfmq.domain.domain.message.MessageBO;
-import cn.coderule.wolfmq.domain.domain.store.infra.MappedFileQueue;
+import cn.coderule.wolfmq.domain.core.mmap.MappedFileQueue;
 import java.util.concurrent.CompletableFuture;
 
 /**

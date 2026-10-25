@@ -1,5 +1,6 @@
 package cn.coderule.wolfmq.domain.domain.cluster.selector;
 
+import cn.coderule.wolfmq.domain.server.selector.LatencyFaultToleranceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

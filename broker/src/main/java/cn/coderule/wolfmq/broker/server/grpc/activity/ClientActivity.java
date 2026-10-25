@@ -11,7 +11,7 @@ import cn.coderule.wolfmq.broker.server.grpc.service.channel.HeartbeatService;
 import cn.coderule.wolfmq.broker.server.grpc.service.channel.TelemetryObserver;
 import cn.coderule.wolfmq.broker.server.grpc.service.channel.TelemetryService;
 import cn.coderule.wolfmq.broker.server.grpc.service.channel.TerminationService;
-import cn.coderule.wolfmq.domain.domain.cluster.RequestContext;
+import cn.coderule.wolfmq.domain.server.RequestContext;
 import cn.coderule.wolfmq.rpc.common.grpc.activity.ActivityHelper;
 import io.grpc.stub.StreamObserver;
 import java.util.concurrent.ThreadPoolExecutor;

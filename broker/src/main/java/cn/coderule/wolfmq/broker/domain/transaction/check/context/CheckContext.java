@@ -1,7 +1,7 @@
 package cn.coderule.wolfmq.broker.domain.transaction.check.context;
 
 import cn.coderule.wolfmq.domain.config.business.TransactionConfig;
-import cn.coderule.wolfmq.domain.domain.MessageQueue;
+import cn.coderule.wolfmq.domain.domain.mq.MessageQueue;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;

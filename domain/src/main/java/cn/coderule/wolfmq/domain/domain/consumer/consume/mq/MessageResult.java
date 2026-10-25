@@ -1,14 +1,11 @@
 package cn.coderule.wolfmq.domain.domain.consumer.consume.mq;
 
-import cn.coderule.wolfmq.domain.core.enums.message.MessageStatus;
+import cn.coderule.wolfmq.domain.domain.message.enums.MessageStatus;
 import cn.coderule.wolfmq.domain.domain.message.MessageBO;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NonNull;
 
 @Data
 @Builder

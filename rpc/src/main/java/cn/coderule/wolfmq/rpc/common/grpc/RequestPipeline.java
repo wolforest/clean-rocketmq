@@ -16,7 +16,7 @@
  */
 package cn.coderule.wolfmq.rpc.common.grpc;
 
-import cn.coderule.wolfmq.domain.domain.cluster.RequestContext;
+import cn.coderule.wolfmq.domain.server.RequestContext;
 import com.google.protobuf.GeneratedMessage;
 import io.grpc.Metadata;
 

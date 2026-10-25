@@ -1,8 +1,8 @@
 package cn.coderule.wolfmq.broker.domain.consumer.renew;
 
 import cn.coderule.wolfmq.broker.domain.consumer.ack.InvisibleService;
-import cn.coderule.wolfmq.domain.core.EventListener;
-import cn.coderule.wolfmq.domain.domain.cluster.RequestContext;
+import cn.coderule.wolfmq.domain.domain.consumer.receipt.EventListener;
+import cn.coderule.wolfmq.domain.server.RequestContext;
 import cn.coderule.wolfmq.domain.domain.consumer.ack.broker.AckResult;
 import cn.coderule.wolfmq.domain.domain.consumer.ack.broker.InvisibleRequest;
 import cn.coderule.wolfmq.domain.domain.consumer.receipt.MessageReceipt;

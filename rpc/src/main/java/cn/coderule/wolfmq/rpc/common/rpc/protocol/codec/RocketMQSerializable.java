@@ -2,7 +2,7 @@ package cn.coderule.wolfmq.rpc.common.rpc.protocol.codec;
 
 import cn.coderule.wolfmq.rpc.common.rpc.core.exception.RemotingCommandException;
 import cn.coderule.wolfmq.rpc.common.rpc.core.invoke.RpcCommand;
-import cn.coderule.wolfmq.domain.core.enums.code.LanguageCode;
+import cn.coderule.wolfmq.domain.core.constant.code.LanguageCode;
 import cn.coderule.wolfmq.rpc.common.rpc.protocol.header.FastCodesHeader;
 import io.netty.buffer.ByteBuf;
 import java.nio.ByteBuffer;

@@ -1,6 +1,6 @@
 package cn.coderule.wolfmq.domain.domain.producer;
 
-import cn.coderule.wolfmq.domain.domain.cluster.ClientChannelInfo;
+import cn.coderule.wolfmq.domain.server.ClientChannelInfo;
 import java.io.Serializable;
 import lombok.Data;
 

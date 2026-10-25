@@ -1,6 +1,6 @@
 package cn.coderule.wolfmq.rpc.broker.rpc.protocol.body;
 
-import cn.coderule.wolfmq.domain.core.enums.consume.CMResult;
+import cn.coderule.wolfmq.domain.domain.consumer.consume.CMResult;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

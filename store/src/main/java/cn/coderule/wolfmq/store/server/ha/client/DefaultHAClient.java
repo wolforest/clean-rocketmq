@@ -3,7 +3,7 @@ package cn.coderule.wolfmq.store.server.ha.client;
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 import cn.coderule.common.util.net.NetworkUtil;
 import cn.coderule.wolfmq.domain.config.server.StoreConfig;
-import cn.coderule.wolfmq.domain.domain.store.api.CommitLogStore;
+import cn.coderule.wolfmq.domain.server.store.api.CommitLogStore;
 import cn.coderule.wolfmq.rpc.common.rpc.netty.service.helper.NettyHelper;
 import cn.coderule.wolfmq.store.server.ha.core.ConnectionState;
 import cn.coderule.wolfmq.store.server.ha.core.monitor.FlowMonitor;

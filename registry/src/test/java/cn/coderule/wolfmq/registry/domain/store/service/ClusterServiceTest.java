@@ -1,9 +1,8 @@
 package cn.coderule.wolfmq.registry.domain.store.service;
 
 import cn.coderule.wolfmq.domain.config.server.RegistryConfig;
-import cn.coderule.wolfmq.domain.domain.cluster.server.ClusterInfo;
-import cn.coderule.wolfmq.domain.domain.cluster.server.GroupInfo;
-import cn.coderule.wolfmq.domain.domain.meta.topic.Topic;
+import cn.coderule.wolfmq.domain.server.registry.ClusterInfo;
+import cn.coderule.wolfmq.domain.server.registry.GroupInfo;
 import cn.coderule.wolfmq.registry.domain.store.model.Route;
 import cn.coderule.wolfmq.rpc.registry.protocol.body.BrokerMemberGroup;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,9 +27,9 @@ public class ClusterServiceTest {
     @Test
     void testGetClusterInfo() {
         route.getOrCreateGroup("zone1", "cluster1", "broker-a", false);
-        
+
         ClusterInfo clusterInfo = clusterService.getClusterInfo();
-        
+
         assertNotNull(clusterInfo);
         assertNotNull(clusterInfo.getBrokerAddrTable());
         assertNotNull(clusterInfo.getClusterAddrTable());
@@ -40,9 +39,9 @@ public class ClusterServiceTest {
     void testGetGroupInfo() {
         GroupInfo groupInfo = route.getOrCreateGroup("zone1", "cluster1", "broker-a", false);
         groupInfo.getBrokerAddrs().put(0L, "127.0.0.1:10911");
-        
+
         BrokerMemberGroup memberGroup = clusterService.getGroupInfo("cluster1", "broker-a");
-        
+
         assertNotNull(memberGroup);
         assertEquals("cluster1", memberGroup.getCluster());
         assertEquals("broker-a", memberGroup.getBrokerName());
@@ -52,7 +51,7 @@ public class ClusterServiceTest {
     @Test
     void testGetGroupInfoNotFound() {
         BrokerMemberGroup memberGroup = clusterService.getGroupInfo("cluster1", "non-existent");
-        
+
         assertNotNull(memberGroup);
         assertTrue(memberGroup.getBrokerAddrs().isEmpty());
     }
@@ -60,7 +59,7 @@ public class ClusterServiceTest {
     @Test
     void testLogClusterStatusDoesNotThrow() {
         route.getOrCreateGroup("zone1", "cluster1", "broker-a", false);
-        
+
         assertDoesNotThrow(() -> clusterService.logClusterStatus());
     }
 }

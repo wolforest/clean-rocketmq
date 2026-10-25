@@ -1,6 +1,6 @@
 package cn.coderule.wolfmq.rpc.common.grpc.core;
 
-import cn.coderule.wolfmq.domain.domain.cluster.RequestContext;
+import cn.coderule.wolfmq.domain.server.RequestContext;
 import io.grpc.stub.StreamObserver;
 import lombok.Data;
 

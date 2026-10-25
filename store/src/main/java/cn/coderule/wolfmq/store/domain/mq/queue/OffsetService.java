@@ -2,16 +2,16 @@ package cn.coderule.wolfmq.store.domain.mq.queue;
 
 import cn.coderule.wolfmq.domain.config.business.MessageConfig;
 import cn.coderule.wolfmq.domain.config.server.StoreConfig;
-import cn.coderule.wolfmq.domain.domain.store.domain.consumequeue.QueueUnit;
-import cn.coderule.wolfmq.domain.domain.store.infra.SelectedMappedBuffer;
-import cn.coderule.wolfmq.domain.domain.store.domain.mq.DequeueRequest;
-import cn.coderule.wolfmq.domain.domain.store.domain.mq.DequeueResult;
+import cn.coderule.wolfmq.domain.domain.consumequeue.QueueUnit;
+import cn.coderule.wolfmq.domain.core.mmap.SelectedMappedBuffer;
+import cn.coderule.wolfmq.domain.domain.mq.dto.DequeueRequest;
+import cn.coderule.wolfmq.domain.domain.mq.dto.DequeueResult;
 import cn.coderule.wolfmq.domain.domain.consumer.consume.pop.helper.PopConverter;
 import cn.coderule.wolfmq.domain.domain.meta.order.OrderRequest;
-import cn.coderule.wolfmq.domain.domain.store.domain.commitlog.CommitLog;
+import cn.coderule.wolfmq.domain.domain.commitlog.CommitLog;
 import cn.coderule.wolfmq.store.domain.consumequeue.queue.ConsumeQueueManager;
-import cn.coderule.wolfmq.domain.domain.store.domain.meta.ConsumeOffsetService;
-import cn.coderule.wolfmq.domain.domain.store.domain.meta.ConsumeOrderService;
+import cn.coderule.wolfmq.domain.domain.meta.service.ConsumeOffsetService;
+import cn.coderule.wolfmq.domain.domain.meta.service.ConsumeOrderService;
 import cn.coderule.wolfmq.store.domain.mq.ack.AckService;
 import lombok.extern.slf4j.Slf4j;
 

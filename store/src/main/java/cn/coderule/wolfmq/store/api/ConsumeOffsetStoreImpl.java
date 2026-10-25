@@ -5,8 +5,8 @@ import cn.coderule.wolfmq.domain.domain.meta.offset.OffsetFilter;
 import cn.coderule.wolfmq.domain.domain.meta.offset.OffsetRequest;
 import cn.coderule.wolfmq.domain.domain.meta.offset.OffsetResult;
 import cn.coderule.wolfmq.domain.domain.meta.offset.TopicResult;
-import cn.coderule.wolfmq.domain.domain.store.api.meta.ConsumeOffsetStore;
-import cn.coderule.wolfmq.domain.domain.store.domain.meta.ConsumeOffsetService;
+import cn.coderule.wolfmq.domain.server.store.api.meta.ConsumeOffsetStore;
+import cn.coderule.wolfmq.domain.domain.meta.service.ConsumeOffsetService;
 import java.util.Set;
 
 public class ConsumeOffsetStoreImpl implements ConsumeOffsetStore {

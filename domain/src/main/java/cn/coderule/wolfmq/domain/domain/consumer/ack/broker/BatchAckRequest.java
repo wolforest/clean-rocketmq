@@ -1,6 +1,6 @@
 package cn.coderule.wolfmq.domain.domain.consumer.ack.broker;
 
-import cn.coderule.wolfmq.domain.domain.cluster.RequestContext;
+import cn.coderule.wolfmq.domain.server.RequestContext;
 import cn.coderule.wolfmq.domain.domain.consumer.receipt.MessageIdReceipt;
 import cn.coderule.wolfmq.domain.domain.consumer.receipt.ReceiptHandle;
 import java.io.Serializable;

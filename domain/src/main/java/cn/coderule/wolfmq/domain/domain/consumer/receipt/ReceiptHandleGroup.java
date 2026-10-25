@@ -2,7 +2,7 @@
 package cn.coderule.wolfmq.domain.domain.consumer.receipt;
 
 import cn.coderule.wolfmq.domain.config.business.MessageConfig;
-import cn.coderule.wolfmq.domain.core.enums.code.BrokerExceptionCode;
+import cn.coderule.wolfmq.domain.core.constant.code.BrokerExceptionCode;
 import cn.coderule.wolfmq.domain.core.exception.BrokerException;
 import com.google.common.base.MoreObjects;
 import java.util.Map;

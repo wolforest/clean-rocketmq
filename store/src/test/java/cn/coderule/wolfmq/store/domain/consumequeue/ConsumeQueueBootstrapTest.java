@@ -3,7 +3,7 @@ package cn.coderule.wolfmq.store.domain.consumequeue;
 import cn.coderule.wolfmq.domain.config.server.StoreConfig;
 import cn.coderule.wolfmq.domain.config.store.CommitConfig;
 import cn.coderule.wolfmq.domain.config.store.StorePath;
-import cn.coderule.wolfmq.domain.domain.store.domain.meta.TopicService;
+import cn.coderule.wolfmq.domain.domain.meta.service.TopicService;
 import cn.coderule.wolfmq.domain.mock.ConfigMock;
 import cn.coderule.wolfmq.store.domain.consumequeue.queue.ConsumeQueueManager;
 import cn.coderule.wolfmq.store.domain.dispatcher.CommitHandlerManager;

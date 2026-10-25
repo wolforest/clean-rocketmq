@@ -6,7 +6,7 @@ import apache.rocketmq.v2.QueryOffsetRequest;
 import apache.rocketmq.v2.QueryOffsetResponse;
 import apache.rocketmq.v2.UpdateOffsetRequest;
 import apache.rocketmq.v2.UpdateOffsetResponse;
-import cn.coderule.wolfmq.domain.domain.cluster.RequestContext;
+import cn.coderule.wolfmq.domain.server.RequestContext;
 import java.util.concurrent.CompletableFuture;
 
 public class GrpcOffsetService {

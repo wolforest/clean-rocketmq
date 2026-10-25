@@ -1,6 +1,6 @@
 package cn.coderule.wolfmq.store.domain.commitlog.vo;
 
-import cn.coderule.wolfmq.domain.core.enums.store.EnqueueStatus;
+import cn.coderule.wolfmq.domain.domain.mq.dto.EnqueueStatus;
 import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.CompletableFuture;

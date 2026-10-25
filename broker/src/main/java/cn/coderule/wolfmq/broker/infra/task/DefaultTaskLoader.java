@@ -5,9 +5,9 @@ import cn.coderule.wolfmq.broker.infra.task.strategy.EmbedStrategy;
 import cn.coderule.wolfmq.broker.infra.task.strategy.ShardingStrategy;
 import cn.coderule.wolfmq.domain.config.server.BrokerConfig;
 import cn.coderule.wolfmq.domain.config.business.TaskConfig;
-import cn.coderule.wolfmq.domain.domain.cluster.task.TaskFactory;
-import cn.coderule.wolfmq.domain.domain.cluster.task.TaskLoader;
-import cn.coderule.wolfmq.domain.domain.cluster.task.TaskStrategy;
+import cn.coderule.wolfmq.domain.server.task.TaskFactory;
+import cn.coderule.wolfmq.domain.server.task.TaskLoader;
+import cn.coderule.wolfmq.domain.server.task.TaskStrategy;
 
 public class DefaultTaskLoader implements TaskLoader {
     private final TaskContext taskContext;

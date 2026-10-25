@@ -1,9 +1,8 @@
 package cn.coderule.wolfmq.store.api;
 
-import cn.coderule.wolfmq.domain.domain.timer.ScanResult;
-import cn.coderule.wolfmq.domain.domain.timer.TimerEvent;
+import cn.coderule.wolfmq.domain.domain.timer.model.ScanResult;
+import cn.coderule.wolfmq.domain.domain.timer.model.TimerEvent;
 import cn.coderule.wolfmq.domain.domain.timer.state.TimerCheckpoint;
-import cn.coderule.wolfmq.domain.domain.store.api.TimerStore;
 import cn.coderule.wolfmq.store.domain.timer.service.TimerService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

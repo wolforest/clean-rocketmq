@@ -6,7 +6,7 @@ import cn.coderule.wolfmq.domain.domain.consumer.ack.broker.AckResult;
 import cn.coderule.wolfmq.domain.domain.consumer.ack.store.AckMessage;
 import cn.coderule.wolfmq.domain.domain.consumer.consume.pop.checkpoint.PopCheckPoint;
 import cn.coderule.wolfmq.domain.domain.message.MessageBO;
-import cn.coderule.wolfmq.domain.domain.store.domain.mq.EnqueueResult;
+import cn.coderule.wolfmq.domain.domain.mq.dto.EnqueueResult;
 import cn.coderule.wolfmq.store.domain.mq.queue.EnqueueService;
 import lombok.extern.slf4j.Slf4j;
 

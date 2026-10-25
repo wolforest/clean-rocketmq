@@ -3,9 +3,9 @@ package cn.coderule.wolfmq.broker.domain.transaction.service;
 import cn.coderule.wolfmq.broker.domain.transaction.receipt.ReceiptRegistry;
 import cn.coderule.wolfmq.broker.infra.store.MQStore;
 import cn.coderule.wolfmq.domain.config.business.TransactionConfig;
-import cn.coderule.wolfmq.domain.domain.store.domain.mq.EnqueueRequest;
-import cn.coderule.wolfmq.domain.domain.store.domain.mq.EnqueueResult;
-import cn.coderule.wolfmq.domain.domain.cluster.RequestContext;
+import cn.coderule.wolfmq.domain.domain.mq.dto.EnqueueRequest;
+import cn.coderule.wolfmq.domain.domain.mq.dto.EnqueueResult;
+import cn.coderule.wolfmq.domain.server.RequestContext;
 import cn.coderule.wolfmq.domain.domain.message.MessageBO;
 import org.junit.jupiter.api.Test;
 

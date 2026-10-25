@@ -2,7 +2,7 @@ package cn.coderule.wolfmq.store.api;
 
 import cn.coderule.wolfmq.domain.domain.meta.subscription.SubscriptionGroup;
 import cn.coderule.wolfmq.domain.domain.meta.subscription.SubscriptionRequest;
-import cn.coderule.wolfmq.domain.domain.store.domain.meta.SubscriptionService;
+import cn.coderule.wolfmq.domain.domain.meta.service.SubscriptionService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

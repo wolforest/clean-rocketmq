@@ -2,7 +2,7 @@ package cn.coderule.wolfmq.store.api;
 
 import cn.coderule.wolfmq.domain.domain.meta.topic.Topic;
 import cn.coderule.wolfmq.domain.domain.meta.topic.TopicRequest;
-import cn.coderule.wolfmq.domain.domain.store.domain.meta.TopicService;
+import cn.coderule.wolfmq.domain.domain.meta.service.TopicService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

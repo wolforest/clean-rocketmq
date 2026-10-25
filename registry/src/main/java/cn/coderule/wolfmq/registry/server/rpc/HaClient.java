@@ -10,7 +10,7 @@ import cn.coderule.wolfmq.domain.config.network.RpcClientConfig;
 import cn.coderule.wolfmq.rpc.common.rpc.core.invoke.RpcCommand;
 import cn.coderule.wolfmq.rpc.common.rpc.netty.NettyClient;
 import cn.coderule.wolfmq.rpc.common.rpc.protocol.code.RequestCode;
-import cn.coderule.wolfmq.domain.domain.cluster.server.GroupInfo;
+import cn.coderule.wolfmq.domain.server.registry.GroupInfo;
 import cn.coderule.wolfmq.rpc.registry.protocol.header.NotifyMinBrokerIdChangeRequestHeader;
 import java.util.ArrayList;
 import java.util.Collections;

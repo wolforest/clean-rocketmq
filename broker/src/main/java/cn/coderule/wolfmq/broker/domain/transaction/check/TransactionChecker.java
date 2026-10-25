@@ -8,9 +8,9 @@ import cn.coderule.wolfmq.broker.domain.transaction.check.service.OperationMessa
 import cn.coderule.wolfmq.broker.domain.transaction.check.service.PrepareMessageChecker;
 import cn.coderule.wolfmq.broker.domain.transaction.service.TransactionMessageService;
 import cn.coderule.wolfmq.domain.config.business.TransactionConfig;
-import cn.coderule.wolfmq.domain.domain.MessageQueue;
-import cn.coderule.wolfmq.domain.domain.cluster.task.QueueTask;
-import cn.coderule.wolfmq.domain.domain.store.domain.mq.DequeueResult;
+import cn.coderule.wolfmq.domain.domain.mq.MessageQueue;
+import cn.coderule.wolfmq.domain.server.task.QueueTask;
+import cn.coderule.wolfmq.domain.domain.mq.dto.DequeueResult;
 import cn.coderule.wolfmq.domain.domain.transaction.CheckBuffer;
 import cn.coderule.wolfmq.domain.domain.transaction.TransactionUtil;
 import java.util.Set;

@@ -1,6 +1,6 @@
 package cn.coderule.wolfmq.domain.domain.consumer.ack.store;
 
-import cn.coderule.wolfmq.domain.domain.cluster.RequestContext;
+import cn.coderule.wolfmq.domain.server.RequestContext;
 import cn.coderule.wolfmq.domain.domain.consumer.ack.AckInfo;
 import cn.coderule.wolfmq.domain.domain.consumer.receipt.ReceiptHandle;
 import cn.coderule.wolfmq.domain.domain.meta.topic.KeyBuilder;

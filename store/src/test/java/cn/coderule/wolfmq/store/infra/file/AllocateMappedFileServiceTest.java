@@ -1,7 +1,7 @@
 package cn.coderule.wolfmq.store.infra.file;
 
 import cn.coderule.wolfmq.domain.config.server.StoreConfig;
-import cn.coderule.wolfmq.domain.domain.store.infra.MappedFile;
+import cn.coderule.wolfmq.domain.core.mmap.MappedFile;
 import cn.coderule.wolfmq.store.infra.memory.TransientPool;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

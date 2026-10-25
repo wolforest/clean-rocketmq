@@ -11,7 +11,7 @@ import cn.coderule.wolfmq.rpc.common.rpc.protocol.code.RequestCode;
 import cn.coderule.wolfmq.rpc.common.rpc.protocol.code.ResponseCode;
 import cn.coderule.wolfmq.rpc.common.rpc.protocol.code.SystemResponseCode;
 import cn.coderule.wolfmq.rpc.registry.protocol.header.GetRouteInfoRequestHeader;
-import cn.coderule.wolfmq.domain.domain.cluster.route.RouteInfo;
+import cn.coderule.wolfmq.domain.server.route.RouteInfo;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;

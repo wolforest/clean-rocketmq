@@ -1,5 +1,6 @@
 package cn.coderule.wolfmq.domain.domain.message.utils;
 
+import cn.coderule.wolfmq.domain.domain.message.codec.MessageIDSetter;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

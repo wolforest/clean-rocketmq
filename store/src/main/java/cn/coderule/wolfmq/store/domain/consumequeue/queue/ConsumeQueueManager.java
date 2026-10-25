@@ -1,8 +1,8 @@
 package cn.coderule.wolfmq.store.domain.consumequeue.queue;
 
-import cn.coderule.wolfmq.domain.domain.store.domain.commitlog.CommitEvent;
-import cn.coderule.wolfmq.domain.domain.store.domain.consumequeue.QueueUnit;
-import cn.coderule.wolfmq.domain.domain.store.domain.consumequeue.ConsumeQueue;
+import cn.coderule.wolfmq.domain.domain.commitlog.CommitEvent;
+import cn.coderule.wolfmq.domain.domain.consumequeue.QueueUnit;
+import cn.coderule.wolfmq.domain.domain.consumequeue.ConsumeQueue;
 import java.util.List;
 
 /**

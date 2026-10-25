@@ -2,7 +2,7 @@ package cn.coderule.wolfmq.store.server.rpc.processor;
 
 import cn.coderule.wolfmq.domain.domain.meta.subscription.SubscriptionGroup;
 import cn.coderule.wolfmq.domain.domain.meta.subscription.SubscriptionRequest;
-import cn.coderule.wolfmq.domain.domain.store.api.meta.SubscriptionStore;
+import cn.coderule.wolfmq.domain.server.store.api.meta.SubscriptionStore;
 import cn.coderule.wolfmq.rpc.common.rpc.RpcProcessor;
 import cn.coderule.wolfmq.rpc.common.rpc.core.exception.RemotingCommandException;
 import cn.coderule.wolfmq.rpc.common.rpc.core.invoke.RpcCommand;

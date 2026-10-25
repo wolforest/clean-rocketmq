@@ -3,7 +3,7 @@ package cn.coderule.wolfmq.broker.infra.embed;
 import cn.coderule.wolfmq.domain.domain.meta.subscription.SubscriptionGroup;
 import cn.coderule.wolfmq.domain.domain.meta.subscription.SubscriptionRequest;
 import cn.coderule.wolfmq.rpc.store.facade.SubscriptionFacade;
-import cn.coderule.wolfmq.domain.domain.store.api.meta.SubscriptionStore;
+import cn.coderule.wolfmq.domain.server.store.api.meta.SubscriptionStore;
 import java.util.concurrent.CompletableFuture;
 
 public class EmbedSubscriptionStore extends AbstractEmbedStore implements SubscriptionFacade {

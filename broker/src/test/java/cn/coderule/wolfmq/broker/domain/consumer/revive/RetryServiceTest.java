@@ -6,9 +6,10 @@ import cn.coderule.wolfmq.domain.domain.message.MessageBO;
 import cn.coderule.wolfmq.domain.domain.meta.offset.OffsetRequest;
 import cn.coderule.wolfmq.domain.domain.meta.offset.OffsetResult;
 import cn.coderule.wolfmq.domain.domain.meta.topic.TopicRequest;
-import cn.coderule.wolfmq.domain.domain.store.domain.mq.EnqueueRequest;
-import cn.coderule.wolfmq.domain.domain.store.domain.mq.EnqueueResult;
-import cn.coderule.wolfmq.domain.domain.store.infra.InsertResult;
+import cn.coderule.wolfmq.domain.domain.mq.dto.EnqueueRequest;
+import cn.coderule.wolfmq.domain.domain.mq.dto.EnqueueResult;
+import cn.coderule.wolfmq.domain.domain.mq.dto.EnqueueStatus;
+import cn.coderule.wolfmq.domain.core.mmap.InsertResult;
 import cn.coderule.wolfmq.rpc.store.facade.ConsumeOffsetFacade;
 import cn.coderule.wolfmq.rpc.store.facade.MQFacade;
 import cn.coderule.wolfmq.rpc.store.facade.TopicFacade;
@@ -52,7 +53,7 @@ class RetryServiceTest {
         when(reviveContext.getConsumeOffsetFacade()).thenReturn(consumeOffsetFacade);
         when(brokerConfig.getHost()).thenReturn("127.0.0.1");
         when(brokerConfig.getPort()).thenReturn(10911);
-        
+
         retryService = new RetryService(reviveContext);
     }
 
@@ -164,7 +165,7 @@ class RetryServiceTest {
 
     private EnqueueResult createSuccessResult(MessageBO message) {
         return EnqueueResult.builder()
-            .status(cn.coderule.wolfmq.domain.core.enums.store.EnqueueStatus.PUT_OK)
+            .status(EnqueueStatus.PUT_OK)
             .insertResult(mockInsertResult)
             .storeGroup(message.getStoreGroup())
             .messageId(message.getMessageId())

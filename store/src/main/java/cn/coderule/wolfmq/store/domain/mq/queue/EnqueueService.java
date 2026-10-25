@@ -1,8 +1,8 @@
 package cn.coderule.wolfmq.store.domain.mq.queue;
 
 import cn.coderule.wolfmq.domain.config.server.StoreConfig;
-import cn.coderule.wolfmq.domain.domain.store.domain.mq.EnqueueResult;
-import cn.coderule.wolfmq.domain.domain.store.domain.mq.EnqueueFuture;
+import cn.coderule.wolfmq.domain.domain.mq.dto.EnqueueResult;
+import cn.coderule.wolfmq.domain.domain.mq.dto.EnqueueFuture;
 import cn.coderule.wolfmq.domain.core.lock.queue.EnqueueLock;
 import cn.coderule.wolfmq.domain.domain.message.MessageBO;
 import cn.coderule.wolfmq.store.domain.commitlog.log.CommitLogManager;

@@ -1,13 +1,10 @@
 package cn.coderule.wolfmq.store.domain.consumequeue.service;
 
 import cn.coderule.wolfmq.domain.config.store.ConsumeQueueConfig;
-import cn.coderule.wolfmq.domain.domain.store.domain.consumequeue.ConsumeQueue;
-import cn.coderule.wolfmq.domain.domain.store.infra.MappedFileQueue;
+import cn.coderule.wolfmq.domain.domain.consumequeue.ConsumeQueue;
+import cn.coderule.wolfmq.domain.core.mmap.MappedFileQueue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;

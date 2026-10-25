@@ -5,7 +5,7 @@ import cn.coderule.wolfmq.domain.config.server.StoreConfig;
 import cn.coderule.wolfmq.domain.config.store.StorePath;
 import cn.coderule.wolfmq.domain.core.constant.MessageConst;
 import cn.coderule.wolfmq.domain.domain.message.MessageBO;
-import cn.coderule.wolfmq.domain.domain.timer.TimerEvent;
+import cn.coderule.wolfmq.domain.domain.timer.model.TimerEvent;
 import cn.coderule.wolfmq.domain.domain.timer.wheel.Slot;
 import cn.coderule.wolfmq.domain.mock.ConfigMock;
 import cn.coderule.wolfmq.domain.mock.MessageMock;

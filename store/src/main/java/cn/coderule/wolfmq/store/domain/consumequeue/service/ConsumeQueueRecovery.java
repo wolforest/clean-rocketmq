@@ -1,12 +1,12 @@
 package cn.coderule.wolfmq.store.domain.consumequeue.service;
 
 import cn.coderule.wolfmq.domain.config.store.ConsumeQueueConfig;
-import cn.coderule.wolfmq.domain.domain.store.domain.consumequeue.QueueUnit;
-import cn.coderule.wolfmq.domain.domain.store.domain.consumequeue.ConsumeQueue;
-import cn.coderule.wolfmq.domain.domain.store.infra.MappedFile;
-import cn.coderule.wolfmq.domain.domain.store.infra.MappedFileQueue;
-import cn.coderule.wolfmq.domain.domain.store.server.CheckPoint;
-import cn.coderule.wolfmq.domain.domain.store.server.Offset;
+import cn.coderule.wolfmq.domain.domain.consumequeue.QueueUnit;
+import cn.coderule.wolfmq.domain.domain.consumequeue.ConsumeQueue;
+import cn.coderule.wolfmq.domain.core.mmap.MappedFile;
+import cn.coderule.wolfmq.domain.core.mmap.MappedFileQueue;
+import cn.coderule.wolfmq.domain.server.store.CheckPoint;
+import cn.coderule.wolfmq.domain.server.store.Offset;
 import cn.coderule.wolfmq.store.domain.commitlog.sharding.OffsetCodec;
 import cn.coderule.wolfmq.store.domain.consumequeue.queue.ConsumeQueueRegistry;
 import java.util.ArrayList;

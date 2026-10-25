@@ -1,10 +1,10 @@
 package cn.coderule.wolfmq.domain.domain.consumer.running;
 
-import cn.coderule.wolfmq.domain.core.enums.consume.ConsumeStrategy;
-import cn.coderule.wolfmq.domain.core.enums.consume.ConsumeType;
-import cn.coderule.wolfmq.domain.core.enums.message.MessageModel;
-import cn.coderule.wolfmq.domain.domain.cluster.ClientChannelInfo;
-import cn.coderule.wolfmq.domain.domain.cluster.server.heartbeat.SubscriptionData;
+import cn.coderule.wolfmq.domain.domain.consumer.consume.ConsumeStrategy;
+import cn.coderule.wolfmq.domain.domain.consumer.consume.ConsumeType;
+import cn.coderule.wolfmq.domain.domain.message.enums.MessageModel;
+import cn.coderule.wolfmq.domain.server.ClientChannelInfo;
+import cn.coderule.wolfmq.domain.server.heartbeat.SubscriptionData;
 import io.netty.channel.Channel;
 import java.util.ArrayList;
 import java.util.HashSet;

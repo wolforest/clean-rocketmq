@@ -1,8 +1,8 @@
 package cn.coderule.wolfmq.store.domain.dispatcher;
 
 import cn.coderule.wolfmq.domain.config.store.CommitConfig;
-import cn.coderule.wolfmq.domain.domain.store.domain.commitlog.CommitLog;
-import cn.coderule.wolfmq.domain.domain.store.server.CheckPoint;
+import cn.coderule.wolfmq.domain.domain.commitlog.CommitLog;
+import cn.coderule.wolfmq.domain.server.store.CheckPoint;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;

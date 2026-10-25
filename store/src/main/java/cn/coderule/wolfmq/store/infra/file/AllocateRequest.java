@@ -1,6 +1,6 @@
 package cn.coderule.wolfmq.store.infra.file;
 
-import cn.coderule.wolfmq.domain.domain.store.infra.MappedFile;
+import cn.coderule.wolfmq.domain.core.mmap.MappedFile;
 import java.io.File;
 import java.util.concurrent.CountDownLatch;
 import lombok.Data;

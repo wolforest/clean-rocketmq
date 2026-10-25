@@ -1,6 +1,7 @@
 package cn.coderule.wolfmq.domain.domain.store.utils;
 
-import cn.coderule.wolfmq.domain.domain.timer.TimerConstants;
+import cn.coderule.wolfmq.domain.domain.timer.model.TimerConstants;
+import cn.coderule.wolfmq.domain.domain.timer.wheel.TimerUtils;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

@@ -1,8 +1,8 @@
 package cn.coderule.wolfmq.store.infra.rocksdb;
 
 import cn.coderule.wolfmq.domain.config.store.KVConfig;
-import cn.coderule.wolfmq.domain.domain.store.infra.kv.KVDatabase;
-import cn.coderule.wolfmq.domain.domain.store.infra.kv.KVTable;
+import cn.coderule.wolfmq.domain.core.kv.KVDatabase;
+import cn.coderule.wolfmq.domain.core.kv.KVTable;
 import lombok.Getter;
 import org.rocksdb.RocksDB;
 

@@ -7,15 +7,15 @@ import cn.coderule.wolfmq.broker.domain.timer.service.TimerConverter;
 import cn.coderule.wolfmq.broker.infra.store.MQStore;
 import cn.coderule.wolfmq.domain.config.business.TimerConfig;
 import cn.coderule.wolfmq.domain.core.constant.MessageConst;
-import cn.coderule.wolfmq.domain.domain.cluster.task.QueueTask;
+import cn.coderule.wolfmq.domain.server.task.QueueTask;
 import cn.coderule.wolfmq.domain.domain.message.MessageBO;
-import cn.coderule.wolfmq.domain.domain.store.domain.mq.EnqueueRequest;
-import cn.coderule.wolfmq.domain.domain.store.domain.mq.EnqueueResult;
-import cn.coderule.wolfmq.domain.domain.timer.TimerConstants;
-import cn.coderule.wolfmq.domain.domain.timer.TimerEvent;
-import cn.coderule.wolfmq.domain.domain.timer.TimerQueue;
+import cn.coderule.wolfmq.domain.domain.mq.dto.EnqueueRequest;
+import cn.coderule.wolfmq.domain.domain.mq.dto.EnqueueResult;
+import cn.coderule.wolfmq.domain.domain.timer.model.TimerConstants;
+import cn.coderule.wolfmq.domain.domain.timer.model.TimerEvent;
+import cn.coderule.wolfmq.domain.domain.timer.model.TimerQueue;
 import cn.coderule.wolfmq.domain.domain.timer.state.TimerState;
-import cn.coderule.wolfmq.domain.domain.store.utils.TimerUtils;
+import cn.coderule.wolfmq.domain.domain.timer.wheel.TimerUtils;
 import lombok.extern.slf4j.Slf4j;
 
 /**

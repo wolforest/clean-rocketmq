@@ -48,6 +48,8 @@ public class ReceiptRegistry {
                 dataSet.pollFirst();
             }
 
+            updateMaxExpireTime(dataSet);
+
             return dataSet;
         });
     }

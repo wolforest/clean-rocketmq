@@ -1,6 +1,6 @@
 package cn.coderule.wolfmq.domain.domain.consumer.ack.broker;
 
-import cn.coderule.wolfmq.domain.core.enums.consume.AckStatus;
+import cn.coderule.wolfmq.domain.domain.consumer.ack.AckStatus;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

@@ -1,6 +1,6 @@
 package cn.coderule.wolfmq.store.domain.commitlog.vo;
 
-import cn.coderule.wolfmq.domain.core.enums.store.EnqueueStatus;
+import cn.coderule.wolfmq.domain.domain.mq.dto.EnqueueStatus;
 import java.io.Serializable;
 import java.util.concurrent.CompletableFuture;
 import lombok.AllArgsConstructor;

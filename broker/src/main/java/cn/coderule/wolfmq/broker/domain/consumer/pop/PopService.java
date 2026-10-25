@@ -1,6 +1,6 @@
 package cn.coderule.wolfmq.broker.domain.consumer.pop;
 
-import cn.coderule.wolfmq.domain.core.enums.code.BrokerExceptionCode;
+import cn.coderule.wolfmq.domain.core.constant.code.BrokerExceptionCode;
 import cn.coderule.wolfmq.domain.core.exception.BrokerException;
 import cn.coderule.wolfmq.domain.domain.consumer.consume.pop.PopContext;
 import cn.coderule.wolfmq.domain.domain.consumer.consume.pop.PopRequest;

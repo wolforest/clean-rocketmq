@@ -1,6 +1,6 @@
 package cn.coderule.wolfmq.domain.domain.consumer.hook;
 
-import cn.coderule.wolfmq.domain.core.enums.consume.ConsumerEvent;
+import cn.coderule.wolfmq.domain.core.event.ConsumerEvent;
 
 public interface ConsumerListener {
 

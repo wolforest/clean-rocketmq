@@ -1,5 +1,6 @@
 package cn.coderule.wolfmq.domain.domain.message.utils;
 
+import cn.coderule.wolfmq.domain.domain.message.enums.TagType;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
@@ -82,7 +83,7 @@ class MessageUtilsTest {
 
     @Test
     void getTagsCode_withTagType() {
-        long code = MessageUtils.getTagsCode(cn.coderule.wolfmq.domain.core.enums.message.TagType.SINGLE_TAG, "tagA");
+        long code = MessageUtils.getTagsCode(TagType.SINGLE_TAG, "tagA");
         assertEquals("tagA".hashCode(), code);
     }
 

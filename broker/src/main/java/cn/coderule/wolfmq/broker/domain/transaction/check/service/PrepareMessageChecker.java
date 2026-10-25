@@ -10,9 +10,9 @@ import cn.coderule.wolfmq.domain.config.business.MessageConfig;
 import cn.coderule.wolfmq.domain.config.business.TransactionConfig;
 import cn.coderule.wolfmq.domain.config.server.BrokerConfig;
 import cn.coderule.wolfmq.domain.core.constant.MessageConst;
-import cn.coderule.wolfmq.domain.domain.store.domain.mq.DequeueResult;
+import cn.coderule.wolfmq.domain.domain.mq.dto.DequeueResult;
 import cn.coderule.wolfmq.domain.domain.message.MessageBO;
-import cn.coderule.wolfmq.domain.domain.store.domain.mq.EnqueueResult;
+import cn.coderule.wolfmq.domain.domain.mq.dto.EnqueueResult;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

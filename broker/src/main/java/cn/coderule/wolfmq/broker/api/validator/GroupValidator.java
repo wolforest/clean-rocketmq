@@ -2,7 +2,7 @@ package cn.coderule.wolfmq.broker.api.validator;
 
 import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.wolfmq.domain.core.constant.MQConstants;
-import cn.coderule.wolfmq.domain.core.enums.code.InvalidCode;
+import cn.coderule.wolfmq.domain.core.constant.code.InvalidCode;
 import cn.coderule.wolfmq.domain.core.exception.InvalidParameterException;
 
 import static cn.coderule.wolfmq.domain.domain.meta.topic.TopicValidator.isTopicOrGroupIllegal;

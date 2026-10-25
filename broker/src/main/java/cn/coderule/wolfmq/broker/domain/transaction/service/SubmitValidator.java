@@ -2,7 +2,7 @@ package cn.coderule.wolfmq.broker.domain.transaction.service;
 
 import cn.coderule.wolfmq.domain.config.business.TransactionConfig;
 import cn.coderule.wolfmq.domain.core.constant.MessageConst;
-import cn.coderule.wolfmq.domain.core.enums.code.InvalidCode;
+import cn.coderule.wolfmq.domain.core.constant.code.InvalidCode;
 import cn.coderule.wolfmq.domain.core.exception.InvalidRequestException;
 import cn.coderule.wolfmq.domain.domain.message.MessageBO;
 import cn.coderule.wolfmq.domain.domain.transaction.SubmitRequest;

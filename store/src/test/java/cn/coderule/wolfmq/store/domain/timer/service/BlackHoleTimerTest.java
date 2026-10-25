@@ -1,7 +1,7 @@
 package cn.coderule.wolfmq.store.domain.timer.service;
 
-import cn.coderule.wolfmq.domain.domain.timer.ScanResult;
-import cn.coderule.wolfmq.domain.domain.timer.TimerEvent;
+import cn.coderule.wolfmq.domain.domain.timer.model.ScanResult;
+import cn.coderule.wolfmq.domain.domain.timer.model.TimerEvent;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

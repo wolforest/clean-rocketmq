@@ -2,12 +2,12 @@ package cn.coderule.wolfmq.store.domain.dispatcher;
 
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 import cn.coderule.common.util.lang.ThreadUtil;
-import cn.coderule.wolfmq.domain.domain.store.domain.commitlog.CommitEvent;
+import cn.coderule.wolfmq.domain.domain.commitlog.CommitEvent;
 import cn.coderule.wolfmq.domain.domain.message.MessageBO;
-import cn.coderule.wolfmq.domain.domain.store.domain.commitlog.CommitLog;
-import cn.coderule.wolfmq.domain.domain.store.domain.commitlog.CommitHandler;
-import cn.coderule.wolfmq.domain.domain.store.domain.commitlog.CommitEventDispatcher;
-import cn.coderule.wolfmq.domain.domain.store.server.CheckPoint;
+import cn.coderule.wolfmq.domain.domain.commitlog.CommitLog;
+import cn.coderule.wolfmq.domain.domain.commitlog.CommitHandler;
+import cn.coderule.wolfmq.domain.domain.commitlog.CommitEventDispatcher;
+import cn.coderule.wolfmq.domain.server.store.CheckPoint;
 import java.util.ArrayList;
 import lombok.Getter;
 import lombok.Setter;

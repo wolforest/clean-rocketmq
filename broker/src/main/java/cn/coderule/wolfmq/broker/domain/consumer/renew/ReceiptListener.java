@@ -1,8 +1,8 @@
 package cn.coderule.wolfmq.broker.domain.consumer.renew;
 
 import cn.coderule.wolfmq.rpc.common.core.channel.ChannelHelper;
-import cn.coderule.wolfmq.domain.core.enums.consume.ConsumerEvent;
-import cn.coderule.wolfmq.domain.domain.cluster.ClientChannelInfo;
+import cn.coderule.wolfmq.domain.core.event.ConsumerEvent;
+import cn.coderule.wolfmq.domain.server.ClientChannelInfo;
 import cn.coderule.wolfmq.domain.domain.consumer.receipt.ReceiptHandleGroupKey;
 import cn.coderule.wolfmq.domain.domain.consumer.hook.ConsumerListener;
 import cn.coderule.wolfmq.domain.domain.consumer.receipt.ReceiptHandler;

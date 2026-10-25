@@ -1,7 +1,7 @@
 package cn.coderule.wolfmq.domain.config.store;
 
 import cn.coderule.wolfmq.domain.config.base.ConfigAttribute;
-import cn.coderule.wolfmq.domain.core.enums.store.FlushType;
+import cn.coderule.wolfmq.domain.domain.commitlog.FlushType;
 import java.io.Serializable;
 import lombok.Data;
 

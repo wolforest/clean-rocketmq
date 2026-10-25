@@ -2,8 +2,8 @@ package cn.coderule.wolfmq.broker.server.grpc.interceptor;
 
 import cn.coderule.wolfmq.broker.server.grpc.service.channel.ChannelManager;
 import cn.coderule.wolfmq.broker.server.grpc.service.channel.SettingManager;
-import cn.coderule.wolfmq.domain.core.enums.produce.ProducerEvent;
-import cn.coderule.wolfmq.domain.domain.cluster.ClientChannelInfo;
+import cn.coderule.wolfmq.domain.core.event.ProducerEvent;
+import cn.coderule.wolfmq.domain.server.ClientChannelInfo;
 import io.netty.channel.Channel;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

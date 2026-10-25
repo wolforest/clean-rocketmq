@@ -1,12 +1,11 @@
 package cn.coderule.wolfmq.rpc.registry.route;
 
-import cn.coderule.wolfmq.domain.domain.cluster.route.QueueInfo;
-import cn.coderule.wolfmq.domain.domain.cluster.route.RouteInfo;
-import cn.coderule.wolfmq.domain.domain.MessageQueue;
+import cn.coderule.wolfmq.domain.server.route.QueueInfo;
+import cn.coderule.wolfmq.domain.server.route.RouteInfo;
+import cn.coderule.wolfmq.domain.domain.mq.MessageQueue;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 

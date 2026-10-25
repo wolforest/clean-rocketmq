@@ -1,7 +1,7 @@
 package cn.coderule.wolfmq.store.domain.consumequeue.queue;
 
-import cn.coderule.wolfmq.domain.core.enums.store.QueueType;
-import cn.coderule.wolfmq.domain.domain.store.domain.consumequeue.QueueUnit;
+import cn.coderule.wolfmq.domain.domain.consumequeue.QueueType;
+import cn.coderule.wolfmq.domain.domain.consumequeue.QueueUnit;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

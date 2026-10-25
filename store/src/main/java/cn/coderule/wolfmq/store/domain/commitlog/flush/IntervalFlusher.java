@@ -1,8 +1,8 @@
 package cn.coderule.wolfmq.store.domain.commitlog.flush;
 
 import cn.coderule.wolfmq.domain.config.store.CommitConfig;
-import cn.coderule.wolfmq.domain.domain.store.infra.MappedFileQueue;
-import cn.coderule.wolfmq.domain.domain.store.server.CheckPoint;
+import cn.coderule.wolfmq.domain.core.mmap.MappedFileQueue;
+import cn.coderule.wolfmq.domain.server.store.CheckPoint;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

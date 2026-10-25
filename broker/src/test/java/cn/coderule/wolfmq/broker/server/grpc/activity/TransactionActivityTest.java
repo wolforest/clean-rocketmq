@@ -4,7 +4,7 @@ import apache.rocketmq.v2.EndTransactionRequest;
 import apache.rocketmq.v2.EndTransactionResponse;
 import cn.coderule.wolfmq.broker.server.grpc.interceptor.PipelineExecutor;
 import cn.coderule.wolfmq.broker.server.grpc.service.TransactionService;
-import cn.coderule.wolfmq.domain.domain.cluster.RequestContext;
+import cn.coderule.wolfmq.domain.server.RequestContext;
 import io.grpc.stub.StreamObserver;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

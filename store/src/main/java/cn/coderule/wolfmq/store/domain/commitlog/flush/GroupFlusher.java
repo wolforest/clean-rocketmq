@@ -1,11 +1,10 @@
 package cn.coderule.wolfmq.store.domain.commitlog.flush;
 
-import cn.coderule.wolfmq.domain.domain.store.domain.commitlog.CommitLog;
-import cn.coderule.wolfmq.domain.domain.store.server.CheckPoint;
+import cn.coderule.wolfmq.domain.server.store.CheckPoint;
 import cn.coderule.wolfmq.store.domain.commitlog.vo.GroupCommitRequest;
 import cn.coderule.common.util.lang.ThreadUtil;
-import cn.coderule.wolfmq.domain.core.enums.store.EnqueueStatus;
-import cn.coderule.wolfmq.domain.domain.store.infra.MappedFileQueue;
+import cn.coderule.wolfmq.domain.domain.mq.dto.EnqueueStatus;
+import cn.coderule.wolfmq.domain.core.mmap.MappedFileQueue;
 import cn.coderule.wolfmq.domain.core.lock.commitlog.CommitLogLock;
 import cn.coderule.wolfmq.domain.core.lock.commitlog.CommitLogSpinLock;
 import java.util.LinkedList;

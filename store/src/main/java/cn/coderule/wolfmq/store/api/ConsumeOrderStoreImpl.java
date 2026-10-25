@@ -1,8 +1,8 @@
 package cn.coderule.wolfmq.store.api;
 
 import cn.coderule.wolfmq.domain.domain.meta.order.OrderRequest;
-import cn.coderule.wolfmq.domain.domain.store.api.meta.ConsumeOrderStore;
-import cn.coderule.wolfmq.domain.domain.store.domain.meta.ConsumeOrderService;
+import cn.coderule.wolfmq.domain.server.store.api.meta.ConsumeOrderStore;
+import cn.coderule.wolfmq.domain.domain.meta.service.ConsumeOrderService;
 
 public class ConsumeOrderStoreImpl implements ConsumeOrderStore {
     private final ConsumeOrderService consumeOrderService;

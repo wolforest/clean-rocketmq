@@ -1,11 +1,10 @@
 package cn.coderule.wolfmq.store.server.ha.server.processor;
 
 import cn.coderule.wolfmq.domain.config.server.StoreConfig;
-import cn.coderule.wolfmq.domain.core.enums.store.EnqueueStatus;
 import cn.coderule.wolfmq.domain.domain.message.MessageBO;
-import cn.coderule.wolfmq.domain.domain.store.domain.mq.EnqueueFuture;
-import cn.coderule.wolfmq.domain.domain.store.domain.mq.EnqueueResult;
-import cn.coderule.wolfmq.domain.domain.store.infra.InsertResult;
+import cn.coderule.wolfmq.domain.domain.mq.dto.EnqueueFuture;
+import cn.coderule.wolfmq.domain.domain.mq.dto.EnqueueResult;
+import cn.coderule.wolfmq.domain.core.mmap.InsertResult;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

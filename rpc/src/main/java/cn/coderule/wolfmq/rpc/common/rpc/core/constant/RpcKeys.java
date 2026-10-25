@@ -1,7 +1,7 @@
 package cn.coderule.wolfmq.rpc.common.rpc.core.constant;
 
 import cn.coderule.wolfmq.rpc.common.core.constants.HAProxyConstants;
-import cn.coderule.wolfmq.domain.core.enums.code.LanguageCode;
+import cn.coderule.wolfmq.domain.core.constant.code.LanguageCode;
 import io.netty.util.AttributeKey;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

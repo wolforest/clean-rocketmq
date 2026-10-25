@@ -1,7 +1,7 @@
 package cn.coderule.wolfmq.broker.server.grpc.service.consume;
 
-import cn.coderule.wolfmq.domain.domain.cluster.RequestContext;
-import cn.coderule.wolfmq.domain.domain.cluster.server.heartbeat.SubscriptionData;
+import cn.coderule.wolfmq.domain.server.RequestContext;
+import cn.coderule.wolfmq.domain.server.heartbeat.SubscriptionData;
 import cn.coderule.wolfmq.domain.domain.consumer.hook.PopFilter.FilterResult;
 import cn.coderule.wolfmq.domain.domain.message.MessageBO;
 import org.junit.jupiter.api.BeforeEach;

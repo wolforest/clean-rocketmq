@@ -1,6 +1,6 @@
 package cn.coderule.wolfmq.broker.domain.meta;
 
-import cn.coderule.wolfmq.domain.core.enums.message.MessageType;
+import cn.coderule.wolfmq.domain.domain.message.enums.MessageType;
 import cn.coderule.wolfmq.domain.domain.meta.topic.Topic;
 import cn.coderule.wolfmq.domain.domain.meta.topic.TopicRequest;
 import cn.coderule.wolfmq.rpc.store.facade.TopicFacade;

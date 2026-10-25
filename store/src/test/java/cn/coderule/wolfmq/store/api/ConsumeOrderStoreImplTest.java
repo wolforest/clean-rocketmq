@@ -1,7 +1,7 @@
 package cn.coderule.wolfmq.store.api;
 
 import cn.coderule.wolfmq.domain.domain.meta.order.OrderRequest;
-import cn.coderule.wolfmq.domain.domain.store.domain.meta.ConsumeOrderService;
+import cn.coderule.wolfmq.domain.domain.meta.service.ConsumeOrderService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

@@ -1,7 +1,7 @@
 package cn.coderule.wolfmq.store.domain.index;
 
-import cn.coderule.wolfmq.domain.domain.store.domain.commitlog.CommitEvent;
-import cn.coderule.wolfmq.domain.domain.store.domain.index.IndexService;
+import cn.coderule.wolfmq.domain.domain.commitlog.CommitEvent;
+import cn.coderule.wolfmq.domain.domain.index.IndexService;
 import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.*;

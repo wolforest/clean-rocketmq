@@ -1,7 +1,7 @@
 package cn.coderule.wolfmq.store.server.ha.client;
 
 import cn.coderule.wolfmq.domain.config.server.StoreConfig;
-import cn.coderule.wolfmq.domain.domain.store.api.CommitLogStore;
+import cn.coderule.wolfmq.domain.server.store.api.CommitLogStore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

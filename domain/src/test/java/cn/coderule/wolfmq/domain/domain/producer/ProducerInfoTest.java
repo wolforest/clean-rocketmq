@@ -1,6 +1,6 @@
 package cn.coderule.wolfmq.domain.domain.producer;
 
-import cn.coderule.wolfmq.domain.domain.cluster.ClientChannelInfo;
+import cn.coderule.wolfmq.domain.server.ClientChannelInfo;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -12,7 +12,7 @@ class ProducerInfoTest {
     void testSetterGetter() {
         ProducerInfo info = new ProducerInfo();
         info.setGroupName("producerGroup");
-        
+
         ClientChannelInfo channelInfo = mock(ClientChannelInfo.class);
         info.setChannelInfo(channelInfo);
 

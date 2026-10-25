@@ -1,7 +1,7 @@
 package cn.coderule.wolfmq.store.domain.dispatcher;
 
-import cn.coderule.wolfmq.domain.domain.store.domain.commitlog.CommitEvent;
-import cn.coderule.wolfmq.domain.domain.store.domain.commitlog.CommitHandler;
+import cn.coderule.wolfmq.domain.domain.commitlog.CommitEvent;
+import cn.coderule.wolfmq.domain.domain.commitlog.CommitHandler;
 import java.util.ArrayList;
 
 /**

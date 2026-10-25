@@ -8,7 +8,7 @@ import cn.coderule.wolfmq.domain.domain.consumer.ack.AckConverter;
 import cn.coderule.wolfmq.domain.domain.consumer.ack.AckInfo;
 import cn.coderule.wolfmq.domain.domain.consumer.ack.BatchAckInfo;
 import cn.coderule.wolfmq.domain.domain.consumer.ack.store.AckMessage;
-import cn.coderule.wolfmq.domain.domain.store.domain.mq.EnqueueResult;
+import cn.coderule.wolfmq.domain.domain.mq.dto.EnqueueResult;
 import cn.coderule.wolfmq.domain.domain.consumer.consume.pop.checkpoint.PopCheckPoint;
 import cn.coderule.wolfmq.domain.domain.consumer.consume.pop.checkpoint.PopCheckPointWrapper;
 import cn.coderule.wolfmq.domain.domain.consumer.consume.pop.helper.PopConverter;

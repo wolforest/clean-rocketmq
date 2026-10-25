@@ -1,8 +1,8 @@
 package cn.coderule.wolfmq.store.domain.consumequeue.service;
 
 import cn.coderule.wolfmq.domain.config.store.ConsumeQueueConfig;
-import cn.coderule.wolfmq.domain.domain.store.domain.consumequeue.ConsumeQueue;
-import cn.coderule.wolfmq.domain.domain.store.server.CheckPoint;
+import cn.coderule.wolfmq.domain.domain.consumequeue.ConsumeQueue;
+import cn.coderule.wolfmq.domain.server.store.CheckPoint;
 import cn.coderule.wolfmq.store.domain.commitlog.sharding.OffsetCodec;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

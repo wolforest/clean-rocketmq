@@ -1,12 +1,12 @@
 package cn.coderule.wolfmq.store.domain.mq;
 
 import cn.coderule.common.util.lang.collection.CollectionUtil;
-import cn.coderule.wolfmq.domain.domain.store.domain.mq.DequeueRequest;
-import cn.coderule.wolfmq.domain.domain.store.domain.mq.DequeueResult;
+import cn.coderule.wolfmq.domain.domain.mq.dto.DequeueRequest;
+import cn.coderule.wolfmq.domain.domain.mq.dto.DequeueResult;
 import cn.coderule.wolfmq.domain.domain.consumer.consume.mq.MessageRequest;
 import cn.coderule.wolfmq.domain.domain.consumer.consume.mq.MessageResult;
-import cn.coderule.wolfmq.domain.domain.store.domain.mq.MQService;
-import cn.coderule.wolfmq.domain.domain.store.domain.mq.EnqueueResult;
+import cn.coderule.wolfmq.domain.domain.mq.MQService;
+import cn.coderule.wolfmq.domain.domain.mq.dto.EnqueueResult;
 import cn.coderule.wolfmq.domain.domain.message.MessageBO;
 import cn.coderule.wolfmq.store.domain.mq.queue.DequeueService;
 import cn.coderule.wolfmq.store.domain.mq.queue.EnqueueService;

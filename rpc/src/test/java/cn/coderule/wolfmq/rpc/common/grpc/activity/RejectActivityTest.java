@@ -1,6 +1,6 @@
 package cn.coderule.wolfmq.rpc.common.grpc.activity;
 
-import cn.coderule.wolfmq.domain.domain.cluster.RequestContext;
+import cn.coderule.wolfmq.domain.server.RequestContext;
 import cn.coderule.wolfmq.rpc.common.grpc.core.GrpcTask;
 import apache.rocketmq.v2.Status;
 import io.grpc.stub.StreamObserver;
@@ -11,7 +11,6 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.concurrent.ThreadPoolExecutor;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class RejectActivityTest {

@@ -1,6 +1,6 @@
 package cn.coderule.wolfmq.domain.domain.message;
 
-import cn.coderule.wolfmq.domain.core.enums.message.MessageStatus;
+import cn.coderule.wolfmq.domain.domain.message.enums.MessageStatus;
 import org.junit.jupiter.api.Test;
 
 import java.net.InetSocketAddress;

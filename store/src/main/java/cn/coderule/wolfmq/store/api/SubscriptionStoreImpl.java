@@ -2,8 +2,8 @@ package cn.coderule.wolfmq.store.api;
 
 import cn.coderule.wolfmq.domain.domain.meta.subscription.SubscriptionGroup;
 import cn.coderule.wolfmq.domain.domain.meta.subscription.SubscriptionRequest;
-import cn.coderule.wolfmq.domain.domain.store.api.meta.SubscriptionStore;
-import cn.coderule.wolfmq.domain.domain.store.domain.meta.SubscriptionService;
+import cn.coderule.wolfmq.domain.server.store.api.meta.SubscriptionStore;
+import cn.coderule.wolfmq.domain.domain.meta.service.SubscriptionService;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

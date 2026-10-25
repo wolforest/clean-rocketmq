@@ -1,8 +1,8 @@
 package cn.coderule.wolfmq.domain.core.exception;
 
 import cn.coderule.common.lang.exception.BusinessException;
-import cn.coderule.wolfmq.domain.core.enums.message.MessageStatus;
-import cn.coderule.wolfmq.domain.domain.store.domain.mq.DequeueResult;
+import cn.coderule.wolfmq.domain.domain.message.enums.MessageStatus;
+import cn.coderule.wolfmq.domain.domain.mq.dto.DequeueResult;
 import java.util.List;
 import lombok.Getter;
 

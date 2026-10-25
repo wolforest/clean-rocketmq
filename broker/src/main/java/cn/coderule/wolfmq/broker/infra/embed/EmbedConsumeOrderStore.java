@@ -1,7 +1,7 @@
 package cn.coderule.wolfmq.broker.infra.embed;
 
 import cn.coderule.wolfmq.domain.domain.meta.order.OrderRequest;
-import cn.coderule.wolfmq.domain.domain.store.api.meta.ConsumeOrderStore;
+import cn.coderule.wolfmq.domain.server.store.api.meta.ConsumeOrderStore;
 import cn.coderule.wolfmq.rpc.store.facade.ConsumeOrderFacade;
 
 public class EmbedConsumeOrderStore extends AbstractEmbedStore implements ConsumeOrderFacade {

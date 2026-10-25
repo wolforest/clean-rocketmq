@@ -2,32 +2,28 @@ package cn.coderule.wolfmq.broker.domain.producer;
 
 import cn.coderule.wolfmq.broker.api.ProducerController;
 import cn.coderule.wolfmq.broker.domain.meta.RouteService;
-import cn.coderule.wolfmq.broker.domain.producer.EnqueueService;
-import cn.coderule.wolfmq.broker.domain.producer.ProduceHookManager;
-import cn.coderule.wolfmq.broker.domain.producer.Producer;
-import cn.coderule.wolfmq.broker.domain.producer.ProducerManager;
-import cn.coderule.wolfmq.broker.domain.producer.QueueSelector;
 import cn.coderule.wolfmq.broker.domain.transaction.Transaction;
+import cn.coderule.wolfmq.domain.server.route.QueueInfo;
+import cn.coderule.wolfmq.domain.server.route.RouteInfo;
+import cn.coderule.wolfmq.domain.server.registry.GroupInfo;
 import cn.coderule.wolfmq.domain.config.business.MessageConfig;
 import cn.coderule.wolfmq.domain.config.business.TimerConfig;
 import cn.coderule.wolfmq.domain.config.server.BrokerConfig;
 import cn.coderule.wolfmq.domain.core.constant.MessageConst;
-import cn.coderule.wolfmq.domain.core.enums.code.InvalidCode;
-import cn.coderule.wolfmq.domain.core.enums.message.CleanupPolicy;
-import cn.coderule.wolfmq.domain.core.enums.store.EnqueueStatus;
+import cn.coderule.wolfmq.domain.core.constant.code.InvalidCode;
+import cn.coderule.wolfmq.domain.domain.mq.dto.EnqueueStatus;
 import cn.coderule.wolfmq.domain.core.exception.InvalidParameterException;
 import cn.coderule.wolfmq.domain.core.exception.InvalidRequestException;
-import cn.coderule.wolfmq.domain.domain.MessageQueue;
-import cn.coderule.wolfmq.domain.domain.cluster.ClientChannelInfo;
-import cn.coderule.wolfmq.domain.domain.cluster.RequestContext;
-import cn.coderule.wolfmq.domain.domain.cluster.selector.MessageQueueSelector;
-import cn.coderule.wolfmq.domain.domain.cluster.selector.MessageQueueView;
+import cn.coderule.wolfmq.domain.domain.mq.MessageQueue;
+import cn.coderule.wolfmq.domain.server.ClientChannelInfo;
+import cn.coderule.wolfmq.domain.server.RequestContext;
+import cn.coderule.wolfmq.domain.server.selector.MessageQueueView;
 import cn.coderule.wolfmq.domain.domain.message.MessageBO;
 import cn.coderule.wolfmq.domain.domain.meta.topic.Topic;
 import cn.coderule.wolfmq.domain.domain.producer.ProduceContext;
 import cn.coderule.wolfmq.domain.domain.producer.hook.ProduceHook;
-import cn.coderule.wolfmq.domain.domain.store.domain.mq.EnqueueRequest;
-import cn.coderule.wolfmq.domain.domain.store.domain.mq.EnqueueResult;
+import cn.coderule.wolfmq.domain.domain.mq.dto.EnqueueRequest;
+import cn.coderule.wolfmq.domain.domain.mq.dto.EnqueueResult;
 import cn.coderule.wolfmq.rpc.store.facade.MQFacade;
 import cn.coderule.wolfmq.rpc.store.facade.TopicFacade;
 import io.netty.channel.Channel;
@@ -184,18 +180,18 @@ class ProducerFlowIntegrationTest {
     }
 
     private MessageQueueView createQueueView(String topicName) {
-        cn.coderule.wolfmq.domain.domain.cluster.route.RouteInfo routeInfo = new cn.coderule.wolfmq.domain.domain.cluster.route.RouteInfo();
+        RouteInfo routeInfo = new RouteInfo();
         routeInfo.setTopicName(topicName);
 
-        cn.coderule.wolfmq.domain.domain.cluster.server.GroupInfo groupInfo =
-            new cn.coderule.wolfmq.domain.domain.cluster.server.GroupInfo("DefaultCluster", "DefaultGroup");
+        GroupInfo groupInfo =
+            new GroupInfo("DefaultCluster", "DefaultGroup");
         Map<Long, String> brokerAddrs = new HashMap<>();
         brokerAddrs.put(0L, "localhost:10911");
         groupInfo.setBrokerAddrs(brokerAddrs);
         routeInfo.getBrokerDatas().add(groupInfo);
 
-        cn.coderule.wolfmq.domain.domain.cluster.route.QueueInfo queueInfo =
-            cn.coderule.wolfmq.domain.domain.cluster.route.QueueInfo.from("DefaultGroup", createCompactionTopic(topicName));
+        QueueInfo queueInfo =
+            QueueInfo.from("DefaultGroup", createCompactionTopic(topicName));
         routeInfo.getQueueDatas().add(queueInfo);
 
         return new MessageQueueView(topicName, routeInfo, null);

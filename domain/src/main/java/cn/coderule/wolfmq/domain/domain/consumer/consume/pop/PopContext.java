@@ -2,7 +2,7 @@ package cn.coderule.wolfmq.domain.domain.consumer.consume.pop;
 
 import cn.coderule.wolfmq.domain.config.business.MessageConfig;
 import cn.coderule.wolfmq.domain.config.server.BrokerConfig;
-import cn.coderule.wolfmq.domain.domain.MessageQueue;
+import cn.coderule.wolfmq.domain.domain.mq.MessageQueue;
 import cn.coderule.wolfmq.domain.domain.meta.topic.Topic;
 import io.netty.channel.Channel;
 import java.io.Serializable;

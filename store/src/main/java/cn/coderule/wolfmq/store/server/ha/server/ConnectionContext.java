@@ -3,7 +3,7 @@ package cn.coderule.wolfmq.store.server.ha.server;
 import cn.coderule.common.convention.service.LifecycleManager;
 import cn.coderule.common.lang.concurrent.thread.WakeupCoordinator;
 import cn.coderule.wolfmq.domain.config.server.StoreConfig;
-import cn.coderule.wolfmq.domain.domain.store.api.CommitLogStore;
+import cn.coderule.wolfmq.domain.server.store.api.CommitLogStore;
 import cn.coderule.wolfmq.store.server.ha.core.HAContext;
 import cn.coderule.wolfmq.store.server.ha.core.monitor.FlowMonitor;
 import cn.coderule.wolfmq.store.server.ha.server.processor.CommitLogSynchronizer;

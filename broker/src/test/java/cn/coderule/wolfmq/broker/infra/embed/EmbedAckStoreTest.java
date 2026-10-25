@@ -1,6 +1,6 @@
 package cn.coderule.wolfmq.broker.infra.embed;
 
-import cn.coderule.wolfmq.domain.domain.store.api.meta.AckStore;
+import cn.coderule.wolfmq.domain.server.store.api.meta.AckStore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

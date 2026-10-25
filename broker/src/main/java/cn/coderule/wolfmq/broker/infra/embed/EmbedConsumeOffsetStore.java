@@ -6,7 +6,7 @@ import cn.coderule.wolfmq.domain.domain.meta.offset.OffsetRequest;
 import cn.coderule.wolfmq.domain.domain.meta.offset.OffsetResult;
 import cn.coderule.wolfmq.domain.domain.meta.offset.TopicResult;
 import cn.coderule.wolfmq.rpc.store.facade.ConsumeOffsetFacade;
-import cn.coderule.wolfmq.domain.domain.store.api.meta.ConsumeOffsetStore;
+import cn.coderule.wolfmq.domain.server.store.api.meta.ConsumeOffsetStore;
 
 public class EmbedConsumeOffsetStore extends AbstractEmbedStore implements ConsumeOffsetFacade {
     private final ConsumeOffsetStore consumeOffsetStore;

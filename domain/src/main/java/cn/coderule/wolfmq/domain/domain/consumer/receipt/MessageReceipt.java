@@ -1,7 +1,7 @@
 
 package cn.coderule.wolfmq.domain.domain.consumer.receipt;
 
-import cn.coderule.wolfmq.domain.domain.cluster.RequestContext;
+import cn.coderule.wolfmq.domain.server.RequestContext;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import io.netty.channel.Channel;

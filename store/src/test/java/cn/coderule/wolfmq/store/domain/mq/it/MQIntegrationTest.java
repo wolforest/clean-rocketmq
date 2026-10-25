@@ -1,17 +1,19 @@
 package cn.coderule.wolfmq.store.domain.mq.it;
 
 import cn.coderule.wolfmq.domain.config.server.StoreConfig;
-import cn.coderule.wolfmq.domain.core.enums.message.MessageStatus;
+import cn.coderule.wolfmq.domain.domain.message.enums.MessageStatus;
 import cn.coderule.wolfmq.domain.core.lock.queue.DequeueLock;
 import cn.coderule.wolfmq.domain.domain.consumer.consume.InflightCounter;
 import cn.coderule.wolfmq.domain.domain.consumer.consume.mq.MessageRequest;
 import cn.coderule.wolfmq.domain.domain.consumer.consume.mq.MessageResult;
 import cn.coderule.wolfmq.domain.domain.message.MessageBO;
-import cn.coderule.wolfmq.domain.domain.store.domain.mq.DequeueRequest;
-import cn.coderule.wolfmq.domain.domain.store.domain.mq.DequeueResult;
-import cn.coderule.wolfmq.domain.domain.store.domain.mq.EnqueueFuture;
-import cn.coderule.wolfmq.domain.domain.store.domain.mq.EnqueueResult;
+import cn.coderule.wolfmq.domain.domain.mq.dto.DequeueRequest;
+import cn.coderule.wolfmq.domain.domain.mq.dto.DequeueResult;
+import cn.coderule.wolfmq.domain.domain.mq.dto.EnqueueFuture;
+import cn.coderule.wolfmq.domain.domain.mq.dto.EnqueueResult;
 import cn.coderule.wolfmq.domain.mock.MessageMock;
+import cn.coderule.wolfmq.domain.domain.meta.service.ConsumeOffsetService;
+import cn.coderule.wolfmq.domain.domain.meta.service.ConsumeOrderService;
 import cn.coderule.wolfmq.store.domain.mq.DefaultMQService;
 import cn.coderule.wolfmq.store.domain.mq.ack.AckOffset;
 import cn.coderule.wolfmq.store.domain.mq.ack.AckService;
@@ -369,10 +371,10 @@ class MQIntegrationTest extends BaseMQIntegrationTest {
         cn.coderule.wolfmq.domain.core.lock.queue.DequeueLock dequeueLock = new cn.coderule.wolfmq.domain.core.lock.queue.DequeueLock();
         InflightCounter inflightCounter = new InflightCounter();
 
-        cn.coderule.wolfmq.domain.domain.store.domain.meta.ConsumeOffsetService consumeOffsetService =
-            mock(cn.coderule.wolfmq.domain.domain.store.domain.meta.ConsumeOffsetService.class);
-        cn.coderule.wolfmq.domain.domain.store.domain.meta.ConsumeOrderService consumeOrderService =
-            mock(cn.coderule.wolfmq.domain.domain.store.domain.meta.ConsumeOrderService.class);
+        ConsumeOffsetService consumeOffsetService =
+            mock(ConsumeOffsetService.class);
+        ConsumeOrderService consumeOrderService =
+            mock(ConsumeOrderService.class);
 
         AckOffset ackOffset = new AckOffset(dequeueLock, inflightCounter, consumeOffsetService, consumeOrderService);
 

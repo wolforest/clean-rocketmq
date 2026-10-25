@@ -1,10 +1,8 @@
 package cn.coderule.wolfmq.store.infra.file;
 
-import cn.coderule.wolfmq.domain.core.enums.store.InsertStatus;
-import cn.coderule.wolfmq.domain.domain.store.infra.InsertResult;
-import cn.coderule.wolfmq.domain.domain.store.infra.MappedFile;
-import cn.coderule.wolfmq.domain.domain.store.infra.MappedFileQueue;
-import java.io.IOException;
+import cn.coderule.wolfmq.domain.core.mmap.InsertStatus;
+import cn.coderule.wolfmq.domain.core.mmap.InsertResult;
+import cn.coderule.wolfmq.domain.core.mmap.MappedFile;
 import java.nio.file.Path;
 import java.util.List;
 import org.junit.jupiter.api.Test;

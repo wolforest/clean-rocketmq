@@ -4,8 +4,8 @@ import cn.coderule.wolfmq.domain.core.lock.queue.DequeueLock;
 import cn.coderule.wolfmq.domain.domain.consumer.ack.AckInfo;
 import cn.coderule.wolfmq.domain.domain.consumer.ack.store.AckMessage;
 import cn.coderule.wolfmq.domain.domain.consumer.consume.InflightCounter;
-import cn.coderule.wolfmq.domain.domain.store.domain.meta.ConsumeOffsetService;
-import cn.coderule.wolfmq.domain.domain.store.domain.meta.ConsumeOrderService;
+import cn.coderule.wolfmq.domain.domain.meta.service.ConsumeOffsetService;
+import cn.coderule.wolfmq.domain.domain.meta.service.ConsumeOrderService;
 import cn.coderule.wolfmq.domain.domain.meta.topic.KeyBuilder;
 import org.junit.jupiter.api.Test;
 

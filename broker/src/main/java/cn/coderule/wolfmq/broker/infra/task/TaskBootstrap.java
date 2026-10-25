@@ -3,7 +3,7 @@ package cn.coderule.wolfmq.broker.infra.task;
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.wolfmq.broker.server.bootstrap.BrokerContext;
 import cn.coderule.wolfmq.domain.config.server.BrokerConfig;
-import cn.coderule.wolfmq.domain.domain.cluster.task.TaskLoader;
+import cn.coderule.wolfmq.domain.server.task.TaskLoader;
 
 public class TaskBootstrap implements Lifecycle {
     private TaskContext taskContext;

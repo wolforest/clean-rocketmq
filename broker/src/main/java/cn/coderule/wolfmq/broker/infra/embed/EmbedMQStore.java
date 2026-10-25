@@ -8,12 +8,12 @@ import cn.coderule.wolfmq.domain.domain.consumer.consume.mq.MessageRequest;
 import cn.coderule.wolfmq.domain.domain.consumer.consume.mq.MessageResult;
 import cn.coderule.wolfmq.domain.domain.consumer.consume.mq.QueueRequest;
 import cn.coderule.wolfmq.domain.domain.consumer.consume.mq.QueueResult;
-import cn.coderule.wolfmq.domain.domain.store.domain.mq.EnqueueRequest;
-import cn.coderule.wolfmq.domain.domain.store.domain.mq.EnqueueResult;
-import cn.coderule.wolfmq.domain.domain.store.domain.mq.DequeueRequest;
-import cn.coderule.wolfmq.domain.domain.store.domain.mq.DequeueResult;
+import cn.coderule.wolfmq.domain.domain.mq.dto.EnqueueRequest;
+import cn.coderule.wolfmq.domain.domain.mq.dto.EnqueueResult;
+import cn.coderule.wolfmq.domain.domain.mq.dto.DequeueRequest;
+import cn.coderule.wolfmq.domain.domain.mq.dto.DequeueResult;
 import cn.coderule.wolfmq.rpc.store.facade.MQFacade;
-import cn.coderule.wolfmq.domain.domain.store.api.MQStore;
+import cn.coderule.wolfmq.domain.server.store.api.MQStore;
 import java.util.concurrent.CompletableFuture;
 
 public class EmbedMQStore extends AbstractEmbedStore implements MQFacade {

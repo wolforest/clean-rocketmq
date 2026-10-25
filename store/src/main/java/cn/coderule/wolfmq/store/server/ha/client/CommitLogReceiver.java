@@ -1,7 +1,7 @@
 package cn.coderule.wolfmq.store.server.ha.client;
 
 import cn.coderule.common.convention.service.Lifecycle;
-import cn.coderule.wolfmq.domain.domain.store.api.CommitLogStore;
+import cn.coderule.wolfmq.domain.server.store.api.CommitLogStore;
 import cn.coderule.wolfmq.store.server.ha.core.DefaultHAConnection;
 import java.io.IOException;
 import java.nio.ByteBuffer;

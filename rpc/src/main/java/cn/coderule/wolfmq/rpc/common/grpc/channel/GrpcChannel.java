@@ -3,7 +3,7 @@ package cn.coderule.wolfmq.rpc.common.grpc.channel;
 import apache.rocketmq.v2.Settings;
 import apache.rocketmq.v2.TelemetryCommand;
 import cn.coderule.wolfmq.rpc.common.core.channel.ChannelHelper;
-import cn.coderule.wolfmq.domain.domain.cluster.RequestContext;
+import cn.coderule.wolfmq.domain.server.RequestContext;
 import cn.coderule.wolfmq.rpc.common.core.channel.ClientChannel;
 import cn.coderule.wolfmq.rpc.common.core.channel.ChannelExtendAttributeGetter;
 import cn.coderule.wolfmq.rpc.common.core.channel.ChannelProtocolType;

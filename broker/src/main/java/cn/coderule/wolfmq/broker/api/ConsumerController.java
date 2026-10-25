@@ -12,7 +12,7 @@ import cn.coderule.wolfmq.domain.domain.consumer.consume.pop.PopRequest;
 import cn.coderule.wolfmq.domain.domain.consumer.ack.broker.AckResult;
 import cn.coderule.wolfmq.domain.domain.consumer.consume.pop.PopResult;
 import cn.coderule.wolfmq.domain.domain.consumer.running.ConsumerGroupInfo;
-import cn.coderule.wolfmq.domain.domain.cluster.RequestContext;
+import cn.coderule.wolfmq.domain.server.RequestContext;
 import cn.coderule.wolfmq.domain.domain.meta.subscription.SubscriptionGroup;
 import java.util.concurrent.CompletableFuture;
 

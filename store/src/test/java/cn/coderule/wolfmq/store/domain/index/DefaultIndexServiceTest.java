@@ -1,7 +1,7 @@
 package cn.coderule.wolfmq.store.domain.index;
 
-import cn.coderule.wolfmq.domain.domain.store.domain.index.IndexService;
-import cn.coderule.wolfmq.domain.domain.store.domain.index.QueryOffsetResult;
+import cn.coderule.wolfmq.domain.domain.index.IndexService;
+import cn.coderule.wolfmq.domain.domain.index.QueryOffsetResult;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 

@@ -1,7 +1,7 @@
 package cn.coderule.wolfmq.broker.domain.transaction.service;
 
 import cn.coderule.wolfmq.domain.domain.message.MessageBO;
-import cn.coderule.wolfmq.domain.domain.store.domain.mq.EnqueueResult;
+import cn.coderule.wolfmq.domain.domain.mq.dto.EnqueueResult;
 import cn.coderule.wolfmq.domain.domain.transaction.SubmitRequest;
 import cn.coderule.wolfmq.domain.domain.transaction.CommitResult;
 import java.util.concurrent.CompletableFuture;

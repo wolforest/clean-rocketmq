@@ -5,9 +5,9 @@ import cn.coderule.wolfmq.domain.config.business.MessageConfig;
 import cn.coderule.wolfmq.domain.config.server.BrokerConfig;
 import cn.coderule.wolfmq.domain.core.constant.MQConstants;
 import cn.coderule.wolfmq.domain.core.constant.MessageConst;
-import cn.coderule.wolfmq.domain.core.enums.code.InvalidCode;
+import cn.coderule.wolfmq.domain.core.constant.code.InvalidCode;
 import cn.coderule.wolfmq.domain.domain.message.MessageBO;
-import cn.coderule.wolfmq.domain.domain.message.MessageEncoder;
+import cn.coderule.wolfmq.domain.domain.message.codec.MessageEncoder;
 import cn.coderule.wolfmq.domain.domain.meta.topic.TopicValidator;
 import cn.coderule.wolfmq.domain.core.exception.InvalidRequestException;
 

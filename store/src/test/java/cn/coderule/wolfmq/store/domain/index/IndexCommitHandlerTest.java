@@ -1,7 +1,8 @@
 package cn.coderule.wolfmq.store.domain.index;
 
-import cn.coderule.wolfmq.domain.domain.store.domain.commitlog.CommitEvent;
-import cn.coderule.wolfmq.domain.domain.store.domain.index.IndexService;
+import cn.coderule.wolfmq.domain.domain.commitlog.CommitEvent;
+import cn.coderule.wolfmq.domain.domain.index.IndexService;
+import cn.coderule.wolfmq.domain.domain.commitlog.CommitHandler;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -14,7 +15,7 @@ public class IndexCommitHandlerTest {
 
     @Test
     void testImplementsCommitHandler() {
-        assertInstanceOf(cn.coderule.wolfmq.domain.domain.store.domain.commitlog.CommitHandler.class, handler);
+        assertInstanceOf(CommitHandler.class, handler);
     }
 
     @Test

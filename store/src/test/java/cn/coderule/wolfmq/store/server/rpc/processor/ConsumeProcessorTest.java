@@ -1,6 +1,6 @@
 package cn.coderule.wolfmq.store.server.rpc.processor;
 
-import cn.coderule.wolfmq.domain.domain.store.api.meta.ConsumeOffsetStore;
+import cn.coderule.wolfmq.domain.server.store.api.meta.ConsumeOffsetStore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

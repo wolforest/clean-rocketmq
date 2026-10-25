@@ -2,7 +2,7 @@ package cn.coderule.wolfmq.broker.domain.consumer.ack;
 
 import cn.coderule.wolfmq.broker.domain.consumer.consumer.ConsumerManager;
 import cn.coderule.wolfmq.domain.config.server.BrokerConfig;
-import cn.coderule.wolfmq.domain.domain.cluster.ClientChannelInfo;
+import cn.coderule.wolfmq.domain.server.ClientChannelInfo;
 import cn.coderule.wolfmq.domain.domain.consumer.ack.AckConverter;
 import cn.coderule.wolfmq.domain.domain.consumer.ack.broker.InvisibleRequest;
 import cn.coderule.wolfmq.domain.domain.consumer.ack.broker.AckResult;

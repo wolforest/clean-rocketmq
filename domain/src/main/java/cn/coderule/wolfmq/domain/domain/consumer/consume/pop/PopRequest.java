@@ -1,8 +1,8 @@
 package cn.coderule.wolfmq.domain.domain.consumer.consume.pop;
 
-import cn.coderule.wolfmq.domain.core.enums.consume.ConsumeStrategy;
-import cn.coderule.wolfmq.domain.domain.cluster.RequestContext;
-import cn.coderule.wolfmq.domain.domain.cluster.server.heartbeat.SubscriptionData;
+import cn.coderule.wolfmq.domain.domain.consumer.consume.ConsumeStrategy;
+import cn.coderule.wolfmq.domain.server.RequestContext;
+import cn.coderule.wolfmq.domain.server.heartbeat.SubscriptionData;
 import cn.coderule.wolfmq.domain.domain.consumer.hook.PopFilter;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;

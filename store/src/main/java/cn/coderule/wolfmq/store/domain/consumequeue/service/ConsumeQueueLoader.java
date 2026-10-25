@@ -1,8 +1,8 @@
 package cn.coderule.wolfmq.store.domain.consumequeue.service;
 
 import cn.coderule.wolfmq.domain.config.store.ConsumeQueueConfig;
-import cn.coderule.wolfmq.domain.domain.store.domain.consumequeue.ConsumeQueue;
-import cn.coderule.wolfmq.domain.domain.store.infra.MappedFileQueue;
+import cn.coderule.wolfmq.domain.domain.consumequeue.ConsumeQueue;
+import cn.coderule.wolfmq.domain.core.mmap.MappedFileQueue;
 import cn.coderule.wolfmq.store.domain.consumequeue.queue.ConsumeQueueRegistry;
 import java.util.LinkedHashSet;
 import java.util.Set;

@@ -1,7 +1,7 @@
 package cn.coderule.wolfmq.store.domain.commitlog.vo;
 
 import cn.coderule.wolfmq.domain.config.business.MessageConfig;
-import cn.coderule.wolfmq.domain.domain.message.MessageEncoder;
+import cn.coderule.wolfmq.domain.domain.message.codec.MessageEncoder;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

@@ -4,10 +4,10 @@ import cn.coderule.wolfmq.domain.config.business.TopicConfig;
 import cn.coderule.wolfmq.domain.config.server.StoreConfig;
 import cn.coderule.wolfmq.domain.core.constant.MQConstants;
 import cn.coderule.wolfmq.domain.domain.meta.topic.Topic;
-import cn.coderule.wolfmq.domain.domain.store.domain.meta.TopicService;
+import cn.coderule.wolfmq.domain.domain.meta.service.TopicService;
 import cn.coderule.wolfmq.domain.domain.meta.topic.KeyBuilder;
 import cn.coderule.wolfmq.domain.domain.meta.topic.TopicValidator;
-import cn.coderule.wolfmq.domain.domain.timer.TimerConstants;
+import cn.coderule.wolfmq.domain.domain.timer.model.TimerConstants;
 
 public class SystemTopicRegister {
     private static final int SCHEDULE_TOPIC_QUEUE_NUM = 18;

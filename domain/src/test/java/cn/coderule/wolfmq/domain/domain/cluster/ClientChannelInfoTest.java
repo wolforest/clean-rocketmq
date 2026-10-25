@@ -1,6 +1,7 @@
 package cn.coderule.wolfmq.domain.domain.cluster;
 
-import cn.coderule.wolfmq.domain.core.enums.code.LanguageCode;
+import cn.coderule.wolfmq.domain.server.ClientChannelInfo;
+import cn.coderule.wolfmq.domain.core.constant.code.LanguageCode;
 import io.netty.channel.Channel;
 import org.junit.jupiter.api.Test;
 

@@ -2,7 +2,7 @@ package cn.coderule.wolfmq.store.domain.meta;
 
 import cn.coderule.wolfmq.domain.core.constant.MQConstants;
 import cn.coderule.wolfmq.domain.domain.meta.subscription.SubscriptionGroup;
-import cn.coderule.wolfmq.domain.domain.store.domain.meta.ConsumeOffsetService;
+import cn.coderule.wolfmq.domain.domain.meta.service.ConsumeOffsetService;
 import cn.coderule.wolfmq.store.server.bootstrap.StoreContext;
 import java.nio.file.Path;
 import org.junit.jupiter.api.Test;

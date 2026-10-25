@@ -1,9 +1,9 @@
 package cn.coderule.wolfmq.store.domain.timer.rocksdb;
 
 import cn.coderule.wolfmq.domain.config.server.StoreConfig;
-import cn.coderule.wolfmq.domain.domain.timer.ScanResult;
-import cn.coderule.wolfmq.domain.domain.timer.TimerEvent;
-import cn.coderule.wolfmq.domain.domain.store.domain.timer.Timer;
+import cn.coderule.wolfmq.domain.domain.timer.model.ScanResult;
+import cn.coderule.wolfmq.domain.domain.timer.model.TimerEvent;
+import cn.coderule.wolfmq.domain.domain.timer.Timer;
 
 public class RocksdbTimer implements Timer {
     private final StoreConfig storeConfig;

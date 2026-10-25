@@ -8,14 +8,13 @@ import apache.rocketmq.v2.QueryAssignmentResponse;
 import apache.rocketmq.v2.QueryRouteRequest;
 import apache.rocketmq.v2.QueryRouteResponse;
 import apache.rocketmq.v2.Resource;
-import cn.coderule.wolfmq.domain.domain.cluster.route.QueueInfo;
-import cn.coderule.wolfmq.domain.domain.cluster.route.RouteInfo;
-import cn.coderule.wolfmq.domain.domain.cluster.server.GroupInfo;
+import cn.coderule.wolfmq.domain.server.route.QueueInfo;
+import cn.coderule.wolfmq.domain.server.route.RouteInfo;
+import cn.coderule.wolfmq.domain.server.registry.GroupInfo;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -39,7 +38,7 @@ class RouteConverterTest {
         qi.setReadQueueNums(readNums);
         qi.setWriteQueueNums(writeNums);
         qi.setPerm(perm);
-        qi.setMessageType(cn.coderule.wolfmq.domain.core.enums.message.MessageType.NORMAL);
+        qi.setMessageType(cn.coderule.wolfmq.domain.domain.message.enums.MessageType.NORMAL);
         return qi;
     }
 
@@ -55,7 +54,7 @@ class RouteConverterTest {
         ri.setQueueDatas(queueDatas);
         ri.setBrokerDatas(brokerDatas);
         ri.setTopicName("test_topic");
-        ri.setMessageType(cn.coderule.wolfmq.domain.core.enums.message.MessageType.NORMAL);
+        ri.setMessageType(cn.coderule.wolfmq.domain.domain.message.enums.MessageType.NORMAL);
         return ri;
     }
 
@@ -64,7 +63,7 @@ class RouteConverterTest {
     @Test
     void toTypeList_normal_returnsNormalList() {
         List<MessageType> types = RouteConverter.toTypeList(
-            cn.coderule.wolfmq.domain.core.enums.message.MessageType.NORMAL);
+            cn.coderule.wolfmq.domain.domain.message.enums.MessageType.NORMAL);
         assertEquals(1, types.size());
         assertEquals(MessageType.NORMAL, types.get(0));
     }
@@ -72,7 +71,7 @@ class RouteConverterTest {
     @Test
     void toTypeList_fifo_returnsFifoList() {
         List<MessageType> types = RouteConverter.toTypeList(
-            cn.coderule.wolfmq.domain.core.enums.message.MessageType.FIFO);
+            cn.coderule.wolfmq.domain.domain.message.enums.MessageType.FIFO);
         assertEquals(1, types.size());
         assertEquals(MessageType.FIFO, types.get(0));
     }
@@ -80,7 +79,7 @@ class RouteConverterTest {
     @Test
     void toTypeList_transaction_returnsTransactionList() {
         List<MessageType> types = RouteConverter.toTypeList(
-            cn.coderule.wolfmq.domain.core.enums.message.MessageType.TRANSACTION);
+            cn.coderule.wolfmq.domain.domain.message.enums.MessageType.TRANSACTION);
         assertEquals(1, types.size());
         assertEquals(MessageType.TRANSACTION, types.get(0));
     }
@@ -88,7 +87,7 @@ class RouteConverterTest {
     @Test
     void toTypeList_delay_returnsDelayList() {
         List<MessageType> types = RouteConverter.toTypeList(
-            cn.coderule.wolfmq.domain.core.enums.message.MessageType.DELAY);
+            cn.coderule.wolfmq.domain.domain.message.enums.MessageType.DELAY);
         assertEquals(1, types.size());
         assertEquals(MessageType.DELAY, types.get(0));
     }
@@ -96,7 +95,7 @@ class RouteConverterTest {
     @Test
     void toTypeList_mixed_returnsAllTypes() {
         List<MessageType> types = RouteConverter.toTypeList(
-            cn.coderule.wolfmq.domain.core.enums.message.MessageType.MIXED);
+            cn.coderule.wolfmq.domain.domain.message.enums.MessageType.MIXED);
         assertEquals(4, types.size());
         assertTrue(types.contains(MessageType.NORMAL));
         assertTrue(types.contains(MessageType.FIFO));
@@ -183,7 +182,7 @@ class RouteConverterTest {
 
         QueryRouteResponse response = RouteConverter.toRouteResponse(
             routeInfo,
-            cn.coderule.wolfmq.domain.core.enums.message.MessageType.NORMAL,
+            cn.coderule.wolfmq.domain.domain.message.enums.MessageType.NORMAL,
             buildRouteRequest("test_topic"));
 
         assertEquals(apache.rocketmq.v2.Code.OK, response.getStatus().getCode());
@@ -199,7 +198,7 @@ class RouteConverterTest {
 
         QueryRouteResponse response = RouteConverter.toRouteResponse(
             routeInfo,
-            cn.coderule.wolfmq.domain.core.enums.message.MessageType.NORMAL,
+            cn.coderule.wolfmq.domain.domain.message.enums.MessageType.NORMAL,
             buildRouteRequest("test_topic"));
 
         assertEquals(apache.rocketmq.v2.Code.OK, response.getStatus().getCode());
@@ -218,7 +217,7 @@ class RouteConverterTest {
 
         QueryRouteResponse response = RouteConverter.toRouteResponse(
             routeInfo,
-            cn.coderule.wolfmq.domain.core.enums.message.MessageType.NORMAL,
+            cn.coderule.wolfmq.domain.domain.message.enums.MessageType.NORMAL,
             buildRouteRequest("test_topic"));
 
         assertEquals(apache.rocketmq.v2.Code.OK, response.getStatus().getCode());
@@ -237,7 +236,7 @@ class RouteConverterTest {
 
         QueryRouteResponse response = RouteConverter.toRouteResponse(
             routeInfo,
-            cn.coderule.wolfmq.domain.core.enums.message.MessageType.NORMAL,
+            cn.coderule.wolfmq.domain.domain.message.enums.MessageType.NORMAL,
             buildRouteRequest("test_topic"));
 
         assertEquals(apache.rocketmq.v2.Code.OK, response.getStatus().getCode());
@@ -253,7 +252,7 @@ class RouteConverterTest {
 
         QueryRouteResponse response = RouteConverter.toRouteResponse(
             routeInfo,
-            cn.coderule.wolfmq.domain.core.enums.message.MessageType.FIFO,
+            cn.coderule.wolfmq.domain.domain.message.enums.MessageType.FIFO,
             buildRouteRequest("test_topic"));
 
         assertEquals(apache.rocketmq.v2.Code.OK, response.getStatus().getCode());
@@ -272,7 +271,7 @@ class RouteConverterTest {
 
         QueryRouteResponse response = RouteConverter.toRouteResponse(
             routeInfo,
-            cn.coderule.wolfmq.domain.core.enums.message.MessageType.NORMAL,
+            cn.coderule.wolfmq.domain.domain.message.enums.MessageType.NORMAL,
             buildRouteRequest("test_topic"));
 
         // Should be empty because broker-a has no matching group info

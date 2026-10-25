@@ -2,8 +2,8 @@ package cn.coderule.wolfmq.store.api;
 
 import cn.coderule.wolfmq.domain.domain.meta.topic.Topic;
 import cn.coderule.wolfmq.domain.domain.meta.topic.TopicRequest;
-import cn.coderule.wolfmq.domain.domain.store.api.meta.TopicStore;
-import cn.coderule.wolfmq.domain.domain.store.domain.meta.TopicService;
+import cn.coderule.wolfmq.domain.server.store.api.meta.TopicStore;
+import cn.coderule.wolfmq.domain.domain.meta.service.TopicService;
 
 public class TopicStoreImpl implements TopicStore {
     private final TopicService topicService;

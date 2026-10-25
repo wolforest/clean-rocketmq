@@ -2,8 +2,8 @@ package cn.coderule.wolfmq.broker.domain.consumer.pop;
 
 import cn.coderule.wolfmq.domain.config.business.MessageConfig;
 import cn.coderule.wolfmq.domain.config.server.BrokerConfig;
-import cn.coderule.wolfmq.domain.domain.MessageQueue;
-import cn.coderule.wolfmq.domain.domain.cluster.RequestContext;
+import cn.coderule.wolfmq.domain.domain.mq.MessageQueue;
+import cn.coderule.wolfmq.domain.server.RequestContext;
 import cn.coderule.wolfmq.domain.domain.consumer.consume.pop.PopContext;
 import cn.coderule.wolfmq.domain.domain.consumer.consume.pop.PopRequest;
 import cn.coderule.wolfmq.domain.domain.consumer.consume.pop.PopResult;
@@ -43,7 +43,7 @@ class PopServiceTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
         popService = new PopService(contextBuilder, queueSelector, dequeueService, receiptHandler);
-        
+
         MessageConfig messageConfig = new MessageConfig();
         messageConfig.setPopRetryProbability(50);
         when(brokerConfig.getMessageConfig()).thenReturn(messageConfig);
@@ -103,7 +103,7 @@ class PopServiceTest {
             .readQueueNums(4)
             .writeQueueNums(4)
             .build();
-        
+
         MessageQueue messageQueue = MessageQueue.builder()
             .topicName(request.getTopicName())
             .queueId(0)

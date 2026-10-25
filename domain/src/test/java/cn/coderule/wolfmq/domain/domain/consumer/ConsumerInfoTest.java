@@ -1,10 +1,10 @@
 package cn.coderule.wolfmq.domain.domain.consumer;
 
-import cn.coderule.wolfmq.domain.core.enums.consume.ConsumeStrategy;
-import cn.coderule.wolfmq.domain.core.enums.consume.ConsumeType;
-import cn.coderule.wolfmq.domain.core.enums.message.MessageModel;
-import cn.coderule.wolfmq.domain.domain.cluster.RequestContext;
-import cn.coderule.wolfmq.domain.domain.cluster.server.heartbeat.SubscriptionData;
+import cn.coderule.wolfmq.domain.domain.consumer.consume.ConsumeStrategy;
+import cn.coderule.wolfmq.domain.domain.consumer.consume.ConsumeType;
+import cn.coderule.wolfmq.domain.domain.message.enums.MessageModel;
+import cn.coderule.wolfmq.domain.server.RequestContext;
+import cn.coderule.wolfmq.domain.server.heartbeat.SubscriptionData;
 import org.junit.jupiter.api.Test;
 
 import java.util.Set;

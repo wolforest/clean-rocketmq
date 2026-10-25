@@ -3,7 +3,7 @@ package cn.coderule.wolfmq.broker.domain.transaction.check;
 import cn.coderule.wolfmq.broker.domain.transaction.check.context.TransactionContext;
 import cn.coderule.wolfmq.broker.domain.transaction.service.TransactionMessageService;
 import cn.coderule.wolfmq.domain.config.server.BrokerConfig;
-import cn.coderule.wolfmq.domain.domain.cluster.task.QueueTask;
+import cn.coderule.wolfmq.domain.server.task.QueueTask;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

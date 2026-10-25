@@ -17,9 +17,9 @@ import apache.rocketmq.v2.Status;
 import cn.coderule.common.util.net.Address;
 import cn.coderule.wolfmq.domain.core.constant.MQConstants;
 import cn.coderule.wolfmq.domain.core.constant.PermName;
-import cn.coderule.wolfmq.domain.domain.cluster.server.GroupInfo;
-import cn.coderule.wolfmq.domain.domain.cluster.route.QueueInfo;
-import cn.coderule.wolfmq.domain.domain.cluster.route.RouteInfo;
+import cn.coderule.wolfmq.domain.server.registry.GroupInfo;
+import cn.coderule.wolfmq.domain.server.route.QueueInfo;
+import cn.coderule.wolfmq.domain.server.route.RouteInfo;
 import cn.coderule.wolfmq.rpc.common.grpc.response.ResponseBuilder;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,7 +40,7 @@ public class RouteConverter {
 
     public static QueryRouteResponse toRouteResponse(
         RouteInfo routeInfo,
-        cn.coderule.wolfmq.domain.core.enums.message.MessageType messageType,
+        cn.coderule.wolfmq.domain.domain.message.enums.MessageType messageType,
         QueryRouteRequest request
     ) {
         Map<String, Map<Long, Broker>> brokerMap = buildBrokerMap(routeInfo);
@@ -166,7 +166,7 @@ public class RouteConverter {
 
     private static List<MessageQueue> generateQueueList(
         RouteInfo routeInfo,
-        cn.coderule.wolfmq.domain.core.enums.message.MessageType topicMessageType,
+        cn.coderule.wolfmq.domain.domain.message.enums.MessageType topicMessageType,
         QueryRouteRequest request,
         Map<String, Map<Long, Broker>> brokerMap
     ) {
@@ -180,7 +180,7 @@ public class RouteConverter {
 
     private static void parseQueueData(
         QueueInfo queueData,
-        cn.coderule.wolfmq.domain.core.enums.message.MessageType topicMessageType,
+        cn.coderule.wolfmq.domain.domain.message.enums.MessageType topicMessageType,
         QueryRouteRequest request,
         Map<String, Map<Long, Broker>> brokerMap,
         List<MessageQueue> queueList
@@ -199,7 +199,7 @@ public class RouteConverter {
     private static List<MessageQueue> generateQueue(
         QueueInfo queueData,
         Resource topic,
-        cn.coderule.wolfmq.domain.core.enums.message.MessageType messageType,
+        cn.coderule.wolfmq.domain.domain.message.enums.MessageType messageType,
         Broker broker
     ) {
         List<MessageQueue> messageQueueList = new ArrayList<>();
@@ -228,7 +228,7 @@ public class RouteConverter {
     private static void addReadOnlyQueue(
         List<MessageQueue> messageQueueList,
         Resource topic,
-        cn.coderule.wolfmq.domain.core.enums.message.MessageType messageType,
+        cn.coderule.wolfmq.domain.domain.message.enums.MessageType messageType,
         Broker broker,
         int num
     ) {
@@ -249,7 +249,7 @@ public class RouteConverter {
     private static void addWriteOnlyQueue(
         List<MessageQueue> messageQueueList,
         Resource topic,
-        cn.coderule.wolfmq.domain.core.enums.message.MessageType messageType,
+        cn.coderule.wolfmq.domain.domain.message.enums.MessageType messageType,
         Broker broker,
         int num
     ) {
@@ -267,7 +267,7 @@ public class RouteConverter {
     private static void addReadWriteQueue(
         List<MessageQueue> messageQueueList,
         Resource topic,
-        cn.coderule.wolfmq.domain.core.enums.message.MessageType messageType,
+        cn.coderule.wolfmq.domain.domain.message.enums.MessageType messageType,
         Broker broker,
         int num
     ) {
@@ -282,7 +282,7 @@ public class RouteConverter {
         }
     }
 
-    public static List<MessageType> toTypeList(cn.coderule.wolfmq.domain.core.enums.message.MessageType type) {
+    public static List<MessageType> toTypeList(cn.coderule.wolfmq.domain.domain.message.enums.MessageType type) {
         return switch (type) {
             case NORMAL -> Collections.singletonList(MessageType.NORMAL);
             case FIFO -> Collections.singletonList(MessageType.FIFO);

@@ -1,5 +1,6 @@
 package cn.coderule.wolfmq.domain.domain.cluster;
 
+import cn.coderule.wolfmq.domain.server.registry.RegistryUtils;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

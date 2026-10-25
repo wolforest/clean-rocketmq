@@ -1,6 +1,6 @@
 package cn.coderule.wolfmq.domain.domain.consumer.consume.pop;
 
-import cn.coderule.wolfmq.domain.core.enums.consume.PopStatus;
+import cn.coderule.wolfmq.domain.domain.consumer.consume.PopStatus;
 import cn.coderule.wolfmq.domain.domain.message.MessageBO;
 import java.io.Serializable;
 import java.util.ArrayList;

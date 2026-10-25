@@ -1,8 +1,9 @@
 package cn.coderule.wolfmq.domain.domain.store.domain.mq;
 
-import cn.coderule.wolfmq.domain.core.enums.store.EnqueueStatus;
 import cn.coderule.wolfmq.domain.domain.message.MessageBO;
-import cn.coderule.wolfmq.domain.domain.store.infra.InsertResult;
+import cn.coderule.wolfmq.domain.domain.mq.dto.EnqueueResult;
+import cn.coderule.wolfmq.domain.domain.mq.dto.EnqueueStatus;
+import cn.coderule.wolfmq.domain.core.mmap.InsertResult;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

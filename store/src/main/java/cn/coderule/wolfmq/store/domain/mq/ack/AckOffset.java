@@ -1,8 +1,8 @@
 package cn.coderule.wolfmq.store.domain.mq.ack;
 
 import cn.coderule.wolfmq.domain.core.lock.queue.DequeueLock;
-import cn.coderule.wolfmq.domain.domain.store.domain.meta.ConsumeOffsetService;
-import cn.coderule.wolfmq.domain.domain.store.domain.meta.ConsumeOrderService;
+import cn.coderule.wolfmq.domain.domain.meta.service.ConsumeOffsetService;
+import cn.coderule.wolfmq.domain.domain.meta.service.ConsumeOrderService;
 import cn.coderule.wolfmq.domain.domain.consumer.ack.AckConverter;
 import cn.coderule.wolfmq.domain.domain.consumer.ack.AckInfo;
 import cn.coderule.wolfmq.domain.domain.consumer.ack.broker.AckResult;

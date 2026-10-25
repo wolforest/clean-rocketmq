@@ -1,11 +1,11 @@
 package cn.coderule.wolfmq.store.domain.mq.ack;
 
 import cn.coderule.wolfmq.domain.config.server.StoreConfig;
-import cn.coderule.wolfmq.domain.core.enums.store.EnqueueStatus;
+import cn.coderule.wolfmq.domain.domain.mq.dto.EnqueueStatus;
 import cn.coderule.wolfmq.domain.domain.consumer.ack.AckInfo;
 import cn.coderule.wolfmq.domain.domain.consumer.ack.broker.AckResult;
 import cn.coderule.wolfmq.domain.domain.consumer.ack.store.AckMessage;
-import cn.coderule.wolfmq.domain.domain.store.domain.mq.EnqueueResult;
+import cn.coderule.wolfmq.domain.domain.mq.dto.EnqueueResult;
 import cn.coderule.wolfmq.domain.domain.meta.topic.KeyBuilder;
 import cn.coderule.wolfmq.store.domain.mq.queue.EnqueueService;
 import org.junit.jupiter.api.Test;
