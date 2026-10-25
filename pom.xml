@@ -10,7 +10,7 @@
 
     <groupId>cn.coderule</groupId>
     <artifactId>wolfmq</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>${revision}</version>
     <packaging>pom</packaging>
 
     <name>wolfmq</name>
@@ -24,10 +24,11 @@
         <module>broker</module>
         <module>test</module>
         <module>learn</module>
+        <module>distribution</module>
     </modules>
 
     <properties>
-        <wolfmq.version>1.0.0-SNAPSHOT</wolfmq.version>
+        <revision>1.0.0-SNAPSHOT</revision>
     </properties>
 
     <dependencyManagement>
@@ -35,27 +36,27 @@
             <dependency>
                 <groupId>cn.coderule.wolfmq</groupId>
                 <artifactId>domain</artifactId>
-                <version>${wolfmq.version}</version>
+                <version>${revision}</version>
             </dependency>
             <dependency>
                 <groupId>cn.coderule.wolfmq</groupId>
                 <artifactId>rpc</artifactId>
-                <version>${wolfmq.version}</version>
+                <version>${revision}</version>
             </dependency>
             <dependency>
                 <groupId>cn.coderule.wolfmq</groupId>
                 <artifactId>registry</artifactId>
-                <version>${wolfmq.version}</version>
+                <version>${revision}</version>
             </dependency>
             <dependency>
                 <groupId>cn.coderule.wolfmq</groupId>
                 <artifactId>broker</artifactId>
-                <version>${wolfmq.version}</version>
+                <version>${revision}</version>
             </dependency>
             <dependency>
                 <groupId>cn.coderule.wolfmq</groupId>
                 <artifactId>store</artifactId>
-                <version>${wolfmq.version}</version>
+                <version>${revision}</version>
             </dependency>
 
         </dependencies>
