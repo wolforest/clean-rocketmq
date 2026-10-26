@@ -14,9 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.coderule.wolfmq.test.apitest.admin;
+package cn.coderule.wolfmq.test.e2etest.admin;
 
-import cn.coderule.wolfmq.test.apitest.ApiBaseTest;
+import cn.coderule.wolfmq.test.e2etest.ApiBaseTest;
 import cn.coderule.wolfmq.test.manager.GroupManager;
 import cn.coderule.wolfmq.test.manager.TopicManager;
 import org.apache.rocketmq.common.domain.topic.TopicConfig;

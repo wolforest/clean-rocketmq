@@ -1,6 +1,6 @@
-package cn.coderule.wolfmq.test.apitest.pubsub;
+package cn.coderule.wolfmq.test.e2etest.pubsub;
 
-import cn.coderule.wolfmq.test.apitest.ApiBaseTest;
+import cn.coderule.wolfmq.test.e2etest.ApiBaseTest;
 import cn.coderule.wolfmq.test.manager.ClientManager;
 import cn.coderule.wolfmq.test.manager.ProducerManager;
 import cn.coderule.wolfmq.test.manager.TopicManager;

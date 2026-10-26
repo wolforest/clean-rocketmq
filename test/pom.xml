@@ -16,7 +16,7 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>apitest</module>
+        <module>e2etest</module>
     </modules>
 
     <properties>

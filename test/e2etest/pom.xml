@@ -11,7 +11,7 @@
     </parent>
 
     <groupId>cn.coderule.wolfmq</groupId>
-    <artifactId>apitest</artifactId>
+    <artifactId>e2etest</artifactId>
     <version>${revision}</version>
 
     <properties>

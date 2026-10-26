@@ -14,13 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.coderule.wolfmq.test.apitest.transaction;
+package cn.coderule.wolfmq.test.e2etest.schedule;
 
 import cn.coderule.common.util.lang.ThreadUtil;
-import cn.coderule.wolfmq.test.apitest.ApiBaseTest;
+import cn.coderule.wolfmq.test.e2etest.ApiBaseTest;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import cn.coderule.wolfmq.test.manager.ClientManager;
 import cn.coderule.wolfmq.test.manager.ConsumerManager;
@@ -34,9 +35,6 @@ import org.apache.rocketmq.client.apis.consumer.PushConsumer;
 import org.apache.rocketmq.client.apis.message.Message;
 import org.apache.rocketmq.client.apis.producer.Producer;
 import org.apache.rocketmq.client.apis.producer.SendReceipt;
-import org.apache.rocketmq.client.apis.producer.Transaction;
-import org.apache.rocketmq.client.apis.producer.TransactionChecker;
-import org.apache.rocketmq.client.apis.producer.TransactionResolution;
 import org.apache.rocketmq.logging.org.slf4j.Logger;
 import org.apache.rocketmq.logging.org.slf4j.LoggerFactory;
 import org.testng.Assert;
@@ -45,19 +43,23 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @Test(groups = {"client"})
-public class CheckFailureTest extends ApiBaseTest {
-    private static final Logger LOG = LoggerFactory.getLogger(CheckFailureTest.class);
+public class DelayTest extends ApiBaseTest {
+    private static final Logger LOG = LoggerFactory.getLogger(DelayTest.class);
     private static final String TOPIC = TopicManager.createUniqueTopic();
     private static final String CONSUMER_GROUP = GroupManager.createUniqueGroup();
-    private static final String MESSAGE_PREFIX = "MQ_TRX_";
-    private static final String MESSAGE_BODY = "transaction message body: ";
+    private static final String MESSAGE_PREFIX = "MQM_DL_";
+    private static final String MESSAGE_BODY = "delay message body: ";
+    private static final long DELAY_TIME = 5000;
 
     private PushConsumer consumer;
     private Producer producer;
 
+    private final Map<String, Long> pubTimeMap = new HashMap<>();
+
+
     @BeforeMethod
     public void beforeMethod() {
-        TopicManager.createTransactionalTopic(TOPIC);
+        TopicManager.createDelayTopic(TOPIC);
         GroupManager.createGroup(CONSUMER_GROUP);
         createProducer();
         startConsumer();
@@ -71,7 +73,7 @@ public class CheckFailureTest extends ApiBaseTest {
             TopicManager.deleteTopic(TOPIC);
             GroupManager.deleteGroup(CONSUMER_GROUP);
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.error("stop consumer error", e);
         }
     }
 
@@ -84,18 +86,15 @@ public class CheckFailureTest extends ApiBaseTest {
         for (int i = 0; i < 100; i++) {
             Message message = createMessage(i);
 
-
             try {
-                Transaction transaction = producer.beginTransaction();
-
-                SendReceipt sendReceipt = producer.send(message, transaction);
+                SendReceipt sendReceipt = producer.send(message);
                 Assert.assertNotNull(sendReceipt);
 
                 String messageId = sendReceipt.getMessageId().toString();
                 Assert.assertNotNull(messageId);
-                LOG.info("pub message: {}", sendReceipt);
 
-                //transaction.rollback();
+                pubTimeMap.put(messageId, System.currentTimeMillis());
+                LOG.info("pub message: {}", sendReceipt);
             } catch (Throwable t) {
                 LOG.error("Failed to send message: {}", i, t);
             }
@@ -108,7 +107,7 @@ public class CheckFailureTest extends ApiBaseTest {
     }
 
     private void createProducer() {
-        producer = ProducerManager.buildTransactionalProducer(createChecker(), TOPIC);
+        producer = ProducerManager.buildProducer(TOPIC);
     }
 
     private void startConsumer() {
@@ -136,18 +135,19 @@ public class CheckFailureTest extends ApiBaseTest {
         producer.close();
     }
 
-    private TransactionChecker createChecker() {
-        return message -> {
-            LOG.info("check message: {}", message);
-            return TransactionResolution.ROLLBACK;
-        };
-    }
-
     private MessageListener createListener() {
         LOG.info("create consume listener");
         return message -> {
             LOG.info("Consume message={}", message);
-            Assert.fail("consumer received unexpected messages");
+            String messageId = message.getMessageId().toString();
+
+            Assert.assertEquals(TOPIC, message.getTopic());
+            Assert.assertTrue(pubTimeMap.containsKey(messageId));
+
+            long consumeTime = System.currentTimeMillis();
+            long elapsedTime = consumeTime - pubTimeMap.get(messageId);
+            Assert.assertTrue(elapsedTime > DELAY_TIME);
+
 
             return ConsumeResult.SUCCESS;
         };
@@ -159,6 +159,7 @@ public class CheckFailureTest extends ApiBaseTest {
             .setTopic(TOPIC)
             .setKeys(MESSAGE_PREFIX + i)
             .setBody((MESSAGE_BODY + i).getBytes(StandardCharsets.UTF_8))
+            .setDeliveryTimestamp(System.currentTimeMillis() + DELAY_TIME)
             .build();
     }
 

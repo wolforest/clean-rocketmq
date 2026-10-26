@@ -14,10 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.coderule.wolfmq.test.apitest.pubsub;
+package cn.coderule.wolfmq.test.e2etest.pubsub;
 
 import cn.coderule.common.util.lang.ThreadUtil;
-import cn.coderule.wolfmq.test.apitest.ApiBaseTest;
+import cn.coderule.wolfmq.test.e2etest.ApiBaseTest;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;

@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.coderule.wolfmq.test.apitest;
+package cn.coderule.wolfmq.test.e2etest;
 
 import cn.coderule.wolfmq.test.manager.ClientManager;
 import cn.coderule.wolfmq.test.manager.ConfigManager;

@@ -14,18 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.coderule.wolfmq.test.apitest.pubsub;
+package cn.coderule.wolfmq.test.e2etest.transaction;
 
 import cn.coderule.common.util.lang.ThreadUtil;
-import cn.coderule.common.util.lang.string.StringUtil;
-import cn.coderule.wolfmq.test.apitest.ApiBaseTest;
+import cn.coderule.wolfmq.test.e2etest.ApiBaseTest;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import cn.coderule.wolfmq.test.manager.ClientManager;
 import cn.coderule.wolfmq.test.manager.ConsumerManager;
 import cn.coderule.wolfmq.test.manager.GroupManager;
@@ -38,6 +34,9 @@ import org.apache.rocketmq.client.apis.consumer.PushConsumer;
 import org.apache.rocketmq.client.apis.message.Message;
 import org.apache.rocketmq.client.apis.producer.Producer;
 import org.apache.rocketmq.client.apis.producer.SendReceipt;
+import org.apache.rocketmq.client.apis.producer.Transaction;
+import org.apache.rocketmq.client.apis.producer.TransactionChecker;
+import org.apache.rocketmq.client.apis.producer.TransactionResolution;
 import org.apache.rocketmq.logging.org.slf4j.Logger;
 import org.apache.rocketmq.logging.org.slf4j.LoggerFactory;
 import org.testng.Assert;
@@ -45,30 +44,21 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-/**
- * Before running OrderlyTest,You should set the fifo property for the consumer-group to True
- */
 @Test(groups = {"client"})
-public class OrderlyTest extends ApiBaseTest {
-    private static final Logger LOG = LoggerFactory.getLogger(OrderlyTest.class);
+public class TransactionFailureTest extends ApiBaseTest {
+    private static final Logger LOG = LoggerFactory.getLogger(TransactionFailureTest.class);
     private static final String TOPIC = TopicManager.createUniqueTopic();
     private static final String CONSUMER_GROUP = GroupManager.createUniqueGroup();
-    private static final String PRODUCE_GROUP = GroupManager.createUniqueGroup();
-    private static final String MESSAGE_KEY_PREFIX = "MQM_DL_";
-    private static final String MESSAGE_GROUP_PREFIX = "MQM_GP_";
-    private static final String MESSAGE_BODY = "orderly message body: ";
+    private static final String MESSAGE_PREFIX = "MQ_TRX_";
+    private static final String MESSAGE_BODY = "transaction message body: ";
 
     private PushConsumer consumer;
     private Producer producer;
 
-    private final Set<String> messageIdSet = new HashSet<>();
-    private int lastKeyIndex = 0;
-
-
     @BeforeMethod
     public void beforeMethod() {
-        TopicManager.createFIFOTopic(TOPIC);
-        GroupManager.createOrderlyGroup(CONSUMER_GROUP);
+        TopicManager.createTransactionalTopic(TOPIC);
+        GroupManager.createGroup(CONSUMER_GROUP);
         createProducer();
         startConsumer();
     }
@@ -81,7 +71,7 @@ public class OrderlyTest extends ApiBaseTest {
             TopicManager.deleteTopic(TOPIC);
             GroupManager.deleteGroup(CONSUMER_GROUP);
         } catch (Exception e) {
-            LOG.error("after method error", e);
+            e.printStackTrace();
         }
     }
 
@@ -92,18 +82,20 @@ public class OrderlyTest extends ApiBaseTest {
         }
 
         for (int i = 0; i < 100; i++) {
-            int groupIndex = i % 4;
-            Message message = createMessage(i, groupIndex);
+            Message message = createMessage(i);
+
 
             try {
-                SendReceipt sendReceipt = producer.send(message);
+                Transaction transaction = producer.beginTransaction();
+
+                SendReceipt sendReceipt = producer.send(message, transaction);
                 Assert.assertNotNull(sendReceipt);
 
                 String messageId = sendReceipt.getMessageId().toString();
                 Assert.assertNotNull(messageId);
-
-                messageIdSet.add(messageId);
                 LOG.info("pub message: {}", sendReceipt);
+
+                transaction.rollback();
             } catch (Throwable t) {
                 LOG.error("Failed to send message: {}", i, t);
             }
@@ -116,7 +108,7 @@ public class OrderlyTest extends ApiBaseTest {
     }
 
     private void createProducer() {
-        producer = ProducerManager.buildProducer(TOPIC);
+        producer = ProducerManager.buildTransactionalProducer(createChecker(), TOPIC);
     }
 
     private void startConsumer() {
@@ -129,7 +121,7 @@ public class OrderlyTest extends ApiBaseTest {
             return;
         }
 
-        ThreadUtil.sleep(30000);
+        ThreadUtil.sleep(10000);
         LOG.info("stop consumer");
 
         consumer.close();
@@ -144,47 +136,30 @@ public class OrderlyTest extends ApiBaseTest {
         producer.close();
     }
 
+    private TransactionChecker createChecker() {
+        return message -> {
+            LOG.info("check message: {}", message);
+            return TransactionResolution.COMMIT;
+        };
+    }
+
     private MessageListener createListener() {
         LOG.info("create consume listener");
         return message -> {
             LOG.info("Consume message={}", message);
-            String messageId = message.getMessageId().toString();
+            Assert.fail("consumer received unexpected messages");
 
-            Assert.assertEquals(TOPIC, message.getTopic());
-            Assert.assertTrue(messageIdSet.contains(messageId));
-
-            int keyIndex = getKeyIndex(message.getKeys());
-            LOG.info("current message index: {}; last message index: {}", keyIndex, lastKeyIndex);
-
-            Assert.assertTrue(keyIndex > lastKeyIndex);
-
-            lastKeyIndex = keyIndex;
             return ConsumeResult.SUCCESS;
         };
     }
 
-    private int getKeyIndex(Collection<String> keys) {
-        if (keys.isEmpty()) {
-            return -1;
-        }
-
-        String key = keys.iterator().next();
-        if (StringUtil.isBlank(key)) {
-            return -1;
-        }
-
-        String num = key.substring(MESSAGE_KEY_PREFIX.length() - 1);
-        return Integer.parseInt(num);
-    }
-
-    private Message createMessage(int i, int groupIndex) {
+    private Message createMessage(int i) {
         return ClientManager.getProvider()
-                .newMessageBuilder()
-                .setTopic(TOPIC)
-                .setKeys(MESSAGE_KEY_PREFIX + i)
-                .setMessageGroup(MESSAGE_GROUP_PREFIX + groupIndex)
-                .setBody((MESSAGE_BODY + i).getBytes(StandardCharsets.UTF_8))
-                .build();
+            .newMessageBuilder()
+            .setTopic(TOPIC)
+            .setKeys(MESSAGE_PREFIX + i)
+            .setBody((MESSAGE_BODY + i).getBytes(StandardCharsets.UTF_8))
+            .build();
     }
 
 }
