@@ -9,13 +9,13 @@
 
     <test verbose="1" preserve-order="true" name="ClientTest">
         <classes>
-            <class name="cn.coderule.wolfmq.test.e2etest.pubsub.PubSubTest" />
-            <class name="cn.coderule.wolfmq.test.e2etest.pubsub.OrderlyTest" />
-            <class name="cn.coderule.wolfmq.test.e2etest.schedule.DelayTest" />
-            <class name="cn.coderule.wolfmq.test.e2etest.transaction.TransactionSuccessTest" />
-            <class name="cn.coderule.wolfmq.test.e2etest.transaction.TransactionFailureTest" />
-            <class name="cn.coderule.wolfmq.test.e2etest.transaction.CheckFailureTest" />
-            <class name="cn.coderule.wolfmq.test.e2etest.transaction.CheckSuccessTest" />
+            <class name="cn.coderule.wolfmq.test.e2etest.e2etest.pubsub.PubSubTest" />
+            <class name="cn.coderule.wolfmq.test.e2etest.e2etest.pubsub.OrderlyTest" />
+            <class name="cn.coderule.wolfmq.test.e2etest.e2etest.schedule.DelayTest" />
+            <class name="cn.coderule.wolfmq.test.e2etest.e2etest.transaction.TransactionSuccessTest" />
+            <class name="cn.coderule.wolfmq.test.e2etest.e2etest.transaction.TransactionFailureTest" />
+            <class name="cn.coderule.wolfmq.test.e2etest.e2etest.transaction.CheckFailureTest" />
+            <class name="cn.coderule.wolfmq.test.e2etest.e2etest.transaction.CheckSuccessTest" />
         </classes>
     </test>
 </suite>

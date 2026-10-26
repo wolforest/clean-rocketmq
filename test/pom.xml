@@ -17,6 +17,9 @@
 
     <modules>
         <module>e2etest</module>
+        <module>apitest</module>
+        <module>ittest</module>
+        <module>performance</module>
     </modules>
 
     <properties>

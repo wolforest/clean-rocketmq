@@ -9,8 +9,8 @@
 
     <test verbose="1" preserve-order="true" name="AdminTest">
         <classes>
-            <class name="cn.coderule.wolfmq.test.e2etest.admin.TopicTest" />
-            <class name="cn.coderule.wolfmq.test.e2etest.admin.GroupTest" />
+            <class name="cn.coderule.wolfmq.test.e2etest.e2etest.admin.TopicTest" />
+            <class name="cn.coderule.wolfmq.test.e2etest.e2etest.admin.GroupTest" />
         </classes>
     </test>
 </suite>

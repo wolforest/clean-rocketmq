@@ -1,0 +1,62 @@
+package cn.coderule.wolfmq.test.e2etest.benchmark.core;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+
+public class ConfigBuilder implements Serializable {
+    private List<Integer> concurrencyList = new ArrayList<>();
+    private int requestNumber = 10000;
+    private int topicNumber = 10;
+    private int groupNumber = 10;
+    private int messageSize = 1024;
+
+    public ConfigBuilder concurrencyList(List<Integer> concurrencyList) {
+        this.concurrencyList = concurrencyList;
+
+        return this;
+    }
+
+    public ConfigBuilder requestNumber(int requestNumber) {
+        this.requestNumber = requestNumber;
+
+        return this;
+    }
+
+    public ConfigBuilder topicNumber(int topicNumber) {
+        this.topicNumber = topicNumber;
+
+        return this;
+    }
+
+    public ConfigBuilder groupNumber(int groupNumber) {
+        this.groupNumber = groupNumber;
+
+        return this;
+    }
+
+    public ConfigBuilder messageSize(int messageSize) {
+        this.messageSize = messageSize;
+
+        return this;
+    }
+
+    public List<Config> build() {
+        List<Config> configList = new ArrayList<>();
+
+        for (int concurrency : concurrencyList) {
+            Config config = Config.builder()
+                .concurrency(concurrency)
+                .requestNumber(requestNumber)
+                .topicNumber(topicNumber)
+                .groupNumber(groupNumber)
+                .messageSize(messageSize)
+                .build();
+
+            configList.add(config);
+        }
+
+        return configList;
+    }
+}

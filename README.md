@@ -1,5 +1,5 @@
 # Clean-RocketMQ
-<img src="/docs/cn/img/architecture/next-generation-mq.jpg" alt="下一代消息队列" />
+<img src="/docs/article/img/architecture/next-generation-mq.jpg" alt="下一代消息队列" />
 
 **Clean-RocketMQ 是最快的事务型消息队列。**<br />
 1. **兼容RocketMQ：** 可完全或部分替换RocketMQ。 
@@ -41,12 +41,12 @@ AI时代，拥抱AI, 持续体系化学习是软件人的基本要求。<br />
 ### RocketMQ学习圈
 
 ### 软件读书会
-<img src="/docs/cn/img/architecture/software-reading-community.png" alt="软件读书会" />
+<img src="/docs/article/img/architecture/software-reading-community.png" alt="软件读书会" />
 
 
 ## 更多信息
 **Clean-RocketMQ:**
-* [Clean-RocketMQ架构](/docs/cn/architecture/logical.md)
+* [Clean-RocketMQ架构](/docs/article/architecture/logical.md)
 
 **图书目录及进度:**
 * [RocketMQ源码解析与优化(上)](/docs/book/rocketmq-analyze.md)
