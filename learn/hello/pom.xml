@@ -37,13 +37,13 @@
         <dependency>
             <groupId>com.rabbitmq</groupId>
             <artifactId>amqp-client</artifactId>
-            <version>5.28.0</version>
+            <version>5.37.0</version>
         </dependency>
 
         <dependency>
             <groupId>org.apache.rocketmq</groupId>
             <artifactId>rocketmq-client-java</artifactId>
-            <version>5.0.7</version>
+<!--            <version>5.0.7</version>-->
             <exclusions>
                 <exclusion>
                     <groupId>io.grpc</groupId>
