@@ -8,7 +8,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>cn.coderule</groupId>
+    <groupId>com.wolfmq</groupId>
     <artifactId>wolfmq</artifactId>
     <version>${revision}</version>
     <packaging>pom</packaging>
@@ -36,27 +36,27 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>cn.coderule.wolfmq</groupId>
+                <groupId>com.wolfmq</groupId>
                 <artifactId>domain</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
-                <groupId>cn.coderule.wolfmq</groupId>
+                <groupId>com.wolfmq</groupId>
                 <artifactId>rpc</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
-                <groupId>cn.coderule.wolfmq</groupId>
+                <groupId>com.wolfmq</groupId>
                 <artifactId>registry</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
-                <groupId>cn.coderule.wolfmq</groupId>
+                <groupId>com.wolfmq</groupId>
                 <artifactId>broker</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
-                <groupId>cn.coderule.wolfmq</groupId>
+                <groupId>com.wolfmq</groupId>
                 <artifactId>store</artifactId>
                 <version>${revision}</version>
             </dependency>

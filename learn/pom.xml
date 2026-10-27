@@ -4,13 +4,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>cn.coderule</groupId>
+        <groupId>com.wolfmq</groupId>
         <artifactId>wolfmq</artifactId>
         <version>${revision}</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <groupId>cn.coderule.wolfmq</groupId>
     <artifactId>learn</artifactId>
     <version>${revision}</version>
     <packaging>pom</packaging>
