@@ -15,9 +15,9 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>e2etest</module>
-        <module>apitest</module>
-        <module>ittest</module>
+        <module>e2e</module>
+        <module>api</module>
+        <module>Integration</module>
         <module>performance</module>
     </modules>
 
