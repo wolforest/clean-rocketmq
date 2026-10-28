@@ -1,0 +1,49 @@
+package com.wolfmq.store.api;
+
+import com.wolfmq.domain.domain.meta.topic.Topic;
+import com.wolfmq.domain.domain.meta.topic.TopicRequest;
+import com.wolfmq.domain.server.store.api.meta.TopicStore;
+import com.wolfmq.domain.domain.meta.service.TopicService;
+
+public class TopicStoreImpl implements TopicStore {
+    private final TopicService topicService;
+
+    public TopicStoreImpl(TopicService topicService) {
+        this.topicService = topicService;
+    }
+
+    @Override
+    public boolean exists(String topicName) {
+        return topicService.exists(topicName);
+    }
+
+    @Override
+    public Topic getTopic(String topicName) {
+        return topicService.getTopic(topicName);
+    }
+
+    @Override
+    public void saveTopic(Topic topic) {
+        topicService.saveTopic(topic);
+    }
+
+    @Override
+    public void deleteTopic(String topicName) {
+        topicService.deleteTopic(topicName);
+    }
+
+    @Override
+    public void saveTopic(TopicRequest request) {
+        topicService.saveTopic(request.getTopic());
+    }
+
+    @Override
+    public void deleteTopic(TopicRequest request) {
+        topicService.deleteTopic(request.getTopicName());
+    }
+
+    @Override
+    public String getAllTopicJson() {
+        return "";
+    }
+}

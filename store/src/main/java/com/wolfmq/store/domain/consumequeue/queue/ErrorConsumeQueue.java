@@ -1,0 +1,136 @@
+package com.wolfmq.store.domain.consumequeue.queue;
+
+import com.wolfmq.domain.domain.consumequeue.QueueType;
+import com.wolfmq.domain.domain.commitlog.CommitEvent;
+import com.wolfmq.domain.domain.consumequeue.QueueUnit;
+import com.wolfmq.domain.domain.consumequeue.ConsumeQueue;
+import com.wolfmq.domain.core.mmap.MappedFileQueue;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentMap;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+public class ErrorConsumeQueue implements ConsumeQueue {
+    public static final ErrorConsumeQueue INSTANCE = new ErrorConsumeQueue();
+
+    public static ErrorConsumeQueue singleton(String msg) {
+        log.error("no such queue store: {}", msg);
+        return INSTANCE;
+    }
+
+    @Override
+    public QueueType getQueueType() {
+        return QueueType.ERROR;
+    }
+
+    @Override
+    public String getTopic() {
+        return "NO_SUCH_TOPIC";
+    }
+
+    @Override
+    public int getQueueId() {
+        return 0;
+    }
+
+    @Override
+    public int getUnitSize() {
+        return 0;
+    }
+
+    @Override
+    public void enqueue(CommitEvent event) {
+
+    }
+
+    @Override
+    public QueueUnit get(long index) {
+        return null;
+    }
+
+    @Override
+    public List<QueueUnit> get(long index, int num) {
+        return List.of();
+    }
+
+    @Override
+    public long getMinOffset() {
+        return 0;
+    }
+
+    @Override
+    public void setMinOffset(long offset) {
+
+    }
+
+    @Override
+    public long getMaxOffset() {
+        return 0;
+    }
+
+    @Override
+    public void setMaxOffset(long maxOffset) {
+
+    }
+
+    @Override
+    public long rollToOffset(long offset) {
+        return 0;
+    }
+
+    @Override
+    public void setCommitOffsetMap(ConcurrentMap<Integer, Long> map) {
+
+    }
+
+    @Override
+    public Map<Integer, Long> getCommitOffsetMap() {
+        return Map.of();
+    }
+
+    @Override
+    public Long getCommitOffsetByShardId(int shardId) {
+        return null;
+    }
+
+    @Override
+    public void setCommitOffsetByShardId(int shardId, long offset) {
+
+    }
+
+    @Override
+    public long getMaxCommitOffset() {
+        return 0;
+    }
+
+    @Override
+    public void setMaxCommitOffset(long maxCommitOffset) {
+
+    }
+
+    @Override
+    public long increaseOffset() {
+        return 0;
+    }
+
+    @Override
+    public MappedFileQueue getMappedFileQueue() {
+        return null;
+    }
+
+    @Override
+    public void load() {
+
+    }
+
+    @Override
+    public void flush(int minPages) {
+
+    }
+
+    @Override
+    public void destroy() {
+
+    }
+}

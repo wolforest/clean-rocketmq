@@ -1,0 +1,125 @@
+package com.wolfmq.store.domain.dispatcher;
+
+import cn.coderule.common.lang.concurrent.thread.ServiceThread;
+import cn.coderule.common.util.lang.ThreadUtil;
+import com.wolfmq.domain.domain.commitlog.CommitEvent;
+import com.wolfmq.domain.domain.message.MessageBO;
+import com.wolfmq.domain.domain.commitlog.CommitLog;
+import com.wolfmq.domain.domain.commitlog.CommitHandler;
+import com.wolfmq.domain.domain.commitlog.CommitEventDispatcher;
+import com.wolfmq.domain.server.store.CheckPoint;
+import java.util.ArrayList;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@Deprecated
+public class DefaultCommitEventDispatcher extends ServiceThread  implements CommitEventDispatcher {
+    /**
+     * startOffset (confirmOffset in RocketMQ)
+     *
+     */
+    @Getter @Setter
+    private volatile long dispatchedOffset = -1;
+
+    private final ArrayList<CommitHandler> consumerList = new ArrayList<>();
+
+    private final CommitLog commitLog;
+    private final CheckPoint checkPoint;
+
+    public DefaultCommitEventDispatcher(CommitLog commitLog, CheckPoint checkPoint) {
+        this.commitLog = commitLog;
+        this.checkPoint = checkPoint;
+    }
+
+    @Override
+    public void registerHandler(CommitHandler handler) {
+        consumerList.add(handler);
+    }
+
+    @Override
+    public String getServiceName() {
+        return DefaultCommitEventDispatcher.class.getSimpleName();
+    }
+
+    @Override
+    public void dispatch(CommitEvent event) {
+        if (consumerList.isEmpty()) {
+            return;
+        }
+
+        for (CommitHandler consumer : consumerList) {
+             consumer.handle(event);
+        }
+    }
+
+    @Override
+    public void run() {
+        log.info("{} service started", this.getServiceName());
+
+        while (!this.isStopped()) {
+            try {
+                ThreadUtil.sleep(1);
+                this.loadAndDispatch();
+            } catch (Exception e) {
+                log.error("{} service has exception. ", this.getServiceName(), e);
+            }
+        }
+
+        log.info("{} service end", this.getServiceName());
+    }
+
+    private void loadAndDispatch() {
+        initDispatchedOffset();
+
+        while (hasNewEvent()) {
+            MessageBO messageBO = commitLog.select(this.dispatchedOffset);
+            if (isOverflow(messageBO.getMessageLength())) {
+                break;
+            }
+
+            if (messageBO.isValid()) {
+                dispatch(messageBO);
+            }
+
+            if (messageBO.getMessageLength() > 0) {
+                saveDispatchedOffset(messageBO.getMessageLength());
+            }
+        }
+    }
+
+    private void saveDispatchedOffset(int size) {
+        this.dispatchedOffset += size;
+        checkPoint.getMaxOffset().setDispatchedOffset(commitLog.getShardId(), dispatchedOffset);
+        checkPoint.getMaxOffset().setDispatchedOffset(dispatchedOffset);
+    }
+
+    private void dispatch(MessageBO messageBO) {
+        CommitEvent event = CommitEvent.of(messageBO);
+        dispatch(event);
+    }
+
+    private void initDispatchedOffset() {
+        if (this.dispatchedOffset > -1) {
+            return;
+        }
+
+        long checkpointOffset = checkPoint.getMaxOffset().getDispatchedOffset();
+        if (checkpointOffset > -1) {
+            this.dispatchedOffset = checkpointOffset;
+            return;
+        }
+
+        this.dispatchedOffset = commitLog.getMinOffset();
+    }
+
+    private boolean isOverflow(int size) {
+        return this.dispatchedOffset + size > commitLog.getMaxOffset();
+    }
+
+    private boolean hasNewEvent() {
+        long maxOffset = commitLog.getMaxOffset();
+        return this.dispatchedOffset < maxOffset;
+    }
+}

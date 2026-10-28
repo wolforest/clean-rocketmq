@@ -1,0 +1,402 @@
+package com.wolfmq.store.domain.consumequeue.queue;
+
+import cn.coderule.common.util.lang.ThreadUtil;
+import com.wolfmq.domain.config.store.ConsumeQueueConfig;
+import com.wolfmq.domain.config.store.StorePath;
+import com.wolfmq.domain.domain.consumequeue.QueueType;
+import com.wolfmq.domain.domain.commitlog.CommitEvent;
+import com.wolfmq.domain.domain.message.MessageBO;
+import com.wolfmq.domain.domain.consumequeue.QueueUnit;
+import com.wolfmq.domain.core.mmap.SelectedMappedBuffer;
+import com.wolfmq.domain.domain.consumequeue.ConsumeQueue;
+import com.wolfmq.domain.core.mmap.MappedFile;
+import com.wolfmq.domain.core.mmap.MappedFileQueue;
+import com.wolfmq.store.infra.file.DefaultMappedFileQueue;
+import com.wolfmq.store.server.bootstrap.StoreCheckpoint;
+import java.io.File;
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.atomic.AtomicLongFieldUpdater;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+public class DefaultConsumeQueue implements ConsumeQueue {
+    private static final AtomicLongFieldUpdater<DefaultConsumeQueue> MAX_OFFSET_UPDATER
+        = AtomicLongFieldUpdater.newUpdater(DefaultConsumeQueue.class, "maxOffset");
+    private static final AtomicLongFieldUpdater<DefaultConsumeQueue> MIN_OFFSET_UPDATER
+        = AtomicLongFieldUpdater.newUpdater(DefaultConsumeQueue.class, "minOffset");
+
+    @Getter
+    private final String topic;
+    @Getter
+    private final int queueId;
+    @Getter
+    private MappedFileQueue mappedFileQueue;
+
+    private final ConsumeQueueConfig config;
+    private final StoreCheckpoint checkpoint;
+    private final ByteBuffer writeBuffer;
+
+    @Getter @Setter
+    private long maxCommitOffset = 0L;
+    @Getter @Setter
+    private ConcurrentMap<Integer, Long> commitOffsetMap;
+
+    private volatile long minOffset = 0;
+    private volatile long maxOffset = 0;
+
+    public DefaultConsumeQueue(String topic, int queueId, ConsumeQueueConfig config, StoreCheckpoint checkpoint) {
+        this.topic = topic;
+        this.queueId = queueId;
+        this.config = config;
+        this.checkpoint = checkpoint;
+
+        this.writeBuffer = ByteBuffer.allocate(config.getUnitSize());
+        this.commitOffsetMap = new ConcurrentHashMap<>();
+
+        initMappedFileQueue();
+    }
+
+    @Override
+    public QueueType getQueueType() {
+        return QueueType.DEFAULT;
+    }
+
+    @Override
+    public int getUnitSize() {
+        return config.getUnitSize();
+    }
+
+    @Override
+    public void enqueue(CommitEvent event) {
+        if (!preEnqueue(event)) return;
+
+        for (int i = 0; i < config.getMaxEnqueueRetry(); i++) {
+            boolean success = insert(event);
+            if (success) {
+                postEnqueue(event);
+                return;
+            }
+
+            log.warn("[BUG]ConsumeQueue.enqueue failed, retry {} times", i);
+            ThreadUtil.sleep(1000);
+        }
+
+        log.error("[BUG]consume queue can not write, {} {}", this.topic, this.queueId);
+    }
+
+    @Override
+    public QueueUnit get(long index) {
+        if (index < MIN_OFFSET_UPDATER.get(this)) {
+            return null;
+        }
+
+        long offset = index * config.getUnitSize();
+        SelectedMappedBuffer buffer = select(offset, config.getUnitSize());
+        if (buffer == null) {
+            return null;
+        }
+
+        QueueUnit unit = createQueueUnit(offset, buffer);
+        buffer.release();
+        return unit;
+    }
+
+    @Override
+    public List<QueueUnit> get(long index, int num) {
+        long offset = index * config.getUnitSize();
+        if (offset < MIN_OFFSET_UPDATER.get(this)) {
+            return List.of();
+        }
+
+        SelectedMappedBuffer buffer = select(offset);
+        if (buffer == null) {
+            return List.of();
+        }
+
+        List<QueueUnit> result = new ArrayList<>(num);
+        for (int i = 0; i < num; i++) {
+            if (!buffer.getByteBuffer().hasRemaining()) {
+                break;
+            }
+
+            QueueUnit unit = createQueueUnit(offset, buffer);
+            result.add(unit);
+            offset += config.getUnitSize();
+        }
+
+        buffer.release();
+        return result;
+    }
+
+    @Override
+    public long getMinOffset() {
+        return MIN_OFFSET_UPDATER.get(this);
+    }
+
+    @Override
+    public void setMinOffset(long offset) {
+        MIN_OFFSET_UPDATER.set(this, offset);
+    }
+
+    @Override
+    public void setMaxOffset(long maxOffset) {
+        MAX_OFFSET_UPDATER.set(this, maxOffset);
+    }
+
+    @Override
+    public long rollToOffset(long offset) {
+        int fileSize = config.getFileSize();
+        int totalUnits = fileSize / config.getUnitSize();
+
+        return offset + totalUnits - offset % totalUnits;
+    }
+
+    @Override
+    public Long getCommitOffsetByShardId(int shardId) {
+        return commitOffsetMap.get(shardId);
+    }
+
+    @Override
+    public void setCommitOffsetByShardId(int shardId, long offset) {
+        commitOffsetMap.put(shardId, offset);
+    }
+
+
+
+    @Override
+    public long getMaxOffset() {
+        return MAX_OFFSET_UPDATER.get(this);
+    }
+
+    @Override
+    public long increaseOffset() {
+        return MAX_OFFSET_UPDATER.getAndAdd(this, 1);
+    }
+
+    @Override
+    public void load() {
+        mappedFileQueue.load();
+        // TODO: UPDATE minOffset/maxOffset while loading
+        setMinOffset(mappedFileQueue.getMinOffset());
+        setMaxOffset(mappedFileQueue.getMaxOffset());
+    }
+
+    @Override
+    public void flush(int minPages) {
+        mappedFileQueue.flush(minPages);
+    }
+
+    @Override
+    public void destroy() {
+        mappedFileQueue.destroy();
+    }
+
+    private QueueUnit createQueueUnit(long offset, SelectedMappedBuffer buffer) {
+        ByteBuffer byteBuffer = buffer.getByteBuffer();
+        long commitOffset = byteBuffer.getLong();
+        int messageSize = byteBuffer.getInt();
+        long tagsCode = byteBuffer.getLong();
+
+        return QueueUnit.builder()
+            .queueOffset(offset / config.getUnitSize())
+            .commitOffset(commitOffset)
+            .messageSize(messageSize)
+            .tagsCode(tagsCode)
+            .unitSize(config.getUnitSize())
+            .build();
+    }
+
+    private void initMappedFileQueue() {
+        String path = StorePath.getConsumeQueuePath()
+            + File.separator
+            + topic
+            + File.separator
+            + queueId;
+        this.mappedFileQueue = new DefaultMappedFileQueue(path, config.getFileSize());
+    }
+
+    private SelectedMappedBuffer select(long offset) {
+        MappedFile mappedFile = mappedFileQueue.getMappedFileByOffset(offset);
+        if (mappedFile == null) {
+            return null;
+        }
+
+        int position = (int)(offset % config.getFileSize());
+        return mappedFile.select(position);
+    }
+
+    private SelectedMappedBuffer select(long offset, int size) {
+        MappedFile mappedFile = mappedFileQueue.getMappedFileByOffset(offset);
+        if (mappedFile == null) {
+            return null;
+        }
+
+        int position = (int)(offset % config.getFileSize());
+        return mappedFile.select(position, size);
+    }
+
+    private boolean insert(CommitEvent event) {
+        MessageBO messageBO = event.getMessageBO();
+
+        long offset = messageBO.getQueueOffset() * config.getUnitSize();
+        if (!validateOffset(messageBO.getQueueOffset(), offset)) {
+            return true;
+        }
+
+        MappedFile mappedFile = getMappedFile(messageBO.getQueueOffset(), offset);
+        if (mappedFile == null) {
+            return false;
+        }
+
+        setWriteBuffer(event);
+        mappedFile.insert(this.writeBuffer);
+        setMaxOffset(messageBO.getQueueOffset());
+        return true;
+    }
+
+    /**
+     * validate queue offset
+     *  - if mappedFileQueue is empty, return true
+     *  - if mappedFileQueue is not empty, the offset should be
+     *      - in the range of the last MappedFile
+     *      - or in the next last MappedFile
+     *
+     * @param queueIndex queueUnit index
+     * @param queueOffset queue offset
+     * @return true | false
+     */
+    private boolean validateOffset(long queueIndex, long queueOffset) {
+        if (0 == queueIndex) {
+            return true;
+        }
+
+        MappedFile last = mappedFileQueue.getLastMappedFile();
+        if (last == null) {
+            return true;
+        }
+
+        if (last.containsOffset(queueOffset)) {
+            return !last.isFull();
+        }
+
+        if (queueOffset < last.getMinOffset()) {
+            return false;
+        }
+
+        return queueOffset <= last.getMinOffset() + last.getFileSize() * 2L;
+    }
+
+    /**
+     * get MappedFile by queue index and offset
+     * if the MappedFile exists, return it
+     * else create a new MappedFile and init it
+     *
+     * @param queueIndex queueUnit index
+     * @param queueOffset queue offset
+     * @return mappedFile
+     */
+    private MappedFile getMappedFile(long queueIndex, long queueOffset) {
+        MappedFile last = mappedFileQueue.getLastMappedFile();
+        if (last != null && last.containsOffset(queueOffset)) {
+            return last;
+        }
+
+        long fileOffset = queueOffset - queueOffset % config.getFileSize();
+        boolean isQueueEmpty = mappedFileQueue.isEmpty();
+        MappedFile file = mappedFileQueue.createMappedFileByStartOffset(fileOffset);
+        if (file == null) {
+            return null;
+        }
+
+        if (!isQueueEmpty) {
+            return file;
+        }
+
+        initMappedFile(file, queueIndex, queueOffset);
+        return file;
+    }
+
+    private void initMappedFile(MappedFile mappedFile, long queueIndex, long queueOffset) {
+        if (0 == queueIndex || 0 != mappedFile.getInsertPosition()) {
+            return;
+        }
+
+//        if (0 == MIN_OFFSET_UPDATER.get(this) || queueOffset < MIN_OFFSET_UPDATER.get(this)) {
+//            MIN_OFFSET_UPDATER.set(this, queueOffset);
+//        }
+
+        preFillBlank(mappedFile, queueOffset);
+    }
+
+    private void preFillBlank(final MappedFile mappedFile, final long size) {
+        ByteBuffer byteBuffer = ByteBuffer.allocate(config.getUnitSize());
+        byteBuffer.putLong(0L);
+        byteBuffer.putInt(Integer.MAX_VALUE);
+        byteBuffer.putLong(0L);
+
+        int until = (int) (size % mappedFile.getFileSize());
+        for (int i = 0; i < until; i += config.getUnitSize()) {
+            mappedFile.insert(byteBuffer.array());
+        }
+    }
+
+    private void setWriteBuffer(CommitEvent event) {
+        MessageBO messageBO = event.getMessageBO();
+        this.writeBuffer.flip();
+        this.writeBuffer.limit(config.getUnitSize());
+
+        this.writeBuffer.putLong(messageBO.getCommitOffset());
+        this.writeBuffer.putInt(messageBO.getMessageLength());
+        this.writeBuffer.putLong(messageBO.getTagsCode());
+
+        this.writeBuffer.flip();
+        this.writeBuffer.limit(config.getUnitSize());
+    }
+
+    private boolean preEnqueue(CommitEvent event) {
+        return true;
+    }
+
+    /**
+     * set maxCommitLogOffset and checkpoint info
+     * @param event commitLogEvent
+     */
+    private void postEnqueue(CommitEvent event) {
+        updateCommitOffset(event);
+        saveOffsetToCheckpoint(event);
+    }
+
+    private void saveOffsetToCheckpoint(CommitEvent event) {
+        long offset = event.getMessageBO().getQueueOffset();
+        long oldOffset = checkpoint.getMaxOffset().getQueueOffset(topic, queueId);
+
+        if (oldOffset < offset) {
+            checkpoint.getMaxOffset().setQueueOffset(topic, queueId, offset);
+        }
+    }
+
+    private void updateCommitOffset(CommitEvent event) {
+        long offset = event.getMessageBO().getCommitOffset()
+            + event.getMessageBO().getMessageLength();
+
+        // to be deleted
+        if (offset > maxCommitOffset) {
+            maxCommitOffset = offset;
+        }
+
+        int shardId = event.getShardId();
+        Long oldOffset = commitOffsetMap.get(shardId);
+        if (oldOffset != null && oldOffset >  offset) {
+            return;
+        }
+
+        commitOffsetMap.put(shardId, offset);
+    }
+
+}
