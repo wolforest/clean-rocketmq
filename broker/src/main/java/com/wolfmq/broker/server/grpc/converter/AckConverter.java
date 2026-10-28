@@ -1,0 +1,65 @@
+package com.wolfmq.broker.server.grpc.converter;
+
+import apache.rocketmq.v2.AckMessageEntry;
+import apache.rocketmq.v2.AckMessageRequest;
+import apache.rocketmq.v2.AckMessageResultEntry;
+import apache.rocketmq.v2.Code;
+import apache.rocketmq.v2.Status;
+import com.wolfmq.domain.server.RequestContext;
+import com.wolfmq.domain.domain.consumer.ack.broker.AckRequest;
+import com.wolfmq.domain.domain.consumer.ack.broker.AckResult;
+import com.wolfmq.rpc.common.grpc.response.ResponseBuilder;
+
+public class AckConverter {
+    public static AckRequest toAckRequest(
+        RequestContext context,
+        AckMessageRequest request,
+        AckMessageEntry entry
+    ) {
+        String requestTopic = request.getTopic().getName();
+        String requestGroup = request.getGroup().getName();
+
+        return AckRequest.builder()
+            .requestContext(context)
+            .topicName(requestTopic)
+            .groupName(requestGroup)
+            .messageId(entry.getMessageId())
+            .receiptStr(entry.getReceiptHandle())
+            .build();
+    }
+
+    public static AckMessageResultEntry toResultEntry(
+        AckMessageEntry entry,
+        AckResult ackResult
+    ) {
+
+        Status status;
+        if (ackResult.isSuccess()) {
+            status = ResponseBuilder.getInstance()
+                .buildStatus(Code.OK, Code.OK.name());
+        } else {
+            status = ResponseBuilder.getInstance()
+                .buildStatus(Code.INTERNAL_SERVER_ERROR, "ack failed");
+        }
+
+        return AckMessageResultEntry.newBuilder()
+            .setMessageId(entry.getMessageId())
+            .setReceiptHandle(entry.getReceiptHandle())
+            .setStatus(status)
+            .build();
+    }
+
+    public static AckMessageResultEntry toResultEntry(
+        AckMessageEntry entry,
+        Throwable t
+    ) {
+        Status status = ResponseBuilder.getInstance()
+            .buildStatus(t);
+
+        return AckMessageResultEntry.newBuilder()
+            .setMessageId(entry.getMessageId())
+            .setReceiptHandle(entry.getReceiptHandle())
+            .setStatus(status)
+            .build();
+    }
+}

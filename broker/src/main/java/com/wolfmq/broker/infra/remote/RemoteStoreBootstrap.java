@@ -1,0 +1,61 @@
+package com.wolfmq.broker.infra.remote;
+
+import cn.coderule.common.convention.service.Lifecycle;
+import com.wolfmq.rpc.common.rpc.RpcClient;
+import com.wolfmq.rpc.common.rpc.netty.NettyClient;
+import com.wolfmq.rpc.registry.route.RouteLoader;
+import com.wolfmq.broker.server.bootstrap.BrokerContext;
+import com.wolfmq.domain.config.server.BrokerConfig;
+
+public class RemoteStoreBootstrap implements Lifecycle {
+    private BrokerConfig brokerConfig;
+    private RemoteLoadBalance loadBalance;
+    private RpcClient rpcClient;
+
+    @Override
+    public void initialize() throws Exception {
+        this.brokerConfig = BrokerContext.getBean(BrokerConfig.class);
+        if (!this.brokerConfig.isEnableRemoteStore()) {
+            return;
+        }
+
+        RouteLoader routeLoader = BrokerContext.getBean(RouteLoader.class);
+        this.loadBalance = new RemoteLoadBalance(this.brokerConfig, routeLoader);
+        this.rpcClient = BrokerContext.getBean(NettyClient.class);
+
+        initServices();
+    }
+
+    @Override
+    public void start() throws Exception {
+
+    }
+
+    @Override
+    public void shutdown() throws Exception {
+    }
+
+    private void initServices() {
+        RemoteMQStore mqStore =
+            new RemoteMQStore(brokerConfig, loadBalance, rpcClient);
+        BrokerContext.register(mqStore);
+
+        RemoteTopicStore topicStore =
+            new RemoteTopicStore(brokerConfig, loadBalance, rpcClient);
+        BrokerContext.register(topicStore);
+
+        RemoteSubscriptionStore subscriptionStore =
+            new RemoteSubscriptionStore(brokerConfig, loadBalance, rpcClient);
+        BrokerContext.register(subscriptionStore);
+
+        RemoteConsumeOffsetStore consumeOffsetStore =
+            new RemoteConsumeOffsetStore(brokerConfig, loadBalance, rpcClient);
+        BrokerContext.register(consumeOffsetStore);
+
+        RemoteTimerStore timerStore =
+            new RemoteTimerStore(brokerConfig, loadBalance, rpcClient);
+        BrokerContext.register(timerStore);
+
+    }
+
+}

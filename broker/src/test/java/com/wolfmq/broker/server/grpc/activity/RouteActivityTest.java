@@ -1,0 +1,156 @@
+package com.wolfmq.broker.server.grpc.activity;
+
+import apache.rocketmq.v2.Address;
+import apache.rocketmq.v2.Endpoints;
+import apache.rocketmq.v2.QueryAssignmentRequest;
+import apache.rocketmq.v2.QueryAssignmentResponse;
+import apache.rocketmq.v2.QueryRouteRequest;
+import apache.rocketmq.v2.QueryRouteResponse;
+import apache.rocketmq.v2.Resource;
+import com.wolfmq.broker.api.RouteController;
+import com.wolfmq.broker.server.grpc.interceptor.PipelineExecutor;
+import com.wolfmq.domain.config.network.GrpcConfig;
+import com.wolfmq.domain.server.RequestContext;
+import io.grpc.stub.StreamObserver;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import java.util.concurrent.ThreadPoolExecutor;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.*;
+
+class RouteActivityTest {
+
+    @Mock
+    private GrpcConfig grpcConfig;
+
+    @Mock
+    private ThreadPoolExecutor executor;
+
+    @Mock
+    private RouteController routeController;
+
+    @Mock
+    private StreamObserver<QueryRouteResponse> routeObserver;
+
+    @Mock
+    private StreamObserver<QueryAssignmentResponse> assignmentObserver;
+
+    @Mock
+    private PipelineExecutor pipelineExecutor;
+
+    private RouteActivity activity;
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+        when(grpcConfig.getPort()).thenReturn(8080);
+        activity = new RouteActivity(grpcConfig, executor, pipelineExecutor);
+        activity.setRouteController(routeController);
+    }
+
+    @Test
+    void testConstructor() {
+        assertNotNull(activity);
+    }
+
+    @Test
+    void testSetRouteController() {
+        RouteActivity newActivity = new RouteActivity(grpcConfig, executor, pipelineExecutor);
+        newActivity.setRouteController(routeController);
+        assertNotNull(newActivity);
+    }
+
+    @Test
+    void testGetRoute_withValidRequest_submitsToExecutor() {
+        RequestContext context = RequestContext.builder().build();
+        Resource topicResource = Resource.newBuilder().setName("test-topic").build();
+        Endpoints endpoints = Endpoints.newBuilder()
+            .addAddresses(Address.newBuilder().setHost("127.0.0.1").setPort(8080).build())
+            .build();
+        QueryRouteRequest request = QueryRouteRequest.newBuilder()
+            .setTopic(topicResource)
+            .setEndpoints(endpoints)
+            .build();
+
+        doAnswer(inv -> {
+            Runnable r = inv.getArgument(0);
+            r.run();
+            return null;
+        }).when(executor).submit(any(Runnable.class));
+
+        activity.getRoute(context, request, routeObserver);
+
+        verify(executor).submit(any(Runnable.class));
+    }
+
+    @Test
+    void testGetRoute_executorThrowsException_handlesGracefully() {
+        RequestContext context = RequestContext.builder().build();
+        Resource topicResource = Resource.newBuilder().setName("test-topic").build();
+        Endpoints endpoints = Endpoints.newBuilder()
+            .addAddresses(Address.newBuilder().setHost("127.0.0.1").setPort(8080).build())
+            .build();
+        QueryRouteRequest request = QueryRouteRequest.newBuilder()
+            .setTopic(topicResource)
+            .setEndpoints(endpoints)
+            .build();
+
+        when(executor.submit(any(Runnable.class))).thenThrow(new RuntimeException("executor rejected"));
+
+        activity.getRoute(context, request, routeObserver);
+
+        verify(routeObserver).onCompleted();
+    }
+
+    @Test
+    void testGetAssignment_withValidRequest_submitsToExecutor() {
+        RequestContext context = RequestContext.builder().build();
+        Resource topicResource = Resource.newBuilder().setName("test-topic").build();
+        Resource groupResource = Resource.newBuilder().setName("test-group").build();
+        Endpoints endpoints = Endpoints.newBuilder()
+            .addAddresses(Address.newBuilder().setHost("127.0.0.1").setPort(8080).build())
+            .build();
+        QueryAssignmentRequest request = QueryAssignmentRequest.newBuilder()
+            .setTopic(topicResource)
+            .setGroup(groupResource)
+            .setEndpoints(endpoints)
+            .build();
+
+        doAnswer(inv -> {
+            Runnable r = inv.getArgument(0);
+            r.run();
+            return null;
+        }).when(executor).submit(any(Runnable.class));
+
+        activity.getAssignment(context, request, assignmentObserver);
+
+        verify(executor).submit(any(Runnable.class));
+    }
+
+    @Test
+    void testGetAssignment_executorThrowsException_handlesGracefully() {
+        RequestContext context = RequestContext.builder().build();
+        Resource topicResource = Resource.newBuilder().setName("test-topic").build();
+        Resource groupResource = Resource.newBuilder().setName("test-group").build();
+        Endpoints endpoints = Endpoints.newBuilder()
+            .addAddresses(Address.newBuilder().setHost("127.0.0.1").setPort(8080).build())
+            .build();
+        QueryAssignmentRequest request = QueryAssignmentRequest.newBuilder()
+            .setTopic(topicResource)
+            .setGroup(groupResource)
+            .setEndpoints(endpoints)
+            .build();
+
+        when(executor.submit(any(Runnable.class))).thenThrow(new RuntimeException("executor rejected"));
+
+        activity.getAssignment(context, request, assignmentObserver);
+
+        verify(assignmentObserver).onCompleted();
+    }
+}
