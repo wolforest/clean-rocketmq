@@ -1,0 +1,15 @@
+package com.wolfmq.domain.config.cli;
+
+import java.io.Serializable;
+import lombok.Data;
+import picocli.CommandLine;
+
+@Data
+public class StoreArgument implements Serializable {
+    @CommandLine.Option(names = {"-c", "--configFile"}, description = "config file", required = true)
+    private String configFile;
+
+    public void validate() {
+
+    }
+}

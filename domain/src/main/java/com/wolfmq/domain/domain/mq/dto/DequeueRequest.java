@@ -1,0 +1,47 @@
+package com.wolfmq.domain.domain.mq.dto;
+
+import com.wolfmq.domain.domain.consumer.consume.ConsumeStrategy;
+import com.wolfmq.domain.server.RequestContext;
+import com.wolfmq.domain.domain.mq.filter.MessageFilter;
+import java.io.Serializable;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class DequeueRequest implements Serializable {
+    private RequestContext requestContext;
+    private String storeGroup;
+    private String attemptId;
+
+    private String consumerGroup;
+    private String topicName;
+    private int queueId;
+    private int reviveQueueId;
+    private long offset;
+
+    private long dequeueTime;
+    private long invisibleTime;
+
+    @Builder.Default
+    private int num = 1;
+    @Builder.Default
+    private boolean fifo = false;
+    @Builder.Default
+    private boolean checkResetOffset = false;
+    @Builder.Default
+    private boolean commitInitOffset = true;
+
+    @Builder.Default
+    private MessageFilter filter = null;
+    private ConsumeStrategy consumeStrategy;
+
+    public boolean isConsumeFromStart() {
+        return consumeStrategy == ConsumeStrategy.CONSUME_FROM_START;
+    }
+}
+
