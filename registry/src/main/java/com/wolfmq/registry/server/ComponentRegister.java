@@ -4,10 +4,10 @@ import cn.coderule.common.convention.container.ApplicationContext;
 import cn.coderule.common.convention.service.LifecycleManager;
 import com.wolfmq.domain.config.server.RegistryConfig;
 import com.wolfmq.domain.core.constant.ContextNamespace;
-import com.wolfmq.registry.domain.broker.BrokerManager;
-import com.wolfmq.registry.domain.kv.KVManager;
-import com.wolfmq.registry.domain.property.PropertyManager;
-import com.wolfmq.registry.domain.store.StoreManager;
+import com.wolfmq.registry.domain.broker.BrokerBootstrap;
+import com.wolfmq.registry.domain.kv.KVBootstrap;
+import com.wolfmq.registry.domain.property.PropertyBootstrap;
+import com.wolfmq.registry.domain.store.StoreBootstrap;
 import com.wolfmq.registry.server.bootstrap.ExecutorFactory;
 import com.wolfmq.registry.server.rpc.HaClient;
 import com.wolfmq.registry.server.rpc.RpcBootstrap;
@@ -36,10 +36,10 @@ public class ComponentRegister {
         registerExecutor();
         registerHaClient();
 
-        manager.register(new PropertyManager(context));
-        manager.register(new KVManager(context));
-        manager.register(new StoreManager(context));
-        manager.register(new BrokerManager());
+        manager.register(new PropertyBootstrap(context));
+        manager.register(new KVBootstrap(context));
+        manager.register(new StoreBootstrap(context));
+        manager.register(new BrokerBootstrap());
 
         manager.register(new RpcBootstrap(context));
         return this.manager;
