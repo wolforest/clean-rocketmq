@@ -1,12 +1,21 @@
 package com.wolfmq.broker.server.grpc;
 
+import com.wolfmq.domain.core.constant.ContextNamespace;
+
+import cn.coderule.common.convention.container.ApplicationContext;
+
 import com.wolfmq.broker.server.grpc.service.MessageBootstrap;
-import com.wolfmq.broker.server.bootstrap.BrokerContext;
 import cn.coderule.common.convention.service.Lifecycle;
 import com.wolfmq.domain.config.server.BrokerConfig;
 import com.wolfmq.domain.config.network.GrpcConfig;
 
 public class GrpcBootstrap implements Lifecycle {
+    private final ApplicationContext context;
+
+    public GrpcBootstrap(ApplicationContext context) {
+        this.context = context;
+    }
+
     private BrokerConfig brokerConfig;
     private GrpcConfig grpcConfig;
     private MessageBootstrap messageBootstrap;
@@ -33,14 +42,14 @@ public class GrpcBootstrap implements Lifecycle {
     }
 
     private void initConfig() {
-        this.brokerConfig = BrokerContext.getBean(BrokerConfig.class);
+        this.brokerConfig = context.getBean(BrokerConfig.class, ContextNamespace.APP);
         this.grpcConfig = brokerConfig.getGrpcConfig();
 
         this.grpcConfig.setPort(brokerConfig.getPort());
     }
 
     private void initMessageService() {
-        this.messageBootstrap = new MessageBootstrap(brokerConfig);
+        this.messageBootstrap = new MessageBootstrap(context, brokerConfig);
         try {
             messageBootstrap.initialize();
         } catch (Exception e) {

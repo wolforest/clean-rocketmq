@@ -1,14 +1,18 @@
 package com.wolfmq.broker.infra.store;
 
+import cn.coderule.common.convention.container.ApplicationContext;
+
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class TopicStoreTest {
+    private final ApplicationContext context = new ApplicationContext();
+
 
     @Test
     void testStoreBootstrap_constructor() {
-        StoreBootstrap bootstrap = new StoreBootstrap();
+        StoreBootstrap bootstrap = new StoreBootstrap(context);
         assertNotNull(bootstrap);
     }
 

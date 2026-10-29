@@ -30,9 +30,9 @@ public class ProducerActivity {
     private final ThreadPoolExecutor executor;
     /**
      * inject by GrpcManager , while starting
-     *  All controllers will be registered in BrokerContext
+     *  All controllers will be registered in ApplicationContext
      *      after related component initialized
-     *  GrpcManager will get controllers in BrokerContext
+     *  GrpcManager will get controllers in ApplicationContext
      */
     @Setter
     private ProducerController producerController;

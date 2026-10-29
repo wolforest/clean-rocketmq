@@ -1,30 +1,39 @@
 package com.wolfmq.broker.domain.producer;
 
+import com.wolfmq.domain.core.constant.ContextNamespace;
+
+import cn.coderule.common.convention.container.ApplicationContext;
+
 import com.wolfmq.broker.api.ProducerController;
 import cn.coderule.common.convention.service.Lifecycle;
 import com.wolfmq.broker.domain.meta.RouteService;
 import com.wolfmq.broker.domain.transaction.Transaction;
 import com.wolfmq.broker.infra.store.MQStore;
 import com.wolfmq.broker.infra.store.TopicStore;
-import com.wolfmq.broker.server.bootstrap.BrokerContext;
 import com.wolfmq.domain.config.server.BrokerConfig;
 
 public class ProducerBootstrap implements Lifecycle {
+    private final ApplicationContext context;
+
+    public ProducerBootstrap(ApplicationContext context) {
+        this.context = context;
+    }
+
     private BrokerConfig brokerConfig;
     private EnqueueService enqueueService;
 
     @Override
     public void initialize() throws Exception {
-        this.brokerConfig = BrokerContext.getBean(BrokerConfig.class);
+        this.brokerConfig = context.getBean(BrokerConfig.class, ContextNamespace.APP);
 
         initMessageSender();
 
         ProducerManager producerManager = new ProducerManager(brokerConfig);
-        BrokerContext.register(producerManager);
+        context.register(producerManager, ContextNamespace.APP);
 
         Producer producer = new Producer(enqueueService, producerManager);
         ProducerController controller = new ProducerController(brokerConfig, producer);
-        BrokerContext.registerAPI(controller);
+        context.register(controller, ContextNamespace.API);
     }
 
     @Override
@@ -39,15 +48,15 @@ public class ProducerBootstrap implements Lifecycle {
 
     private void initMessageSender() {
         ProduceHookManager hookManager = new ProduceHookManager();
-        BrokerContext.register(hookManager);
+        context.register(hookManager, ContextNamespace.APP);
 
-        RouteService routeService = BrokerContext.getBean(RouteService.class);
+        RouteService routeService = context.getBean(RouteService.class, ContextNamespace.APP);
         QueueSelector queueSelector = new QueueSelector(routeService);
-        BrokerContext.register(queueSelector);
+        context.register(queueSelector, ContextNamespace.APP);
 
-        MQStore messageStore = BrokerContext.getBean(MQStore.class);
-        TopicStore topicStore = BrokerContext.getBean(TopicStore.class);
-        Transaction transaction = BrokerContext.getBean(Transaction.class);
+        MQStore messageStore = context.getBean(MQStore.class, ContextNamespace.APP);
+        TopicStore topicStore = context.getBean(TopicStore.class, ContextNamespace.APP);
+        Transaction transaction = context.getBean(Transaction.class, ContextNamespace.APP);
 
         this.enqueueService = new EnqueueService(
             brokerConfig,

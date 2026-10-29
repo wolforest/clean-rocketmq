@@ -1,5 +1,9 @@
 package com.wolfmq.broker.domain.transaction;
 
+import com.wolfmq.domain.core.constant.ContextNamespace;
+
+import cn.coderule.common.convention.container.ApplicationContext;
+
 import com.wolfmq.broker.api.TransactionController;
 import cn.coderule.common.convention.service.Lifecycle;
 import com.wolfmq.broker.domain.producer.ProducerManager;
@@ -19,13 +23,18 @@ import com.wolfmq.broker.domain.transaction.service.SubscribeService;
 import com.wolfmq.broker.infra.store.ConsumeOffsetStore;
 import com.wolfmq.broker.infra.store.MQStore;
 import com.wolfmq.broker.infra.store.TopicStore;
-import com.wolfmq.broker.server.bootstrap.BrokerContext;
 import com.wolfmq.domain.config.business.TransactionConfig;
 import com.wolfmq.domain.config.server.BrokerConfig;
 import com.wolfmq.domain.server.task.TaskLoader;
 import com.wolfmq.domain.domain.transaction.CommitBuffer;
 
 public class TransactionBootstrap implements Lifecycle {
+    private final ApplicationContext context;
+
+    public TransactionBootstrap(ApplicationContext context) {
+        this.context = context;
+    }
+
     private BrokerConfig brokerConfig;
     private TransactionConfig transactionConfig;
     private Transaction transaction;
@@ -57,7 +66,7 @@ public class TransactionBootstrap implements Lifecycle {
 
         checkerFactory.start();
 
-        ProducerManager producerManager = BrokerContext.getBean(ProducerManager.class);
+        ProducerManager producerManager = context.getBean(ProducerManager.class, ContextNamespace.APP);
         checkService.inject(producerManager);
         checkService.start();
     }
@@ -72,10 +81,10 @@ public class TransactionBootstrap implements Lifecycle {
     }
 
     private void initLibs() {
-        brokerConfig = BrokerContext.getBean(BrokerConfig.class);
+        brokerConfig = context.getBean(BrokerConfig.class, ContextNamespace.APP);
         transactionConfig = brokerConfig.getTransactionConfig();
 
-        MQStore mqStore = BrokerContext.getBean(MQStore.class);
+        MQStore mqStore = context.getBean(MQStore.class, ContextNamespace.APP);
         commitBuffer = new CommitBuffer(transactionConfig);
         messageFactory = new MessageFactory(brokerConfig, commitBuffer);
 
@@ -88,9 +97,9 @@ public class TransactionBootstrap implements Lifecycle {
     }
 
     private void initTransaction() {
-        MQStore mqStore = BrokerContext.getBean(MQStore.class);
-        TopicStore topicStore = BrokerContext.getBean(TopicStore.class);
-        ConsumeOffsetStore consumeOffsetStore = BrokerContext.getBean(ConsumeOffsetStore.class);
+        MQStore mqStore = context.getBean(MQStore.class, ContextNamespace.APP);
+        TopicStore topicStore = context.getBean(TopicStore.class, ContextNamespace.APP);
+        ConsumeOffsetStore consumeOffsetStore = context.getBean(ConsumeOffsetStore.class, ContextNamespace.APP);
 
         PrepareService prepareService = new PrepareService(
             transactionConfig, messageFactory, mqStore, receiptRegistry);
@@ -109,19 +118,19 @@ public class TransactionBootstrap implements Lifecycle {
             commitService,
             rollbackService
         );
-        BrokerContext.register(transaction);
+        context.register(transaction, ContextNamespace.APP);
     }
 
     private void initController() {
         TransactionController controller = new TransactionController(transaction);
-        BrokerContext.registerAPI(controller);
+        context.register(controller, ContextNamespace.API);
     }
 
     private void initChecker() {
         DiscardService discardService = new DiscardService(brokerConfig, messageService);
         checkService = new CheckService(transactionConfig, receiptRegistry);
 
-        TransactionContext context = TransactionContext.builder()
+        TransactionContext transactionContext = TransactionContext.builder()
             .brokerConfig(brokerConfig)
             .commitBuffer(commitBuffer)
             .checkService(checkService)
@@ -129,9 +138,9 @@ public class TransactionBootstrap implements Lifecycle {
             .messageService(messageService)
             .build();
 
-        checkerFactory = new CheckerFactory(context);
+        checkerFactory = new CheckerFactory(transactionContext);
 
-        TaskLoader loader = BrokerContext.getBean(TaskLoader.class);
+        TaskLoader loader = context.getBean(TaskLoader.class, ContextNamespace.APP);
         loader.registerTransactionFactory(checkerFactory);
     }
 }

@@ -1,34 +1,22 @@
 package com.wolfmq.broker.server;
 
-import com.wolfmq.broker.server.bootstrap.BrokerContext;
+import cn.coderule.common.convention.container.ApplicationContext;
 import com.wolfmq.domain.config.server.BrokerConfig;
+import com.wolfmq.domain.core.constant.ContextNamespace;
 import com.wolfmq.domain.mock.ConfigMock;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class ComponentRegisterTest {
 
-    @BeforeEach
-    void setUp() {
-        BrokerContext.APPLICATION.getBeanMap().clear();
-        BrokerContext.API.getBeanMap().clear();
-    }
-
-    @AfterEach
-    void tearDown() {
-        BrokerContext.APPLICATION.getBeanMap().clear();
-        BrokerContext.API.getBeanMap().clear();
-    }
-
     @Test
     void constructor_ShouldCreateComponentRegister() {
+        ApplicationContext context = new ApplicationContext();
         BrokerConfig brokerConfig = ConfigMock.createBrokerConfig();
-        BrokerContext.register(brokerConfig);
+        context.register(brokerConfig, ContextNamespace.APP);
 
-        ComponentRegister register = new ComponentRegister();
+        ComponentRegister register = new ComponentRegister(context);
         assertNotNull(register);
     }
 }

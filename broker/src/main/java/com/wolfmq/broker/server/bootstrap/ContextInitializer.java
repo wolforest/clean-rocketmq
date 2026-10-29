@@ -1,6 +1,8 @@
 package com.wolfmq.broker.server.bootstrap;
 
+import cn.coderule.common.convention.container.ApplicationContext;
 import cn.coderule.common.convention.container.EventBus;
+import com.wolfmq.domain.core.constant.ContextNamespace;
 
 /**
  * context initializer
@@ -11,25 +13,27 @@ import cn.coderule.common.convention.container.EventBus;
 public class ContextInitializer {
     private final String[] args;
     private final BrokerArgument argument;
+    private final ApplicationContext context;
 
-    public static void init(String[] args) {
-        ContextInitializer initializer = new ContextInitializer(args);
+    public static void init(String[] args, ApplicationContext context) {
+        ContextInitializer initializer = new ContextInitializer(args, context);
         initializer.initialize();
     }
 
-    public ContextInitializer(String[] args) {
+    public ContextInitializer(String[] args, ApplicationContext context) {
         this.args = args;
         this.argument = new BrokerArgument();
+        this.context = context;
     }
 
     public void initialize() {
-        ConfigLoader.load();
+        ConfigLoader.load(context);
         initLibs();
     }
 
     private void initLibs() {
         EventBus eventBus = new EventBus();
-        BrokerContext.register(eventBus);
+        context.register(eventBus, ContextNamespace.APP);
     }
 
 }

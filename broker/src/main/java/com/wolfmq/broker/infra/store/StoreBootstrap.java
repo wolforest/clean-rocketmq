@@ -13,22 +13,25 @@ import com.wolfmq.broker.infra.remote.RemoteStoreBootstrap;
 import com.wolfmq.broker.infra.remote.RemoteSubscriptionStore;
 import com.wolfmq.broker.infra.remote.RemoteTimerStore;
 import com.wolfmq.broker.infra.remote.RemoteTopicStore;
-import com.wolfmq.broker.server.bootstrap.BrokerContext;
+import cn.coderule.common.convention.container.ApplicationContext;
+import com.wolfmq.domain.core.constant.ContextNamespace;
 import com.wolfmq.domain.config.server.BrokerConfig;
 
 public class StoreBootstrap implements Lifecycle {
+    private final ApplicationContext context;
     private BrokerConfig brokerConfig;
     private final EmbedStoreBootstrap embedManager;
     private final RemoteStoreBootstrap remoteManager;
 
-    public StoreBootstrap() {
-        this.embedManager = new EmbedStoreBootstrap();
-        this.remoteManager = new RemoteStoreBootstrap();
+    public StoreBootstrap(ApplicationContext context) {
+        this.context = context;
+        this.embedManager = new EmbedStoreBootstrap(context);
+        this.remoteManager = new RemoteStoreBootstrap(context);
     }
 
     @Override
     public void initialize() throws Exception {
-        this.brokerConfig = BrokerContext.getBean(BrokerConfig.class);
+        this.brokerConfig = context.getBean(BrokerConfig.class, ContextNamespace.APP);
 
         embedManager.initialize();
         remoteManager.initialize();
@@ -58,37 +61,37 @@ public class StoreBootstrap implements Lifecycle {
     }
 
     private void initMQStore() {
-        EmbedMQStore embedMQStore = BrokerContext.getBean(EmbedMQStore.class);
-        RemoteMQStore remoteMQStore = BrokerContext.getBean(RemoteMQStore.class);
+        EmbedMQStore embedMQStore = context.getBean(EmbedMQStore.class, ContextNamespace.APP);
+        RemoteMQStore remoteMQStore = context.getBean(RemoteMQStore.class, ContextNamespace.APP);
         MQStore mqStore = new MQStore(brokerConfig, embedMQStore, remoteMQStore);
-        BrokerContext.register(mqStore);
+        context.register(mqStore, ContextNamespace.APP);
     }
 
     private void initTopicStore() {
-        EmbedTopicStore embedTopicStore = BrokerContext.getBean(EmbedTopicStore.class);
-        RemoteTopicStore remoteTopicStore = BrokerContext.getBean(RemoteTopicStore.class);
+        EmbedTopicStore embedTopicStore = context.getBean(EmbedTopicStore.class, ContextNamespace.APP);
+        RemoteTopicStore remoteTopicStore = context.getBean(RemoteTopicStore.class, ContextNamespace.APP);
         TopicStore topicStore = new TopicStore(brokerConfig, embedTopicStore, remoteTopicStore);
-        BrokerContext.register(topicStore);
+        context.register(topicStore, ContextNamespace.APP);
     }
 
     private void initConsumeOffsetStore() {
-        EmbedConsumeOffsetStore embedStore = BrokerContext.getBean(EmbedConsumeOffsetStore.class);
-        RemoteConsumeOffsetStore remoteStore = BrokerContext.getBean(RemoteConsumeOffsetStore.class);
+        EmbedConsumeOffsetStore embedStore = context.getBean(EmbedConsumeOffsetStore.class, ContextNamespace.APP);
+        RemoteConsumeOffsetStore remoteStore = context.getBean(RemoteConsumeOffsetStore.class, ContextNamespace.APP);
         ConsumeOffsetStore consumeOffsetStore = new ConsumeOffsetStore(brokerConfig, embedStore, remoteStore);
-        BrokerContext.register(consumeOffsetStore);
+        context.register(consumeOffsetStore, ContextNamespace.APP);
     }
 
     private void initSubscriptionStore() {
-        EmbedSubscriptionStore embedStore = BrokerContext.getBean(EmbedSubscriptionStore.class);
-        RemoteSubscriptionStore remoteStore = BrokerContext.getBean(RemoteSubscriptionStore.class);
+        EmbedSubscriptionStore embedStore = context.getBean(EmbedSubscriptionStore.class, ContextNamespace.APP);
+        RemoteSubscriptionStore remoteStore = context.getBean(RemoteSubscriptionStore.class, ContextNamespace.APP);
         SubscriptionStore subscriptionStore = new SubscriptionStore(brokerConfig, embedStore, remoteStore);
-        BrokerContext.register(subscriptionStore);
+        context.register(subscriptionStore, ContextNamespace.APP);
     }
 
     private void initTimerStore() {
-        EmbedTimerStore embedStore = BrokerContext.getBean(EmbedTimerStore.class);
-        RemoteTimerStore remoteStore = BrokerContext.getBean(RemoteTimerStore.class);
+        EmbedTimerStore embedStore = context.getBean(EmbedTimerStore.class, ContextNamespace.APP);
+        RemoteTimerStore remoteStore = context.getBean(RemoteTimerStore.class, ContextNamespace.APP);
         TimerStore timerStore = new TimerStore(brokerConfig, embedStore, remoteStore);
-        BrokerContext.register(timerStore);
+        context.register(timerStore, ContextNamespace.APP);
     }
 }

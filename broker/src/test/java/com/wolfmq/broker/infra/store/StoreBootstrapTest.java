@@ -1,5 +1,7 @@
 package com.wolfmq.broker.infra.store;
 
+import cn.coderule.common.convention.container.ApplicationContext;
+
 import com.wolfmq.broker.infra.embed.EmbedConsumeOffsetStore;
 import com.wolfmq.broker.infra.embed.EmbedMQStore;
 import com.wolfmq.broker.infra.embed.EmbedStoreBootstrap;
@@ -21,6 +23,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class StoreBootstrapTest {
+    private final ApplicationContext context = new ApplicationContext();
+
 
     @Mock
     private EmbedStoreBootstrap embedStoreBootstrap;
@@ -63,7 +67,7 @@ class StoreBootstrapTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        storeBootstrap = new StoreBootstrap();
+        storeBootstrap = new StoreBootstrap(context);
     }
 
     @Test

@@ -1,7 +1,8 @@
 package com.wolfmq.broker.infra.embed;
 
+import cn.coderule.common.convention.container.ApplicationContext;
+
 import cn.coderule.common.convention.service.Lifecycle;
-import com.wolfmq.broker.server.bootstrap.BrokerContext;
 import com.wolfmq.domain.config.server.BrokerConfig;
 import com.wolfmq.domain.core.constant.ContextNamespace;
 import com.wolfmq.domain.server.store.api.MQStore;
@@ -13,6 +14,12 @@ import com.wolfmq.store.Store;
 import com.wolfmq.store.server.bootstrap.StoreArgument;
 
 public class EmbedStoreBootstrap implements Lifecycle {
+    private final ApplicationContext context;
+
+    public EmbedStoreBootstrap(ApplicationContext context) {
+        this.context = context;
+    }
+
     private BrokerConfig brokerConfig;
 
     private Store store;
@@ -20,7 +27,7 @@ public class EmbedStoreBootstrap implements Lifecycle {
 
     @Override
     public void initialize() throws Exception {
-        this.brokerConfig = BrokerContext.getBean(BrokerConfig.class);
+        this.brokerConfig = context.getBean(BrokerConfig.class, ContextNamespace.APP);
         if (!this.brokerConfig.isEnableEmbedStore()) {
             return;
         }
@@ -58,39 +65,40 @@ public class EmbedStoreBootstrap implements Lifecycle {
         store = new Store(storeArgument);
         store.initialize();
 
-        BrokerContext.APPLICATION.registerAll(
-            store.getContext().getBeanMap(ContextNamespace.API)
+        context.registerAll(
+            store.getContext().getBeanMap(ContextNamespace.API),
+            ContextNamespace.APP
         );
     }
 
     private void initLoadBalance() {
-        TopicStore topicStore = BrokerContext.getBean(TopicStore.class);
-        SubscriptionStore subscriptionStore = BrokerContext.getBean(SubscriptionStore.class);
+        TopicStore topicStore = context.getBean(TopicStore.class, ContextNamespace.APP);
+        SubscriptionStore subscriptionStore = context.getBean(SubscriptionStore.class, ContextNamespace.APP);
 
         loadBalance = new EmbedLoadBalance(brokerConfig, topicStore, subscriptionStore);
-        BrokerContext.register(loadBalance);
+        context.register(loadBalance, ContextNamespace.APP);
     }
 
     private void initEmbedServices() {
-        MQStore mqStore = BrokerContext.getBean(MQStore.class);
+        MQStore mqStore = context.getBean(MQStore.class, ContextNamespace.APP);
         EmbedMQStore embedMQStore = new EmbedMQStore(mqStore, loadBalance);
-        BrokerContext.register(embedMQStore);
+        context.register(embedMQStore, ContextNamespace.APP);
 
-        TopicStore topicStore = BrokerContext.getBean(TopicStore.class);
+        TopicStore topicStore = context.getBean(TopicStore.class, ContextNamespace.APP);
         EmbedTopicStore embedTopicStore = new EmbedTopicStore(topicStore, loadBalance);
-        BrokerContext.register(embedTopicStore);
+        context.register(embedTopicStore, ContextNamespace.APP);
 
-        SubscriptionStore subscriptionStore = BrokerContext.getBean(SubscriptionStore.class);
+        SubscriptionStore subscriptionStore = context.getBean(SubscriptionStore.class, ContextNamespace.APP);
         EmbedSubscriptionStore embedSubscriptionStore = new EmbedSubscriptionStore(subscriptionStore, loadBalance);
-        BrokerContext.register(embedSubscriptionStore);
+        context.register(embedSubscriptionStore, ContextNamespace.APP);
 
-        ConsumeOffsetStore consumeOffsetStore = BrokerContext.getBean(ConsumeOffsetStore.class);
+        ConsumeOffsetStore consumeOffsetStore = context.getBean(ConsumeOffsetStore.class, ContextNamespace.APP);
         EmbedConsumeOffsetStore embedConsumeOffsetStore = new EmbedConsumeOffsetStore(consumeOffsetStore, loadBalance);
-        BrokerContext.register(embedConsumeOffsetStore);
+        context.register(embedConsumeOffsetStore, ContextNamespace.APP);
 
-        TimerStore timerStore = BrokerContext.getBean(TimerStore.class);
+        TimerStore timerStore = context.getBean(TimerStore.class, ContextNamespace.APP);
         EmbedTimerStore embedTimerStore = new EmbedTimerStore(timerStore, loadBalance);
-        BrokerContext.register(embedTimerStore);
+        context.register(embedTimerStore, ContextNamespace.APP);
     }
 
 }

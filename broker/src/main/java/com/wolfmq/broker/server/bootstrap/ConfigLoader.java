@@ -1,5 +1,6 @@
 package com.wolfmq.broker.server.bootstrap;
 
+import cn.coderule.common.convention.container.ApplicationContext;
 import com.wolfmq.domain.config.business.TimerConfig;
 import com.wolfmq.domain.config.business.TransactionConfig;
 import com.wolfmq.domain.config.network.RpcClientConfig;
@@ -9,9 +10,10 @@ import com.wolfmq.domain.config.network.GrpcConfig;
 import com.wolfmq.domain.config.business.MessageConfig;
 import com.wolfmq.domain.config.business.TopicConfig;
 import com.wolfmq.domain.config.business.TaskConfig;
+import com.wolfmq.domain.core.constant.ContextNamespace;
 
 public class ConfigLoader {
-    public static void load() {
+    public static void load(ApplicationContext context) {
         BrokerConfig brokerConfig = new BrokerConfig();
         brokerConfig.setMessageConfig(new MessageConfig());
         brokerConfig.setTopicConfig(new TopicConfig());
@@ -23,6 +25,6 @@ public class ConfigLoader {
         brokerConfig.setRpcServerConfig(new RpcServerConfig());
         brokerConfig.setRpcClientConfig(new RpcClientConfig());
 
-        BrokerContext.register(brokerConfig);
+        context.register(brokerConfig, ContextNamespace.APP);
     }
 }

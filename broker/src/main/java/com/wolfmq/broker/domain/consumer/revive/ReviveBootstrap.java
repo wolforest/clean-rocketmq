@@ -1,12 +1,15 @@
 package com.wolfmq.broker.domain.consumer.revive;
 
+import com.wolfmq.domain.core.constant.ContextNamespace;
+
+import cn.coderule.common.convention.container.ApplicationContext;
+
 import cn.coderule.common.convention.container.EventBus;
 import cn.coderule.common.convention.service.Lifecycle;
 import com.wolfmq.broker.infra.store.ConsumeOffsetStore;
 import com.wolfmq.broker.infra.store.MQStore;
 import com.wolfmq.broker.infra.store.SubscriptionStore;
 import com.wolfmq.broker.infra.store.TopicStore;
-import com.wolfmq.broker.server.bootstrap.BrokerContext;
 import com.wolfmq.domain.config.server.BrokerConfig;
 import com.wolfmq.domain.domain.meta.topic.KeyBuilder;
 import com.wolfmq.domain.core.event.ServerEvent;
@@ -14,6 +17,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ReviveBootstrap implements Lifecycle {
+    private final ApplicationContext context;
+
+    public ReviveBootstrap(ApplicationContext context) {
+        this.context = context;
+    }
+
     private final List<ReviveThread> reviveThreadList = new ArrayList<>();
 
     @Override
@@ -43,7 +52,7 @@ public class ReviveBootstrap implements Lifecycle {
     }
 
     private ReviveContext initContext() {
-        BrokerConfig brokerConfig = BrokerContext.getBean(BrokerConfig.class);
+        BrokerConfig brokerConfig = context.getBean(BrokerConfig.class, ContextNamespace.APP);
         String reviveTopic = KeyBuilder.buildClusterReviveTopic(brokerConfig.getCluster());
 
         return ReviveContext.builder()
@@ -52,19 +61,19 @@ public class ReviveBootstrap implements Lifecycle {
             .messageConfig(brokerConfig.getMessageConfig())
             .topicConfig(brokerConfig.getTopicConfig())
 
-            .mqFacade(BrokerContext.getBean(MQStore.class))
+            .mqFacade(context.getBean(MQStore.class, ContextNamespace.APP))
 
-            .topicFacade(BrokerContext.getBean(TopicStore.class))
-            .subscriptionFacade(BrokerContext.getBean(SubscriptionStore.class))
-            .consumeOffsetFacade(BrokerContext.getBean(ConsumeOffsetStore.class))
+            .topicFacade(context.getBean(TopicStore.class, ContextNamespace.APP))
+            .subscriptionFacade(context.getBean(SubscriptionStore.class, ContextNamespace.APP))
+            .consumeOffsetFacade(context.getBean(ConsumeOffsetStore.class, ContextNamespace.APP))
 
             .build();
     }
 
-    private ReviveThread createReviveThread(ReviveContext context, int queueId, RetryService retryService) {
-        ReviveThread reviveThread = new ReviveThread(context, queueId, retryService);
+    private ReviveThread createReviveThread(ReviveContext reviveContext, int queueId, RetryService retryService) {
+        ReviveThread reviveThread = new ReviveThread(reviveContext, queueId, retryService);
 
-        EventBus eventBus = BrokerContext.getBean(EventBus.class);
+        EventBus eventBus = context.getBean(EventBus.class, ContextNamespace.APP);
         eventBus.on(
             ServerEvent.BECOME_MASTER, (arg) -> reviveThread.setSkipRevive(false)
         );

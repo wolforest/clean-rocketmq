@@ -1,11 +1,10 @@
-package com.wolfmq.broker.server.core;
+package com.wolfmq.broker.server.channel;
 
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.lang.concurrent.thread.DefaultThreadFactory;
 import cn.coderule.common.util.lang.ThreadUtil;
 import com.wolfmq.broker.api.ConsumerController;
 import com.wolfmq.broker.api.ProducerController;
-import com.wolfmq.broker.server.bootstrap.BrokerContext;
 import com.wolfmq.domain.config.server.BrokerConfig;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -15,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 public class ChannelScheduler implements Lifecycle {
     private final ScheduledExecutorService scheduler;
     private final BrokerConfig brokerConfig;
-
     private ProducerController producerController;
     private ConsumerController consumerController;
 
@@ -26,17 +24,9 @@ public class ChannelScheduler implements Lifecycle {
         );
     }
 
-    @Override
-    public void initialize() throws Exception {
-        producerController = BrokerContext.getAPI(ProducerController.class);
-        consumerController = BrokerContext.getAPI(ConsumerController.class);
-
-        scheduler.scheduleAtFixedRate(
-            this::scanIdleChannels,
-            brokerConfig.getScanIdleChannelsDelay(),
-            brokerConfig.getScanIdleChannelsInterval(),
-            TimeUnit.MILLISECONDS
-        );
+    public void inject(ProducerController producerController, ConsumerController consumerController) {
+        this.producerController = producerController;
+        this.consumerController = consumerController;
     }
 
     private void scanIdleChannels() {
@@ -50,7 +40,12 @@ public class ChannelScheduler implements Lifecycle {
 
     @Override
     public void start() throws Exception {
-
+        scheduler.scheduleAtFixedRate(
+            this::scanIdleChannels,
+            brokerConfig.getScanIdleChannelsDelay(),
+            brokerConfig.getScanIdleChannelsInterval(),
+            TimeUnit.MILLISECONDS
+        );
     }
 
     @Override

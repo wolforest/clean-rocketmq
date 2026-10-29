@@ -1,16 +1,20 @@
 package com.wolfmq.broker.server.bootstrap;
 
+import cn.coderule.common.convention.container.ApplicationContext;
 import cn.coderule.common.convention.container.EventBus;
+import com.wolfmq.domain.core.constant.ContextNamespace;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class ContextInitializerTest {
 
+    private final ApplicationContext context = new ApplicationContext();
+
     @Test
     void testConstructor() {
         String[] args = {"-c", "config.properties"};
-        ContextInitializer initializer = new ContextInitializer(args);
+        ContextInitializer initializer = new ContextInitializer(args, context);
 
         assertNotNull(initializer);
     }
@@ -18,31 +22,27 @@ class ContextInitializerTest {
     @Test
     void testInitialize() {
         String[] args = {};
-        ContextInitializer initializer = new ContextInitializer(args);
+        ContextInitializer initializer = new ContextInitializer(args, context);
 
-        // Initialize should not throw
         assertDoesNotThrow(initializer::initialize);
 
-        // Verify config was loaded
-        assertNotNull(BrokerContext.getBean(com.wolfmq.domain.config.server.BrokerConfig.class));
+        assertNotNull(context.getBean(com.wolfmq.domain.config.server.BrokerConfig.class, ContextNamespace.APP));
     }
 
     @Test
     void testStaticInit() {
         String[] args = {};
 
-        // Static init should not throw
-        assertDoesNotThrow(() -> ContextInitializer.init(args));
+        assertDoesNotThrow(() -> ContextInitializer.init(args, context));
     }
 
     @Test
     void testInitLibsRegistersEventBus() {
         String[] args = {};
-        ContextInitializer initializer = new ContextInitializer(args);
+        ContextInitializer initializer = new ContextInitializer(args, context);
         initializer.initialize();
 
-        // Verify ServerEventBus was registered
-        EventBus eventBus = BrokerContext.getBean(EventBus.class);
+        EventBus eventBus = context.getBean(EventBus.class, ContextNamespace.APP);
         assertNotNull(eventBus);
     }
 }

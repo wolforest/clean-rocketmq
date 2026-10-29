@@ -28,13 +28,15 @@ import com.wolfmq.broker.server.grpc.activity.ClientActivity;
 import com.wolfmq.broker.server.grpc.activity.ConsumerActivity;
 import com.wolfmq.broker.server.grpc.activity.ProducerActivity;
 import com.wolfmq.broker.server.grpc.activity.RouteActivity;
-import com.wolfmq.broker.server.bootstrap.BrokerContext;
+import cn.coderule.common.convention.container.ApplicationContext;
+import com.wolfmq.domain.core.constant.ContextNamespace;
 import com.wolfmq.domain.config.network.GrpcConfig;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import lombok.Getter;
 
 public class MessageBootstrap implements Lifecycle {
+    private final ApplicationContext context;
     private final BrokerConfig brokerConfig;
     private final GrpcConfig grpcConfig;
     private final RejectActivity rejectActivity = new RejectActivity();
@@ -62,7 +64,8 @@ public class MessageBootstrap implements Lifecycle {
     protected ThreadPoolExecutor clientThreadPoolExecutor;
     protected ThreadPoolExecutor transactionThreadPoolExecutor;
 
-    public MessageBootstrap(BrokerConfig brokerConfig) {
+    public MessageBootstrap(ApplicationContext context, BrokerConfig brokerConfig) {
+        this.context = context;
         this.brokerConfig = brokerConfig;
         this.grpcConfig = brokerConfig.getGrpcConfig();
     }
@@ -138,31 +141,31 @@ public class MessageBootstrap implements Lifecycle {
     }
 
     private void injectControllerToService() {
-        this.settingManager.inject(BrokerContext.getAPI(ConsumerController.class));
+        this.settingManager.inject(context.getBean(ConsumerController.class, ContextNamespace.API));
         this.registerService.inject(
-            BrokerContext.getAPI(RouteController.class),
-            BrokerContext.getAPI(ProducerController.class),
-            BrokerContext.getAPI(ConsumerController.class),
-            BrokerContext.getAPI(TransactionController.class)
+            context.getBean(RouteController.class, ContextNamespace.API),
+            context.getBean(ProducerController.class, ContextNamespace.API),
+            context.getBean(ConsumerController.class, ContextNamespace.API),
+            context.getBean(TransactionController.class, ContextNamespace.API)
         );
 
         this.heartbeatService.inject(
-            BrokerContext.getAPI(RouteController.class),
-            BrokerContext.getAPI(ProducerController.class),
-            BrokerContext.getAPI(ConsumerController.class),
-            BrokerContext.getAPI(TransactionController.class)
+            context.getBean(RouteController.class, ContextNamespace.API),
+            context.getBean(ProducerController.class, ContextNamespace.API),
+            context.getBean(ConsumerController.class, ContextNamespace.API),
+            context.getBean(TransactionController.class, ContextNamespace.API)
         );
 
         this.telemetryService.inject(
-            BrokerContext.getAPI(RouteController.class),
-            BrokerContext.getAPI(ProducerController.class),
-            BrokerContext.getAPI(ConsumerController.class),
-            BrokerContext.getAPI(TransactionController.class)
+            context.getBean(RouteController.class, ContextNamespace.API),
+            context.getBean(ProducerController.class, ContextNamespace.API),
+            context.getBean(ConsumerController.class, ContextNamespace.API),
+            context.getBean(TransactionController.class, ContextNamespace.API)
         );
 
         this.terminationService.inject(
-            BrokerContext.getAPI(ProducerController.class),
-            BrokerContext.getAPI(ConsumerController.class)
+            context.getBean(ProducerController.class, ContextNamespace.API),
+            context.getBean(ConsumerController.class, ContextNamespace.API)
         );
     }
 
@@ -258,7 +261,7 @@ public class MessageBootstrap implements Lifecycle {
     }
 
     private void injectRouteController() {
-        RouteController routeController = BrokerContext.getAPI(RouteController.class);
+        RouteController routeController = context.getBean(RouteController.class, ContextNamespace.API);
         if (routeController == null) {
             throw new StartupException("route controller is null");
         }
@@ -266,7 +269,7 @@ public class MessageBootstrap implements Lifecycle {
     }
 
     private void injectProducerController() {
-        ProducerController producerController = BrokerContext.getAPI(ProducerController.class);
+        ProducerController producerController = context.getBean(ProducerController.class, ContextNamespace.API);
         if (producerController == null) {
             throw new StartupException("producer controller is null");
         }
@@ -274,7 +277,7 @@ public class MessageBootstrap implements Lifecycle {
     }
 
     private void injectConsumerController() {
-        ConsumerController consumerController = BrokerContext.getAPI(ConsumerController.class);
+        ConsumerController consumerController = context.getBean(ConsumerController.class, ContextNamespace.API);
         if (consumerController == null) {
             throw new StartupException("consumer controller is null");
         }
@@ -302,7 +305,7 @@ public class MessageBootstrap implements Lifecycle {
     }
 
     private void injectTransactionController() {
-        TransactionController transactionController = BrokerContext.getAPI(TransactionController.class);
+        TransactionController transactionController = context.getBean(TransactionController.class, ContextNamespace.API);
         if (transactionController == null) {
             throw new StartupException("transaction controller is null");
         }

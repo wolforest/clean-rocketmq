@@ -1,14 +1,23 @@
 package com.wolfmq.broker.domain.consumer.renew;
 
+import com.wolfmq.domain.core.constant.ContextNamespace;
+
+import cn.coderule.common.convention.container.ApplicationContext;
+
 import cn.coderule.common.convention.service.Lifecycle;
 import com.wolfmq.broker.domain.consumer.ack.InvisibleService;
 import com.wolfmq.broker.domain.consumer.consumer.ConsumerManager;
 import com.wolfmq.broker.infra.store.SubscriptionStore;
-import com.wolfmq.broker.server.bootstrap.BrokerContext;
 import com.wolfmq.domain.config.server.BrokerConfig;
 import com.wolfmq.domain.domain.consumer.receipt.ReceiptHandler;
 
 public class RenewBootstrap implements Lifecycle {
+    private final ApplicationContext context;
+
+    public RenewBootstrap(ApplicationContext context) {
+        this.context = context;
+    }
+
     private BrokerConfig brokerConfig;
 
     private RenewListener renewListener;
@@ -17,7 +26,7 @@ public class RenewBootstrap implements Lifecycle {
 
     @Override
     public void initialize() throws Exception {
-        brokerConfig = BrokerContext.getBean(BrokerConfig.class);
+        brokerConfig = context.getBean(BrokerConfig.class, ContextNamespace.APP);
 
         initRenewListener();
         initReceiptHandler();
@@ -38,13 +47,13 @@ public class RenewBootstrap implements Lifecycle {
     }
 
     private void initRenewListener() {
-        InvisibleService invisibleService = BrokerContext.getBean(InvisibleService.class);
+        InvisibleService invisibleService = context.getBean(InvisibleService.class, ContextNamespace.APP);
         renewListener = new RenewListener(invisibleService);
     }
 
     private void initReceiptHandler() {
         receiptHandler = new DefaultReceiptHandler(brokerConfig, renewListener);
-        BrokerContext.register(receiptHandler, ReceiptHandler.class);
+        context.register(receiptHandler, ReceiptHandler.class, ContextNamespace.APP);
     }
 
     private void initRenewService() throws Exception {
@@ -52,8 +61,8 @@ public class RenewBootstrap implements Lifecycle {
             brokerConfig,
             receiptHandler,
             renewListener,
-            BrokerContext.getBean(ConsumerManager.class),
-            BrokerContext.getBean(SubscriptionStore.class)
+            context.getBean(ConsumerManager.class, ContextNamespace.APP),
+            context.getBean(SubscriptionStore.class, ContextNamespace.APP)
         );
 
         renewService.initialize();
@@ -62,7 +71,7 @@ public class RenewBootstrap implements Lifecycle {
     private void initReceiptListener() {
         ReceiptListener receiptListener = new ReceiptListener(receiptHandler);
 
-        ConsumerManager register = BrokerContext.getBean(ConsumerManager.class);
+        ConsumerManager register = context.getBean(ConsumerManager.class, ContextNamespace.APP);
         register.addListener(receiptListener);
     }
 

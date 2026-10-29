@@ -1,5 +1,9 @@
 package com.wolfmq.broker.domain.consumer;
 
+import com.wolfmq.domain.core.constant.ContextNamespace;
+
+import cn.coderule.common.convention.container.ApplicationContext;
+
 import com.wolfmq.broker.api.ConsumerController;
 import cn.coderule.common.convention.service.Lifecycle;
 import com.wolfmq.broker.domain.consumer.ack.AckBootstrap;
@@ -12,10 +16,15 @@ import com.wolfmq.broker.domain.consumer.pop.PopService;
 import com.wolfmq.broker.domain.consumer.renew.RenewBootstrap;
 import com.wolfmq.broker.domain.consumer.revive.ReviveBootstrap;
 import com.wolfmq.broker.infra.store.SubscriptionStore;
-import com.wolfmq.broker.server.bootstrap.BrokerContext;
 import com.wolfmq.domain.config.server.BrokerConfig;
 
 public class ConsumerBootstrap implements Lifecycle {
+    private final ApplicationContext context;
+
+    public ConsumerBootstrap(ApplicationContext context) {
+        this.context = context;
+    }
+
     private BrokerConfig brokerConfig;
     private Consumer consumer;
 
@@ -26,7 +35,7 @@ public class ConsumerBootstrap implements Lifecycle {
 
     @Override
     public void initialize() throws Exception {
-        brokerConfig = BrokerContext.getBean(BrokerConfig.class);
+        brokerConfig = context.getBean(BrokerConfig.class, ContextNamespace.APP);
         initTools();
 
         initRenew();
@@ -56,46 +65,46 @@ public class ConsumerBootstrap implements Lifecycle {
 
     private void initTools() {
         ConsumerManager register = new ConsumerManager(brokerConfig);
-        BrokerContext.register(register);
+        context.register(register, ContextNamespace.APP);
 
         ConsumeHookManager hookManager = new ConsumeHookManager();
-        BrokerContext.register(hookManager);
+        context.register(hookManager, ContextNamespace.APP);
     }
 
     private void initRenew() throws Exception {
-        renewBootstrap = new RenewBootstrap();
+        renewBootstrap = new RenewBootstrap(context);
         renewBootstrap.initialize();
     }
 
     private void initAck() throws Exception {
-        ackBootstrap = new AckBootstrap();
+        ackBootstrap = new AckBootstrap(context);
         ackBootstrap.initialize();
     }
 
     private void initPop() throws Exception {
-        popBootstrap = new PopBootstrap();
+        popBootstrap = new PopBootstrap(context);
         popBootstrap.initialize();
     }
 
     private void initRevive() throws Exception {
-        reviveBootstrap = new ReviveBootstrap();
+        reviveBootstrap = new ReviveBootstrap(context);
         reviveBootstrap.initialize();
     }
 
     private void initConsumer() {
         consumer = new Consumer(
-            BrokerContext.getBean(PopService.class),
-            BrokerContext.getBean(BrokerAckService.class),
-            BrokerContext.getBean(ConsumerManager.class),
-            BrokerContext.getBean(InvisibleService.class),
-            BrokerContext.getBean(SubscriptionStore.class)
+            context.getBean(PopService.class, ContextNamespace.APP),
+            context.getBean(BrokerAckService.class, ContextNamespace.APP),
+            context.getBean(ConsumerManager.class, ContextNamespace.APP),
+            context.getBean(InvisibleService.class, ContextNamespace.APP),
+            context.getBean(SubscriptionStore.class, ContextNamespace.APP)
         );
-        BrokerContext.register(consumer);
+        context.register(consumer, ContextNamespace.APP);
     }
 
     private void initController() {
         ConsumerController controller = new ConsumerController(brokerConfig, consumer);
-        BrokerContext.registerAPI(controller);
+        context.register(controller, ContextNamespace.API);
     }
 
 }

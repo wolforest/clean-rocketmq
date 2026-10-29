@@ -1,5 +1,6 @@
 package com.wolfmq.broker;
 
+import cn.coderule.common.convention.container.ApplicationContext;
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.convention.service.LifecycleManager;
 import com.wolfmq.broker.server.ComponentRegister;
@@ -28,6 +29,7 @@ public class Broker implements Lifecycle {
     }
 
     private final String[] args;
+    private final ApplicationContext context = new ApplicationContext();
     private State state = State.INITIALIZING;
     private LifecycleManager componentManager;
 
@@ -41,9 +43,9 @@ public class Broker implements Lifecycle {
      */
     @Override
     public void initialize() throws Exception {
-        ContextInitializer.init(args);
+        ContextInitializer.init(args, context);
 
-        this.componentManager = ComponentRegister.register();
+        this.componentManager = new ComponentRegister(context).register();
         this.componentManager.initialize();
     }
 
