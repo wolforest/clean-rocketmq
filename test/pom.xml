@@ -17,8 +17,10 @@
     <modules>
         <module>e2e</module>
         <module>api</module>
-        <module>Integration</module>
+        <module>integration</module>
         <module>performance</module>
+        <module>stability</module>
+        <module>architecture</module>
     </modules>
 
     <properties>
