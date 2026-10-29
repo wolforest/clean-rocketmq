@@ -7,7 +7,6 @@ import com.wolfmq.domain.core.lock.queue.EnqueueLock;
 import com.wolfmq.domain.domain.message.MessageBO;
 import com.wolfmq.store.domain.commitlog.log.CommitLogManager;
 import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueManager;
-import com.wolfmq.store.server.bootstrap.StoreContext;
 import com.wolfmq.store.server.ha.server.processor.CommitLogSynchronizer;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
@@ -106,8 +105,7 @@ public class EnqueueService {
 
     private EnqueueResult waitForResult(CompletableFuture<EnqueueResult> future) {
         try {
-            StoreConfig config = StoreContext.getBean(StoreConfig.class);
-            int timeout = config.getSyncFlushTimeout() + 5 * 1000;
+            int timeout = storeConfig.getSyncFlushTimeout() + 5 * 1000;
             return future.get(timeout, TimeUnit.MILLISECONDS);
         } catch (Exception e) {
             log.error("enqueue error:", e);

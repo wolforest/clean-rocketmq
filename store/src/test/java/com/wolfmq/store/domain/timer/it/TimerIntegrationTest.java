@@ -1,5 +1,9 @@
 package com.wolfmq.store.domain.timer.it;
 
+import com.wolfmq.domain.core.constant.ContextNamespace;
+
+import cn.coderule.common.convention.container.ApplicationContext;
+
 import com.wolfmq.domain.config.business.TimerConfig;
 import com.wolfmq.domain.config.server.StoreConfig;
 import com.wolfmq.domain.domain.message.property.MessageConst;
@@ -29,7 +33,6 @@ import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueRecovery;
 import com.wolfmq.store.domain.commitlog.sharding.OffsetCodec;
 import com.wolfmq.store.infra.file.AllocateMappedFileService;
 import com.wolfmq.store.server.bootstrap.StoreCheckpoint;
-import com.wolfmq.store.server.bootstrap.StoreContext;
 import com.wolfmq.domain.config.store.CommitConfig;
 import com.wolfmq.domain.config.store.ConsumeQueueConfig;
 import com.wolfmq.domain.domain.commitlog.CommitLog;
@@ -47,6 +50,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class TimerIntegrationTest {
+    protected ApplicationContext context = new ApplicationContext();
+
 
     private static final int FILE_SIZE = 1024 * 1024;
     private static final int TOTAL_SLOTS = 3600;
@@ -76,16 +81,16 @@ class TimerIntegrationTest {
         storeConfig.getTimerConfig().setTotalSlots(TOTAL_SLOTS);
         storeConfig.getTimerConfig().setPrecision(PRECISION_MS);
 
-        StoreContext.register(storeConfig);
-        StoreContext.register(storeConfig.getCommitConfig());
+        context.register(storeConfig, ContextNamespace.APP);
+        context.register(storeConfig.getCommitConfig(), ContextNamespace.APP);
 
         StoreCheckpoint checkpoint = new StoreCheckpoint(tmpDir.resolve("checkpoint").toString());
         checkpoint.setShutdownSuccessful(false);
-        StoreContext.setCheckPoint(checkpoint);
+        context.register(checkpoint, CheckPoint.class, ContextNamespace.APP); context.register(checkpoint, StoreCheckpoint.class, ContextNamespace.APP);
 
         allocateService = new AllocateMappedFileService(storeConfig);
         allocateService.start();
-        StoreContext.register(allocateService);
+        context.register(allocateService, ContextNamespace.APP);
 
         initCommitLog();
         initConsumeQueue();
@@ -93,24 +98,21 @@ class TimerIntegrationTest {
     }
 
     private void resetStoreContext() {
-        StoreContext.CHECK_POINT = null;
-        StoreContext.APPLICATION.getBeanMap().clear();
-        StoreContext.API.getBeanMap().clear();
     }
 
     private void initCommitLog() throws Exception {
-        CheckPoint checkpoint = StoreContext.getCheckPoint();
+        CheckPoint checkpoint = context.getBean(StoreCheckpoint.class, ContextNamespace.APP);
         CommitConfig commitConfig = storeConfig.getCommitConfig();
 
-        CommitLogFactory factory = new CommitLogFactory(storeConfig, checkpoint);
+        CommitLogFactory factory = new CommitLogFactory(storeConfig, checkpoint, allocateService);
         List<CommitLog> logList = factory.createByConfig();
 
         TopicPartitioner partitioner = new TopicPartitioner(commitConfig);
         commitLogManager = new CommitLogManager(commitConfig, partitioner);
         commitLogManager.addCommitLog(logList);
 
-        StoreContext.register(partitioner);
-        StoreContext.register(commitLogManager);
+        context.register(partitioner, ContextNamespace.APP);
+        context.register(commitLogManager, ContextNamespace.APP);
 
         commitLogManager.initialize();
         commitLogManager.start();
@@ -121,12 +123,12 @@ class TimerIntegrationTest {
 
     private void initConsumeQueue() {
         ConsumeQueueConfig cqConfig = storeConfig.getConsumeQueueConfig();
-        StoreCheckpoint checkpoint = StoreContext.getCheckPoint();
+        StoreCheckpoint checkpoint = context.getBean(StoreCheckpoint.class, ContextNamespace.APP);
         CommitConfig commitConfig = storeConfig.getCommitConfig();
 
         TopicService topicService = mock(TopicService.class);
         when(topicService.exists(anyString())).thenReturn(true);
-        StoreContext.register(topicService, TopicService.class);
+        context.register(topicService, TopicService.class, ContextNamespace.APP);
 
         ConsumeQueueFlusher flusher = new ConsumeQueueFlusher(cqConfig, checkpoint);
         ConsumeQueueLoader loader = new ConsumeQueueLoader(cqConfig);
@@ -140,10 +142,10 @@ class TimerIntegrationTest {
         factory.createAll();
 
         ConsumeQueueManager consumeQueueManager = new ConsumeQueueManager(factory);
-        StoreContext.register(consumeQueueManager, ConsumeQueueManager.class);
+        context.register(consumeQueueManager, ConsumeQueueManager.class, ContextNamespace.APP);
 
         messageService = new MessageService(commitLogManager, consumeQueueManager);
-        StoreContext.register(messageService, MessageService.class);
+        context.register(messageService, MessageService.class, ContextNamespace.APP);
     }
 
     private void initTimer() throws IOException {

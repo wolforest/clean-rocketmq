@@ -8,8 +8,11 @@ import com.wolfmq.store.server.bootstrap.ContextInitializer;
 import com.wolfmq.store.server.bootstrap.ComponentRegister;
 import com.wolfmq.store.server.bootstrap.StoreArgument;
 import com.wolfmq.store.server.bootstrap.StoreCheckpoint;
-import com.wolfmq.store.server.bootstrap.StoreContext;
+import cn.coderule.common.convention.container.ApplicationContext;
+import com.wolfmq.domain.core.constant.ContextNamespace;
 import com.wolfmq.domain.config.store.StorePath;
+import com.wolfmq.domain.server.store.CheckPoint;
+import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
@@ -25,21 +28,15 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class Store implements Lifecycle {
-    public static void main(String[] args) {
+
+    public static void main(String[] args) throws Exception {
         Store store = new Store(args);
-        try {
-            store.initialize();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        try {
-            store.start();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        store.initialize();
+        store.start();
     }
 
     private final StoreArgument argument;
+    @Getter private final ApplicationContext context;
     private LifecycleManager componentManager;
 
     private StartupLock startupLock;
@@ -51,17 +48,18 @@ public class Store implements Lifecycle {
 
     public Store(@NonNull StoreArgument argument) {
         this.argument = argument;
+        this.context = new ApplicationContext();
     }
 
     @Override
     public void initialize() throws Exception {
-        ContextInitializer.init(argument);
+        ContextInitializer.init(argument, context);
 
         startupLock = new StartupLock(StorePath.getLockFile());
         shutdownLock = new ShutdownLock(StorePath.getAbortFile());
 
         this.initCheckPoint();
-        this.componentManager = ComponentRegister.register();
+        this.componentManager = new ComponentRegister(context).register();
         this.componentManager.initialize();
     }
 
@@ -81,7 +79,7 @@ public class Store implements Lifecycle {
         log.info("Store is shutting down ...");
 
         this.componentManager.shutdown();
-        StoreContext.getCheckPoint().save();
+        context.getBean(CheckPoint.class, ContextNamespace.APP).save();
 
         startupLock.unlock();
         shutdownLock.unlock();
@@ -100,6 +98,8 @@ public class Store implements Lifecycle {
         StoreCheckpoint checkpoint = new StoreCheckpoint(StorePath.getCheckpointPath());
         checkpoint.setShutdownSuccessful(isShutdownSuccessful);
 
-        StoreContext.setCheckPoint(checkpoint);
+        context.register(checkpoint, CheckPoint.class, ContextNamespace.APP);
+        context.register(checkpoint, StoreCheckpoint.class, ContextNamespace.APP);
     }
+
 }

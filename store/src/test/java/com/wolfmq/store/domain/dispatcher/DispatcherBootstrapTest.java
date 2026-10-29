@@ -1,5 +1,11 @@
 package com.wolfmq.store.domain.dispatcher;
 
+import com.wolfmq.domain.server.store.CheckPoint;
+
+import com.wolfmq.domain.core.constant.ContextNamespace;
+
+import cn.coderule.common.convention.container.ApplicationContext;
+
 import com.wolfmq.domain.config.server.StoreConfig;
 import com.wolfmq.domain.config.store.StorePath;
 import com.wolfmq.domain.domain.meta.service.TopicService;
@@ -7,7 +13,6 @@ import com.wolfmq.domain.mock.ConfigMock;
 import com.wolfmq.store.domain.commitlog.log.CommitLogManager;
 import com.wolfmq.store.domain.commitlog.sharding.TopicPartitioner;
 import com.wolfmq.store.server.bootstrap.StoreCheckpoint;
-import com.wolfmq.store.server.bootstrap.StoreContext;
 import java.nio.file.Path;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,6 +23,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class DispatcherBootstrapTest {
+    protected ApplicationContext context = new ApplicationContext();
+
 
     @TempDir
     Path tempDir;
@@ -29,10 +36,6 @@ class DispatcherBootstrapTest {
 
     @AfterEach
     void tearDown() {
-        StoreContext.APPLICATION.getBeanMap().clear();
-        StoreContext.API.getBeanMap().clear();
-        StoreContext.CHECK_POINT = null;
-        StoreContext.SCHEDULER = null;
     }
 
     @Test
@@ -40,25 +43,25 @@ class DispatcherBootstrapTest {
         StoreConfig storeConfig = ConfigMock.createStoreConfig(anotherDir.toString());
         StorePath.initPath(anotherDir.toString());
 
-        StoreContext.register(storeConfig);
-        StoreContext.CHECK_POINT = new StoreCheckpoint(anotherDir.toString());
+        context.register(storeConfig, ContextNamespace.APP);
+        StoreCheckpoint __cp = new StoreCheckpoint(anotherDir.toString()); context.register(__cp, CheckPoint.class, ContextNamespace.APP); context.register(__cp, StoreCheckpoint.class, ContextNamespace.APP);
 
         TopicService topicService = mock(TopicService.class);
-        StoreContext.register(topicService, TopicService.class);
+        context.register(topicService, TopicService.class, ContextNamespace.APP);
 
         CommitLogManager commitLogManager = new CommitLogManager(
             storeConfig.getCommitConfig(),
             new TopicPartitioner(storeConfig.getCommitConfig(), topicService)
         );
-        StoreContext.register(commitLogManager);
+        context.register(commitLogManager, ContextNamespace.APP);
 
-        DispatcherBootstrap bootstrap = new DispatcherBootstrap();
+        DispatcherBootstrap bootstrap = new DispatcherBootstrap(context);
         bootstrap.initialize();
 
-        DispatchManager dispatchManager = StoreContext.getBean(DispatchManager.class);
+        DispatchManager dispatchManager = context.getBean(DispatchManager.class, ContextNamespace.APP);
         assertNotNull(dispatchManager);
 
-        CommitHandlerManager handlerManager = StoreContext.getBean(CommitHandlerManager.class);
+        CommitHandlerManager handlerManager = context.getBean(CommitHandlerManager.class, ContextNamespace.APP);
         assertNotNull(handlerManager);
     }
 }

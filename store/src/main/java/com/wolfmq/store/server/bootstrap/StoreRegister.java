@@ -20,15 +20,22 @@ import com.wolfmq.domain.server.registry.ServerInfo;
 import com.wolfmq.domain.server.registry.StoreInfo;
 import com.wolfmq.domain.server.route.TopicInfo;
 import java.util.List;
+import java.util.function.Supplier;
 import lombok.extern.slf4j.Slf4j;
 
 
 @Slf4j
 public class StoreRegister implements Lifecycle {
+    private final Supplier<TopicService> topicServiceSupplier;
     private final StoreConfig storeConfig;
     private final RegistryClient registryClient;
 
-    public StoreRegister(StoreConfig storeConfig, NettyClient nettyClient) {
+    public StoreRegister(
+        StoreConfig storeConfig,
+        NettyClient nettyClient,
+        Supplier<TopicService> topicServiceSupplier
+    ) {
+        this.topicServiceSupplier = topicServiceSupplier;
         this.registryClient = new DefaultRegistryClient(
             storeConfig.getRpcClientConfig(),
             storeConfig.getRegistryAddress(),
@@ -87,7 +94,7 @@ public class StoreRegister implements Lifecycle {
     }
 
     private TopicConfigSerializeWrapper getTopicInfo() {
-        TopicService topicService = StoreContext.getBean(TopicService.class);
+        TopicService topicService = topicServiceSupplier.get();
         TopicMap topicMap = topicService.getTopicMap();
 
         TopicConfigSerializeWrapper topicInfo = new TopicConfigSerializeWrapper();
@@ -118,7 +125,7 @@ public class StoreRegister implements Lifecycle {
     }
 
     private void updateClusterInfo(List<RegisterStoreResult> results, boolean updateOrderConfig) {
-        TopicService topicService = StoreContext.getBean(TopicService.class);
+        TopicService topicService = topicServiceSupplier.get();
         for (RegisterStoreResult result : results) {
             if (result == null) {
                 continue;
@@ -157,7 +164,7 @@ public class StoreRegister implements Lifecycle {
     }
 
     private HeartBeat createHeartBeat() {
-        TopicService topicService = StoreContext.getBean(TopicService.class);
+        TopicService topicService = topicServiceSupplier.get();
         DataVersion version = topicService.getTopicMap().getVersion();
 
         return HeartBeat.builder()

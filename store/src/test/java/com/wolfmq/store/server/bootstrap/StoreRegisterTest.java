@@ -1,7 +1,11 @@
 package com.wolfmq.store.server.bootstrap;
 
+import cn.coderule.common.convention.container.ApplicationContext;
+
 import com.wolfmq.domain.config.server.StoreConfig;
 import com.wolfmq.domain.config.store.StorePath;
+import com.wolfmq.domain.core.constant.ContextNamespace;
+import com.wolfmq.domain.domain.meta.service.TopicService;
 import com.wolfmq.domain.domain.meta.topic.Topic;
 import com.wolfmq.domain.domain.meta.topic.PermName;
 import com.wolfmq.domain.mock.ConfigMock;
@@ -17,6 +21,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class StoreRegisterTest {
+    protected ApplicationContext context = new ApplicationContext();
+
 
     @TempDir
     Path tempDir;
@@ -28,8 +34,6 @@ class StoreRegisterTest {
     @BeforeEach
     void setUp() {
         StorePath.initPath(tempDir.toString());
-        StoreContext.APPLICATION.getBeanMap().clear();
-        StoreContext.API.getBeanMap().clear();
 
         storeConfig = ConfigMock.createStoreConfig(tempDir.toString());
         storeConfig.setCluster("default-cluster");
@@ -43,27 +47,23 @@ class StoreRegisterTest {
 
     @AfterEach
     void tearDown() {
-        StoreContext.APPLICATION.getBeanMap().clear();
-        StoreContext.API.getBeanMap().clear();
-        StoreContext.CHECK_POINT = null;
-        StoreContext.SCHEDULER = null;
     }
 
     @Test
     void constructor_ShouldCreateStoreRegister() {
-        storeRegister = new StoreRegister(storeConfig, nettyClient);
+        storeRegister = new StoreRegister(storeConfig, nettyClient, () -> context.getBean(TopicService.class, ContextNamespace.APP));
         assertNotNull(storeRegister);
     }
 
     @Test
     void shutdown_ShouldNotThrow() throws Exception {
-        storeRegister = new StoreRegister(storeConfig, nettyClient);
+        storeRegister = new StoreRegister(storeConfig, nettyClient, () -> context.getBean(TopicService.class, ContextNamespace.APP));
         assertDoesNotThrow(() -> storeRegister.shutdown());
     }
 
     @Test
     void unregisterStore_ShouldCallRegistry() {
-        storeRegister = new StoreRegister(storeConfig, nettyClient);
+        storeRegister = new StoreRegister(storeConfig, nettyClient, () -> context.getBean(TopicService.class, ContextNamespace.APP));
         assertDoesNotThrow(() -> storeRegister.unregisterStore());
     }
 

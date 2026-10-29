@@ -1,5 +1,13 @@
 package com.wolfmq.store.server.bootstrap;
 
+import com.wolfmq.store.infra.StoreScheduler;
+
+import com.wolfmq.domain.server.store.CheckPoint;
+
+import com.wolfmq.domain.core.constant.ContextNamespace;
+
+import cn.coderule.common.convention.container.ApplicationContext;
+
 import cn.coderule.common.convention.service.LifecycleManager;
 import com.wolfmq.domain.config.server.StoreConfig;
 import com.wolfmq.domain.config.store.StorePath;
@@ -16,6 +24,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class ComponentRegisterTest {
+    protected ApplicationContext context = new ApplicationContext();
+
 
     @TempDir
     Path tempDir;
@@ -23,43 +33,35 @@ class ComponentRegisterTest {
     @BeforeEach
     void setUp() {
         StorePath.initPath(tempDir.toString());
-        StoreContext.APPLICATION.getBeanMap().clear();
-        StoreContext.API.getBeanMap().clear();
-        StoreContext.CHECK_POINT = null;
-        StoreContext.SCHEDULER = null;
     }
 
     @AfterEach
     void tearDown() {
-        StoreContext.APPLICATION.getBeanMap().clear();
-        StoreContext.API.getBeanMap().clear();
-        StoreContext.CHECK_POINT = null;
-        StoreContext.SCHEDULER = null;
     }
 
     @Test
     void execute_ShouldRegisterAllComponents() {
         StoreConfig storeConfig = ConfigMock.createStoreConfig(tempDir.toString());
-        StoreContext.register(storeConfig);
-        StoreContext.register(mock(NettyClient.class));
+        context.register(storeConfig, ContextNamespace.APP);
+        context.register(mock(NettyClient.class), ContextNamespace.APP);
 
-        StoreContext.CHECK_POINT = new StoreCheckpoint(tempDir.toString());
+        StoreCheckpoint __cp = new StoreCheckpoint(tempDir.toString()); context.register(__cp, CheckPoint.class, ContextNamespace.APP); context.register(__cp, StoreCheckpoint.class, ContextNamespace.APP);
 
-        LifecycleManager manager = ComponentRegister.register();
+        LifecycleManager manager = new ComponentRegister(context).register();
         assertNotNull(manager);
     }
 
     @Test
     void execute_ShouldRegisterStoreConfig() {
         StoreConfig storeConfig = ConfigMock.createStoreConfig(tempDir.toString());
-        StoreContext.register(storeConfig);
-        StoreContext.register(mock(NettyClient.class));
+        context.register(storeConfig, ContextNamespace.APP);
+        context.register(mock(NettyClient.class), ContextNamespace.APP);
 
-        StoreContext.CHECK_POINT = new StoreCheckpoint(tempDir.toString());
+        StoreCheckpoint __cp = new StoreCheckpoint(tempDir.toString()); context.register(__cp, CheckPoint.class, ContextNamespace.APP); context.register(__cp, StoreCheckpoint.class, ContextNamespace.APP);
 
-        ComponentRegister.register();
+        new ComponentRegister(context).register();
 
-        StoreConfig retrievedConfig = StoreContext.getBean(StoreConfig.class);
+        StoreConfig retrievedConfig = context.getBean(StoreConfig.class, ContextNamespace.APP);
         assertNotNull(retrievedConfig);
         assertEquals(storeConfig, retrievedConfig);
     }
@@ -67,13 +69,13 @@ class ComponentRegisterTest {
     @Test
     void execute_ShouldRegisterScheduler() {
         StoreConfig storeConfig = ConfigMock.createStoreConfig(tempDir.toString());
-        StoreContext.register(storeConfig);
-        StoreContext.register(mock(NettyClient.class));
+        context.register(storeConfig, ContextNamespace.APP);
+        context.register(mock(NettyClient.class), ContextNamespace.APP);
 
-        StoreContext.CHECK_POINT = new StoreCheckpoint(tempDir.toString());
+        StoreCheckpoint __cp = new StoreCheckpoint(tempDir.toString()); context.register(__cp, CheckPoint.class, ContextNamespace.APP); context.register(__cp, StoreCheckpoint.class, ContextNamespace.APP);
 
-        ComponentRegister.register();
+        new ComponentRegister(context).register();
 
-        assertNotNull(StoreContext.getScheduler());
+        assertNotNull(context.getBean(StoreScheduler.class, ContextNamespace.APP));
     }
 }

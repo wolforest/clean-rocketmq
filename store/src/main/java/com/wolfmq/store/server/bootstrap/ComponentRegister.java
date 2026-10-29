@@ -1,8 +1,11 @@
 package com.wolfmq.store.server.bootstrap;
 
+import cn.coderule.common.convention.container.ApplicationContext;
 import cn.coderule.common.convention.container.EventBus;
 import cn.coderule.common.convention.service.LifecycleManager;
+import com.wolfmq.domain.core.constant.ContextNamespace;
 import com.wolfmq.domain.config.server.StoreConfig;
+import com.wolfmq.domain.domain.meta.service.TopicService;
 import com.wolfmq.rpc.common.rpc.netty.NettyClient;
 import com.wolfmq.store.domain.commitlog.CommitLogBootstrap;
 import com.wolfmq.store.domain.consumequeue.ConsumeQueueBootstrap;
@@ -19,12 +22,16 @@ import com.wolfmq.store.server.rpc.RpcBootstrap;
 
 public class ComponentRegister {
     private final LifecycleManager manager = new LifecycleManager();
+    private final ApplicationContext context;
 
-    public static LifecycleManager register() {
-        ComponentRegister register = new ComponentRegister();
-        StoreContext.register(register);
+    public ComponentRegister(ApplicationContext context) {
+        this.context = context;
+    }
 
-        return register.execute();
+    public LifecycleManager register() {
+        context.register(this, ContextNamespace.APP);
+
+        return this.execute();
     }
 
     public LifecycleManager execute() {
@@ -38,7 +45,7 @@ public class ComponentRegister {
 
     private void registerLib() {
         EventBus eventBus = new EventBus();
-        StoreContext.register(eventBus);
+        context.register(eventBus, ContextNamespace.APP);
     }
 
     private void registerInfra() {
@@ -66,84 +73,87 @@ public class ComponentRegister {
     }
 
     private void registerNettyClient() {
-        StoreConfig storeConfig = StoreContext.getBean(StoreConfig.class);
+        StoreConfig storeConfig = context.getBean(StoreConfig.class, ContextNamespace.APP);
         NettyClient component = new NettyClient(storeConfig.getRpcClientConfig());
-        StoreContext.register(component);
+        context.register(component, ContextNamespace.APP);
     }
 
     private void registerScheduler() {
-        StoreConfig storeConfig = StoreContext.getBean(StoreConfig.class);
+        StoreConfig storeConfig = context.getBean(StoreConfig.class, ContextNamespace.APP);
         StoreScheduler scheduler = new StoreScheduler(storeConfig);
 
         manager.register(scheduler);
-        StoreContext.setScheduler(scheduler);
+        context.register(scheduler, StoreScheduler.class, ContextNamespace.APP);
     }
 
     private void registerMeta() {
-        MetaBootstrap component = new MetaBootstrap();
+        MetaBootstrap component = new MetaBootstrap(context);
         manager.register(component);
     }
 
     private void registerCommitLog() {
-        CommitLogBootstrap component = new CommitLogBootstrap();
+        CommitLogBootstrap component = new CommitLogBootstrap(context);
         manager.register(component);
     }
 
     private void registerDispatcher() {
-        DispatcherBootstrap component = new DispatcherBootstrap();
+        DispatcherBootstrap component = new DispatcherBootstrap(context);
         manager.register(component);
     }
 
     private void registerConsumeQueue() {
-        ConsumeQueueBootstrap component = new ConsumeQueueBootstrap();
+        ConsumeQueueBootstrap component = new ConsumeQueueBootstrap(context);
         manager.register(component);
     }
 
     private void registerMessageQueue() {
-        MQBootstrap component = new MQBootstrap();
+        MQBootstrap component = new MQBootstrap(context);
         manager.register(component);
     }
 
     private void registerIndexService() {
-        IndexBootstrap component = new IndexBootstrap();
+        IndexBootstrap component = new IndexBootstrap(context);
         manager.register(component);
     }
 
     private void registerTimer() {
-        TimerBootstrap component = new TimerBootstrap();
+        TimerBootstrap component = new TimerBootstrap(context);
         manager.register(component);
     }
 
     private void registerMappedFileService() {
-        StoreConfig storeConfig = StoreContext.getBean(StoreConfig.class);
+        StoreConfig storeConfig = context.getBean(StoreConfig.class, ContextNamespace.APP);
         TransientPool transientPool = null;
         if (storeConfig.isEnableTransientPool()) {
             transientPool = new TransientPool(storeConfig.getTransientPoolSize(), storeConfig.getTransientFileSize());
             manager.register(transientPool);
-            StoreContext.register(transientPool);
+            context.register(transientPool, ContextNamespace.APP);
         }
 
         AllocateMappedFileService component = new AllocateMappedFileService(storeConfig, transientPool);
         manager.register(component);
-        StoreContext.register(component);
+        context.register(component, ContextNamespace.APP);
     }
 
     private void registerRegistry() {
-        StoreConfig storeConfig = StoreContext.getBean(StoreConfig.class);
-        NettyClient nettyClient = StoreContext.getBean(NettyClient.class);
-        StoreRegister component = new StoreRegister(storeConfig, nettyClient);
+        StoreConfig storeConfig = context.getBean(StoreConfig.class, ContextNamespace.APP);
+        NettyClient nettyClient = context.getBean(NettyClient.class, ContextNamespace.APP);
+        StoreRegister component = new StoreRegister(
+            storeConfig, nettyClient,
+            () -> context.getBean(TopicService.class, ContextNamespace.APP)
+        );
 
         manager.register(component);
-        StoreContext.register(component);
+        context.register(component, ContextNamespace.APP);
     }
 
     private void registerRpc() {
-        RpcBootstrap component = new RpcBootstrap();
+        RpcBootstrap component = new RpcBootstrap(context);
         manager.register(component);
     }
 
     private void registerHA() {
-        HABootstrap component = new HABootstrap();
+        HABootstrap component = new HABootstrap(context);
         manager.register(component);
     }
 

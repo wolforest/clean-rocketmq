@@ -10,7 +10,6 @@ import com.wolfmq.domain.server.store.CheckPoint;
 import com.wolfmq.store.domain.commitlog.flush.policy.DefaultCommitLogFlushPolicy;
 import com.wolfmq.store.infra.file.AllocateMappedFileService;
 import com.wolfmq.store.infra.file.DefaultMappedFileQueue;
-import com.wolfmq.store.server.bootstrap.StoreContext;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,13 +20,19 @@ public class CommitLogFactory {
 
     private final int shardNumber;
     private final CheckPoint checkpoint;
+    private final AllocateMappedFileService allocateService;
 
-    public CommitLogFactory(StoreConfig storeConfig, CheckPoint checkpoint) {
+    public CommitLogFactory(
+        StoreConfig storeConfig,
+        CheckPoint checkpoint,
+        AllocateMappedFileService allocateService
+    ) {
         this.storeConfig = storeConfig;
         this.commitConfig = storeConfig.getCommitConfig();
         this.shardNumber = commitConfig.getShardingNumber();
 
         this.checkpoint = checkpoint;
+        this.allocateService = allocateService;
     }
 
     public List<CommitLog> createByConfig() {
@@ -54,7 +59,6 @@ public class CommitLogFactory {
             + File.separator;
         DirUtil.createIfNotExists(dir);
 
-        AllocateMappedFileService allocateService = StoreContext.getBean(AllocateMappedFileService.class);
         return new DefaultMappedFileQueue(dir, commitConfig.getFileSize(), allocateService);
     }
 

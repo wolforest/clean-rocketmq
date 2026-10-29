@@ -7,7 +7,6 @@ import com.wolfmq.domain.config.store.StorePath;
 import com.wolfmq.domain.domain.message.property.MessageConst;
 import com.wolfmq.domain.domain.index.IndexService;
 import com.wolfmq.domain.domain.index.QueryOffsetResult;
-import com.wolfmq.store.server.bootstrap.StoreContext;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,8 +27,7 @@ public class DefaultIndexService implements IndexService {
     private final ArrayList<IndexFile> indexFileList = new ArrayList<>();
     private final ReentrantReadWriteLock readWriteLock = new ReentrantReadWriteLock();
 
-    public DefaultIndexService() {
-        StoreConfig storeConfig = StoreContext.getBean(StoreConfig.class);
+    public DefaultIndexService(StoreConfig storeConfig) {
         IndexConfig indexConfig = storeConfig.getIndexConfig();
         this.maxHashSlotNum = indexConfig.getMaxHashSlotNum();
         this.maxIndexNum = indexConfig.getMaxIndexNum();

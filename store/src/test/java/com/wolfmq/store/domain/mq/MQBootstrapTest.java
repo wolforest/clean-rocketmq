@@ -1,5 +1,11 @@
 package com.wolfmq.store.domain.mq;
 
+import com.wolfmq.domain.server.store.CheckPoint;
+
+import com.wolfmq.domain.core.constant.ContextNamespace;
+
+import cn.coderule.common.convention.container.ApplicationContext;
+
 import com.wolfmq.domain.config.server.StoreConfig;
 import com.wolfmq.domain.config.store.StorePath;
 import com.wolfmq.domain.server.store.api.MQStore;
@@ -12,6 +18,8 @@ import com.wolfmq.domain.core.lock.queue.DequeueLock;
 import com.wolfmq.domain.mock.ConfigMock;
 import com.wolfmq.store.domain.commitlog.log.CommitLogManager;
 import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueManager;
+import com.wolfmq.store.domain.meta.DefaultConsumeOffsetService;
+import com.wolfmq.store.domain.meta.DefaultConsumeOrderService;
 import com.wolfmq.store.domain.mq.ack.AckService;
 import com.wolfmq.store.domain.mq.ack.InvisibleService;
 import com.wolfmq.store.domain.mq.queue.DequeueService;
@@ -19,7 +27,6 @@ import com.wolfmq.store.domain.mq.queue.EnqueueService;
 import com.wolfmq.store.domain.mq.queue.MessageService;
 import com.wolfmq.store.domain.mq.queue.OffsetService;
 import com.wolfmq.store.server.bootstrap.StoreCheckpoint;
-import com.wolfmq.store.server.bootstrap.StoreContext;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,6 +38,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class MQBootstrapTest {
+    protected ApplicationContext context = new ApplicationContext();
+
 
     @TempDir
     Path tempDir;
@@ -40,51 +49,45 @@ class MQBootstrapTest {
     @BeforeEach
     void setUp() {
         StorePath.initPath(tempDir.toString());
-        StoreContext.APPLICATION.getBeanMap().clear();
-        StoreContext.API.getBeanMap().clear();
-        StoreContext.CHECK_POINT = null;
-        StoreContext.SCHEDULER = null;
 
         storeConfig = ConfigMock.createStoreConfig(tempDir.toString());
-        StoreContext.register(storeConfig);
-        StoreContext.CHECK_POINT = new StoreCheckpoint(tempDir.toString());
+        context.register(storeConfig, ContextNamespace.APP);
+        StoreCheckpoint __cp = new StoreCheckpoint(tempDir.toString()); context.register(__cp, CheckPoint.class, ContextNamespace.APP); context.register(__cp, StoreCheckpoint.class, ContextNamespace.APP);
 
-        StoreContext.register(mock(CommitLogManager.class), CommitLogManager.class);
-        StoreContext.register(mock(ConsumeQueueManager.class), ConsumeQueueManager.class);
-        StoreContext.register(mock(ConsumeOffsetService.class), ConsumeOffsetService.class);
-        StoreContext.register(mock(ConsumeOrderService.class), ConsumeOrderService.class);
-        StoreContext.register(mock(CommitLog.class), CommitLog.class);
+        context.register(mock(CommitLogManager.class), CommitLogManager.class, ContextNamespace.APP);
+        context.register(mock(ConsumeQueueManager.class), ConsumeQueueManager.class, ContextNamespace.APP);
+        context.register(mock(ConsumeOffsetService.class), ConsumeOffsetService.class, ContextNamespace.APP);
+        context.register(mock(ConsumeOrderService.class), ConsumeOrderService.class, ContextNamespace.APP);
+        context.register(mock(DefaultConsumeOffsetService.class), DefaultConsumeOffsetService.class, ContextNamespace.APP);
+        context.register(mock(DefaultConsumeOrderService.class), DefaultConsumeOrderService.class, ContextNamespace.APP);
+        context.register(mock(CommitLog.class), CommitLog.class, ContextNamespace.APP);
     }
 
     @AfterEach
     void tearDown() {
-        StoreContext.APPLICATION.getBeanMap().clear();
-        StoreContext.API.getBeanMap().clear();
-        StoreContext.CHECK_POINT = null;
-        StoreContext.SCHEDULER = null;
     }
 
     @Test
     void initialize_ShouldRegisterAllBeans() throws Exception {
-        MQBootstrap bootstrap = new MQBootstrap();
+        MQBootstrap bootstrap = new MQBootstrap(context);
         bootstrap.initialize();
 
-        assertNotNull(StoreContext.getBean(EnqueueService.class));
-        assertNotNull(StoreContext.getBean(MessageService.class));
-        assertNotNull(StoreContext.getBean(AckService.class));
-        assertNotNull(StoreContext.getBean(InvisibleService.class));
-        assertNotNull(StoreContext.getBean(OffsetService.class));
-        assertNotNull(StoreContext.getBean(DequeueService.class));
-        assertNotNull(StoreContext.getBean(MQService.class));
-        assertNotNull(StoreContext.getBean(DequeueLock.class));
-        assertNotNull(StoreContext.getBean(InflightCounter.class));
+        assertNotNull(context.getBean(EnqueueService.class, ContextNamespace.APP));
+        assertNotNull(context.getBean(MessageService.class, ContextNamespace.APP));
+        assertNotNull(context.getBean(AckService.class, ContextNamespace.APP));
+        assertNotNull(context.getBean(InvisibleService.class, ContextNamespace.APP));
+        assertNotNull(context.getBean(OffsetService.class, ContextNamespace.APP));
+        assertNotNull(context.getBean(DequeueService.class, ContextNamespace.APP));
+        assertNotNull(context.getBean(MQService.class, ContextNamespace.APP));
+        assertNotNull(context.getBean(DequeueLock.class, ContextNamespace.APP));
+        assertNotNull(context.getBean(InflightCounter.class, ContextNamespace.APP));
     }
 
     @Test
     void initialize_ShouldRegisterMQStoreAPI() throws Exception {
-        MQBootstrap bootstrap = new MQBootstrap();
+        MQBootstrap bootstrap = new MQBootstrap(context);
         bootstrap.initialize();
 
-        assertNotNull(StoreContext.getAPI(MQStore.class));
+        assertNotNull(context.getBean(MQStore.class, ContextNamespace.API));
     }
 }

@@ -1,5 +1,11 @@
 package com.wolfmq.store.domain.consumequeue;
 
+import com.wolfmq.domain.server.store.CheckPoint;
+
+import com.wolfmq.domain.core.constant.ContextNamespace;
+
+import cn.coderule.common.convention.container.ApplicationContext;
+
 import com.wolfmq.domain.config.server.StoreConfig;
 import com.wolfmq.domain.config.store.CommitConfig;
 import com.wolfmq.domain.config.store.StorePath;
@@ -8,7 +14,6 @@ import com.wolfmq.domain.mock.ConfigMock;
 import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueManager;
 import com.wolfmq.store.domain.dispatcher.CommitHandlerManager;
 import com.wolfmq.store.server.bootstrap.StoreCheckpoint;
-import com.wolfmq.store.server.bootstrap.StoreContext;
 import java.nio.file.Path;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,6 +24,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class ConsumeQueueBootstrapTest {
+    protected ApplicationContext context = new ApplicationContext();
+
 
     @TempDir
     Path tempDir;
@@ -30,10 +37,6 @@ class ConsumeQueueBootstrapTest {
 
     @AfterEach
     void tearDown() {
-        StoreContext.APPLICATION.getBeanMap().clear();
-        StoreContext.API.getBeanMap().clear();
-        StoreContext.CHECK_POINT = null;
-        StoreContext.SCHEDULER = null;
     }
 
     @Test
@@ -42,20 +45,20 @@ class ConsumeQueueBootstrapTest {
         StorePath.initPath(anotherDir.toString());
         storeConfig.setCommitConfig(new CommitConfig());
 
-        StoreContext.register(storeConfig);
-        StoreContext.register(storeConfig.getCommitConfig(), CommitConfig.class);
-        StoreContext.CHECK_POINT = new StoreCheckpoint(anotherDir.toString());
+        context.register(storeConfig, ContextNamespace.APP);
+        context.register(storeConfig.getCommitConfig(), CommitConfig.class, ContextNamespace.APP);
+        StoreCheckpoint __cp = new StoreCheckpoint(anotherDir.toString()); context.register(__cp, CheckPoint.class, ContextNamespace.APP); context.register(__cp, StoreCheckpoint.class, ContextNamespace.APP);
 
         TopicService topicService = mock(TopicService.class);
-        StoreContext.register(topicService, TopicService.class);
+        context.register(topicService, TopicService.class, ContextNamespace.APP);
 
         CommitHandlerManager handlerManager = new CommitHandlerManager();
-        StoreContext.register(handlerManager);
+        context.register(handlerManager, ContextNamespace.APP);
 
-        ConsumeQueueBootstrap bootstrap = new ConsumeQueueBootstrap();
+        ConsumeQueueBootstrap bootstrap = new ConsumeQueueBootstrap(context);
         assertDoesNotThrow(bootstrap::initialize);
 
-        ConsumeQueueManager manager = StoreContext.getBean(ConsumeQueueManager.class);
+        ConsumeQueueManager manager = context.getBean(ConsumeQueueManager.class, ContextNamespace.APP);
         assertNotNull(manager);
     }
 }

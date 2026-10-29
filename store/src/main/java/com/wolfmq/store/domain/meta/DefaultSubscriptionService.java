@@ -7,18 +7,24 @@ import com.wolfmq.domain.domain.meta.subscription.SubscriptionGroup;
 import com.wolfmq.domain.domain.meta.subscription.SubscriptionMap;
 import com.wolfmq.domain.domain.meta.service.ConsumeOffsetService;
 import com.wolfmq.domain.domain.meta.service.SubscriptionService;
-import com.wolfmq.store.server.bootstrap.StoreContext;
+import com.wolfmq.domain.server.store.StoreState;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class DefaultSubscriptionService implements SubscriptionService {
+    private final StoreState storeState;
     private final String storePath;
     private final ConsumeOffsetService consumeOffsetService;
     @Getter
     private SubscriptionMap subscriptionMap;
 
-    public DefaultSubscriptionService(String storePath, ConsumeOffsetService consumeOffsetService) {
+    public DefaultSubscriptionService(
+        StoreState storeState,
+        String storePath,
+        ConsumeOffsetService consumeOffsetService
+    ) {
+        this.storeState = storeState;
         this.storePath = storePath;
         this.consumeOffsetService = consumeOffsetService;
 
@@ -42,13 +48,13 @@ public class DefaultSubscriptionService implements SubscriptionService {
 
     @Override
     public void saveGroup(SubscriptionGroup group) {
-        subscriptionMap.saveGroup(group, StoreContext.getStateMachineVersion());
+        subscriptionMap.saveGroup(group, storeState.getStateMachineVersion());
         this.store();
     }
 
     @Override
     public void deleteGroup(String groupName, boolean cleanOffset) {
-        subscriptionMap.deleteGroup(groupName, StoreContext.getStateMachineVersion());
+        subscriptionMap.deleteGroup(groupName, storeState.getStateMachineVersion());
         this.store();
 
         if (!cleanOffset) {

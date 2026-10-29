@@ -8,23 +8,31 @@ import com.wolfmq.store.api.TimerStoreImpl;
 import com.wolfmq.store.domain.mq.queue.MessageService;
 import com.wolfmq.store.domain.timer.service.CheckpointService;
 import com.wolfmq.store.domain.timer.service.TimerService;
-import com.wolfmq.store.server.bootstrap.StoreContext;
+import cn.coderule.common.convention.container.ApplicationContext;
+import com.wolfmq.domain.core.constant.ContextNamespace;
 
 public class TimerBootstrap implements Lifecycle {
+    private final ApplicationContext context;
+
     private TimerService timerService;
+
+    public TimerBootstrap(ApplicationContext context) {
+        this.context = context;
+    }
+
     @Override
     public void initialize() throws Exception {
-        StoreConfig storeConfig = StoreContext.getBean(StoreConfig.class);
-        MessageService messageService = StoreContext.getBean(MessageService.class);
+        StoreConfig storeConfig = context.getBean(StoreConfig.class, ContextNamespace.APP);
+        MessageService messageService = context.getBean(MessageService.class, ContextNamespace.APP);
 
         String checkpointPath = StorePath.getTimerCheckPath();
         CheckpointService checkpointService = new CheckpointService(checkpointPath);
 
         timerService = new TimerService(storeConfig, checkpointService, messageService);
-        StoreContext.register(timerService);
+        context.register(timerService, ContextNamespace.APP);
 
         TimerStore timerStore = new TimerStoreImpl(timerService);
-        StoreContext.registerAPI(timerStore, TimerStore.class);
+        context.register(timerStore, TimerStore.class, ContextNamespace.API);
     }
 
     @Override

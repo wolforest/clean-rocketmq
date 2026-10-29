@@ -13,16 +13,24 @@ import com.wolfmq.domain.domain.meta.service.TopicService;
 import com.wolfmq.store.api.ConsumeOffsetStoreImpl;
 import com.wolfmq.store.api.SubscriptionStoreImpl;
 import com.wolfmq.store.api.TopicStoreImpl;
-import com.wolfmq.store.server.bootstrap.StoreContext;
+import cn.coderule.common.convention.container.ApplicationContext;
+import com.wolfmq.domain.core.constant.ContextNamespace;
 import com.wolfmq.domain.config.store.StorePath;
+import com.wolfmq.domain.server.store.StoreState;
 import com.wolfmq.store.server.bootstrap.StoreRegister;
 
 public class MetaBootstrap implements Lifecycle {
+    private final ApplicationContext context;
+
     private DefaultTopicService topicService;
     private SubscriptionService subscriptionService;
 
     private ConsumeOffsetService offsetService;
     private ConsumeOrderService orderService;
+
+    public MetaBootstrap(ApplicationContext context) {
+        this.context = context;
+    }
 
     @Override
     public void initialize() throws Exception {
@@ -46,55 +54,57 @@ public class MetaBootstrap implements Lifecycle {
     }
 
     private void injectDependency() {
-        ConsumeQueueManager consumeQueueManager = StoreContext.getBean(ConsumeQueueManager.class);
-        StoreRegister storeRegister = StoreContext.getBean(StoreRegister.class);
+        ConsumeQueueManager consumeQueueManager = context.getBean(ConsumeQueueManager.class, ContextNamespace.APP);
+        StoreRegister storeRegister = context.getBean(StoreRegister.class, ContextNamespace.APP);
 
         topicService.inject(consumeQueueManager, storeRegister);
     }
 
     private void initConsumerOffset() {
-        StoreConfig storeConfig = StoreContext.getBean(StoreConfig.class);
+        StoreConfig storeConfig = context.getBean(StoreConfig.class, ContextNamespace.APP);
         offsetService = new DefaultConsumeOffsetService(storeConfig, StorePath.getConsumerOffsetPath());
-        StoreContext.register(offsetService, ConsumeOffsetService.class);
+        context.register(offsetService, ConsumeOffsetService.class, ContextNamespace.APP);
 
         offsetService.load();
 
         ConsumeOffsetStore offsetStore = new ConsumeOffsetStoreImpl(offsetService);
-        StoreContext.registerAPI(offsetStore, ConsumeOffsetStore.class);
-        StoreContext.register(offsetStore, ConsumeOffsetStore.class);
+        context.register(offsetStore, ConsumeOffsetStore.class, ContextNamespace.API);
+        context.register(offsetStore, ConsumeOffsetStore.class, ContextNamespace.APP);
     }
 
     private void initTopic() {
-        StoreConfig storeConfig = StoreContext.getBean(StoreConfig.class);
-        topicService = new DefaultTopicService(storeConfig, StorePath.getTopicPath(), offsetService);
-        StoreContext.register(topicService, TopicService.class);
+        StoreConfig storeConfig = context.getBean(StoreConfig.class, ContextNamespace.APP);
+        StoreState storeState = context.getBean(StoreState.class, ContextNamespace.APP);
+        topicService = new DefaultTopicService(storeState, storeConfig, StorePath.getTopicPath(), offsetService);
+        context.register(topicService, TopicService.class, ContextNamespace.APP);
 
         topicService.load();
 
         TopicStore topicApi = new TopicStoreImpl(topicService);
-        StoreContext.registerAPI(topicApi, TopicStore.class);
-        StoreContext.register(topicApi, TopicStore.class);
+        context.register(topicApi, TopicStore.class, ContextNamespace.API);
+        context.register(topicApi, TopicStore.class, ContextNamespace.APP);
     }
 
     private void initSubscription() {
         String storePath = StorePath.getSubscriptionGroupPath();
-        subscriptionService = new DefaultSubscriptionService(storePath, offsetService);
-        StoreContext.register(subscriptionService, SubscriptionService.class);
+        StoreState storeState = context.getBean(StoreState.class, ContextNamespace.APP);
+        subscriptionService = new DefaultSubscriptionService(storeState, storePath, offsetService);
+        context.register(subscriptionService, SubscriptionService.class, ContextNamespace.APP);
 
         subscriptionService.load();
 
         SubscriptionStore subscriptionApi = new SubscriptionStoreImpl(subscriptionService);
-        StoreContext.registerAPI(subscriptionApi, SubscriptionStore.class);
-        StoreContext.register(subscriptionApi, SubscriptionStore.class);
+        context.register(subscriptionApi, SubscriptionStore.class, ContextNamespace.API);
+        context.register(subscriptionApi, SubscriptionStore.class, ContextNamespace.APP);
     }
 
     private void initConsumeOrder() {
-        StoreConfig storeConfig = StoreContext.getBean(StoreConfig.class);
+        StoreConfig storeConfig = context.getBean(StoreConfig.class, ContextNamespace.APP);
         String storePath = StorePath.getConsumerOrderInfoPath();
 
         OrderLockCleaner cleaner = new OrderLockCleaner(topicService, subscriptionService);
         orderService = new DefaultConsumeOrderService(storeConfig, storePath, cleaner);
-        StoreContext.register(orderService, ConsumeOrderService.class);
+        context.register(orderService, ConsumeOrderService.class, ContextNamespace.APP);
 
         orderService.load();
     }

@@ -1,5 +1,9 @@
 package com.wolfmq.store.domain.commitlog.it;
 
+import com.wolfmq.domain.core.constant.ContextNamespace;
+
+import cn.coderule.common.convention.container.ApplicationContext;
+
 import com.wolfmq.domain.config.server.StoreConfig;
 import com.wolfmq.domain.config.store.CommitConfig;
 import com.wolfmq.domain.server.store.api.CommitLogStore;
@@ -12,7 +16,6 @@ import com.wolfmq.store.domain.commitlog.log.CommitLogManager;
 import com.wolfmq.store.domain.commitlog.sharding.TopicPartitioner;
 import com.wolfmq.store.infra.file.AllocateMappedFileService;
 import com.wolfmq.store.server.bootstrap.StoreCheckpoint;
-import com.wolfmq.store.server.bootstrap.StoreContext;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.io.TempDir;
@@ -20,6 +23,8 @@ import java.nio.file.Path;
 import java.util.List;
 
 public abstract class BaseCommitLogIntegrationTest {
+    protected ApplicationContext context = new ApplicationContext();
+
 
     protected static final int MMAP_FILE_SIZE = 1024 * 1024;
 
@@ -42,22 +47,19 @@ public abstract class BaseCommitLogIntegrationTest {
         storeConfig.getCommitConfig().setShardingNumber(1);
         storeConfig.getCommitConfig().setMaxShardingNumber(1);
 
-        StoreContext.register(storeConfig);
-        StoreContext.register(storeConfig.getCommitConfig());
+        context.register(storeConfig, ContextNamespace.APP);
+        context.register(storeConfig.getCommitConfig(), ContextNamespace.APP);
 
         initCheckPoint();
 
         allocateService = new AllocateMappedFileService(storeConfig);
         allocateService.start();
-        StoreContext.register(allocateService);
+        context.register(allocateService, ContextNamespace.APP);
 
         initCommitLog();
     }
 
     private void resetStoreContext() {
-        StoreContext.CHECK_POINT = null;
-        StoreContext.APPLICATION.getBeanMap().clear();
-        StoreContext.API.getBeanMap().clear();
     }
 
     @AfterEach
@@ -77,7 +79,6 @@ public abstract class BaseCommitLogIntegrationTest {
             } catch (Exception ignore) {
             }
         }
-        StoreContext.CHECK_POINT = null;
     }
 
     private int maxShard() {
@@ -89,22 +90,22 @@ public abstract class BaseCommitLogIntegrationTest {
             tmpDir.resolve("checkpoint").toString()
         );
         checkpoint.setShutdownSuccessful(false);
-        StoreContext.setCheckPoint(checkpoint);
+        context.register(checkpoint, CheckPoint.class, ContextNamespace.APP); context.register(checkpoint, StoreCheckpoint.class, ContextNamespace.APP);
     }
 
     private void initCommitLog() throws Exception {
-        CheckPoint checkpoint = StoreContext.getCheckPoint();
+        CheckPoint checkpoint = context.getBean(StoreCheckpoint.class, ContextNamespace.APP);
         CommitConfig commitConfig = storeConfig.getCommitConfig();
 
-        CommitLogFactory factory = new CommitLogFactory(storeConfig, checkpoint);
+        CommitLogFactory factory = new CommitLogFactory(storeConfig, checkpoint, allocateService);
         List<CommitLog> logList = factory.createByConfig();
 
         partitioner = new TopicPartitioner(commitConfig);
         commitLogManager = new CommitLogManager(commitConfig, partitioner);
         commitLogManager.addCommitLog(logList);
 
-        StoreContext.register(partitioner);
-        StoreContext.register(commitLogManager);
+        context.register(partitioner, ContextNamespace.APP);
+        context.register(commitLogManager, ContextNamespace.APP);
 
         commitLogStore = new CommitLogStoreImpl(commitLogManager);
 

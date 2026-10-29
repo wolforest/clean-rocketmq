@@ -2,13 +2,13 @@ package com.wolfmq.store.domain.meta;
 
 import com.wolfmq.domain.config.server.StoreConfig;
 import com.wolfmq.domain.core.constant.MQConstants;
+import com.wolfmq.domain.domain.meta.service.ConsumeOffsetService;
 import com.wolfmq.domain.domain.meta.topic.KeyBuilder;
 import com.wolfmq.domain.domain.meta.topic.Topic;
 import com.wolfmq.domain.domain.meta.topic.TopicValidator;
-import com.wolfmq.domain.domain.meta.service.ConsumeOffsetService;
 import com.wolfmq.domain.mock.ConfigMock;
+import com.wolfmq.domain.server.store.StoreState;
 import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueManager;
-import com.wolfmq.store.server.bootstrap.StoreContext;
 import com.wolfmq.store.server.bootstrap.StoreRegister;
 import java.nio.file.Path;
 import java.util.Set;
@@ -19,20 +19,21 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class DefaultTopicServiceTest {
+    private final StoreState storeState = new StoreState();
 
     @TempDir
     Path tempDir;
 
     @Test
     void saveTopic_ShouldPersistAndRegisterTopic() {
-        StoreContext.setStateMachineVersion(11L);
+        storeState.setStateMachineVersion(11L);
         StoreConfig storeConfig = ConfigMock.createStoreConfig(tempDir.toString());
         ConsumeOffsetService offsetService = mock(ConsumeOffsetService.class);
         ConsumeQueueManager consumeQueueManager = mock(ConsumeQueueManager.class);
         StoreRegister storeRegister = mock(StoreRegister.class);
         String storePath = tempDir.resolve("topic.json").toString();
 
-        DefaultTopicService service = new DefaultTopicService(storeConfig, storePath, offsetService);
+        DefaultTopicService service = new DefaultTopicService(storeState, storeConfig, storePath, offsetService);
         service.inject(consumeQueueManager, storeRegister);
 
         Topic topic = new Topic();
@@ -45,14 +46,14 @@ class DefaultTopicServiceTest {
 
     @Test
     void deleteTopic_ShouldDeleteMainAndRetryTopics() {
-        StoreContext.setStateMachineVersion(22L);
+        storeState.setStateMachineVersion(22L);
         StoreConfig storeConfig = ConfigMock.createStoreConfig(tempDir.toString());
         ConsumeOffsetService offsetService = mock(ConsumeOffsetService.class);
         ConsumeQueueManager consumeQueueManager = mock(ConsumeQueueManager.class);
         StoreRegister storeRegister = mock(StoreRegister.class);
         String storePath = tempDir.resolve("topic.json").toString();
 
-        DefaultTopicService service = new DefaultTopicService(storeConfig, storePath, offsetService);
+        DefaultTopicService service = new DefaultTopicService(storeState, storeConfig, storePath, offsetService);
         service.inject(consumeQueueManager, storeRegister);
 
         Topic mainTopic = new Topic();
@@ -79,6 +80,7 @@ class DefaultTopicServiceTest {
         StoreConfig storeConfig = ConfigMock.createStoreConfig(tempDir.toString());
         ConsumeOffsetService offsetService = mock(ConsumeOffsetService.class);
         DefaultTopicService service = new DefaultTopicService(
+            storeState,
             storeConfig,
             tempDir.resolve("topic.json").toString(),
             offsetService
@@ -92,4 +94,3 @@ class DefaultTopicServiceTest {
         assertTrue(service.exists(storeConfig.getCluster() + "_" + MQConstants.REPLY_TOPIC_POSTFIX));
     }
 }
-

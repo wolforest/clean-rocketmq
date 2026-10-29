@@ -1,11 +1,14 @@
 package com.wolfmq.store.domain.index;
 
+import com.wolfmq.domain.core.constant.ContextNamespace;
+
+import cn.coderule.common.convention.container.ApplicationContext;
+
 import com.wolfmq.domain.config.server.StoreConfig;
 import com.wolfmq.domain.config.store.IndexConfig;
 import com.wolfmq.domain.config.store.StorePath;
 import com.wolfmq.domain.mock.ConfigMock;
 import com.wolfmq.store.domain.dispatcher.CommitHandlerManager;
-import com.wolfmq.store.server.bootstrap.StoreContext;
 import java.nio.file.Path;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,6 +18,8 @@ import org.junit.jupiter.api.io.TempDir;
 import static org.junit.jupiter.api.Assertions.*;
 
 class IndexBootstrapTest {
+    protected ApplicationContext context = new ApplicationContext();
+
 
     @TempDir
     Path tempDir;
@@ -26,10 +31,6 @@ class IndexBootstrapTest {
 
     @AfterEach
     void tearDown() {
-        StoreContext.APPLICATION.getBeanMap().clear();
-        StoreContext.API.getBeanMap().clear();
-        StoreContext.CHECK_POINT = null;
-        StoreContext.SCHEDULER = null;
     }
 
     @Test
@@ -38,14 +39,14 @@ class IndexBootstrapTest {
         StorePath.initPath(anotherDir.toString());
         storeConfig.setIndexConfig(new IndexConfig());
 
-        StoreContext.register(storeConfig);
+        context.register(storeConfig, ContextNamespace.APP);
         CommitHandlerManager handlerManager = new CommitHandlerManager();
-        StoreContext.register(handlerManager);
+        context.register(handlerManager, ContextNamespace.APP);
 
-        IndexBootstrap bootstrap = new IndexBootstrap();
+        IndexBootstrap bootstrap = new IndexBootstrap(context);
         bootstrap.initialize();
 
-        DefaultIndexService service = StoreContext.getBean(DefaultIndexService.class);
+        DefaultIndexService service = context.getBean(DefaultIndexService.class, ContextNamespace.APP);
         assertNotNull(service);
 
         assertNotNull(handlerManager);
@@ -53,7 +54,7 @@ class IndexBootstrapTest {
 
     @Test
     void shutdown_ShouldNotThrowWhenServiceNotInitialized() throws Exception {
-        IndexBootstrap bootstrap = new IndexBootstrap();
+        IndexBootstrap bootstrap = new IndexBootstrap(context);
         assertDoesNotThrow(() -> bootstrap.shutdown());
     }
 }

@@ -1,5 +1,9 @@
 package com.wolfmq.store.server.rpc;
 
+import com.wolfmq.domain.core.constant.ContextNamespace;
+
+import cn.coderule.common.convention.container.ApplicationContext;
+
 import com.wolfmq.domain.config.server.StoreConfig;
 import com.wolfmq.domain.config.store.StorePath;
 import com.wolfmq.domain.server.store.api.TimerStore;
@@ -9,7 +13,6 @@ import com.wolfmq.domain.server.store.api.meta.TopicStore;
 import com.wolfmq.store.domain.mq.queue.DequeueService;
 import com.wolfmq.store.domain.mq.queue.EnqueueService;
 import com.wolfmq.domain.mock.ConfigMock;
-import com.wolfmq.store.server.bootstrap.StoreContext;
 import java.nio.file.Path;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,6 +23,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class RpcBootstrapTest {
+    protected ApplicationContext context = new ApplicationContext();
+
 
     @TempDir
     Path tempDir;
@@ -31,10 +36,6 @@ class RpcBootstrapTest {
 
     @AfterEach
     void tearDown() {
-        StoreContext.APPLICATION.getBeanMap().clear();
-        StoreContext.API.getBeanMap().clear();
-        StoreContext.CHECK_POINT = null;
-        StoreContext.SCHEDULER = null;
     }
 
     @Test
@@ -42,15 +43,15 @@ class RpcBootstrapTest {
         StoreConfig storeConfig = ConfigMock.createStoreConfig(anotherDir.toString());
         StorePath.initPath(anotherDir.toString());
 
-        StoreContext.register(storeConfig);
-        StoreContext.register(mock(TopicStore.class), TopicStore.class);
-        StoreContext.register(mock(SubscriptionStore.class), SubscriptionStore.class);
-        StoreContext.register(mock(ConsumeOffsetStore.class), ConsumeOffsetStore.class);
-        StoreContext.register(mock(DequeueService.class), DequeueService.class);
-        StoreContext.register(mock(EnqueueService.class), EnqueueService.class);
-        StoreContext.register(mock(TimerStore.class), TimerStore.class);
+        context.register(storeConfig, ContextNamespace.APP);
+        context.register(mock(TopicStore.class), TopicStore.class, ContextNamespace.APP);
+        context.register(mock(SubscriptionStore.class), SubscriptionStore.class, ContextNamespace.APP);
+        context.register(mock(ConsumeOffsetStore.class), ConsumeOffsetStore.class, ContextNamespace.APP);
+        context.register(mock(DequeueService.class), DequeueService.class, ContextNamespace.APP);
+        context.register(mock(EnqueueService.class), EnqueueService.class, ContextNamespace.APP);
+        context.register(mock(TimerStore.class), TimerStore.class, ContextNamespace.APP);
 
-        RpcBootstrap bootstrap = new RpcBootstrap();
+        RpcBootstrap bootstrap = new RpcBootstrap(context);
         assertDoesNotThrow(() -> bootstrap.initialize());
     }
 }

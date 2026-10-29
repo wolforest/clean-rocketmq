@@ -1,16 +1,15 @@
 package com.wolfmq.broker.infra.embed;
 
-import cn.coderule.common.convention.container.ApplicationContext;
 import cn.coderule.common.convention.service.Lifecycle;
 import com.wolfmq.broker.server.bootstrap.BrokerContext;
 import com.wolfmq.domain.config.server.BrokerConfig;
+import com.wolfmq.domain.core.constant.ContextNamespace;
 import com.wolfmq.domain.server.store.api.MQStore;
 import com.wolfmq.domain.server.store.api.TimerStore;
 import com.wolfmq.domain.server.store.api.meta.ConsumeOffsetStore;
 import com.wolfmq.domain.server.store.api.meta.SubscriptionStore;
 import com.wolfmq.domain.server.store.api.meta.TopicStore;
 import com.wolfmq.store.Store;
-import com.wolfmq.store.server.bootstrap.StoreContext;
 import com.wolfmq.store.server.bootstrap.StoreArgument;
 
 public class EmbedStoreBootstrap implements Lifecycle {
@@ -59,8 +58,9 @@ public class EmbedStoreBootstrap implements Lifecycle {
         store = new Store(storeArgument);
         store.initialize();
 
-        ApplicationContext storeApi = StoreContext.API;
-        BrokerContext.registerContext(storeApi);
+        BrokerContext.APPLICATION.registerAll(
+            store.getContext().getBeanMap(ContextNamespace.API)
+        );
     }
 
     private void initLoadBalance() {

@@ -1,12 +1,19 @@
 package com.wolfmq.store.domain.commitlog;
 
+import com.wolfmq.domain.server.store.CheckPoint;
+
+import com.wolfmq.domain.core.constant.ContextNamespace;
+
+import cn.coderule.common.convention.container.ApplicationContext;
+
 import com.wolfmq.domain.config.server.StoreConfig;
 import com.wolfmq.domain.config.store.StorePath;
 import com.wolfmq.domain.server.store.api.CommitLogStore;
 import com.wolfmq.domain.mock.ConfigMock;
+import com.wolfmq.domain.domain.meta.service.TopicService;
 import com.wolfmq.store.domain.commitlog.log.CommitLogManager;
+import com.wolfmq.store.infra.file.AllocateMappedFileService;
 import com.wolfmq.store.server.bootstrap.StoreCheckpoint;
-import com.wolfmq.store.server.bootstrap.StoreContext;
 import java.nio.file.Path;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,8 +21,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
 
 class CommitLogBootstrapTest {
+    protected ApplicationContext context = new ApplicationContext();
+
 
     @TempDir
     Path tempDir;
@@ -27,10 +37,6 @@ class CommitLogBootstrapTest {
 
     @AfterEach
     void tearDown() {
-        StoreContext.CHECK_POINT = null;
-        StoreContext.SCHEDULER = null;
-        StoreContext.ISOLATED = false;
-        StoreContext.STATE_MACHINE_VERSION = 0L;
     }
 
     @Test
@@ -38,16 +44,18 @@ class CommitLogBootstrapTest {
         StoreConfig storeConfig = ConfigMock.createStoreConfig(anotherDir.toString());
         StorePath.initPath(anotherDir.toString());
 
-        StoreContext.register(storeConfig);
-        StoreContext.CHECK_POINT = new StoreCheckpoint(anotherDir.toString());
+        context.register(storeConfig, ContextNamespace.APP);
+        StoreCheckpoint __cp = new StoreCheckpoint(anotherDir.toString()); context.register(__cp, CheckPoint.class, ContextNamespace.APP); context.register(__cp, StoreCheckpoint.class, ContextNamespace.APP);
+        context.register(mock(TopicService.class), TopicService.class, ContextNamespace.APP);
+        context.register(mock(AllocateMappedFileService.class), ContextNamespace.APP);
 
-        CommitLogBootstrap bootstrap = new CommitLogBootstrap();
+        CommitLogBootstrap bootstrap = new CommitLogBootstrap(context);
         bootstrap.initialize();
 
-        CommitLogManager manager = StoreContext.getBean(CommitLogManager.class);
+        CommitLogManager manager = context.getBean(CommitLogManager.class, ContextNamespace.APP);
         assertNotNull(manager);
 
-        CommitLogStore store = StoreContext.getAPI(CommitLogStore.class);
+        CommitLogStore store = context.getBean(CommitLogStore.class, ContextNamespace.API);
         assertNotNull(store);
     }
 }

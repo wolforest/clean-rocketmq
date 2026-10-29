@@ -1,5 +1,7 @@
 package com.wolfmq.store.domain.mq.queue;
 
+import cn.coderule.common.convention.container.ApplicationContext;
+
 import com.wolfmq.domain.config.server.StoreConfig;
 import com.wolfmq.domain.core.mmap.InsertStatus;
 import com.wolfmq.domain.domain.message.MessageBO;
@@ -21,6 +23,8 @@ import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 class EnqueueServiceTest {
+    protected ApplicationContext context = new ApplicationContext();
+
 
     @Test
     void enqueueAsyncAssignsAndIncreasesOffsetWhenInsertSuccess() {

@@ -11,12 +11,13 @@ import com.wolfmq.domain.domain.meta.service.ConsumeOffsetService;
 import com.wolfmq.domain.domain.meta.service.TopicService;
 import com.wolfmq.domain.domain.meta.topic.KeyBuilder;
 import com.wolfmq.store.server.bootstrap.StoreRegister;
-import com.wolfmq.store.server.bootstrap.StoreContext;
+import com.wolfmq.domain.server.store.StoreState;
 import java.util.Map;
 import java.util.Set;
 import lombok.Getter;
 
 public class DefaultTopicService implements TopicService {
+    private final StoreState storeState;
     private final StoreConfig storeConfig;
     private final String storePath;
     private final ConsumeOffsetService consumeOffsetService;
@@ -29,10 +30,12 @@ public class DefaultTopicService implements TopicService {
     private TopicMap topicMap;
 
     public DefaultTopicService(
+        StoreState storeState,
         StoreConfig storeConfig,
         String storePath,
         ConsumeOffsetService consumeOffsetService
     ) {
+        this.storeState = storeState;
         this.storePath = storePath;
         this.storeConfig = storeConfig;
 
@@ -61,7 +64,7 @@ public class DefaultTopicService implements TopicService {
 
     @Override
     public void saveTopic(Topic topic) {
-        topicMap.saveTopic(topic, StoreContext.getStateMachineVersion());
+        topicMap.saveTopic(topic, storeState.getStateMachineVersion());
         this.store();
 
         storeRegister.registerTopic(topic);
@@ -129,7 +132,7 @@ public class DefaultTopicService implements TopicService {
         consumeOffsetService.deleteByTopic(topicName);
         consumeQueueManager.deleteByTopic(topicName);
 
-        topicMap.deleteTopic(topicName, StoreContext.getStateMachineVersion());
+        topicMap.deleteTopic(topicName, storeState.getStateMachineVersion());
         this.store();
     }
 }

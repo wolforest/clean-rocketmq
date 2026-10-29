@@ -1,12 +1,15 @@
 package com.wolfmq.store.domain.timer;
 
+import com.wolfmq.domain.core.constant.ContextNamespace;
+
+import cn.coderule.common.convention.container.ApplicationContext;
+
 import com.wolfmq.domain.config.server.StoreConfig;
 import com.wolfmq.domain.config.store.StorePath;
 import com.wolfmq.domain.server.store.api.TimerStore;
 import com.wolfmq.domain.mock.ConfigMock;
 import com.wolfmq.store.domain.mq.queue.MessageService;
 import com.wolfmq.store.domain.timer.service.TimerService;
-import com.wolfmq.store.server.bootstrap.StoreContext;
 import java.nio.file.Path;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -15,6 +18,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class TimerBootstrapTest {
+    protected ApplicationContext context = new ApplicationContext();
+
 
     @Test
     void initialize_ShouldRegisterTimerBeans(@TempDir Path tempDir) throws Exception {
@@ -27,14 +32,14 @@ class TimerBootstrapTest {
         StorePath.initPath(tempDir.toString());
         MessageService messageService = mock(MessageService.class);
 
-        StoreContext.register(storeConfig);
-        StoreContext.register(messageService);
+        context.register(storeConfig, ContextNamespace.APP);
+        context.register(messageService, ContextNamespace.APP);
 
-        TimerBootstrap bootstrap = new TimerBootstrap();
+        TimerBootstrap bootstrap = new TimerBootstrap(context);
         bootstrap.initialize();
 
-        TimerService timerService = StoreContext.getBean(TimerService.class);
-        TimerStore timerStore = StoreContext.getAPI(TimerStore.class);
+        TimerService timerService = context.getBean(TimerService.class, ContextNamespace.APP);
+        TimerStore timerStore = context.getBean(TimerStore.class, ContextNamespace.API);
 
         assertNotNull(timerService);
         assertNotNull(timerStore);

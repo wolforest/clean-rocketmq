@@ -1,5 +1,9 @@
 package com.wolfmq.store.server.bootstrap;
 
+import com.wolfmq.domain.core.constant.ContextNamespace;
+
+import cn.coderule.common.convention.container.ApplicationContext;
+
 import com.wolfmq.domain.config.server.StoreConfig;
 import com.wolfmq.domain.mock.ConfigMock;
 import java.nio.file.Path;
@@ -10,12 +14,10 @@ import org.junit.jupiter.api.io.TempDir;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ContextInitializerTest {
+    protected ApplicationContext context = new ApplicationContext();
+
     @AfterEach
     void tearDown() {
-        StoreContext.APPLICATION.getBeanMap().clear();
-        StoreContext.API.getBeanMap().clear();
-        StoreContext.CHECK_POINT = null;
-        StoreContext.SCHEDULER = null;
     }
 
     @Test
@@ -25,9 +27,9 @@ class ContextInitializerTest {
             .storeConfig(storeConfig)
             .build();
 
-        ContextInitializer.init(argument);
+        ContextInitializer.init(argument, context);
 
-        StoreConfig registered = StoreContext.getBean(StoreConfig.class);
+        StoreConfig registered = context.getBean(StoreConfig.class, ContextNamespace.APP);
         assertNotNull(registered);
     }
 }

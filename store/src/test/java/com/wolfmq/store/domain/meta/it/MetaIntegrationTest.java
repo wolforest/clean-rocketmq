@@ -1,5 +1,11 @@
 package com.wolfmq.store.domain.meta.it;
 
+import com.wolfmq.domain.server.store.StoreState;
+
+import com.wolfmq.domain.core.constant.ContextNamespace;
+
+import cn.coderule.common.convention.container.ApplicationContext;
+
 import com.wolfmq.domain.config.server.StoreConfig;
 import com.wolfmq.domain.domain.meta.order.OrderRequest;
 import com.wolfmq.domain.domain.meta.subscription.SubscriptionGroup;
@@ -11,7 +17,6 @@ import com.wolfmq.store.domain.meta.DefaultConsumeOrderService;
 import com.wolfmq.store.domain.meta.DefaultSubscriptionService;
 import com.wolfmq.store.domain.meta.DefaultTopicService;
 import com.wolfmq.store.domain.meta.OrderLockCleaner;
-import com.wolfmq.store.server.bootstrap.StoreContext;
 import com.wolfmq.store.server.bootstrap.StoreRegister;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,6 +29,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class MetaIntegrationTest {
+    protected ApplicationContext context = new ApplicationContext();
+
 
     @TempDir
     Path tmpDir;
@@ -33,13 +40,13 @@ class MetaIntegrationTest {
     @BeforeEach
     void setUp() {
         storeConfig = ConfigMock.createStoreConfig(tmpDir.toString());
-        StoreContext.setStateMachineVersion(1L);
+        StoreState storeState = new StoreState();
+        storeState.setStateMachineVersion(1L);
+        context.register(storeState, StoreState.class, ContextNamespace.APP);
     }
 
     @AfterEach
     void tearDown() {
-        StoreContext.APPLICATION.getBeanMap().clear();
-        StoreContext.API.getBeanMap().clear();
     }
 
     // --- DefaultConsumeOffsetService ---
@@ -259,7 +266,7 @@ void testConsumeOrderStoreAndReload() {
         com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueManager cqManager =
             mock(com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueManager.class);
 
-        DefaultTopicService service = new DefaultTopicService(storeConfig, storePath, offsetService);
+        DefaultTopicService service = new DefaultTopicService(context.getBean(StoreState.class, ContextNamespace.APP), storeConfig, storePath, offsetService);
         service.inject(cqManager, storeRegister);
 
         assertDoesNotThrow(() -> service.load());
@@ -276,7 +283,7 @@ void testConsumeOrderStoreAndReload() {
         com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueManager cqManager =
             mock(com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueManager.class);
 
-        DefaultTopicService service = new DefaultTopicService(storeConfig, storePath, offsetService);
+        DefaultTopicService service = new DefaultTopicService(context.getBean(StoreState.class, ContextNamespace.APP), storeConfig, storePath, offsetService);
         service.inject(cqManager, storeRegister);
         service.load();
 
@@ -296,7 +303,7 @@ void testConsumeOrderStoreAndReload() {
         com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueManager cqManager =
             mock(com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueManager.class);
 
-        DefaultTopicService service1 = new DefaultTopicService(storeConfig, storePath, offsetService);
+        DefaultTopicService service1 = new DefaultTopicService(context.getBean(StoreState.class, ContextNamespace.APP), storeConfig, storePath, offsetService);
         service1.inject(cqManager, storeRegister);
         service1.load();
 
@@ -305,7 +312,7 @@ void testConsumeOrderStoreAndReload() {
         service1.saveTopic(topic);
         service1.store();
 
-        DefaultTopicService service2 = new DefaultTopicService(storeConfig, storePath, offsetService);
+        DefaultTopicService service2 = new DefaultTopicService(context.getBean(StoreState.class, ContextNamespace.APP), storeConfig, storePath, offsetService);
         service2.inject(cqManager, storeRegister);
         service2.load();
 
@@ -320,7 +327,7 @@ void testConsumeOrderStoreAndReload() {
         com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueManager cqManager =
             mock(com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueManager.class);
 
-        DefaultTopicService service = new DefaultTopicService(storeConfig, storePath, offsetService);
+        DefaultTopicService service = new DefaultTopicService(context.getBean(StoreState.class, ContextNamespace.APP), storeConfig, storePath, offsetService);
         service.inject(cqManager, storeRegister);
         service.load();
 
@@ -342,7 +349,7 @@ void testConsumeOrderStoreAndReload() {
         String storePath = tmpDir.resolve("subscription.json").toString();
         ConsumeOffsetService offsetService = mock(ConsumeOffsetService.class);
 
-        DefaultSubscriptionService service = new DefaultSubscriptionService(storePath, offsetService);
+        DefaultSubscriptionService service = new DefaultSubscriptionService(context.getBean(StoreState.class, ContextNamespace.APP), storePath, offsetService);
         service.load();
 
         SubscriptionGroup group = new SubscriptionGroup();
@@ -358,7 +365,7 @@ void testConsumeOrderStoreAndReload() {
         String storePath = tmpDir.resolve("sub-save.json").toString();
         ConsumeOffsetService offsetService = mock(ConsumeOffsetService.class);
 
-        DefaultSubscriptionService service1 = new DefaultSubscriptionService(storePath, offsetService);
+        DefaultSubscriptionService service1 = new DefaultSubscriptionService(context.getBean(StoreState.class, ContextNamespace.APP), storePath, offsetService);
         service1.load();
 
         SubscriptionGroup group = new SubscriptionGroup();
@@ -366,7 +373,7 @@ void testConsumeOrderStoreAndReload() {
         service1.saveGroup(group);
         service1.store();
 
-        DefaultSubscriptionService service2 = new DefaultSubscriptionService(storePath, offsetService);
+        DefaultSubscriptionService service2 = new DefaultSubscriptionService(context.getBean(StoreState.class, ContextNamespace.APP), storePath, offsetService);
         service2.load();
 
         assertTrue(service2.existsGroup("PERSISTENT_GROUP"));
@@ -377,7 +384,7 @@ void testConsumeOrderStoreAndReload() {
         String storePath = tmpDir.resolve("sub-delete.json").toString();
         ConsumeOffsetService offsetService = mock(ConsumeOffsetService.class);
 
-        DefaultSubscriptionService service = new DefaultSubscriptionService(storePath, offsetService);
+        DefaultSubscriptionService service = new DefaultSubscriptionService(context.getBean(StoreState.class, ContextNamespace.APP), storePath, offsetService);
         service.load();
 
         SubscriptionGroup group = new SubscriptionGroup();
@@ -394,7 +401,7 @@ void testConsumeOrderStoreAndReload() {
         String storePath = tmpDir.resolve("sub-delete-offset.json").toString();
         ConsumeOffsetService offsetService = mock(ConsumeOffsetService.class);
 
-        DefaultSubscriptionService service = new DefaultSubscriptionService(storePath, offsetService);
+        DefaultSubscriptionService service = new DefaultSubscriptionService(context.getBean(StoreState.class, ContextNamespace.APP), storePath, offsetService);
         service.load();
 
         SubscriptionGroup group = new SubscriptionGroup();
@@ -419,7 +426,7 @@ void testConsumeOrderStoreAndReload() {
         com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueManager cqManager =
             mock(com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueManager.class);
 
-        DefaultTopicService topicService = new DefaultTopicService(storeConfig, topicPath, offsetService);
+        DefaultTopicService topicService = new DefaultTopicService(context.getBean(StoreState.class, ContextNamespace.APP), storeConfig, topicPath, offsetService);
         topicService.inject(cqManager, storeRegister);
         topicService.load();
 

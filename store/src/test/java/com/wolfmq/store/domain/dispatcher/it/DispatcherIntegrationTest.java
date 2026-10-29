@@ -1,5 +1,9 @@
 package com.wolfmq.store.domain.dispatcher.it;
 
+import com.wolfmq.domain.core.constant.ContextNamespace;
+
+import cn.coderule.common.convention.container.ApplicationContext;
+
 import com.wolfmq.domain.config.store.CommitConfig;
 import com.wolfmq.domain.domain.commitlog.dispatch.CommitEvent;
 import com.wolfmq.domain.domain.message.MessageBO;
@@ -8,7 +12,6 @@ import com.wolfmq.store.domain.dispatcher.CommitListener;
 import com.wolfmq.store.domain.dispatcher.DispatchManager;
 import com.wolfmq.store.domain.dispatcher.DispatchQueue;
 import com.wolfmq.store.server.bootstrap.StoreCheckpoint;
-import com.wolfmq.store.server.bootstrap.StoreContext;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -135,7 +138,7 @@ class DispatcherIntegrationTest extends BaseDispatcherIntegrationTest {
         CommitConfig config = storeConfig.getCommitConfig();
         config.setDispatchThreads(2);
 
-        StoreCheckpoint checkpoint = StoreContext.getCheckPoint();
+        StoreCheckpoint checkpoint = context.getBean(StoreCheckpoint.class, ContextNamespace.APP);
         DispatchManager dispatchManager = new DispatchManager(
             config, checkpoint, commitLogManager, handlerManager);
 
@@ -205,7 +208,7 @@ class DispatcherIntegrationTest extends BaseDispatcherIntegrationTest {
 
     @Test
     void testCommitListenerCheckpointIntegration() {
-        StoreCheckpoint checkpoint = StoreContext.getCheckPoint();
+        StoreCheckpoint checkpoint = context.getBean(StoreCheckpoint.class, ContextNamespace.APP);
 
         Long dispatchedOffset = checkpoint.getMaxOffset().getDispatchedOffset(0);
         assertNull(dispatchedOffset, "initial dispatchedOffset should be null");
@@ -222,7 +225,7 @@ class DispatcherIntegrationTest extends BaseDispatcherIntegrationTest {
         CommitConfig config = storeConfig.getCommitConfig();
         config.setDispatchThreads(1);
 
-        StoreCheckpoint checkpoint = StoreContext.getCheckPoint();
+        StoreCheckpoint checkpoint = context.getBean(StoreCheckpoint.class, ContextNamespace.APP);
         DispatchManager dispatchManager = new DispatchManager(
             config, checkpoint, commitLogManager, handlerManager);
 

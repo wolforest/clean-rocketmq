@@ -8,7 +8,8 @@ import com.wolfmq.domain.server.store.api.meta.ConsumeOffsetStore;
 import com.wolfmq.domain.server.store.api.meta.SubscriptionStore;
 import com.wolfmq.domain.server.store.api.meta.TopicStore;
 import com.wolfmq.domain.config.network.RpcServerConfig;
-import com.wolfmq.store.server.bootstrap.StoreContext;
+import cn.coderule.common.convention.container.ApplicationContext;
+import com.wolfmq.domain.core.constant.ContextNamespace;
 import com.wolfmq.store.server.rpc.processor.ConsumeProcessor;
 import com.wolfmq.store.server.rpc.processor.SubscriptionProcessor;
 import com.wolfmq.store.server.rpc.processor.TimerProcessor;
@@ -20,13 +21,19 @@ import com.wolfmq.store.server.rpc.server.StoreServer;
 import java.util.concurrent.ExecutorService;
 
 public class RpcBootstrap implements Lifecycle {
+    private final ApplicationContext context;
+
     private StoreConfig storeConfig;
     private ExecutorManager executorManager;
     private StoreServer storeServer;
 
+    public RpcBootstrap(ApplicationContext context) {
+        this.context = context;
+    }
+
     @Override
     public void initialize() throws Exception {
-        storeConfig = StoreContext.getBean(StoreConfig.class);
+        storeConfig = context.getBean(StoreConfig.class, ContextNamespace.APP);
 
         initExecutor();
         initServer();
@@ -71,7 +78,7 @@ public class RpcBootstrap implements Lifecycle {
 
     private void initTopicProcessor() {
         TopicConfig topicConfig = storeConfig.getTopicConfig();
-        TopicStore topicStore = StoreContext.getBean(TopicStore.class);
+        TopicStore topicStore = context.getBean(TopicStore.class, ContextNamespace.APP);
         ExecutorService executor = executorManager.getAdminExecutor();
 
         TopicProcessor topicProcessor = new TopicProcessor(topicConfig, topicStore, executor);
@@ -80,7 +87,7 @@ public class RpcBootstrap implements Lifecycle {
 
     private void initConsumeProcessor() {
         ExecutorService executor = executorManager.getAdminExecutor();
-        ConsumeOffsetStore offsetStore = StoreContext.getBean(ConsumeOffsetStore.class);
+        ConsumeOffsetStore offsetStore = context.getBean(ConsumeOffsetStore.class, ContextNamespace.APP);
 
         ConsumeProcessor consumeProcessor = new ConsumeProcessor(offsetStore, executor);
         storeServer.registerProcessor(consumeProcessor);
@@ -88,14 +95,14 @@ public class RpcBootstrap implements Lifecycle {
 
     private void initTimerProcessor() {
         ExecutorService executor = executorManager.getAdminExecutor();
-        TimerStore timerStore = StoreContext.getBean(TimerStore.class);
+        TimerStore timerStore = context.getBean(TimerStore.class, ContextNamespace.APP);
 
         TimerProcessor timerProcessor = new TimerProcessor(timerStore, executor);
         storeServer.registerProcessor(timerProcessor);
     }
 
     private void initSubscriptionProcessor() {
-        SubscriptionStore subscriptionStore = StoreContext.getBean(SubscriptionStore.class);
+        SubscriptionStore subscriptionStore = context.getBean(SubscriptionStore.class, ContextNamespace.APP);
         ExecutorService executor = executorManager.getAdminExecutor();
 
         SubscriptionProcessor subscriptionProcessor = new SubscriptionProcessor(subscriptionStore, executor);

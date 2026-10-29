@@ -1,5 +1,9 @@
 package com.wolfmq.store.domain.commitlog.it;
 
+import com.wolfmq.domain.core.constant.ContextNamespace;
+
+import cn.coderule.common.convention.container.ApplicationContext;
+
 import com.wolfmq.domain.config.server.StoreConfig;
 import com.wolfmq.domain.config.store.CommitConfig;
 import com.wolfmq.domain.server.store.api.CommitLogStore;
@@ -15,7 +19,6 @@ import com.wolfmq.store.domain.commitlog.sharding.OffsetCodec;
 import com.wolfmq.store.domain.commitlog.sharding.TopicPartitioner;
 import com.wolfmq.store.infra.file.AllocateMappedFileService;
 import com.wolfmq.store.server.bootstrap.StoreCheckpoint;
-import com.wolfmq.store.server.bootstrap.StoreContext;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,6 +30,8 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class MultiShardCommitLogIntegrationTest {
+    protected ApplicationContext context = new ApplicationContext();
+
 
     private static final int SHARD_COUNT = 3;
     private static final int MAX_SHARD = 3;
@@ -52,16 +57,16 @@ class MultiShardCommitLogIntegrationTest {
         storeConfig.getCommitConfig().setShardingNumber(SHARD_COUNT);
         storeConfig.getCommitConfig().setMaxShardingNumber(MAX_SHARD);
 
-        StoreContext.register(storeConfig);
-        StoreContext.register(storeConfig.getCommitConfig());
+        context.register(storeConfig, ContextNamespace.APP);
+        context.register(storeConfig.getCommitConfig(), ContextNamespace.APP);
 
         StoreCheckpoint checkpoint = new StoreCheckpoint(tmpDir.resolve("checkpoint").toString());
         checkpoint.setShutdownSuccessful(false);
-        StoreContext.setCheckPoint(checkpoint);
+        context.register(checkpoint, CheckPoint.class, ContextNamespace.APP); context.register(checkpoint, StoreCheckpoint.class, ContextNamespace.APP);
 
         allocateService = new AllocateMappedFileService(storeConfig);
         allocateService.start();
-        StoreContext.register(allocateService);
+        context.register(allocateService, ContextNamespace.APP);
 
         initCommitLog();
     }
@@ -83,30 +88,24 @@ class MultiShardCommitLogIntegrationTest {
             } catch (Exception ignore) {
             }
         }
-        StoreContext.CHECK_POINT = null;
-        StoreContext.APPLICATION.getBeanMap().clear();
-        StoreContext.API.getBeanMap().clear();
     }
 
     private void resetStoreContext() {
-        StoreContext.CHECK_POINT = null;
-        StoreContext.APPLICATION.getBeanMap().clear();
-        StoreContext.API.getBeanMap().clear();
     }
 
     private void initCommitLog() throws Exception {
-        CheckPoint ckpt = StoreContext.getCheckPoint();
+        CheckPoint ckpt = context.getBean(StoreCheckpoint.class, ContextNamespace.APP);
         CommitConfig commitConfig = storeConfig.getCommitConfig();
 
-        CommitLogFactory factory = new CommitLogFactory(storeConfig, ckpt);
+        CommitLogFactory factory = new CommitLogFactory(storeConfig, ckpt, allocateService);
         List<CommitLog> logList = factory.createByConfig();
 
         partitioner = new TopicPartitioner(commitConfig);
         commitLogManager = new CommitLogManager(commitConfig, partitioner);
         commitLogManager.addCommitLog(logList);
 
-        StoreContext.register(partitioner);
-        StoreContext.register(commitLogManager);
+        context.register(partitioner, ContextNamespace.APP);
+        context.register(commitLogManager, ContextNamespace.APP);
 
         offsetCodec = new OffsetCodec(MAX_SHARD);
 

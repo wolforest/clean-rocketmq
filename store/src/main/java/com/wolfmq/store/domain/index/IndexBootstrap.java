@@ -3,7 +3,8 @@ package com.wolfmq.store.domain.index;
 import cn.coderule.common.convention.service.Lifecycle;
 import com.wolfmq.domain.config.server.StoreConfig;
 import com.wolfmq.store.domain.dispatcher.CommitHandlerManager;
-import com.wolfmq.store.server.bootstrap.StoreContext;
+import cn.coderule.common.convention.container.ApplicationContext;
+import com.wolfmq.domain.core.constant.ContextNamespace;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -16,7 +17,13 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class IndexBootstrap implements Lifecycle {
+    private final ApplicationContext context;
+
     private DefaultIndexService indexService;
+
+    public IndexBootstrap(ApplicationContext context) {
+        this.context = context;
+    }
 
     @Override
     public void initialize() throws Exception {
@@ -39,13 +46,13 @@ public class IndexBootstrap implements Lifecycle {
     }
 
     private void initIndexService() {
-        StoreConfig storeConfig = StoreContext.getBean(StoreConfig.class);
-        indexService = new DefaultIndexService();
-        StoreContext.register(indexService, DefaultIndexService.class);
+        StoreConfig storeConfig = context.getBean(StoreConfig.class, ContextNamespace.APP);
+        indexService = new DefaultIndexService(storeConfig);
+        context.register(indexService, DefaultIndexService.class, ContextNamespace.APP);
     }
 
     private void registerCommitHandler() {
-        CommitHandlerManager handlerManager = StoreContext.getBean(CommitHandlerManager.class);
+        CommitHandlerManager handlerManager = context.getBean(CommitHandlerManager.class, ContextNamespace.APP);
         IndexCommitHandler handler = new IndexCommitHandler(indexService);
         handlerManager.registerHandler(handler);
     }

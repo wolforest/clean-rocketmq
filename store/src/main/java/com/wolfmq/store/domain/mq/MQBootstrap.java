@@ -19,12 +19,15 @@ import com.wolfmq.store.domain.mq.queue.DequeueService;
 import com.wolfmq.store.domain.mq.queue.EnqueueService;
 import com.wolfmq.store.domain.mq.queue.MessageService;
 import com.wolfmq.store.domain.mq.queue.OffsetService;
-import com.wolfmq.store.server.bootstrap.StoreContext;
+import cn.coderule.common.convention.container.ApplicationContext;
+import com.wolfmq.domain.core.constant.ContextNamespace;
 import com.wolfmq.store.server.ha.server.processor.CommitLogSynchronizer;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class MQBootstrap implements Lifecycle {
+    private final ApplicationContext context;
+
     private DequeueLock dequeueLock;
     private InflightCounter inflightCounter;
 
@@ -35,12 +38,16 @@ public class MQBootstrap implements Lifecycle {
     private OffsetService offsetService;
     private MQService mqService;
 
+    public MQBootstrap(ApplicationContext context) {
+        this.context = context;
+    }
+
     @Override
     public void initialize() throws Exception {
         dequeueLock = new DequeueLock();
         inflightCounter = new InflightCounter();
-        StoreContext.register(dequeueLock);
-        StoreContext.register(inflightCounter);
+        context.register(dequeueLock, ContextNamespace.APP);
+        context.register(inflightCounter, ContextNamespace.APP);
 
         initPubService();
         initAckManager();
@@ -51,7 +58,7 @@ public class MQBootstrap implements Lifecycle {
 
     @Override
     public void start() throws Exception {
-        CommitLogSynchronizer commitLogSynchronizer = StoreContext.getBean(CommitLogSynchronizer.class);
+        CommitLogSynchronizer commitLogSynchronizer = context.getBean(CommitLogSynchronizer.class, ContextNamespace.APP);
         this.enqueueService.inject(commitLogSynchronizer);
 
         dequeueLock.start();
@@ -65,50 +72,50 @@ public class MQBootstrap implements Lifecycle {
     }
 
     private void initMQManager() {
-        AckService ackService = StoreContext.getBean(AckService.class);
-        InvisibleService invisibleService = StoreContext.getBean(InvisibleService.class);
-        ConsumeQueueManager consumeQueueManager = StoreContext.getBean(ConsumeQueueManager.class);
+        AckService ackService = context.getBean(AckService.class, ContextNamespace.APP);
+        InvisibleService invisibleService = context.getBean(InvisibleService.class, ContextNamespace.APP);
+        ConsumeQueueManager consumeQueueManager = context.getBean(ConsumeQueueManager.class, ContextNamespace.APP);
 
         MQStore MQStore = new MQStoreImpl(mqService, ackService, invisibleService, consumeQueueManager);
-        StoreContext.registerAPI(MQStore, MQStore.class);
+        context.register(MQStore, MQStore.class, ContextNamespace.API);
     }
 
     private void initAckManager() throws Exception {
-        ackBootstrap = new AckBootstrap();
+        ackBootstrap = new AckBootstrap(context);
         ackBootstrap.initialize();
     }
 
     private void initPubService() {
-        CommitLogManager commitLogManager = StoreContext.getBean(CommitLogManager.class);
-        StoreConfig storeConfig  = StoreContext.getBean(StoreConfig.class);
-        ConsumeQueueManager consumeQueue = StoreContext.getBean(ConsumeQueueManager.class);
+        CommitLogManager commitLogManager = context.getBean(CommitLogManager.class, ContextNamespace.APP);
+        StoreConfig storeConfig  = context.getBean(StoreConfig.class, ContextNamespace.APP);
+        ConsumeQueueManager consumeQueue = context.getBean(ConsumeQueueManager.class, ContextNamespace.APP);
 
         this.enqueueService = new EnqueueService(storeConfig, commitLogManager, consumeQueue);
         this.messageService = new MessageService(commitLogManager, consumeQueue);
-        StoreContext.register(this.enqueueService, EnqueueService.class);
-        StoreContext.register(this.messageService, MessageService.class);
+        context.register(this.enqueueService, EnqueueService.class, ContextNamespace.APP);
+        context.register(this.messageService, MessageService.class, ContextNamespace.APP);
     }
 
     private void initSubService() {
-        StoreConfig storeConfig  = StoreContext.getBean(StoreConfig.class);
+        StoreConfig storeConfig  = context.getBean(StoreConfig.class, ContextNamespace.APP);
 
-        CommitLog commitLog = StoreContext.getBean(CommitLog.class);
-        ConsumeQueueManager consumeQueue = StoreContext.getBean(ConsumeQueueManager.class);
-        ConsumeOffsetService consumeOffsetService = StoreContext.getBean(ConsumeOffsetService.class);
-        ConsumeOrderService orderService = StoreContext.getBean(ConsumeOrderService.class);
+        CommitLog commitLog = context.getBean(CommitLog.class, ContextNamespace.APP);
+        ConsumeQueueManager consumeQueue = context.getBean(ConsumeQueueManager.class, ContextNamespace.APP);
+        ConsumeOffsetService consumeOffsetService = context.getBean(ConsumeOffsetService.class, ContextNamespace.APP);
+        ConsumeOrderService orderService = context.getBean(ConsumeOrderService.class, ContextNamespace.APP);
 
-        AckService ackService = StoreContext.getBean(AckService.class);
+        AckService ackService = context.getBean(AckService.class, ContextNamespace.APP);
         this.offsetService = new OffsetService(
             storeConfig, commitLog, ackService, consumeQueue, consumeOffsetService, orderService
         );
-        StoreContext.register(offsetService, OffsetService.class);
+        context.register(offsetService, OffsetService.class, ContextNamespace.APP);
 
         this.dequeueService = new DequeueService(
             storeConfig, dequeueLock, messageService, ackService, offsetService, inflightCounter, orderService
         );
-        StoreContext.register(dequeueService, DequeueService.class);
+        context.register(dequeueService, DequeueService.class, ContextNamespace.APP);
 
         this.mqService = new DefaultMQService(enqueueService, dequeueService, messageService);
-        StoreContext.register(mqService, MQService.class);
+        context.register(mqService, MQService.class, ContextNamespace.APP);
     }
 }

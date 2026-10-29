@@ -15,7 +15,6 @@ import com.wolfmq.broker.server.grpc.GrpcBootstrap;
 import com.wolfmq.domain.config.server.BrokerConfig;
 import com.wolfmq.rpc.common.rpc.netty.NettyClient;
 import com.wolfmq.rpc.registry.route.RouteLoader;
-import com.wolfmq.store.server.bootstrap.StoreContext;
 
 public class ComponentRegister {
     private final LifecycleManager manager = new LifecycleManager();
@@ -23,7 +22,6 @@ public class ComponentRegister {
 
     public static LifecycleManager register() {
         ComponentRegister register = new ComponentRegister();
-        StoreContext.register(register);
 
         return register.execute();
     }

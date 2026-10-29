@@ -1,5 +1,8 @@
 package com.wolfmq.store.server.bootstrap;
 
+import cn.coderule.common.convention.container.ApplicationContext;
+import com.wolfmq.domain.core.constant.ContextNamespace;
+import com.wolfmq.domain.server.store.StoreState;
 import com.wolfmq.domain.config.network.RpcClientConfig;
 import com.wolfmq.domain.config.store.CommitConfig;
 import com.wolfmq.domain.config.store.ConsumeQueueConfig;
@@ -13,14 +16,16 @@ import com.wolfmq.domain.config.store.StorePath;
 
 public class ContextInitializer {
     private final StoreArgument argument;
+    private final ApplicationContext context;
 
-    public static void init(StoreArgument argument) {
-        ContextInitializer initializer = new ContextInitializer(argument);
+    public static void init(StoreArgument argument, ApplicationContext context) {
+        ContextInitializer initializer = new ContextInitializer(argument, context);
         initializer.initialize();
     }
 
-    public ContextInitializer(StoreArgument argument) {
+    public ContextInitializer(StoreArgument argument, ApplicationContext context) {
         this.argument = argument;
+        this.context = context;
     }
 
     public void initialize() {
@@ -43,7 +48,8 @@ public class ContextInitializer {
 
         StorePath.initPath(storeConfig.getRootDir());
 
-        StoreContext.register(storeConfig);
+        context.register(storeConfig, ContextNamespace.APP);
+        context.register(new StoreState(), StoreState.class, ContextNamespace.APP);
     }
 
     private void initializeMonitor() {
@@ -51,7 +57,7 @@ public class ContextInitializer {
             return;
         }
 
-        StoreContext.MONITOR = argument.getMonitorContext();
+        context.merge(argument.getMonitorContext(), ContextNamespace.MONITOR);
     }
 
 }

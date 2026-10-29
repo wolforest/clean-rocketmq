@@ -3,21 +3,28 @@ package com.wolfmq.store.server.ha;
 import cn.coderule.common.convention.service.Lifecycle;
 import com.wolfmq.domain.config.server.StoreConfig;
 import com.wolfmq.store.server.bootstrap.StoreRegister;
-import com.wolfmq.store.server.bootstrap.StoreContext;
+import cn.coderule.common.convention.container.ApplicationContext;
+import com.wolfmq.domain.core.constant.ContextNamespace;
 import com.wolfmq.store.server.ha.core.ClusterService;
 import com.wolfmq.store.server.ha.server.processor.CommitLogSynchronizer;
 
 public class HABootstrap implements Lifecycle {
+    private final ApplicationContext context;
+
     private StoreConfig storeConfig;
     private ClusterService clusterService;
 
+    public HABootstrap(ApplicationContext context) {
+        this.context = context;
+    }
+
     @Override
     public void initialize() throws Exception {
-        this.storeConfig = StoreContext.getBean(StoreConfig.class);
-        StoreRegister storeRegister = StoreContext.getBean(StoreRegister.class);
+        this.storeConfig = context.getBean(StoreConfig.class, ContextNamespace.APP);
+        StoreRegister storeRegister = context.getBean(StoreRegister.class, ContextNamespace.APP);
 
         CommitLogSynchronizer commitLogSynchronizer = new CommitLogSynchronizer(storeConfig);
-        StoreContext.register(commitLogSynchronizer);
+        context.register(commitLogSynchronizer, ContextNamespace.APP);
 
 
         clusterService = new ClusterService(storeConfig, storeRegister);

@@ -1,5 +1,11 @@
 package com.wolfmq.store.domain.consumequeue.it;
 
+import com.wolfmq.domain.server.store.CheckPoint;
+
+import com.wolfmq.domain.core.constant.ContextNamespace;
+
+import cn.coderule.common.convention.container.ApplicationContext;
+
 import com.wolfmq.domain.config.server.StoreConfig;
 import com.wolfmq.domain.config.store.CommitConfig;
 import com.wolfmq.domain.config.store.ConsumeQueueConfig;
@@ -15,7 +21,6 @@ import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueRecovery;
 import com.wolfmq.store.domain.commitlog.sharding.OffsetCodec;
 import com.wolfmq.store.infra.file.AllocateMappedFileService;
 import com.wolfmq.store.server.bootstrap.StoreCheckpoint;
-import com.wolfmq.store.server.bootstrap.StoreContext;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.io.TempDir;
@@ -24,6 +29,8 @@ import java.nio.file.Path;
 import static org.mockito.Mockito.*;
 
 public abstract class BaseConsumeQueueIntegrationTest {
+    protected ApplicationContext context = new ApplicationContext();
+
 
     protected static final String TEST_TOPIC = "TestTopic";
     protected static final int TEST_QUEUE_ID = 0;
@@ -56,15 +63,15 @@ public abstract class BaseConsumeQueueIntegrationTest {
         cqConfig.setFileSize(FILE_SIZE);
         cqConfig.setUnitSize(UNIT_SIZE);
 
-        StoreContext.register(storeConfig);
-        StoreContext.register(storeConfig.getCommitConfig());
-        StoreContext.register(cqConfig);
+        context.register(storeConfig, ContextNamespace.APP);
+        context.register(storeConfig.getCommitConfig(), ContextNamespace.APP);
+        context.register(cqConfig, ContextNamespace.APP);
 
         initCheckPoint();
 
         allocateService = new AllocateMappedFileService(storeConfig);
         allocateService.start();
-        StoreContext.register(allocateService);
+        context.register(allocateService, ContextNamespace.APP);
 
         topicService = mock(TopicService.class);
         when(topicService.exists(TEST_TOPIC)).thenReturn(true);
@@ -74,7 +81,7 @@ public abstract class BaseConsumeQueueIntegrationTest {
             .writeQueueNums(4)
             .build();
         when(topicService.getTopic(TEST_TOPIC)).thenReturn(topic);
-        StoreContext.register(topicService, TopicService.class);
+        context.register(topicService, TopicService.class, ContextNamespace.APP);
 
         initConsumeQueue();
     }
@@ -92,9 +99,6 @@ public abstract class BaseConsumeQueueIntegrationTest {
     }
 
     private void resetStoreContext() {
-        StoreContext.CHECK_POINT = null;
-        StoreContext.APPLICATION.getBeanMap().clear();
-        StoreContext.API.getBeanMap().clear();
     }
 
     private void initCheckPoint() {
@@ -102,13 +106,13 @@ public abstract class BaseConsumeQueueIntegrationTest {
             tmpDir.resolve("checkpoint").toString()
         );
         checkpoint.setShutdownSuccessful(false);
-        StoreContext.setCheckPoint(checkpoint);
+        context.register(checkpoint, CheckPoint.class, ContextNamespace.APP); context.register(checkpoint, StoreCheckpoint.class, ContextNamespace.APP);
     }
 
     private void initConsumeQueue() {
         ConsumeQueueConfig cqConfig = storeConfig.getConsumeQueueConfig();
         CommitConfig commitConfig = storeConfig.getCommitConfig();
-        StoreCheckpoint checkpoint = StoreContext.getCheckPoint();
+        StoreCheckpoint checkpoint = context.getBean(StoreCheckpoint.class, ContextNamespace.APP);
 
         flusher = new ConsumeQueueFlusher(cqConfig, checkpoint);
         loader = new ConsumeQueueLoader(cqConfig);
@@ -123,7 +127,7 @@ public abstract class BaseConsumeQueueIntegrationTest {
         consumeQueueFactory.createAll();
 
         consumeQueueManager = new ConsumeQueueManager(consumeQueueFactory);
-        StoreContext.register(consumeQueueManager, ConsumeQueueManager.class);
+        context.register(consumeQueueManager, ConsumeQueueManager.class, ContextNamespace.APP);
     }
 
     private void destroyConsumeQueues() {

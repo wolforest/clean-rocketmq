@@ -10,12 +10,15 @@ import com.wolfmq.domain.domain.meta.topic.KeyBuilder;
 import com.wolfmq.store.domain.meta.DefaultConsumeOffsetService;
 import com.wolfmq.store.domain.meta.DefaultConsumeOrderService;
 import com.wolfmq.store.domain.mq.queue.EnqueueService;
-import com.wolfmq.store.server.bootstrap.StoreContext;
+import cn.coderule.common.convention.container.ApplicationContext;
+import com.wolfmq.domain.core.constant.ContextNamespace;
 
 /**
  * @renamed from AckManager to AckBootstrap
  */
 public class AckBootstrap implements Lifecycle {
+    private final ApplicationContext context;
+
     private StoreConfig storeConfig;
 
     private String reviveTopic;
@@ -24,6 +27,10 @@ public class AckBootstrap implements Lifecycle {
 
     private AckOffset offsetService;
     private AckService ackService;
+
+    public AckBootstrap(ApplicationContext context) {
+        this.context = context;
+    }
 
     @Override
     public void initialize() throws Exception {
@@ -44,7 +51,7 @@ public class AckBootstrap implements Lifecycle {
     }
 
     private void initLibrary() {
-        this.storeConfig = StoreContext.getBean(StoreConfig.class);
+        this.storeConfig = context.getBean(StoreConfig.class, ContextNamespace.APP);
         MessageConfig messageConfig = storeConfig.getMessageConfig();
 
         this.reviveTopic = KeyBuilder.buildClusterReviveTopic(storeConfig.getCluster());
@@ -57,10 +64,10 @@ public class AckBootstrap implements Lifecycle {
 
     private AckOffset initOffsetService() {
         return new AckOffset(
-            StoreContext.getBean(DequeueLock.class),
-            StoreContext.getBean(InflightCounter.class),
-            StoreContext.getBean(DefaultConsumeOffsetService.class),
-            StoreContext.getBean(DefaultConsumeOrderService.class)
+            context.getBean(DequeueLock.class, ContextNamespace.APP),
+            context.getBean(InflightCounter.class, ContextNamespace.APP),
+            context.getBean(DefaultConsumeOffsetService.class, ContextNamespace.APP),
+            context.getBean(DefaultConsumeOrderService.class, ContextNamespace.APP)
         );
     }
 
@@ -69,10 +76,10 @@ public class AckBootstrap implements Lifecycle {
             storeConfig,
             reviveTopic,
             ackBuffer,
-            StoreContext.getBean(EnqueueService.class),
+            context.getBean(EnqueueService.class, ContextNamespace.APP),
             offsetService
         );
-        StoreContext.register(ackService);
+        context.register(ackService, ContextNamespace.APP);
     }
 
     private void initInvisibleService() {
@@ -80,10 +87,10 @@ public class AckBootstrap implements Lifecycle {
             storeConfig,
             reviveTopic,
             ackService,
-            StoreContext.getBean(EnqueueService.class),
+            context.getBean(EnqueueService.class, ContextNamespace.APP),
             offsetService
         );
 
-        StoreContext.register(invisibleService);
+        context.register(invisibleService, ContextNamespace.APP);
     }
 }
