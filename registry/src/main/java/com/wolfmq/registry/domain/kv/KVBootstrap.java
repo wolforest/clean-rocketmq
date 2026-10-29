@@ -9,10 +9,10 @@ import com.wolfmq.domain.config.server.RegistryConfig;
 import com.wolfmq.registry.processor.KVProcessor;
 import com.wolfmq.registry.server.bootstrap.ExecutorFactory;
 
-public class KVManager implements Lifecycle {
+public class KVBootstrap implements Lifecycle {
     private final ApplicationContext context;
 
-    public KVManager(ApplicationContext context) {
+    public KVBootstrap(ApplicationContext context) {
         this.context = context;
     }
 

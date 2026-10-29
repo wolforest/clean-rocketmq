@@ -5,11 +5,11 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class KVManagerTest {
+public class KVBootstrapTest {
 
     @Test
     void testLifecycleDoesNotThrow() {
-        KVManager manager = new KVManager(new ApplicationContext());
+        KVBootstrap manager = new KVBootstrap(new ApplicationContext());
         assertDoesNotThrow(() -> manager.start());
         assertDoesNotThrow(() -> manager.shutdown());
     }
