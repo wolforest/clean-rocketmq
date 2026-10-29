@@ -1,5 +1,9 @@
 package com.wolfmq.registry.domain.store;
 
+import com.wolfmq.domain.core.constant.ContextNamespace;
+
+import cn.coderule.common.convention.container.ApplicationContext;
+
 import cn.coderule.common.convention.service.Lifecycle;
 import com.wolfmq.domain.config.server.RegistryConfig;
 import com.wolfmq.registry.domain.kv.KVService;
@@ -13,10 +17,15 @@ import com.wolfmq.registry.processor.RegistryProcessor;
 import com.wolfmq.registry.processor.RouteProcessor;
 import com.wolfmq.registry.processor.TopicProcessor;
 import com.wolfmq.registry.server.bootstrap.ExecutorFactory;
-import com.wolfmq.registry.server.bootstrap.RegistryContext;
 import com.wolfmq.registry.server.rpc.HaClient;
 
 public class StoreManager implements Lifecycle {
+    private final ApplicationContext context;
+
+    public StoreManager(ApplicationContext context) {
+        this.context = context;
+    }
+
     private RegistryConfig registryConfig;
     private Route route ;
     private ExecutorFactory factory;
@@ -29,8 +38,8 @@ public class StoreManager implements Lifecycle {
     @Override
     public void initialize() throws Exception {
         this.route = new Route();
-        this.factory = RegistryContext.getBean(ExecutorFactory.class);
-        this.registryConfig = RegistryContext.getBean(RegistryConfig.class);
+        this.factory = context.getBean(ExecutorFactory.class, ContextNamespace.APP);
+        this.registryConfig = context.getBean(RegistryConfig.class, ContextNamespace.APP);
 
         initService();
         initProcessor();
@@ -49,7 +58,7 @@ public class StoreManager implements Lifecycle {
     }
 
     private void initService() {
-        HaClient haClient = RegistryContext.getBean(HaClient.class);
+        HaClient haClient = context.getBean(HaClient.class, ContextNamespace.APP);
         this.storeRegistry = new StoreRegistry(registryConfig, route, haClient);
 
         this.idleScanner = new IdleScanner(registryConfig, storeRegistry, route);
@@ -57,7 +66,7 @@ public class StoreManager implements Lifecycle {
         this.topicService = new RegistryTopicService(registryConfig, route);
 
         ChannelCloser channelCloser = new ChannelCloser(storeRegistry, route);
-        RegistryContext.register(channelCloser);
+        context.register(channelCloser, ContextNamespace.APP);
     }
 
     private void initProcessor() {
@@ -68,25 +77,25 @@ public class StoreManager implements Lifecycle {
     }
 
     private void initRegistryProcessor() {
-        KVService kvService = RegistryContext.getBean(KVService.class);
+        KVService kvService = context.getBean(KVService.class, ContextNamespace.APP);
         RegistryProcessor registryProcessor = new RegistryProcessor(registryConfig, storeRegistry, kvService, factory.getDefaultExecutor());
-        RegistryContext.register(registryProcessor);
+        context.register(registryProcessor, ContextNamespace.APP);
     }
 
     private void initRouteProcessor() {
-        KVService kvService = RegistryContext.getBean(KVService.class);
+        KVService kvService = context.getBean(KVService.class, ContextNamespace.APP);
         RouteProcessor routeProcessor = new RouteProcessor(registryConfig, topicService, kvService, factory.getRouteExecutor());
-        RegistryContext.register(routeProcessor);
+        context.register(routeProcessor, ContextNamespace.APP);
     }
 
     private void initClusterProcessor() {
         ClusterProcessor clusterProcessor = new ClusterProcessor(clusterService, factory.getDefaultExecutor());
-        RegistryContext.register(clusterProcessor);
+        context.register(clusterProcessor, ContextNamespace.APP);
     }
 
     private void initTopicProcessor() {
         TopicProcessor topicProcessor = new TopicProcessor(registryConfig, topicService, factory.getDefaultExecutor());
-        RegistryContext.register(topicProcessor);
+        context.register(topicProcessor, ContextNamespace.APP);
     }
 
 }

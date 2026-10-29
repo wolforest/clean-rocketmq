@@ -1,5 +1,6 @@
 package com.wolfmq.registry;
 
+import cn.coderule.common.convention.container.ApplicationContext;
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.convention.service.LifecycleManager;
 import com.wolfmq.registry.server.ComponentRegister;
@@ -20,15 +21,12 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class Registry implements Lifecycle {
-    public static void main(String[] args) {
-        try {
-            new Registry(args).start();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+    public static void main(String[] args) throws Exception {
+        new Registry(args).start();
     }
 
     private final String[] args;
+    private final ApplicationContext context = new ApplicationContext();
     private LifecycleManager componentManager;
 
     public Registry(String[] args) {
@@ -38,9 +36,9 @@ public class Registry implements Lifecycle {
     @Override
     public void initialize() throws Exception {
         ContextInitializer.init(args);
-        ConfigLoader.load();
+        ConfigLoader.load(context);
 
-        this.componentManager = ComponentRegister.register();
+        this.componentManager = new ComponentRegister(context).register();
         this.componentManager.initialize();
     }
 
