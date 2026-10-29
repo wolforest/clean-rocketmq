@@ -27,7 +27,7 @@
 
         <dependency>
             <groupId>cn.coderule.starter</groupId>
-            <artifactId>wolf-starter-grpc</artifactId>
+            <artifactId>wolf-grpc-starter</artifactId>
         </dependency>
 
     </dependencies>
