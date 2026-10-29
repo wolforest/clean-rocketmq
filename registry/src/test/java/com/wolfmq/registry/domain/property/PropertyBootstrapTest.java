@@ -5,11 +5,11 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class PropertyManagerTest {
+public class PropertyBootstrapTest {
 
     @Test
     void testLifecycleDoesNotThrow() {
-        PropertyManager manager = new PropertyManager(new ApplicationContext());
+        PropertyBootstrap manager = new PropertyBootstrap(new ApplicationContext());
         assertDoesNotThrow(() -> manager.start());
         assertDoesNotThrow(() -> manager.shutdown());
     }

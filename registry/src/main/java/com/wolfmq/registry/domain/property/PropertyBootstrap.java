@@ -10,10 +10,10 @@ import com.wolfmq.registry.processor.PropertyProcessor;
 import com.wolfmq.registry.server.bootstrap.ExecutorFactory;
 import com.wolfmq.domain.config.network.RpcServerConfig;
 
-public class PropertyManager implements Lifecycle {
+public class PropertyBootstrap implements Lifecycle {
     private final ApplicationContext context;
 
-    public PropertyManager(ApplicationContext context) {
+    public PropertyBootstrap(ApplicationContext context) {
         this.context = context;
     }
 
