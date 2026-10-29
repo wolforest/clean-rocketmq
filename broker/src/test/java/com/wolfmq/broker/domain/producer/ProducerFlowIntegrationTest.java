@@ -9,7 +9,7 @@ import com.wolfmq.domain.server.registry.GroupInfo;
 import com.wolfmq.domain.config.business.MessageConfig;
 import com.wolfmq.domain.config.business.TimerConfig;
 import com.wolfmq.domain.config.server.BrokerConfig;
-import com.wolfmq.domain.core.constant.MessageConst;
+import com.wolfmq.domain.domain.message.property.MessageConst;
 import com.wolfmq.domain.core.constant.code.InvalidCode;
 import com.wolfmq.domain.domain.mq.dto.EnqueueStatus;
 import com.wolfmq.domain.core.exception.InvalidParameterException;

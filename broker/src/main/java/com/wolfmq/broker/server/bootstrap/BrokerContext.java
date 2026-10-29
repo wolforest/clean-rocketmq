@@ -16,7 +16,7 @@ public class BrokerContext {
     public static final ApplicationContext AMQP = new ApplicationContext();
 
     public static void registerContext(ApplicationContext context) {
-        APPLICATION.registerContext(context);
+        APPLICATION.merge(context);
     }
 
     public static void register(Object bean) {
@@ -32,7 +32,7 @@ public class BrokerContext {
     }
 
     public static <T> T getBean(Class<T> beanClass, boolean throwNotFoundException) {
-        return APPLICATION.getBean(beanClass, throwNotFoundException);
+        return APPLICATION.getBean(beanClass);
     }
 
     public static void registerAPI(Object bean) {

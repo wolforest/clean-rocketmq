@@ -2,7 +2,7 @@ package com.wolfmq.domain.server.selector;
 
 import cn.coderule.common.util.lang.string.StringUtil;
 import com.wolfmq.domain.server.route.QueueInfo;
-import com.wolfmq.domain.core.constant.PermName;
+import com.wolfmq.domain.domain.meta.topic.PermName;
 import com.wolfmq.domain.domain.mq.MessageQueue;
 import com.wolfmq.domain.domain.meta.topic.TopicRouteWrapper;
 import com.google.common.base.MoreObjects;

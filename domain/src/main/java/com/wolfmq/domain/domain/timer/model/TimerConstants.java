@@ -1,7 +1,7 @@
 package com.wolfmq.domain.domain.timer.model;
 
 import com.wolfmq.domain.core.constant.MQConstants;
-import com.wolfmq.domain.core.constant.MessageConst;
+import com.wolfmq.domain.domain.message.property.MessageConst;
 import com.wolfmq.domain.domain.meta.topic.TopicValidator;
 
 public class TimerConstants {

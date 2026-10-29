@@ -6,7 +6,7 @@ import com.wolfmq.broker.infra.store.TopicStore;
 import com.wolfmq.domain.config.business.TopicConfig;
 import com.wolfmq.domain.config.business.TransactionConfig;
 import com.wolfmq.domain.config.server.BrokerConfig;
-import com.wolfmq.domain.core.constant.PermName;
+import com.wolfmq.domain.domain.meta.topic.PermName;
 import com.wolfmq.domain.domain.mq.MessageQueue;
 import com.wolfmq.domain.server.RequestContext;
 import com.wolfmq.domain.domain.consumer.consume.mq.MessageRequest;

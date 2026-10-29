@@ -13,7 +13,7 @@ import com.wolfmq.domain.config.store.CommitConfig;
 import com.wolfmq.domain.config.store.ConsumeQueueConfig;
 import com.wolfmq.domain.config.store.IndexConfig;
 import com.wolfmq.domain.config.store.MetaConfig;
-import com.wolfmq.domain.core.constant.PermName;
+import com.wolfmq.domain.domain.meta.topic.PermName;
 import java.io.File;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;

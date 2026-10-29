@@ -1,4 +1,4 @@
-package com.wolfmq.domain.core.constant.flag;
+package com.wolfmq.domain.domain.consumer.consume;
 
 public class PullSysFlag {
     private final static int FLAG_COMMIT_OFFSET = 0x1;

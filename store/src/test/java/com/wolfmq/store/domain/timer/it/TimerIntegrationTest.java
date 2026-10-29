@@ -2,6 +2,7 @@ package com.wolfmq.store.domain.timer.it;
 
 import com.wolfmq.domain.config.business.TimerConfig;
 import com.wolfmq.domain.config.server.StoreConfig;
+import com.wolfmq.domain.domain.message.property.MessageConst;
 import com.wolfmq.domain.domain.timer.model.ScanResult;
 import com.wolfmq.domain.domain.timer.model.TimerConstants;
 import com.wolfmq.domain.domain.timer.model.TimerEvent;
@@ -93,8 +94,8 @@ class TimerIntegrationTest {
 
     private void resetStoreContext() {
         StoreContext.CHECK_POINT = null;
-        StoreContext.APPLICATION.getObjectMap().clear();
-        StoreContext.API.getObjectMap().clear();
+        StoreContext.APPLICATION.getBeanMap().clear();
+        StoreContext.API.getBeanMap().clear();
     }
 
     private void initCommitLog() throws Exception {
@@ -455,7 +456,7 @@ class TimerIntegrationTest {
         long delayTime = batchTime + 3000;
 
         MessageBO message = MessageMock.createMessage("E2E_TIMER_TOPIC", 128, 0, 0);
-        message.putProperty(com.wolfmq.domain.core.constant.MessageConst.PROPERTY_REAL_TOPIC, "E2E_TIMER_TOPIC");
+        message.putProperty(MessageConst.PROPERTY_REAL_TOPIC, "E2E_TIMER_TOPIC");
 
         TimerEvent event = TimerEvent.builder()
             .batchTime(batchTime)
@@ -508,7 +509,7 @@ class TimerIntegrationTest {
         long delayTime2 = batchTime + 3000;
 
         MessageBO msg1 = MessageMock.createMessage("MULTI_TOPIC_1", 128, 0, 0);
-        msg1.putProperty(com.wolfmq.domain.core.constant.MessageConst.PROPERTY_REAL_TOPIC, "MULTI_TOPIC_1");
+        msg1.putProperty(MessageConst.PROPERTY_REAL_TOPIC, "MULTI_TOPIC_1");
 
         TimerEvent event1 = TimerEvent.builder()
             .batchTime(batchTime).delayTime(delayTime1).commitLogOffset(100L)
@@ -516,7 +517,7 @@ class TimerIntegrationTest {
         adder.addTimer(event1);
 
         MessageBO msg2 = MessageMock.createMessage("MULTI_TOPIC_2", 128, 0, 0);
-        msg2.putProperty(com.wolfmq.domain.core.constant.MessageConst.PROPERTY_REAL_TOPIC, "MULTI_TOPIC_2");
+        msg2.putProperty(MessageConst.PROPERTY_REAL_TOPIC, "MULTI_TOPIC_2");
 
         TimerEvent event2 = TimerEvent.builder()
             .batchTime(batchTime).delayTime(delayTime1).commitLogOffset(200L)

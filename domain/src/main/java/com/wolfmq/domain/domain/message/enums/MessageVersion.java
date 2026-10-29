@@ -1,6 +1,6 @@
 package com.wolfmq.domain.domain.message.enums;
 
-import com.wolfmq.domain.core.constant.MessageConst;
+import com.wolfmq.domain.domain.message.property.MessageConst;
 import java.nio.ByteBuffer;
 
 public enum MessageVersion {

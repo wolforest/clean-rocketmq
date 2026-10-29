@@ -2,7 +2,7 @@ package com.wolfmq.broker.domain.consumer.pop;
 
 import com.wolfmq.broker.domain.consumer.consumer.ConsumerManager;
 import com.wolfmq.domain.config.server.BrokerConfig;
-import com.wolfmq.domain.core.constant.PermName;
+import com.wolfmq.domain.domain.meta.topic.PermName;
 import com.wolfmq.domain.core.constant.code.InvalidCode;
 import com.wolfmq.domain.core.exception.InvalidRequestException;
 import com.wolfmq.domain.server.ClientChannelInfo;

@@ -3,7 +3,7 @@ package com.wolfmq.domain.domain.message.codec;
 import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.common.util.lang.SystemUtil;
 import cn.coderule.common.util.net.NetworkUtil;
-import com.wolfmq.domain.core.constant.MessageConst;
+import com.wolfmq.domain.domain.message.property.MessageConst;
 import com.wolfmq.domain.domain.message.MessageBO;
 import com.wolfmq.domain.domain.message.utils.MessageUtils;
 import java.nio.ByteBuffer;

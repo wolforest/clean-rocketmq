@@ -1,5 +1,6 @@
 package com.wolfmq.domain.core.constant.flag;
 
+import com.wolfmq.domain.domain.meta.topic.TopicSysFlag;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

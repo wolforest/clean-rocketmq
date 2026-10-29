@@ -4,7 +4,7 @@ import cn.coderule.common.util.lang.string.StringUtil;
 import com.wolfmq.domain.config.server.StoreConfig;
 import com.wolfmq.domain.config.store.IndexConfig;
 import com.wolfmq.domain.config.store.StorePath;
-import com.wolfmq.domain.core.constant.MessageConst;
+import com.wolfmq.domain.domain.message.property.MessageConst;
 import com.wolfmq.domain.domain.index.IndexService;
 import com.wolfmq.domain.domain.index.QueryOffsetResult;
 import com.wolfmq.store.server.bootstrap.StoreContext;

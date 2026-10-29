@@ -6,7 +6,7 @@ import com.wolfmq.broker.api.validator.MessageValidator;
 import com.wolfmq.broker.api.validator.ServerValidator;
 import com.wolfmq.broker.domain.producer.Producer;
 import com.wolfmq.domain.config.server.BrokerConfig;
-import com.wolfmq.domain.core.constant.MessageConst;
+import com.wolfmq.domain.domain.message.property.MessageConst;
 import com.wolfmq.domain.core.constant.code.InvalidCode;
 import com.wolfmq.domain.core.exception.InvalidParameterException;
 import com.wolfmq.domain.server.ClientChannelInfo;

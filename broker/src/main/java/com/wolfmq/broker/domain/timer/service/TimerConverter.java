@@ -1,6 +1,6 @@
 package com.wolfmq.broker.domain.timer.service;
 
-import com.wolfmq.domain.core.constant.MessageConst;
+import com.wolfmq.domain.domain.message.property.MessageConst;
 import com.wolfmq.domain.domain.message.MessageBO;
 import com.wolfmq.domain.domain.timer.model.TimerConstants;
 import com.wolfmq.domain.domain.timer.model.TimerEvent;

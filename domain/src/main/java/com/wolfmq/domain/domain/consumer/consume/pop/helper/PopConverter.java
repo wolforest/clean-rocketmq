@@ -1,8 +1,8 @@
 package com.wolfmq.domain.domain.consumer.consume.pop.helper;
 
 import com.wolfmq.domain.core.constant.MQConstants;
-import com.wolfmq.domain.core.constant.MessageConst;
-import com.wolfmq.domain.core.constant.PopConstants;
+import com.wolfmq.domain.domain.message.property.MessageConst;
+import com.wolfmq.domain.domain.consumer.consume.pop.PopConstants;
 import com.wolfmq.domain.domain.consumer.consume.PopStatus;
 import com.wolfmq.domain.domain.message.enums.MessageStatus;
 import com.wolfmq.domain.domain.consumer.ack.AckInfo;

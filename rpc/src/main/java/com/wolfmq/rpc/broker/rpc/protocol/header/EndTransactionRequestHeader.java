@@ -1,7 +1,7 @@
 
 package com.wolfmq.rpc.broker.rpc.protocol.header;
 
-import com.wolfmq.domain.core.constant.flag.MessageSysFlag;
+import com.wolfmq.domain.domain.message.property.MessageSysFlag;
 import com.wolfmq.rpc.common.rpc.core.annotation.CFNotNull;
 import com.wolfmq.rpc.common.rpc.core.annotation.CFNullable;
 import com.wolfmq.rpc.common.rpc.core.annotation.RocketMQAction;

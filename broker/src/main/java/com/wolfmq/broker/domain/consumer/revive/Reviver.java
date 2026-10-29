@@ -4,7 +4,7 @@ import cn.coderule.common.lang.type.Pair;
 import cn.coderule.common.util.lang.ByteUtil;
 import cn.coderule.common.util.lang.ThreadUtil;
 import com.wolfmq.domain.config.server.BrokerConfig;
-import com.wolfmq.domain.core.constant.PopConstants;
+import com.wolfmq.domain.domain.consumer.consume.pop.PopConstants;
 import com.wolfmq.domain.domain.mq.dto.DequeueRequest;
 import com.wolfmq.domain.domain.mq.dto.DequeueResult;
 import com.wolfmq.domain.domain.message.enums.MessageStatus;

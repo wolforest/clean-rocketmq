@@ -1,4 +1,4 @@
-package com.wolfmq.domain.core.constant.flag;
+package com.wolfmq.domain.domain.message.property;
 
 
 public class MessageSysFlag {

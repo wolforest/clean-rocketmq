@@ -1,4 +1,4 @@
-package com.wolfmq.domain.domain.message;
+package com.wolfmq.domain.domain.message.property;
 
 import java.net.SocketAddress;
 

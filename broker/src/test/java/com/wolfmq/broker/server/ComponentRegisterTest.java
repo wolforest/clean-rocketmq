@@ -14,18 +14,18 @@ class ComponentRegisterTest {
 
     @BeforeEach
     void setUp() {
-        StoreContext.APPLICATION.getObjectMap().clear();
-        StoreContext.API.getObjectMap().clear();
-        BrokerContext.APPLICATION.getObjectMap().clear();
-        BrokerContext.API.getObjectMap().clear();
+        StoreContext.APPLICATION.getBeanMap().clear();
+        StoreContext.API.getBeanMap().clear();
+        BrokerContext.APPLICATION.getBeanMap().clear();
+        BrokerContext.API.getBeanMap().clear();
     }
 
     @AfterEach
     void tearDown() {
-        StoreContext.APPLICATION.getObjectMap().clear();
-        StoreContext.API.getObjectMap().clear();
-        BrokerContext.APPLICATION.getObjectMap().clear();
-        BrokerContext.API.getObjectMap().clear();
+        StoreContext.APPLICATION.getBeanMap().clear();
+        StoreContext.API.getBeanMap().clear();
+        BrokerContext.APPLICATION.getBeanMap().clear();
+        BrokerContext.API.getBeanMap().clear();
     }
 
     @Test

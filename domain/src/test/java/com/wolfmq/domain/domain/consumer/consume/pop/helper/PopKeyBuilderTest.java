@@ -1,6 +1,6 @@
 package com.wolfmq.domain.domain.consumer.consume.pop.helper;
 
-import com.wolfmq.domain.core.constant.PopConstants;
+import com.wolfmq.domain.domain.consumer.consume.pop.PopConstants;
 import com.wolfmq.domain.domain.consumer.ack.AckInfo;
 import com.wolfmq.domain.domain.consumer.ack.BatchAckInfo;
 import com.wolfmq.domain.domain.consumer.consume.pop.checkpoint.PopCheckPoint;

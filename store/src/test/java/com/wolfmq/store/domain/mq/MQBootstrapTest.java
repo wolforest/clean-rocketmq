@@ -40,8 +40,8 @@ class MQBootstrapTest {
     @BeforeEach
     void setUp() {
         StorePath.initPath(tempDir.toString());
-        StoreContext.APPLICATION.getObjectMap().clear();
-        StoreContext.API.getObjectMap().clear();
+        StoreContext.APPLICATION.getBeanMap().clear();
+        StoreContext.API.getBeanMap().clear();
         StoreContext.CHECK_POINT = null;
         StoreContext.SCHEDULER = null;
 
@@ -58,8 +58,8 @@ class MQBootstrapTest {
 
     @AfterEach
     void tearDown() {
-        StoreContext.APPLICATION.getObjectMap().clear();
-        StoreContext.API.getObjectMap().clear();
+        StoreContext.APPLICATION.getBeanMap().clear();
+        StoreContext.API.getBeanMap().clear();
         StoreContext.CHECK_POINT = null;
         StoreContext.SCHEDULER = null;
     }

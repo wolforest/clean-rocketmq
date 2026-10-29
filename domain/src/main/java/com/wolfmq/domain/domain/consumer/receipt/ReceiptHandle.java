@@ -1,7 +1,7 @@
 
 package com.wolfmq.domain.domain.consumer.receipt;
 
-import com.wolfmq.domain.core.constant.MessageConst;
+import com.wolfmq.domain.domain.message.property.MessageConst;
 import com.wolfmq.domain.domain.meta.topic.KeyBuilder;
 import java.util.Arrays;
 import java.util.List;

@@ -4,7 +4,7 @@ import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.common.util.lang.collection.MapUtil;
 import com.wolfmq.domain.config.server.StoreConfig;
-import com.wolfmq.domain.core.constant.PermName;
+import com.wolfmq.domain.domain.meta.topic.PermName;
 import com.wolfmq.domain.domain.meta.DataVersion;
 import com.wolfmq.domain.domain.meta.topic.Topic;
 import com.wolfmq.domain.domain.meta.topic.TopicMap;

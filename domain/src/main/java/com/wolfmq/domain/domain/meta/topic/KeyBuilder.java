@@ -1,7 +1,7 @@
 package com.wolfmq.domain.domain.meta.topic;
 
 import com.wolfmq.domain.core.constant.MQConstants;
-import com.wolfmq.domain.core.constant.PopConstants;
+import com.wolfmq.domain.domain.consumer.consume.pop.PopConstants;
 
 public class KeyBuilder {
     public static final int POP_ORDER_REVIVE_QUEUE = 999;

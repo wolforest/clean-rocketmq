@@ -6,7 +6,7 @@ import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
 import com.wolfmq.broker.domain.transaction.Transaction;
 import com.wolfmq.domain.config.server.BrokerConfig;
-import com.wolfmq.domain.core.constant.MessageConst;
+import com.wolfmq.domain.domain.message.property.MessageConst;
 import com.wolfmq.domain.domain.mq.dto.EnqueueRequest;
 import com.wolfmq.domain.domain.mq.dto.EnqueueResult;
 import com.wolfmq.domain.core.constant.code.InvalidCode;

@@ -2,8 +2,8 @@ package com.wolfmq.broker.domain.transaction.service;
 
 import com.wolfmq.domain.config.business.TransactionConfig;
 import com.wolfmq.domain.config.server.BrokerConfig;
-import com.wolfmq.domain.core.constant.MessageConst;
-import com.wolfmq.domain.core.constant.flag.MessageSysFlag;
+import com.wolfmq.domain.domain.message.property.MessageConst;
+import com.wolfmq.domain.domain.message.property.MessageSysFlag;
 import com.wolfmq.domain.domain.mq.MessageQueue;
 import com.wolfmq.domain.domain.message.MessageBO;
 import com.wolfmq.domain.domain.transaction.CommitBuffer;

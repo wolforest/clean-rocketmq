@@ -3,7 +3,7 @@ package com.wolfmq.domain.domain.message.utils;
 import cn.coderule.common.util.lang.ByteUtil;
 import cn.coderule.common.util.lang.string.StringUtil;
 import com.wolfmq.domain.domain.message.enums.TagType;
-import com.wolfmq.domain.domain.message.MessageId;
+import com.wolfmq.domain.domain.message.property.MessageId;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;

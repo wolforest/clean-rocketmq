@@ -1,6 +1,6 @@
 package com.wolfmq.rpc.broker.rpc.protocol.header;
 
-import com.wolfmq.domain.core.constant.flag.MessageSysFlag;
+import com.wolfmq.domain.domain.message.property.MessageSysFlag;
 import com.wolfmq.rpc.common.rpc.core.exception.RemotingCommandException;
 import org.junit.jupiter.api.Test;
 

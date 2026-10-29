@@ -6,7 +6,7 @@ import apache.rocketmq.v2.ReceiveMessageResponse;
 import apache.rocketmq.v2.Resource;
 import apache.rocketmq.v2.SystemProperties;
 import com.wolfmq.broker.api.ConsumerController;
-import com.wolfmq.domain.core.constant.MessageConst;
+import com.wolfmq.domain.domain.message.property.MessageConst;
 import com.wolfmq.domain.domain.consumer.consume.PopStatus;
 import com.wolfmq.domain.server.RequestContext;
 import com.wolfmq.domain.domain.consumer.ack.broker.InvisibleRequest;

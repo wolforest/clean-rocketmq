@@ -1,7 +1,7 @@
 package com.wolfmq.domain.domain.message.utils;
 
 import com.wolfmq.domain.core.constant.MQConstants;
-import com.wolfmq.domain.core.constant.MessageConst;
+import com.wolfmq.domain.domain.message.property.MessageConst;
 import com.wolfmq.domain.domain.meta.topic.KeyBuilder;
 import java.util.ArrayList;
 import java.util.HashMap;

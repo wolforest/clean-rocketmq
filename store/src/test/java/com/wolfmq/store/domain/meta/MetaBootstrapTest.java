@@ -34,8 +34,8 @@ class MetaBootstrapTest {
 
     @AfterEach
     void tearDown() {
-        StoreContext.APPLICATION.getObjectMap().clear();
-        StoreContext.API.getObjectMap().clear();
+        StoreContext.APPLICATION.getBeanMap().clear();
+        StoreContext.API.getBeanMap().clear();
         StoreContext.CHECK_POINT = null;
         StoreContext.SCHEDULER = null;
     }

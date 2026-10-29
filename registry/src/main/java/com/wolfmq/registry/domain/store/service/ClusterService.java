@@ -1,7 +1,7 @@
 package com.wolfmq.registry.domain.store.service;
 
 import com.wolfmq.domain.config.server.RegistryConfig;
-import com.wolfmq.domain.core.constant.PermName;
+import com.wolfmq.domain.domain.meta.topic.PermName;
 import com.wolfmq.domain.domain.meta.topic.Topic;
 import com.wolfmq.registry.domain.store.model.Route;
 import com.wolfmq.registry.domain.store.model.StoreHealthInfo;

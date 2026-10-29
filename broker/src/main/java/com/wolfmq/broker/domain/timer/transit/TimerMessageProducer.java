@@ -6,7 +6,7 @@ import com.wolfmq.broker.domain.timer.context.TimerContext;
 import com.wolfmq.broker.domain.timer.service.TimerConverter;
 import com.wolfmq.broker.infra.store.MQStore;
 import com.wolfmq.domain.config.business.TimerConfig;
-import com.wolfmq.domain.core.constant.MessageConst;
+import com.wolfmq.domain.domain.message.property.MessageConst;
 import com.wolfmq.domain.server.task.QueueTask;
 import com.wolfmq.domain.domain.message.MessageBO;
 import com.wolfmq.domain.domain.mq.dto.EnqueueRequest;

@@ -1,5 +1,6 @@
 package com.wolfmq.domain.domain.message;
 
+import com.wolfmq.domain.domain.message.property.MessageId;
 import org.junit.jupiter.api.Test;
 import java.net.InetSocketAddress;
 import static org.junit.jupiter.api.Assertions.*;

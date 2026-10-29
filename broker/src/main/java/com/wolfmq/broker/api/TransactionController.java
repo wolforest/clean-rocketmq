@@ -2,7 +2,7 @@ package com.wolfmq.broker.api;
 
 import cn.coderule.common.util.lang.string.StringUtil;
 import com.wolfmq.broker.domain.transaction.Transaction;
-import com.wolfmq.domain.core.constant.flag.MessageSysFlag;
+import com.wolfmq.domain.domain.message.property.MessageSysFlag;
 import com.wolfmq.domain.core.constant.code.InvalidCode;
 import com.wolfmq.domain.core.exception.InvalidRequestException;
 import com.wolfmq.domain.domain.meta.topic.TopicValidator;

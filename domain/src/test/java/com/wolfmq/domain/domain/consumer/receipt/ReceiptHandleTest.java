@@ -1,6 +1,6 @@
 package com.wolfmq.domain.domain.consumer.receipt;
 
-import com.wolfmq.domain.core.constant.MessageConst;
+import com.wolfmq.domain.domain.message.property.MessageConst;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

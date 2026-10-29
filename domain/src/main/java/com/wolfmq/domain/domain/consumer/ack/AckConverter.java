@@ -2,7 +2,7 @@ package com.wolfmq.domain.domain.consumer.ack;
 
 import cn.coderule.common.util.lang.string.JSONUtil;
 import com.wolfmq.domain.core.constant.MQConstants;
-import com.wolfmq.domain.core.constant.PopConstants;
+import com.wolfmq.domain.domain.consumer.consume.pop.PopConstants;
 import com.wolfmq.domain.domain.consumer.ack.broker.AckRequest;
 import com.wolfmq.domain.domain.consumer.ack.broker.AckResult;
 import com.wolfmq.domain.domain.consumer.ack.broker.InvisibleRequest;

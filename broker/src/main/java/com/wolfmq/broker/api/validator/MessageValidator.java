@@ -4,7 +4,7 @@ import cn.coderule.common.util.lang.string.StringUtil;
 import com.wolfmq.domain.config.business.MessageConfig;
 import com.wolfmq.domain.config.server.BrokerConfig;
 import com.wolfmq.domain.core.constant.MQConstants;
-import com.wolfmq.domain.core.constant.MessageConst;
+import com.wolfmq.domain.domain.message.property.MessageConst;
 import com.wolfmq.domain.core.constant.code.InvalidCode;
 import com.wolfmq.domain.domain.message.MessageBO;
 import com.wolfmq.domain.domain.message.codec.MessageEncoder;

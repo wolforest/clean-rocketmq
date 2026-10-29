@@ -1,6 +1,6 @@
 package com.wolfmq.domain.config.business;
 
-import com.wolfmq.domain.core.constant.MessageConst;
+import com.wolfmq.domain.domain.message.property.MessageConst;
 import java.io.Serializable;
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;

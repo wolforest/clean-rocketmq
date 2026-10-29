@@ -1,4 +1,4 @@
-package com.wolfmq.domain.core.constant;
+package com.wolfmq.domain.domain.message.property;
 
 import java.util.HashSet;
 

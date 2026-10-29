@@ -1,6 +1,6 @@
 package com.wolfmq.domain.domain.consumer.consume.pop.checkpoint;
 
-import com.wolfmq.domain.core.constant.PopConstants;
+import com.wolfmq.domain.domain.consumer.consume.pop.PopConstants;
 import com.wolfmq.domain.domain.consumer.consume.pop.helper.PopKeyBuilder;
 import java.util.concurrent.atomic.AtomicInteger;
 

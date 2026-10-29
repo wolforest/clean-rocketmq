@@ -3,7 +3,7 @@ package com.wolfmq.store.domain.timer.wheel;
 import cn.coderule.common.util.lang.time.DateUtil;
 import com.wolfmq.domain.config.business.TimerConfig;
 import com.wolfmq.domain.config.server.StoreConfig;
-import com.wolfmq.domain.core.constant.MessageConst;
+import com.wolfmq.domain.domain.message.property.MessageConst;
 import com.wolfmq.domain.domain.message.MessageBO;
 import com.wolfmq.domain.domain.timer.model.TimerConstants;
 import com.wolfmq.domain.domain.timer.model.TimerEvent;

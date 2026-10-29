@@ -7,7 +7,7 @@ import apache.rocketmq.v2.Status;
 import apache.rocketmq.v2.TransactionResolution;
 import apache.rocketmq.v2.TransactionSource;
 import com.wolfmq.broker.api.TransactionController;
-import com.wolfmq.domain.core.constant.flag.MessageSysFlag;
+import com.wolfmq.domain.domain.message.property.MessageSysFlag;
 import com.wolfmq.domain.domain.transaction.TransactionType;
 import com.wolfmq.domain.server.RequestContext;
 import com.wolfmq.domain.domain.transaction.SubmitRequest;

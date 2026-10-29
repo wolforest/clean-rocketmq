@@ -3,7 +3,7 @@ package com.wolfmq.store.server.bootstrap;
 import com.wolfmq.domain.config.server.StoreConfig;
 import com.wolfmq.domain.config.store.StorePath;
 import com.wolfmq.domain.domain.meta.topic.Topic;
-import com.wolfmq.domain.core.constant.PermName;
+import com.wolfmq.domain.domain.meta.topic.PermName;
 import com.wolfmq.domain.mock.ConfigMock;
 import com.wolfmq.rpc.common.rpc.netty.NettyClient;
 import org.junit.jupiter.api.AfterEach;
@@ -28,8 +28,8 @@ class StoreRegisterTest {
     @BeforeEach
     void setUp() {
         StorePath.initPath(tempDir.toString());
-        StoreContext.APPLICATION.getObjectMap().clear();
-        StoreContext.API.getObjectMap().clear();
+        StoreContext.APPLICATION.getBeanMap().clear();
+        StoreContext.API.getBeanMap().clear();
 
         storeConfig = ConfigMock.createStoreConfig(tempDir.toString());
         storeConfig.setCluster("default-cluster");
@@ -43,8 +43,8 @@ class StoreRegisterTest {
 
     @AfterEach
     void tearDown() {
-        StoreContext.APPLICATION.getObjectMap().clear();
-        StoreContext.API.getObjectMap().clear();
+        StoreContext.APPLICATION.getBeanMap().clear();
+        StoreContext.API.getBeanMap().clear();
         StoreContext.CHECK_POINT = null;
         StoreContext.SCHEDULER = null;
     }

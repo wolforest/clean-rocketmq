@@ -10,7 +10,7 @@ public class RegistryContext {
     public static final ApplicationContext MONITOR = new ApplicationContext();
 
     public static void registerContext(ApplicationContext context) {
-        APPLICATION.registerContext(context);
+        APPLICATION.merge(context);
     }
 
     public static void register(Object bean) {

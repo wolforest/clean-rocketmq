@@ -1,6 +1,6 @@
 package com.wolfmq.broker.domain.consumer.revive;
 
-import com.wolfmq.domain.core.constant.PopConstants;
+import com.wolfmq.domain.domain.consumer.consume.pop.PopConstants;
 import com.wolfmq.domain.domain.consumer.consume.mq.QueueRequest;
 import com.wolfmq.domain.domain.consumer.revive.ReviveBuffer;
 import com.wolfmq.domain.domain.meta.offset.OffsetRequest;

@@ -88,8 +88,8 @@ public abstract class BaseDispatcherIntegrationTest {
 
     private void resetStoreContext() {
         StoreContext.CHECK_POINT = null;
-        StoreContext.APPLICATION.getObjectMap().clear();
-        StoreContext.API.getObjectMap().clear();
+        StoreContext.APPLICATION.getBeanMap().clear();
+        StoreContext.API.getBeanMap().clear();
     }
 
     private void initCheckPoint() {

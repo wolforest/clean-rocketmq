@@ -9,7 +9,7 @@ import com.wolfmq.broker.domain.transaction.service.TransactionMessageService;
 import com.wolfmq.domain.config.business.MessageConfig;
 import com.wolfmq.domain.config.business.TransactionConfig;
 import com.wolfmq.domain.config.server.BrokerConfig;
-import com.wolfmq.domain.core.constant.MessageConst;
+import com.wolfmq.domain.domain.message.property.MessageConst;
 import com.wolfmq.domain.domain.mq.dto.DequeueResult;
 import com.wolfmq.domain.domain.message.MessageBO;
 import com.wolfmq.domain.domain.mq.dto.EnqueueResult;
