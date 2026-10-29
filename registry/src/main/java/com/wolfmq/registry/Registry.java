@@ -26,11 +26,12 @@ public class Registry implements Lifecycle {
     }
 
     private final String[] args;
-    private final ApplicationContext context = new ApplicationContext();
+    private final ApplicationContext context;
     private LifecycleManager componentManager;
 
     public Registry(String[] args) {
         this.args = args;
+        this.context = new ApplicationContext();
     }
 
     @Override
