@@ -19,10 +19,10 @@ import com.wolfmq.registry.processor.TopicProcessor;
 import com.wolfmq.registry.server.bootstrap.ExecutorFactory;
 import com.wolfmq.registry.server.rpc.HaClient;
 
-public class StoreManager implements Lifecycle {
+public class StoreBootstrap implements Lifecycle {
     private final ApplicationContext context;
 
-    public StoreManager(ApplicationContext context) {
+    public StoreBootstrap(ApplicationContext context) {
         this.context = context;
     }
 
