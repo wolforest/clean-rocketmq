@@ -30,9 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 public class Store implements Lifecycle {
 
     public static void main(String[] args) throws Exception {
-        Store store = new Store(args);
-        store.initialize();
-        store.start();
+        new Store(args).start();
     }
 
     private final StoreArgument argument;
@@ -67,9 +65,10 @@ public class Store implements Lifecycle {
     public void start() throws Exception {
         log.info("Store is starting");
 
+        this.initialize();
+
         startupLock.lock();
         this.componentManager.start();
-        shutdownLock.lock();
 
         log.info("Store start successfully");
     }
@@ -78,6 +77,7 @@ public class Store implements Lifecycle {
     public void shutdown() throws Exception {
         log.info("Store is shutting down ...");
 
+        shutdownLock.lock();
         this.componentManager.shutdown();
         context.getBean(CheckPoint.class, ContextNamespace.APP).save();
 
