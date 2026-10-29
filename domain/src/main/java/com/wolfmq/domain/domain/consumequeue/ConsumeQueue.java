@@ -1,6 +1,6 @@
 package com.wolfmq.domain.domain.consumequeue;
 
-import com.wolfmq.domain.domain.commitlog.CommitEvent;
+import com.wolfmq.domain.domain.commitlog.dispatch.CommitEvent;
 import com.wolfmq.domain.core.mmap.MappedFileQueue;
 import java.util.List;
 import java.util.Map;

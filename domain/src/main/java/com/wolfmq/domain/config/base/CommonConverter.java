@@ -1,6 +1,6 @@
 package com.wolfmq.domain.config.base;
 
-import com.wolfmq.domain.domain.commitlog.FlushType;
+import com.wolfmq.domain.domain.commitlog.flush.FlushType;
 import lombok.extern.slf4j.Slf4j;
 
 /**

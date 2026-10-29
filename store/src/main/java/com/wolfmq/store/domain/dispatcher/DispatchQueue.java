@@ -1,7 +1,7 @@
 package com.wolfmq.store.domain.dispatcher;
 
 import com.wolfmq.domain.config.store.CommitConfig;
-import com.wolfmq.domain.domain.commitlog.CommitEvent;
+import com.wolfmq.domain.domain.commitlog.dispatch.CommitEvent;
 import com.conversantmedia.util.concurrent.DisruptorBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;

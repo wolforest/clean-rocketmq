@@ -2,7 +2,7 @@ package com.wolfmq.store.domain.dispatcher;
 
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 import cn.coderule.common.util.lang.ThreadUtil;
-import com.wolfmq.domain.domain.commitlog.CommitEvent;
+import com.wolfmq.domain.domain.commitlog.dispatch.CommitEvent;
 import lombok.extern.slf4j.Slf4j;
 
 /**

@@ -9,7 +9,7 @@ import com.wolfmq.domain.core.lock.queue.EnqueueLock;
 import com.wolfmq.domain.domain.message.MessageBO;
 import com.wolfmq.domain.domain.message.codec.MessageEncoder;
 import com.wolfmq.domain.domain.commitlog.CommitLog;
-import com.wolfmq.domain.domain.commitlog.CommitLogFlushPolicy;
+import com.wolfmq.domain.domain.commitlog.flush.CommitLogFlushPolicy;
 import com.wolfmq.domain.core.mmap.MappedFileQueue;
 import com.wolfmq.domain.mock.ConfigMock;
 import com.wolfmq.domain.mock.MessageMock;

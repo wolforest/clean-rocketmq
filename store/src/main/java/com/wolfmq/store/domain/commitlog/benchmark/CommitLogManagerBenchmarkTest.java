@@ -7,7 +7,7 @@ import com.wolfmq.domain.config.store.CommitConfig;
 import com.wolfmq.domain.domain.message.MessageBO;
 import com.wolfmq.domain.domain.message.codec.MessageEncoder;
 import com.wolfmq.domain.domain.commitlog.CommitLog;
-import com.wolfmq.domain.domain.commitlog.CommitLogFlushPolicy;
+import com.wolfmq.domain.domain.commitlog.flush.CommitLogFlushPolicy;
 import com.wolfmq.domain.domain.mq.dto.EnqueueFuture;
 import com.wolfmq.domain.core.mmap.MappedFileQueue;
 import com.wolfmq.domain.mock.ConfigMock;

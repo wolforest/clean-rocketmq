@@ -5,7 +5,7 @@ import com.sun.jna.NativeLong;
 import com.sun.jna.Pointer;
 import cn.coderule.common.util.lang.ByteUtil;
 import cn.coderule.common.util.io.DirUtil;
-import com.wolfmq.domain.domain.commitlog.FlushType;
+import com.wolfmq.domain.domain.commitlog.flush.FlushType;
 import com.wolfmq.domain.core.mmap.MappedFile;
 import com.wolfmq.domain.core.mmap.InsertResult;
 import com.wolfmq.domain.core.mmap.SelectedMappedBuffer;

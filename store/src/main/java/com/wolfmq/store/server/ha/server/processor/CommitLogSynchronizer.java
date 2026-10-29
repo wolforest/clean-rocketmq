@@ -8,7 +8,7 @@ import com.wolfmq.domain.core.constant.MQConstants;
 import com.wolfmq.domain.domain.mq.dto.EnqueueStatus;
 import com.wolfmq.domain.core.lock.commitlog.CommitLogLock;
 import com.wolfmq.domain.core.lock.commitlog.CommitLogSpinLock;
-import com.wolfmq.domain.domain.commitlog.GroupCommitEvent;
+import com.wolfmq.domain.domain.commitlog.flush.GroupCommitEvent;
 import com.wolfmq.domain.domain.mq.dto.EnqueueResult;
 import com.wolfmq.domain.domain.mq.dto.EnqueueFuture;
 import com.wolfmq.domain.server.store.api.CommitLogStore;

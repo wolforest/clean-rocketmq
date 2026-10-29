@@ -1,4 +1,4 @@
-package com.wolfmq.domain.domain.commitlog;
+package com.wolfmq.domain.domain.commitlog.dispatch;
 
 import com.wolfmq.domain.domain.message.MessageBO;
 import java.io.Serializable;

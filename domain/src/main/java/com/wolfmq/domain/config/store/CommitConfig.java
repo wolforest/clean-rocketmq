@@ -1,7 +1,7 @@
 package com.wolfmq.domain.config.store;
 
 import com.wolfmq.domain.config.base.ConfigAttribute;
-import com.wolfmq.domain.domain.commitlog.FlushType;
+import com.wolfmq.domain.domain.commitlog.flush.FlushType;
 import java.io.Serializable;
 import lombok.Data;
 

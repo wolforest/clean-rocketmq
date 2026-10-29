@@ -1,4 +1,4 @@
-package com.wolfmq.domain.domain.commitlog;
+package com.wolfmq.domain.domain.commitlog.dispatch;
 
 public interface CommitEventDispatcher {
     long getDispatchedOffset();

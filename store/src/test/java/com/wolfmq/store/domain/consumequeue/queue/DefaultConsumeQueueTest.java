@@ -4,7 +4,7 @@ import com.wolfmq.domain.config.server.StoreConfig;
 import com.wolfmq.domain.config.store.ConsumeQueueConfig;
 import com.wolfmq.domain.config.store.StorePath;
 import com.wolfmq.domain.domain.consumequeue.QueueType;
-import com.wolfmq.domain.domain.commitlog.CommitEvent;
+import com.wolfmq.domain.domain.commitlog.dispatch.CommitEvent;
 import com.wolfmq.domain.domain.consumequeue.QueueUnit;
 import com.wolfmq.domain.domain.consumequeue.ConsumeQueue;
 import com.wolfmq.domain.domain.message.MessageBO;

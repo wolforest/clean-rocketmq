@@ -1,4 +1,4 @@
-package com.wolfmq.domain.domain.commitlog;
+package com.wolfmq.domain.domain.commitlog.flush;
 
 import com.wolfmq.domain.domain.mq.dto.EnqueueStatus;
 import com.wolfmq.domain.domain.mq.dto.EnqueueFuture;

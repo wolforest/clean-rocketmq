@@ -1,6 +1,6 @@
 package com.wolfmq.store.domain.index;
 
-import com.wolfmq.domain.domain.commitlog.CommitEvent;
+import com.wolfmq.domain.domain.commitlog.dispatch.CommitEvent;
 import com.wolfmq.domain.domain.index.IndexService;
 import org.junit.jupiter.api.Test;
 

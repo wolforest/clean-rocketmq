@@ -4,7 +4,7 @@ import cn.coderule.common.util.io.DirUtil;
 import com.wolfmq.domain.config.server.StoreConfig;
 import com.wolfmq.domain.config.store.CommitConfig;
 import com.wolfmq.domain.domain.commitlog.CommitLog;
-import com.wolfmq.domain.domain.commitlog.CommitLogFlushPolicy;
+import com.wolfmq.domain.domain.commitlog.flush.CommitLogFlushPolicy;
 import com.wolfmq.domain.core.mmap.MappedFileQueue;
 import com.wolfmq.domain.server.store.CheckPoint;
 import com.wolfmq.store.domain.commitlog.flush.policy.DefaultCommitLogFlushPolicy;

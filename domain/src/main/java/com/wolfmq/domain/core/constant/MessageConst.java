@@ -43,10 +43,22 @@ public class MessageConst {
     public static final String PROPERTY_RECONSUME_TIME = "RECONSUME_TIME";
     public static final String PROPERTY_MSG_REGION = "MSG_REGION";
     public static final String PROPERTY_TRACE_SWITCH = "TRACE_ON";
+
+    /**
+     * Event related properties, to support event driven applications.
+     * Event graph was build with PROPERTY_EVENT_NAME:
+     *  EventA -> EventB ->                       Event1
+     *                       EventY -> EventZ ->  Event2
+     *  EventM -> EventN ->                       Event3
+     * (memo: EventB + EventN -> EventY)
+     */
+    public static final String PROPERTY_EVENT_TYPE = "EVENT_TYPE";
+    public static final String PROPERTY_EVENT_ID = "EVENT_ID";
+    public static final String PROPERTY_EVENT_NAME = "EVENT_NAME";
+
     /**
      * client can set the unique key of the message
      * or the broker will set the value as uniqueID by SendMessageProcessor
-     *
      * use cases:
      * - message unique key
      * - transaction ID
@@ -170,5 +182,10 @@ public class MessageConst {
         STRING_HASH_SET.add(PROPERTY_DLQ_ORIGIN_TOPIC);
         STRING_HASH_SET.add(PROPERTY_DLQ_ORIGIN_MESSAGE_ID);
         STRING_HASH_SET.add(PROPERTY_CRC32);
+
+        // event related properties
+        STRING_HASH_SET.add(PROPERTY_EVENT_TYPE);
+        STRING_HASH_SET.add(PROPERTY_EVENT_NAME);
+        STRING_HASH_SET.add(PROPERTY_EVENT_ID);
     }
 }

@@ -1,7 +1,7 @@
 package com.wolfmq.store.domain.commitlog.flush.policy;
 
 import com.wolfmq.domain.domain.message.MessageBO;
-import com.wolfmq.domain.domain.commitlog.CommitLogFlushPolicy;
+import com.wolfmq.domain.domain.commitlog.flush.CommitLogFlushPolicy;
 import com.wolfmq.domain.domain.mq.dto.EnqueueFuture;
 import com.wolfmq.domain.core.mmap.InsertResult;
 import com.wolfmq.domain.core.mmap.MappedFileQueue;

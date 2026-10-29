@@ -4,7 +4,7 @@ import com.wolfmq.domain.config.server.StoreConfig;
 import com.wolfmq.domain.core.constant.code.InvalidCode;
 import com.wolfmq.domain.core.exception.InvalidRequestException;
 import com.wolfmq.domain.domain.message.codec.MessageEncoder;
-import com.wolfmq.domain.domain.commitlog.CommitLogFlushPolicy;
+import com.wolfmq.domain.domain.commitlog.flush.CommitLogFlushPolicy;
 import com.wolfmq.domain.server.store.CheckPoint;
 import com.wolfmq.store.domain.commitlog.vo.InsertContext;
 import com.wolfmq.domain.config.store.CommitConfig;

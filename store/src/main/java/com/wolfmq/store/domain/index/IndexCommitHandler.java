@@ -2,8 +2,8 @@ package com.wolfmq.store.domain.index;
 
 import cn.coderule.common.util.lang.string.StringUtil;
 import com.wolfmq.domain.domain.message.MessageBO;
-import com.wolfmq.domain.domain.commitlog.CommitEvent;
-import com.wolfmq.domain.domain.commitlog.CommitHandler;
+import com.wolfmq.domain.domain.commitlog.dispatch.CommitEvent;
+import com.wolfmq.domain.domain.commitlog.dispatch.CommitHandler;
 import com.wolfmq.domain.domain.index.IndexService;
 import lombok.extern.slf4j.Slf4j;
 

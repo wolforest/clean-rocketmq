@@ -1,6 +1,6 @@
 package com.wolfmq.domain.core.mmap;
 
-import com.wolfmq.domain.domain.commitlog.FlushType;
+import com.wolfmq.domain.domain.commitlog.flush.FlushType;
 import java.nio.ByteBuffer;
 import java.nio.MappedByteBuffer;
 

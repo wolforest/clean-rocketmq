@@ -1,6 +1,6 @@
 package com.wolfmq.domain.domain.commitlog;
 
-public enum CommitShardingStrategy {
+public enum ShardingStrategy {
     BY_TOPIC,
     BY_THREAD,
 }

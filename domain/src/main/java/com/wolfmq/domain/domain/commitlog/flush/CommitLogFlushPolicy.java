@@ -1,4 +1,4 @@
-package com.wolfmq.domain.domain.commitlog;
+package com.wolfmq.domain.domain.commitlog.flush;
 
 import cn.coderule.common.convention.service.Lifecycle;
 import com.wolfmq.domain.domain.mq.dto.EnqueueFuture;

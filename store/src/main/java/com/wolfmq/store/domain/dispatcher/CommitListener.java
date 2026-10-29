@@ -4,7 +4,7 @@ import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 import cn.coderule.common.util.lang.ThreadUtil;
 import com.wolfmq.domain.config.store.CommitConfig;
 import com.wolfmq.domain.domain.message.MessageBO;
-import com.wolfmq.domain.domain.commitlog.CommitEvent;
+import com.wolfmq.domain.domain.commitlog.dispatch.CommitEvent;
 import com.wolfmq.domain.domain.commitlog.CommitLog;
 import com.wolfmq.domain.server.store.CheckPoint;
 import java.util.concurrent.atomic.AtomicLong;

@@ -1,6 +1,6 @@
 package com.wolfmq.store.domain.consumequeue.queue;
 
-import com.wolfmq.domain.domain.commitlog.CommitEvent;
+import com.wolfmq.domain.domain.commitlog.dispatch.CommitEvent;
 import com.wolfmq.domain.domain.consumequeue.QueueUnit;
 import com.wolfmq.domain.domain.consumequeue.ConsumeQueue;
 import java.util.List;

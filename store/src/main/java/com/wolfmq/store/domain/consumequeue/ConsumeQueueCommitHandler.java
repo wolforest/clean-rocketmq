@@ -1,8 +1,8 @@
 package com.wolfmq.store.domain.consumequeue;
 
 import com.wolfmq.domain.domain.message.MessageBO;
-import com.wolfmq.domain.domain.commitlog.CommitEvent;
-import com.wolfmq.domain.domain.commitlog.CommitHandler;
+import com.wolfmq.domain.domain.commitlog.dispatch.CommitEvent;
+import com.wolfmq.domain.domain.commitlog.dispatch.CommitHandler;
 import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueManager;
 
 /**

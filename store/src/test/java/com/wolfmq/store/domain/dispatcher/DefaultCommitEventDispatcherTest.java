@@ -1,7 +1,7 @@
 package com.wolfmq.store.domain.dispatcher;
 
-import com.wolfmq.domain.domain.commitlog.CommitEvent;
-import com.wolfmq.domain.domain.commitlog.CommitHandler;
+import com.wolfmq.domain.domain.commitlog.dispatch.CommitEvent;
+import com.wolfmq.domain.domain.commitlog.dispatch.CommitHandler;
 import com.wolfmq.domain.domain.commitlog.CommitLog;
 import com.wolfmq.domain.server.store.CheckPoint;
 import org.junit.jupiter.api.BeforeEach;
