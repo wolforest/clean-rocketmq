@@ -4,11 +4,11 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class BrokerManagerTest {
+public class BrokerBootstrapTest {
 
     @Test
     void testLifecycleDoesNotThrow() {
-        BrokerManager manager = new BrokerManager();
+        BrokerBootstrap manager = new BrokerBootstrap();
         assertDoesNotThrow(() -> manager.start());
         assertDoesNotThrow(() -> manager.shutdown());
     }
