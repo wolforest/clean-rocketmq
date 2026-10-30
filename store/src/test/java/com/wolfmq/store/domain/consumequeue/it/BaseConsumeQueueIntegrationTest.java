@@ -105,15 +105,15 @@ public abstract class BaseConsumeQueueIntegrationTest {
             tmpDir.resolve("checkpoint").toString()
         );
         checkpoint.setShutdownSuccessful(false);
-        context.register(checkpoint, CheckPoint.class); context.register(checkpoint, StoreCheckpoint.class);
+        context.register(checkpoint, CheckPoint.class);
     }
 
     private void initConsumeQueue() {
         ConsumeQueueConfig cqConfig = storeConfig.getConsumeQueueConfig();
         CommitConfig commitConfig = storeConfig.getCommitConfig();
-        StoreCheckpoint checkpoint = context.getBean(StoreCheckpoint.class);
+        CheckPoint checkpoint = context.getBean(CheckPoint.class);
 
-        flusher = new ConsumeQueueFlusher(cqConfig, checkpoint);
+        flusher = new ConsumeQueueFlusher(cqConfig);
         loader = new ConsumeQueueLoader(cqConfig);
 
         OffsetCodec offsetCodec = new OffsetCodec(commitConfig.getMaxShardingNumber());

@@ -5,7 +5,6 @@ import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 import com.wolfmq.domain.config.store.ConsumeQueueConfig;
 import com.wolfmq.domain.domain.consumequeue.ConsumeQueue;
 import com.wolfmq.domain.core.mmap.MappedFileQueue;
-import com.wolfmq.store.server.bootstrap.StoreCheckpoint;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
@@ -13,14 +12,12 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ConsumeQueueFlusher extends ServiceThread implements ConsumeQueueRegistry {
     private final ConsumeQueueConfig config;
-    private final StoreCheckpoint checkpoint;
 
     private long lastFlushTime = 0;
     private final Set<ConsumeQueue> queueSet = new LinkedHashSet<>(128);
 
-    public ConsumeQueueFlusher(ConsumeQueueConfig config, StoreCheckpoint checkpoint) {
+    public ConsumeQueueFlusher(ConsumeQueueConfig config) {
         this.config = config;
-        this.checkpoint = checkpoint;
     }
 
     @Override

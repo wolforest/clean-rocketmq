@@ -61,7 +61,7 @@ class MultiShardCommitLogIntegrationTest {
 
         StoreCheckpoint checkpoint = new StoreCheckpoint(tmpDir.resolve("checkpoint").toString());
         checkpoint.setShutdownSuccessful(false);
-        context.register(checkpoint, CheckPoint.class); context.register(checkpoint, StoreCheckpoint.class);
+        context.register(checkpoint, CheckPoint.class);
 
         allocateService = new AllocateMappedFileService(storeConfig);
         allocateService.start();
@@ -93,7 +93,7 @@ class MultiShardCommitLogIntegrationTest {
     }
 
     private void initCommitLog() throws Exception {
-        CheckPoint ckpt = context.getBean(StoreCheckpoint.class);
+        CheckPoint ckpt = context.getBean(CheckPoint.class);
         CommitConfig commitConfig = storeConfig.getCommitConfig();
 
         CommitLogFactory factory = new CommitLogFactory(storeConfig, ckpt, allocateService);

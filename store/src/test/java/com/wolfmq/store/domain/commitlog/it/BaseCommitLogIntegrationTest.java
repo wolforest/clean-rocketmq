@@ -89,11 +89,11 @@ public abstract class BaseCommitLogIntegrationTest {
             tmpDir.resolve("checkpoint").toString()
         );
         checkpoint.setShutdownSuccessful(false);
-        context.register(checkpoint, CheckPoint.class); context.register(checkpoint, StoreCheckpoint.class);
+        context.register(checkpoint, CheckPoint.class);
     }
 
     private void initCommitLog() throws Exception {
-        CheckPoint checkpoint = context.getBean(StoreCheckpoint.class);
+        CheckPoint checkpoint = context.getBean(CheckPoint.class);
         CommitConfig commitConfig = storeConfig.getCommitConfig();
 
         CommitLogFactory factory = new CommitLogFactory(storeConfig, checkpoint, allocateService);

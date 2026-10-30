@@ -3,7 +3,6 @@ package com.wolfmq.store.domain.consumequeue.service;
 import com.wolfmq.domain.config.store.ConsumeQueueConfig;
 import com.wolfmq.domain.domain.consumequeue.ConsumeQueue;
 import com.wolfmq.domain.core.mmap.MappedFileQueue;
-import com.wolfmq.store.server.bootstrap.StoreCheckpoint;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -13,14 +12,12 @@ import static org.mockito.Mockito.*;
 public class ConsumeQueueFlusherTest {
 
     private ConsumeQueueConfig config;
-    private StoreCheckpoint checkpoint;
     private ConsumeQueueFlusher flusher;
 
     @BeforeEach
     void setUp() {
         config = new ConsumeQueueConfig();
-        checkpoint = mock(StoreCheckpoint.class);
-        flusher = new ConsumeQueueFlusher(config, checkpoint);
+        flusher = new ConsumeQueueFlusher(config);
     }
 
     @Test

@@ -98,11 +98,11 @@ public abstract class BaseDispatcherIntegrationTest {
             tmpDir.resolve("checkpoint").toString()
         );
         checkpoint.setShutdownSuccessful(false);
-        context.register(checkpoint, CheckPoint.class); context.register(checkpoint, StoreCheckpoint.class);
+        context.register(checkpoint, CheckPoint.class);
     }
 
     private void initCommitLog() throws Exception {
-        CheckPoint checkpoint = context.getBean(StoreCheckpoint.class);
+        CheckPoint checkpoint = context.getBean(CheckPoint.class);
         CommitConfig commitConfig = storeConfig.getCommitConfig();
 
         CommitLogFactory factory = new CommitLogFactory(storeConfig, checkpoint, allocateService);
@@ -130,7 +130,7 @@ public abstract class BaseDispatcherIntegrationTest {
 
     protected CommitListener createCommitListener() {
         CommitLog commitLog = commitLogManager.selectByShardId(0);
-        return new CommitListener(dispatchQueue, commitLog, context.getBean(StoreCheckpoint.class), storeConfig.getCommitConfig());
+        return new CommitListener(dispatchQueue, commitLog, context.getBean(CheckPoint.class), storeConfig.getCommitConfig());
     }
 
     protected AtomicInteger registerCountingHandler() {

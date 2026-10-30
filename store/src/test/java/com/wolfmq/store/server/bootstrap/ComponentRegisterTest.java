@@ -44,7 +44,7 @@ class ComponentRegisterTest {
         context.register(storeConfig);
         context.register(mock(NettyClient.class));
 
-        StoreCheckpoint __cp = new StoreCheckpoint(tempDir.toString()); context.register(__cp, CheckPoint.class); context.register(__cp, StoreCheckpoint.class);
+        StoreCheckpoint __cp = new StoreCheckpoint(tempDir.toString()); context.register(__cp, CheckPoint.class);
 
         LifecycleManager manager = new ComponentRegister(context).register();
         assertNotNull(manager);
@@ -56,7 +56,7 @@ class ComponentRegisterTest {
         context.register(storeConfig);
         context.register(mock(NettyClient.class));
 
-        StoreCheckpoint __cp = new StoreCheckpoint(tempDir.toString()); context.register(__cp, CheckPoint.class); context.register(__cp, StoreCheckpoint.class);
+        StoreCheckpoint __cp = new StoreCheckpoint(tempDir.toString()); context.register(__cp, CheckPoint.class);
 
         new ComponentRegister(context).register();
 
@@ -71,7 +71,7 @@ class ComponentRegisterTest {
         context.register(storeConfig);
         context.register(mock(NettyClient.class));
 
-        StoreCheckpoint __cp = new StoreCheckpoint(tempDir.toString()); context.register(__cp, CheckPoint.class); context.register(__cp, StoreCheckpoint.class);
+        StoreCheckpoint __cp = new StoreCheckpoint(tempDir.toString()); context.register(__cp, CheckPoint.class);
 
         new ComponentRegister(context).register();
 

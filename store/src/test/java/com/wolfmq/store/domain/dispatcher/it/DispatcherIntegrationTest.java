@@ -10,7 +10,7 @@ import com.wolfmq.domain.mock.MessageMock;
 import com.wolfmq.store.domain.dispatcher.CommitListener;
 import com.wolfmq.store.domain.dispatcher.DispatchManager;
 import com.wolfmq.store.domain.dispatcher.DispatchQueue;
-import com.wolfmq.store.server.bootstrap.StoreCheckpoint;
+import com.wolfmq.domain.server.store.CheckPoint;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -137,7 +137,7 @@ class DispatcherIntegrationTest extends BaseDispatcherIntegrationTest {
         CommitConfig config = storeConfig.getCommitConfig();
         config.setDispatchThreads(2);
 
-        StoreCheckpoint checkpoint = context.getBean(StoreCheckpoint.class);
+        CheckPoint checkpoint = context.getBean(CheckPoint.class);
         DispatchManager dispatchManager = new DispatchManager(
             config, checkpoint, commitLogManager, handlerManager);
 
@@ -207,7 +207,7 @@ class DispatcherIntegrationTest extends BaseDispatcherIntegrationTest {
 
     @Test
     void testCommitListenerCheckpointIntegration() {
-        StoreCheckpoint checkpoint = context.getBean(StoreCheckpoint.class);
+        CheckPoint checkpoint = context.getBean(CheckPoint.class);
 
         Long dispatchedOffset = checkpoint.getMaxOffset().getDispatchedOffset(0);
         assertNull(dispatchedOffset, "initial dispatchedOffset should be null");
@@ -224,7 +224,7 @@ class DispatcherIntegrationTest extends BaseDispatcherIntegrationTest {
         CommitConfig config = storeConfig.getCommitConfig();
         config.setDispatchThreads(1);
 
-        StoreCheckpoint checkpoint = context.getBean(StoreCheckpoint.class);
+        CheckPoint checkpoint = context.getBean(CheckPoint.class);
         DispatchManager dispatchManager = new DispatchManager(
             config, checkpoint, commitLogManager, handlerManager);
 

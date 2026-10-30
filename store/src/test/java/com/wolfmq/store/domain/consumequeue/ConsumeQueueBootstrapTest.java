@@ -46,7 +46,7 @@ class ConsumeQueueBootstrapTest {
 
         context.register(storeConfig);
         context.register(storeConfig.getCommitConfig(), CommitConfig.class);
-        StoreCheckpoint __cp = new StoreCheckpoint(anotherDir.toString()); context.register(__cp, CheckPoint.class); context.register(__cp, StoreCheckpoint.class);
+        StoreCheckpoint __cp = new StoreCheckpoint(anotherDir.toString()); context.register(__cp, CheckPoint.class);
 
         TopicService topicService = mock(TopicService.class);
         context.register(topicService, TopicService.class);

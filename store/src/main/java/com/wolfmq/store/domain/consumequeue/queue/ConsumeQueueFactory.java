@@ -3,7 +3,7 @@ package com.wolfmq.store.domain.consumequeue.queue;
 import com.wolfmq.domain.config.store.ConsumeQueueConfig;
 import com.wolfmq.domain.domain.consumequeue.ConsumeQueue;
 import com.wolfmq.domain.domain.meta.service.TopicService;
-import com.wolfmq.store.server.bootstrap.StoreCheckpoint;
+import com.wolfmq.domain.server.store.CheckPoint;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -16,7 +16,7 @@ public class ConsumeQueueFactory implements ConsumeQueueRegistry {
 
     private final ConsumeQueueConfig config;
     private final TopicService topicService;
-    private final StoreCheckpoint checkpoint;
+    private final CheckPoint checkpoint;
 
     private final List<ConsumeQueueRegistry> createHooks = new ArrayList<>();
     /**
@@ -25,7 +25,7 @@ public class ConsumeQueueFactory implements ConsumeQueueRegistry {
      */
     protected final ConcurrentMap<String, ConcurrentMap<Integer, ConsumeQueue>> topicMap;
 
-    public ConsumeQueueFactory(ConsumeQueueConfig config, TopicService topicService, StoreCheckpoint checkpoint) {
+    public ConsumeQueueFactory(ConsumeQueueConfig config, TopicService topicService, CheckPoint checkpoint) {
         this.config = config;
         this.topicService = topicService;
         this.checkpoint = checkpoint;

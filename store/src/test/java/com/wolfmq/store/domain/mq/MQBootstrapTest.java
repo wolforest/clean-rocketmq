@@ -52,7 +52,7 @@ class MQBootstrapTest {
 
         storeConfig = ConfigMock.createStoreConfig(tempDir.toString());
         context.register(storeConfig);
-        StoreCheckpoint __cp = new StoreCheckpoint(tempDir.toString()); context.register(__cp, CheckPoint.class); context.register(__cp, StoreCheckpoint.class);
+        StoreCheckpoint __cp = new StoreCheckpoint(tempDir.toString()); context.register(__cp, CheckPoint.class);
 
         context.register(mock(CommitLogManager.class), CommitLogManager.class);
         context.register(mock(ConsumeQueueManager.class), ConsumeQueueManager.class);

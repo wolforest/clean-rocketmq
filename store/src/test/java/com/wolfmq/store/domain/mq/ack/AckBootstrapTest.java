@@ -39,7 +39,7 @@ class AckBootstrapTest {
 
         storeConfig = ConfigMock.createStoreConfig(tempDir.toString());
         context.register(storeConfig);
-        StoreCheckpoint __cp = new StoreCheckpoint(tempDir.toString()); context.register(__cp, CheckPoint.class); context.register(__cp, StoreCheckpoint.class);
+        StoreCheckpoint __cp = new StoreCheckpoint(tempDir.toString()); context.register(__cp, CheckPoint.class);
 
         context.register(new DequeueLock());
         context.register(new InflightCounter());

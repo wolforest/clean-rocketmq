@@ -51,7 +51,7 @@ class MetaBootstrapTest {
 
         context.register(storeConfig);
         context.register(new StoreState(), StoreState.class);
-        StoreCheckpoint __cp = new StoreCheckpoint(anotherDir.toString()); context.register(__cp, CheckPoint.class); context.register(__cp, StoreCheckpoint.class);
+        StoreCheckpoint __cp = new StoreCheckpoint(anotherDir.toString()); context.register(__cp, CheckPoint.class);
 
         ConsumeQueueManager consumeQueueManager = mock(ConsumeQueueManager.class);
         StoreRegister storeRegister = mock(StoreRegister.class);

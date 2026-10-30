@@ -13,7 +13,7 @@ import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueLoader;
 import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueRecovery;
 import com.wolfmq.store.domain.dispatcher.CommitHandlerManager;
 import cn.coderule.common.convention.container.ApplicationContext;
-import com.wolfmq.store.server.bootstrap.StoreCheckpoint;
+import com.wolfmq.domain.server.store.CheckPoint;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -57,12 +57,12 @@ public class ConsumeQueueBootstrap implements Lifecycle {
     }
 
     private void initConsumeQueue() {
-        flusher = new ConsumeQueueFlusher(consumeQueueConfig, context.getBean(StoreCheckpoint.class));
+        flusher = new ConsumeQueueFlusher(consumeQueueConfig);
         loader = new ConsumeQueueLoader(consumeQueueConfig);
 
         CommitConfig commitConfig = context.getBean(StoreConfig.class).getCommitConfig();
         OffsetCodec offsetCodec = new OffsetCodec(commitConfig.getMaxShardingNumber());
-        recovery = new ConsumeQueueRecovery(consumeQueueConfig, context.getBean(StoreCheckpoint.class), offsetCodec);
+        recovery = new ConsumeQueueRecovery(consumeQueueConfig, context.getBean(CheckPoint.class), offsetCodec);
 
         ConsumeQueueFactory consumeQueueFactory = initConsumeQueueFactory();
         consumeQueueManager = new ConsumeQueueManager(consumeQueueFactory);
@@ -74,7 +74,7 @@ public class ConsumeQueueBootstrap implements Lifecycle {
         ConsumeQueueFactory consumeQueueFactory = new ConsumeQueueFactory(
             consumeQueueConfig,
             topicService,
-            context.getBean(StoreCheckpoint.class)
+            context.getBean(CheckPoint.class)
         );
 
         consumeQueueFactory.addCreateHook(flusher);

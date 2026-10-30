@@ -99,7 +99,6 @@ public class Store implements Lifecycle {
         checkpoint.setShutdownSuccessful(isShutdownSuccessful);
 
         context.register(checkpoint, CheckPoint.class);
-        context.register(checkpoint, StoreCheckpoint.class);
     }
 
 }

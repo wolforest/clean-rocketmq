@@ -45,7 +45,7 @@ class CommitLogBootstrapTest {
         StorePath.initPath(anotherDir.toString());
 
         context.register(storeConfig);
-        StoreCheckpoint __cp = new StoreCheckpoint(anotherDir.toString()); context.register(__cp, CheckPoint.class); context.register(__cp, StoreCheckpoint.class);
+        StoreCheckpoint __cp = new StoreCheckpoint(anotherDir.toString()); context.register(__cp, CheckPoint.class);
         context.register(mock(TopicService.class), TopicService.class);
         context.register(mock(AllocateMappedFileService.class));
 

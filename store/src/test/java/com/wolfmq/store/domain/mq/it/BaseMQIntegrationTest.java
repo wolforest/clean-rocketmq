@@ -96,11 +96,11 @@ public abstract class BaseMQIntegrationTest {
             tmpDir.resolve("checkpoint").toString()
         );
         checkpoint.setShutdownSuccessful(false);
-        context.register(checkpoint, CheckPoint.class); context.register(checkpoint, StoreCheckpoint.class);
+        context.register(checkpoint, CheckPoint.class);
     }
 
     private void initCommitLog() throws Exception {
-        CheckPoint checkpoint = context.getBean(StoreCheckpoint.class);
+        CheckPoint checkpoint = context.getBean(CheckPoint.class);
         CommitConfig commitConfig = storeConfig.getCommitConfig();
 
         CommitLogFactory factory = new CommitLogFactory(storeConfig, checkpoint, allocateService);
@@ -122,14 +122,14 @@ public abstract class BaseMQIntegrationTest {
 
     private void initConsumeQueue() {
         ConsumeQueueConfig cqConfig = storeConfig.getConsumeQueueConfig();
-        StoreCheckpoint checkpoint = context.getBean(StoreCheckpoint.class);
+        CheckPoint checkpoint = context.getBean(CheckPoint.class);
         CommitConfig commitConfig = storeConfig.getCommitConfig();
 
         TopicService topicService = mock(TopicService.class);
         when(topicService.exists(anyString())).thenReturn(true);
         context.register(topicService, TopicService.class);
 
-        ConsumeQueueFlusher flusher = new ConsumeQueueFlusher(cqConfig, checkpoint);
+        ConsumeQueueFlusher flusher = new ConsumeQueueFlusher(cqConfig);
         ConsumeQueueLoader loader = new ConsumeQueueLoader(cqConfig);
         OffsetCodec offsetCodec = new OffsetCodec(commitConfig.getMaxShardingNumber());
         ConsumeQueueRecovery recovery = new ConsumeQueueRecovery(cqConfig, checkpoint, offsetCodec);

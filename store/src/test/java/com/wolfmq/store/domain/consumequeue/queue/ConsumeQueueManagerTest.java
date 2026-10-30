@@ -3,7 +3,7 @@ package com.wolfmq.store.domain.consumequeue.queue;
 import com.wolfmq.domain.config.store.ConsumeQueueConfig;
 import com.wolfmq.domain.domain.consumequeue.ConsumeQueue;
 import com.wolfmq.domain.domain.meta.service.TopicService;
-import com.wolfmq.store.server.bootstrap.StoreCheckpoint;
+import com.wolfmq.domain.server.store.CheckPoint;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -20,7 +20,7 @@ public class ConsumeQueueManagerTest {
     void setUp() {
         ConsumeQueueConfig config = new ConsumeQueueConfig();
         topicService = mock(TopicService.class);
-        StoreCheckpoint checkpoint = mock(StoreCheckpoint.class);
+        CheckPoint checkpoint = mock(CheckPoint.class);
         factory = spy(new ConsumeQueueFactory(config, topicService, checkpoint));
         manager = new ConsumeQueueManager(factory);
     }

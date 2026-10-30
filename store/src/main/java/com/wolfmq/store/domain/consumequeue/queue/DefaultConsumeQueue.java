@@ -12,7 +12,7 @@ import com.wolfmq.domain.domain.consumequeue.ConsumeQueue;
 import com.wolfmq.domain.core.mmap.MappedFile;
 import com.wolfmq.domain.core.mmap.MappedFileQueue;
 import com.wolfmq.store.infra.file.DefaultMappedFileQueue;
-import com.wolfmq.store.server.bootstrap.StoreCheckpoint;
+import com.wolfmq.domain.server.store.CheckPoint;
 import java.io.File;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -39,7 +39,7 @@ public class DefaultConsumeQueue implements ConsumeQueue {
     private MappedFileQueue mappedFileQueue;
 
     private final ConsumeQueueConfig config;
-    private final StoreCheckpoint checkpoint;
+    private final CheckPoint checkpoint;
     private final ByteBuffer writeBuffer;
 
     @Getter @Setter
@@ -50,7 +50,7 @@ public class DefaultConsumeQueue implements ConsumeQueue {
     private volatile long minOffset = 0;
     private volatile long maxOffset = 0;
 
-    public DefaultConsumeQueue(String topic, int queueId, ConsumeQueueConfig config, StoreCheckpoint checkpoint) {
+    public DefaultConsumeQueue(String topic, int queueId, ConsumeQueueConfig config, CheckPoint checkpoint) {
         this.topic = topic;
         this.queueId = queueId;
         this.config = config;
