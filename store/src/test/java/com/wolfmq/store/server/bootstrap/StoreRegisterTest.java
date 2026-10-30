@@ -7,7 +7,7 @@ import com.wolfmq.domain.config.store.StorePath;
 import com.wolfmq.domain.domain.meta.service.TopicService;
 import com.wolfmq.domain.domain.meta.topic.Topic;
 import com.wolfmq.domain.domain.meta.topic.PermName;
-import com.wolfmq.domain.mock.ConfigMock;
+import com.wolfmq.domain.test.ConfigMock;
 import com.wolfmq.rpc.common.rpc.netty.NettyClient;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

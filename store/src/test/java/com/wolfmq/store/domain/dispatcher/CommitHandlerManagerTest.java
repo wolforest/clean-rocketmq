@@ -2,7 +2,7 @@ package com.wolfmq.store.domain.dispatcher;
 
 import com.wolfmq.domain.domain.commitlog.dispatch.CommitEvent;
 import com.wolfmq.domain.domain.commitlog.dispatch.CommitHandler;
-import com.wolfmq.domain.mock.MessageMock;
+import com.wolfmq.domain.test.MessageMock;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

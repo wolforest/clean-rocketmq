@@ -4,7 +4,7 @@ import com.wolfmq.domain.config.server.BrokerConfig;
 import com.wolfmq.domain.domain.meta.offset.OffsetRequest;
 import com.wolfmq.domain.domain.meta.offset.OffsetResult;
 import com.wolfmq.domain.server.store.api.meta.ConsumeOffsetStore;
-import com.wolfmq.domain.mock.ConfigMock;
+import com.wolfmq.domain.test.ConfigMock;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

@@ -2,7 +2,7 @@ package com.wolfmq.broker.server;
 
 import cn.coderule.common.convention.container.ApplicationContext;
 import com.wolfmq.domain.config.server.BrokerConfig;
-import com.wolfmq.domain.mock.ConfigMock;
+import com.wolfmq.domain.test.ConfigMock;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

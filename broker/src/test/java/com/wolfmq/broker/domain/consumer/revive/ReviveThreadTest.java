@@ -1,8 +1,7 @@
 package com.wolfmq.broker.domain.consumer.revive;
 
-import com.wolfmq.domain.config.business.MessageConfig;
 import com.wolfmq.domain.config.server.BrokerConfig;
-import com.wolfmq.domain.mock.ConfigMock;
+import com.wolfmq.domain.test.ConfigMock;
 import com.wolfmq.rpc.store.facade.ConsumeOffsetFacade;
 import com.wolfmq.rpc.store.facade.MQFacade;
 import com.wolfmq.rpc.store.facade.SubscriptionFacade;

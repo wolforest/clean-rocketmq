@@ -6,7 +6,7 @@ import com.wolfmq.domain.config.server.BrokerConfig;
 import com.wolfmq.domain.server.task.QueueTask;
 import com.wolfmq.domain.domain.timer.model.TimerQueue;
 import com.wolfmq.domain.domain.timer.state.TimerState;
-import com.wolfmq.domain.mock.ConfigMock;
+import com.wolfmq.domain.test.ConfigMock;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

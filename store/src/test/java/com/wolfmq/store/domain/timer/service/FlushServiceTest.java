@@ -1,7 +1,7 @@
 package com.wolfmq.store.domain.timer.service;
 
 import com.wolfmq.domain.config.server.StoreConfig;
-import com.wolfmq.domain.mock.ConfigMock;
+import com.wolfmq.domain.test.ConfigMock;
 import java.nio.file.Path;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;

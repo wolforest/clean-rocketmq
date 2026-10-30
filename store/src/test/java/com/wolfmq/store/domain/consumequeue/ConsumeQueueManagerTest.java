@@ -3,7 +3,7 @@ package com.wolfmq.store.domain.consumequeue;
 import com.wolfmq.domain.domain.commitlog.dispatch.CommitEvent;
 import com.wolfmq.domain.domain.consumequeue.ConsumeQueue;
 import com.wolfmq.domain.domain.consumequeue.QueueUnit;
-import com.wolfmq.domain.mock.MessageMock;
+import com.wolfmq.domain.test.MessageMock;
 import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueFactory;
 import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueManager;
 import java.util.List;

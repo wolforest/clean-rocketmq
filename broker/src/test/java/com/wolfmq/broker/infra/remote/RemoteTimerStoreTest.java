@@ -1,7 +1,7 @@
 package com.wolfmq.broker.infra.remote;
 
 import com.wolfmq.domain.config.server.BrokerConfig;
-import com.wolfmq.domain.mock.ConfigMock;
+import com.wolfmq.domain.test.ConfigMock;
 import com.wolfmq.rpc.common.rpc.RpcClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

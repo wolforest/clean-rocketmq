@@ -8,7 +8,7 @@ import com.wolfmq.domain.domain.message.MessageBO;
 import com.wolfmq.domain.domain.mq.dto.EnqueueFuture;
 import com.wolfmq.domain.domain.mq.dto.EnqueueResult;
 import com.wolfmq.domain.core.mmap.InsertResult;
-import com.wolfmq.domain.mock.MessageMock;
+import com.wolfmq.domain.test.MessageMock;
 import com.wolfmq.store.domain.commitlog.log.CommitLogManager;
 import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueManager;
 import com.wolfmq.store.server.ha.server.processor.CommitLogSynchronizer;

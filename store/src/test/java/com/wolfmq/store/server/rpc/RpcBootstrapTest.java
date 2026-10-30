@@ -11,7 +11,7 @@ import com.wolfmq.domain.server.store.api.meta.SubscriptionStore;
 import com.wolfmq.domain.server.store.api.meta.TopicStore;
 import com.wolfmq.store.domain.mq.queue.DequeueService;
 import com.wolfmq.store.domain.mq.queue.EnqueueService;
-import com.wolfmq.domain.mock.ConfigMock;
+import com.wolfmq.domain.test.ConfigMock;
 import java.nio.file.Path;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

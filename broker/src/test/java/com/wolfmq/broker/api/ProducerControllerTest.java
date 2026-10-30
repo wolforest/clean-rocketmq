@@ -4,7 +4,7 @@ import com.wolfmq.broker.domain.producer.Producer;
 import com.wolfmq.domain.config.server.BrokerConfig;
 import com.wolfmq.domain.server.ClientChannelInfo;
 import com.wolfmq.domain.server.RequestContext;
-import com.wolfmq.domain.mock.ConfigMock;
+import com.wolfmq.domain.test.ConfigMock;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

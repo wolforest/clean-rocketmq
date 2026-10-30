@@ -3,7 +3,7 @@ package com.wolfmq.store.domain.timer.wheel;
 import com.wolfmq.domain.config.business.TimerConfig;
 import com.wolfmq.domain.config.server.StoreConfig;
 import com.wolfmq.domain.config.store.StorePath;
-import com.wolfmq.domain.mock.ConfigMock;
+import com.wolfmq.domain.test.ConfigMock;
 import com.wolfmq.store.domain.mq.queue.MessageService;
 import com.wolfmq.store.domain.timer.service.CheckpointService;
 import java.nio.file.Path;

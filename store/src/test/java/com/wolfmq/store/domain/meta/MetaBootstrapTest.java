@@ -15,7 +15,7 @@ import com.wolfmq.domain.server.store.api.meta.TopicStore;
 import com.wolfmq.domain.domain.meta.service.ConsumeOffsetService;
 import com.wolfmq.domain.domain.meta.service.ConsumeOrderService;
 import com.wolfmq.domain.domain.meta.service.TopicService;
-import com.wolfmq.domain.mock.ConfigMock;
+import com.wolfmq.domain.test.ConfigMock;
 import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueManager;
 import com.wolfmq.store.server.bootstrap.StoreCheckpoint;
 import com.wolfmq.store.server.bootstrap.StoreRegister;

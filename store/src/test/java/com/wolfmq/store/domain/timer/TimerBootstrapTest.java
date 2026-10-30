@@ -7,7 +7,7 @@ import cn.coderule.common.convention.container.ApplicationContext;
 import com.wolfmq.domain.config.server.StoreConfig;
 import com.wolfmq.domain.config.store.StorePath;
 import com.wolfmq.domain.server.store.api.TimerStore;
-import com.wolfmq.domain.mock.ConfigMock;
+import com.wolfmq.domain.test.ConfigMock;
 import com.wolfmq.store.domain.mq.queue.MessageService;
 import com.wolfmq.store.domain.timer.service.TimerService;
 import java.nio.file.Path;

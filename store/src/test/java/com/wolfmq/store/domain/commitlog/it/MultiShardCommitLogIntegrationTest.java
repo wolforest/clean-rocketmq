@@ -10,7 +10,7 @@ import com.wolfmq.domain.domain.commitlog.CommitLog;
 import com.wolfmq.domain.server.store.CheckPoint;
 import com.wolfmq.domain.core.mmap.InsertResult;
 import com.wolfmq.domain.core.mmap.SelectedMappedBuffer;
-import com.wolfmq.domain.mock.ConfigMock;
+import com.wolfmq.domain.test.ConfigMock;
 import com.wolfmq.store.api.CommitLogStoreImpl;
 import com.wolfmq.store.domain.commitlog.log.CommitLogFactory;
 import com.wolfmq.store.domain.commitlog.log.CommitLogManager;

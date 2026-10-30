@@ -1,12 +1,10 @@
 package com.wolfmq.store.domain.dispatcher.it;
 
 
-import cn.coderule.common.convention.container.ApplicationContext;
-
 import com.wolfmq.domain.config.store.CommitConfig;
 import com.wolfmq.domain.domain.commitlog.dispatch.CommitEvent;
 import com.wolfmq.domain.domain.message.MessageBO;
-import com.wolfmq.domain.mock.MessageMock;
+import com.wolfmq.domain.test.MessageMock;
 import com.wolfmq.store.domain.dispatcher.CommitListener;
 import com.wolfmq.store.domain.dispatcher.DispatchManager;
 import com.wolfmq.store.domain.dispatcher.DispatchQueue;

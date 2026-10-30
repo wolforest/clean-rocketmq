@@ -9,7 +9,7 @@ import com.wolfmq.domain.domain.message.MessageBO;
 import com.wolfmq.domain.domain.mq.dto.DequeueRequest;
 import com.wolfmq.domain.domain.mq.dto.DequeueResult;
 import com.wolfmq.domain.domain.meta.service.ConsumeOrderService;
-import com.wolfmq.domain.mock.MessageMock;
+import com.wolfmq.domain.test.MessageMock;
 import com.wolfmq.store.domain.mq.ack.AckService;
 import java.util.List;
 import org.junit.jupiter.api.Test;
