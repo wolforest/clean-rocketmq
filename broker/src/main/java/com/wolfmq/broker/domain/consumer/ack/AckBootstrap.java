@@ -1,6 +1,5 @@
 package com.wolfmq.broker.domain.consumer.ack;
 
-import com.wolfmq.domain.core.constant.ContextNamespace;
 
 import cn.coderule.common.convention.container.ApplicationContext;
 
@@ -22,23 +21,23 @@ public class AckBootstrap implements Lifecycle {
 
     @Override
     public void initialize() throws Exception {
-        BrokerConfig brokerConfig = context.getBean(BrokerConfig.class, ContextNamespace.APP);
-        MQFacade mqFacade = context.getBean(MQStore.class, ContextNamespace.APP);
-        TopicFacade topicFacade = context.getBean(TopicStore.class, ContextNamespace.APP);
-        ReceiptHandler receiptHandler = context.getBean(ReceiptHandler.class, ContextNamespace.APP);
-        ConsumerManager consumerManager = context.getBean(ConsumerManager.class, ContextNamespace.APP);
+        BrokerConfig brokerConfig = context.getBean(BrokerConfig.class);
+        MQFacade mqFacade = context.getBean(MQStore.class);
+        TopicFacade topicFacade = context.getBean(TopicStore.class);
+        ReceiptHandler receiptHandler = context.getBean(ReceiptHandler.class);
+        ConsumerManager consumerManager = context.getBean(ConsumerManager.class);
 
         AckValidator ackValidator = new AckValidator(mqFacade, topicFacade);
 
         BrokerAckService ackService = new BrokerAckService(
             mqFacade, consumerManager, receiptHandler, ackValidator
         );
-        context.register(ackService, ContextNamespace.APP);
+        context.register(ackService);
 
         InvisibleService invisibleService = new InvisibleService(
             brokerConfig, mqFacade, consumerManager, receiptHandler, ackValidator
         );
-        context.register(invisibleService, ContextNamespace.APP);
+        context.register(invisibleService);
     }
 
     @Override

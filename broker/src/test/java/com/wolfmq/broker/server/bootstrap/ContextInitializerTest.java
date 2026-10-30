@@ -2,7 +2,6 @@ package com.wolfmq.broker.server.bootstrap;
 
 import cn.coderule.common.convention.container.ApplicationContext;
 import cn.coderule.common.convention.container.EventBus;
-import com.wolfmq.domain.core.constant.ContextNamespace;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -26,7 +25,7 @@ class ContextInitializerTest {
 
         assertDoesNotThrow(initializer::initialize);
 
-        assertNotNull(context.getBean(com.wolfmq.domain.config.server.BrokerConfig.class, ContextNamespace.APP));
+        assertNotNull(context.getBean(com.wolfmq.domain.config.server.BrokerConfig.class));
     }
 
     @Test
@@ -42,7 +41,7 @@ class ContextInitializerTest {
         ContextInitializer initializer = new ContextInitializer(args, context);
         initializer.initialize();
 
-        EventBus eventBus = context.getBean(EventBus.class, ContextNamespace.APP);
+        EventBus eventBus = context.getBean(EventBus.class);
         assertNotNull(eventBus);
     }
 }

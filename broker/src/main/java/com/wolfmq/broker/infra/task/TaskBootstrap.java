@@ -1,6 +1,5 @@
 package com.wolfmq.broker.infra.task;
 
-import com.wolfmq.domain.core.constant.ContextNamespace;
 
 import cn.coderule.common.convention.container.ApplicationContext;
 
@@ -23,7 +22,7 @@ public class TaskBootstrap implements Lifecycle {
         initContext();
 
         taskLoader = new DefaultTaskLoader(taskContext);
-        context.register(taskLoader, TaskLoader.class, ContextNamespace.APP);
+        context.register(taskLoader, TaskLoader.class);
     }
 
     @Override
@@ -36,7 +35,7 @@ public class TaskBootstrap implements Lifecycle {
     }
 
     private void initContext() {
-        BrokerConfig brokerConfig = context.getBean(BrokerConfig.class, ContextNamespace.APP);
+        BrokerConfig brokerConfig = context.getBean(BrokerConfig.class);
         taskContext = new TaskContext(brokerConfig);
     }
 

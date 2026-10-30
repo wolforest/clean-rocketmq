@@ -10,7 +10,6 @@ import com.wolfmq.domain.config.network.GrpcConfig;
 import com.wolfmq.domain.config.business.MessageConfig;
 import com.wolfmq.domain.config.business.TopicConfig;
 import com.wolfmq.domain.config.business.TaskConfig;
-import com.wolfmq.domain.core.constant.ContextNamespace;
 
 public class ConfigLoader {
     public static void load(ApplicationContext context) {
@@ -25,6 +24,6 @@ public class ConfigLoader {
         brokerConfig.setRpcServerConfig(new RpcServerConfig());
         brokerConfig.setRpcClientConfig(new RpcClientConfig());
 
-        context.register(brokerConfig, ContextNamespace.APP);
+        context.register(brokerConfig);
     }
 }

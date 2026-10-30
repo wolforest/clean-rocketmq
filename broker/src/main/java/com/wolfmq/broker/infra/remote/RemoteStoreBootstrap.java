@@ -1,6 +1,5 @@
 package com.wolfmq.broker.infra.remote;
 
-import com.wolfmq.domain.core.constant.ContextNamespace;
 
 import cn.coderule.common.convention.container.ApplicationContext;
 
@@ -23,14 +22,14 @@ public class RemoteStoreBootstrap implements Lifecycle {
 
     @Override
     public void initialize() throws Exception {
-        this.brokerConfig = context.getBean(BrokerConfig.class, ContextNamespace.APP);
+        this.brokerConfig = context.getBean(BrokerConfig.class);
         if (!this.brokerConfig.isEnableRemoteStore()) {
             return;
         }
 
-        RouteLoader routeLoader = context.getBean(RouteLoader.class, ContextNamespace.APP);
+        RouteLoader routeLoader = context.getBean(RouteLoader.class);
         this.loadBalance = new RemoteLoadBalance(this.brokerConfig, routeLoader);
-        this.rpcClient = context.getBean(NettyClient.class, ContextNamespace.APP);
+        this.rpcClient = context.getBean(NettyClient.class);
 
         initServices();
     }
@@ -47,23 +46,23 @@ public class RemoteStoreBootstrap implements Lifecycle {
     private void initServices() {
         RemoteMQStore mqStore =
             new RemoteMQStore(brokerConfig, loadBalance, rpcClient);
-        context.register(mqStore, ContextNamespace.APP);
+        context.register(mqStore);
 
         RemoteTopicStore topicStore =
             new RemoteTopicStore(brokerConfig, loadBalance, rpcClient);
-        context.register(topicStore, ContextNamespace.APP);
+        context.register(topicStore);
 
         RemoteSubscriptionStore subscriptionStore =
             new RemoteSubscriptionStore(brokerConfig, loadBalance, rpcClient);
-        context.register(subscriptionStore, ContextNamespace.APP);
+        context.register(subscriptionStore);
 
         RemoteConsumeOffsetStore consumeOffsetStore =
             new RemoteConsumeOffsetStore(brokerConfig, loadBalance, rpcClient);
-        context.register(consumeOffsetStore, ContextNamespace.APP);
+        context.register(consumeOffsetStore);
 
         RemoteTimerStore timerStore =
             new RemoteTimerStore(brokerConfig, loadBalance, rpcClient);
-        context.register(timerStore, ContextNamespace.APP);
+        context.register(timerStore);
 
     }
 

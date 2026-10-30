@@ -27,7 +27,7 @@ public class EmbedStoreBootstrap implements Lifecycle {
 
     @Override
     public void initialize() throws Exception {
-        this.brokerConfig = context.getBean(BrokerConfig.class, ContextNamespace.APP);
+        this.brokerConfig = context.getBean(BrokerConfig.class);
         if (!this.brokerConfig.isEnableEmbedStore()) {
             return;
         }
@@ -66,39 +66,38 @@ public class EmbedStoreBootstrap implements Lifecycle {
         store.initialize();
 
         context.registerAll(
-            store.getContext().getBeanMap(ContextNamespace.API),
-            ContextNamespace.APP
+            store.getContext().getBeanMap(ContextNamespace.API)
         );
     }
 
     private void initLoadBalance() {
-        TopicStore topicStore = context.getBean(TopicStore.class, ContextNamespace.APP);
-        SubscriptionStore subscriptionStore = context.getBean(SubscriptionStore.class, ContextNamespace.APP);
+        TopicStore topicStore = context.getBean(TopicStore.class);
+        SubscriptionStore subscriptionStore = context.getBean(SubscriptionStore.class);
 
         loadBalance = new EmbedLoadBalance(brokerConfig, topicStore, subscriptionStore);
-        context.register(loadBalance, ContextNamespace.APP);
+        context.register(loadBalance);
     }
 
     private void initEmbedServices() {
-        MQStore mqStore = context.getBean(MQStore.class, ContextNamespace.APP);
+        MQStore mqStore = context.getBean(MQStore.class);
         EmbedMQStore embedMQStore = new EmbedMQStore(mqStore, loadBalance);
-        context.register(embedMQStore, ContextNamespace.APP);
+        context.register(embedMQStore);
 
-        TopicStore topicStore = context.getBean(TopicStore.class, ContextNamespace.APP);
+        TopicStore topicStore = context.getBean(TopicStore.class);
         EmbedTopicStore embedTopicStore = new EmbedTopicStore(topicStore, loadBalance);
-        context.register(embedTopicStore, ContextNamespace.APP);
+        context.register(embedTopicStore);
 
-        SubscriptionStore subscriptionStore = context.getBean(SubscriptionStore.class, ContextNamespace.APP);
+        SubscriptionStore subscriptionStore = context.getBean(SubscriptionStore.class);
         EmbedSubscriptionStore embedSubscriptionStore = new EmbedSubscriptionStore(subscriptionStore, loadBalance);
-        context.register(embedSubscriptionStore, ContextNamespace.APP);
+        context.register(embedSubscriptionStore);
 
-        ConsumeOffsetStore consumeOffsetStore = context.getBean(ConsumeOffsetStore.class, ContextNamespace.APP);
+        ConsumeOffsetStore consumeOffsetStore = context.getBean(ConsumeOffsetStore.class);
         EmbedConsumeOffsetStore embedConsumeOffsetStore = new EmbedConsumeOffsetStore(consumeOffsetStore, loadBalance);
-        context.register(embedConsumeOffsetStore, ContextNamespace.APP);
+        context.register(embedConsumeOffsetStore);
 
-        TimerStore timerStore = context.getBean(TimerStore.class, ContextNamespace.APP);
+        TimerStore timerStore = context.getBean(TimerStore.class);
         EmbedTimerStore embedTimerStore = new EmbedTimerStore(timerStore, loadBalance);
-        context.register(embedTimerStore, ContextNamespace.APP);
+        context.register(embedTimerStore);
     }
 
 }

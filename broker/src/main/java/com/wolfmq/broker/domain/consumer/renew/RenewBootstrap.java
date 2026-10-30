@@ -1,6 +1,5 @@
 package com.wolfmq.broker.domain.consumer.renew;
 
-import com.wolfmq.domain.core.constant.ContextNamespace;
 
 import cn.coderule.common.convention.container.ApplicationContext;
 
@@ -26,7 +25,7 @@ public class RenewBootstrap implements Lifecycle {
 
     @Override
     public void initialize() throws Exception {
-        brokerConfig = context.getBean(BrokerConfig.class, ContextNamespace.APP);
+        brokerConfig = context.getBean(BrokerConfig.class);
 
         initRenewListener();
         initReceiptHandler();
@@ -47,13 +46,13 @@ public class RenewBootstrap implements Lifecycle {
     }
 
     private void initRenewListener() {
-        InvisibleService invisibleService = context.getBean(InvisibleService.class, ContextNamespace.APP);
+        InvisibleService invisibleService = context.getBean(InvisibleService.class);
         renewListener = new RenewListener(invisibleService);
     }
 
     private void initReceiptHandler() {
         receiptHandler = new DefaultReceiptHandler(brokerConfig, renewListener);
-        context.register(receiptHandler, ReceiptHandler.class, ContextNamespace.APP);
+        context.register(receiptHandler, ReceiptHandler.class);
     }
 
     private void initRenewService() throws Exception {
@@ -61,8 +60,8 @@ public class RenewBootstrap implements Lifecycle {
             brokerConfig,
             receiptHandler,
             renewListener,
-            context.getBean(ConsumerManager.class, ContextNamespace.APP),
-            context.getBean(SubscriptionStore.class, ContextNamespace.APP)
+            context.getBean(ConsumerManager.class),
+            context.getBean(SubscriptionStore.class)
         );
 
         renewService.initialize();
@@ -71,7 +70,7 @@ public class RenewBootstrap implements Lifecycle {
     private void initReceiptListener() {
         ReceiptListener receiptListener = new ReceiptListener(receiptHandler);
 
-        ConsumerManager register = context.getBean(ConsumerManager.class, ContextNamespace.APP);
+        ConsumerManager register = context.getBean(ConsumerManager.class);
         register.addListener(receiptListener);
     }
 

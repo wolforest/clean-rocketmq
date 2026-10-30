@@ -1,6 +1,5 @@
 package com.wolfmq.broker.server.grpc;
 
-import com.wolfmq.domain.core.constant.ContextNamespace;
 
 import cn.coderule.common.convention.container.ApplicationContext;
 
@@ -42,7 +41,7 @@ public class GrpcBootstrap implements Lifecycle {
     }
 
     private void initConfig() {
-        this.brokerConfig = context.getBean(BrokerConfig.class, ContextNamespace.APP);
+        this.brokerConfig = context.getBean(BrokerConfig.class);
         this.grpcConfig = brokerConfig.getGrpcConfig();
 
         this.grpcConfig.setPort(brokerConfig.getPort());

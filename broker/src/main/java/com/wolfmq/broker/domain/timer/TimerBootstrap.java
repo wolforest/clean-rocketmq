@@ -1,6 +1,5 @@
 package com.wolfmq.broker.domain.timer;
 
-import com.wolfmq.domain.core.constant.ContextNamespace;
 
 import cn.coderule.common.convention.container.ApplicationContext;
 
@@ -43,7 +42,7 @@ public class TimerBootstrap implements Lifecycle {
 
     @Override
     public void initialize() throws Exception {
-        brokerConfig = context.getBean(BrokerConfig.class, ContextNamespace.APP);
+        brokerConfig = context.getBean(BrokerConfig.class);
         timerConfig = brokerConfig.getTimerConfig();
         if (!timerConfig.isEnableTimer()) {
             return;
@@ -104,8 +103,8 @@ public class TimerBootstrap implements Lifecycle {
             .messageProducers(messageProducers)
             .taskSchedulers(taskSchedulers)
 
-            .mqStore(context.getBean(MQStore.class, ContextNamespace.APP))
-            .timerStore(context.getBean(TimerStore.class, ContextNamespace.APP))
+            .mqStore(context.getBean(MQStore.class))
+            .timerStore(context.getBean(TimerStore.class))
 
             .build();
     }
@@ -151,15 +150,15 @@ public class TimerBootstrap implements Lifecycle {
     private void initTimerFactory() {
         timerFactory = new TimerFactory(timerContext);
 
-        TaskLoader loader = context.getBean(TaskLoader.class, ContextNamespace.APP);
+        TaskLoader loader = context.getBean(TaskLoader.class);
         loader.registerTimerFactory(timerFactory);
     }
 
     private void injectTimerHook() {
         // inject timer produce hook
-        ProduceHookManager hookManager = context.getBean(ProduceHookManager.class, ContextNamespace.APP);
+        ProduceHookManager hookManager = context.getBean(ProduceHookManager.class);
 
-        BrokerConfig brokerConfig = context.getBean(BrokerConfig.class, ContextNamespace.APP);
+        BrokerConfig brokerConfig = context.getBean(BrokerConfig.class);
         TimerHook hook = new TimerHook(brokerConfig);
         hookManager.registerHook(hook);
     }

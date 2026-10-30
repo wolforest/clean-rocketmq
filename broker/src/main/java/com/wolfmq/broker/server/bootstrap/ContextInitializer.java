@@ -2,7 +2,6 @@ package com.wolfmq.broker.server.bootstrap;
 
 import cn.coderule.common.convention.container.ApplicationContext;
 import cn.coderule.common.convention.container.EventBus;
-import com.wolfmq.domain.core.constant.ContextNamespace;
 
 /**
  * context initializer
@@ -33,7 +32,7 @@ public class ContextInitializer {
 
     private void initLibs() {
         EventBus eventBus = new EventBus();
-        context.register(eventBus, ContextNamespace.APP);
+        context.register(eventBus);
     }
 
 }

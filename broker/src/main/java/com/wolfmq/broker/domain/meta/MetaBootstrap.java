@@ -30,7 +30,7 @@ public class MetaBootstrap implements Lifecycle {
     private BrokerConfig brokerConfig;
     @Override
     public void initialize() throws Exception {
-        brokerConfig = context.getBean(BrokerConfig.class, ContextNamespace.APP);
+        brokerConfig = context.getBean(BrokerConfig.class);
 
         RouteService routeService = initRouteService();
         BrokerTopicService topicService = initTopicService();
@@ -51,24 +51,24 @@ public class MetaBootstrap implements Lifecycle {
     }
 
     private BrokerTopicService initTopicService() {
-        TopicStore topicStore = context.getBean(TopicStore.class, ContextNamespace.APP);
+        TopicStore topicStore = context.getBean(TopicStore.class);
         return new BrokerTopicService(topicStore);
     }
 
     private SubscriptionService initSubscriptionService() {
-        SubscriptionStore subscriptionStore = context.getBean(SubscriptionStore.class, ContextNamespace.APP);
+        SubscriptionStore subscriptionStore = context.getBean(SubscriptionStore.class);
         return new SubscriptionService(subscriptionStore);
     }
 
     private RouteService initRouteService() {
         RouteLoader routeLoader = null;
         if (StringUtil.notBlank(brokerConfig.getRegistryAddress())) {
-            routeLoader = context.getBean(RouteLoader.class, ContextNamespace.APP);
+            routeLoader = context.getBean(RouteLoader.class);
         }
 
         RouteMocker routeMocker = null;
         if (brokerConfig.isEnableEmbedStore()) {
-            EmbedTopicStore embedTopicStore = context.getBean(EmbedTopicStore.class, ContextNamespace.APP);
+            EmbedTopicStore embedTopicStore = context.getBean(EmbedTopicStore.class);
             TopicConfig topicConfig = brokerConfig.getTopicConfig();
             routeMocker = new RouteMocker(brokerConfig, topicConfig, embedTopicStore);
         }
@@ -78,7 +78,7 @@ public class MetaBootstrap implements Lifecycle {
         }
 
         RouteService routeService = new RouteService(brokerConfig, routeLoader, routeMocker);
-        context.register(routeService, ContextNamespace.APP);
+        context.register(routeService);
         return routeService;
     }
 

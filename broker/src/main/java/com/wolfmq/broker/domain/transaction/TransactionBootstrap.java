@@ -66,7 +66,7 @@ public class TransactionBootstrap implements Lifecycle {
 
         checkerFactory.start();
 
-        ProducerManager producerManager = context.getBean(ProducerManager.class, ContextNamespace.APP);
+        ProducerManager producerManager = context.getBean(ProducerManager.class);
         checkService.inject(producerManager);
         checkService.start();
     }
@@ -81,10 +81,10 @@ public class TransactionBootstrap implements Lifecycle {
     }
 
     private void initLibs() {
-        brokerConfig = context.getBean(BrokerConfig.class, ContextNamespace.APP);
+        brokerConfig = context.getBean(BrokerConfig.class);
         transactionConfig = brokerConfig.getTransactionConfig();
 
-        MQStore mqStore = context.getBean(MQStore.class, ContextNamespace.APP);
+        MQStore mqStore = context.getBean(MQStore.class);
         commitBuffer = new CommitBuffer(transactionConfig);
         messageFactory = new MessageFactory(brokerConfig, commitBuffer);
 
@@ -97,9 +97,9 @@ public class TransactionBootstrap implements Lifecycle {
     }
 
     private void initTransaction() {
-        MQStore mqStore = context.getBean(MQStore.class, ContextNamespace.APP);
-        TopicStore topicStore = context.getBean(TopicStore.class, ContextNamespace.APP);
-        ConsumeOffsetStore consumeOffsetStore = context.getBean(ConsumeOffsetStore.class, ContextNamespace.APP);
+        MQStore mqStore = context.getBean(MQStore.class);
+        TopicStore topicStore = context.getBean(TopicStore.class);
+        ConsumeOffsetStore consumeOffsetStore = context.getBean(ConsumeOffsetStore.class);
 
         PrepareService prepareService = new PrepareService(
             transactionConfig, messageFactory, mqStore, receiptRegistry);
@@ -118,7 +118,7 @@ public class TransactionBootstrap implements Lifecycle {
             commitService,
             rollbackService
         );
-        context.register(transaction, ContextNamespace.APP);
+        context.register(transaction);
     }
 
     private void initController() {
@@ -140,7 +140,7 @@ public class TransactionBootstrap implements Lifecycle {
 
         checkerFactory = new CheckerFactory(transactionContext);
 
-        TaskLoader loader = context.getBean(TaskLoader.class, ContextNamespace.APP);
+        TaskLoader loader = context.getBean(TaskLoader.class);
         loader.registerTransactionFactory(checkerFactory);
     }
 }

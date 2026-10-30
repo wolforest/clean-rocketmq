@@ -2,7 +2,6 @@ package com.wolfmq.broker.server.bootstrap;
 
 import cn.coderule.common.convention.container.ApplicationContext;
 import com.wolfmq.domain.config.server.BrokerConfig;
-import com.wolfmq.domain.core.constant.ContextNamespace;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -15,7 +14,7 @@ class ConfigLoaderTest {
     void testLoad() {
         ConfigLoader.load(context);
 
-        BrokerConfig brokerConfig = context.getBean(BrokerConfig.class, ContextNamespace.APP);
+        BrokerConfig brokerConfig = context.getBean(BrokerConfig.class);
         assertNotNull(brokerConfig);
         assertNotNull(brokerConfig.getMessageConfig());
         assertNotNull(brokerConfig.getTopicConfig());
@@ -31,7 +30,7 @@ class ConfigLoaderTest {
     void testLoadCreatesValidConfig() {
         ConfigLoader.load(context);
 
-        BrokerConfig brokerConfig = context.getBean(BrokerConfig.class, ContextNamespace.APP);
+        BrokerConfig brokerConfig = context.getBean(BrokerConfig.class);
 
         assertNotNull(brokerConfig.getGrpcConfig());
         assertTrue(brokerConfig.getGrpcConfig().getPort() > 0);

@@ -2,6 +2,7 @@ package com.wolfmq.broker;
 
 import cn.coderule.common.convention.container.ApplicationContext;
 import cn.coderule.common.convention.service.Lifecycle;
+import com.wolfmq.domain.core.constant.ContextNamespace;
 import cn.coderule.common.convention.service.LifecycleManager;
 import com.wolfmq.broker.server.ComponentRegister;
 import com.wolfmq.broker.server.bootstrap.ContextInitializer;
@@ -29,7 +30,7 @@ public class Broker implements Lifecycle {
     }
 
     private final String[] args;
-    private final ApplicationContext context = new ApplicationContext();
+    private final ApplicationContext context = new ApplicationContext(ContextNamespace.APP);
     private State state = State.INITIALIZING;
     private LifecycleManager componentManager;
 

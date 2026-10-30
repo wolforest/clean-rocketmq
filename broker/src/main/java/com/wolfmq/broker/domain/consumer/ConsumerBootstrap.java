@@ -35,7 +35,7 @@ public class ConsumerBootstrap implements Lifecycle {
 
     @Override
     public void initialize() throws Exception {
-        brokerConfig = context.getBean(BrokerConfig.class, ContextNamespace.APP);
+        brokerConfig = context.getBean(BrokerConfig.class);
         initTools();
 
         initRenew();
@@ -65,10 +65,10 @@ public class ConsumerBootstrap implements Lifecycle {
 
     private void initTools() {
         ConsumerManager register = new ConsumerManager(brokerConfig);
-        context.register(register, ContextNamespace.APP);
+        context.register(register);
 
         ConsumeHookManager hookManager = new ConsumeHookManager();
-        context.register(hookManager, ContextNamespace.APP);
+        context.register(hookManager);
     }
 
     private void initRenew() throws Exception {
@@ -93,13 +93,13 @@ public class ConsumerBootstrap implements Lifecycle {
 
     private void initConsumer() {
         consumer = new Consumer(
-            context.getBean(PopService.class, ContextNamespace.APP),
-            context.getBean(BrokerAckService.class, ContextNamespace.APP),
-            context.getBean(ConsumerManager.class, ContextNamespace.APP),
-            context.getBean(InvisibleService.class, ContextNamespace.APP),
-            context.getBean(SubscriptionStore.class, ContextNamespace.APP)
+            context.getBean(PopService.class),
+            context.getBean(BrokerAckService.class),
+            context.getBean(ConsumerManager.class),
+            context.getBean(InvisibleService.class),
+            context.getBean(SubscriptionStore.class)
         );
-        context.register(consumer, ContextNamespace.APP);
+        context.register(consumer);
     }
 
     private void initController() {

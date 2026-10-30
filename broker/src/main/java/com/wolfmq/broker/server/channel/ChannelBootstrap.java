@@ -5,7 +5,6 @@ import cn.coderule.common.convention.service.Lifecycle;
 import com.wolfmq.broker.api.ConsumerController;
 import com.wolfmq.broker.api.ProducerController;
 import com.wolfmq.domain.config.server.BrokerConfig;
-import com.wolfmq.domain.core.constant.ContextNamespace;
 
 public class ChannelBootstrap implements Lifecycle {
     private final ApplicationContext context;
@@ -18,7 +17,7 @@ public class ChannelBootstrap implements Lifecycle {
 
     @Override
     public void initialize() throws Exception {
-        BrokerConfig brokerConfig = context.getBean(BrokerConfig.class, ContextNamespace.APP);
+        BrokerConfig brokerConfig = context.getBean(BrokerConfig.class);
         channelScheduler = new ChannelScheduler(brokerConfig);
         channelScheduler.initialize();
     }
@@ -26,8 +25,8 @@ public class ChannelBootstrap implements Lifecycle {
     @Override
     public void start() throws Exception {
         channelScheduler.inject(
-            context.getBean(ProducerController.class, ContextNamespace.APP),
-            context.getBean(ConsumerController.class, ContextNamespace.APP)
+            context.getBean(ProducerController.class),
+            context.getBean(ConsumerController.class)
         );
         channelScheduler.start();
     }

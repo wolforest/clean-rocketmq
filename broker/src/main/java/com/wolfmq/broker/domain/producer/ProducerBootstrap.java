@@ -24,12 +24,12 @@ public class ProducerBootstrap implements Lifecycle {
 
     @Override
     public void initialize() throws Exception {
-        this.brokerConfig = context.getBean(BrokerConfig.class, ContextNamespace.APP);
+        this.brokerConfig = context.getBean(BrokerConfig.class);
 
         initMessageSender();
 
         ProducerManager producerManager = new ProducerManager(brokerConfig);
-        context.register(producerManager, ContextNamespace.APP);
+        context.register(producerManager);
 
         Producer producer = new Producer(enqueueService, producerManager);
         ProducerController controller = new ProducerController(brokerConfig, producer);
@@ -48,15 +48,15 @@ public class ProducerBootstrap implements Lifecycle {
 
     private void initMessageSender() {
         ProduceHookManager hookManager = new ProduceHookManager();
-        context.register(hookManager, ContextNamespace.APP);
+        context.register(hookManager);
 
-        RouteService routeService = context.getBean(RouteService.class, ContextNamespace.APP);
+        RouteService routeService = context.getBean(RouteService.class);
         QueueSelector queueSelector = new QueueSelector(routeService);
-        context.register(queueSelector, ContextNamespace.APP);
+        context.register(queueSelector);
 
-        MQStore messageStore = context.getBean(MQStore.class, ContextNamespace.APP);
-        TopicStore topicStore = context.getBean(TopicStore.class, ContextNamespace.APP);
-        Transaction transaction = context.getBean(Transaction.class, ContextNamespace.APP);
+        MQStore messageStore = context.getBean(MQStore.class);
+        TopicStore topicStore = context.getBean(TopicStore.class);
+        Transaction transaction = context.getBean(Transaction.class);
 
         this.enqueueService = new EnqueueService(
             brokerConfig,

@@ -1,6 +1,5 @@
 package com.wolfmq.broker.domain.consumer.revive;
 
-import com.wolfmq.domain.core.constant.ContextNamespace;
 
 import cn.coderule.common.convention.container.ApplicationContext;
 
@@ -52,7 +51,7 @@ public class ReviveBootstrap implements Lifecycle {
     }
 
     private ReviveContext initContext() {
-        BrokerConfig brokerConfig = context.getBean(BrokerConfig.class, ContextNamespace.APP);
+        BrokerConfig brokerConfig = context.getBean(BrokerConfig.class);
         String reviveTopic = KeyBuilder.buildClusterReviveTopic(brokerConfig.getCluster());
 
         return ReviveContext.builder()
@@ -61,11 +60,11 @@ public class ReviveBootstrap implements Lifecycle {
             .messageConfig(brokerConfig.getMessageConfig())
             .topicConfig(brokerConfig.getTopicConfig())
 
-            .mqFacade(context.getBean(MQStore.class, ContextNamespace.APP))
+            .mqFacade(context.getBean(MQStore.class))
 
-            .topicFacade(context.getBean(TopicStore.class, ContextNamespace.APP))
-            .subscriptionFacade(context.getBean(SubscriptionStore.class, ContextNamespace.APP))
-            .consumeOffsetFacade(context.getBean(ConsumeOffsetStore.class, ContextNamespace.APP))
+            .topicFacade(context.getBean(TopicStore.class))
+            .subscriptionFacade(context.getBean(SubscriptionStore.class))
+            .consumeOffsetFacade(context.getBean(ConsumeOffsetStore.class))
 
             .build();
     }
@@ -73,7 +72,7 @@ public class ReviveBootstrap implements Lifecycle {
     private ReviveThread createReviveThread(ReviveContext reviveContext, int queueId, RetryService retryService) {
         ReviveThread reviveThread = new ReviveThread(reviveContext, queueId, retryService);
 
-        EventBus eventBus = context.getBean(EventBus.class, ContextNamespace.APP);
+        EventBus eventBus = context.getBean(EventBus.class);
         eventBus.on(
             ServerEvent.BECOME_MASTER, (arg) -> reviveThread.setSkipRevive(false)
         );

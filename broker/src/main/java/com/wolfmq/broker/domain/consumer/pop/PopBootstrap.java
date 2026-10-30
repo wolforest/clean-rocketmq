@@ -1,6 +1,5 @@
 package com.wolfmq.broker.domain.consumer.pop;
 
-import com.wolfmq.domain.core.constant.ContextNamespace;
 
 import cn.coderule.common.convention.container.ApplicationContext;
 
@@ -28,7 +27,7 @@ public class PopBootstrap implements Lifecycle {
 
     @Override
     public void initialize() throws Exception {
-        brokerConfig = context.getBean(BrokerConfig.class, ContextNamespace.APP);
+        brokerConfig = context.getBean(BrokerConfig.class);
 
         initContextBuilder();
         initQueueSelector();
@@ -47,33 +46,33 @@ public class PopBootstrap implements Lifecycle {
     private void initContextBuilder() {
         contextBuilder = new ContextBuilder(
             brokerConfig,
-            context.getBean(ConsumerManager.class, ContextNamespace.APP),
-            context.getBean(TopicStore.class, ContextNamespace.APP),
-            context.getBean(SubscriptionStore.class, ContextNamespace.APP)
+            context.getBean(ConsumerManager.class),
+            context.getBean(TopicStore.class),
+            context.getBean(SubscriptionStore.class)
         );
     }
 
     private void initQueueSelector() {
         queueSelector = new QueueSelector(
             brokerConfig,
-            context.getBean(RouteService.class, ContextNamespace.APP)
+            context.getBean(RouteService.class)
         );
     }
 
     private void initDequeueService() {
         dequeueService = new BrokerDequeueService(
-            context.getBean(MQStore.class, ContextNamespace.APP)
+            context.getBean(MQStore.class)
         );
     }
 
     private void initPopService() {
-        ReceiptHandler receiptHandler = context.getBean(DefaultReceiptHandler.class, ContextNamespace.APP);
+        ReceiptHandler receiptHandler = context.getBean(DefaultReceiptHandler.class);
         PopService popService = new PopService(
             contextBuilder, queueSelector,
             dequeueService, receiptHandler
         );
 
-        context.register(popService, ContextNamespace.APP);
+        context.register(popService);
     }
 
 }

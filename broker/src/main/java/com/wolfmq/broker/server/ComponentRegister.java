@@ -13,7 +13,6 @@ import com.wolfmq.broker.infra.store.StoreBootstrap;
 import com.wolfmq.broker.infra.task.TaskBootstrap;
 import com.wolfmq.broker.server.channel.ChannelBootstrap;
 import com.wolfmq.broker.server.grpc.GrpcBootstrap;
-import com.wolfmq.domain.core.constant.ContextNamespace;
 import com.wolfmq.domain.config.server.BrokerConfig;
 import com.wolfmq.rpc.common.rpc.netty.NettyClient;
 import com.wolfmq.rpc.registry.route.RouteLoader;
@@ -25,7 +24,7 @@ public class ComponentRegister {
 
     public ComponentRegister(ApplicationContext context) {
         this.context = context;
-        this.brokerConfig = context.getBean(BrokerConfig.class, ContextNamespace.APP);
+        this.brokerConfig = context.getBean(BrokerConfig.class);
     }
 
     public LifecycleManager register() {
@@ -80,7 +79,7 @@ public class ComponentRegister {
 
     private void registerNettyClient() {
         NettyClient component = new NettyClient(brokerConfig.getRpcClientConfig());
-        context.register(component, ContextNamespace.APP);
+        context.register(component);
     }
 
     private void registerBrokerRegister() {
@@ -88,12 +87,12 @@ public class ComponentRegister {
             return;
         }
 
-        NettyClient nettyClient = context.getBean(NettyClient.class, ContextNamespace.APP);
+        NettyClient nettyClient = context.getBean(NettyClient.class);
         BrokerRegister component = new BrokerRegister(brokerConfig, nettyClient);
         manager.register(component);
-        context.register(component, ContextNamespace.APP);
+        context.register(component);
 
-        BrokerRegister register = context.getBean(BrokerRegister.class, ContextNamespace.APP);
+        BrokerRegister register = context.getBean(BrokerRegister.class);
         RouteLoader loader = new RouteLoader(register.getRegistryClient());
         manager.register(loader);
     }
