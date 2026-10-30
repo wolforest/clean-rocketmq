@@ -4,7 +4,6 @@ import com.wolfmq.store.infra.StoreScheduler;
 
 import com.wolfmq.domain.server.store.CheckPoint;
 
-import com.wolfmq.domain.core.constant.ContextNamespace;
 
 import cn.coderule.common.convention.container.ApplicationContext;
 
@@ -42,10 +41,10 @@ class ComponentRegisterTest {
     @Test
     void execute_ShouldRegisterAllComponents() {
         StoreConfig storeConfig = ConfigMock.createStoreConfig(tempDir.toString());
-        context.register(storeConfig, ContextNamespace.APP);
-        context.register(mock(NettyClient.class), ContextNamespace.APP);
+        context.register(storeConfig);
+        context.register(mock(NettyClient.class));
 
-        StoreCheckpoint __cp = new StoreCheckpoint(tempDir.toString()); context.register(__cp, CheckPoint.class, ContextNamespace.APP); context.register(__cp, StoreCheckpoint.class, ContextNamespace.APP);
+        StoreCheckpoint __cp = new StoreCheckpoint(tempDir.toString()); context.register(__cp, CheckPoint.class); context.register(__cp, StoreCheckpoint.class);
 
         LifecycleManager manager = new ComponentRegister(context).register();
         assertNotNull(manager);
@@ -54,14 +53,14 @@ class ComponentRegisterTest {
     @Test
     void execute_ShouldRegisterStoreConfig() {
         StoreConfig storeConfig = ConfigMock.createStoreConfig(tempDir.toString());
-        context.register(storeConfig, ContextNamespace.APP);
-        context.register(mock(NettyClient.class), ContextNamespace.APP);
+        context.register(storeConfig);
+        context.register(mock(NettyClient.class));
 
-        StoreCheckpoint __cp = new StoreCheckpoint(tempDir.toString()); context.register(__cp, CheckPoint.class, ContextNamespace.APP); context.register(__cp, StoreCheckpoint.class, ContextNamespace.APP);
+        StoreCheckpoint __cp = new StoreCheckpoint(tempDir.toString()); context.register(__cp, CheckPoint.class); context.register(__cp, StoreCheckpoint.class);
 
         new ComponentRegister(context).register();
 
-        StoreConfig retrievedConfig = context.getBean(StoreConfig.class, ContextNamespace.APP);
+        StoreConfig retrievedConfig = context.getBean(StoreConfig.class);
         assertNotNull(retrievedConfig);
         assertEquals(storeConfig, retrievedConfig);
     }
@@ -69,13 +68,13 @@ class ComponentRegisterTest {
     @Test
     void execute_ShouldRegisterScheduler() {
         StoreConfig storeConfig = ConfigMock.createStoreConfig(tempDir.toString());
-        context.register(storeConfig, ContextNamespace.APP);
-        context.register(mock(NettyClient.class), ContextNamespace.APP);
+        context.register(storeConfig);
+        context.register(mock(NettyClient.class));
 
-        StoreCheckpoint __cp = new StoreCheckpoint(tempDir.toString()); context.register(__cp, CheckPoint.class, ContextNamespace.APP); context.register(__cp, StoreCheckpoint.class, ContextNamespace.APP);
+        StoreCheckpoint __cp = new StoreCheckpoint(tempDir.toString()); context.register(__cp, CheckPoint.class); context.register(__cp, StoreCheckpoint.class);
 
         new ComponentRegister(context).register();
 
-        assertNotNull(context.getBean(StoreScheduler.class, ContextNamespace.APP));
+        assertNotNull(context.getBean(StoreScheduler.class));
     }
 }

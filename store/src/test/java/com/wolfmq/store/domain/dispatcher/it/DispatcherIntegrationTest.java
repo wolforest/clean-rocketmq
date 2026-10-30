@@ -1,6 +1,5 @@
 package com.wolfmq.store.domain.dispatcher.it;
 
-import com.wolfmq.domain.core.constant.ContextNamespace;
 
 import cn.coderule.common.convention.container.ApplicationContext;
 
@@ -138,7 +137,7 @@ class DispatcherIntegrationTest extends BaseDispatcherIntegrationTest {
         CommitConfig config = storeConfig.getCommitConfig();
         config.setDispatchThreads(2);
 
-        StoreCheckpoint checkpoint = context.getBean(StoreCheckpoint.class, ContextNamespace.APP);
+        StoreCheckpoint checkpoint = context.getBean(StoreCheckpoint.class);
         DispatchManager dispatchManager = new DispatchManager(
             config, checkpoint, commitLogManager, handlerManager);
 
@@ -208,7 +207,7 @@ class DispatcherIntegrationTest extends BaseDispatcherIntegrationTest {
 
     @Test
     void testCommitListenerCheckpointIntegration() {
-        StoreCheckpoint checkpoint = context.getBean(StoreCheckpoint.class, ContextNamespace.APP);
+        StoreCheckpoint checkpoint = context.getBean(StoreCheckpoint.class);
 
         Long dispatchedOffset = checkpoint.getMaxOffset().getDispatchedOffset(0);
         assertNull(dispatchedOffset, "initial dispatchedOffset should be null");
@@ -225,7 +224,7 @@ class DispatcherIntegrationTest extends BaseDispatcherIntegrationTest {
         CommitConfig config = storeConfig.getCommitConfig();
         config.setDispatchThreads(1);
 
-        StoreCheckpoint checkpoint = context.getBean(StoreCheckpoint.class, ContextNamespace.APP);
+        StoreCheckpoint checkpoint = context.getBean(StoreCheckpoint.class);
         DispatchManager dispatchManager = new DispatchManager(
             config, checkpoint, commitLogManager, handlerManager);
 

@@ -2,7 +2,6 @@ package com.wolfmq.store.domain.mq.ack;
 
 import com.wolfmq.domain.server.store.CheckPoint;
 
-import com.wolfmq.domain.core.constant.ContextNamespace;
 
 import cn.coderule.common.convention.container.ApplicationContext;
 
@@ -39,14 +38,14 @@ class AckBootstrapTest {
         StorePath.initPath(tempDir.toString());
 
         storeConfig = ConfigMock.createStoreConfig(tempDir.toString());
-        context.register(storeConfig, ContextNamespace.APP);
-        StoreCheckpoint __cp = new StoreCheckpoint(tempDir.toString()); context.register(__cp, CheckPoint.class, ContextNamespace.APP); context.register(__cp, StoreCheckpoint.class, ContextNamespace.APP);
+        context.register(storeConfig);
+        StoreCheckpoint __cp = new StoreCheckpoint(tempDir.toString()); context.register(__cp, CheckPoint.class); context.register(__cp, StoreCheckpoint.class);
 
-        context.register(new DequeueLock(), ContextNamespace.APP);
-        context.register(new InflightCounter(), ContextNamespace.APP);
-        context.register(mock(DefaultConsumeOffsetService.class), DefaultConsumeOffsetService.class, ContextNamespace.APP);
-        context.register(mock(DefaultConsumeOrderService.class), DefaultConsumeOrderService.class, ContextNamespace.APP);
-        context.register(mock(EnqueueService.class), EnqueueService.class, ContextNamespace.APP);
+        context.register(new DequeueLock());
+        context.register(new InflightCounter());
+        context.register(mock(DefaultConsumeOffsetService.class), DefaultConsumeOffsetService.class);
+        context.register(mock(DefaultConsumeOrderService.class), DefaultConsumeOrderService.class);
+        context.register(mock(EnqueueService.class), EnqueueService.class);
     }
 
     @AfterEach
@@ -58,7 +57,7 @@ class AckBootstrapTest {
         AckBootstrap bootstrap = new AckBootstrap(context);
         bootstrap.initialize();
 
-        AckService ackService = context.getBean(AckService.class, ContextNamespace.APP);
+        AckService ackService = context.getBean(AckService.class);
         assertNotNull(ackService);
     }
 
@@ -67,7 +66,7 @@ class AckBootstrapTest {
         AckBootstrap bootstrap = new AckBootstrap(context);
         bootstrap.initialize();
 
-        InvisibleService invisibleService = context.getBean(InvisibleService.class, ContextNamespace.APP);
+        InvisibleService invisibleService = context.getBean(InvisibleService.class);
         assertNotNull(invisibleService);
     }
 }

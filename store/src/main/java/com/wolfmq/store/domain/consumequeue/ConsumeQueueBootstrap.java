@@ -13,7 +13,6 @@ import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueLoader;
 import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueRecovery;
 import com.wolfmq.store.domain.dispatcher.CommitHandlerManager;
 import cn.coderule.common.convention.container.ApplicationContext;
-import com.wolfmq.domain.core.constant.ContextNamespace;
 import com.wolfmq.store.server.bootstrap.StoreCheckpoint;
 import lombok.extern.slf4j.Slf4j;
 
@@ -53,29 +52,29 @@ public class ConsumeQueueBootstrap implements Lifecycle {
     }
 
     private void initConfig() {
-        StoreConfig storeConfig = context.getBean(StoreConfig.class, ContextNamespace.APP);
+        StoreConfig storeConfig = context.getBean(StoreConfig.class);
         consumeQueueConfig = storeConfig.getConsumeQueueConfig();
     }
 
     private void initConsumeQueue() {
-        flusher = new ConsumeQueueFlusher(consumeQueueConfig, context.getBean(StoreCheckpoint.class, ContextNamespace.APP));
+        flusher = new ConsumeQueueFlusher(consumeQueueConfig, context.getBean(StoreCheckpoint.class));
         loader = new ConsumeQueueLoader(consumeQueueConfig);
 
-        CommitConfig commitConfig = context.getBean(StoreConfig.class, ContextNamespace.APP).getCommitConfig();
+        CommitConfig commitConfig = context.getBean(StoreConfig.class).getCommitConfig();
         OffsetCodec offsetCodec = new OffsetCodec(commitConfig.getMaxShardingNumber());
-        recovery = new ConsumeQueueRecovery(consumeQueueConfig, context.getBean(StoreCheckpoint.class, ContextNamespace.APP), offsetCodec);
+        recovery = new ConsumeQueueRecovery(consumeQueueConfig, context.getBean(StoreCheckpoint.class), offsetCodec);
 
         ConsumeQueueFactory consumeQueueFactory = initConsumeQueueFactory();
         consumeQueueManager = new ConsumeQueueManager(consumeQueueFactory);
-        context.register(consumeQueueManager, ConsumeQueueManager.class, ContextNamespace.APP);
+        context.register(consumeQueueManager, ConsumeQueueManager.class);
     }
 
     private ConsumeQueueFactory initConsumeQueueFactory() {
-        TopicService topicService = context.getBean(TopicService.class, ContextNamespace.APP);
+        TopicService topicService = context.getBean(TopicService.class);
         ConsumeQueueFactory consumeQueueFactory = new ConsumeQueueFactory(
             consumeQueueConfig,
             topicService,
-            context.getBean(StoreCheckpoint.class, ContextNamespace.APP)
+            context.getBean(StoreCheckpoint.class)
         );
 
         consumeQueueFactory.addCreateHook(flusher);
@@ -87,7 +86,7 @@ public class ConsumeQueueBootstrap implements Lifecycle {
     }
 
     private void registerDispatchHandler() {
-        CommitHandlerManager handlerManager = context.getBean(CommitHandlerManager.class, ContextNamespace.APP);
+        CommitHandlerManager handlerManager = context.getBean(CommitHandlerManager.class);
         ConsumeQueueCommitHandler handler = new ConsumeQueueCommitHandler(consumeQueueManager);
         handlerManager.registerHandler(handler);
     }

@@ -51,16 +51,16 @@ class MQBootstrapTest {
         StorePath.initPath(tempDir.toString());
 
         storeConfig = ConfigMock.createStoreConfig(tempDir.toString());
-        context.register(storeConfig, ContextNamespace.APP);
-        StoreCheckpoint __cp = new StoreCheckpoint(tempDir.toString()); context.register(__cp, CheckPoint.class, ContextNamespace.APP); context.register(__cp, StoreCheckpoint.class, ContextNamespace.APP);
+        context.register(storeConfig);
+        StoreCheckpoint __cp = new StoreCheckpoint(tempDir.toString()); context.register(__cp, CheckPoint.class); context.register(__cp, StoreCheckpoint.class);
 
-        context.register(mock(CommitLogManager.class), CommitLogManager.class, ContextNamespace.APP);
-        context.register(mock(ConsumeQueueManager.class), ConsumeQueueManager.class, ContextNamespace.APP);
-        context.register(mock(ConsumeOffsetService.class), ConsumeOffsetService.class, ContextNamespace.APP);
-        context.register(mock(ConsumeOrderService.class), ConsumeOrderService.class, ContextNamespace.APP);
-        context.register(mock(DefaultConsumeOffsetService.class), DefaultConsumeOffsetService.class, ContextNamespace.APP);
-        context.register(mock(DefaultConsumeOrderService.class), DefaultConsumeOrderService.class, ContextNamespace.APP);
-        context.register(mock(CommitLog.class), CommitLog.class, ContextNamespace.APP);
+        context.register(mock(CommitLogManager.class), CommitLogManager.class);
+        context.register(mock(ConsumeQueueManager.class), ConsumeQueueManager.class);
+        context.register(mock(ConsumeOffsetService.class), ConsumeOffsetService.class);
+        context.register(mock(ConsumeOrderService.class), ConsumeOrderService.class);
+        context.register(mock(DefaultConsumeOffsetService.class), DefaultConsumeOffsetService.class);
+        context.register(mock(DefaultConsumeOrderService.class), DefaultConsumeOrderService.class);
+        context.register(mock(CommitLog.class), CommitLog.class);
     }
 
     @AfterEach
@@ -72,15 +72,15 @@ class MQBootstrapTest {
         MQBootstrap bootstrap = new MQBootstrap(context);
         bootstrap.initialize();
 
-        assertNotNull(context.getBean(EnqueueService.class, ContextNamespace.APP));
-        assertNotNull(context.getBean(MessageService.class, ContextNamespace.APP));
-        assertNotNull(context.getBean(AckService.class, ContextNamespace.APP));
-        assertNotNull(context.getBean(InvisibleService.class, ContextNamespace.APP));
-        assertNotNull(context.getBean(OffsetService.class, ContextNamespace.APP));
-        assertNotNull(context.getBean(DequeueService.class, ContextNamespace.APP));
-        assertNotNull(context.getBean(MQService.class, ContextNamespace.APP));
-        assertNotNull(context.getBean(DequeueLock.class, ContextNamespace.APP));
-        assertNotNull(context.getBean(InflightCounter.class, ContextNamespace.APP));
+        assertNotNull(context.getBean(EnqueueService.class));
+        assertNotNull(context.getBean(MessageService.class));
+        assertNotNull(context.getBean(AckService.class));
+        assertNotNull(context.getBean(InvisibleService.class));
+        assertNotNull(context.getBean(OffsetService.class));
+        assertNotNull(context.getBean(DequeueService.class));
+        assertNotNull(context.getBean(MQService.class));
+        assertNotNull(context.getBean(DequeueLock.class));
+        assertNotNull(context.getBean(InflightCounter.class));
     }
 
     @Test

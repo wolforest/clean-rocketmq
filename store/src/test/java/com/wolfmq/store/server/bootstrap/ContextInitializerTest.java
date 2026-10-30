@@ -1,6 +1,5 @@
 package com.wolfmq.store.server.bootstrap;
 
-import com.wolfmq.domain.core.constant.ContextNamespace;
 
 import cn.coderule.common.convention.container.ApplicationContext;
 
@@ -29,7 +28,7 @@ class ContextInitializerTest {
 
         ContextInitializer.init(argument, context);
 
-        StoreConfig registered = context.getBean(StoreConfig.class, ContextNamespace.APP);
+        StoreConfig registered = context.getBean(StoreConfig.class);
         assertNotNull(registered);
     }
 }

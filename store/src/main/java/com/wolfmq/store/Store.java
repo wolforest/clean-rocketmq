@@ -46,7 +46,7 @@ public class Store implements Lifecycle {
 
     public Store(@NonNull StoreArgument argument) {
         this.argument = argument;
-        this.context = new ApplicationContext();
+        this.context = new ApplicationContext(ContextNamespace.APP);
     }
 
     @Override
@@ -79,7 +79,7 @@ public class Store implements Lifecycle {
 
         shutdownLock.lock();
         this.componentManager.shutdown();
-        context.getBean(CheckPoint.class, ContextNamespace.APP).save();
+        context.getBean(CheckPoint.class).save();
 
         startupLock.unlock();
         shutdownLock.unlock();
@@ -98,8 +98,8 @@ public class Store implements Lifecycle {
         StoreCheckpoint checkpoint = new StoreCheckpoint(StorePath.getCheckpointPath());
         checkpoint.setShutdownSuccessful(isShutdownSuccessful);
 
-        context.register(checkpoint, CheckPoint.class, ContextNamespace.APP);
-        context.register(checkpoint, StoreCheckpoint.class, ContextNamespace.APP);
+        context.register(checkpoint, CheckPoint.class);
+        context.register(checkpoint, StoreCheckpoint.class);
     }
 
 }

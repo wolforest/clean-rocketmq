@@ -11,7 +11,6 @@ import com.wolfmq.store.domain.meta.DefaultConsumeOffsetService;
 import com.wolfmq.store.domain.meta.DefaultConsumeOrderService;
 import com.wolfmq.store.domain.mq.queue.EnqueueService;
 import cn.coderule.common.convention.container.ApplicationContext;
-import com.wolfmq.domain.core.constant.ContextNamespace;
 
 /**
  * @renamed from AckManager to AckBootstrap
@@ -51,7 +50,7 @@ public class AckBootstrap implements Lifecycle {
     }
 
     private void initLibrary() {
-        this.storeConfig = context.getBean(StoreConfig.class, ContextNamespace.APP);
+        this.storeConfig = context.getBean(StoreConfig.class);
         MessageConfig messageConfig = storeConfig.getMessageConfig();
 
         this.reviveTopic = KeyBuilder.buildClusterReviveTopic(storeConfig.getCluster());
@@ -64,10 +63,10 @@ public class AckBootstrap implements Lifecycle {
 
     private AckOffset initOffsetService() {
         return new AckOffset(
-            context.getBean(DequeueLock.class, ContextNamespace.APP),
-            context.getBean(InflightCounter.class, ContextNamespace.APP),
-            context.getBean(DefaultConsumeOffsetService.class, ContextNamespace.APP),
-            context.getBean(DefaultConsumeOrderService.class, ContextNamespace.APP)
+            context.getBean(DequeueLock.class),
+            context.getBean(InflightCounter.class),
+            context.getBean(DefaultConsumeOffsetService.class),
+            context.getBean(DefaultConsumeOrderService.class)
         );
     }
 
@@ -76,10 +75,10 @@ public class AckBootstrap implements Lifecycle {
             storeConfig,
             reviveTopic,
             ackBuffer,
-            context.getBean(EnqueueService.class, ContextNamespace.APP),
+            context.getBean(EnqueueService.class),
             offsetService
         );
-        context.register(ackService, ContextNamespace.APP);
+        context.register(ackService);
     }
 
     private void initInvisibleService() {
@@ -87,10 +86,10 @@ public class AckBootstrap implements Lifecycle {
             storeConfig,
             reviveTopic,
             ackService,
-            context.getBean(EnqueueService.class, ContextNamespace.APP),
+            context.getBean(EnqueueService.class),
             offsetService
         );
 
-        context.register(invisibleService, ContextNamespace.APP);
+        context.register(invisibleService);
     }
 }

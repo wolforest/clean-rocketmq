@@ -44,15 +44,15 @@ class CommitLogBootstrapTest {
         StoreConfig storeConfig = ConfigMock.createStoreConfig(anotherDir.toString());
         StorePath.initPath(anotherDir.toString());
 
-        context.register(storeConfig, ContextNamespace.APP);
-        StoreCheckpoint __cp = new StoreCheckpoint(anotherDir.toString()); context.register(__cp, CheckPoint.class, ContextNamespace.APP); context.register(__cp, StoreCheckpoint.class, ContextNamespace.APP);
-        context.register(mock(TopicService.class), TopicService.class, ContextNamespace.APP);
-        context.register(mock(AllocateMappedFileService.class), ContextNamespace.APP);
+        context.register(storeConfig);
+        StoreCheckpoint __cp = new StoreCheckpoint(anotherDir.toString()); context.register(__cp, CheckPoint.class); context.register(__cp, StoreCheckpoint.class);
+        context.register(mock(TopicService.class), TopicService.class);
+        context.register(mock(AllocateMappedFileService.class));
 
         CommitLogBootstrap bootstrap = new CommitLogBootstrap(context);
         bootstrap.initialize();
 
-        CommitLogManager manager = context.getBean(CommitLogManager.class, ContextNamespace.APP);
+        CommitLogManager manager = context.getBean(CommitLogManager.class);
         assertNotNull(manager);
 
         CommitLogStore store = context.getBean(CommitLogStore.class, ContextNamespace.API);

@@ -2,7 +2,6 @@ package com.wolfmq.store.domain.dispatcher;
 
 import com.wolfmq.domain.server.store.CheckPoint;
 
-import com.wolfmq.domain.core.constant.ContextNamespace;
 
 import cn.coderule.common.convention.container.ApplicationContext;
 
@@ -43,25 +42,25 @@ class DispatcherBootstrapTest {
         StoreConfig storeConfig = ConfigMock.createStoreConfig(anotherDir.toString());
         StorePath.initPath(anotherDir.toString());
 
-        context.register(storeConfig, ContextNamespace.APP);
-        StoreCheckpoint __cp = new StoreCheckpoint(anotherDir.toString()); context.register(__cp, CheckPoint.class, ContextNamespace.APP); context.register(__cp, StoreCheckpoint.class, ContextNamespace.APP);
+        context.register(storeConfig);
+        StoreCheckpoint __cp = new StoreCheckpoint(anotherDir.toString()); context.register(__cp, CheckPoint.class); context.register(__cp, StoreCheckpoint.class);
 
         TopicService topicService = mock(TopicService.class);
-        context.register(topicService, TopicService.class, ContextNamespace.APP);
+        context.register(topicService, TopicService.class);
 
         CommitLogManager commitLogManager = new CommitLogManager(
             storeConfig.getCommitConfig(),
             new TopicPartitioner(storeConfig.getCommitConfig(), topicService)
         );
-        context.register(commitLogManager, ContextNamespace.APP);
+        context.register(commitLogManager);
 
         DispatcherBootstrap bootstrap = new DispatcherBootstrap(context);
         bootstrap.initialize();
 
-        DispatchManager dispatchManager = context.getBean(DispatchManager.class, ContextNamespace.APP);
+        DispatchManager dispatchManager = context.getBean(DispatchManager.class);
         assertNotNull(dispatchManager);
 
-        CommitHandlerManager handlerManager = context.getBean(CommitHandlerManager.class, ContextNamespace.APP);
+        CommitHandlerManager handlerManager = context.getBean(CommitHandlerManager.class);
         assertNotNull(handlerManager);
     }
 }

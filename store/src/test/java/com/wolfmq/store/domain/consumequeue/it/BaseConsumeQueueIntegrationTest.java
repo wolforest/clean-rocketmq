@@ -2,7 +2,6 @@ package com.wolfmq.store.domain.consumequeue.it;
 
 import com.wolfmq.domain.server.store.CheckPoint;
 
-import com.wolfmq.domain.core.constant.ContextNamespace;
 
 import cn.coderule.common.convention.container.ApplicationContext;
 
@@ -63,15 +62,15 @@ public abstract class BaseConsumeQueueIntegrationTest {
         cqConfig.setFileSize(FILE_SIZE);
         cqConfig.setUnitSize(UNIT_SIZE);
 
-        context.register(storeConfig, ContextNamespace.APP);
-        context.register(storeConfig.getCommitConfig(), ContextNamespace.APP);
-        context.register(cqConfig, ContextNamespace.APP);
+        context.register(storeConfig);
+        context.register(storeConfig.getCommitConfig());
+        context.register(cqConfig);
 
         initCheckPoint();
 
         allocateService = new AllocateMappedFileService(storeConfig);
         allocateService.start();
-        context.register(allocateService, ContextNamespace.APP);
+        context.register(allocateService);
 
         topicService = mock(TopicService.class);
         when(topicService.exists(TEST_TOPIC)).thenReturn(true);
@@ -81,7 +80,7 @@ public abstract class BaseConsumeQueueIntegrationTest {
             .writeQueueNums(4)
             .build();
         when(topicService.getTopic(TEST_TOPIC)).thenReturn(topic);
-        context.register(topicService, TopicService.class, ContextNamespace.APP);
+        context.register(topicService, TopicService.class);
 
         initConsumeQueue();
     }
@@ -106,13 +105,13 @@ public abstract class BaseConsumeQueueIntegrationTest {
             tmpDir.resolve("checkpoint").toString()
         );
         checkpoint.setShutdownSuccessful(false);
-        context.register(checkpoint, CheckPoint.class, ContextNamespace.APP); context.register(checkpoint, StoreCheckpoint.class, ContextNamespace.APP);
+        context.register(checkpoint, CheckPoint.class); context.register(checkpoint, StoreCheckpoint.class);
     }
 
     private void initConsumeQueue() {
         ConsumeQueueConfig cqConfig = storeConfig.getConsumeQueueConfig();
         CommitConfig commitConfig = storeConfig.getCommitConfig();
-        StoreCheckpoint checkpoint = context.getBean(StoreCheckpoint.class, ContextNamespace.APP);
+        StoreCheckpoint checkpoint = context.getBean(StoreCheckpoint.class);
 
         flusher = new ConsumeQueueFlusher(cqConfig, checkpoint);
         loader = new ConsumeQueueLoader(cqConfig);
@@ -127,7 +126,7 @@ public abstract class BaseConsumeQueueIntegrationTest {
         consumeQueueFactory.createAll();
 
         consumeQueueManager = new ConsumeQueueManager(consumeQueueFactory);
-        context.register(consumeQueueManager, ConsumeQueueManager.class, ContextNamespace.APP);
+        context.register(consumeQueueManager, ConsumeQueueManager.class);
     }
 
     private void destroyConsumeQueues() {

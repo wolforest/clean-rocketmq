@@ -1,6 +1,5 @@
 package com.wolfmq.store.server.rpc;
 
-import com.wolfmq.domain.core.constant.ContextNamespace;
 
 import cn.coderule.common.convention.container.ApplicationContext;
 
@@ -43,13 +42,13 @@ class RpcBootstrapTest {
         StoreConfig storeConfig = ConfigMock.createStoreConfig(anotherDir.toString());
         StorePath.initPath(anotherDir.toString());
 
-        context.register(storeConfig, ContextNamespace.APP);
-        context.register(mock(TopicStore.class), TopicStore.class, ContextNamespace.APP);
-        context.register(mock(SubscriptionStore.class), SubscriptionStore.class, ContextNamespace.APP);
-        context.register(mock(ConsumeOffsetStore.class), ConsumeOffsetStore.class, ContextNamespace.APP);
-        context.register(mock(DequeueService.class), DequeueService.class, ContextNamespace.APP);
-        context.register(mock(EnqueueService.class), EnqueueService.class, ContextNamespace.APP);
-        context.register(mock(TimerStore.class), TimerStore.class, ContextNamespace.APP);
+        context.register(storeConfig);
+        context.register(mock(TopicStore.class), TopicStore.class);
+        context.register(mock(SubscriptionStore.class), SubscriptionStore.class);
+        context.register(mock(ConsumeOffsetStore.class), ConsumeOffsetStore.class);
+        context.register(mock(DequeueService.class), DequeueService.class);
+        context.register(mock(EnqueueService.class), EnqueueService.class);
+        context.register(mock(TimerStore.class), TimerStore.class);
 
         RpcBootstrap bootstrap = new RpcBootstrap(context);
         assertDoesNotThrow(() -> bootstrap.initialize());

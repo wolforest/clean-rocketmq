@@ -49,12 +49,12 @@ public class CommitLogBootstrap implements Lifecycle {
     }
 
     private void initCommitLog() {
-        CheckPoint checkpoint = context.getBean(CheckPoint.class, ContextNamespace.APP);
-        StoreConfig storeConfig = context.getBean(StoreConfig.class, ContextNamespace.APP);
+        CheckPoint checkpoint = context.getBean(CheckPoint.class);
+        StoreConfig storeConfig = context.getBean(StoreConfig.class);
         CommitConfig commitConfig = storeConfig.getCommitConfig();
-        TopicService topicService = context.getBean(TopicService.class, ContextNamespace.APP);
+        TopicService topicService = context.getBean(TopicService.class);
 
-        AllocateMappedFileService allocateService = context.getBean(AllocateMappedFileService.class, ContextNamespace.APP);
+        AllocateMappedFileService allocateService = context.getBean(AllocateMappedFileService.class);
         CommitLogFactory commitLogFactory = new CommitLogFactory(storeConfig, checkpoint, allocateService);
         List<CommitLog> logList = commitLogFactory.createByConfig();
 
@@ -62,8 +62,8 @@ public class CommitLogBootstrap implements Lifecycle {
         commitLogManager = new CommitLogManager(commitConfig, partitioner);
         commitLogManager.addCommitLog(logList);
 
-        context.register(partitioner, ContextNamespace.APP);
-        context.register(commitLogManager, ContextNamespace.APP);
+        context.register(partitioner);
+        context.register(commitLogManager);
     }
 
     private void registerAPI() {

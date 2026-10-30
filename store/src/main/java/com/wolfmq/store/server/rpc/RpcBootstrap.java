@@ -9,7 +9,6 @@ import com.wolfmq.domain.server.store.api.meta.SubscriptionStore;
 import com.wolfmq.domain.server.store.api.meta.TopicStore;
 import com.wolfmq.domain.config.network.RpcServerConfig;
 import cn.coderule.common.convention.container.ApplicationContext;
-import com.wolfmq.domain.core.constant.ContextNamespace;
 import com.wolfmq.store.server.rpc.processor.ConsumeProcessor;
 import com.wolfmq.store.server.rpc.processor.SubscriptionProcessor;
 import com.wolfmq.store.server.rpc.processor.TimerProcessor;
@@ -33,7 +32,7 @@ public class RpcBootstrap implements Lifecycle {
 
     @Override
     public void initialize() throws Exception {
-        storeConfig = context.getBean(StoreConfig.class, ContextNamespace.APP);
+        storeConfig = context.getBean(StoreConfig.class);
 
         initExecutor();
         initServer();
@@ -78,7 +77,7 @@ public class RpcBootstrap implements Lifecycle {
 
     private void initTopicProcessor() {
         TopicConfig topicConfig = storeConfig.getTopicConfig();
-        TopicStore topicStore = context.getBean(TopicStore.class, ContextNamespace.APP);
+        TopicStore topicStore = context.getBean(TopicStore.class);
         ExecutorService executor = executorManager.getAdminExecutor();
 
         TopicProcessor topicProcessor = new TopicProcessor(topicConfig, topicStore, executor);
@@ -87,7 +86,7 @@ public class RpcBootstrap implements Lifecycle {
 
     private void initConsumeProcessor() {
         ExecutorService executor = executorManager.getAdminExecutor();
-        ConsumeOffsetStore offsetStore = context.getBean(ConsumeOffsetStore.class, ContextNamespace.APP);
+        ConsumeOffsetStore offsetStore = context.getBean(ConsumeOffsetStore.class);
 
         ConsumeProcessor consumeProcessor = new ConsumeProcessor(offsetStore, executor);
         storeServer.registerProcessor(consumeProcessor);
@@ -95,14 +94,14 @@ public class RpcBootstrap implements Lifecycle {
 
     private void initTimerProcessor() {
         ExecutorService executor = executorManager.getAdminExecutor();
-        TimerStore timerStore = context.getBean(TimerStore.class, ContextNamespace.APP);
+        TimerStore timerStore = context.getBean(TimerStore.class);
 
         TimerProcessor timerProcessor = new TimerProcessor(timerStore, executor);
         storeServer.registerProcessor(timerProcessor);
     }
 
     private void initSubscriptionProcessor() {
-        SubscriptionStore subscriptionStore = context.getBean(SubscriptionStore.class, ContextNamespace.APP);
+        SubscriptionStore subscriptionStore = context.getBean(SubscriptionStore.class);
         ExecutorService executor = executorManager.getAdminExecutor();
 
         SubscriptionProcessor subscriptionProcessor = new SubscriptionProcessor(subscriptionStore, executor);

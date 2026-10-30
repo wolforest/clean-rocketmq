@@ -1,6 +1,5 @@
 package com.wolfmq.store.domain.dispatcher.it;
 
-import com.wolfmq.domain.core.constant.ContextNamespace;
 
 import cn.coderule.common.convention.container.ApplicationContext;
 
@@ -52,14 +51,14 @@ public abstract class BaseDispatcherIntegrationTest {
         storeConfig.getCommitConfig().setShardingNumber(1);
         storeConfig.getCommitConfig().setMaxShardingNumber(1);
 
-        context.register(storeConfig, ContextNamespace.APP);
-        context.register(storeConfig.getCommitConfig(), ContextNamespace.APP);
+        context.register(storeConfig);
+        context.register(storeConfig.getCommitConfig());
 
         initCheckPoint();
 
         allocateService = new AllocateMappedFileService(storeConfig);
         allocateService.start();
-        context.register(allocateService, ContextNamespace.APP);
+        context.register(allocateService);
 
         initCommitLog();
 
@@ -99,11 +98,11 @@ public abstract class BaseDispatcherIntegrationTest {
             tmpDir.resolve("checkpoint").toString()
         );
         checkpoint.setShutdownSuccessful(false);
-        context.register(checkpoint, CheckPoint.class, ContextNamespace.APP); context.register(checkpoint, StoreCheckpoint.class, ContextNamespace.APP);
+        context.register(checkpoint, CheckPoint.class); context.register(checkpoint, StoreCheckpoint.class);
     }
 
     private void initCommitLog() throws Exception {
-        CheckPoint checkpoint = context.getBean(StoreCheckpoint.class, ContextNamespace.APP);
+        CheckPoint checkpoint = context.getBean(StoreCheckpoint.class);
         CommitConfig commitConfig = storeConfig.getCommitConfig();
 
         CommitLogFactory factory = new CommitLogFactory(storeConfig, checkpoint, allocateService);
@@ -113,8 +112,8 @@ public abstract class BaseDispatcherIntegrationTest {
         commitLogManager = new CommitLogManager(commitConfig, partitioner);
         commitLogManager.addCommitLog(logList);
 
-        context.register(partitioner, ContextNamespace.APP);
-        context.register(commitLogManager, ContextNamespace.APP);
+        context.register(partitioner);
+        context.register(commitLogManager);
 
         commitLogStore = new CommitLogStoreImpl(commitLogManager);
 
@@ -131,7 +130,7 @@ public abstract class BaseDispatcherIntegrationTest {
 
     protected CommitListener createCommitListener() {
         CommitLog commitLog = commitLogManager.selectByShardId(0);
-        return new CommitListener(dispatchQueue, commitLog, context.getBean(StoreCheckpoint.class, ContextNamespace.APP), storeConfig.getCommitConfig());
+        return new CommitListener(dispatchQueue, commitLog, context.getBean(StoreCheckpoint.class), storeConfig.getCommitConfig());
     }
 
     protected AtomicInteger registerCountingHandler() {

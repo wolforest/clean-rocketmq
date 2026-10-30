@@ -49,25 +49,25 @@ class MetaBootstrapTest {
         StoreConfig storeConfig = ConfigMock.createStoreConfig(anotherDir.toString());
         StorePath.initPath(anotherDir.toString());
 
-        context.register(storeConfig, ContextNamespace.APP);
-        context.register(new StoreState(), StoreState.class, ContextNamespace.APP);
-        StoreCheckpoint __cp = new StoreCheckpoint(anotherDir.toString()); context.register(__cp, CheckPoint.class, ContextNamespace.APP); context.register(__cp, StoreCheckpoint.class, ContextNamespace.APP);
+        context.register(storeConfig);
+        context.register(new StoreState(), StoreState.class);
+        StoreCheckpoint __cp = new StoreCheckpoint(anotherDir.toString()); context.register(__cp, CheckPoint.class); context.register(__cp, StoreCheckpoint.class);
 
         ConsumeQueueManager consumeQueueManager = mock(ConsumeQueueManager.class);
         StoreRegister storeRegister = mock(StoreRegister.class);
-        context.register(consumeQueueManager, ConsumeQueueManager.class, ContextNamespace.APP);
-        context.register(storeRegister, StoreRegister.class, ContextNamespace.APP);
+        context.register(consumeQueueManager, ConsumeQueueManager.class);
+        context.register(storeRegister, StoreRegister.class);
 
         MetaBootstrap bootstrap = new MetaBootstrap(context);
         bootstrap.initialize();
 
-        ConsumeOffsetService offsetService = context.getBean(ConsumeOffsetService.class, ContextNamespace.APP);
+        ConsumeOffsetService offsetService = context.getBean(ConsumeOffsetService.class);
         assertNotNull(offsetService);
 
-        ConsumeOrderService orderService = context.getBean(ConsumeOrderService.class, ContextNamespace.APP);
+        ConsumeOrderService orderService = context.getBean(ConsumeOrderService.class);
         assertNotNull(orderService);
 
-        TopicService topicService = context.getBean(TopicService.class, ContextNamespace.APP);
+        TopicService topicService = context.getBean(TopicService.class);
         assertNotNull(topicService);
 
         ConsumeOffsetStore offsetStore = context.getBean(ConsumeOffsetStore.class, ContextNamespace.API);

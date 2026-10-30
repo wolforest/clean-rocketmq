@@ -46,8 +46,8 @@ public class MQBootstrap implements Lifecycle {
     public void initialize() throws Exception {
         dequeueLock = new DequeueLock();
         inflightCounter = new InflightCounter();
-        context.register(dequeueLock, ContextNamespace.APP);
-        context.register(inflightCounter, ContextNamespace.APP);
+        context.register(dequeueLock);
+        context.register(inflightCounter);
 
         initPubService();
         initAckManager();
@@ -58,7 +58,7 @@ public class MQBootstrap implements Lifecycle {
 
     @Override
     public void start() throws Exception {
-        CommitLogSynchronizer commitLogSynchronizer = context.getBean(CommitLogSynchronizer.class, ContextNamespace.APP);
+        CommitLogSynchronizer commitLogSynchronizer = context.getBean(CommitLogSynchronizer.class);
         this.enqueueService.inject(commitLogSynchronizer);
 
         dequeueLock.start();
@@ -72,9 +72,9 @@ public class MQBootstrap implements Lifecycle {
     }
 
     private void initMQManager() {
-        AckService ackService = context.getBean(AckService.class, ContextNamespace.APP);
-        InvisibleService invisibleService = context.getBean(InvisibleService.class, ContextNamespace.APP);
-        ConsumeQueueManager consumeQueueManager = context.getBean(ConsumeQueueManager.class, ContextNamespace.APP);
+        AckService ackService = context.getBean(AckService.class);
+        InvisibleService invisibleService = context.getBean(InvisibleService.class);
+        ConsumeQueueManager consumeQueueManager = context.getBean(ConsumeQueueManager.class);
 
         MQStore MQStore = new MQStoreImpl(mqService, ackService, invisibleService, consumeQueueManager);
         context.register(MQStore, MQStore.class, ContextNamespace.API);
@@ -86,36 +86,36 @@ public class MQBootstrap implements Lifecycle {
     }
 
     private void initPubService() {
-        CommitLogManager commitLogManager = context.getBean(CommitLogManager.class, ContextNamespace.APP);
-        StoreConfig storeConfig  = context.getBean(StoreConfig.class, ContextNamespace.APP);
-        ConsumeQueueManager consumeQueue = context.getBean(ConsumeQueueManager.class, ContextNamespace.APP);
+        CommitLogManager commitLogManager = context.getBean(CommitLogManager.class);
+        StoreConfig storeConfig  = context.getBean(StoreConfig.class);
+        ConsumeQueueManager consumeQueue = context.getBean(ConsumeQueueManager.class);
 
         this.enqueueService = new EnqueueService(storeConfig, commitLogManager, consumeQueue);
         this.messageService = new MessageService(commitLogManager, consumeQueue);
-        context.register(this.enqueueService, EnqueueService.class, ContextNamespace.APP);
-        context.register(this.messageService, MessageService.class, ContextNamespace.APP);
+        context.register(this.enqueueService, EnqueueService.class);
+        context.register(this.messageService, MessageService.class);
     }
 
     private void initSubService() {
-        StoreConfig storeConfig  = context.getBean(StoreConfig.class, ContextNamespace.APP);
+        StoreConfig storeConfig  = context.getBean(StoreConfig.class);
 
-        CommitLog commitLog = context.getBean(CommitLog.class, ContextNamespace.APP);
-        ConsumeQueueManager consumeQueue = context.getBean(ConsumeQueueManager.class, ContextNamespace.APP);
-        ConsumeOffsetService consumeOffsetService = context.getBean(ConsumeOffsetService.class, ContextNamespace.APP);
-        ConsumeOrderService orderService = context.getBean(ConsumeOrderService.class, ContextNamespace.APP);
+        CommitLog commitLog = context.getBean(CommitLog.class);
+        ConsumeQueueManager consumeQueue = context.getBean(ConsumeQueueManager.class);
+        ConsumeOffsetService consumeOffsetService = context.getBean(ConsumeOffsetService.class);
+        ConsumeOrderService orderService = context.getBean(ConsumeOrderService.class);
 
-        AckService ackService = context.getBean(AckService.class, ContextNamespace.APP);
+        AckService ackService = context.getBean(AckService.class);
         this.offsetService = new OffsetService(
             storeConfig, commitLog, ackService, consumeQueue, consumeOffsetService, orderService
         );
-        context.register(offsetService, OffsetService.class, ContextNamespace.APP);
+        context.register(offsetService, OffsetService.class);
 
         this.dequeueService = new DequeueService(
             storeConfig, dequeueLock, messageService, ackService, offsetService, inflightCounter, orderService
         );
-        context.register(dequeueService, DequeueService.class, ContextNamespace.APP);
+        context.register(dequeueService, DequeueService.class);
 
         this.mqService = new DefaultMQService(enqueueService, dequeueService, messageService);
-        context.register(mqService, MQService.class, ContextNamespace.APP);
+        context.register(mqService, MQService.class);
     }
 }

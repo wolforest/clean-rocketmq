@@ -1,6 +1,5 @@
 package com.wolfmq.store.domain.commitlog.it;
 
-import com.wolfmq.domain.core.constant.ContextNamespace;
 
 import cn.coderule.common.convention.container.ApplicationContext;
 
@@ -57,16 +56,16 @@ class MultiShardCommitLogIntegrationTest {
         storeConfig.getCommitConfig().setShardingNumber(SHARD_COUNT);
         storeConfig.getCommitConfig().setMaxShardingNumber(MAX_SHARD);
 
-        context.register(storeConfig, ContextNamespace.APP);
-        context.register(storeConfig.getCommitConfig(), ContextNamespace.APP);
+        context.register(storeConfig);
+        context.register(storeConfig.getCommitConfig());
 
         StoreCheckpoint checkpoint = new StoreCheckpoint(tmpDir.resolve("checkpoint").toString());
         checkpoint.setShutdownSuccessful(false);
-        context.register(checkpoint, CheckPoint.class, ContextNamespace.APP); context.register(checkpoint, StoreCheckpoint.class, ContextNamespace.APP);
+        context.register(checkpoint, CheckPoint.class); context.register(checkpoint, StoreCheckpoint.class);
 
         allocateService = new AllocateMappedFileService(storeConfig);
         allocateService.start();
-        context.register(allocateService, ContextNamespace.APP);
+        context.register(allocateService);
 
         initCommitLog();
     }
@@ -94,7 +93,7 @@ class MultiShardCommitLogIntegrationTest {
     }
 
     private void initCommitLog() throws Exception {
-        CheckPoint ckpt = context.getBean(StoreCheckpoint.class, ContextNamespace.APP);
+        CheckPoint ckpt = context.getBean(StoreCheckpoint.class);
         CommitConfig commitConfig = storeConfig.getCommitConfig();
 
         CommitLogFactory factory = new CommitLogFactory(storeConfig, ckpt, allocateService);
@@ -104,8 +103,8 @@ class MultiShardCommitLogIntegrationTest {
         commitLogManager = new CommitLogManager(commitConfig, partitioner);
         commitLogManager.addCommitLog(logList);
 
-        context.register(partitioner, ContextNamespace.APP);
-        context.register(commitLogManager, ContextNamespace.APP);
+        context.register(partitioner);
+        context.register(commitLogManager);
 
         offsetCodec = new OffsetCodec(MAX_SHARD);
 

@@ -6,7 +6,6 @@ import com.wolfmq.domain.config.store.CommitConfig;
 import com.wolfmq.domain.server.store.CheckPoint;
 import com.wolfmq.store.domain.commitlog.log.CommitLogManager;
 import cn.coderule.common.convention.container.ApplicationContext;
-import com.wolfmq.domain.core.constant.ContextNamespace;
 
 /**
  * @renamed from CommitLogDispatcherBootstrap to DispatcherBootstrap
@@ -22,17 +21,17 @@ public class DispatcherBootstrap implements Lifecycle {
 
     @Override
     public void initialize() throws Exception {
-        StoreConfig storeConfig = context.getBean(StoreConfig.class, ContextNamespace.APP);
+        StoreConfig storeConfig = context.getBean(StoreConfig.class);
         CommitConfig commitConfig = storeConfig.getCommitConfig();
-        CheckPoint checkPoint = context.getBean(CheckPoint.class, ContextNamespace.APP);
-        CommitLogManager commitLogManager = context.getBean(CommitLogManager.class, ContextNamespace.APP);
+        CheckPoint checkPoint = context.getBean(CheckPoint.class);
+        CommitLogManager commitLogManager = context.getBean(CommitLogManager.class);
 
         CommitHandlerManager handlerManager = new CommitHandlerManager();
-        context.register(handlerManager, ContextNamespace.APP);
+        context.register(handlerManager);
 
         dispatchManager = new DispatchManager(
             commitConfig, checkPoint, commitLogManager, handlerManager);
-        context.register(dispatchManager, ContextNamespace.APP);
+        context.register(dispatchManager);
     }
 
     @Override

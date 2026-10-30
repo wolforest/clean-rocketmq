@@ -32,13 +32,13 @@ class TimerBootstrapTest {
         StorePath.initPath(tempDir.toString());
         MessageService messageService = mock(MessageService.class);
 
-        context.register(storeConfig, ContextNamespace.APP);
-        context.register(messageService, ContextNamespace.APP);
+        context.register(storeConfig);
+        context.register(messageService);
 
         TimerBootstrap bootstrap = new TimerBootstrap(context);
         bootstrap.initialize();
 
-        TimerService timerService = context.getBean(TimerService.class, ContextNamespace.APP);
+        TimerService timerService = context.getBean(TimerService.class);
         TimerStore timerStore = context.getBean(TimerStore.class, ContextNamespace.API);
 
         assertNotNull(timerService);

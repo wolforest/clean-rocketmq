@@ -4,7 +4,6 @@ import cn.coderule.common.convention.container.ApplicationContext;
 
 import com.wolfmq.domain.config.server.StoreConfig;
 import com.wolfmq.domain.config.store.StorePath;
-import com.wolfmq.domain.core.constant.ContextNamespace;
 import com.wolfmq.domain.domain.meta.service.TopicService;
 import com.wolfmq.domain.domain.meta.topic.Topic;
 import com.wolfmq.domain.domain.meta.topic.PermName;
@@ -51,19 +50,19 @@ class StoreRegisterTest {
 
     @Test
     void constructor_ShouldCreateStoreRegister() {
-        storeRegister = new StoreRegister(storeConfig, nettyClient, () -> context.getBean(TopicService.class, ContextNamespace.APP));
+        storeRegister = new StoreRegister(storeConfig, nettyClient, () -> context.getBean(TopicService.class));
         assertNotNull(storeRegister);
     }
 
     @Test
     void shutdown_ShouldNotThrow() throws Exception {
-        storeRegister = new StoreRegister(storeConfig, nettyClient, () -> context.getBean(TopicService.class, ContextNamespace.APP));
+        storeRegister = new StoreRegister(storeConfig, nettyClient, () -> context.getBean(TopicService.class));
         assertDoesNotThrow(() -> storeRegister.shutdown());
     }
 
     @Test
     void unregisterStore_ShouldCallRegistry() {
-        storeRegister = new StoreRegister(storeConfig, nettyClient, () -> context.getBean(TopicService.class, ContextNamespace.APP));
+        storeRegister = new StoreRegister(storeConfig, nettyClient, () -> context.getBean(TopicService.class));
         assertDoesNotThrow(() -> storeRegister.unregisterStore());
     }
 

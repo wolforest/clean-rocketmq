@@ -1,6 +1,5 @@
 package com.wolfmq.store.server.ha;
 
-import com.wolfmq.domain.core.constant.ContextNamespace;
 
 import cn.coderule.common.convention.container.ApplicationContext;
 
@@ -40,13 +39,13 @@ class HABootstrapTest {
         StorePath.initPath(anotherDir.toString());
 
         StoreRegister storeRegister = mock(StoreRegister.class);
-        context.register(storeConfig, ContextNamespace.APP);
-        context.register(storeRegister, StoreRegister.class, ContextNamespace.APP);
+        context.register(storeConfig);
+        context.register(storeRegister, StoreRegister.class);
 
         HABootstrap bootstrap = new HABootstrap(context);
         bootstrap.initialize();
 
-        CommitLogSynchronizer synchronizer = context.getBean(CommitLogSynchronizer.class, ContextNamespace.APP);
+        CommitLogSynchronizer synchronizer = context.getBean(CommitLogSynchronizer.class);
         assertNotNull(synchronizer);
     }
 }

@@ -2,7 +2,6 @@ package com.wolfmq.store.domain.consumequeue;
 
 import com.wolfmq.domain.server.store.CheckPoint;
 
-import com.wolfmq.domain.core.constant.ContextNamespace;
 
 import cn.coderule.common.convention.container.ApplicationContext;
 
@@ -45,20 +44,20 @@ class ConsumeQueueBootstrapTest {
         StorePath.initPath(anotherDir.toString());
         storeConfig.setCommitConfig(new CommitConfig());
 
-        context.register(storeConfig, ContextNamespace.APP);
-        context.register(storeConfig.getCommitConfig(), CommitConfig.class, ContextNamespace.APP);
-        StoreCheckpoint __cp = new StoreCheckpoint(anotherDir.toString()); context.register(__cp, CheckPoint.class, ContextNamespace.APP); context.register(__cp, StoreCheckpoint.class, ContextNamespace.APP);
+        context.register(storeConfig);
+        context.register(storeConfig.getCommitConfig(), CommitConfig.class);
+        StoreCheckpoint __cp = new StoreCheckpoint(anotherDir.toString()); context.register(__cp, CheckPoint.class); context.register(__cp, StoreCheckpoint.class);
 
         TopicService topicService = mock(TopicService.class);
-        context.register(topicService, TopicService.class, ContextNamespace.APP);
+        context.register(topicService, TopicService.class);
 
         CommitHandlerManager handlerManager = new CommitHandlerManager();
-        context.register(handlerManager, ContextNamespace.APP);
+        context.register(handlerManager);
 
         ConsumeQueueBootstrap bootstrap = new ConsumeQueueBootstrap(context);
         assertDoesNotThrow(bootstrap::initialize);
 
-        ConsumeQueueManager manager = context.getBean(ConsumeQueueManager.class, ContextNamespace.APP);
+        ConsumeQueueManager manager = context.getBean(ConsumeQueueManager.class);
         assertNotNull(manager);
     }
 }

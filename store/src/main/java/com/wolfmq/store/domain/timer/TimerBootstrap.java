@@ -22,14 +22,14 @@ public class TimerBootstrap implements Lifecycle {
 
     @Override
     public void initialize() throws Exception {
-        StoreConfig storeConfig = context.getBean(StoreConfig.class, ContextNamespace.APP);
-        MessageService messageService = context.getBean(MessageService.class, ContextNamespace.APP);
+        StoreConfig storeConfig = context.getBean(StoreConfig.class);
+        MessageService messageService = context.getBean(MessageService.class);
 
         String checkpointPath = StorePath.getTimerCheckPath();
         CheckpointService checkpointService = new CheckpointService(checkpointPath);
 
         timerService = new TimerService(storeConfig, checkpointService, messageService);
-        context.register(timerService, ContextNamespace.APP);
+        context.register(timerService);
 
         TimerStore timerStore = new TimerStoreImpl(timerService);
         context.register(timerStore, TimerStore.class, ContextNamespace.API);

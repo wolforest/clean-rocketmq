@@ -1,6 +1,5 @@
 package com.wolfmq.store.domain.index;
 
-import com.wolfmq.domain.core.constant.ContextNamespace;
 
 import cn.coderule.common.convention.container.ApplicationContext;
 
@@ -39,14 +38,14 @@ class IndexBootstrapTest {
         StorePath.initPath(anotherDir.toString());
         storeConfig.setIndexConfig(new IndexConfig());
 
-        context.register(storeConfig, ContextNamespace.APP);
+        context.register(storeConfig);
         CommitHandlerManager handlerManager = new CommitHandlerManager();
-        context.register(handlerManager, ContextNamespace.APP);
+        context.register(handlerManager);
 
         IndexBootstrap bootstrap = new IndexBootstrap(context);
         bootstrap.initialize();
 
-        DefaultIndexService service = context.getBean(DefaultIndexService.class, ContextNamespace.APP);
+        DefaultIndexService service = context.getBean(DefaultIndexService.class);
         assertNotNull(service);
 
         assertNotNull(handlerManager);

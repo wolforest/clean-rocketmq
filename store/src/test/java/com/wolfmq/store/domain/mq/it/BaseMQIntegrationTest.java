@@ -1,6 +1,5 @@
 package com.wolfmq.store.domain.mq.it;
 
-import com.wolfmq.domain.core.constant.ContextNamespace;
 
 import cn.coderule.common.convention.container.ApplicationContext;
 
@@ -63,14 +62,14 @@ public abstract class BaseMQIntegrationTest {
         storeConfig.getCommitConfig().setShardingNumber(1);
         storeConfig.getCommitConfig().setMaxShardingNumber(1);
 
-        context.register(storeConfig, ContextNamespace.APP);
-        context.register(storeConfig.getCommitConfig(), ContextNamespace.APP);
+        context.register(storeConfig);
+        context.register(storeConfig.getCommitConfig());
 
         initCheckPoint();
 
         allocateService = new AllocateMappedFileService(storeConfig);
         allocateService.start();
-        context.register(allocateService, ContextNamespace.APP);
+        context.register(allocateService);
 
         initCommitLog();
         initConsumeQueue();
@@ -97,11 +96,11 @@ public abstract class BaseMQIntegrationTest {
             tmpDir.resolve("checkpoint").toString()
         );
         checkpoint.setShutdownSuccessful(false);
-        context.register(checkpoint, CheckPoint.class, ContextNamespace.APP); context.register(checkpoint, StoreCheckpoint.class, ContextNamespace.APP);
+        context.register(checkpoint, CheckPoint.class); context.register(checkpoint, StoreCheckpoint.class);
     }
 
     private void initCommitLog() throws Exception {
-        CheckPoint checkpoint = context.getBean(StoreCheckpoint.class, ContextNamespace.APP);
+        CheckPoint checkpoint = context.getBean(StoreCheckpoint.class);
         CommitConfig commitConfig = storeConfig.getCommitConfig();
 
         CommitLogFactory factory = new CommitLogFactory(storeConfig, checkpoint, allocateService);
@@ -111,8 +110,8 @@ public abstract class BaseMQIntegrationTest {
         commitLogManager = new CommitLogManager(commitConfig, partitioner);
         commitLogManager.addCommitLog(logList);
 
-        context.register(partitioner, ContextNamespace.APP);
-        context.register(commitLogManager, ContextNamespace.APP);
+        context.register(partitioner);
+        context.register(commitLogManager);
 
         commitLogManager.initialize();
         commitLogManager.start();
@@ -123,12 +122,12 @@ public abstract class BaseMQIntegrationTest {
 
     private void initConsumeQueue() {
         ConsumeQueueConfig cqConfig = storeConfig.getConsumeQueueConfig();
-        StoreCheckpoint checkpoint = context.getBean(StoreCheckpoint.class, ContextNamespace.APP);
+        StoreCheckpoint checkpoint = context.getBean(StoreCheckpoint.class);
         CommitConfig commitConfig = storeConfig.getCommitConfig();
 
         TopicService topicService = mock(TopicService.class);
         when(topicService.exists(anyString())).thenReturn(true);
-        context.register(topicService, TopicService.class, ContextNamespace.APP);
+        context.register(topicService, TopicService.class);
 
         ConsumeQueueFlusher flusher = new ConsumeQueueFlusher(cqConfig, checkpoint);
         ConsumeQueueLoader loader = new ConsumeQueueLoader(cqConfig);
@@ -142,7 +141,7 @@ public abstract class BaseMQIntegrationTest {
         factory.createAll();
 
         consumeQueueManager = new ConsumeQueueManager(factory);
-        context.register(consumeQueueManager, ConsumeQueueManager.class, ContextNamespace.APP);
+        context.register(consumeQueueManager, ConsumeQueueManager.class);
     }
 
     private void initMetaServices() {
@@ -154,8 +153,8 @@ public abstract class BaseMQIntegrationTest {
         messageService = new MessageService(commitLogManager, consumeQueueManager);
 
         enqueueService = new EnqueueService(storeConfig, commitLogManager, consumeQueueManager);
-        context.register(enqueueService, EnqueueService.class, ContextNamespace.APP);
-        context.register(messageService, MessageService.class, ContextNamespace.APP);
+        context.register(enqueueService, EnqueueService.class);
+        context.register(messageService, MessageService.class);
     }
 
     protected CommitLog getCommitLog() {

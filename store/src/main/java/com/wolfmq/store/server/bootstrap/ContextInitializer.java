@@ -48,8 +48,8 @@ public class ContextInitializer {
 
         StorePath.initPath(storeConfig.getRootDir());
 
-        context.register(storeConfig, ContextNamespace.APP);
-        context.register(new StoreState(), StoreState.class, ContextNamespace.APP);
+        context.register(storeConfig);
+        context.register(new StoreState(), StoreState.class);
     }
 
     private void initializeMonitor() {
