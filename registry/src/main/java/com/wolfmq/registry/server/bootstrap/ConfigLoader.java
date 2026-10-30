@@ -4,12 +4,11 @@ import cn.coderule.common.convention.container.ApplicationContext;
 import com.wolfmq.domain.config.network.RpcClientConfig;
 import com.wolfmq.domain.config.network.RpcServerConfig;
 import com.wolfmq.domain.config.server.RegistryConfig;
-import com.wolfmq.domain.core.constant.ContextNamespace;
 
 public class ConfigLoader {
     public static void load(ApplicationContext context) {
         RegistryConfig registryConfig = new RegistryConfig();
-        context.register(registryConfig, ContextNamespace.APP);
+        context.register(registryConfig);
 
         RpcServerConfig rpcServerConfig = new RpcServerConfig();
         rpcServerConfig.setPort(registryConfig.getPort());
@@ -17,9 +16,9 @@ public class ConfigLoader {
         rpcServerConfig.setWorkerThreadNum(registryConfig.getWorkerThreadNum());
         rpcServerConfig.setBusinessThreadNum(registryConfig.getBusinessThreadNum());
         rpcServerConfig.setCallbackThreadNum(registryConfig.getCallbackThreadNum());
-        context.register(rpcServerConfig, ContextNamespace.APP);
+        context.register(rpcServerConfig);
 
         RpcClientConfig rpcClientConfig = new RpcClientConfig();
-        context.register(rpcClientConfig, ContextNamespace.APP);
+        context.register(rpcClientConfig);
     }
 }

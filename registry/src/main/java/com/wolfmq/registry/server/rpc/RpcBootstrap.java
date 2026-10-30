@@ -4,7 +4,6 @@ import cn.coderule.common.convention.container.ApplicationContext;
 import cn.coderule.common.convention.service.Lifecycle;
 import com.wolfmq.domain.config.network.RpcServerConfig;
 import com.wolfmq.domain.config.server.RegistryConfig;
-import com.wolfmq.domain.core.constant.ContextNamespace;
 import com.wolfmq.registry.domain.store.service.ChannelCloser;
 import com.wolfmq.registry.processor.ClusterProcessor;
 import com.wolfmq.registry.processor.KVProcessor;
@@ -26,19 +25,19 @@ public class RpcBootstrap implements Lifecycle {
 
     @Override
     public void initialize() throws Exception {
-        ChannelCloser channelCloser = context.getBean(ChannelCloser.class, ContextNamespace.APP);
+        ChannelCloser channelCloser = context.getBean(ChannelCloser.class);
         ConnectionManager connectionManager = new ConnectionManager(channelCloser);
 
-        RegistryConfig registryConfig = context.getBean(RegistryConfig.class, ContextNamespace.APP);
-        RpcServerConfig serverConfig = context.getBean(RpcServerConfig.class, ContextNamespace.APP);
+        RegistryConfig registryConfig = context.getBean(RegistryConfig.class);
+        RpcServerConfig serverConfig = context.getBean(RpcServerConfig.class);
 
         List<RpcProcessor> processors = List.of(
-            context.getBean(KVProcessor.class, ContextNamespace.APP),
-            context.getBean(PropertyProcessor.class, ContextNamespace.APP),
-            context.getBean(ClusterProcessor.class, ContextNamespace.APP),
-            context.getBean(RegistryProcessor.class, ContextNamespace.APP),
-            context.getBean(RouteProcessor.class, ContextNamespace.APP),
-            context.getBean(TopicProcessor.class, ContextNamespace.APP)
+            context.getBean(KVProcessor.class),
+            context.getBean(PropertyProcessor.class),
+            context.getBean(ClusterProcessor.class),
+            context.getBean(RegistryProcessor.class),
+            context.getBean(RouteProcessor.class),
+            context.getBean(TopicProcessor.class)
         );
 
         server = new RegistryServer(registryConfig, serverConfig, connectionManager, processors);

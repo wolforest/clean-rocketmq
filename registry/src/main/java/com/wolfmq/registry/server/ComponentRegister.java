@@ -3,7 +3,6 @@ package com.wolfmq.registry.server;
 import cn.coderule.common.convention.container.ApplicationContext;
 import cn.coderule.common.convention.service.LifecycleManager;
 import com.wolfmq.domain.config.server.RegistryConfig;
-import com.wolfmq.domain.core.constant.ContextNamespace;
 import com.wolfmq.registry.domain.broker.BrokerBootstrap;
 import com.wolfmq.registry.domain.kv.KVBootstrap;
 import com.wolfmq.registry.domain.property.PropertyBootstrap;
@@ -46,21 +45,21 @@ public class ComponentRegister {
     }
 
     private void registerExecutor() {
-        RegistryConfig config = context.getBean(RegistryConfig.class, ContextNamespace.APP);
+        RegistryConfig config = context.getBean(RegistryConfig.class);
         ExecutorFactory factory = new ExecutorFactory(config);
 
         manager.register(factory);
-        context.register(factory, ContextNamespace.APP);
+        context.register(factory);
     }
 
     private void registerHaClient() {
         HaClient haClient = new HaClient(
-            context.getBean(RegistryConfig.class, ContextNamespace.APP),
-            context.getBean(RpcClientConfig.class, ContextNamespace.APP)
+            context.getBean(RegistryConfig.class),
+            context.getBean(RpcClientConfig.class)
         );
 
         manager.register(haClient);
-        context.register(haClient, ContextNamespace.APP);
+        context.register(haClient);
     }
 
 }

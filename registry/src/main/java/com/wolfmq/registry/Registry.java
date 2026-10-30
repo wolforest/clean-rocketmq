@@ -2,6 +2,7 @@ package com.wolfmq.registry;
 
 import cn.coderule.common.convention.container.ApplicationContext;
 import cn.coderule.common.convention.service.Lifecycle;
+import com.wolfmq.domain.core.constant.ContextNamespace;
 import cn.coderule.common.convention.service.LifecycleManager;
 import com.wolfmq.registry.server.ComponentRegister;
 import com.wolfmq.registry.server.bootstrap.ConfigLoader;
@@ -31,7 +32,7 @@ public class Registry implements Lifecycle {
 
     public Registry(String[] args) {
         this.args = args;
-        this.context = new ApplicationContext();
+        this.context = new ApplicationContext(ContextNamespace.APP);
     }
 
     @Override

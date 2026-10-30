@@ -1,6 +1,5 @@
 package com.wolfmq.registry.domain.property;
 
-import com.wolfmq.domain.core.constant.ContextNamespace;
 
 import cn.coderule.common.convention.container.ApplicationContext;
 
@@ -20,15 +19,15 @@ public class PropertyBootstrap implements Lifecycle {
     @Override
     public void initialize() throws Exception {
         PropertyService propertyService = new PropertyService(
-            context.getBean(RegistryConfig.class, ContextNamespace.APP),
-            context.getBean(RpcServerConfig.class, ContextNamespace.APP)
+            context.getBean(RegistryConfig.class),
+            context.getBean(RpcServerConfig.class)
         );
 
-        ExecutorFactory factory = context.getBean(ExecutorFactory.class, ContextNamespace.APP);
+        ExecutorFactory factory = context.getBean(ExecutorFactory.class);
         PropertyProcessor processor = new PropertyProcessor(propertyService, factory.getDefaultExecutor());
 
-        context.register(propertyService, ContextNamespace.APP);
-        context.register(processor, ContextNamespace.APP);
+        context.register(propertyService);
+        context.register(processor);
     }
 
     @Override

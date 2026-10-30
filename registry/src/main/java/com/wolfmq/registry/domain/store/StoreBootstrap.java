@@ -1,6 +1,5 @@
 package com.wolfmq.registry.domain.store;
 
-import com.wolfmq.domain.core.constant.ContextNamespace;
 
 import cn.coderule.common.convention.container.ApplicationContext;
 
@@ -38,8 +37,8 @@ public class StoreBootstrap implements Lifecycle {
     @Override
     public void initialize() throws Exception {
         this.route = new Route();
-        this.factory = context.getBean(ExecutorFactory.class, ContextNamespace.APP);
-        this.registryConfig = context.getBean(RegistryConfig.class, ContextNamespace.APP);
+        this.factory = context.getBean(ExecutorFactory.class);
+        this.registryConfig = context.getBean(RegistryConfig.class);
 
         initService();
         initProcessor();
@@ -58,7 +57,7 @@ public class StoreBootstrap implements Lifecycle {
     }
 
     private void initService() {
-        HaClient haClient = context.getBean(HaClient.class, ContextNamespace.APP);
+        HaClient haClient = context.getBean(HaClient.class);
         this.storeRegistry = new StoreRegistry(registryConfig, route, haClient);
 
         this.idleScanner = new IdleScanner(registryConfig, storeRegistry, route);
@@ -66,7 +65,7 @@ public class StoreBootstrap implements Lifecycle {
         this.topicService = new RegistryTopicService(registryConfig, route);
 
         ChannelCloser channelCloser = new ChannelCloser(storeRegistry, route);
-        context.register(channelCloser, ContextNamespace.APP);
+        context.register(channelCloser);
     }
 
     private void initProcessor() {
@@ -77,25 +76,25 @@ public class StoreBootstrap implements Lifecycle {
     }
 
     private void initRegistryProcessor() {
-        KVService kvService = context.getBean(KVService.class, ContextNamespace.APP);
+        KVService kvService = context.getBean(KVService.class);
         RegistryProcessor registryProcessor = new RegistryProcessor(registryConfig, storeRegistry, kvService, factory.getDefaultExecutor());
-        context.register(registryProcessor, ContextNamespace.APP);
+        context.register(registryProcessor);
     }
 
     private void initRouteProcessor() {
-        KVService kvService = context.getBean(KVService.class, ContextNamespace.APP);
+        KVService kvService = context.getBean(KVService.class);
         RouteProcessor routeProcessor = new RouteProcessor(registryConfig, topicService, kvService, factory.getRouteExecutor());
-        context.register(routeProcessor, ContextNamespace.APP);
+        context.register(routeProcessor);
     }
 
     private void initClusterProcessor() {
         ClusterProcessor clusterProcessor = new ClusterProcessor(clusterService, factory.getDefaultExecutor());
-        context.register(clusterProcessor, ContextNamespace.APP);
+        context.register(clusterProcessor);
     }
 
     private void initTopicProcessor() {
         TopicProcessor topicProcessor = new TopicProcessor(registryConfig, topicService, factory.getDefaultExecutor());
-        context.register(topicProcessor, ContextNamespace.APP);
+        context.register(topicProcessor);
     }
 
 }

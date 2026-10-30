@@ -1,6 +1,5 @@
 package com.wolfmq.registry.domain.kv;
 
-import com.wolfmq.domain.core.constant.ContextNamespace;
 
 import cn.coderule.common.convention.container.ApplicationContext;
 
@@ -19,14 +18,14 @@ public class KVBootstrap implements Lifecycle {
     @Override
     public void initialize() throws Exception {
         KVService kvService = new KVService(
-            context.getBean(RegistryConfig.class, ContextNamespace.APP)
+            context.getBean(RegistryConfig.class)
         );
 
-        ExecutorFactory factory = context.getBean(ExecutorFactory.class, ContextNamespace.APP);
+        ExecutorFactory factory = context.getBean(ExecutorFactory.class);
         KVProcessor processor = new KVProcessor(kvService, factory.getDefaultExecutor());
 
-        context.register(kvService, ContextNamespace.APP);
-        context.register(processor, ContextNamespace.APP);
+        context.register(kvService);
+        context.register(processor);
     }
 
     @Override
