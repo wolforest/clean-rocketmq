@@ -14,7 +14,7 @@ public class Metric implements Serializable {
     /**
      * metrics unit:
      *  - time: ns/ms/s/m/h/d/...
-     *  - counting:
+     *  - count/byte/
      */
     private String unit = "";
 
