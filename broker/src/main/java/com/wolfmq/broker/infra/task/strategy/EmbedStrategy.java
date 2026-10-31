@@ -96,7 +96,7 @@ public class EmbedStrategy implements TaskStrategy {
     }
 
     private void initReviveTask(StoreTask task) {
-        TopicConfig topicConfig = taskContext.getBrokerConfig().getTopicConfig();
+        TopicConfig topicConfig = taskContext.getBrokerConfig().getTopic();
         List<Integer> reviveQueueList = IntStream
             .range(0, topicConfig.getReviveQueueNum())
             .boxed()
@@ -106,7 +106,7 @@ public class EmbedStrategy implements TaskStrategy {
     }
 
     private void initTimerTask(StoreTask task) {
-        TopicConfig topicConfig = taskContext.getBrokerConfig().getTopicConfig();
+        TopicConfig topicConfig = taskContext.getBrokerConfig().getTopic();
         List<Integer> timerQueueList = IntStream
             .range(0, topicConfig.getTimerQueueNum())
             .boxed()
@@ -116,7 +116,7 @@ public class EmbedStrategy implements TaskStrategy {
     }
 
     private void initTransactionTask(StoreTask task) {
-        TopicConfig topicConfig = taskContext.getBrokerConfig().getTopicConfig();
+        TopicConfig topicConfig = taskContext.getBrokerConfig().getTopic();
         List<Integer> transactionQueueList = IntStream
             .range(0, topicConfig.getPrepareQueueNum())
             .boxed()

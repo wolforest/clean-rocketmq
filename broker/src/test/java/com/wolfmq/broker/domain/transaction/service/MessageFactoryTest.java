@@ -35,7 +35,7 @@ public class MessageFactoryTest {
         commitBuffer = mock(CommitBuffer.class);
         hostAddress = new InetSocketAddress("127.0.0.1", 10911);
 
-        when(brokerConfig.getTransactionConfig()).thenReturn(transactionConfig);
+        when(brokerConfig.getTransaction()).thenReturn(transactionConfig);
         when(brokerConfig.getHostAddress()).thenReturn(hostAddress);
         when(transactionConfig.getMaxCommitMessageLength()).thenReturn(4096);
 

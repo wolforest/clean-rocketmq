@@ -42,7 +42,7 @@ public class GrpcBootstrap implements Lifecycle {
 
     private void initConfig() {
         this.brokerConfig = context.getBean(BrokerConfig.class);
-        this.grpcConfig = brokerConfig.getGrpcConfig();
+        this.grpcConfig = brokerConfig.getGrpc();
 
         this.grpcConfig.setPort(brokerConfig.getPort());
     }

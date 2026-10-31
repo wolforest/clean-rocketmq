@@ -47,8 +47,8 @@ class PrepareMessageCheckerTest {
         messageService = mock(TransactionMessageService.class);
 
         when(transactionContext.getBrokerConfig()).thenReturn(brokerConfig);
-        when(brokerConfig.getTransactionConfig()).thenReturn(transactionConfig);
-        when(brokerConfig.getMessageConfig()).thenReturn(messageConfig);
+        when(brokerConfig.getTransaction()).thenReturn(transactionConfig);
+        when(brokerConfig.getMessage()).thenReturn(messageConfig);
         when(transactionContext.getCheckService()).thenReturn(checkService);
         when(transactionContext.getDiscardService()).thenReturn(discardService);
         when(transactionContext.getMessageService()).thenReturn(messageService);

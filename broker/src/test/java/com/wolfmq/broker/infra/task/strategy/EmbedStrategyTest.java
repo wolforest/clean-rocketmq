@@ -44,8 +44,8 @@ class EmbedStrategyTest {
         MockitoAnnotations.openMocks(this);
 
         when(brokerConfig.getGroup()).thenReturn("testGroup");
-        when(brokerConfig.getTaskConfig()).thenReturn(taskConfig);
-        when(brokerConfig.getTopicConfig()).thenReturn(topicConfig);
+        when(brokerConfig.getTask()).thenReturn(taskConfig);
+        when(brokerConfig.getTopic()).thenReturn(topicConfig);
         when(topicConfig.getReviveQueueNum()).thenReturn(8);
         when(topicConfig.getTimerQueueNum()).thenReturn(4);
         when(topicConfig.getPrepareQueueNum()).thenReturn(2);

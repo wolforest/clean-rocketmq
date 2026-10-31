@@ -16,14 +16,14 @@ class ConfigLoaderTest {
 
         BrokerConfig brokerConfig = context.getBean(BrokerConfig.class);
         assertNotNull(brokerConfig);
-        assertNotNull(brokerConfig.getMessageConfig());
-        assertNotNull(brokerConfig.getTopicConfig());
-        assertNotNull(brokerConfig.getTimerConfig());
-        assertNotNull(brokerConfig.getTransactionConfig());
-        assertNotNull(brokerConfig.getTaskConfig());
-        assertNotNull(brokerConfig.getGrpcConfig());
-        assertNotNull(brokerConfig.getRpcServerConfig());
-        assertNotNull(brokerConfig.getRpcClientConfig());
+        assertNotNull(brokerConfig.getMessage());
+        assertNotNull(brokerConfig.getTopic());
+        assertNotNull(brokerConfig.getTimer());
+        assertNotNull(brokerConfig.getTransaction());
+        assertNotNull(brokerConfig.getTask());
+        assertNotNull(brokerConfig.getGrpc());
+        assertNotNull(brokerConfig.getRpcServer());
+        assertNotNull(brokerConfig.getRpcClient());
     }
 
     @Test
@@ -32,9 +32,9 @@ class ConfigLoaderTest {
 
         BrokerConfig brokerConfig = context.getBean(BrokerConfig.class);
 
-        assertNotNull(brokerConfig.getGrpcConfig());
-        assertTrue(brokerConfig.getGrpcConfig().getPort() > 0);
-        assertNotNull(brokerConfig.getTopicConfig());
-        assertTrue(brokerConfig.getTopicConfig().getReviveQueueNum() > 0);
+        assertNotNull(brokerConfig.getGrpc());
+        assertTrue(brokerConfig.getGrpc().getPort() > 0);
+        assertNotNull(brokerConfig.getTopic());
+        assertTrue(brokerConfig.getTopic().getReviveQueueNum() > 0);
     }
 }

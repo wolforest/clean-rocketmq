@@ -51,7 +51,7 @@ public class RenewService implements Lifecycle {
         ConsumerManager consumerManager,
         SubscriptionStore subscriptionStore
     ) {
-        this.messageConfig = brokerConfig.getMessageConfig();
+        this.messageConfig = brokerConfig.getMessage();
 
         this.consumerManager = consumerManager;
         this.subscriptionStore = subscriptionStore;

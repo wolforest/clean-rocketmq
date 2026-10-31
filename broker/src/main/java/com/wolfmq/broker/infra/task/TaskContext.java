@@ -20,6 +20,6 @@ public class TaskContext implements Serializable {
 
     public TaskContext(BrokerConfig brokerConfig) {
         this.brokerConfig = brokerConfig;
-        this.taskConfig = brokerConfig.getTaskConfig();
+        this.taskConfig = brokerConfig.getTask();
     }
 }

@@ -36,7 +36,7 @@ public class TransactionChecker extends ServiceThread {
     public TransactionChecker(TransactionContext context, QueueTask task) {
         this.task = task;
         this.transactionContext = context;
-        this.transactionConfig = context.getBrokerConfig().getTransactionConfig();
+        this.transactionConfig = context.getBrokerConfig().getTransaction();
 
         this.checkBuffer = new CheckBuffer();
         this.operationMessageLoader = new OperationMessageLoader(transactionContext);

@@ -61,8 +61,8 @@ public class TransactionFlowIntegrationTest {
         transactionConfig.setMaxCommitMessageLength(4096);
 
         brokerConfig = mock(BrokerConfig.class);
-        when(brokerConfig.getTransactionConfig()).thenReturn(transactionConfig);
-        when(brokerConfig.getMessageConfig()).thenReturn(mock(com.wolfmq.domain.config.business.MessageConfig.class));
+        when(brokerConfig.getTransaction()).thenReturn(transactionConfig);
+        when(brokerConfig.getMessage()).thenReturn(mock(com.wolfmq.domain.config.business.MessageConfig.class));
         when(brokerConfig.getHost()).thenReturn("localhost");
         when(brokerConfig.getPort()).thenReturn(10911);
         when(brokerConfig.getHostAddress()).thenReturn(new InetSocketAddress("localhost", 10911));

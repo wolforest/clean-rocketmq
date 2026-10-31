@@ -21,7 +21,7 @@ public class MessageFactory {
 
     public MessageFactory(BrokerConfig brokerConfig, CommitBuffer commitBuffer) {
         this.brokerConfig = brokerConfig;
-        this.transactionConfig = brokerConfig.getTransactionConfig();
+        this.transactionConfig = brokerConfig.getTransaction();
         this.host = brokerConfig.getHostAddress();
     }
 

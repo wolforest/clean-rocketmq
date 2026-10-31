@@ -46,7 +46,7 @@ class PopServiceTest {
 
         MessageConfig messageConfig = new MessageConfig();
         messageConfig.setPopRetryProbability(50);
-        when(brokerConfig.getMessageConfig()).thenReturn(messageConfig);
+        when(brokerConfig.getMessage()).thenReturn(messageConfig);
     }
 
     @Test

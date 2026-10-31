@@ -22,7 +22,7 @@ public class MessageValidator {
 
     public MessageValidator(BrokerConfig brokerConfig) {
         this.brokerConfig = brokerConfig;
-        this.messageConfig = brokerConfig.getMessageConfig();
+        this.messageConfig = brokerConfig.getMessage();
 
         this.maxMessageLength = Integer.MAX_VALUE - messageConfig.getMaxBodySize() >= 64 * 1023
             ? messageConfig.getMaxBodySize() + 64 * 1024
@@ -160,7 +160,7 @@ public class MessageValidator {
             return;
         }
 
-        long maxDelayTime = brokerConfig.getTimerConfig().getMaxDelayTime();
+        long maxDelayTime = brokerConfig.getTimer().getMaxDelayTime();
         if (maxDelayTime <= 0) {
             return;
         }

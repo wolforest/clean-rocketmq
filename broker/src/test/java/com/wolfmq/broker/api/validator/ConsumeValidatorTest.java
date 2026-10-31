@@ -23,7 +23,7 @@ class ConsumeValidatorTest {
         messageConfig.setMinInvisibleTime(10000);
         messageConfig.setMaxInvisibleTime(300000);
         messageConfig.setMaxPopSize(32);
-        brokerConfig.setMessageConfig(messageConfig);
+        brokerConfig.setMessage(messageConfig);
 
         validator = new ConsumeValidator(brokerConfig);
     }

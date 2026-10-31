@@ -32,8 +32,8 @@ public class PrepareMessageChecker {
 
     public PrepareMessageChecker(TransactionContext context, OperationMessageLoader operationMessageLoader) {
         BrokerConfig brokerConfig = context.getBrokerConfig();
-        this.transactionConfig = brokerConfig.getTransactionConfig();
-        this.messageConfig = brokerConfig.getMessageConfig();
+        this.transactionConfig = brokerConfig.getTransaction();
+        this.messageConfig = brokerConfig.getMessage();
         this.operationMessageLoader = operationMessageLoader;
 
         this.checkService = context.getCheckService();

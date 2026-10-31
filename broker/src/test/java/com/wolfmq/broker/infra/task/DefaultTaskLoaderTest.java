@@ -38,8 +38,8 @@ class DefaultTaskLoaderTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        when(brokerConfig.getTaskConfig()).thenReturn(taskConfig);
-        when(brokerConfig.getTopicConfig()).thenReturn(topicConfig);
+        when(brokerConfig.getTask()).thenReturn(taskConfig);
+        when(brokerConfig.getTopic()).thenReturn(topicConfig);
         when(brokerConfig.isEnableEmbedStore()).thenReturn(true);
         when(taskConfig.getTaskMode()).thenReturn("embed");
         when(topicConfig.getReviveQueueNum()).thenReturn(8);

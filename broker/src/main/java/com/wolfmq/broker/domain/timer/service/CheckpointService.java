@@ -75,7 +75,7 @@ public class CheckpointService extends ServiceThread {
     private int getInterval() {
         return context
             .getBrokerConfig()
-            .getTimerConfig()
+            .getTimer()
             .getFlushInterval();
     }
 

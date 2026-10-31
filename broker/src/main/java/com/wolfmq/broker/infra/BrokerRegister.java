@@ -22,7 +22,7 @@ public class BrokerRegister implements Lifecycle {
         this.brokerConfig = brokerConfig;
 
         this.registryClient = new DefaultRegistryClient(
-            brokerConfig.getRpcClientConfig(),
+            brokerConfig.getRpcClient(),
             brokerConfig.getRegistryAddress(),
             nettyClient);
     }

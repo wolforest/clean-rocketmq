@@ -38,7 +38,7 @@ public class PopService {
         ConsumerController consumerController,
         SettingManager settingManager
     ) {
-        this.grpcConfig = brokerConfig.getGrpcConfig();
+        this.grpcConfig = brokerConfig.getGrpc();
         this.consumerController = consumerController;
         this.settingManager = settingManager;
     }

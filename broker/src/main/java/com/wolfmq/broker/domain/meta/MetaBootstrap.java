@@ -69,7 +69,7 @@ public class MetaBootstrap implements Lifecycle {
         RouteMocker routeMocker = null;
         if (brokerConfig.isEnableEmbedStore()) {
             EmbedTopicStore embedTopicStore = context.getBean(EmbedTopicStore.class);
-            TopicConfig topicConfig = brokerConfig.getTopicConfig();
+            TopicConfig topicConfig = brokerConfig.getTopic();
             routeMocker = new RouteMocker(brokerConfig, topicConfig, embedTopicStore);
         }
 

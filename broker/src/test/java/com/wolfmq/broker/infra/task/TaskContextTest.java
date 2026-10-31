@@ -32,7 +32,7 @@ class TaskContextTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        when(brokerConfig.getTaskConfig()).thenReturn(taskConfig);
+        when(brokerConfig.getTask()).thenReturn(taskConfig);
     }
 
     @Test

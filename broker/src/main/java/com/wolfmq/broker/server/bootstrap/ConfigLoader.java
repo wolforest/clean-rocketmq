@@ -14,15 +14,15 @@ import com.wolfmq.domain.config.business.TaskConfig;
 public class ConfigLoader {
     public static void load(ApplicationContext context) {
         BrokerConfig brokerConfig = new BrokerConfig();
-        brokerConfig.setMessageConfig(new MessageConfig());
-        brokerConfig.setTopicConfig(new TopicConfig());
-        brokerConfig.setTimerConfig(new TimerConfig());
-        brokerConfig.setTransactionConfig(new TransactionConfig());
-        brokerConfig.setTaskConfig(new TaskConfig());
+        brokerConfig.setMessage(new MessageConfig());
+        brokerConfig.setTopic(new TopicConfig());
+        brokerConfig.setTimer(new TimerConfig());
+        brokerConfig.setTransaction(new TransactionConfig());
+        brokerConfig.setTask(new TaskConfig());
 
-        brokerConfig.setGrpcConfig(new GrpcConfig());
-        brokerConfig.setRpcServerConfig(new RpcServerConfig());
-        brokerConfig.setRpcClientConfig(new RpcClientConfig());
+        brokerConfig.setGrpc(new GrpcConfig());
+        brokerConfig.setRpcServer(new RpcServerConfig());
+        brokerConfig.setRpcClient(new RpcClientConfig());
 
         context.register(brokerConfig);
     }

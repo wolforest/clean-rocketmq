@@ -52,8 +52,8 @@ public class TransactionMessageService {
         TopicStore topicStore,
         ConsumeOffsetStore consumeOffsetStore
     ) {
-        this.topicConfig = brokerConfig.getTopicConfig();
-        this.transactionConfig = brokerConfig.getTransactionConfig();
+        this.topicConfig = brokerConfig.getTopic();
+        this.transactionConfig = brokerConfig.getTransaction();
 
         this.commitBuffer = commitBuffer;
         this.messageFactory = messageFactory;

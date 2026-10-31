@@ -47,7 +47,7 @@ public class DefaultTaskLoader implements TaskLoader {
             strategy = new EmbedStrategy(taskContext);
         }
 
-        TaskConfig taskConfig = brokerConfig.getTaskConfig();
+        TaskConfig taskConfig = brokerConfig.getTask();
         if ("binding".equalsIgnoreCase(taskConfig.getTaskMode())) {
             strategy = new BindingStrategy(taskContext);
         }

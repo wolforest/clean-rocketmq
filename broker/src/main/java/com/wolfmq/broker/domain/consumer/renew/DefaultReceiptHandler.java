@@ -27,7 +27,7 @@ public class DefaultReceiptHandler implements ReceiptHandler, Lifecycle {
         BrokerConfig brokerConfig,
         RenewListener renewListener
     ) {
-        this.messageConfig = brokerConfig.getMessageConfig();
+        this.messageConfig = brokerConfig.getMessage();
         this.renewListener = renewListener;
     }
 

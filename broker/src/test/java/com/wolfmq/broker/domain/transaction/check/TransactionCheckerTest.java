@@ -16,7 +16,7 @@ public class TransactionCheckerTest {
         TransactionContext context = mock(TransactionContext.class);
         BrokerConfig brokerConfig = mock(BrokerConfig.class);
         when(context.getBrokerConfig()).thenReturn(brokerConfig);
-        when(brokerConfig.getTransactionConfig()).thenReturn(null);
+        when(brokerConfig.getTransaction()).thenReturn(null);
 
         TransactionMessageService messageService = mock(TransactionMessageService.class);
         when(context.getMessageService()).thenReturn(messageService);

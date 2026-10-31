@@ -67,7 +67,7 @@ public class QueueSelector {
             return;
         }
 
-        int queueNum = brokerConfig.getTopicConfig().getReviveQueueNum();
+        int queueNum = brokerConfig.getTopic().getReviveQueueNum();
         int queueId = (int) Math.abs(reviveCount.getAndIncrement() % queueNum);
         context.setReviveQueueId(queueId);
     }

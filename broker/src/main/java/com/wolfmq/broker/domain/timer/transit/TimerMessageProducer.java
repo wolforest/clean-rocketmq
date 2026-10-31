@@ -34,7 +34,7 @@ public class TimerMessageProducer extends ServiceThread {
 
     public TimerMessageProducer(TimerContext context) {
         this.timerContext = context;
-        this.timerConfig = context.getBrokerConfig().getTimerConfig();
+        this.timerConfig = context.getBrokerConfig().getTimer();
         this.timerQueue = context.getTimerQueue();
         this.timerState = context.getTimerState();
         this.mqStore = context.getMqStore();

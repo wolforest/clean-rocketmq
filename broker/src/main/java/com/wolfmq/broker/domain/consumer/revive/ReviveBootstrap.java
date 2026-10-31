@@ -57,8 +57,8 @@ public class ReviveBootstrap implements Lifecycle {
         return ReviveContext.builder()
             .reviveTopic(reviveTopic)
             .brokerConfig(brokerConfig)
-            .messageConfig(brokerConfig.getMessageConfig())
-            .topicConfig(brokerConfig.getTopicConfig())
+            .messageConfig(brokerConfig.getMessage())
+            .topicConfig(brokerConfig.getTopic())
 
             .mqFacade(context.getBean(MQStore.class))
 

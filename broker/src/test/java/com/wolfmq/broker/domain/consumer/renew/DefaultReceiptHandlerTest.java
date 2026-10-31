@@ -36,7 +36,7 @@ class DefaultReceiptHandlerTest {
         MockitoAnnotations.openMocks(this);
         MessageConfig messageConfig = new MessageConfig();
         messageConfig.setInvisibleTimeOfClear(30000);
-        when(brokerConfig.getMessageConfig()).thenReturn(messageConfig);
+        when(brokerConfig.getMessage()).thenReturn(messageConfig);
         when(mockChannel.id()).thenReturn(mockChannelId);
         when(mockChannelId.asLongText()).thenReturn("mockChannelId");
         receiptHandler = new DefaultReceiptHandler(brokerConfig, renewListener);

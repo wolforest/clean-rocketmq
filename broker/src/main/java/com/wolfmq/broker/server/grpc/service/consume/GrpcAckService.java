@@ -29,7 +29,7 @@ public class GrpcAckService {
         BrokerConfig brokerConfig,
         ConsumerController consumerController
     ) {
-        this.messageConfig = brokerConfig.getMessageConfig();
+        this.messageConfig = brokerConfig.getMessage();
         this.consumerController = consumerController;
     }
 

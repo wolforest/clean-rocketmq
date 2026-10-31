@@ -13,7 +13,7 @@ public class ConsumeValidator {
     private final MessageConfig messageConfig;
 
     public ConsumeValidator(BrokerConfig brokerConfig) {
-        this.messageConfig = brokerConfig.getMessageConfig();
+        this.messageConfig = brokerConfig.getMessage();
     }
 
     public void validate(PopRequest request) {

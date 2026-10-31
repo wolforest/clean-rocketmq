@@ -70,8 +70,8 @@ class ProducerFlowIntegrationTest {
         timerConfig = new TimerConfig();
 
         brokerConfig = mock(BrokerConfig.class);
-        when(brokerConfig.getMessageConfig()).thenReturn(messageConfig);
-        when(brokerConfig.getTimerConfig()).thenReturn(timerConfig);
+        when(brokerConfig.getMessage()).thenReturn(messageConfig);
+        when(brokerConfig.getTimer()).thenReturn(timerConfig);
         when(brokerConfig.getProducerThreadNum()).thenReturn(2);
         when(brokerConfig.getProducerQueueCapacity()).thenReturn(100);
         when(brokerConfig.getHost()).thenReturn("localhost");

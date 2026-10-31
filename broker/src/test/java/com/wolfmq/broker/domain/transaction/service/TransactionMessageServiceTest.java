@@ -15,8 +15,8 @@ public class TransactionMessageServiceTest {
     @Test
     void testConstructorDoesNotThrow() {
         BrokerConfig brokerConfig = mock(BrokerConfig.class);
-        when(brokerConfig.getTopicConfig()).thenReturn(null);
-        when(brokerConfig.getTransactionConfig()).thenReturn(null);
+        when(brokerConfig.getTopic()).thenReturn(null);
+        when(brokerConfig.getTransaction()).thenReturn(null);
 
         CommitBuffer commitBuffer = mock(CommitBuffer.class);
         BatchCommitService batchCommitService = mock(BatchCommitService.class);

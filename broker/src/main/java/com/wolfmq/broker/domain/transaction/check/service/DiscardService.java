@@ -35,7 +35,7 @@ public class DiscardService {
     }
 
     private int getQueueId() {
-        int queueNum = brokerConfig.getTopicConfig().getDiscardQueueNum();
+        int queueNum = brokerConfig.getTopic().getDiscardQueueNum();
         return ThreadLocalRandom.current().nextInt(99999999) % queueNum;
     }
 

@@ -31,7 +31,7 @@ public class TimerTaskScheduler extends ServiceThread {
     public TimerTaskScheduler(TimerContext context) {
         this.timerContext = context;
         BrokerConfig brokerConfig = context.getBrokerConfig();
-        this.timerConfig = brokerConfig.getTimerConfig();
+        this.timerConfig = brokerConfig.getTimer();
         this.timerQueue = context.getTimerQueue();
         this.mqStore = context.getMqStore();
     }

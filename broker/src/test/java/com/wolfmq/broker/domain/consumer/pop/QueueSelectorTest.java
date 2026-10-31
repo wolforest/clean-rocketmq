@@ -41,7 +41,7 @@ class QueueSelectorTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        when(brokerConfig.getTopicConfig()).thenReturn(topicConfig);
+        when(brokerConfig.getTopic()).thenReturn(topicConfig);
         when(topicConfig.getReviveQueueNum()).thenReturn(8);
         queueSelector = new QueueSelector(brokerConfig, routeService);
     }

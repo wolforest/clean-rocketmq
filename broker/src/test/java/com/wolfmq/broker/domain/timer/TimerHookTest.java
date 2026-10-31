@@ -25,7 +25,7 @@ class TimerHookTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        when(brokerConfig.getTimerConfig()).thenReturn(timerConfig);
+        when(brokerConfig.getTimer()).thenReturn(timerConfig);
         when(timerConfig.getPrecision()).thenReturn(1000);
         when(timerConfig.getMaxDelayTime()).thenReturn(3600); // 1 hour
 

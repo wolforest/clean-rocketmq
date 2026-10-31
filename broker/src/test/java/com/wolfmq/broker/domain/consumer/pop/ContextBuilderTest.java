@@ -41,7 +41,7 @@ class ContextBuilderTest {
         MockitoAnnotations.openMocks(this);
         MessageConfig messageConfig = new MessageConfig();
         messageConfig.setPopRetryProbability(50);
-        when(brokerConfig.getMessageConfig()).thenReturn(messageConfig);
+        when(brokerConfig.getMessage()).thenReturn(messageConfig);
         contextBuilder = new ContextBuilder(brokerConfig, consumerManager, topicFacade, subscriptionFacade);
     }
 

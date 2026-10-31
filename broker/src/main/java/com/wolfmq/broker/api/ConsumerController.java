@@ -24,7 +24,7 @@ public class ConsumerController {
     private final ConsumeValidator consumeValidator;
 
     public ConsumerController(BrokerConfig brokerConfig, Consumer consumer) {
-        this.messageConfig = brokerConfig.getMessageConfig();
+        this.messageConfig = brokerConfig.getMessage();
 
         this.consumer = consumer;
         this.consumeValidator = new ConsumeValidator(brokerConfig);

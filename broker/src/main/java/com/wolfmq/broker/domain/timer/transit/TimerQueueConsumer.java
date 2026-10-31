@@ -30,7 +30,7 @@ public class TimerQueueConsumer extends ServiceThread {
 
     public TimerQueueConsumer(TimerContext context, QueueTask task) {
         this.task = task;
-        this.timerConfig = context.getBrokerConfig().getTimerConfig();
+        this.timerConfig = context.getBrokerConfig().getTimer();
         this.timerState = context.getTimerState();
         this.timerQueue = context.getTimerQueue();
         this.mqStore = context.getMqStore();

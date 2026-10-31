@@ -78,7 +78,7 @@ public class ComponentRegister {
     }
 
     private void registerNettyClient() {
-        NettyClient component = new NettyClient(brokerConfig.getRpcClientConfig());
+        NettyClient component = new NettyClient(brokerConfig.getRpcClient());
         context.register(component);
     }
 

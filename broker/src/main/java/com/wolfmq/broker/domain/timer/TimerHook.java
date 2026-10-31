@@ -16,7 +16,7 @@ public class TimerHook implements ProduceHook {
     private final TimerConfig timerConfig;
 
     public TimerHook(BrokerConfig brokerConfig) {
-        this.timerConfig = brokerConfig.getTimerConfig();
+        this.timerConfig = brokerConfig.getTimer();
     }
 
     @Override

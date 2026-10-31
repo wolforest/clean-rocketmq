@@ -67,7 +67,7 @@ public class MessageBootstrap implements Lifecycle {
     public MessageBootstrap(ApplicationContext context, BrokerConfig brokerConfig) {
         this.context = context;
         this.brokerConfig = brokerConfig;
-        this.grpcConfig = brokerConfig.getGrpcConfig();
+        this.grpcConfig = brokerConfig.getGrpc();
     }
 
     @Override

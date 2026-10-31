@@ -67,7 +67,7 @@ class ConsumerFlowIntegrationTest {
         messageConfig.setEnableAutoRenew(true);
 
         brokerConfig = new BrokerConfig();
-        brokerConfig.setMessageConfig(messageConfig);
+        brokerConfig.setMessage(messageConfig);
 
         popService = mock(PopService.class);
         ackService = mock(BrokerAckService.class);

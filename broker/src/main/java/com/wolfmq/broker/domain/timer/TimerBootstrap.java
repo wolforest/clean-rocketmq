@@ -43,7 +43,7 @@ public class TimerBootstrap implements Lifecycle {
     @Override
     public void initialize() throws Exception {
         brokerConfig = context.getBean(BrokerConfig.class);
-        timerConfig = brokerConfig.getTimerConfig();
+        timerConfig = brokerConfig.getTimer();
         if (!timerConfig.isEnableTimer()) {
             return;
         }

@@ -82,7 +82,7 @@ public class TransactionBootstrap implements Lifecycle {
 
     private void initLibs() {
         brokerConfig = context.getBean(BrokerConfig.class);
-        transactionConfig = brokerConfig.getTransactionConfig();
+        transactionConfig = brokerConfig.getTransaction();
 
         MQStore mqStore = context.getBean(MQStore.class);
         commitBuffer = new CommitBuffer(transactionConfig);

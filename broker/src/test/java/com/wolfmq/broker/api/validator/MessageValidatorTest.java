@@ -26,9 +26,9 @@ class MessageValidatorTest {
         messageConfig.setMaxPropertySize(8192);
         messageConfig.setMaxPropertyCount(128);
         messageConfig.setMaxMessageGroupSize(256);
-        brokerConfig.setMessageConfig(messageConfig);
-        brokerConfig.setTimerConfig(new TimerConfig());
-        brokerConfig.setTopicConfig(new TopicConfig());
+        brokerConfig.setMessage(messageConfig);
+        brokerConfig.setTimer(new TimerConfig());
+        brokerConfig.setTopic(new TopicConfig());
 
         validator = new MessageValidator(brokerConfig);
     }
@@ -73,7 +73,7 @@ class MessageValidatorTest {
 
     @Test
     void testValidateBodyTooLarge() {
-        brokerConfig.getMessageConfig().setMaxBodySize(100);
+        brokerConfig.getMessage().setMaxBodySize(100);
 
         MessageBO message = MessageMock.createMessage(200);
         message.setTopic("TestTopic");
