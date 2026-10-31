@@ -16,7 +16,7 @@ import com.wolfmq.domain.domain.meta.service.ConsumeOffsetService;
 import com.wolfmq.domain.domain.meta.service.ConsumeOrderService;
 import com.wolfmq.domain.domain.meta.service.TopicService;
 import com.wolfmq.domain.test.ConfigMock;
-import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueManager;
+import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueProxy;
 import com.wolfmq.store.server.bootstrap.StoreCheckpoint;
 import com.wolfmq.store.server.bootstrap.StoreRegister;
 import java.nio.file.Path;
@@ -53,9 +53,9 @@ class MetaBootstrapTest {
         context.register(new StoreState(), StoreState.class);
         StoreCheckpoint __cp = new StoreCheckpoint(anotherDir.toString()); context.register(__cp, CheckPoint.class);
 
-        ConsumeQueueManager consumeQueueManager = mock(ConsumeQueueManager.class);
+        ConsumeQueueProxy consumeQueueProxy = mock(ConsumeQueueProxy.class);
         StoreRegister storeRegister = mock(StoreRegister.class);
-        context.register(consumeQueueManager, ConsumeQueueManager.class);
+        context.register(consumeQueueProxy, ConsumeQueueProxy.class);
         context.register(storeRegister, StoreRegister.class);
 
         MetaBootstrap bootstrap = new MetaBootstrap(context);

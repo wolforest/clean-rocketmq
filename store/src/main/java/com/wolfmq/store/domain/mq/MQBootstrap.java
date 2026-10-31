@@ -6,7 +6,7 @@ import com.wolfmq.domain.core.lock.queue.DequeueLock;
 import com.wolfmq.domain.server.store.api.MQStore;
 import com.wolfmq.domain.domain.commitlog.CommitLog;
 import com.wolfmq.store.domain.commitlog.log.CommitLogProxy;
-import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueManager;
+import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueProxy;
 import com.wolfmq.domain.domain.meta.service.ConsumeOffsetService;
 import com.wolfmq.domain.domain.meta.service.ConsumeOrderService;
 import com.wolfmq.domain.domain.mq.MQService;
@@ -74,9 +74,9 @@ public class MQBootstrap implements Lifecycle {
     private void initMQManager() {
         AckService ackService = context.getBean(AckService.class);
         InvisibleService invisibleService = context.getBean(InvisibleService.class);
-        ConsumeQueueManager consumeQueueManager = context.getBean(ConsumeQueueManager.class);
+        ConsumeQueueProxy consumeQueueProxy = context.getBean(ConsumeQueueProxy.class);
 
-        MQStore MQStore = new MQStoreImpl(mqService, ackService, invisibleService, consumeQueueManager);
+        MQStore MQStore = new MQStoreImpl(mqService, ackService, invisibleService, consumeQueueProxy);
         context.register(MQStore, MQStore.class, ContextNamespace.API);
     }
 
@@ -88,7 +88,7 @@ public class MQBootstrap implements Lifecycle {
     private void initPubService() {
         CommitLogProxy commitLogProxy = context.getBean(CommitLogProxy.class);
         StoreConfig storeConfig  = context.getBean(StoreConfig.class);
-        ConsumeQueueManager consumeQueue = context.getBean(ConsumeQueueManager.class);
+        ConsumeQueueProxy consumeQueue = context.getBean(ConsumeQueueProxy.class);
 
         this.enqueueService = new EnqueueService(storeConfig, commitLogProxy, consumeQueue);
         this.messageService = new MessageService(commitLogProxy, consumeQueue);
@@ -100,7 +100,7 @@ public class MQBootstrap implements Lifecycle {
         StoreConfig storeConfig  = context.getBean(StoreConfig.class);
 
         CommitLog commitLog = context.getBean(CommitLog.class);
-        ConsumeQueueManager consumeQueue = context.getBean(ConsumeQueueManager.class);
+        ConsumeQueueProxy consumeQueue = context.getBean(ConsumeQueueProxy.class);
         ConsumeOffsetService consumeOffsetService = context.getBean(ConsumeOffsetService.class);
         ConsumeOrderService orderService = context.getBean(ConsumeOrderService.class);
 

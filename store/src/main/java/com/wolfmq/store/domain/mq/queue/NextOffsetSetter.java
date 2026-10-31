@@ -6,13 +6,13 @@ import com.wolfmq.domain.domain.message.enums.MessageStatus;
 import com.wolfmq.domain.domain.mq.dto.DequeueRequest;
 import com.wolfmq.domain.domain.mq.dto.DequeueResult;
 import com.wolfmq.domain.domain.message.MessageBO;
-import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueManager;
+import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueProxy;
 
 public class NextOffsetSetter {
     private final StoreConfig storeConfig;
-    private final ConsumeQueueManager consumeQueue;
+    private final ConsumeQueueProxy consumeQueue;
 
-    public NextOffsetSetter(StoreConfig storeConfig, ConsumeQueueManager consumeQueue) {
+    public NextOffsetSetter(StoreConfig storeConfig, ConsumeQueueProxy consumeQueue) {
         this.storeConfig = storeConfig;
         this.consumeQueue = consumeQueue;
     }

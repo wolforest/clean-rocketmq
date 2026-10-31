@@ -6,13 +6,14 @@ import com.wolfmq.domain.domain.consumequeue.ConsumeQueue;
 import java.util.List;
 
 /**
- * @renamed from ConsumeQueueFacade to ConsumeQueueManager
  * @renamed from ConsumeQueueGateway to ConsumeQueueFacade
+ * @renamed from ConsumeQueueFacade to ConsumeQueueManager
+ * @renamed from ConsumeQueueManager to ConsumeQueueProxy
  */
-public class ConsumeQueueManager {
+public class ConsumeQueueProxy {
     private final ConsumeQueueFactory consumeQueueFactory;
 
-    public ConsumeQueueManager(ConsumeQueueFactory consumeQueueFactory) {
+    public ConsumeQueueProxy(ConsumeQueueFactory consumeQueueFactory) {
         this.consumeQueueFactory = consumeQueueFactory;
     }
 

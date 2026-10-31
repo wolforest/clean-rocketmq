@@ -7,7 +7,7 @@ import com.wolfmq.domain.config.store.ConsumeQueueConfig;
 import com.wolfmq.domain.domain.meta.service.TopicService;
 import com.wolfmq.store.domain.commitlog.sharding.OffsetCodec;
 import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueFactory;
-import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueManager;
+import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueProxy;
 import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueFlusher;
 import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueLoader;
 import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueRecovery;
@@ -24,7 +24,7 @@ public class ConsumeQueueBootstrap implements Lifecycle {
     private ConsumeQueueFlusher flusher;
     private ConsumeQueueLoader loader;
     private ConsumeQueueRecovery recovery;
-    private ConsumeQueueManager consumeQueueManager;
+    private ConsumeQueueProxy consumeQueueProxy;
 
     public ConsumeQueueBootstrap(ApplicationContext context) {
         this.context = context;
@@ -65,8 +65,8 @@ public class ConsumeQueueBootstrap implements Lifecycle {
         recovery = new ConsumeQueueRecovery(consumeQueueConfig, context.getBean(CheckPoint.class), offsetCodec);
 
         ConsumeQueueFactory consumeQueueFactory = initConsumeQueueFactory();
-        consumeQueueManager = new ConsumeQueueManager(consumeQueueFactory);
-        context.register(consumeQueueManager, ConsumeQueueManager.class);
+        consumeQueueProxy = new ConsumeQueueProxy(consumeQueueFactory);
+        context.register(consumeQueueProxy, ConsumeQueueProxy.class);
     }
 
     private ConsumeQueueFactory initConsumeQueueFactory() {
@@ -87,7 +87,7 @@ public class ConsumeQueueBootstrap implements Lifecycle {
 
     private void registerDispatchHandler() {
         CommitHandlerManager handlerManager = context.getBean(CommitHandlerManager.class);
-        ConsumeQueueCommitHandler handler = new ConsumeQueueCommitHandler(consumeQueueManager);
+        ConsumeQueueCommitHandler handler = new ConsumeQueueCommitHandler(consumeQueueProxy);
         handlerManager.registerHandler(handler);
     }
 }

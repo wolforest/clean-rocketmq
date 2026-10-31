@@ -6,7 +6,7 @@ import cn.coderule.common.util.lang.string.JSONUtil;
 import com.wolfmq.domain.config.server.StoreConfig;
 import com.wolfmq.domain.domain.meta.topic.Topic;
 import com.wolfmq.domain.domain.meta.topic.TopicMap;
-import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueManager;
+import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueProxy;
 import com.wolfmq.domain.domain.meta.service.ConsumeOffsetService;
 import com.wolfmq.domain.domain.meta.service.TopicService;
 import com.wolfmq.domain.domain.meta.topic.KeyBuilder;
@@ -23,7 +23,7 @@ public class DefaultTopicService implements TopicService {
     private final ConsumeOffsetService consumeOffsetService;
 
     // dependency from other package, injected by module manager
-    private ConsumeQueueManager consumeQueueManager;
+    private ConsumeQueueProxy consumeQueueProxy;
     private StoreRegister storeRegister;
 
     @Getter
@@ -43,8 +43,8 @@ public class DefaultTopicService implements TopicService {
         this.topicMap = new TopicMap();
     }
 
-    public void inject(ConsumeQueueManager consumeQueueManager, StoreRegister storeRegister) {
-        this.consumeQueueManager = consumeQueueManager;
+    public void inject(ConsumeQueueProxy consumeQueueProxy, StoreRegister storeRegister) {
+        this.consumeQueueProxy = consumeQueueProxy;
         this.storeRegister = storeRegister;
     }
 
@@ -130,7 +130,7 @@ public class DefaultTopicService implements TopicService {
 
     private void cleanTopicInfo(String topicName) {
         consumeOffsetService.deleteByTopic(topicName);
-        consumeQueueManager.deleteByTopic(topicName);
+        consumeQueueProxy.deleteByTopic(topicName);
 
         topicMap.deleteTopic(topicName, storeState.getStateMachineVersion());
         this.store();

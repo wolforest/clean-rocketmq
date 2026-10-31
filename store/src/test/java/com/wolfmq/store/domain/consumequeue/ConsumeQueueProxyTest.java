@@ -5,7 +5,7 @@ import com.wolfmq.domain.domain.consumequeue.ConsumeQueue;
 import com.wolfmq.domain.domain.consumequeue.QueueUnit;
 import com.wolfmq.domain.test.MessageMock;
 import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueFactory;
-import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueManager;
+import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueProxy;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
@@ -15,13 +15,13 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
-class ConsumeQueueManagerTest {
+class ConsumeQueueProxyTest {
 
     @Test
     void enqueue_ShouldRouteByTopicAndQueueId() {
         ConsumeQueueFactory factory = mock(ConsumeQueueFactory.class);
         ConsumeQueue queue = mock(ConsumeQueue.class);
-        ConsumeQueueManager facade = new ConsumeQueueManager(factory);
+        ConsumeQueueProxy facade = new ConsumeQueueProxy(factory);
 
         String topic = "TOPIC_A";
         int queueId = 3;
@@ -38,7 +38,7 @@ class ConsumeQueueManagerTest {
     void get_ShouldDelegateToQueue() {
         ConsumeQueueFactory factory = mock(ConsumeQueueFactory.class);
         ConsumeQueue queue = mock(ConsumeQueue.class);
-        ConsumeQueueManager facade = new ConsumeQueueManager(factory);
+        ConsumeQueueProxy facade = new ConsumeQueueProxy(factory);
 
         String topic = "TOPIC_B";
         int queueId = 1;
@@ -58,7 +58,7 @@ class ConsumeQueueManagerTest {
     void getBatch_ShouldDelegateToQueue() {
         ConsumeQueueFactory factory = mock(ConsumeQueueFactory.class);
         ConsumeQueue queue = mock(ConsumeQueue.class);
-        ConsumeQueueManager facade = new ConsumeQueueManager(factory);
+        ConsumeQueueProxy facade = new ConsumeQueueProxy(factory);
 
         String topic = "TOPIC_C";
         int queueId = 5;
@@ -82,7 +82,7 @@ class ConsumeQueueManagerTest {
     void offsetMethods_ShouldDelegateToQueue() {
         ConsumeQueueFactory factory = mock(ConsumeQueueFactory.class);
         ConsumeQueue queue = mock(ConsumeQueue.class);
-        ConsumeQueueManager facade = new ConsumeQueueManager(factory);
+        ConsumeQueueProxy facade = new ConsumeQueueProxy(factory);
 
         String topic = "TOPIC_D";
         int queueId = 0;
@@ -108,7 +108,7 @@ class ConsumeQueueManagerTest {
     @Test
     void existsQueue_ShouldDelegateToFactory() {
         ConsumeQueueFactory factory = mock(ConsumeQueueFactory.class);
-        ConsumeQueueManager facade = new ConsumeQueueManager(factory);
+        ConsumeQueueProxy facade = new ConsumeQueueProxy(factory);
 
         when(factory.exists("TOPIC_E", 2)).thenReturn(true);
         when(factory.exists("TOPIC_E", 9)).thenReturn(false);
@@ -123,7 +123,7 @@ class ConsumeQueueManagerTest {
     void methods_ShouldUseEventTopicAndQueueId() {
         ConsumeQueueFactory factory = mock(ConsumeQueueFactory.class);
         ConsumeQueue queue = mock(ConsumeQueue.class);
-        ConsumeQueueManager facade = new ConsumeQueueManager(factory);
+        ConsumeQueueProxy facade = new ConsumeQueueProxy(factory);
 
         CommitEvent event = createEvent("TOPIC_F", 6);
         when(factory.getOrCreate("TOPIC_F", 6)).thenReturn(queue);

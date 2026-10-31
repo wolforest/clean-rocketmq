@@ -10,7 +10,7 @@ import com.wolfmq.domain.domain.mq.dto.EnqueueResult;
 import com.wolfmq.domain.core.mmap.InsertResult;
 import com.wolfmq.domain.test.MessageMock;
 import com.wolfmq.store.domain.commitlog.log.CommitLogProxy;
-import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueManager;
+import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueProxy;
 import com.wolfmq.store.server.ha.server.processor.CommitLogSynchronizer;
 import java.util.concurrent.CompletableFuture;
 import org.junit.jupiter.api.Test;
@@ -31,14 +31,14 @@ class EnqueueServiceTest {
         StoreConfig storeConfig = new StoreConfig();
         storeConfig.setAssignConsumeOffset(true);
         CommitLogProxy commitLog = mock(CommitLogProxy.class);
-        ConsumeQueueManager consumeQueueManager = mock(ConsumeQueueManager.class);
+        ConsumeQueueProxy consumeQueueProxy = mock(ConsumeQueueProxy.class);
         CommitLogSynchronizer synchronizer = mock(CommitLogSynchronizer.class);
 
-        EnqueueService service = new EnqueueService(storeConfig, commitLog, consumeQueueManager);
+        EnqueueService service = new EnqueueService(storeConfig, commitLog, consumeQueueProxy);
         service.inject(synchronizer);
 
         MessageBO message = MessageMock.createMessage("TOPIC_A", 0, 0);
-        when(consumeQueueManager.assignOffset("TOPIC_A", 0)).thenReturn(5L);
+        when(consumeQueueProxy.assignOffset("TOPIC_A", 0)).thenReturn(5L);
 
         InsertResult insertResult = new InsertResult(InsertStatus.PUT_OK, 0, 1, 0);
         EnqueueFuture future = EnqueueFuture.success(insertResult, message);
@@ -50,8 +50,8 @@ class EnqueueServiceTest {
         service.enqueueAsync(message);
 
         assertEquals(5L, message.getQueueOffset());
-        verify(consumeQueueManager).assignOffset("TOPIC_A", 0);
-        verify(consumeQueueManager).increaseOffset("TOPIC_A", 0);
+        verify(consumeQueueProxy).assignOffset("TOPIC_A", 0);
+        verify(consumeQueueProxy).increaseOffset("TOPIC_A", 0);
         verify(synchronizer).sync(future);
     }
 
@@ -61,10 +61,10 @@ class EnqueueServiceTest {
         storeConfig.setAssignConsumeOffset(false);
 
         CommitLogProxy commitLog = mock(CommitLogProxy.class);
-        ConsumeQueueManager consumeQueueManager = mock(ConsumeQueueManager.class);
+        ConsumeQueueProxy consumeQueueProxy = mock(ConsumeQueueProxy.class);
         CommitLogSynchronizer synchronizer = mock(CommitLogSynchronizer.class);
 
-        EnqueueService service = new EnqueueService(storeConfig, commitLog, consumeQueueManager);
+        EnqueueService service = new EnqueueService(storeConfig, commitLog, consumeQueueProxy);
         service.inject(synchronizer);
 
         MessageBO message = MessageMock.createMessage("TOPIC_B", 1, 0);
@@ -76,7 +76,7 @@ class EnqueueServiceTest {
         service.enqueueAsync(message);
 
         assertEquals(-1, message.getQueueOffset());
-        verifyNoInteractions(consumeQueueManager);
+        verifyNoInteractions(consumeQueueProxy);
         verify(synchronizer).sync(future);
     }
 }

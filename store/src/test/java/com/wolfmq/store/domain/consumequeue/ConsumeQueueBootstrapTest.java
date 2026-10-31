@@ -10,7 +10,7 @@ import com.wolfmq.domain.config.store.CommitConfig;
 import com.wolfmq.domain.config.store.StorePath;
 import com.wolfmq.domain.domain.meta.service.TopicService;
 import com.wolfmq.domain.test.ConfigMock;
-import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueManager;
+import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueProxy;
 import com.wolfmq.store.domain.dispatcher.CommitHandlerManager;
 import com.wolfmq.store.server.bootstrap.StoreCheckpoint;
 import java.nio.file.Path;
@@ -57,7 +57,7 @@ class ConsumeQueueBootstrapTest {
         ConsumeQueueBootstrap bootstrap = new ConsumeQueueBootstrap(context);
         assertDoesNotThrow(bootstrap::initialize);
 
-        ConsumeQueueManager manager = context.getBean(ConsumeQueueManager.class);
+        ConsumeQueueProxy manager = context.getBean(ConsumeQueueProxy.class);
         assertNotNull(manager);
     }
 }

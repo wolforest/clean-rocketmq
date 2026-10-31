@@ -13,7 +13,7 @@ import com.wolfmq.domain.domain.consumequeue.ConsumeQueue;
 import com.wolfmq.domain.domain.meta.service.TopicService;
 import com.wolfmq.domain.test.ConfigMock;
 import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueFactory;
-import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueManager;
+import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueProxy;
 import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueFlusher;
 import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueLoader;
 import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueRecovery;
@@ -42,7 +42,7 @@ public abstract class BaseConsumeQueueIntegrationTest {
     protected StoreConfig storeConfig;
     protected AllocateMappedFileService allocateService;
     protected ConsumeQueueFactory consumeQueueFactory;
-    protected ConsumeQueueManager consumeQueueManager;
+    protected ConsumeQueueProxy consumeQueueProxy;
     protected ConsumeQueueFlusher flusher;
     protected ConsumeQueueLoader loader;
     protected ConsumeQueueRecovery recovery;
@@ -125,8 +125,8 @@ public abstract class BaseConsumeQueueIntegrationTest {
         consumeQueueFactory.addCreateHook(recovery);
         consumeQueueFactory.createAll();
 
-        consumeQueueManager = new ConsumeQueueManager(consumeQueueFactory);
-        context.register(consumeQueueManager, ConsumeQueueManager.class);
+        consumeQueueProxy = new ConsumeQueueProxy(consumeQueueFactory);
+        context.register(consumeQueueProxy, ConsumeQueueProxy.class);
     }
 
     private void destroyConsumeQueues() {

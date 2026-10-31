@@ -8,7 +8,7 @@ import com.wolfmq.domain.domain.mq.dto.DequeueRequest;
 import com.wolfmq.domain.domain.mq.dto.DequeueResult;
 import com.wolfmq.domain.domain.meta.service.ConsumeOffsetService;
 import com.wolfmq.domain.domain.meta.service.ConsumeOrderService;
-import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueManager;
+import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueProxy;
 import com.wolfmq.store.domain.mq.ack.AckService;
 import org.junit.jupiter.api.Test;
 
@@ -28,7 +28,7 @@ class OffsetServiceTest {
 
         CommitLog commitLog = mock(CommitLog.class);
         AckService ackService = mock(AckService.class);
-        ConsumeQueueManager consumeQueue = mock(ConsumeQueueManager.class);
+        ConsumeQueueProxy consumeQueue = mock(ConsumeQueueProxy.class);
         ConsumeOffsetService consumeOffsetService = mock(ConsumeOffsetService.class);
         ConsumeOrderService consumeOrderService = mock(ConsumeOrderService.class);
 
@@ -62,7 +62,7 @@ class OffsetServiceTest {
 
         CommitLog commitLog = mock(CommitLog.class);
         AckService ackService = mock(AckService.class);
-        ConsumeQueueManager consumeQueue = mock(ConsumeQueueManager.class);
+        ConsumeQueueProxy consumeQueue = mock(ConsumeQueueProxy.class);
         ConsumeOffsetService consumeOffsetService = mock(ConsumeOffsetService.class);
         ConsumeOrderService consumeOrderService = mock(ConsumeOrderService.class);
 
@@ -99,7 +99,7 @@ class OffsetServiceTest {
 
         CommitLog commitLog = mock(CommitLog.class);
         AckService ackService = mock(AckService.class);
-        ConsumeQueueManager consumeQueue = mock(ConsumeQueueManager.class);
+        ConsumeQueueProxy consumeQueue = mock(ConsumeQueueProxy.class);
         ConsumeOffsetService consumeOffsetService = mock(ConsumeOffsetService.class);
         ConsumeOrderService consumeOrderService = mock(ConsumeOrderService.class);
 

@@ -17,7 +17,7 @@ import com.wolfmq.store.domain.commitlog.log.CommitLogProxy;
 import com.wolfmq.store.domain.commitlog.sharding.OffsetCodec;
 import com.wolfmq.store.domain.commitlog.sharding.TopicPartitioner;
 import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueFactory;
-import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueManager;
+import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueProxy;
 import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueFlusher;
 import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueLoader;
 import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueRecovery;
@@ -46,7 +46,7 @@ public abstract class BaseMQIntegrationTest {
     protected StoreConfig storeConfig;
     protected AllocateMappedFileService allocateService;
     protected CommitLogProxy commitLogProxy;
-    protected ConsumeQueueManager consumeQueueManager;
+    protected ConsumeQueueProxy consumeQueueProxy;
     protected MessageService messageService;
     protected EnqueueService enqueueService;
     protected ConsumeOffsetService consumeOffsetService;
@@ -140,8 +140,8 @@ public abstract class BaseMQIntegrationTest {
         factory.addCreateHook(recovery);
         factory.createAll();
 
-        consumeQueueManager = new ConsumeQueueManager(factory);
-        context.register(consumeQueueManager, ConsumeQueueManager.class);
+        consumeQueueProxy = new ConsumeQueueProxy(factory);
+        context.register(consumeQueueProxy, ConsumeQueueProxy.class);
     }
 
     private void initMetaServices() {
@@ -150,9 +150,9 @@ public abstract class BaseMQIntegrationTest {
     }
 
     private void initMQServices() {
-        messageService = new MessageService(commitLogProxy, consumeQueueManager);
+        messageService = new MessageService(commitLogProxy, consumeQueueProxy);
 
-        enqueueService = new EnqueueService(storeConfig, commitLogProxy, consumeQueueManager);
+        enqueueService = new EnqueueService(storeConfig, commitLogProxy, consumeQueueProxy);
         context.register(enqueueService, EnqueueService.class);
         context.register(messageService, MessageService.class);
     }

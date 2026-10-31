@@ -8,7 +8,7 @@ import com.wolfmq.domain.domain.meta.topic.Topic;
 import com.wolfmq.domain.domain.meta.topic.TopicValidator;
 import com.wolfmq.domain.test.ConfigMock;
 import com.wolfmq.domain.server.store.StoreState;
-import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueManager;
+import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueProxy;
 import com.wolfmq.store.server.bootstrap.StoreRegister;
 import java.nio.file.Path;
 import java.util.Set;
@@ -29,12 +29,12 @@ class DefaultTopicServiceTest {
         storeState.setStateMachineVersion(11L);
         StoreConfig storeConfig = ConfigMock.createStoreConfig(tempDir.toString());
         ConsumeOffsetService offsetService = mock(ConsumeOffsetService.class);
-        ConsumeQueueManager consumeQueueManager = mock(ConsumeQueueManager.class);
+        ConsumeQueueProxy consumeQueueProxy = mock(ConsumeQueueProxy.class);
         StoreRegister storeRegister = mock(StoreRegister.class);
         String storePath = tempDir.resolve("topic.json").toString();
 
         DefaultTopicService service = new DefaultTopicService(storeState, storeConfig, storePath, offsetService);
-        service.inject(consumeQueueManager, storeRegister);
+        service.inject(consumeQueueProxy, storeRegister);
 
         Topic topic = new Topic();
         topic.setTopicName("topic-save");
@@ -49,12 +49,12 @@ class DefaultTopicServiceTest {
         storeState.setStateMachineVersion(22L);
         StoreConfig storeConfig = ConfigMock.createStoreConfig(tempDir.toString());
         ConsumeOffsetService offsetService = mock(ConsumeOffsetService.class);
-        ConsumeQueueManager consumeQueueManager = mock(ConsumeQueueManager.class);
+        ConsumeQueueProxy consumeQueueProxy = mock(ConsumeQueueProxy.class);
         StoreRegister storeRegister = mock(StoreRegister.class);
         String storePath = tempDir.resolve("topic.json").toString();
 
         DefaultTopicService service = new DefaultTopicService(storeState, storeConfig, storePath, offsetService);
-        service.inject(consumeQueueManager, storeRegister);
+        service.inject(consumeQueueProxy, storeRegister);
 
         Topic mainTopic = new Topic();
         mainTopic.setTopicName("topic-main");
@@ -71,8 +71,8 @@ class DefaultTopicServiceTest {
         assertFalse(service.exists(retryTopic.getTopicName()));
         verify(offsetService).deleteByTopic("topic-main");
         verify(offsetService).deleteByTopic(retryTopic.getTopicName());
-        verify(consumeQueueManager).deleteByTopic("topic-main");
-        verify(consumeQueueManager).deleteByTopic(retryTopic.getTopicName());
+        verify(consumeQueueProxy).deleteByTopic("topic-main");
+        verify(consumeQueueProxy).deleteByTopic(retryTopic.getTopicName());
     }
 
     @Test
@@ -85,7 +85,7 @@ class DefaultTopicServiceTest {
             tempDir.resolve("topic.json").toString(),
             offsetService
         );
-        service.inject(mock(ConsumeQueueManager.class), mock(StoreRegister.class));
+        service.inject(mock(ConsumeQueueProxy.class), mock(StoreRegister.class));
 
         service.load();
 

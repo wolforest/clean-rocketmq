@@ -8,7 +8,7 @@ import com.wolfmq.domain.domain.mq.dto.DequeueResult;
 import com.wolfmq.domain.domain.message.MessageBO;
 import com.wolfmq.domain.test.MessageMock;
 import com.wolfmq.store.domain.commitlog.log.CommitLogProxy;
-import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueManager;
+import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueProxy;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
@@ -23,8 +23,8 @@ class MessageServiceTest {
     @Test
     void getMessageReturnsNotFoundWhenInvalid() {
         CommitLogProxy commitLog = mock(CommitLogProxy.class);
-        ConsumeQueueManager consumeQueueManager = mock(ConsumeQueueManager.class);
-        MessageService service = new MessageService(commitLog, consumeQueueManager);
+        ConsumeQueueProxy consumeQueueProxy = mock(ConsumeQueueProxy.class);
+        MessageService service = new MessageService(commitLog, consumeQueueProxy);
 
         MessageBO invalid = MessageBO.notFound();
         when(commitLog.select(7L)).thenReturn(invalid);
@@ -37,8 +37,8 @@ class MessageServiceTest {
     @Test
     void getSkipsNullMessagesAndSetsStatus() {
         CommitLogProxy commitLog = mock(CommitLogProxy.class);
-        ConsumeQueueManager consumeQueueManager = mock(ConsumeQueueManager.class);
-        MessageService service = new MessageService(commitLog, consumeQueueManager);
+        ConsumeQueueProxy consumeQueueProxy = mock(ConsumeQueueProxy.class);
+        MessageService service = new MessageService(commitLog, consumeQueueProxy);
 
         QueueUnit first = QueueUnit.builder()
             .commitOffset(10)
@@ -49,7 +49,7 @@ class MessageServiceTest {
             .messageSize(7)
             .build();
 
-        when(consumeQueueManager.get("TOPIC_A", 0, 1, 2)).thenReturn(List.of(first, second));
+        when(consumeQueueProxy.get("TOPIC_A", 0, 1, 2)).thenReturn(List.of(first, second));
 
         MessageBO message = MessageMock.createMessage("TOPIC_A", 0, 1);
         message.setStatus(MessageStatus.FOUND);

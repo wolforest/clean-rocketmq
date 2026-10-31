@@ -13,7 +13,7 @@ import com.wolfmq.domain.domain.consumer.consume.mq.QueueResult;
 import com.wolfmq.domain.domain.mq.dto.EnqueueRequest;
 import com.wolfmq.domain.domain.mq.dto.EnqueueResult;
 import com.wolfmq.domain.server.store.api.MQStore;
-import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueManager;
+import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueProxy;
 import com.wolfmq.domain.domain.mq.MQService;
 import com.wolfmq.store.domain.mq.ack.AckService;
 import com.wolfmq.store.domain.mq.ack.InvisibleService;
@@ -23,19 +23,19 @@ public class MQStoreImpl implements MQStore {
     private final MQService mqService;
     private final AckService ackService;
     private final InvisibleService invisibleService;
-    private final ConsumeQueueManager consumeQueueManager;
+    private final ConsumeQueueProxy consumeQueueProxy;
 
     public MQStoreImpl(
         MQService mqService,
         AckService ackService,
         InvisibleService invisibleService,
-        ConsumeQueueManager consumeQueueManager
+        ConsumeQueueProxy consumeQueueProxy
     ) {
         this.ackService = ackService;
         this.invisibleService = invisibleService;
 
         this.mqService = mqService;
-        this.consumeQueueManager = consumeQueueManager;
+        this.consumeQueueProxy = consumeQueueProxy;
     }
 
     @Override
@@ -100,7 +100,7 @@ public class MQStoreImpl implements MQStore {
 
     @Override
     public QueueResult getMinOffset(QueueRequest request) {
-        long minOffset = consumeQueueManager.getMinOffset(
+        long minOffset = consumeQueueProxy.getMinOffset(
             request.getTopicName(),
             request.getQueueId()
         );
@@ -110,7 +110,7 @@ public class MQStoreImpl implements MQStore {
 
     @Override
     public QueueResult getMaxOffset(QueueRequest request) {
-        long maxOffset = consumeQueueManager.getMaxOffset(
+        long maxOffset = consumeQueueProxy.getMaxOffset(
             request.getTopicName(),
             request.getQueueId()
         );

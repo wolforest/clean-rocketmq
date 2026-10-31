@@ -8,20 +8,20 @@ import com.wolfmq.domain.domain.consumer.consume.mq.MessageRequest;
 import com.wolfmq.domain.domain.consumer.consume.mq.MessageResult;
 import com.wolfmq.domain.domain.message.MessageBO;
 import com.wolfmq.store.domain.commitlog.log.CommitLogProxy;
-import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueManager;
+import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueProxy;
 import java.util.List;
 import lombok.NonNull;
 
 public class MessageService {
     private final CommitLogProxy commitLogProxy;
-    private final ConsumeQueueManager consumeQueueManager;
+    private final ConsumeQueueProxy consumeQueueProxy;
 
     public MessageService(
         CommitLogProxy commitLogProxy,
-        ConsumeQueueManager consumeQueueManager
+        ConsumeQueueProxy consumeQueueProxy
     ) {
         this.commitLogProxy = commitLogProxy;
-        this.consumeQueueManager = consumeQueueManager;
+        this.consumeQueueProxy = consumeQueueProxy;
     }
 
     public MessageResult getMessage(MessageRequest request) {
@@ -45,7 +45,7 @@ public class MessageService {
     }
 
     public DequeueResult get(DequeueRequest request) {
-        List<QueueUnit> unitList = consumeQueueManager.get(
+        List<QueueUnit> unitList = consumeQueueProxy.get(
             request.getTopicName(), request.getQueueId(), request.getOffset(), request.getNum()
         );
 

@@ -7,7 +7,7 @@ import com.wolfmq.rpc.store.facade.MQFacade;
 import com.wolfmq.rpc.store.facade.ConsumeOffsetFacade;
 import com.wolfmq.rpc.store.facade.SubscriptionFacade;
 import com.wolfmq.rpc.store.facade.TopicFacade;
-import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueManager;
+import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueProxy;
 import com.wolfmq.domain.domain.meta.service.ConsumeOffsetService;
 import com.wolfmq.domain.domain.meta.service.SubscriptionService;
 import com.wolfmq.domain.domain.meta.service.TopicService;
@@ -36,7 +36,7 @@ public class ReviveContext implements Serializable {
     private ConsumeOffsetFacade consumeOffsetFacade;
 
     private MQService mqService;
-    private ConsumeQueueManager consumeQueueManager;;
+    private ConsumeQueueProxy consumeQueueProxy;;
     private TopicService topicService;
     private SubscriptionService subscriptionService;
     private ConsumeOffsetService consumeOffsetService;

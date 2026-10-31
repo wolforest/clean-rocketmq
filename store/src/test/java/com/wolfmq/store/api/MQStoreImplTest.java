@@ -10,7 +10,7 @@ import com.wolfmq.domain.domain.mq.dto.EnqueueRequest;
 import com.wolfmq.domain.domain.mq.dto.EnqueueResult;
 import com.wolfmq.domain.domain.mq.MQService;
 import com.wolfmq.domain.domain.message.MessageBO;
-import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueManager;
+import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueProxy;
 import com.wolfmq.store.domain.mq.ack.AckService;
 import com.wolfmq.store.domain.mq.ack.InvisibleService;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,7 +24,7 @@ class MQStoreImplTest {
     private MQService mqService;
     private AckService ackService;
     private InvisibleService invisibleService;
-    private ConsumeQueueManager consumeQueueManager;
+    private ConsumeQueueProxy consumeQueueProxy;
     private MQStoreImpl store;
 
     @BeforeEach
@@ -32,8 +32,8 @@ class MQStoreImplTest {
         mqService = mock(MQService.class);
         ackService = mock(AckService.class);
         invisibleService = mock(InvisibleService.class);
-        consumeQueueManager = mock(ConsumeQueueManager.class);
-        store = new MQStoreImpl(mqService, ackService, invisibleService, consumeQueueManager);
+        consumeQueueProxy = mock(ConsumeQueueProxy.class);
+        store = new MQStoreImpl(mqService, ackService, invisibleService, consumeQueueProxy);
     }
 
     @Test
@@ -87,7 +87,7 @@ class MQStoreImplTest {
         QueueRequest request = mock(QueueRequest.class);
         when(request.getTopicName()).thenReturn("t1");
         when(request.getQueueId()).thenReturn(0);
-        when(consumeQueueManager.getMinOffset("t1", 0)).thenReturn(0L);
+        when(consumeQueueProxy.getMinOffset("t1", 0)).thenReturn(0L);
 
         QueueResult result = store.getMinOffset(request);
         assertNotNull(result);
@@ -98,7 +98,7 @@ class MQStoreImplTest {
         QueueRequest request = mock(QueueRequest.class);
         when(request.getTopicName()).thenReturn("t1");
         when(request.getQueueId()).thenReturn(0);
-        when(consumeQueueManager.getMaxOffset("t1", 0)).thenReturn(5000L);
+        when(consumeQueueProxy.getMaxOffset("t1", 0)).thenReturn(5000L);
 
         QueueResult result = store.getMaxOffset(request);
         assertNotNull(result);

@@ -123,9 +123,9 @@ class ConsumeQueueIntegrationTest extends BaseConsumeQueueIntegrationTest {
         queue.load();
 
         CommitEvent event = createEvent(500L, 64, 999L, 0);
-        consumeQueueManager.enqueue(event);
+        consumeQueueProxy.enqueue(event);
 
-        QueueUnit unit = consumeQueueManager.get(TEST_TOPIC, TEST_QUEUE_ID, 0);
+        QueueUnit unit = consumeQueueProxy.get(TEST_TOPIC, TEST_QUEUE_ID, 0);
         assertNotNull(unit);
         assertEquals(500L, unit.getCommitOffset());
         assertEquals(64, unit.getMessageSize());
@@ -136,9 +136,9 @@ class ConsumeQueueIntegrationTest extends BaseConsumeQueueIntegrationTest {
         ConsumeQueue queue = consumeQueueFactory.getOrCreate(TEST_TOPIC, TEST_QUEUE_ID);
         queue.load();
 
-        consumeQueueManager.enqueue(createEvent(100L, 128, 100L, 0));
+        consumeQueueProxy.enqueue(createEvent(100L, 128, 100L, 0));
 
-        long minOffset = consumeQueueManager.getMinOffset(TEST_TOPIC, TEST_QUEUE_ID);
+        long minOffset = consumeQueueProxy.getMinOffset(TEST_TOPIC, TEST_QUEUE_ID);
         assertEquals(0, minOffset);
     }
 

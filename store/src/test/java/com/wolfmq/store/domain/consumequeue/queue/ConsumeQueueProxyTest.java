@@ -10,10 +10,10 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-public class ConsumeQueueManagerTest {
+public class ConsumeQueueProxyTest {
 
     private ConsumeQueueFactory factory;
-    private ConsumeQueueManager manager;
+    private ConsumeQueueProxy manager;
     private TopicService topicService;
 
     @BeforeEach
@@ -22,7 +22,7 @@ public class ConsumeQueueManagerTest {
         topicService = mock(TopicService.class);
         CheckPoint checkpoint = mock(CheckPoint.class);
         factory = spy(new ConsumeQueueFactory(config, topicService, checkpoint));
-        manager = new ConsumeQueueManager(factory);
+        manager = new ConsumeQueueProxy(factory);
     }
 
     @Test

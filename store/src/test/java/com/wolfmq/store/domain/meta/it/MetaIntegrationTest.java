@@ -11,6 +11,7 @@ import com.wolfmq.domain.domain.meta.subscription.SubscriptionGroup;
 import com.wolfmq.domain.domain.meta.topic.Topic;
 import com.wolfmq.domain.domain.meta.service.ConsumeOffsetService;
 import com.wolfmq.domain.test.ConfigMock;
+import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueProxy;
 import com.wolfmq.store.domain.meta.DefaultConsumeOffsetService;
 import com.wolfmq.store.domain.meta.DefaultConsumeOrderService;
 import com.wolfmq.store.domain.meta.DefaultSubscriptionService;
@@ -262,8 +263,8 @@ void testConsumeOrderStoreAndReload() {
         String storePath = tmpDir.resolve("topic-sys.json").toString();
         ConsumeOffsetService offsetService = mock(ConsumeOffsetService.class);
         StoreRegister storeRegister = mock(StoreRegister.class);
-        com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueManager cqManager =
-            mock(com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueManager.class);
+        ConsumeQueueProxy cqManager =
+            mock(ConsumeQueueProxy.class);
 
         DefaultTopicService service = new DefaultTopicService(context.getBean(StoreState.class), storeConfig, storePath, offsetService);
         service.inject(cqManager, storeRegister);
@@ -279,8 +280,8 @@ void testConsumeOrderStoreAndReload() {
         String storePath = tmpDir.resolve("topic-put.json").toString();
         ConsumeOffsetService offsetService = mock(ConsumeOffsetService.class);
         StoreRegister storeRegister = mock(StoreRegister.class);
-        com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueManager cqManager =
-            mock(com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueManager.class);
+        ConsumeQueueProxy cqManager =
+            mock(ConsumeQueueProxy.class);
 
         DefaultTopicService service = new DefaultTopicService(context.getBean(StoreState.class), storeConfig, storePath, offsetService);
         service.inject(cqManager, storeRegister);
@@ -299,8 +300,8 @@ void testConsumeOrderStoreAndReload() {
         String storePath = tmpDir.resolve("topic-save.json").toString();
         ConsumeOffsetService offsetService = mock(ConsumeOffsetService.class);
         StoreRegister storeRegister = mock(StoreRegister.class);
-        com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueManager cqManager =
-            mock(com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueManager.class);
+        ConsumeQueueProxy cqManager =
+            mock(ConsumeQueueProxy.class);
 
         DefaultTopicService service1 = new DefaultTopicService(context.getBean(StoreState.class), storeConfig, storePath, offsetService);
         service1.inject(cqManager, storeRegister);
@@ -323,8 +324,8 @@ void testConsumeOrderStoreAndReload() {
         String storePath = tmpDir.resolve("topic-get.json").toString();
         ConsumeOffsetService offsetService = mock(ConsumeOffsetService.class);
         StoreRegister storeRegister = mock(StoreRegister.class);
-        com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueManager cqManager =
-            mock(com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueManager.class);
+        ConsumeQueueProxy cqManager =
+            mock(ConsumeQueueProxy.class);
 
         DefaultTopicService service = new DefaultTopicService(context.getBean(StoreState.class), storeConfig, storePath, offsetService);
         service.inject(cqManager, storeRegister);
@@ -422,8 +423,8 @@ void testConsumeOrderStoreAndReload() {
         offsetService.load();
 
         StoreRegister storeRegister = mock(StoreRegister.class);
-        com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueManager cqManager =
-            mock(com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueManager.class);
+        ConsumeQueueProxy cqManager =
+            mock(ConsumeQueueProxy.class);
 
         DefaultTopicService topicService = new DefaultTopicService(context.getBean(StoreState.class), storeConfig, topicPath, offsetService);
         topicService.inject(cqManager, storeRegister);
