@@ -11,7 +11,7 @@ import com.wolfmq.domain.server.store.CheckPoint;
 import com.wolfmq.domain.test.ConfigMock;
 import com.wolfmq.store.api.CommitLogStoreImpl;
 import com.wolfmq.store.domain.commitlog.log.CommitLogFactory;
-import com.wolfmq.store.domain.commitlog.log.CommitLogManager;
+import com.wolfmq.store.domain.commitlog.log.CommitLogProxy;
 import com.wolfmq.store.domain.commitlog.sharding.TopicPartitioner;
 import com.wolfmq.store.infra.file.AllocateMappedFileService;
 import com.wolfmq.store.server.bootstrap.StoreCheckpoint;
@@ -32,7 +32,7 @@ public abstract class BaseCommitLogIntegrationTest {
 
     protected StoreConfig storeConfig;
     protected AllocateMappedFileService allocateService;
-    protected CommitLogManager commitLogManager;
+    protected CommitLogProxy commitLogProxy;
     protected CommitLogStore commitLogStore;
     protected TopicPartitioner partitioner;
 
@@ -63,15 +63,15 @@ public abstract class BaseCommitLogIntegrationTest {
 
     @AfterEach
     void tearDownInfrastructure() throws Exception {
-        if (commitLogManager != null) {
-            commitLogManager.shutdown();
+        if (commitLogProxy != null) {
+            commitLogProxy.shutdown();
         }
         if (allocateService != null) {
             allocateService.shutdown();
         }
         for (int shardId = 0; shardId < maxShard(); shardId++) {
             try {
-                CommitLog cl = commitLogManager.selectByShardId(shardId);
+                CommitLog cl = commitLogProxy.selectByShardId(shardId);
                 if (cl != null) {
                     cl.destroy();
                 }
@@ -100,22 +100,22 @@ public abstract class BaseCommitLogIntegrationTest {
         List<CommitLog> logList = factory.createByConfig();
 
         partitioner = new TopicPartitioner(commitConfig);
-        commitLogManager = new CommitLogManager(commitConfig, partitioner);
-        commitLogManager.addCommitLog(logList);
+        commitLogProxy = new CommitLogProxy(commitConfig, partitioner);
+        commitLogProxy.addCommitLog(logList);
 
         context.register(partitioner);
-        context.register(commitLogManager);
+        context.register(commitLogProxy);
 
-        commitLogStore = new CommitLogStoreImpl(commitLogManager);
+        commitLogStore = new CommitLogStoreImpl(commitLogProxy);
 
-        commitLogManager.initialize();
-        commitLogManager.start();
+        commitLogProxy.initialize();
+        commitLogProxy.start();
 
         ensureMappedFileExists();
     }
 
     private void ensureMappedFileExists() {
-        CommitLog cl = commitLogManager.selectByShardId(0);
+        CommitLog cl = commitLogProxy.selectByShardId(0);
         cl.getMappedFileQueue().getOrCreateMappedFileForSize(100);
     }
 }

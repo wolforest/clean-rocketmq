@@ -18,9 +18,10 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * @renamed from CommitLogFacade to CommitLogManager
+ * @renamed from CommitLogManager to CommitLogProxy
  */
 @Slf4j
-public class CommitLogManager implements Lifecycle {
+public class CommitLogProxy implements Lifecycle {
     private final CommitConfig config;
     private final TopicPartitioner partitioner;
 
@@ -29,7 +30,7 @@ public class CommitLogManager implements Lifecycle {
 
     private List<CommitLog> commitLogList = null;
 
-    public CommitLogManager(CommitConfig config, TopicPartitioner partitioner) {
+    public CommitLogProxy(CommitConfig config, TopicPartitioner partitioner) {
         this.config = config;
         this.partitioner = partitioner;
 
@@ -46,7 +47,7 @@ public class CommitLogManager implements Lifecycle {
             return selectByRandom();
         }
 
-        CommitLog commitLog = commitLogList.remove(0);
+        CommitLog commitLog = commitLogList.removeFirst();
         if (commitLog != null) {
             return commitLog;
         }

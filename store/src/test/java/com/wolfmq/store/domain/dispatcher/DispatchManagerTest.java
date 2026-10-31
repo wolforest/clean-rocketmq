@@ -2,7 +2,7 @@ package com.wolfmq.store.domain.dispatcher;
 
 import com.wolfmq.domain.config.store.CommitConfig;
 import com.wolfmq.domain.domain.commitlog.CommitLog;
-import com.wolfmq.store.domain.commitlog.log.CommitLogManager;
+import com.wolfmq.store.domain.commitlog.log.CommitLogProxy;
 import com.wolfmq.domain.server.store.CheckPoint;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,7 +20,7 @@ class DispatchManagerTest {
 
     private CommitConfig config;
     private CheckPoint checkPoint;
-    private CommitLogManager commitLogManager;
+    private CommitLogProxy commitLogProxy;
     private CommitHandlerManager handlerManager;
     private DispatchManager dispatchManager;
 
@@ -33,13 +33,13 @@ class DispatchManagerTest {
         String checkpointPath = tmpDir.resolve("checkpoint").toString();
         checkPoint = new StoreCheckpoint(checkpointPath);
 
-        commitLogManager = mock(CommitLogManager.class);
+        commitLogProxy = mock(CommitLogProxy.class);
         for (int i = 0; i < 2; i++) {
             CommitLog mockLog = mock(CommitLog.class);
             when(mockLog.getShardId()).thenReturn(i);
             when(mockLog.getMinOffset()).thenReturn(0L);
             when(mockLog.getMaxOffset()).thenReturn(0L);
-            when(commitLogManager.selectByShardId(i)).thenReturn(mockLog);
+            when(commitLogProxy.selectByShardId(i)).thenReturn(mockLog);
         }
 
         handlerManager = new CommitHandlerManager();
@@ -47,21 +47,21 @@ class DispatchManagerTest {
 
     @Test
     void testInitialize_CreatesCorrectNumber() throws Exception {
-        dispatchManager = new DispatchManager(config, checkPoint, commitLogManager, handlerManager);
+        dispatchManager = new DispatchManager(config, checkPoint, commitLogProxy, handlerManager);
         dispatchManager.initialize();
     }
 
     @Test
     void testInitialize_CreatesListeners() throws Exception {
-        dispatchManager = new DispatchManager(config, checkPoint, commitLogManager, handlerManager);
+        dispatchManager = new DispatchManager(config, checkPoint, commitLogProxy, handlerManager);
         dispatchManager.initialize();
 
-        verify(commitLogManager, times(config.getShardingNumber())).selectByShardId(anyInt());
+        verify(commitLogProxy, times(config.getShardingNumber())).selectByShardId(anyInt());
     }
 
     @Test
     void testStartAll_StartsAllComponents() throws Exception {
-        dispatchManager = new DispatchManager(config, checkPoint, commitLogManager, handlerManager);
+        dispatchManager = new DispatchManager(config, checkPoint, commitLogProxy, handlerManager);
         dispatchManager.initialize();
         dispatchManager.start();
 
@@ -72,7 +72,7 @@ class DispatchManagerTest {
 
     @Test
     void testShutdownAll_StopsAllComponents() throws Exception {
-        dispatchManager = new DispatchManager(config, checkPoint, commitLogManager, handlerManager);
+        dispatchManager = new DispatchManager(config, checkPoint, commitLogProxy, handlerManager);
         dispatchManager.initialize();
         dispatchManager.start();
 
@@ -84,7 +84,7 @@ class DispatchManagerTest {
 
     @Test
     void testQueueShared() throws Exception {
-        dispatchManager = new DispatchManager(config, checkPoint, commitLogManager, handlerManager);
+        dispatchManager = new DispatchManager(config, checkPoint, commitLogProxy, handlerManager);
         dispatchManager.initialize();
         dispatchManager.start();
 
@@ -96,7 +96,7 @@ class DispatchManagerTest {
     @Test
     void testZeroShardingNumber() throws Exception {
         config.setShardingNumber(0);
-        dispatchManager = new DispatchManager(config, checkPoint, commitLogManager, handlerManager);
+        dispatchManager = new DispatchManager(config, checkPoint, commitLogProxy, handlerManager);
         dispatchManager.initialize();
 
         dispatchManager.start();
@@ -108,7 +108,7 @@ class DispatchManagerTest {
     @Test
     void testZeroDispatchThreads() throws Exception {
         config.setDispatchThreads(0);
-        dispatchManager = new DispatchManager(config, checkPoint, commitLogManager, handlerManager);
+        dispatchManager = new DispatchManager(config, checkPoint, commitLogProxy, handlerManager);
         dispatchManager.initialize();
 
         dispatchManager.start();

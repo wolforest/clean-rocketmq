@@ -13,7 +13,7 @@ import com.wolfmq.domain.domain.meta.service.TopicService;
 import com.wolfmq.domain.server.store.CheckPoint;
 import com.wolfmq.domain.test.ConfigMock;
 import com.wolfmq.store.domain.commitlog.log.CommitLogFactory;
-import com.wolfmq.store.domain.commitlog.log.CommitLogManager;
+import com.wolfmq.store.domain.commitlog.log.CommitLogProxy;
 import com.wolfmq.store.domain.commitlog.sharding.OffsetCodec;
 import com.wolfmq.store.domain.commitlog.sharding.TopicPartitioner;
 import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueFactory;
@@ -45,7 +45,7 @@ public abstract class BaseMQIntegrationTest {
 
     protected StoreConfig storeConfig;
     protected AllocateMappedFileService allocateService;
-    protected CommitLogManager commitLogManager;
+    protected CommitLogProxy commitLogProxy;
     protected ConsumeQueueManager consumeQueueManager;
     protected MessageService messageService;
     protected EnqueueService enqueueService;
@@ -79,8 +79,8 @@ public abstract class BaseMQIntegrationTest {
 
     @AfterEach
     void tearDownInfrastructure() throws Exception {
-        if (commitLogManager != null) {
-            commitLogManager.shutdown();
+        if (commitLogProxy != null) {
+            commitLogProxy.shutdown();
         }
         if (allocateService != null) {
             allocateService.shutdown();
@@ -107,16 +107,16 @@ public abstract class BaseMQIntegrationTest {
         List<CommitLog> logList = factory.createByConfig();
 
         TopicPartitioner partitioner = new TopicPartitioner(commitConfig);
-        commitLogManager = new CommitLogManager(commitConfig, partitioner);
-        commitLogManager.addCommitLog(logList);
+        commitLogProxy = new CommitLogProxy(commitConfig, partitioner);
+        commitLogProxy.addCommitLog(logList);
 
         context.register(partitioner);
-        context.register(commitLogManager);
+        context.register(commitLogProxy);
 
-        commitLogManager.initialize();
-        commitLogManager.start();
+        commitLogProxy.initialize();
+        commitLogProxy.start();
 
-        CommitLog cl = commitLogManager.selectByShardId(0);
+        CommitLog cl = commitLogProxy.selectByShardId(0);
         cl.getMappedFileQueue().getOrCreateMappedFileForSize(100);
     }
 
@@ -150,14 +150,14 @@ public abstract class BaseMQIntegrationTest {
     }
 
     private void initMQServices() {
-        messageService = new MessageService(commitLogManager, consumeQueueManager);
+        messageService = new MessageService(commitLogProxy, consumeQueueManager);
 
-        enqueueService = new EnqueueService(storeConfig, commitLogManager, consumeQueueManager);
+        enqueueService = new EnqueueService(storeConfig, commitLogProxy, consumeQueueManager);
         context.register(enqueueService, EnqueueService.class);
         context.register(messageService, MessageService.class);
     }
 
     protected CommitLog getCommitLog() {
-        return commitLogManager.selectByShardId(0);
+        return commitLogProxy.selectByShardId(0);
     }
 }

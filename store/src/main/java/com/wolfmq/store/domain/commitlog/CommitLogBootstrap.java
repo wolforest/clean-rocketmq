@@ -9,7 +9,7 @@ import com.wolfmq.domain.domain.meta.service.TopicService;
 import com.wolfmq.domain.server.store.CheckPoint;
 import com.wolfmq.store.api.CommitLogStoreImpl;
 import com.wolfmq.store.domain.commitlog.log.CommitLogFactory;
-import com.wolfmq.store.domain.commitlog.log.CommitLogManager;
+import com.wolfmq.store.domain.commitlog.log.CommitLogProxy;
 import com.wolfmq.store.domain.commitlog.sharding.TopicPartitioner;
 import com.wolfmq.store.infra.file.AllocateMappedFileService;
 import cn.coderule.common.convention.container.ApplicationContext;
@@ -24,7 +24,7 @@ import java.util.List;
 public class CommitLogBootstrap implements Lifecycle {
     private final ApplicationContext context;
 
-    private CommitLogManager commitLogManager;
+    private CommitLogProxy commitLogProxy;
 
     public CommitLogBootstrap(ApplicationContext context) {
         this.context = context;
@@ -33,19 +33,19 @@ public class CommitLogBootstrap implements Lifecycle {
     @Override
     public void initialize() throws Exception {
         initCommitLog();
-        commitLogManager.initialize();
+        commitLogProxy.initialize();
 
         registerAPI();
     }
 
     @Override
     public void start() throws Exception {
-        commitLogManager.start();
+        commitLogProxy.start();
     }
 
     @Override
     public void shutdown() throws Exception {
-        commitLogManager.shutdown();
+        commitLogProxy.shutdown();
     }
 
     private void initCommitLog() {
@@ -59,15 +59,15 @@ public class CommitLogBootstrap implements Lifecycle {
         List<CommitLog> logList = commitLogFactory.createByConfig();
 
         TopicPartitioner partitioner = new TopicPartitioner(commitConfig, topicService);
-        commitLogManager = new CommitLogManager(commitConfig, partitioner);
-        commitLogManager.addCommitLog(logList);
+        commitLogProxy = new CommitLogProxy(commitConfig, partitioner);
+        commitLogProxy.addCommitLog(logList);
 
         context.register(partitioner);
-        context.register(commitLogManager);
+        context.register(commitLogProxy);
     }
 
     private void registerAPI() {
-        CommitLogStore api = new CommitLogStoreImpl(commitLogManager);
+        CommitLogStore api = new CommitLogStoreImpl(commitLogProxy);
         context.register(api, CommitLogStore.class, ContextNamespace.API);
     }
 }

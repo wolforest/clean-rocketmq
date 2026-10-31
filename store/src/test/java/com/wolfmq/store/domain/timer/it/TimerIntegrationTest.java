@@ -22,7 +22,7 @@ import com.wolfmq.store.domain.timer.wheel.TimerLog;
 import com.wolfmq.store.domain.timer.wheel.TimerWheel;
 import com.wolfmq.store.domain.mq.queue.MessageService;
 import com.wolfmq.store.domain.commitlog.log.CommitLogFactory;
-import com.wolfmq.store.domain.commitlog.log.CommitLogManager;
+import com.wolfmq.store.domain.commitlog.log.CommitLogProxy;
 import com.wolfmq.store.domain.commitlog.sharding.TopicPartitioner;
 import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueManager;
 import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueFactory;
@@ -64,7 +64,7 @@ class TimerIntegrationTest {
     private CheckpointService checkpointService;
     private StoreConfig storeConfig;
     private AllocateMappedFileService allocateService;
-    private CommitLogManager commitLogManager;
+    private CommitLogProxy commitLogProxy;
     private MessageService messageService;
 
     @BeforeEach
@@ -107,16 +107,16 @@ class TimerIntegrationTest {
         List<CommitLog> logList = factory.createByConfig();
 
         TopicPartitioner partitioner = new TopicPartitioner(commitConfig);
-        commitLogManager = new CommitLogManager(commitConfig, partitioner);
-        commitLogManager.addCommitLog(logList);
+        commitLogProxy = new CommitLogProxy(commitConfig, partitioner);
+        commitLogProxy.addCommitLog(logList);
 
         context.register(partitioner);
-        context.register(commitLogManager);
+        context.register(commitLogProxy);
 
-        commitLogManager.initialize();
-        commitLogManager.start();
+        commitLogProxy.initialize();
+        commitLogProxy.start();
 
-        CommitLog cl = commitLogManager.selectByShardId(0);
+        CommitLog cl = commitLogProxy.selectByShardId(0);
         cl.getMappedFileQueue().getOrCreateMappedFileForSize(100);
     }
 
@@ -143,7 +143,7 @@ class TimerIntegrationTest {
         ConsumeQueueManager consumeQueueManager = new ConsumeQueueManager(factory);
         context.register(consumeQueueManager, ConsumeQueueManager.class);
 
-        messageService = new MessageService(commitLogManager, consumeQueueManager);
+        messageService = new MessageService(commitLogProxy, consumeQueueManager);
         context.register(messageService, MessageService.class);
     }
 
@@ -171,8 +171,8 @@ class TimerIntegrationTest {
         if (checkpointService != null) {
             checkpointService.shutdown();
         }
-        if (commitLogManager != null) {
-            commitLogManager.shutdown();
+        if (commitLogProxy != null) {
+            commitLogProxy.shutdown();
         }
         if (allocateService != null) {
             allocateService.shutdown();

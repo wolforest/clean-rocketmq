@@ -7,25 +7,25 @@ import com.wolfmq.domain.domain.consumequeue.QueueUnit;
 import com.wolfmq.domain.domain.consumer.consume.mq.MessageRequest;
 import com.wolfmq.domain.domain.consumer.consume.mq.MessageResult;
 import com.wolfmq.domain.domain.message.MessageBO;
-import com.wolfmq.store.domain.commitlog.log.CommitLogManager;
+import com.wolfmq.store.domain.commitlog.log.CommitLogProxy;
 import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueManager;
 import java.util.List;
 import lombok.NonNull;
 
 public class MessageService {
-    private final CommitLogManager commitLogManager;
+    private final CommitLogProxy commitLogProxy;
     private final ConsumeQueueManager consumeQueueManager;
 
     public MessageService(
-        CommitLogManager commitLogManager,
+        CommitLogProxy commitLogProxy,
         ConsumeQueueManager consumeQueueManager
     ) {
-        this.commitLogManager = commitLogManager;
+        this.commitLogProxy = commitLogProxy;
         this.consumeQueueManager = consumeQueueManager;
     }
 
     public MessageResult getMessage(MessageRequest request) {
-        MessageBO message = commitLogManager.select(request.getOffset());
+        MessageBO message = commitLogProxy.select(request.getOffset());
 
         if (!message.isValid()) {
             return MessageResult.notFound();
@@ -61,7 +61,7 @@ public class MessageService {
         MessageBO messageBO;
 
         for (QueueUnit unit : unitList) {
-            messageBO = commitLogManager.select(unit.getCommitOffset(), unit.getMessageSize());
+            messageBO = commitLogProxy.select(unit.getCommitOffset(), unit.getMessageSize());
             if (messageBO == null) {
                 continue;
             }

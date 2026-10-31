@@ -4,7 +4,7 @@ import cn.coderule.common.convention.service.Lifecycle;
 import com.wolfmq.domain.config.server.StoreConfig;
 import com.wolfmq.domain.config.store.CommitConfig;
 import com.wolfmq.domain.server.store.CheckPoint;
-import com.wolfmq.store.domain.commitlog.log.CommitLogManager;
+import com.wolfmq.store.domain.commitlog.log.CommitLogProxy;
 import cn.coderule.common.convention.container.ApplicationContext;
 
 /**
@@ -24,13 +24,13 @@ public class DispatcherBootstrap implements Lifecycle {
         StoreConfig storeConfig = context.getBean(StoreConfig.class);
         CommitConfig commitConfig = storeConfig.getCommit();
         CheckPoint checkPoint = context.getBean(CheckPoint.class);
-        CommitLogManager commitLogManager = context.getBean(CommitLogManager.class);
+        CommitLogProxy commitLogProxy = context.getBean(CommitLogProxy.class);
 
         CommitHandlerManager handlerManager = new CommitHandlerManager();
         context.register(handlerManager);
 
         dispatchManager = new DispatchManager(
-            commitConfig, checkPoint, commitLogManager, handlerManager);
+            commitConfig, checkPoint, commitLogProxy, handlerManager);
         context.register(dispatchManager);
     }
 

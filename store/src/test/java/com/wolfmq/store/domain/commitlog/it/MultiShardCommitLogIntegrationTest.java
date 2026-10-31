@@ -13,7 +13,7 @@ import com.wolfmq.domain.core.mmap.SelectedMappedBuffer;
 import com.wolfmq.domain.test.ConfigMock;
 import com.wolfmq.store.api.CommitLogStoreImpl;
 import com.wolfmq.store.domain.commitlog.log.CommitLogFactory;
-import com.wolfmq.store.domain.commitlog.log.CommitLogManager;
+import com.wolfmq.store.domain.commitlog.log.CommitLogProxy;
 import com.wolfmq.store.domain.commitlog.sharding.OffsetCodec;
 import com.wolfmq.store.domain.commitlog.sharding.TopicPartitioner;
 import com.wolfmq.store.infra.file.AllocateMappedFileService;
@@ -41,7 +41,7 @@ class MultiShardCommitLogIntegrationTest {
 
     private StoreConfig storeConfig;
     private AllocateMappedFileService allocateService;
-    private CommitLogManager commitLogManager;
+    private CommitLogProxy commitLogProxy;
     private CommitLogStore commitLogStore;
     private TopicPartitioner partitioner;
     private OffsetCodec offsetCodec;
@@ -72,15 +72,15 @@ class MultiShardCommitLogIntegrationTest {
 
     @AfterEach
     void tearDown() throws Exception {
-        if (commitLogManager != null) {
-            commitLogManager.shutdown();
+        if (commitLogProxy != null) {
+            commitLogProxy.shutdown();
         }
         if (allocateService != null) {
             allocateService.shutdown();
         }
         for (int shardId = 0; shardId < SHARD_COUNT; shardId++) {
             try {
-                CommitLog cl = commitLogManager.selectByShardId(shardId);
+                CommitLog cl = commitLogProxy.selectByShardId(shardId);
                 if (cl != null) {
                     cl.destroy();
                 }
@@ -100,21 +100,21 @@ class MultiShardCommitLogIntegrationTest {
         List<CommitLog> logList = factory.createByConfig();
 
         partitioner = new TopicPartitioner(commitConfig);
-        commitLogManager = new CommitLogManager(commitConfig, partitioner);
-        commitLogManager.addCommitLog(logList);
+        commitLogProxy = new CommitLogProxy(commitConfig, partitioner);
+        commitLogProxy.addCommitLog(logList);
 
         context.register(partitioner);
-        context.register(commitLogManager);
+        context.register(commitLogProxy);
 
         offsetCodec = new OffsetCodec(MAX_SHARD);
 
-        commitLogStore = new CommitLogStoreImpl(commitLogManager);
+        commitLogStore = new CommitLogStoreImpl(commitLogProxy);
 
-        commitLogManager.initialize();
-        commitLogManager.start();
+        commitLogProxy.initialize();
+        commitLogProxy.start();
 
         for (int i = 0; i < SHARD_COUNT; i++) {
-            CommitLog cl = commitLogManager.selectByShardId(i);
+            CommitLog cl = commitLogProxy.selectByShardId(i);
             cl.getMappedFileQueue().getOrCreateMappedFileForSize(100);
         }
     }

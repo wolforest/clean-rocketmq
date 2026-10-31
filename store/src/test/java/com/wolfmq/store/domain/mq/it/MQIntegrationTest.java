@@ -62,7 +62,7 @@ class MQIntegrationTest extends BaseMQIntegrationTest {
 
         CommitLogSynchronizer synchronizer = createSynchronizerMock();
 
-        EnqueueService service = new EnqueueService(localConfig, commitLogManager, consumeQueueManager);
+        EnqueueService service = new EnqueueService(localConfig, commitLogProxy, consumeQueueManager);
         service.inject(synchronizer);
 
         MessageBO message = MessageMock.createMessage("NO_OFFSET_TEST", 100);
@@ -313,7 +313,7 @@ class MQIntegrationTest extends BaseMQIntegrationTest {
         storeConfig.setAssignConsumeOffset(true);
 
         CommitLogSynchronizer synchronizer = createSynchronizerMock();
-        EnqueueService service = new EnqueueService(storeConfig, commitLogManager, consumeQueueManager);
+        EnqueueService service = new EnqueueService(storeConfig, commitLogProxy, consumeQueueManager);
         service.inject(synchronizer);
 
         MessageBO message = MessageMock.createMessage("OFFSET_TEST", 100, 0, -1);

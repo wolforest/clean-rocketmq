@@ -3,42 +3,42 @@ package com.wolfmq.store.api;
 import com.wolfmq.domain.core.mmap.InsertResult;
 import com.wolfmq.domain.core.mmap.SelectedMappedBuffer;
 import com.wolfmq.domain.server.store.api.CommitLogStore;
-import com.wolfmq.store.domain.commitlog.log.CommitLogManager;
+import com.wolfmq.store.domain.commitlog.log.CommitLogProxy;
 
 public class CommitLogStoreImpl implements CommitLogStore {
-    private final CommitLogManager commitLogManager;
+    private final CommitLogProxy commitLogProxy;
 
-    public CommitLogStoreImpl(CommitLogManager commitLogManager) {
-        this.commitLogManager = commitLogManager;
+    public CommitLogStoreImpl(CommitLogProxy commitLogProxy) {
+        this.commitLogProxy = commitLogProxy;
     }
     @Override
     public SelectedMappedBuffer select(long offset) {
-        return commitLogManager.selectBuffer(offset);
+        return commitLogProxy.selectBuffer(offset);
     }
 
     @Override
     public InsertResult insert(long offset, byte[] data, int start, int size) {
-        return commitLogManager.insert(offset, data, start, size);
+        return commitLogProxy.insert(offset, data, start, size);
     }
 
     @Override
     public long getMinOffset(int shardId) {
-        return commitLogManager.getMinOffset(shardId);
+        return commitLogProxy.getMinOffset(shardId);
     }
 
     @Override
     public long getMaxOffset(int shardId) {
-        return commitLogManager.getMaxOffset(shardId);
+        return commitLogProxy.getMaxOffset(shardId);
     }
 
     @Override
     public long getFlushedOffset(int shardId) {
-        return commitLogManager.getFlushedOffset(shardId);
+        return commitLogProxy.getFlushedOffset(shardId);
     }
 
     @Override
     public long getUnFlushedSize(int shardId) {
-        return commitLogManager.getUnFlushedSize(shardId);
+        return commitLogProxy.getUnFlushedSize(shardId);
     }
 
 }
