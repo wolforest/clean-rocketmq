@@ -21,7 +21,7 @@ public class TimerRecover {
         CheckpointService checkpointService,
         MessageService messageService
     ) {
-        this.timerConfig = storeConfig.getTimerConfig();
+        this.timerConfig = storeConfig.getTimer();
 
         this.timerLog = timerLog;
         this.timerWheel = timerWheel;

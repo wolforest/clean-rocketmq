@@ -42,12 +42,12 @@ public abstract class BaseCommitLogIntegrationTest {
 
         String rootPath = tmpDir.toString();
         storeConfig = ConfigMock.createStoreConfig(rootPath);
-        storeConfig.getCommitConfig().setFileSize(MMAP_FILE_SIZE);
-        storeConfig.getCommitConfig().setShardingNumber(1);
-        storeConfig.getCommitConfig().setMaxShardingNumber(1);
+        storeConfig.getCommit().setFileSize(MMAP_FILE_SIZE);
+        storeConfig.getCommit().setShardingNumber(1);
+        storeConfig.getCommit().setMaxShardingNumber(1);
 
         context.register(storeConfig);
-        context.register(storeConfig.getCommitConfig());
+        context.register(storeConfig.getCommit());
 
         initCheckPoint();
 
@@ -81,7 +81,7 @@ public abstract class BaseCommitLogIntegrationTest {
     }
 
     private int maxShard() {
-        return storeConfig.getCommitConfig().getShardingNumber();
+        return storeConfig.getCommit().getShardingNumber();
     }
 
     private void initCheckPoint() {
@@ -94,7 +94,7 @@ public abstract class BaseCommitLogIntegrationTest {
 
     private void initCommitLog() throws Exception {
         CheckPoint checkpoint = context.getBean(CheckPoint.class);
-        CommitConfig commitConfig = storeConfig.getCommitConfig();
+        CommitConfig commitConfig = storeConfig.getCommit();
 
         CommitLogFactory factory = new CommitLogFactory(storeConfig, checkpoint, allocateService);
         List<CommitLog> logList = factory.createByConfig();

@@ -23,7 +23,7 @@ class DefaultTimerTest {
     @Test
     void addAndScan_ShouldReturnEvent(@TempDir Path tempDir) throws Exception {
         StoreConfig storeConfig = ConfigMock.createStoreConfig(tempDir.toString());
-        TimerConfig timerConfig = storeConfig.getTimerConfig();
+        TimerConfig timerConfig = storeConfig.getTimer();
         timerConfig.setTimerLogFileSize(1024);
         timerConfig.setTotalSlots(8);
         timerConfig.setWheelSlots(4);

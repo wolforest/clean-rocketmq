@@ -29,7 +29,7 @@ class DequeueServiceTest {
         messageConfig.setEnablePopThreshold(true);
         messageConfig.setPopInflightThreshold(1);
         StoreConfig storeConfig = new StoreConfig();
-        storeConfig.setMessageConfig(messageConfig);
+        storeConfig.setMessage(messageConfig);
 
         DequeueLock dequeueLock = mock(DequeueLock.class);
         MessageService messageService = mock(MessageService.class);
@@ -65,7 +65,7 @@ class DequeueServiceTest {
     @Test
     void dequeueReturnsLockFailedWhenCannotLock() {
         StoreConfig storeConfig = new StoreConfig();
-        storeConfig.setMessageConfig(new MessageConfig());
+        storeConfig.setMessage(new MessageConfig());
 
         DequeueLock dequeueLock = mock(DequeueLock.class);
         MessageService messageService = mock(MessageService.class);
@@ -102,7 +102,7 @@ class DequeueServiceTest {
     @Test
     void dequeueFetchesMessagesAndUpdatesCounters() {
         StoreConfig storeConfig = new StoreConfig();
-        storeConfig.setMessageConfig(new MessageConfig());
+        storeConfig.setMessage(new MessageConfig());
 
         DequeueLock dequeueLock = mock(DequeueLock.class);
         MessageService messageService = mock(MessageService.class);

@@ -58,12 +58,12 @@ public abstract class BaseMQIntegrationTest {
 
         String rootPath = tmpDir.toString();
         storeConfig = ConfigMock.createStoreConfig(rootPath);
-        storeConfig.getCommitConfig().setFileSize(MMAP_FILE_SIZE);
-        storeConfig.getCommitConfig().setShardingNumber(1);
-        storeConfig.getCommitConfig().setMaxShardingNumber(1);
+        storeConfig.getCommit().setFileSize(MMAP_FILE_SIZE);
+        storeConfig.getCommit().setShardingNumber(1);
+        storeConfig.getCommit().setMaxShardingNumber(1);
 
         context.register(storeConfig);
-        context.register(storeConfig.getCommitConfig());
+        context.register(storeConfig.getCommit());
 
         initCheckPoint();
 
@@ -101,7 +101,7 @@ public abstract class BaseMQIntegrationTest {
 
     private void initCommitLog() throws Exception {
         CheckPoint checkpoint = context.getBean(CheckPoint.class);
-        CommitConfig commitConfig = storeConfig.getCommitConfig();
+        CommitConfig commitConfig = storeConfig.getCommit();
 
         CommitLogFactory factory = new CommitLogFactory(storeConfig, checkpoint, allocateService);
         List<CommitLog> logList = factory.createByConfig();
@@ -121,9 +121,9 @@ public abstract class BaseMQIntegrationTest {
     }
 
     private void initConsumeQueue() {
-        ConsumeQueueConfig cqConfig = storeConfig.getConsumeQueueConfig();
+        ConsumeQueueConfig cqConfig = storeConfig.getConsumeQueue();
         CheckPoint checkpoint = context.getBean(CheckPoint.class);
-        CommitConfig commitConfig = storeConfig.getCommitConfig();
+        CommitConfig commitConfig = storeConfig.getCommit();
 
         TopicService topicService = mock(TopicService.class);
         when(topicService.exists(anyString())).thenReturn(true);

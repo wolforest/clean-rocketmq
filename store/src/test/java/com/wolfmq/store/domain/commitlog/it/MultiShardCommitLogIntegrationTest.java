@@ -52,12 +52,12 @@ class MultiShardCommitLogIntegrationTest {
 
         String rootPath = tmpDir.toString();
         storeConfig = ConfigMock.createStoreConfig(rootPath);
-        storeConfig.getCommitConfig().setFileSize(MMAP_FILE_SIZE);
-        storeConfig.getCommitConfig().setShardingNumber(SHARD_COUNT);
-        storeConfig.getCommitConfig().setMaxShardingNumber(MAX_SHARD);
+        storeConfig.getCommit().setFileSize(MMAP_FILE_SIZE);
+        storeConfig.getCommit().setShardingNumber(SHARD_COUNT);
+        storeConfig.getCommit().setMaxShardingNumber(MAX_SHARD);
 
         context.register(storeConfig);
-        context.register(storeConfig.getCommitConfig());
+        context.register(storeConfig.getCommit());
 
         StoreCheckpoint checkpoint = new StoreCheckpoint(tmpDir.resolve("checkpoint").toString());
         checkpoint.setShutdownSuccessful(false);
@@ -94,7 +94,7 @@ class MultiShardCommitLogIntegrationTest {
 
     private void initCommitLog() throws Exception {
         CheckPoint ckpt = context.getBean(CheckPoint.class);
-        CommitConfig commitConfig = storeConfig.getCommitConfig();
+        CommitConfig commitConfig = storeConfig.getCommit();
 
         CommitLogFactory factory = new CommitLogFactory(storeConfig, ckpt, allocateService);
         List<CommitLog> logList = factory.createByConfig();

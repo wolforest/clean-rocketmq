@@ -38,7 +38,7 @@ class DefaultCommitLogTest {
         StoreConfig storeConfig = ConfigMock.createStoreConfig(dir);
         CommitLog commitLog = createCommitLog(dir, storeConfig);
 
-        MessageEncoder encoder = new MessageEncoder(storeConfig.getMessageConfig());
+        MessageEncoder encoder = new MessageEncoder(storeConfig.getMessage());
         MessageBO messageBO = createMessage(encoder);
 
         commitLog.assignCommitOffset(messageBO);
@@ -68,7 +68,7 @@ class DefaultCommitLogTest {
         StoreConfig storeConfig = ConfigMock.createStoreConfig(dir);
         CommitLog commitLog = createCommitLog(dir, storeConfig);
 
-        MessageEncoder encoder = new MessageEncoder(storeConfig.getMessageConfig());
+        MessageEncoder encoder = new MessageEncoder(storeConfig.getMessage());
         MessageBO first = createMessage(encoder);
 
         commitLog.assignCommitOffset(first);
@@ -97,7 +97,7 @@ class DefaultCommitLogTest {
         StoreConfig storeConfig = ConfigMock.createStoreConfig(dir);
         CommitLog commitLog = createCommitLog(dir, storeConfig);
 
-        MessageEncoder encoder = new MessageEncoder(storeConfig.getMessageConfig());
+        MessageEncoder encoder = new MessageEncoder(storeConfig.getMessage());
         int messageCount = 10;
         long[] offsets = new long[messageCount];
 
@@ -125,7 +125,7 @@ class DefaultCommitLogTest {
         StoreConfig storeConfig = ConfigMock.createStoreConfig(dir);
         CommitLog commitLog = createCommitLog(dir, storeConfig);
 
-        MessageEncoder encoder = new MessageEncoder(storeConfig.getMessageConfig());
+        MessageEncoder encoder = new MessageEncoder(storeConfig.getMessage());
         int[] bodySizes = {100, 1024, 1024 * 2, 1024 * 5};
 
         for (int bodySize : bodySizes) {
@@ -154,7 +154,7 @@ class DefaultCommitLogTest {
         StoreConfig storeConfig = ConfigMock.createStoreConfig(dir);
         CommitLog commitLog = createCommitLog(dir, storeConfig);
 
-        MessageEncoder encoder = new MessageEncoder(storeConfig.getMessageConfig());
+        MessageEncoder encoder = new MessageEncoder(storeConfig.getMessage());
         MessageBO messageBO = MessageMock.createMessage();
         messageBO.getProperties().put("KEY1", "VALUE1");
         messageBO.getProperties().put("KEY2", "VALUE2");
@@ -180,7 +180,7 @@ class DefaultCommitLogTest {
         StoreConfig storeConfig = ConfigMock.createStoreConfig(dir);
         CommitLog commitLog = createCommitLog(dir, storeConfig);
 
-        MessageEncoder encoder = new MessageEncoder(storeConfig.getMessageConfig());
+        MessageEncoder encoder = new MessageEncoder(storeConfig.getMessage());
         MessageBO messageBO = createMessage(encoder);
 
         commitLog.insert(messageBO);
@@ -201,7 +201,7 @@ class DefaultCommitLogTest {
         StoreConfig storeConfig = ConfigMock.createStoreConfig(dir);
         CommitLog commitLog = createCommitLog(dir, storeConfig);
 
-        MessageEncoder encoder = new MessageEncoder(storeConfig.getMessageConfig());
+        MessageEncoder encoder = new MessageEncoder(storeConfig.getMessage());
         MessageBO messageBO = createMessage(encoder);
         commitLog.insert(messageBO);
 
@@ -219,7 +219,7 @@ class DefaultCommitLogTest {
         StoreConfig storeConfig = ConfigMock.createStoreConfig(dir);
         CommitLog commitLog = createCommitLog(dir, storeConfig);
 
-        MessageEncoder encoder = new MessageEncoder(storeConfig.getMessageConfig());
+        MessageEncoder encoder = new MessageEncoder(storeConfig.getMessage());
         MessageBO messageBO = createMessage(encoder);
         commitLog.insert(messageBO);
 
@@ -238,7 +238,7 @@ class DefaultCommitLogTest {
         StoreConfig storeConfig = ConfigMock.createStoreConfig(dir);
         CommitLog commitLog = createCommitLog(dir, storeConfig);
 
-        MessageEncoder encoder = new MessageEncoder(storeConfig.getMessageConfig());
+        MessageEncoder encoder = new MessageEncoder(storeConfig.getMessage());
         MessageBO messageBO = createMessage(encoder);
         commitLog.insert(messageBO);
 
@@ -286,7 +286,7 @@ class DefaultCommitLogTest {
         StoreConfig storeConfig = ConfigMock.createStoreConfig(dir);
         CommitLog commitLog = createCommitLog(dir, storeConfig);
 
-        MessageEncoder encoder = new MessageEncoder(storeConfig.getMessageConfig());
+        MessageEncoder encoder = new MessageEncoder(storeConfig.getMessage());
         MessageBO m1 = createMessage(encoder);
         MessageBO m2 = createMessage(encoder);
         MessageBO m3 = createMessage(encoder);
@@ -323,7 +323,7 @@ class DefaultCommitLogTest {
         StoreConfig storeConfig = ConfigMock.createStoreConfig(dir);
         CommitLog commitLog = createCommitLog(dir, storeConfig);
 
-        MessageEncoder encoder = new MessageEncoder(storeConfig.getMessageConfig());
+        MessageEncoder encoder = new MessageEncoder(storeConfig.getMessage());
         MessageBO messageBO = createMessage(encoder);
 
         commitLog.insert(messageBO);
@@ -340,7 +340,7 @@ class DefaultCommitLogTest {
         StoreConfig storeConfig = ConfigMock.createStoreConfig(dir);
         CommitLog commitLog = createCommitLog(dir, storeConfig);
 
-        MessageEncoder encoder = new MessageEncoder(storeConfig.getMessageConfig());
+        MessageEncoder encoder = new MessageEncoder(storeConfig.getMessage());
 
         long prevMax = commitLog.getMaxOffset();
         for (int i = 0; i < 5; i++) {
@@ -363,7 +363,7 @@ class DefaultCommitLogTest {
         StoreConfig storeConfig = ConfigMock.createStoreConfig(dir);
         CommitLog commitLog = createCommitLog(dir, storeConfig);
 
-        MessageEncoder encoder = new MessageEncoder(storeConfig.getMessageConfig());
+        MessageEncoder encoder = new MessageEncoder(storeConfig.getMessage());
         MessageBO messageBO = createMessage(encoder);
 
         commitLog.insert(messageBO);
@@ -382,7 +382,7 @@ class DefaultCommitLogTest {
         StoreConfig storeConfig = ConfigMock.createStoreConfig(dir);
         CommitLog commitLog = createCommitLog(dir, storeConfig);
 
-        MessageEncoder encoder = new MessageEncoder(storeConfig.getMessageConfig());
+        MessageEncoder encoder = new MessageEncoder(storeConfig.getMessage());
         MessageBO messageBO = createMessage(encoder);
 
         commitLog.insert(messageBO);
@@ -402,7 +402,7 @@ class DefaultCommitLogTest {
         CommitLog commitLog = createCommitLog(dir, storeConfig);
 
         // first insert a message to create a mapped file
-        MessageEncoder encoder = new MessageEncoder(storeConfig.getMessageConfig());
+        MessageEncoder encoder = new MessageEncoder(storeConfig.getMessage());
         MessageBO messageBO = createMessage(encoder);
         commitLog.insert(messageBO);
 
@@ -439,7 +439,7 @@ class DefaultCommitLogTest {
         StoreConfig storeConfig = ConfigMock.createStoreConfig(dir);
         CommitLog commitLog = createCommitLog(dir, storeConfig);
 
-        MessageEncoder encoder = new MessageEncoder(storeConfig.getMessageConfig());
+        MessageEncoder encoder = new MessageEncoder(storeConfig.getMessage());
         MessageBO messageBO = createMessage(encoder);
         commitLog.insert(messageBO);
 
@@ -473,7 +473,7 @@ class DefaultCommitLogTest {
         StoreConfig storeConfig = ConfigMock.createStoreConfig(dir);
         CommitLog commitLog = createCommitLog(dir, storeConfig);
 
-        MessageEncoder encoder = new MessageEncoder(storeConfig.getMessageConfig());
+        MessageEncoder encoder = new MessageEncoder(storeConfig.getMessage());
         String[] topics = {"TOPIC_A", "TOPIC_B", "TOPIC_C"};
 
         for (String topic : topics) {
@@ -501,7 +501,7 @@ class DefaultCommitLogTest {
         StoreConfig storeConfig = ConfigMock.createStoreConfig(dir);
         CommitLog commitLog = createCommitLog(dir, storeConfig);
 
-        MessageEncoder encoder = new MessageEncoder(storeConfig.getMessageConfig());
+        MessageEncoder encoder = new MessageEncoder(storeConfig.getMessage());
         MessageBO messageBO = MessageMock.createMessage("RESULT_TEST", 100, 3, 42);
         encoder.calculate(messageBO);
 
@@ -524,7 +524,7 @@ class DefaultCommitLogTest {
     private CommitLog createCommitLog(String dir, StoreConfig storeConfig) {
         MappedFileQueue queue = new DefaultMappedFileQueue(dir, MMAP_FILE_SIZE);
 
-        CommitConfig commitConfig = storeConfig.getCommitConfig();
+        CommitConfig commitConfig = storeConfig.getCommit();
         commitConfig.setFileSize(MMAP_FILE_SIZE);
 
         CommitLogFlushPolicy flusher = new SyncCommitLogFlushPolicy(queue);

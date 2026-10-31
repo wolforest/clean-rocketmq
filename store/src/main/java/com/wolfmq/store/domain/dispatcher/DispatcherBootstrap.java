@@ -22,7 +22,7 @@ public class DispatcherBootstrap implements Lifecycle {
     @Override
     public void initialize() throws Exception {
         StoreConfig storeConfig = context.getBean(StoreConfig.class);
-        CommitConfig commitConfig = storeConfig.getCommitConfig();
+        CommitConfig commitConfig = storeConfig.getCommit();
         CheckPoint checkPoint = context.getBean(CheckPoint.class);
         CommitLogManager commitLogManager = context.getBean(CommitLogManager.class);
 

@@ -73,7 +73,7 @@ public class NextOffsetSetter {
     }
 
     private long correctNextOffset(long oldOffset, long newOffset) {
-        MetaConfig metaConfig = storeConfig.getMetaConfig();
+        MetaConfig metaConfig = storeConfig.getMeta();
 
         if (storeConfig.isMaster() || metaConfig.isEnableOffsetCheckInSlave()) {
             return newOffset;

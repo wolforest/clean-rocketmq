@@ -115,7 +115,7 @@ public class DequeueService {
     }
 
     private boolean hasTooManyInflightMessages(DequeueRequest request) {
-        MessageConfig messageConfig = storeConfig.getMessageConfig();
+        MessageConfig messageConfig = storeConfig.getMessage();
         if (!messageConfig.isEnablePopThreshold()) {
             return false;
         }

@@ -169,7 +169,7 @@ public class CommitLogTransfer extends ServiceThread implements Lifecycle {
     }
 
     private long getMasterOffset() {
-        CommitConfig commitConfig = storeConfig.getCommitConfig();
+        CommitConfig commitConfig = storeConfig.getCommit();
         long masterOffset = commitLogStore.getMaxOffset(shardId);
         long fileSize = commitConfig.getFileSize();
 

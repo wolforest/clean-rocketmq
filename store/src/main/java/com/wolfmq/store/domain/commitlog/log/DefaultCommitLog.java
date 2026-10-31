@@ -68,8 +68,8 @@ public class DefaultCommitLog implements CommitLog {
     ) {
         this.shardId = shardId;
         this.storeConfig = storeConfig;
-        this.commitConfig = storeConfig.getCommitConfig();
-        this.messageConfig = storeConfig.getMessageConfig();
+        this.commitConfig = storeConfig.getCommit();
+        this.messageConfig = storeConfig.getMessage();
 
         this.checkPoint = checkPoint;
         this.mappedFileQueue = mappedFileQueue;

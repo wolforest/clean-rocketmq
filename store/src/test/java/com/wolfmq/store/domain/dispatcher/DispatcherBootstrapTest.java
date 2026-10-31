@@ -49,8 +49,8 @@ class DispatcherBootstrapTest {
         context.register(topicService, TopicService.class);
 
         CommitLogManager commitLogManager = new CommitLogManager(
-            storeConfig.getCommitConfig(),
-            new TopicPartitioner(storeConfig.getCommitConfig(), topicService)
+            storeConfig.getCommit(),
+            new TopicPartitioner(storeConfig.getCommit(), topicService)
         );
         context.register(commitLogManager);
 

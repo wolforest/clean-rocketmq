@@ -98,9 +98,9 @@ class MQIntegrationTest extends BaseMQIntegrationTest {
     @Test
     void testDequeueServiceWithFlowControl() {
         StoreConfig localConfig = new StoreConfig();
-        localConfig.setMessageConfig(new com.wolfmq.domain.config.business.MessageConfig());
-        localConfig.getMessageConfig().setEnablePopThreshold(true);
-        localConfig.getMessageConfig().setPopInflightThreshold(1);
+        localConfig.setMessage(new com.wolfmq.domain.config.business.MessageConfig());
+        localConfig.getMessage().setEnablePopThreshold(true);
+        localConfig.getMessage().setPopInflightThreshold(1);
 
         DequeueLock dequeueLock = new DequeueLock();
         InflightCounter counter = new InflightCounter();
@@ -129,7 +129,7 @@ class MQIntegrationTest extends BaseMQIntegrationTest {
     @Test
     void testDequeueServiceWithLockFailure() {
         StoreConfig localConfig = new StoreConfig();
-        localConfig.setMessageConfig(new com.wolfmq.domain.config.business.MessageConfig());
+        localConfig.setMessage(new com.wolfmq.domain.config.business.MessageConfig());
 
         DequeueLock dequeueLock = mock(DequeueLock.class);
         when(dequeueLock.tryLock(any(DequeueRequest.class))).thenReturn(false);
@@ -158,7 +158,7 @@ class MQIntegrationTest extends BaseMQIntegrationTest {
     @Test
     void testDequeueServiceSuccessfulDequeue() {
         StoreConfig localConfig = new StoreConfig();
-        localConfig.setMessageConfig(new com.wolfmq.domain.config.business.MessageConfig());
+        localConfig.setMessage(new com.wolfmq.domain.config.business.MessageConfig());
 
         DequeueLock dequeueLock = new DequeueLock();
         InflightCounter counter = new InflightCounter();
@@ -234,7 +234,7 @@ class MQIntegrationTest extends BaseMQIntegrationTest {
     @Test
     void testDequeueServiceNotFoundMessages() {
         StoreConfig localConfig = new StoreConfig();
-        localConfig.setMessageConfig(new com.wolfmq.domain.config.business.MessageConfig());
+        localConfig.setMessage(new com.wolfmq.domain.config.business.MessageConfig());
 
         DequeueLock dequeueLock = new DequeueLock();
         InflightCounter counter = new InflightCounter();
@@ -300,7 +300,7 @@ class MQIntegrationTest extends BaseMQIntegrationTest {
         AckOffset ackOffset = mock(AckOffset.class);
         AckService ackService = new AckService(
             localConfig, "REVIVE_TOPIC",
-            new com.wolfmq.domain.domain.consumer.ack.AckBuffer(localConfig.getMessageConfig()),
+            new com.wolfmq.domain.domain.consumer.ack.AckBuffer(localConfig.getMessage()),
             mock(EnqueueService.class), ackOffset
         );
 
@@ -326,15 +326,15 @@ class MQIntegrationTest extends BaseMQIntegrationTest {
     @Test
     void testAckServiceAddCheckpointAndAck() {
         StoreConfig localConfig = new StoreConfig();
-        localConfig.setMessageConfig(new com.wolfmq.domain.config.business.MessageConfig());
-        localConfig.getMessageConfig().setEnablePopBufferMerge(true);
+        localConfig.setMessage(new com.wolfmq.domain.config.business.MessageConfig());
+        localConfig.getMessage().setEnablePopBufferMerge(true);
 
         AckOffset ackOffset = mock(AckOffset.class);
         EnqueueService enqueueService = mock(EnqueueService.class);
 
         AckService ackService = new AckService(
             localConfig, "REVIVE_TOPIC",
-            new com.wolfmq.domain.domain.consumer.ack.AckBuffer(localConfig.getMessageConfig()),
+            new com.wolfmq.domain.domain.consumer.ack.AckBuffer(localConfig.getMessage()),
             enqueueService, ackOffset
         );
 
@@ -356,7 +356,7 @@ class MQIntegrationTest extends BaseMQIntegrationTest {
             );
 
         com.wolfmq.domain.domain.consumer.ack.AckBuffer ackBuffer =
-            new com.wolfmq.domain.domain.consumer.ack.AckBuffer(localConfig.getMessageConfig());
+            new com.wolfmq.domain.domain.consumer.ack.AckBuffer(localConfig.getMessage());
 
         ackBuffer.enqueue(wrapper);
         assertTrue(ackBuffer.getTotalSize() > 0, "ack buffer should contain checkpoint after enqueue");

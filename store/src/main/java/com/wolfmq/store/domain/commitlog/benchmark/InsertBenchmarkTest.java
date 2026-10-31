@@ -43,7 +43,7 @@ public class InsertBenchmarkTest {
         StoreConfig storeConfig = ConfigMock.createStoreConfig(dir);
         CommitLog commitLog = createCommitLog(dir, storeConfig);
 
-        MessageEncoder encoder = new MessageEncoder(storeConfig.getMessageConfig());
+        MessageEncoder encoder = new MessageEncoder(storeConfig.getMessage());
         MessageBO messageBO = createMessage(encoder);
 
         long startTime = System.currentTimeMillis();
@@ -73,7 +73,7 @@ public class InsertBenchmarkTest {
             StoreConfig storeConfig = ConfigMock.createStoreConfig(dir);
             CommitLog commitLog = createCommitLog(dir, storeConfig);
 
-            MessageEncoder encoder = new MessageEncoder(storeConfig.getMessageConfig());
+            MessageEncoder encoder = new MessageEncoder(storeConfig.getMessage());
             MessageBO messageBO = createMessage(encoder);
 
             Runnable task = () -> {
@@ -114,7 +114,7 @@ public class InsertBenchmarkTest {
         StoreConfig storeConfig = ConfigMock.createStoreConfig(dir);
         CommitLog commitLog = createCommitLog(dir, storeConfig);
 
-        MessageEncoder encoder = new MessageEncoder(storeConfig.getMessageConfig());
+        MessageEncoder encoder = new MessageEncoder(storeConfig.getMessage());
         MessageBO messageBO = createMessage(encoder);
 
         Runnable task = () -> {
@@ -159,7 +159,7 @@ public class InsertBenchmarkTest {
         CommitLog commitLog = createCommitLog(dir, storeConfig);
         EnqueueLock enqueueLock = new EnqueueLock();
 
-        MessageEncoder encoder = new MessageEncoder(storeConfig.getMessageConfig());
+        MessageEncoder encoder = new MessageEncoder(storeConfig.getMessage());
         MessageBO messageBO = createMessage(encoder);
 
         Runnable task = () -> {
@@ -228,7 +228,7 @@ public class InsertBenchmarkTest {
     private static CommitLog createCommitLog(String dir, StoreConfig storeConfig) {
         MappedFileQueue queue = new DefaultMappedFileQueue(dir, MMAP_FILE_SIZE);
 
-        CommitConfig commitConfig = storeConfig.getCommitConfig();
+        CommitConfig commitConfig = storeConfig.getCommit();
         commitConfig.setFileSize(MMAP_FILE_SIZE);
 
         CommitLogFlushPolicy flusher = new EmptyCommitLogFlushPolicy(queue);

@@ -91,7 +91,7 @@ public class DefaultTimer implements Timer, Flushable {
     }
 
     private TimerLog initTimerLog() {
-        TimerConfig timerConfig = storeConfig.getTimerConfig();
+        TimerConfig timerConfig = storeConfig.getTimer();
 
         return new TimerLog(
             StorePath.getTimerLogPath(),
@@ -100,7 +100,7 @@ public class DefaultTimer implements Timer, Flushable {
     }
 
     private TimerWheel initTimerWheel() throws IOException {
-        TimerConfig timerConfig = storeConfig.getTimerConfig();
+        TimerConfig timerConfig = storeConfig.getTimer();
 
         return new TimerWheel(
             StorePath.getTimerWheelPath(),

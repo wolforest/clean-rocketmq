@@ -42,10 +42,10 @@ class ConsumeQueueBootstrapTest {
     void initialize_ShouldRegisterConsumeQueueManager(@TempDir Path anotherDir) {
         StoreConfig storeConfig = ConfigMock.createStoreConfig(anotherDir.toString());
         StorePath.initPath(anotherDir.toString());
-        storeConfig.setCommitConfig(new CommitConfig());
+        storeConfig.setCommit(new CommitConfig());
 
         context.register(storeConfig);
-        context.register(storeConfig.getCommitConfig(), CommitConfig.class);
+        context.register(storeConfig.getCommit(), CommitConfig.class);
         StoreCheckpoint __cp = new StoreCheckpoint(anotherDir.toString()); context.register(__cp, CheckPoint.class);
 
         TopicService topicService = mock(TopicService.class);

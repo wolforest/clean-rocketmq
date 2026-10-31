@@ -47,12 +47,12 @@ public abstract class BaseDispatcherIntegrationTest {
 
         String rootPath = tmpDir.toString();
         storeConfig = ConfigMock.createStoreConfig(rootPath);
-        storeConfig.getCommitConfig().setFileSize(MMAP_FILE_SIZE);
-        storeConfig.getCommitConfig().setShardingNumber(1);
-        storeConfig.getCommitConfig().setMaxShardingNumber(1);
+        storeConfig.getCommit().setFileSize(MMAP_FILE_SIZE);
+        storeConfig.getCommit().setShardingNumber(1);
+        storeConfig.getCommit().setMaxShardingNumber(1);
 
         context.register(storeConfig);
-        context.register(storeConfig.getCommitConfig());
+        context.register(storeConfig.getCommit());
 
         initCheckPoint();
 
@@ -63,7 +63,7 @@ public abstract class BaseDispatcherIntegrationTest {
         initCommitLog();
 
         handlerManager = new CommitHandlerManager();
-        dispatchQueue = new DispatchQueue(storeConfig.getCommitConfig());
+        dispatchQueue = new DispatchQueue(storeConfig.getCommit());
     }
 
     @AfterEach
@@ -87,7 +87,7 @@ public abstract class BaseDispatcherIntegrationTest {
     }
 
     private int maxShard() {
-        return storeConfig.getCommitConfig().getShardingNumber();
+        return storeConfig.getCommit().getShardingNumber();
     }
 
     private void resetStoreContext() {
@@ -103,7 +103,7 @@ public abstract class BaseDispatcherIntegrationTest {
 
     private void initCommitLog() throws Exception {
         CheckPoint checkpoint = context.getBean(CheckPoint.class);
-        CommitConfig commitConfig = storeConfig.getCommitConfig();
+        CommitConfig commitConfig = storeConfig.getCommit();
 
         CommitLogFactory factory = new CommitLogFactory(storeConfig, checkpoint, allocateService);
         List<CommitLog> logList = factory.createByConfig();
@@ -130,7 +130,7 @@ public abstract class BaseDispatcherIntegrationTest {
 
     protected CommitListener createCommitListener() {
         CommitLog commitLog = commitLogManager.selectByShardId(0);
-        return new CommitListener(dispatchQueue, commitLog, context.getBean(CheckPoint.class), storeConfig.getCommitConfig());
+        return new CommitListener(dispatchQueue, commitLog, context.getBean(CheckPoint.class), storeConfig.getCommit());
     }
 
     protected AtomicInteger registerCountingHandler() {

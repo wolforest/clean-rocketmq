@@ -36,7 +36,7 @@ public class OffsetService {
         ConsumeOffsetService consumeOffsetService,
         ConsumeOrderService consumeOrderService
     ) {
-        this.messageConfig = storeConfig.getMessageConfig();
+        this.messageConfig = storeConfig.getMessage();
 
         this.commitLog = commitLog;
         this.ackService = ackService;

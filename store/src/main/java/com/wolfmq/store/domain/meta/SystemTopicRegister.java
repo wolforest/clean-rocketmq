@@ -29,7 +29,7 @@ public class SystemTopicRegister {
 
         addSystemTopic(storeConfig.getCluster() + "_" + MQConstants.REPLY_TOPIC_POSTFIX, 1, 1);
 
-        TopicConfig topicConfig = storeConfig.getTopicConfig();
+        TopicConfig topicConfig = storeConfig.getTopic();
 
         // timer topic
         addSystemTopic(TimerConstants.TIMER_TOPIC, topicConfig.getTimerQueueNum(), topicConfig.getTimerQueueNum());

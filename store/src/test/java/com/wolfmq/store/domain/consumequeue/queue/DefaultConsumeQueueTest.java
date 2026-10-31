@@ -347,7 +347,7 @@ class DefaultConsumeQueueTest {
 
     private ConsumeQueue createConsumeQueue(String dir, String topic, int queueId) {
         StoreConfig storeConfig = ConfigMock.createStoreConfig(dir);
-        ConsumeQueueConfig queueConfig = storeConfig.getConsumeQueueConfig();
+        ConsumeQueueConfig queueConfig = storeConfig.getConsumeQueue();
         queueConfig.setFileSize(MMAP_FILE_SIZE);
 
         StoreCheckpoint checkpoint = new StoreCheckpoint(StorePath.getCheckpointPath());

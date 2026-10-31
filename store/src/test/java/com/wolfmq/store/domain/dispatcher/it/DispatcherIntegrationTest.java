@@ -132,7 +132,7 @@ class DispatcherIntegrationTest extends BaseDispatcherIntegrationTest {
 
     @Test
     void testDispatchManagerIntegration() throws Exception {
-        CommitConfig config = storeConfig.getCommitConfig();
+        CommitConfig config = storeConfig.getCommit();
         config.setDispatchThreads(2);
 
         CheckPoint checkpoint = context.getBean(CheckPoint.class);
@@ -219,7 +219,7 @@ class DispatcherIntegrationTest extends BaseDispatcherIntegrationTest {
 
     @Test
     void testDispatchManagerLifecycleWithRealCommitLog() throws Exception {
-        CommitConfig config = storeConfig.getCommitConfig();
+        CommitConfig config = storeConfig.getCommit();
         config.setDispatchThreads(1);
 
         CheckPoint checkpoint = context.getBean(CheckPoint.class);

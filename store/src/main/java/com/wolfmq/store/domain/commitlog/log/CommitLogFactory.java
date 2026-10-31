@@ -28,7 +28,7 @@ public class CommitLogFactory {
         AllocateMappedFileService allocateService
     ) {
         this.storeConfig = storeConfig;
-        this.commitConfig = storeConfig.getCommitConfig();
+        this.commitConfig = storeConfig.getCommit();
         this.shardNumber = commitConfig.getShardingNumber();
 
         this.checkpoint = checkpoint;

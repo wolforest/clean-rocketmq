@@ -73,7 +73,7 @@ public class ComponentRegister {
 
     private void registerNettyClient() {
         StoreConfig storeConfig = context.getBean(StoreConfig.class);
-        NettyClient component = new NettyClient(storeConfig.getRpcClientConfig());
+        NettyClient component = new NettyClient(storeConfig.getRpcClient());
         context.register(component);
     }
 

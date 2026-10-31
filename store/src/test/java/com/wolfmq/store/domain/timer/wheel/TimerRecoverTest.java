@@ -18,7 +18,7 @@ class TimerRecoverTest {
     @Test
     void recover_ShouldNotThrow(@TempDir Path tempDir) throws Exception {
         StoreConfig storeConfig = ConfigMock.createStoreConfig(tempDir.toString());
-        TimerConfig timerConfig = storeConfig.getTimerConfig();
+        TimerConfig timerConfig = storeConfig.getTimer();
         timerConfig.setTimerLogFileSize(1024);
         timerConfig.setTotalSlots(8);
         timerConfig.setPrecision(1000);

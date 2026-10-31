@@ -28,7 +28,7 @@ public class DefaultIndexService implements IndexService {
     private final ReentrantReadWriteLock readWriteLock = new ReentrantReadWriteLock();
 
     public DefaultIndexService(StoreConfig storeConfig) {
-        IndexConfig indexConfig = storeConfig.getIndexConfig();
+        IndexConfig indexConfig = storeConfig.getIndex();
         this.maxHashSlotNum = indexConfig.getMaxHashSlotNum();
         this.maxIndexNum = indexConfig.getMaxIndexNum();
         this.storePath = StorePath.getIndexPath();

@@ -31,7 +31,7 @@ class ConsumeQueueFactoryTest {
     @BeforeEach
     void setUp() {
         StoreConfig storeConfig = ConfigMock.createStoreConfig(tmpDir.toString());
-        ConsumeQueueConfig config = storeConfig.getConsumeQueueConfig();
+        ConsumeQueueConfig config = storeConfig.getConsumeQueue();
         this.topicService = new MockTopicService();
         StoreCheckpoint checkpoint = new StoreCheckpoint(StorePath.getCheckpointPath());
 

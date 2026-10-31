@@ -51,7 +51,7 @@ public class AckBootstrap implements Lifecycle {
 
     private void initLibrary() {
         this.storeConfig = context.getBean(StoreConfig.class);
-        MessageConfig messageConfig = storeConfig.getMessageConfig();
+        MessageConfig messageConfig = storeConfig.getMessage();
 
         this.reviveTopic = KeyBuilder.buildClusterReviveTopic(storeConfig.getCluster());
 

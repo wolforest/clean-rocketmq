@@ -37,7 +37,7 @@ public class AckService {
         AckOffset offsetService
     ) {
         this.storeConfig  = storeConfig;
-        this.messageConfig  = storeConfig.getMessageConfig();
+        this.messageConfig  = storeConfig.getMessage();
         this.reviveTopic = reviveTopic;
 
         this.ackBuffer = ackBuffer;

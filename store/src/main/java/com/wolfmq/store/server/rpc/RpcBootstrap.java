@@ -76,7 +76,7 @@ public class RpcBootstrap implements Lifecycle {
     }
 
     private void initTopicProcessor() {
-        TopicConfig topicConfig = storeConfig.getTopicConfig();
+        TopicConfig topicConfig = storeConfig.getTopic();
         TopicStore topicStore = context.getBean(TopicStore.class);
         ExecutorService executor = executorManager.getAdminExecutor();
 

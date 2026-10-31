@@ -18,7 +18,7 @@ public class TaskAdder {
     private final TimerWheel timerWheel;
 
     public TaskAdder(StoreConfig storeConfig, TimerLog timerLog, TimerWheel timerWheel) {
-        this.timerConfig = storeConfig.getTimerConfig();
+        this.timerConfig = storeConfig.getTimer();
         this.timerLog = timerLog;
         this.timerWheel = timerWheel;
     }

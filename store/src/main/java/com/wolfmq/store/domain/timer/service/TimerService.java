@@ -21,7 +21,7 @@ public class TimerService implements Timer, Flushable {
     private final Timer timer;
 
     public TimerService(StoreConfig storeConfig, CheckpointService checkpointService, MessageService messageService) {
-        this.timerConfig = storeConfig.getTimerConfig();
+        this.timerConfig = storeConfig.getTimer();
 
         this.checkpointService = checkpointService;
         this.messageService = messageService;

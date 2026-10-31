@@ -22,7 +22,7 @@ class TimerServiceTest {
     @Test
     void whenTimerDisabled_ShouldUseBlackHole(@TempDir Path tempDir) throws Exception {
         StoreConfig storeConfig = ConfigMock.createStoreConfig(tempDir.toString());
-        storeConfig.getTimerConfig().setEnableTimer(false);
+        storeConfig.getTimer().setEnableTimer(false);
 
         CheckpointService checkpointService = new CheckpointService(tempDir.resolve("timercheck").toString());
         MessageService messageService = mock(MessageService.class);
@@ -40,8 +40,8 @@ class TimerServiceTest {
     @Test
     void whenRocksdbEnabled_ShouldUseRocksdbTimer(@TempDir Path tempDir) throws Exception {
         StoreConfig storeConfig = ConfigMock.createStoreConfig(tempDir.toString());
-        storeConfig.getTimerConfig().setEnableTimer(true);
-        storeConfig.getTimerConfig().setEnableRocksDB(true);
+        storeConfig.getTimer().setEnableTimer(true);
+        storeConfig.getTimer().setEnableRocksDB(true);
 
         CheckpointService checkpointService = new CheckpointService(tempDir.resolve("timercheck").toString());
         MessageService messageService = mock(MessageService.class);
@@ -54,7 +54,7 @@ class TimerServiceTest {
     @Test
     void whenDefaultTimerEnabled_ShouldAddAndScan(@TempDir Path tempDir) throws Exception {
         StoreConfig storeConfig = ConfigMock.createStoreConfig(tempDir.toString());
-        TimerConfig timerConfig = storeConfig.getTimerConfig();
+        TimerConfig timerConfig = storeConfig.getTimer();
         timerConfig.setEnableTimer(true);
         timerConfig.setEnableRocksDB(false);
         timerConfig.setTimerLogFileSize(1024);

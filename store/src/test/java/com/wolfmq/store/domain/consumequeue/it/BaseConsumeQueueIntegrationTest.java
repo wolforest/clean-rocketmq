@@ -54,16 +54,16 @@ public abstract class BaseConsumeQueueIntegrationTest {
 
         String rootPath = tmpDir.toString();
         storeConfig = ConfigMock.createStoreConfig(rootPath);
-        storeConfig.getCommitConfig().setFileSize(1024 * 1024);
-        storeConfig.getCommitConfig().setShardingNumber(1);
-        storeConfig.getCommitConfig().setMaxShardingNumber(1);
+        storeConfig.getCommit().setFileSize(1024 * 1024);
+        storeConfig.getCommit().setShardingNumber(1);
+        storeConfig.getCommit().setMaxShardingNumber(1);
 
-        ConsumeQueueConfig cqConfig = storeConfig.getConsumeQueueConfig();
+        ConsumeQueueConfig cqConfig = storeConfig.getConsumeQueue();
         cqConfig.setFileSize(FILE_SIZE);
         cqConfig.setUnitSize(UNIT_SIZE);
 
         context.register(storeConfig);
-        context.register(storeConfig.getCommitConfig());
+        context.register(storeConfig.getCommit());
         context.register(cqConfig);
 
         initCheckPoint();
@@ -109,8 +109,8 @@ public abstract class BaseConsumeQueueIntegrationTest {
     }
 
     private void initConsumeQueue() {
-        ConsumeQueueConfig cqConfig = storeConfig.getConsumeQueueConfig();
-        CommitConfig commitConfig = storeConfig.getCommitConfig();
+        ConsumeQueueConfig cqConfig = storeConfig.getConsumeQueue();
+        CommitConfig commitConfig = storeConfig.getCommit();
         CheckPoint checkpoint = context.getBean(CheckPoint.class);
 
         flusher = new ConsumeQueueFlusher(cqConfig);

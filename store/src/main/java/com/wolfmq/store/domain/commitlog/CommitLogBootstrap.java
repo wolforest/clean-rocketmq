@@ -51,7 +51,7 @@ public class CommitLogBootstrap implements Lifecycle {
     private void initCommitLog() {
         CheckPoint checkpoint = context.getBean(CheckPoint.class);
         StoreConfig storeConfig = context.getBean(StoreConfig.class);
-        CommitConfig commitConfig = storeConfig.getCommitConfig();
+        CommitConfig commitConfig = storeConfig.getCommit();
         TopicService topicService = context.getBean(TopicService.class);
 
         AllocateMappedFileService allocateService = context.getBean(AllocateMappedFileService.class);

@@ -37,14 +37,14 @@ public class ContextInitializer {
 
     private void initializeConfig() {
         StoreConfig storeConfig = new StoreConfig();
-        storeConfig.setMessageConfig(new MessageConfig());
-        storeConfig.setTopicConfig(new TopicConfig());
-        storeConfig.setCommitConfig(new CommitConfig());
-        storeConfig.setConsumeQueueConfig(new ConsumeQueueConfig());
-        storeConfig.setTimerConfig(new TimerConfig());
-        storeConfig.setMetaConfig(new MetaConfig());
-        storeConfig.setRpcClientConfig(new RpcClientConfig());
-        storeConfig.setIndexConfig(new IndexConfig());
+        storeConfig.setMessage(new MessageConfig());
+        storeConfig.setTopic(new TopicConfig());
+        storeConfig.setCommit(new CommitConfig());
+        storeConfig.setConsumeQueue(new ConsumeQueueConfig());
+        storeConfig.setTimer(new TimerConfig());
+        storeConfig.setMeta(new MetaConfig());
+        storeConfig.setRpcClient(new RpcClientConfig());
+        storeConfig.setIndex(new IndexConfig());
 
         StorePath.initPath(storeConfig.getRootDir());
 

@@ -36,7 +36,7 @@ class IndexBootstrapTest {
     void initialize_ShouldRegisterIndexServiceAndHandler(@TempDir Path anotherDir) throws Exception {
         StoreConfig storeConfig = ConfigMock.createStoreConfig(anotherDir.toString());
         StorePath.initPath(anotherDir.toString());
-        storeConfig.setIndexConfig(new IndexConfig());
+        storeConfig.setIndex(new IndexConfig());
 
         context.register(storeConfig);
         CommitHandlerManager handlerManager = new CommitHandlerManager();

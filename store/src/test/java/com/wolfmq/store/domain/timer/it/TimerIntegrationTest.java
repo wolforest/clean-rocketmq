@@ -73,15 +73,15 @@ class TimerIntegrationTest {
 
         String rootPath = tmpDir.toString();
         storeConfig = ConfigMock.createStoreConfig(rootPath);
-        storeConfig.getCommitConfig().setFileSize(FILE_SIZE);
-        storeConfig.getCommitConfig().setShardingNumber(1);
-        storeConfig.getCommitConfig().setMaxShardingNumber(1);
-        storeConfig.getTimerConfig().setTimerLogFileSize(FILE_SIZE);
-        storeConfig.getTimerConfig().setTotalSlots(TOTAL_SLOTS);
-        storeConfig.getTimerConfig().setPrecision(PRECISION_MS);
+        storeConfig.getCommit().setFileSize(FILE_SIZE);
+        storeConfig.getCommit().setShardingNumber(1);
+        storeConfig.getCommit().setMaxShardingNumber(1);
+        storeConfig.getTimer().setTimerLogFileSize(FILE_SIZE);
+        storeConfig.getTimer().setTotalSlots(TOTAL_SLOTS);
+        storeConfig.getTimer().setPrecision(PRECISION_MS);
 
         context.register(storeConfig);
-        context.register(storeConfig.getCommitConfig());
+        context.register(storeConfig.getCommit());
 
         StoreCheckpoint checkpoint = new StoreCheckpoint(tmpDir.resolve("checkpoint").toString());
         checkpoint.setShutdownSuccessful(false);
@@ -101,7 +101,7 @@ class TimerIntegrationTest {
 
     private void initCommitLog() throws Exception {
         CheckPoint checkpoint = context.getBean(CheckPoint.class);
-        CommitConfig commitConfig = storeConfig.getCommitConfig();
+        CommitConfig commitConfig = storeConfig.getCommit();
 
         CommitLogFactory factory = new CommitLogFactory(storeConfig, checkpoint, allocateService);
         List<CommitLog> logList = factory.createByConfig();
@@ -121,9 +121,9 @@ class TimerIntegrationTest {
     }
 
     private void initConsumeQueue() {
-        ConsumeQueueConfig cqConfig = storeConfig.getConsumeQueueConfig();
+        ConsumeQueueConfig cqConfig = storeConfig.getConsumeQueue();
         CheckPoint checkpoint = context.getBean(CheckPoint.class);
-        CommitConfig commitConfig = storeConfig.getCommitConfig();
+        CommitConfig commitConfig = storeConfig.getCommit();
 
         TopicService topicService = mock(TopicService.class);
         when(topicService.exists(anyString())).thenReturn(true);
@@ -440,7 +440,7 @@ class TimerIntegrationTest {
         String timerLogPath = tmpDir.resolve("timerlog-e2e").toString();
         String timerWheelPath = tmpDir.resolve("timerwheel-e2e").toString();
 
-        TimerConfig timerConfig = storeConfig.getTimerConfig();
+        TimerConfig timerConfig = storeConfig.getTimer();
         timerConfig.setTimerLogFileSize(FILE_SIZE);
         timerConfig.setTotalSlots(TOTAL_SLOTS);
         timerConfig.setPrecision(PRECISION_MS);
@@ -492,7 +492,7 @@ class TimerIntegrationTest {
         String timerLogPath = tmpDir.resolve("timerlog-multi").toString();
         String timerWheelPath = tmpDir.resolve("timerwheel-multi").toString();
 
-        TimerConfig timerConfig = storeConfig.getTimerConfig();
+        TimerConfig timerConfig = storeConfig.getTimer();
         timerConfig.setTimerLogFileSize(FILE_SIZE);
         timerConfig.setTotalSlots(TOTAL_SLOTS);
         timerConfig.setPrecision(PRECISION_MS);

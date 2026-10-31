@@ -57,7 +57,7 @@ public class CommitLogManagerBenchmarkTest {
         StoreConfig storeConfig = ConfigMock.createStoreConfig(dir);
         CommitLog commitLog = createCommitLog(dir, storeConfig, 0);
 
-        MessageEncoder encoder = new MessageEncoder(storeConfig.getMessageConfig());
+        MessageEncoder encoder = new MessageEncoder(storeConfig.getMessage());
 
         warmup(commitLog, encoder);
 
@@ -79,7 +79,7 @@ public class CommitLogManagerBenchmarkTest {
         DirUtil.createIfNotExists(dir);
         CommitLogManager manager = createCommitLogManager(dir, 1, 1);
 
-        MessageEncoder encoder = new MessageEncoder(createStoreConfig(dir).getMessageConfig());
+        MessageEncoder encoder = new MessageEncoder(createStoreConfig(dir).getMessage());
 
         warmup(manager, encoder, 1);
 
@@ -105,7 +105,7 @@ public class CommitLogManagerBenchmarkTest {
             DirUtil.createIfNotExists(dir);
             CommitLogManager manager = createCommitLogManager(dir, shardCount, 1);
 
-            MessageEncoder encoder = new MessageEncoder(createStoreConfig(dir).getMessageConfig());
+            MessageEncoder encoder = new MessageEncoder(createStoreConfig(dir).getMessage());
 
             warmup(manager, encoder, shardCount);
 
@@ -126,7 +126,7 @@ public class CommitLogManagerBenchmarkTest {
             StoreConfig storeConfig = ConfigMock.createStoreConfig(dir);
             CommitLog commitLog = createCommitLog(dir, storeConfig, 0);
 
-            MessageEncoder encoder = new MessageEncoder(storeConfig.getMessageConfig());
+            MessageEncoder encoder = new MessageEncoder(storeConfig.getMessage());
 
             runDefaultCommitLogMultiThreadBenchmark(commitLog, encoder, threads, BENCHMARK_ITERATIONS,
                 "MultiThread-DefaultCommitLog-" + threads + "threads");
@@ -145,7 +145,7 @@ public class CommitLogManagerBenchmarkTest {
             DirUtil.createIfNotExists(dir);
             CommitLogManager manager = createCommitLogManager(dir, shardCount, shardCount);
 
-            MessageEncoder encoder = new MessageEncoder(createStoreConfig(dir).getMessageConfig());
+            MessageEncoder encoder = new MessageEncoder(createStoreConfig(dir).getMessage());
 
             runMultiThreadBenchmark(manager, encoder, threads, shardCount, BENCHMARK_ITERATIONS,
                 "CommitLogManager-" + shardCount + "shards");
@@ -164,7 +164,7 @@ public class CommitLogManagerBenchmarkTest {
             DirUtil.createIfNotExists(dir);
             CommitLogManager manager = createCommitLogManager(dir, shardCount, shardCount);
 
-            MessageEncoder encoder = new MessageEncoder(createStoreConfig(dir).getMessageConfig());
+            MessageEncoder encoder = new MessageEncoder(createStoreConfig(dir).getMessage());
 
             warmup(manager, encoder, shardCount);
 
@@ -186,7 +186,7 @@ public class CommitLogManagerBenchmarkTest {
             DirUtil.createIfNotExists(dir);
             CommitLogManager manager = createCommitLogManager(dir, shardCount, shardCount);
 
-            MessageEncoder encoder = new MessageEncoder(createStoreConfig(dir).getMessageConfig());
+            MessageEncoder encoder = new MessageEncoder(createStoreConfig(dir).getMessage());
 
             warmup(manager, encoder, shardCount);
 
@@ -208,7 +208,7 @@ public class CommitLogManagerBenchmarkTest {
             DirUtil.createIfNotExists(dir);
             CommitLogManager manager = createCommitLogManager(dir, shardCount, shardCount);
 
-            MessageEncoder encoder = new MessageEncoder(createStoreConfig(dir).getMessageConfig());
+            MessageEncoder encoder = new MessageEncoder(createStoreConfig(dir).getMessage());
 
             warmup(manager, encoder, shardCount);
 
@@ -230,7 +230,7 @@ public class CommitLogManagerBenchmarkTest {
             DirUtil.createIfNotExists(dir);
             CommitLogManager manager = createCommitLogManager(dir, shardCount, shardCount);
 
-            MessageEncoder encoder = new MessageEncoder(createStoreConfig(dir).getMessageConfig());
+            MessageEncoder encoder = new MessageEncoder(createStoreConfig(dir).getMessage());
 
             warmup(manager, encoder, shardCount);
 
@@ -251,7 +251,7 @@ public class CommitLogManagerBenchmarkTest {
             StoreConfig storeConfig = ConfigMock.createStoreConfig(dir);
             CommitLog commitLog = createCommitLog(dir, storeConfig, 0);
 
-            MessageEncoder encoder = new MessageEncoder(storeConfig.getMessageConfig());
+            MessageEncoder encoder = new MessageEncoder(storeConfig.getMessage());
 
             warmup(commitLog, encoder);
 
@@ -270,7 +270,7 @@ public class CommitLogManagerBenchmarkTest {
         String dir1 = System.getProperty("java.io.tmpdir") + "/benchmark-compare-1shard-" + System.currentTimeMillis();
         DirUtil.createIfNotExists(dir1);
         CommitLogManager manager1 = createCommitLogManager(dir1, 1, 1);
-        MessageEncoder encoder1 = new MessageEncoder(createStoreConfig(dir1).getMessageConfig());
+        MessageEncoder encoder1 = new MessageEncoder(createStoreConfig(dir1).getMessage());
         warmup(manager1, encoder1, 1);
         runMultiThreadBenchmarkWithTopics(manager1, encoder1, threads, 1, topicCount, BENCHMARK_ITERATIONS,
             "Compare-1Shard-8Threads");
@@ -280,7 +280,7 @@ public class CommitLogManagerBenchmarkTest {
         String dir5 = System.getProperty("java.io.tmpdir") + "/benchmark-compare-2shards-" + System.currentTimeMillis();
         DirUtil.createIfNotExists(dir5);
         CommitLogManager manager5 = createCommitLogManager(dir5, 2, 2);
-        MessageEncoder encoder5 = new MessageEncoder(createStoreConfig(dir5).getMessageConfig());
+        MessageEncoder encoder5 = new MessageEncoder(createStoreConfig(dir5).getMessage());
         warmup(manager5, encoder5, 2);
         runMultiThreadBenchmarkWithTopics(manager5, encoder5, threads, 2, topicCount, BENCHMARK_ITERATIONS,
             "Compare-2Shards-8Threads");
@@ -295,7 +295,7 @@ public class CommitLogManagerBenchmarkTest {
         String dir1 = System.getProperty("java.io.tmpdir") + "/benchmark-compare-1shard-" + System.currentTimeMillis();
         DirUtil.createIfNotExists(dir1);
         CommitLogManager manager1 = createCommitLogManager(dir1, 1, 1);
-        MessageEncoder encoder1 = new MessageEncoder(createStoreConfig(dir1).getMessageConfig());
+        MessageEncoder encoder1 = new MessageEncoder(createStoreConfig(dir1).getMessage());
         warmup(manager1, encoder1, 1);
         runMultiThreadBenchmarkWithTopics(manager1, encoder1, threads, 1, topicCount, BENCHMARK_ITERATIONS,
             "Compare-1Shard-4Threads");
@@ -305,7 +305,7 @@ public class CommitLogManagerBenchmarkTest {
         String dir5 = System.getProperty("java.io.tmpdir") + "/benchmark-compare-5shards-" + System.currentTimeMillis();
         DirUtil.createIfNotExists(dir5);
         CommitLogManager manager5 = createCommitLogManager(dir5, 5, 5);
-        MessageEncoder encoder5 = new MessageEncoder(createStoreConfig(dir5).getMessageConfig());
+        MessageEncoder encoder5 = new MessageEncoder(createStoreConfig(dir5).getMessage());
         warmup(manager5, encoder5, 5);
         runMultiThreadBenchmarkWithTopics(manager5, encoder5, threads, 5, topicCount, BENCHMARK_ITERATIONS,
             "Compare-5Shards-4Threads");
@@ -444,7 +444,7 @@ public class CommitLogManagerBenchmarkTest {
 
     private static CommitLogManager createCommitLogManager(String baseDir, int maxSharding, int shardCount, boolean bindCpu) {
         StoreConfig storeConfig = createStoreConfig(baseDir);
-        CommitConfig commitConfig = storeConfig.getCommitConfig();
+        CommitConfig commitConfig = storeConfig.getCommit();
         commitConfig.setMaxShardingNumber(maxSharding);
         commitConfig.setShardingNumber(shardCount);
 
@@ -463,7 +463,7 @@ public class CommitLogManagerBenchmarkTest {
 
     private static StoreConfig createStoreConfig(String dir) {
         StoreConfig storeConfig = ConfigMock.createStoreConfig(dir);
-        storeConfig.getCommitConfig().setFileSize(MMAP_FILE_SIZE);
+        storeConfig.getCommit().setFileSize(MMAP_FILE_SIZE);
         return storeConfig;
     }
 

@@ -24,7 +24,7 @@ class NextOffsetSetterTest {
         Path tempDir = Files.createTempDirectory("mq-next-offset");
         StoreConfig storeConfig = ConfigMock.createStoreConfig(tempDir.toString());
         storeConfig.setGroupNo(1);
-        storeConfig.getMetaConfig().setEnableOffsetCheckInSlave(false);
+        storeConfig.getMeta().setEnableOffsetCheckInSlave(false);
 
         ConsumeQueueManager consumeQueue = mock(ConsumeQueueManager.class);
         when(consumeQueue.existsQueue("TOPIC_A", 0)).thenReturn(false);

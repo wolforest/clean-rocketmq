@@ -25,8 +25,8 @@ class SystemTopicRegisterTest {
     @Test
     void register_ShouldPutSystemTopicsWithExpectedSettings() {
         StoreConfig storeConfig = ConfigMock.createStoreConfig(tempDir.toString());
-        storeConfig.getTopicConfig().setTimerQueueNum(3);
-        storeConfig.getTopicConfig().setReviveQueueNum(2);
+        storeConfig.getTopic().setTimerQueueNum(3);
+        storeConfig.getTopic().setReviveQueueNum(2);
 
         TopicService topicService = mock(TopicService.class);
         SystemTopicRegister register = new SystemTopicRegister(storeConfig, topicService);

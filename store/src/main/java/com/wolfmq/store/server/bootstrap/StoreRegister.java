@@ -37,7 +37,7 @@ public class StoreRegister implements Lifecycle {
     ) {
         this.topicServiceSupplier = topicServiceSupplier;
         this.registryClient = new DefaultRegistryClient(
-            storeConfig.getRpcClientConfig(),
+            storeConfig.getRpcClient(),
             storeConfig.getRegistryAddress(),
             nettyClient
         );

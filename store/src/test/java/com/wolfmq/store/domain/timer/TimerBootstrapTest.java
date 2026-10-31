@@ -24,10 +24,10 @@ class TimerBootstrapTest {
     @Test
     void initialize_ShouldRegisterTimerBeans(@TempDir Path tempDir) throws Exception {
         StoreConfig storeConfig = ConfigMock.createStoreConfig(tempDir.toString());
-        storeConfig.getTimerConfig().setTimerLogFileSize(1024);
-        storeConfig.getTimerConfig().setTotalSlots(8);
-        storeConfig.getTimerConfig().setWheelSlots(4);
-        storeConfig.getTimerConfig().setPrecision(1000);
+        storeConfig.getTimer().setTimerLogFileSize(1024);
+        storeConfig.getTimer().setTotalSlots(8);
+        storeConfig.getTimer().setWheelSlots(4);
+        storeConfig.getTimer().setPrecision(1000);
 
         StorePath.initPath(tempDir.toString());
         MessageService messageService = mock(MessageService.class);

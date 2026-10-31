@@ -24,7 +24,7 @@ class OffsetServiceTest {
     @Test
     void getOffsetReturnsBufferedOffsetWhenHigher() {
         StoreConfig storeConfig = new StoreConfig();
-        storeConfig.setMessageConfig(new MessageConfig());
+        storeConfig.setMessage(new MessageConfig());
 
         CommitLog commitLog = mock(CommitLog.class);
         AckService ackService = mock(AckService.class);
@@ -58,7 +58,7 @@ class OffsetServiceTest {
     @Test
     void getOffsetUsesMinOffsetWhenConsumeFromStart() {
         StoreConfig storeConfig = new StoreConfig();
-        storeConfig.setMessageConfig(new MessageConfig());
+        storeConfig.setMessage(new MessageConfig());
 
         CommitLog commitLog = mock(CommitLog.class);
         AckService ackService = mock(AckService.class);
@@ -95,7 +95,7 @@ class OffsetServiceTest {
     @Test
     void updateOffsetLocksOrderAndUpdatesConsumeOffset() {
         StoreConfig storeConfig = new StoreConfig();
-        storeConfig.setMessageConfig(new MessageConfig());
+        storeConfig.setMessage(new MessageConfig());
 
         CommitLog commitLog = mock(CommitLog.class);
         AckService ackService = mock(AckService.class);

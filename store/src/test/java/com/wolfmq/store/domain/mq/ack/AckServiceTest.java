@@ -3,8 +3,6 @@ package com.wolfmq.store.domain.mq.ack;
 import com.wolfmq.domain.config.business.MessageConfig;
 import com.wolfmq.domain.config.server.StoreConfig;
 import com.wolfmq.domain.domain.consumer.ack.AckBuffer;
-import com.wolfmq.domain.domain.consumer.ack.AckInfo;
-import com.wolfmq.domain.domain.consumer.ack.store.AckMessage;
 import com.wolfmq.domain.domain.consumer.consume.pop.checkpoint.PopCheckPoint;
 import com.wolfmq.domain.domain.consumer.consume.pop.checkpoint.PopCheckPointWrapper;
 import com.wolfmq.store.domain.mq.queue.EnqueueService;
@@ -21,7 +19,7 @@ class AckServiceTest {
         MessageConfig messageConfig = new MessageConfig();
         messageConfig.setEnablePopBufferMerge(false);
         StoreConfig storeConfig = new StoreConfig();
-        storeConfig.setMessageConfig(messageConfig);
+        storeConfig.setMessage(messageConfig);
 
         AckBuffer ackBuffer = new AckBuffer(messageConfig);
         EnqueueService enqueueService = mock(EnqueueService.class);

@@ -18,7 +18,7 @@ public class CommitLogFactoryTest {
     void setUp() {
         StoreConfig storeConfig = new StoreConfig();
         CommitConfig commitConfig = new CommitConfig();
-        storeConfig.setCommitConfig(commitConfig);
+        storeConfig.setCommit(commitConfig);
         CheckPoint checkpoint = mock(CheckPoint.class);
         factory = new CommitLogFactory(storeConfig, checkpoint, mock(AllocateMappedFileService.class));
     }
