@@ -1,4 +1,4 @@
-package com.wolfmq.domain.domain.commitlog;
+package com.wolfmq.domain.domain.commitlog.route;
 
 public enum ShardingStrategy {
     BY_TOPIC,

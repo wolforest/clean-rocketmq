@@ -23,7 +23,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class InsertBenchmarkTest {
+public class InsertBenchmark {
     public static int MMAP_FILE_SIZE = 1024 * 1024 * 1024;
 
     public static void main(String[] args) {

@@ -5,7 +5,7 @@ import com.wolfmq.domain.config.server.StoreConfig;
 import com.wolfmq.domain.config.store.CommitConfig;
 import com.wolfmq.domain.config.store.ConsumeQueueConfig;
 import com.wolfmq.domain.domain.meta.service.TopicService;
-import com.wolfmq.store.domain.commitlog.sharding.OffsetCodec;
+import com.wolfmq.domain.domain.commitlog.route.OffsetCodec;
 import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueFactory;
 import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueProxy;
 import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueFlusher;

@@ -11,7 +11,6 @@ import com.wolfmq.domain.config.store.StorePath;
 import com.wolfmq.domain.server.store.api.CommitLogStore;
 import com.wolfmq.domain.test.ConfigMock;
 import com.wolfmq.domain.domain.meta.service.TopicService;
-import com.wolfmq.store.domain.commitlog.log.CommitLogProxy;
 import com.wolfmq.store.infra.file.AllocateMappedFileService;
 import com.wolfmq.store.server.bootstrap.StoreCheckpoint;
 import java.nio.file.Path;

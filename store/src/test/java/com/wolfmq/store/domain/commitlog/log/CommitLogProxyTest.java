@@ -7,6 +7,7 @@ import com.wolfmq.domain.domain.mq.dto.EnqueueFuture;
 import com.wolfmq.domain.core.mmap.InsertResult;
 import com.wolfmq.domain.core.mmap.SelectedMappedBuffer;
 import com.wolfmq.domain.test.MessageMock;
+import com.wolfmq.store.domain.commitlog.CommitLogProxy;
 import com.wolfmq.store.domain.commitlog.sharding.TopicPartitioner;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

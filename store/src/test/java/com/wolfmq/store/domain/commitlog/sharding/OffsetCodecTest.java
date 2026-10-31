@@ -1,5 +1,6 @@
 package com.wolfmq.store.domain.commitlog.sharding;
 
+import com.wolfmq.domain.domain.commitlog.route.OffsetCodec;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

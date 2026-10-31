@@ -1,4 +1,4 @@
-package com.wolfmq.store.domain.commitlog.log;
+package com.wolfmq.store.domain.commitlog;
 
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.util.lang.collection.CollectionUtil;

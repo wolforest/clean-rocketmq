@@ -3,7 +3,7 @@ package com.wolfmq.store.domain.consumequeue.service;
 import com.wolfmq.domain.config.store.ConsumeQueueConfig;
 import com.wolfmq.domain.domain.consumequeue.ConsumeQueue;
 import com.wolfmq.domain.server.store.CheckPoint;
-import com.wolfmq.store.domain.commitlog.sharding.OffsetCodec;
+import com.wolfmq.domain.domain.commitlog.route.OffsetCodec;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

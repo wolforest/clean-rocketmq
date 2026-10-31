@@ -13,7 +13,7 @@ import com.wolfmq.domain.core.mmap.MappedFileQueue;
 import com.wolfmq.domain.test.ConfigMock;
 import com.wolfmq.domain.test.MessageMock;
 import com.wolfmq.store.domain.commitlog.flush.policy.EmptyCommitLogFlushPolicy;
-import com.wolfmq.store.domain.commitlog.log.CommitLogProxy;
+import com.wolfmq.store.domain.commitlog.CommitLogProxy;
 import com.wolfmq.store.domain.commitlog.log.DefaultCommitLog;
 import com.wolfmq.store.domain.commitlog.sharding.TopicPartitioner;
 import com.wolfmq.store.infra.file.DefaultMappedFileQueue;
@@ -26,7 +26,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Slf4j
-public class CommitLogManagerBenchmarkTest {
+public class CommitLogManagerBenchmark {
     public static int MMAP_FILE_SIZE = 1024 * 1024 * 1024;
     public static int MESSAGE_SIZE = 1024;
     public static int WARMUP_ITERATIONS = 1000;

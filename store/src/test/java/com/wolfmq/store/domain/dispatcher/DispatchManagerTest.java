@@ -2,7 +2,7 @@ package com.wolfmq.store.domain.dispatcher;
 
 import com.wolfmq.domain.config.store.CommitConfig;
 import com.wolfmq.domain.domain.commitlog.CommitLog;
-import com.wolfmq.store.domain.commitlog.log.CommitLogProxy;
+import com.wolfmq.store.domain.commitlog.CommitLogProxy;
 import com.wolfmq.domain.server.store.CheckPoint;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

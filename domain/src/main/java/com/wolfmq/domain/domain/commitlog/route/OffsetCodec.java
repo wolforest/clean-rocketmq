@@ -1,4 +1,4 @@
-package com.wolfmq.store.domain.commitlog.sharding;
+package com.wolfmq.domain.domain.commitlog.route;
 
 public class OffsetCodec {
     private final int shardId;

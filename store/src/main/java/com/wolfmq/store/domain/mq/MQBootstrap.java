@@ -5,7 +5,7 @@ import com.wolfmq.domain.config.server.StoreConfig;
 import com.wolfmq.domain.core.lock.queue.DequeueLock;
 import com.wolfmq.domain.server.store.api.MQStore;
 import com.wolfmq.domain.domain.commitlog.CommitLog;
-import com.wolfmq.store.domain.commitlog.log.CommitLogProxy;
+import com.wolfmq.store.domain.commitlog.CommitLogProxy;
 import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueProxy;
 import com.wolfmq.domain.domain.meta.service.ConsumeOffsetService;
 import com.wolfmq.domain.domain.meta.service.ConsumeOrderService;

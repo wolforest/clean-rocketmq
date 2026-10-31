@@ -9,7 +9,6 @@ import com.wolfmq.domain.domain.meta.service.TopicService;
 import com.wolfmq.domain.server.store.CheckPoint;
 import com.wolfmq.store.api.CommitLogStoreImpl;
 import com.wolfmq.store.domain.commitlog.log.CommitLogFactory;
-import com.wolfmq.store.domain.commitlog.log.CommitLogProxy;
 import com.wolfmq.store.domain.commitlog.sharding.TopicPartitioner;
 import com.wolfmq.store.infra.file.AllocateMappedFileService;
 import cn.coderule.common.convention.container.ApplicationContext;

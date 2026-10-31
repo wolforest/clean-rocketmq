@@ -4,7 +4,7 @@ import cn.coderule.common.convention.service.Lifecycle;
 import com.wolfmq.domain.config.store.CommitConfig;
 import com.wolfmq.domain.domain.commitlog.CommitLog;
 import com.wolfmq.domain.server.store.CheckPoint;
-import com.wolfmq.store.domain.commitlog.log.CommitLogProxy;
+import com.wolfmq.store.domain.commitlog.CommitLogProxy;
 import java.util.ArrayList;
 import java.util.List;
 

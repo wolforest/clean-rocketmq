@@ -7,7 +7,7 @@ import com.wolfmq.domain.core.mmap.MappedFile;
 import com.wolfmq.domain.core.mmap.MappedFileQueue;
 import com.wolfmq.domain.server.store.CheckPoint;
 import com.wolfmq.domain.server.store.Offset;
-import com.wolfmq.store.domain.commitlog.sharding.OffsetCodec;
+import com.wolfmq.domain.domain.commitlog.route.OffsetCodec;
 import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueRegistry;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;

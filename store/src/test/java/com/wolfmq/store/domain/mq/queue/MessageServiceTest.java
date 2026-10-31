@@ -7,7 +7,7 @@ import com.wolfmq.domain.domain.consumequeue.QueueUnit;
 import com.wolfmq.domain.domain.mq.dto.DequeueResult;
 import com.wolfmq.domain.domain.message.MessageBO;
 import com.wolfmq.domain.test.MessageMock;
-import com.wolfmq.store.domain.commitlog.log.CommitLogProxy;
+import com.wolfmq.store.domain.commitlog.CommitLogProxy;
 import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueProxy;
 import java.util.List;
 import org.junit.jupiter.api.Test;
