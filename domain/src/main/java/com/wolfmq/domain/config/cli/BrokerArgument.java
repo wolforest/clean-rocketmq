@@ -6,9 +6,11 @@ import picocli.CommandLine.Option;
 
 @Data
 public class BrokerArgument implements Serializable {
-    @Option(names = {"-c", "--configFile"}, description = "config file", required = true)
+    @Option(names = {"-c", "--configFile"}, description = "config file")
     private String configFile;
 
+    @Option(names = {"-m", "--mode"}, description = "running mode")
+    private String mode;
 
     public void validate() {
 

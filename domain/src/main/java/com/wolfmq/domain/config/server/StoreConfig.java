@@ -9,6 +9,7 @@ import com.wolfmq.domain.config.business.MessageConfig;
 import com.wolfmq.domain.config.business.TimerConfig;
 import com.wolfmq.domain.config.business.TopicConfig;
 import com.wolfmq.domain.config.network.RpcClientConfig;
+import com.wolfmq.domain.config.network.RpcServerConfig;
 import com.wolfmq.domain.config.store.CommitConfig;
 import com.wolfmq.domain.config.store.ConsumeQueueConfig;
 import com.wolfmq.domain.config.store.IndexConfig;
@@ -26,11 +27,11 @@ public class StoreConfig extends ServerIdentity {
     private String host = NetworkUtil.getLocalAddress();
     private int port = ConfigAttribute.STORE_PORT;
 
+    private String rootDir = System.getProperty("user.home") + File.separator + "mq";
     /**
      *
      */
     private long serverReadyTime = 0L;
-
 
     /**
      * broker permission
@@ -64,7 +65,6 @@ public class StoreConfig extends ServerIdentity {
     private int adminQueueCapacity = 10000;
 
     private int syncFlushTimeout = 5 * 1000;
-    private String rootDir = System.getProperty("user.home") + File.separator + "mq";
 
     private int schedulerPoolSize = 1;
     private int schedulerShutdownTimeout = 3;
@@ -101,16 +101,17 @@ public class StoreConfig extends ServerIdentity {
     private boolean assignConsumeOffset = false;
 
     private Common common;
-    private MessageConfig messageConfig = new MessageConfig();
-    private TopicConfig topicConfig = new TopicConfig();
+    private MessageConfig message = new MessageConfig();
+    private TopicConfig topic = new TopicConfig();
 
-    private CommitConfig commitConfig = new CommitConfig();
-    private ConsumeQueueConfig consumeQueueConfig = new ConsumeQueueConfig();
-    private IndexConfig indexConfig = new IndexConfig();
-    private TimerConfig timerConfig = new TimerConfig();
-    private MetaConfig metaConfig = new MetaConfig();
+    private CommitConfig commit = new CommitConfig();
+    private ConsumeQueueConfig consumeQueue = new ConsumeQueueConfig();
+    private IndexConfig index = new IndexConfig();
+    private TimerConfig timer = new TimerConfig();
+    private MetaConfig meta = new MetaConfig();
 
-    private RpcClientConfig rpcClientConfig = new RpcClientConfig();
+    private RpcClientConfig rpcClient = new RpcClientConfig();
+    private RpcServerConfig rpcServer = new RpcServerConfig();
 
     public SocketAddress getHostAddress() {
         return new InetSocketAddress(host, port);

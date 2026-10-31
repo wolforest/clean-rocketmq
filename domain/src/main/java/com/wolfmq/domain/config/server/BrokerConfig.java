@@ -67,15 +67,15 @@ public class BrokerConfig extends ServerIdentity implements Serializable {
     private long serverReadyTime = 0L;
 
     private Common common;
-    private MessageConfig messageConfig = new MessageConfig();
-    private TopicConfig topicConfig = new TopicConfig();
-    private TimerConfig timerConfig = new TimerConfig();
-    private TransactionConfig transactionConfig = new TransactionConfig();
-    private TaskConfig taskConfig = new TaskConfig();
+    private MessageConfig message = new MessageConfig();
+    private TopicConfig topic = new TopicConfig();
+    private TimerConfig timer = new TimerConfig();
+    private TransactionConfig transaction = new TransactionConfig();
+    private TaskConfig task = new TaskConfig();
 
-    private GrpcConfig grpcConfig = new GrpcConfig();
-    private RpcClientConfig rpcClientConfig = new RpcClientConfig();
-    private RpcServerConfig rpcServerConfig = new RpcServerConfig();
+    private GrpcConfig grpc = new GrpcConfig();
+    private RpcClientConfig rpcClient = new RpcClientConfig();
+    private RpcServerConfig rpcServer = new RpcServerConfig();
 
     public SocketAddress getHostAddress() {
         return new InetSocketAddress(host, port);

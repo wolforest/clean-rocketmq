@@ -27,7 +27,7 @@ public class PopContext implements Serializable {
 
     public PopContext(BrokerConfig brokerConfig, PopRequest request) {
         this.brokerConfig = brokerConfig;
-        this.messageConfig = brokerConfig.getMessageConfig();
+        this.messageConfig = brokerConfig.getMessage();
 
         this.request = request;
 

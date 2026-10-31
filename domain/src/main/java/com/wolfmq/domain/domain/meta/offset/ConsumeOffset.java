@@ -52,7 +52,7 @@ public class ConsumeOffset implements Serializable {
 
     public void setStoreConfig(StoreConfig storeConfig) {
         this.storeConfig = storeConfig;
-        this.metaConfig = storeConfig.getMetaConfig();
+        this.metaConfig = storeConfig.getMeta();
     }
 
     public boolean containsResetOffset(String group, String topic, int queueId) {

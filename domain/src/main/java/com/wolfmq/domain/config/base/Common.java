@@ -10,20 +10,20 @@ import lombok.Data;
  */
 @Data
 public class Common implements Serializable {
-    private Integer rpcPort;
-    private Integer grpcPort;
-    private Integer amqpPort;
+    protected Integer rpcPort;
+    protected Integer grpcPort;
+    protected Integer amqpPort;
 
-    private Integer storePort;
-    private Integer haPort;
+    protected Integer storePort;
+    protected Integer haPort;
 
-    private String flushType;
+    protected String flushType;
 
-    private Boolean enableCommitLogSharding;
-    private Integer commitLogShardingNum;
-    private Boolean enableCommitLogCache;
+    protected Boolean enableCommitLogSharding;
+    protected Integer commitLogShardingNum;
+    protected Boolean enableCommitLogCache;
 
-    private Boolean enableDisruptor;
+    protected Boolean enableDisruptor;
 
-    private Integer mmapFileSize;
+    protected Integer mmapFileSize;
 }
