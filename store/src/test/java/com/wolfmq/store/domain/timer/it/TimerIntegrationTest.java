@@ -132,7 +132,7 @@ class TimerIntegrationTest {
         ConsumeQueueFlusher flusher = new ConsumeQueueFlusher(cqConfig);
         ConsumeQueueLoader loader = new ConsumeQueueLoader(cqConfig);
         OffsetCodec offsetCodec = new OffsetCodec(commitConfig.getMaxShardingNumber());
-        ConsumeQueueRecovery recovery = new ConsumeQueueRecovery(cqConfig, checkpoint, offsetCodec);
+        ConsumeQueueRecovery recovery = new ConsumeQueueRecovery(cqConfig, checkpoint);
 
         ConsumeQueueFactory factory = new ConsumeQueueFactory(cqConfig, topicService, checkpoint);
         factory.addCreateHook(flusher);
