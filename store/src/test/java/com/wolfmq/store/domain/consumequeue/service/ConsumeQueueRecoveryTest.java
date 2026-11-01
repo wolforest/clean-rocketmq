@@ -22,7 +22,7 @@ public class ConsumeQueueRecoveryTest {
         config = new ConsumeQueueConfig();
         checkPoint = mock(CheckPoint.class);
         offsetCodec = mock(OffsetCodec.class);
-        recovery = new ConsumeQueueRecovery(config, checkPoint, offsetCodec);
+        recovery = new ConsumeQueueRecovery(config, checkPoint);
     }
 
     @Test
