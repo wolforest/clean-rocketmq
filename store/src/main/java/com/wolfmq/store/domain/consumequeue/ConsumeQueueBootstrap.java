@@ -5,7 +5,6 @@ import com.wolfmq.domain.config.server.StoreConfig;
 import com.wolfmq.domain.config.store.CommitConfig;
 import com.wolfmq.domain.config.store.ConsumeQueueConfig;
 import com.wolfmq.domain.domain.meta.service.TopicService;
-import com.wolfmq.domain.domain.commitlog.route.OffsetCodec;
 import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueFactory;
 import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueProxy;
 import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueFlusher;
@@ -21,6 +20,8 @@ public class ConsumeQueueBootstrap implements Lifecycle {
     private final ApplicationContext context;
 
     private ConsumeQueueConfig consumeQueueConfig;
+    private CommitConfig commitConfig;
+
     private ConsumeQueueFlusher flusher;
     private ConsumeQueueLoader loader;
     private ConsumeQueueRecovery recovery;
@@ -54,19 +55,19 @@ public class ConsumeQueueBootstrap implements Lifecycle {
     private void initConfig() {
         StoreConfig storeConfig = context.getBean(StoreConfig.class);
         consumeQueueConfig = storeConfig.getConsumeQueue();
+        commitConfig = storeConfig.getCommit();
     }
 
     private void initConsumeQueue() {
         flusher = new ConsumeQueueFlusher(consumeQueueConfig);
         loader = new ConsumeQueueLoader(consumeQueueConfig);
+        CheckPoint checkPoint = context.getBean(CheckPoint.class);
 
-        CommitConfig commitConfig = context.getBean(StoreConfig.class).getCommit();
-        OffsetCodec offsetCodec = new OffsetCodec(commitConfig.getMaxShardingNumber());
-        recovery = new ConsumeQueueRecovery(consumeQueueConfig, context.getBean(CheckPoint.class), offsetCodec);
+        recovery = new ConsumeQueueRecovery(consumeQueueConfig, checkPoint);
 
         ConsumeQueueFactory consumeQueueFactory = initConsumeQueueFactory();
         consumeQueueProxy = new ConsumeQueueProxy(consumeQueueFactory);
-        context.register(consumeQueueProxy, ConsumeQueueProxy.class);
+        context.register(consumeQueueProxy);
     }
 
     private ConsumeQueueFactory initConsumeQueueFactory() {
