@@ -10,7 +10,7 @@ import com.wolfmq.domain.config.store.StorePath;
 import com.wolfmq.domain.domain.meta.service.TopicService;
 import com.wolfmq.domain.test.ConfigMock;
 import com.wolfmq.store.domain.commitlog.CommitLogProxy;
-import com.wolfmq.store.domain.commitlog.sharding.TopicPartitioner;
+import com.wolfmq.store.domain.commitlog.route.TopicPartitioner;
 import com.wolfmq.store.server.bootstrap.StoreCheckpoint;
 import java.nio.file.Path;
 import org.junit.jupiter.api.AfterEach;

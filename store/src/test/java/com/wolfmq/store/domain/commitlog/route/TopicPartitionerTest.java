@@ -1,4 +1,4 @@
-package com.wolfmq.store.domain.commitlog.sharding;
+package com.wolfmq.store.domain.commitlog.route;
 
 import com.wolfmq.domain.config.store.CommitConfig;
 import org.junit.jupiter.api.BeforeEach;

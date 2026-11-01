@@ -15,7 +15,7 @@ import com.wolfmq.domain.test.MessageMock;
 import com.wolfmq.store.domain.commitlog.flush.policy.EmptyCommitLogFlushPolicy;
 import com.wolfmq.store.domain.commitlog.CommitLogProxy;
 import com.wolfmq.store.domain.commitlog.log.DefaultCommitLog;
-import com.wolfmq.store.domain.commitlog.sharding.TopicPartitioner;
+import com.wolfmq.store.domain.commitlog.route.TopicPartitioner;
 import com.wolfmq.store.infra.file.DefaultMappedFileQueue;
 import java.util.concurrent.ExecutionException;
 import lombok.extern.slf4j.Slf4j;

@@ -12,7 +12,7 @@ import com.wolfmq.domain.test.ConfigMock;
 import com.wolfmq.store.api.CommitLogStoreImpl;
 import com.wolfmq.store.domain.commitlog.log.CommitLogFactory;
 import com.wolfmq.store.domain.commitlog.CommitLogProxy;
-import com.wolfmq.store.domain.commitlog.sharding.TopicPartitioner;
+import com.wolfmq.store.domain.commitlog.route.TopicPartitioner;
 import com.wolfmq.store.infra.file.AllocateMappedFileService;
 import com.wolfmq.store.server.bootstrap.StoreCheckpoint;
 import org.junit.jupiter.api.AfterEach;

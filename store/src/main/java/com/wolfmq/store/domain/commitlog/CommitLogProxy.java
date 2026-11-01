@@ -10,7 +10,7 @@ import com.wolfmq.domain.domain.commitlog.CommitLog;
 import com.wolfmq.domain.domain.mq.dto.EnqueueFuture;
 import com.wolfmq.domain.core.mmap.InsertResult;
 import com.wolfmq.domain.core.mmap.SelectedMappedBuffer;
-import com.wolfmq.store.domain.commitlog.sharding.TopicPartitioner;
+import com.wolfmq.store.domain.commitlog.route.TopicPartitioner;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;

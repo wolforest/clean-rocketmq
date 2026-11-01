@@ -15,7 +15,7 @@ import com.wolfmq.domain.test.ConfigMock;
 import com.wolfmq.store.domain.commitlog.log.CommitLogFactory;
 import com.wolfmq.store.domain.commitlog.CommitLogProxy;
 import com.wolfmq.domain.domain.commitlog.route.OffsetCodec;
-import com.wolfmq.store.domain.commitlog.sharding.TopicPartitioner;
+import com.wolfmq.store.domain.commitlog.route.TopicPartitioner;
 import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueFactory;
 import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueProxy;
 import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueFlusher;
