@@ -7,7 +7,6 @@ import com.wolfmq.domain.core.mmap.MappedFile;
 import com.wolfmq.domain.core.mmap.MappedFileQueue;
 import com.wolfmq.domain.server.store.CheckPoint;
 import com.wolfmq.domain.server.store.Offset;
-import com.wolfmq.domain.domain.commitlog.route.OffsetCodec;
 import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueRegistry;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -21,14 +20,12 @@ import lombok.extern.slf4j.Slf4j;
 public class ConsumeQueueRecovery implements ConsumeQueueRegistry {
     private final ConsumeQueueConfig config;
     private final CheckPoint checkPoint;
-    private final OffsetCodec offsetCodec;
 
     private final Set<ConsumeQueue> queueSet = new LinkedHashSet<>(128);
 
-    public ConsumeQueueRecovery(ConsumeQueueConfig config, CheckPoint checkPoint, OffsetCodec offsetCodec) {
+    public ConsumeQueueRecovery(ConsumeQueueConfig config, CheckPoint checkPoint) {
         this.config = config;
         this.checkPoint = checkPoint;
-        this.offsetCodec = offsetCodec;
     }
     @Override
     public void register(ConsumeQueue queue) {
@@ -139,6 +136,7 @@ public class ConsumeQueueRecovery implements ConsumeQueueRegistry {
         }
 
         mappedFile.setInsertOffset(maxOffset);
+        queue.setMaxOffset(maxOffset);
         queue.setMaxCommitOffset(unit.getCommitOffset());
     }
 
