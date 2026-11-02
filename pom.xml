@@ -30,7 +30,6 @@
     <properties>
         <revision>1.0.0-SNAPSHOT</revision>
         <maven.compiler.enablePreview>true</maven.compiler.enablePreview>
-        <maven.compiler.release></maven.compiler.release>
     </properties>
 
     <dependencyManagement>
