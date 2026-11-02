@@ -1,6 +1,6 @@
 package com.wolfmq.broker.infra.embed;
 
-import com.wolfmq.domain.server.store.api.meta.AckStore;
+import com.wolfmq.common.server.store.api.meta.AckStore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

@@ -1,7 +1,7 @@
 package com.wolfmq.store.domain.consumequeue;
 
-import com.wolfmq.domain.domain.message.MessageBO;
-import com.wolfmq.domain.domain.commitlog.dispatch.CommitEvent;
+import com.wolfmq.common.domain.message.MessageBO;
+import com.wolfmq.common.domain.commitlog.dispatch.CommitEvent;
 import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueProxy;
 import org.junit.jupiter.api.Test;
 

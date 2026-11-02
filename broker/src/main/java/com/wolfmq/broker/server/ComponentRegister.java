@@ -13,7 +13,7 @@ import com.wolfmq.broker.infra.store.StoreBootstrap;
 import com.wolfmq.broker.infra.task.TaskBootstrap;
 import com.wolfmq.broker.server.channel.ChannelBootstrap;
 import com.wolfmq.broker.server.grpc.GrpcBootstrap;
-import com.wolfmq.domain.config.server.BrokerConfig;
+import com.wolfmq.common.config.server.BrokerConfig;
 import com.wolfmq.rpc.common.rpc.netty.NettyClient;
 import com.wolfmq.rpc.registry.route.RouteLoader;
 

@@ -1,7 +1,7 @@
 package com.wolfmq.broker.domain.timer.context;
 
-import com.wolfmq.domain.config.server.BrokerConfig;
-import com.wolfmq.domain.server.task.QueueTask;
+import com.wolfmq.common.config.server.BrokerConfig;
+import com.wolfmq.common.server.task.QueueTask;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

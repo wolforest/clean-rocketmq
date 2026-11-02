@@ -2,8 +2,8 @@ package com.wolfmq.broker.domain.transaction.check;
 
 import com.wolfmq.broker.domain.transaction.check.context.TransactionContext;
 import com.wolfmq.broker.domain.transaction.service.TransactionMessageService;
-import com.wolfmq.domain.config.server.BrokerConfig;
-import com.wolfmq.domain.server.task.QueueTask;
+import com.wolfmq.common.config.server.BrokerConfig;
+import com.wolfmq.common.server.task.QueueTask;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

@@ -1,9 +1,9 @@
 package com.wolfmq.store.domain.commitlog.vo;
 
-import com.wolfmq.domain.domain.message.MessageBO;
-import com.wolfmq.domain.domain.mq.dto.EnqueueResult;
-import com.wolfmq.domain.core.mmap.MappedFile;
-import com.wolfmq.domain.domain.message.codec.MessageEncoder;
+import com.wolfmq.common.domain.message.MessageBO;
+import com.wolfmq.common.domain.mq.dto.EnqueueResult;
+import com.wolfmq.common.core.mmap.MappedFile;
+import com.wolfmq.common.domain.message.codec.MessageEncoder;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

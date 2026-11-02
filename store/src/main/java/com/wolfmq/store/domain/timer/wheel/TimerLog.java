@@ -1,10 +1,10 @@
 package com.wolfmq.store.domain.timer.wheel;
 
 import cn.coderule.common.convention.ability.Flushable;
-import com.wolfmq.domain.core.mmap.SelectedMappedBuffer;
-import com.wolfmq.domain.domain.timer.wheel.Block;
-import com.wolfmq.domain.core.mmap.MappedFile;
-import com.wolfmq.domain.core.mmap.MappedFileQueue;
+import com.wolfmq.common.core.mmap.SelectedMappedBuffer;
+import com.wolfmq.common.domain.timer.wheel.Block;
+import com.wolfmq.common.core.mmap.MappedFile;
+import com.wolfmq.common.core.mmap.MappedFileQueue;
 import com.wolfmq.store.infra.file.DefaultMappedFileQueue;
 import java.nio.ByteBuffer;
 import lombok.extern.slf4j.Slf4j;

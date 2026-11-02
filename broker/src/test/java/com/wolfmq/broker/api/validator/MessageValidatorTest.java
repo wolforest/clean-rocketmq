@@ -1,13 +1,13 @@
 package com.wolfmq.broker.api.validator;
 
-import com.wolfmq.domain.config.business.MessageConfig;
-import com.wolfmq.domain.config.business.TimerConfig;
-import com.wolfmq.domain.config.business.TopicConfig;
-import com.wolfmq.domain.config.server.BrokerConfig;
-import com.wolfmq.domain.domain.message.property.MessageConst;
-import com.wolfmq.domain.core.exception.InvalidRequestException;
-import com.wolfmq.domain.domain.message.MessageBO;
-import com.wolfmq.domain.test.MessageMock;
+import com.wolfmq.common.config.business.MessageConfig;
+import com.wolfmq.common.config.business.TimerConfig;
+import com.wolfmq.common.config.business.TopicConfig;
+import com.wolfmq.common.config.server.BrokerConfig;
+import com.wolfmq.common.domain.message.property.MessageConst;
+import com.wolfmq.common.core.exception.InvalidRequestException;
+import com.wolfmq.common.domain.message.MessageBO;
+import com.wolfmq.common.test.MessageMock;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

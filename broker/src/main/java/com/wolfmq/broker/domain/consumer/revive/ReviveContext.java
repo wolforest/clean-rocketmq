@@ -1,17 +1,17 @@
 package com.wolfmq.broker.domain.consumer.revive;
 
-import com.wolfmq.domain.config.business.MessageConfig;
-import com.wolfmq.domain.config.business.TopicConfig;
-import com.wolfmq.domain.config.server.BrokerConfig;
+import com.wolfmq.common.config.business.MessageConfig;
+import com.wolfmq.common.config.business.TopicConfig;
+import com.wolfmq.common.config.server.BrokerConfig;
 import com.wolfmq.rpc.store.facade.MQFacade;
 import com.wolfmq.rpc.store.facade.ConsumeOffsetFacade;
 import com.wolfmq.rpc.store.facade.SubscriptionFacade;
 import com.wolfmq.rpc.store.facade.TopicFacade;
 import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueProxy;
-import com.wolfmq.domain.domain.meta.service.ConsumeOffsetService;
-import com.wolfmq.domain.domain.meta.service.SubscriptionService;
-import com.wolfmq.domain.domain.meta.service.TopicService;
-import com.wolfmq.domain.domain.mq.MQService;
+import com.wolfmq.common.domain.meta.service.ConsumeOffsetService;
+import com.wolfmq.common.domain.meta.service.SubscriptionService;
+import com.wolfmq.common.domain.meta.service.TopicService;
+import com.wolfmq.common.domain.mq.MQService;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

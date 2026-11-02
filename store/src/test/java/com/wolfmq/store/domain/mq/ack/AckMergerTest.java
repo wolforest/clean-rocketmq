@@ -1,7 +1,7 @@
 package com.wolfmq.store.domain.mq.ack;
 
-import com.wolfmq.domain.config.business.MessageConfig;
-import com.wolfmq.domain.domain.consumer.ack.AckBuffer;
+import com.wolfmq.common.config.business.MessageConfig;
+import com.wolfmq.common.domain.consumer.ack.AckBuffer;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

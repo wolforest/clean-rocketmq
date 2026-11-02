@@ -1,9 +1,9 @@
 package com.wolfmq.store.api;
 
-import com.wolfmq.domain.domain.meta.topic.Topic;
-import com.wolfmq.domain.domain.meta.topic.TopicRequest;
-import com.wolfmq.domain.server.store.api.meta.TopicStore;
-import com.wolfmq.domain.domain.meta.service.TopicService;
+import com.wolfmq.common.domain.meta.topic.Topic;
+import com.wolfmq.common.domain.meta.topic.TopicRequest;
+import com.wolfmq.common.server.store.api.meta.TopicStore;
+import com.wolfmq.common.domain.meta.service.TopicService;
 
 public class TopicStoreImpl implements TopicStore {
     private final TopicService topicService;

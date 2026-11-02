@@ -1,7 +1,7 @@
 package com.wolfmq.broker.infra.remote;
 
 import com.wolfmq.rpc.registry.route.RouteLoader;
-import com.wolfmq.domain.config.server.BrokerConfig;
+import com.wolfmq.common.config.server.BrokerConfig;
 
 public class RemoteLoadBalance {
     private final BrokerConfig brokerConfig;

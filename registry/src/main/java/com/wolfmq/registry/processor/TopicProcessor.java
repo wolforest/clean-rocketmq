@@ -1,7 +1,7 @@
 package com.wolfmq.registry.processor;
 
 import cn.coderule.common.util.lang.string.StringUtil;
-import com.wolfmq.domain.config.server.RegistryConfig;
+import com.wolfmq.common.config.server.RegistryConfig;
 import com.wolfmq.registry.domain.store.service.RegistryTopicService;
 import com.wolfmq.rpc.common.rpc.RpcProcessor;
 import com.wolfmq.rpc.common.rpc.core.exception.RemotingCommandException;

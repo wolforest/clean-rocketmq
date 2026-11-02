@@ -1,6 +1,6 @@
 package com.wolfmq.rpc.broker.rpc.protocol.body;
 
-import com.wolfmq.domain.core.constant.code.LanguageCode;
+import com.wolfmq.common.core.constant.code.LanguageCode;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

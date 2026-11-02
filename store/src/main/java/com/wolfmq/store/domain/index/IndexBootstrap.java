@@ -1,7 +1,7 @@
 package com.wolfmq.store.domain.index;
 
 import cn.coderule.common.convention.service.Lifecycle;
-import com.wolfmq.domain.config.server.StoreConfig;
+import com.wolfmq.common.config.server.StoreConfig;
 import com.wolfmq.store.domain.dispatcher.CommitHandlerManager;
 import cn.coderule.common.convention.container.ApplicationContext;
 import lombok.extern.slf4j.Slf4j;

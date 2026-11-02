@@ -1,10 +1,10 @@
 package com.wolfmq.store.domain.consumequeue.queue;
 
-import com.wolfmq.domain.domain.consumequeue.QueueType;
-import com.wolfmq.domain.domain.commitlog.dispatch.CommitEvent;
-import com.wolfmq.domain.domain.consumequeue.QueueUnit;
-import com.wolfmq.domain.domain.consumequeue.ConsumeQueue;
-import com.wolfmq.domain.core.mmap.MappedFileQueue;
+import com.wolfmq.common.domain.consumequeue.QueueType;
+import com.wolfmq.common.domain.commitlog.dispatch.CommitEvent;
+import com.wolfmq.common.domain.consumequeue.QueueUnit;
+import com.wolfmq.common.domain.consumequeue.ConsumeQueue;
+import com.wolfmq.common.core.mmap.MappedFileQueue;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentMap;

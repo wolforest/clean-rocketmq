@@ -1,7 +1,7 @@
 package com.wolfmq.store.domain.timer.wheel;
 
-import com.wolfmq.domain.config.business.TimerConfig;
-import com.wolfmq.domain.config.server.StoreConfig;
+import com.wolfmq.common.config.business.TimerConfig;
+import com.wolfmq.common.config.server.StoreConfig;
 import com.wolfmq.store.domain.mq.queue.MessageService;
 import com.wolfmq.store.domain.timer.service.CheckpointService;
 import lombok.extern.slf4j.Slf4j;

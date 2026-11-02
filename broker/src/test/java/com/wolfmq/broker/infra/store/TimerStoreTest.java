@@ -2,8 +2,8 @@ package com.wolfmq.broker.infra.store;
 
 import com.wolfmq.broker.infra.embed.EmbedTimerStore;
 import com.wolfmq.broker.infra.remote.RemoteTimerStore;
-import com.wolfmq.domain.config.server.BrokerConfig;
-import com.wolfmq.domain.domain.timer.state.TimerCheckpoint;
+import com.wolfmq.common.config.server.BrokerConfig;
+import com.wolfmq.common.domain.timer.state.TimerCheckpoint;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;

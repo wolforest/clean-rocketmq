@@ -1,6 +1,6 @@
 package com.wolfmq.store.domain.timer.wheel;
 
-import com.wolfmq.domain.domain.timer.wheel.Slot;
+import com.wolfmq.common.domain.timer.wheel.Slot;
 import java.nio.file.Path;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;

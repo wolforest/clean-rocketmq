@@ -1,8 +1,8 @@
 package com.wolfmq.broker.domain.producer;
 
 import cn.coderule.common.util.lang.collection.CollectionUtil;
-import com.wolfmq.domain.domain.producer.ProduceContext;
-import com.wolfmq.domain.domain.producer.hook.ProduceHook;
+import com.wolfmq.common.domain.producer.ProduceContext;
+import com.wolfmq.common.domain.producer.hook.ProduceHook;
 import java.util.ArrayList;
 import java.util.List;
 

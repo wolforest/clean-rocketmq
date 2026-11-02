@@ -1,9 +1,9 @@
 package com.wolfmq.broker.infra.embed;
 
-import com.wolfmq.domain.domain.meta.topic.Topic;
-import com.wolfmq.domain.domain.meta.topic.TopicRequest;
+import com.wolfmq.common.domain.meta.topic.Topic;
+import com.wolfmq.common.domain.meta.topic.TopicRequest;
 import com.wolfmq.rpc.store.facade.TopicFacade;
-import com.wolfmq.domain.server.store.api.meta.TopicStore;
+import com.wolfmq.common.server.store.api.meta.TopicStore;
 import java.util.concurrent.CompletableFuture;
 
 public class EmbedTopicStore extends AbstractEmbedStore implements TopicFacade {

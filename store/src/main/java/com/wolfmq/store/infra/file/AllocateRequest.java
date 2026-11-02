@@ -1,6 +1,6 @@
 package com.wolfmq.store.infra.file;
 
-import com.wolfmq.domain.core.mmap.MappedFile;
+import com.wolfmq.common.core.mmap.MappedFile;
 import java.io.File;
 import java.util.concurrent.CountDownLatch;
 import lombok.Data;

@@ -1,7 +1,7 @@
 package com.wolfmq.store.infra.file;
 
-import com.wolfmq.domain.core.mmap.MappedFile;
-import com.wolfmq.domain.core.mmap.MappedFileQueue;
+import com.wolfmq.common.core.mmap.MappedFile;
+import com.wolfmq.common.core.mmap.MappedFileQueue;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;

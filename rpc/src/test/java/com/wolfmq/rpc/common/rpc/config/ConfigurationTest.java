@@ -1,6 +1,6 @@
 package com.wolfmq.rpc.common.rpc.config;
 
-import com.wolfmq.domain.config.network.RpcServerConfig;
+import com.wolfmq.common.config.network.RpcServerConfig;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

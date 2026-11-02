@@ -1,8 +1,8 @@
 package com.wolfmq.store.server.ha;
 
 import cn.coderule.common.convention.service.Lifecycle;
-import com.wolfmq.domain.domain.mq.dto.EnqueueFuture;
-import com.wolfmq.domain.domain.mq.dto.EnqueueResult;
+import com.wolfmq.common.domain.mq.dto.EnqueueFuture;
+import com.wolfmq.common.domain.mq.dto.EnqueueResult;
 import com.wolfmq.store.server.ha.client.HAClient;
 import com.wolfmq.store.server.ha.core.HAContext;
 import com.wolfmq.store.server.ha.core.monitor.StateMonitor;

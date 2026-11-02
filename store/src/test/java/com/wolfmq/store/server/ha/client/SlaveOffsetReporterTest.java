@@ -1,7 +1,7 @@
 package com.wolfmq.store.server.ha.client;
 
-import com.wolfmq.domain.config.server.StoreConfig;
-import com.wolfmq.domain.server.store.api.CommitLogStore;
+import com.wolfmq.common.config.server.StoreConfig;
+import com.wolfmq.common.server.store.api.CommitLogStore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

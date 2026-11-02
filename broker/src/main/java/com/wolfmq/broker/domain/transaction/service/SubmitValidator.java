@@ -1,11 +1,11 @@
 package com.wolfmq.broker.domain.transaction.service;
 
-import com.wolfmq.domain.config.business.TransactionConfig;
-import com.wolfmq.domain.domain.message.property.MessageConst;
-import com.wolfmq.domain.core.constant.code.InvalidCode;
-import com.wolfmq.domain.core.exception.InvalidRequestException;
-import com.wolfmq.domain.domain.message.MessageBO;
-import com.wolfmq.domain.domain.transaction.SubmitRequest;
+import com.wolfmq.common.config.business.TransactionConfig;
+import com.wolfmq.common.domain.message.property.MessageConst;
+import com.wolfmq.common.core.constant.code.InvalidCode;
+import com.wolfmq.common.core.exception.InvalidRequestException;
+import com.wolfmq.common.domain.message.MessageBO;
+import com.wolfmq.common.domain.transaction.SubmitRequest;
 
 public class SubmitValidator {
     private final TransactionConfig transactionConfig;

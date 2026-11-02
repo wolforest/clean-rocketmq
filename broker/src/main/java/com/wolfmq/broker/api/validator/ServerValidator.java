@@ -1,8 +1,8 @@
 package com.wolfmq.broker.api.validator;
 
-import com.wolfmq.domain.config.server.BrokerConfig;
-import com.wolfmq.domain.core.constant.code.InvalidCode;
-import com.wolfmq.domain.core.exception.InvalidParameterException;
+import com.wolfmq.common.config.server.BrokerConfig;
+import com.wolfmq.common.core.constant.code.InvalidCode;
+import com.wolfmq.common.core.exception.InvalidParameterException;
 
 public class ServerValidator {
     private final BrokerConfig brokerConfig;

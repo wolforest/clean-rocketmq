@@ -3,12 +3,12 @@ package com.wolfmq.broker.domain.producer;
 import cn.coderule.common.util.encrypt.HashUtil;
 import cn.coderule.common.util.lang.string.StringUtil;
 import com.wolfmq.broker.domain.meta.RouteService;
-import com.wolfmq.domain.core.constant.code.BrokerExceptionCode;
-import com.wolfmq.domain.core.exception.BrokerException;
-import com.wolfmq.domain.domain.mq.MessageQueue;
-import com.wolfmq.domain.domain.message.MessageBO;
-import com.wolfmq.domain.server.selector.MessageQueueView;
-import com.wolfmq.domain.server.RequestContext;
+import com.wolfmq.common.core.constant.code.BrokerExceptionCode;
+import com.wolfmq.common.core.exception.BrokerException;
+import com.wolfmq.common.domain.mq.MessageQueue;
+import com.wolfmq.common.domain.message.MessageBO;
+import com.wolfmq.common.server.selector.MessageQueueView;
+import com.wolfmq.common.server.RequestContext;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 

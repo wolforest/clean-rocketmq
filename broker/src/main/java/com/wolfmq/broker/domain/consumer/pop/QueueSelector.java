@@ -2,15 +2,15 @@ package com.wolfmq.broker.domain.consumer.pop;
 
 import cn.coderule.common.util.lang.string.StringUtil;
 import com.wolfmq.broker.domain.meta.RouteService;
-import com.wolfmq.domain.config.server.BrokerConfig;
-import com.wolfmq.domain.core.constant.code.BrokerExceptionCode;
-import com.wolfmq.domain.core.exception.BrokerException;
-import com.wolfmq.domain.domain.mq.MessageQueue;
-import com.wolfmq.domain.server.selector.MessageQueueSelector;
-import com.wolfmq.domain.server.selector.MessageQueueView;
-import com.wolfmq.domain.domain.consumer.consume.pop.PopContext;
-import com.wolfmq.domain.domain.consumer.consume.pop.PopRequest;
-import com.wolfmq.domain.domain.meta.topic.KeyBuilder;
+import com.wolfmq.common.config.server.BrokerConfig;
+import com.wolfmq.common.core.constant.code.BrokerExceptionCode;
+import com.wolfmq.common.core.exception.BrokerException;
+import com.wolfmq.common.domain.mq.MessageQueue;
+import com.wolfmq.common.server.selector.MessageQueueSelector;
+import com.wolfmq.common.server.selector.MessageQueueView;
+import com.wolfmq.common.domain.consumer.consume.pop.PopContext;
+import com.wolfmq.common.domain.consumer.consume.pop.PopRequest;
+import com.wolfmq.common.domain.meta.topic.KeyBuilder;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class QueueSelector {

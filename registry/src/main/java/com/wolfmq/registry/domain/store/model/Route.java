@@ -1,11 +1,11 @@
 package com.wolfmq.registry.domain.store.model;
 
 import cn.coderule.common.util.lang.collection.MapUtil;
-import com.wolfmq.domain.domain.meta.topic.Topic;
-import com.wolfmq.domain.domain.meta.DataVersion;
-import com.wolfmq.domain.server.registry.GroupInfo;
-import com.wolfmq.domain.server.registry.StoreInfo;
-import com.wolfmq.domain.domain.meta.statictopic.TopicQueueMappingInfo;
+import com.wolfmq.common.domain.meta.topic.Topic;
+import com.wolfmq.common.domain.meta.DataVersion;
+import com.wolfmq.common.server.registry.GroupInfo;
+import com.wolfmq.common.server.registry.StoreInfo;
+import com.wolfmq.common.domain.meta.statictopic.TopicQueueMappingInfo;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;

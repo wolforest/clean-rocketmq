@@ -5,7 +5,7 @@ import cn.coderule.common.lang.concurrent.thread.DefaultThreadFactory;
 import cn.coderule.common.util.lang.ThreadUtil;
 import com.wolfmq.broker.api.ConsumerController;
 import com.wolfmq.broker.api.ProducerController;
-import com.wolfmq.domain.config.server.BrokerConfig;
+import com.wolfmq.common.config.server.BrokerConfig;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;

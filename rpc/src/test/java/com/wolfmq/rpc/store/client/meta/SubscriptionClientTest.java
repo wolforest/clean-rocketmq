@@ -1,7 +1,6 @@
 package com.wolfmq.rpc.store.client.meta;
 
-import com.wolfmq.domain.domain.meta.subscription.SubscriptionGroup;
-import com.wolfmq.domain.domain.meta.subscription.SubscriptionRequest;
+import com.wolfmq.common.domain.meta.subscription.SubscriptionRequest;
 import com.wolfmq.rpc.common.rpc.RpcClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

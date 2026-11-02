@@ -1,15 +1,15 @@
 package com.wolfmq.store.domain.mq.queue;
 
-import com.wolfmq.domain.config.business.MessageConfig;
-import com.wolfmq.domain.config.server.StoreConfig;
-import com.wolfmq.domain.domain.message.enums.MessageStatus;
-import com.wolfmq.domain.core.lock.queue.DequeueLock;
-import com.wolfmq.domain.domain.consumer.consume.InflightCounter;
-import com.wolfmq.domain.domain.message.MessageBO;
-import com.wolfmq.domain.domain.mq.dto.DequeueRequest;
-import com.wolfmq.domain.domain.mq.dto.DequeueResult;
-import com.wolfmq.domain.domain.meta.service.ConsumeOrderService;
-import com.wolfmq.domain.test.MessageMock;
+import com.wolfmq.common.config.business.MessageConfig;
+import com.wolfmq.common.config.server.StoreConfig;
+import com.wolfmq.common.domain.message.enums.MessageStatus;
+import com.wolfmq.common.core.lock.queue.DequeueLock;
+import com.wolfmq.common.domain.consumer.consume.InflightCounter;
+import com.wolfmq.common.domain.message.MessageBO;
+import com.wolfmq.common.domain.mq.dto.DequeueRequest;
+import com.wolfmq.common.domain.mq.dto.DequeueResult;
+import com.wolfmq.common.domain.meta.service.ConsumeOrderService;
+import com.wolfmq.common.test.MessageMock;
 import com.wolfmq.store.domain.mq.ack.AckService;
 import java.util.List;
 import org.junit.jupiter.api.Test;

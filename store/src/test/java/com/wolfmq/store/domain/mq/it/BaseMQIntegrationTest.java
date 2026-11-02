@@ -3,18 +3,18 @@ package com.wolfmq.store.domain.mq.it;
 
 import cn.coderule.common.convention.container.ApplicationContext;
 
-import com.wolfmq.domain.config.server.StoreConfig;
-import com.wolfmq.domain.config.store.CommitConfig;
-import com.wolfmq.domain.config.store.ConsumeQueueConfig;
-import com.wolfmq.domain.domain.commitlog.CommitLog;
-import com.wolfmq.domain.domain.meta.service.ConsumeOffsetService;
-import com.wolfmq.domain.domain.meta.service.ConsumeOrderService;
-import com.wolfmq.domain.domain.meta.service.TopicService;
-import com.wolfmq.domain.server.store.CheckPoint;
-import com.wolfmq.domain.test.ConfigMock;
+import com.wolfmq.common.config.server.StoreConfig;
+import com.wolfmq.common.config.store.CommitConfig;
+import com.wolfmq.common.config.store.ConsumeQueueConfig;
+import com.wolfmq.common.domain.commitlog.CommitLog;
+import com.wolfmq.common.domain.meta.service.ConsumeOffsetService;
+import com.wolfmq.common.domain.meta.service.ConsumeOrderService;
+import com.wolfmq.common.domain.meta.service.TopicService;
+import com.wolfmq.common.server.store.CheckPoint;
+import com.wolfmq.common.test.ConfigMock;
 import com.wolfmq.store.domain.commitlog.log.CommitLogFactory;
 import com.wolfmq.store.domain.commitlog.CommitLogProxy;
-import com.wolfmq.domain.domain.commitlog.route.OffsetCodec;
+import com.wolfmq.common.domain.commitlog.route.OffsetCodec;
 import com.wolfmq.store.domain.commitlog.route.TopicPartitioner;
 import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueFactory;
 import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueProxy;

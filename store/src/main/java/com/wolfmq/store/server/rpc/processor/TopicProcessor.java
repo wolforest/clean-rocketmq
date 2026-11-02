@@ -1,12 +1,12 @@
 package com.wolfmq.store.server.rpc.processor;
 
 import cn.coderule.common.util.lang.string.StringUtil;
-import com.wolfmq.domain.config.business.TopicConfig;
-import com.wolfmq.domain.core.constant.MQConstants;
-import com.wolfmq.domain.domain.message.enums.MessageType;
-import com.wolfmq.domain.domain.meta.topic.Topic;
-import com.wolfmq.domain.server.store.api.meta.TopicStore;
-import com.wolfmq.domain.domain.meta.topic.TopicValidator;
+import com.wolfmq.common.config.business.TopicConfig;
+import com.wolfmq.common.core.constant.MQConstants;
+import com.wolfmq.common.domain.message.enums.MessageType;
+import com.wolfmq.common.domain.meta.topic.Topic;
+import com.wolfmq.common.server.store.api.meta.TopicStore;
+import com.wolfmq.common.domain.meta.topic.TopicValidator;
 import com.wolfmq.rpc.common.rpc.RpcProcessor;
 import com.wolfmq.rpc.common.rpc.core.exception.RemotingCommandException;
 import com.wolfmq.rpc.common.rpc.core.invoke.RpcCommand;
@@ -15,7 +15,7 @@ import com.wolfmq.rpc.common.rpc.netty.service.helper.NettyHelper;
 import com.wolfmq.rpc.common.rpc.protocol.code.RequestCode;
 import com.wolfmq.rpc.common.rpc.protocol.code.ResponseCode;
 import com.wolfmq.rpc.common.rpc.protocol.codec.RpcSerializable;
-import com.wolfmq.domain.domain.meta.statictopic.TopicConfigAndQueueMapping;
+import com.wolfmq.common.domain.meta.statictopic.TopicConfigAndQueueMapping;
 import com.wolfmq.rpc.store.protocol.header.CreateTopicRequestHeader;
 import com.wolfmq.rpc.store.protocol.header.DeleteTopicRequestHeader;
 import com.wolfmq.rpc.store.protocol.header.GetAllTopicConfigResponseHeader;

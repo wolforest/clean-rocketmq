@@ -1,10 +1,10 @@
 package com.wolfmq.store.infra.file;
 
 import cn.coderule.common.util.io.FileUtil;
-import com.wolfmq.domain.core.mmap.InsertStatus;
-import com.wolfmq.domain.core.mmap.InsertResult;
-import com.wolfmq.domain.core.mmap.SelectedMappedBuffer;
-import com.wolfmq.domain.domain.meta.offset.OffsetUtils;
+import com.wolfmq.common.core.mmap.InsertStatus;
+import com.wolfmq.common.core.mmap.InsertResult;
+import com.wolfmq.common.core.mmap.SelectedMappedBuffer;
+import com.wolfmq.common.domain.meta.offset.OffsetUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;

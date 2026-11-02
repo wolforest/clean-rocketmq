@@ -3,18 +3,18 @@ package com.wolfmq.store.domain.commitlog.it;
 
 import cn.coderule.common.convention.container.ApplicationContext;
 
-import com.wolfmq.domain.config.server.StoreConfig;
-import com.wolfmq.domain.config.store.CommitConfig;
-import com.wolfmq.domain.server.store.api.CommitLogStore;
-import com.wolfmq.domain.domain.commitlog.CommitLog;
-import com.wolfmq.domain.server.store.CheckPoint;
-import com.wolfmq.domain.core.mmap.InsertResult;
-import com.wolfmq.domain.core.mmap.SelectedMappedBuffer;
-import com.wolfmq.domain.test.ConfigMock;
+import com.wolfmq.common.config.server.StoreConfig;
+import com.wolfmq.common.config.store.CommitConfig;
+import com.wolfmq.common.server.store.api.CommitLogStore;
+import com.wolfmq.common.domain.commitlog.CommitLog;
+import com.wolfmq.common.server.store.CheckPoint;
+import com.wolfmq.common.core.mmap.InsertResult;
+import com.wolfmq.common.core.mmap.SelectedMappedBuffer;
+import com.wolfmq.common.test.ConfigMock;
 import com.wolfmq.store.api.CommitLogStoreImpl;
 import com.wolfmq.store.domain.commitlog.log.CommitLogFactory;
 import com.wolfmq.store.domain.commitlog.CommitLogProxy;
-import com.wolfmq.domain.domain.commitlog.route.OffsetCodec;
+import com.wolfmq.common.domain.commitlog.route.OffsetCodec;
 import com.wolfmq.store.domain.commitlog.route.TopicPartitioner;
 import com.wolfmq.store.infra.file.AllocateMappedFileService;
 import com.wolfmq.store.server.bootstrap.StoreCheckpoint;

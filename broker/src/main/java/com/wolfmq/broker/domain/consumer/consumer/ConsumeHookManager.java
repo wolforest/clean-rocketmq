@@ -1,8 +1,8 @@
 package com.wolfmq.broker.domain.consumer.consumer;
 
 import cn.coderule.common.util.lang.collection.CollectionUtil;
-import com.wolfmq.domain.domain.consumer.consume.ConsumeContext;
-import com.wolfmq.domain.domain.consumer.hook.ConsumeHook;
+import com.wolfmq.common.domain.consumer.consume.ConsumeContext;
+import com.wolfmq.common.domain.consumer.hook.ConsumeHook;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -2,8 +2,8 @@ package com.wolfmq.registry.server.rpc;
 
 import cn.coderule.common.convention.container.ApplicationContext;
 import cn.coderule.common.convention.service.Lifecycle;
-import com.wolfmq.domain.config.network.RpcServerConfig;
-import com.wolfmq.domain.config.server.RegistryConfig;
+import com.wolfmq.common.config.network.RpcServerConfig;
+import com.wolfmq.common.config.server.RegistryConfig;
 import com.wolfmq.registry.domain.store.service.ChannelCloser;
 import com.wolfmq.registry.processor.ClusterProcessor;
 import com.wolfmq.registry.processor.KVProcessor;

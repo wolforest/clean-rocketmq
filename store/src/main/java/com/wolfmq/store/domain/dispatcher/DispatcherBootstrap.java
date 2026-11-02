@@ -1,9 +1,9 @@
 package com.wolfmq.store.domain.dispatcher;
 
 import cn.coderule.common.convention.service.Lifecycle;
-import com.wolfmq.domain.config.server.StoreConfig;
-import com.wolfmq.domain.config.store.CommitConfig;
-import com.wolfmq.domain.server.store.CheckPoint;
+import com.wolfmq.common.config.server.StoreConfig;
+import com.wolfmq.common.config.store.CommitConfig;
+import com.wolfmq.common.server.store.CheckPoint;
 import com.wolfmq.store.domain.commitlog.CommitLogProxy;
 import cn.coderule.common.convention.container.ApplicationContext;
 

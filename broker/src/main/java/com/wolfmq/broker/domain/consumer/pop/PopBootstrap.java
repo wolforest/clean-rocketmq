@@ -10,8 +10,8 @@ import com.wolfmq.broker.domain.meta.RouteService;
 import com.wolfmq.broker.infra.store.MQStore;
 import com.wolfmq.broker.infra.store.SubscriptionStore;
 import com.wolfmq.broker.infra.store.TopicStore;
-import com.wolfmq.domain.config.server.BrokerConfig;
-import com.wolfmq.domain.domain.consumer.receipt.ReceiptHandler;
+import com.wolfmq.common.config.server.BrokerConfig;
+import com.wolfmq.common.domain.consumer.receipt.ReceiptHandler;
 
 public class PopBootstrap implements Lifecycle {
     private final ApplicationContext context;

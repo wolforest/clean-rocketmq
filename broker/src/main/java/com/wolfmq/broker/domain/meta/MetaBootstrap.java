@@ -1,6 +1,6 @@
 package com.wolfmq.broker.domain.meta;
 
-import com.wolfmq.domain.core.constant.ContextNamespace;
+import com.wolfmq.common.core.constant.ContextNamespace;
 
 import cn.coderule.common.convention.container.ApplicationContext;
 
@@ -10,9 +10,9 @@ import com.wolfmq.broker.api.RouteController;
 import com.wolfmq.broker.infra.embed.EmbedTopicStore;
 import com.wolfmq.broker.infra.store.SubscriptionStore;
 import com.wolfmq.broker.infra.store.TopicStore;
-import com.wolfmq.domain.config.server.BrokerConfig;
-import com.wolfmq.domain.config.business.TopicConfig;
-import com.wolfmq.domain.core.exception.InvalidConfigException;
+import com.wolfmq.common.config.server.BrokerConfig;
+import com.wolfmq.common.config.business.TopicConfig;
+import com.wolfmq.common.core.exception.InvalidConfigException;
 import com.wolfmq.rpc.registry.route.RouteLoader;
 
 /**

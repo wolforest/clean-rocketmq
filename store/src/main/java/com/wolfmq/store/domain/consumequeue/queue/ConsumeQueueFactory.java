@@ -1,9 +1,9 @@
 package com.wolfmq.store.domain.consumequeue.queue;
 
-import com.wolfmq.domain.config.store.ConsumeQueueConfig;
-import com.wolfmq.domain.domain.consumequeue.ConsumeQueue;
-import com.wolfmq.domain.domain.meta.service.TopicService;
-import com.wolfmq.domain.server.store.CheckPoint;
+import com.wolfmq.common.config.store.ConsumeQueueConfig;
+import com.wolfmq.common.domain.consumequeue.ConsumeQueue;
+import com.wolfmq.common.domain.meta.service.TopicService;
+import com.wolfmq.common.server.store.CheckPoint;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

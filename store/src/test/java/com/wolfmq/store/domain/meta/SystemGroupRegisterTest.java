@@ -1,8 +1,8 @@
 package com.wolfmq.store.domain.meta;
 
-import com.wolfmq.domain.core.constant.MQConstants;
-import com.wolfmq.domain.domain.meta.subscription.SubscriptionGroup;
-import com.wolfmq.domain.domain.meta.service.SubscriptionService;
+import com.wolfmq.common.core.constant.MQConstants;
+import com.wolfmq.common.domain.meta.subscription.SubscriptionGroup;
+import com.wolfmq.common.domain.meta.service.SubscriptionService;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;

@@ -5,7 +5,7 @@ import apache.rocketmq.v2.Code;
 import apache.rocketmq.v2.HeartbeatRequest;
 import apache.rocketmq.v2.HeartbeatResponse;
 import apache.rocketmq.v2.Settings;
-import com.wolfmq.domain.server.RequestContext;
+import com.wolfmq.common.server.RequestContext;
 import com.wolfmq.rpc.common.grpc.channel.GrpcChannel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

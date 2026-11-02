@@ -2,9 +2,9 @@ package com.wolfmq.broker.domain.consumer.revive;
 
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
-import com.wolfmq.domain.config.business.MessageConfig;
-import com.wolfmq.domain.domain.consumer.consume.pop.checkpoint.PopCheckPoint;
-import com.wolfmq.domain.domain.consumer.revive.ReviveBuffer;
+import com.wolfmq.common.config.business.MessageConfig;
+import com.wolfmq.common.domain.consumer.consume.pop.checkpoint.PopCheckPoint;
+import com.wolfmq.common.domain.consumer.revive.ReviveBuffer;
 import java.util.ArrayList;
 import lombok.extern.slf4j.Slf4j;
 

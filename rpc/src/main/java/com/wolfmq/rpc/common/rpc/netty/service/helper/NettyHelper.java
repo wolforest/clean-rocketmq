@@ -2,7 +2,7 @@ package com.wolfmq.rpc.common.rpc.netty.service.helper;
 
 import cn.coderule.common.util.lang.ThreadUtil;
 import cn.coderule.common.util.net.NetworkUtil;
-import com.wolfmq.domain.config.network.RpcSystemConfig;
+import com.wolfmq.common.config.network.RpcSystemConfig;
 import com.wolfmq.rpc.common.rpc.core.constant.RpcKeys;
 import com.wolfmq.rpc.common.rpc.core.invoke.RpcCommand;
 import com.wolfmq.rpc.common.rpc.core.exception.RemotingCommandException;

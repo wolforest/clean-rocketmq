@@ -1,10 +1,10 @@
 package com.wolfmq.store.domain.consumequeue.it;
 
-import com.wolfmq.domain.domain.consumequeue.QueueType;
-import com.wolfmq.domain.domain.commitlog.dispatch.CommitEvent;
-import com.wolfmq.domain.domain.consumequeue.QueueUnit;
-import com.wolfmq.domain.domain.consumequeue.ConsumeQueue;
-import com.wolfmq.domain.domain.message.MessageBO;
+import com.wolfmq.common.domain.consumequeue.QueueType;
+import com.wolfmq.common.domain.commitlog.dispatch.CommitEvent;
+import com.wolfmq.common.domain.consumequeue.QueueUnit;
+import com.wolfmq.common.domain.consumequeue.ConsumeQueue;
+import com.wolfmq.common.domain.message.MessageBO;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

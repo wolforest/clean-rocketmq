@@ -2,8 +2,8 @@ package com.wolfmq.broker.infra.store;
 
 import com.wolfmq.broker.infra.embed.EmbedAckStore;
 import com.wolfmq.broker.infra.remote.RemoteAckStore;
-import com.wolfmq.domain.config.server.BrokerConfig;
-import com.wolfmq.domain.domain.consumer.consume.pop.checkpoint.PopCheckPoint;
+import com.wolfmq.common.config.server.BrokerConfig;
+import com.wolfmq.common.domain.consumer.consume.pop.checkpoint.PopCheckPoint;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -41,9 +41,9 @@ class AckFacadeTest {
         PopCheckPoint point = mock(PopCheckPoint.class);
         when(point.getTopic()).thenReturn("testTopic");
         when(embedAckStore.containsTopic("testTopic")).thenReturn(true);
-        
+
         ackFacade.addCheckPoint(point, 1, 100L, 200L);
-        
+
         verify(embedAckStore).addCheckPoint(point, 1, 100L, 200L);
         verify(remoteAckStore, never()).addCheckPoint(any(), anyInt(), anyLong(), anyLong());
     }
@@ -54,9 +54,9 @@ class AckFacadeTest {
         when(point.getTopic()).thenReturn("testTopic");
         when(embedAckStore.containsTopic("testTopic")).thenReturn(false);
         when(brokerConfig.isEnableRemoteStore()).thenReturn(true);
-        
+
         ackFacade.addCheckPoint(point, 1, 100L, 200L);
-        
+
         verify(remoteAckStore).addCheckPoint(point, 1, 100L, 200L);
     }
 
@@ -66,9 +66,9 @@ class AckFacadeTest {
         when(point.getTopic()).thenReturn("testTopic");
         when(embedAckStore.containsTopic("testTopic")).thenReturn(false);
         when(brokerConfig.isEnableRemoteStore()).thenReturn(false);
-        
+
         ackFacade.addCheckPoint(point, 1, 100L, 200L);
-        
+
         verify(embedAckStore, never()).addCheckPoint(any(), anyInt(), anyLong(), anyLong());
         verify(remoteAckStore, never()).addCheckPoint(any(), anyInt(), anyLong(), anyLong());
     }

@@ -1,9 +1,9 @@
 package com.wolfmq.store.api;
 
-import com.wolfmq.domain.domain.timer.model.ScanResult;
-import com.wolfmq.domain.domain.timer.model.TimerEvent;
-import com.wolfmq.domain.domain.timer.state.TimerCheckpoint;
-import com.wolfmq.domain.server.store.api.TimerStore;
+import com.wolfmq.common.domain.timer.model.ScanResult;
+import com.wolfmq.common.domain.timer.model.TimerEvent;
+import com.wolfmq.common.domain.timer.state.TimerCheckpoint;
+import com.wolfmq.common.server.store.api.TimerStore;
 import com.wolfmq.store.domain.timer.service.TimerService;
 
 public class TimerStoreImpl implements TimerStore {

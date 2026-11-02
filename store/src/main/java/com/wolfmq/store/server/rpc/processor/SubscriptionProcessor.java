@@ -1,8 +1,8 @@
 package com.wolfmq.store.server.rpc.processor;
 
-import com.wolfmq.domain.domain.meta.subscription.SubscriptionGroup;
-import com.wolfmq.domain.domain.meta.subscription.SubscriptionRequest;
-import com.wolfmq.domain.server.store.api.meta.SubscriptionStore;
+import com.wolfmq.common.domain.meta.subscription.SubscriptionGroup;
+import com.wolfmq.common.domain.meta.subscription.SubscriptionRequest;
+import com.wolfmq.common.server.store.api.meta.SubscriptionStore;
 import com.wolfmq.rpc.common.rpc.RpcProcessor;
 import com.wolfmq.rpc.common.rpc.core.exception.RemotingCommandException;
 import com.wolfmq.rpc.common.rpc.core.invoke.RpcCommand;

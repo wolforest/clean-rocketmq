@@ -1,8 +1,8 @@
 package com.wolfmq.broker.domain.consumer.revive;
 
-import com.wolfmq.domain.config.business.MessageConfig;
-import com.wolfmq.domain.config.business.TopicConfig;
-import com.wolfmq.domain.config.server.BrokerConfig;
+import com.wolfmq.common.config.business.MessageConfig;
+import com.wolfmq.common.config.business.TopicConfig;
+import com.wolfmq.common.config.server.BrokerConfig;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -62,7 +62,7 @@ class ReviveContextTest {
     @Test
     void testSettersAndGetters() {
         ReviveContext context = new ReviveContext();
-        
+
         BrokerConfig brokerConfig = new BrokerConfig();
         context.setBrokerConfig(brokerConfig);
         assertEquals(brokerConfig, context.getBrokerConfig());

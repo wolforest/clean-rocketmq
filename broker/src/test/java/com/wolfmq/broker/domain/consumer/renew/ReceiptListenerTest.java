@@ -1,7 +1,7 @@
 package com.wolfmq.broker.domain.consumer.renew;
 
-import com.wolfmq.domain.core.event.ConsumerEvent;
-import com.wolfmq.domain.domain.consumer.receipt.ReceiptHandler;
+import com.wolfmq.common.core.event.ConsumerEvent;
+import com.wolfmq.common.domain.consumer.receipt.ReceiptHandler;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

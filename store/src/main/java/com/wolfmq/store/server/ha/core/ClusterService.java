@@ -3,7 +3,7 @@ package com.wolfmq.store.server.ha.core;
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.lang.concurrent.thread.DefaultThreadFactory;
 import cn.coderule.common.util.lang.ThreadUtil;
-import com.wolfmq.domain.config.server.StoreConfig;
+import com.wolfmq.common.config.server.StoreConfig;
 import com.wolfmq.store.server.bootstrap.StoreRegister;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;

@@ -1,9 +1,9 @@
 package com.wolfmq.broker.server.grpc.interceptor;
 
 import cn.coderule.common.util.lang.string.StringUtil;
-import com.wolfmq.domain.core.constant.code.InvalidCode;
-import com.wolfmq.domain.core.exception.InvalidRequestException;
-import com.wolfmq.domain.server.RequestContext;
+import com.wolfmq.common.core.constant.code.InvalidCode;
+import com.wolfmq.common.core.exception.InvalidRequestException;
+import com.wolfmq.common.server.RequestContext;
 import com.wolfmq.rpc.common.grpc.RequestPipeline;
 import com.wolfmq.rpc.common.grpc.core.constants.GrpcConstants;
 import com.google.protobuf.GeneratedMessage;

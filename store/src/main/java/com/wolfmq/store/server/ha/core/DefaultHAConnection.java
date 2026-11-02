@@ -2,8 +2,8 @@ package com.wolfmq.store.server.ha.core;
 
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.util.net.NetworkUtil;
-import com.wolfmq.domain.config.server.StoreConfig;
-import com.wolfmq.domain.config.network.RpcSystemConfig;
+import com.wolfmq.common.config.server.StoreConfig;
+import com.wolfmq.common.config.network.RpcSystemConfig;
 import com.wolfmq.store.server.ha.core.monitor.FlowMonitor;
 import com.wolfmq.store.server.ha.server.ConnectionContext;
 import com.wolfmq.store.server.ha.server.processor.SlaveOffsetReceiver;

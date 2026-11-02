@@ -1,7 +1,7 @@
 package com.wolfmq.store.domain.index;
 
-import com.wolfmq.domain.domain.index.IndexService;
-import com.wolfmq.domain.domain.index.QueryOffsetResult;
+import com.wolfmq.common.domain.index.IndexService;
+import com.wolfmq.common.domain.index.QueryOffsetResult;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 

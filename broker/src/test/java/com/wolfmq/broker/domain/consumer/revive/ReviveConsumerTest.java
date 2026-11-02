@@ -1,7 +1,7 @@
 package com.wolfmq.broker.domain.consumer.revive;
 
-import com.wolfmq.domain.config.business.MessageConfig;
-import com.wolfmq.domain.domain.mq.dto.DequeueResult;
+import com.wolfmq.common.config.business.MessageConfig;
+import com.wolfmq.common.domain.mq.dto.DequeueResult;
 import com.wolfmq.rpc.store.facade.MQFacade;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -58,7 +58,7 @@ class ReviveConsumerTest {
                 .build()
         );
 
-        com.wolfmq.domain.domain.consumer.revive.ReviveBuffer buffer = reviveConsumer.consume(0);
+        com.wolfmq.common.domain.consumer.revive.ReviveBuffer buffer = reviveConsumer.consume(0);
 
         assertNotNull(buffer);
     }
@@ -67,7 +67,7 @@ class ReviveConsumerTest {
     void testConsumeWithSkipRevive() {
         reviveConsumer.setSkipRevive(true);
 
-        com.wolfmq.domain.domain.consumer.revive.ReviveBuffer buffer = reviveConsumer.consume(0);
+        com.wolfmq.common.domain.consumer.revive.ReviveBuffer buffer = reviveConsumer.consume(0);
 
         assertNotNull(buffer);
         // Should return empty buffer immediately when skipRevive is true

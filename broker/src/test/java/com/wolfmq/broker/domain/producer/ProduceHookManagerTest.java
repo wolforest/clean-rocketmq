@@ -1,7 +1,7 @@
 package com.wolfmq.broker.domain.producer;
 
-import com.wolfmq.domain.domain.producer.ProduceContext;
-import com.wolfmq.domain.domain.producer.hook.ProduceHook;
+import com.wolfmq.common.domain.producer.ProduceContext;
+import com.wolfmq.common.domain.producer.hook.ProduceHook;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -23,7 +23,7 @@ class ProduceHookManagerTest {
         mockHook1 = mock(ProduceHook.class);
         mockHook2 = mock(ProduceHook.class);
         context = new ProduceContext();
-        
+
         when(mockHook1.hookName()).thenReturn("Hook1");
         when(mockHook2.hookName()).thenReturn("Hook2");
     }
@@ -38,7 +38,7 @@ class ProduceHookManagerTest {
     void testRegisterHook() {
         hookManager.registerHook(mockHook1);
         List<String> hookNames = hookManager.getHookNameList();
-        
+
         assertEquals(1, hookNames.size());
         assertEquals("Hook1", hookNames.get(0));
     }
@@ -48,7 +48,7 @@ class ProduceHookManagerTest {
         hookManager.registerHook(mockHook1);
         hookManager.registerHook(mockHook2);
         List<String> hookNames = hookManager.getHookNameList();
-        
+
         assertEquals(2, hookNames.size());
         assertTrue(hookNames.contains("Hook1"));
         assertTrue(hookNames.contains("Hook2"));
@@ -64,9 +64,9 @@ class ProduceHookManagerTest {
     void testPreProduceWithHooks() {
         hookManager.registerHook(mockHook1);
         hookManager.registerHook(mockHook2);
-        
+
         hookManager.preProduce(context);
-        
+
         verify(mockHook1).preProduce(context);
         verify(mockHook2).preProduce(context);
     }
@@ -81,9 +81,9 @@ class ProduceHookManagerTest {
     void testPostProduceWithHooks() {
         hookManager.registerHook(mockHook1);
         hookManager.registerHook(mockHook2);
-        
+
         hookManager.postProduce(context);
-        
+
         verify(mockHook1).postProduce(context);
         verify(mockHook2).postProduce(context);
     }

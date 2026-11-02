@@ -1,8 +1,8 @@
 package com.wolfmq.store.domain.consumequeue.service;
 
-import com.wolfmq.domain.config.store.ConsumeQueueConfig;
-import com.wolfmq.domain.domain.consumequeue.ConsumeQueue;
-import com.wolfmq.domain.core.mmap.MappedFileQueue;
+import com.wolfmq.common.config.store.ConsumeQueueConfig;
+import com.wolfmq.common.domain.consumequeue.ConsumeQueue;
+import com.wolfmq.common.core.mmap.MappedFileQueue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

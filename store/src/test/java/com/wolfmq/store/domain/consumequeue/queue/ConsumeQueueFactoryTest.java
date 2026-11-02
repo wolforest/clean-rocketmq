@@ -1,11 +1,11 @@
 package com.wolfmq.store.domain.consumequeue.queue;
 
-import com.wolfmq.domain.config.server.StoreConfig;
-import com.wolfmq.domain.config.store.ConsumeQueueConfig;
-import com.wolfmq.domain.config.store.StorePath;
-import com.wolfmq.domain.domain.consumequeue.ConsumeQueue;
-import com.wolfmq.domain.domain.meta.service.TopicService;
-import com.wolfmq.domain.test.ConfigMock;
+import com.wolfmq.common.config.server.StoreConfig;
+import com.wolfmq.common.config.store.ConsumeQueueConfig;
+import com.wolfmq.common.config.store.StorePath;
+import com.wolfmq.common.domain.consumequeue.ConsumeQueue;
+import com.wolfmq.common.domain.meta.service.TopicService;
+import com.wolfmq.common.test.ConfigMock;
 import com.wolfmq.store.server.bootstrap.StoreCheckpoint;
 import java.nio.file.Path;
 import java.util.Set;
@@ -275,16 +275,16 @@ class ConsumeQueueFactoryTest {
         }
 
         @Override
-        public com.wolfmq.domain.domain.meta.topic.Topic getTopic(String topicName) {
+        public com.wolfmq.common.domain.meta.topic.Topic getTopic(String topicName) {
             return null;
         }
 
         @Override
-        public void saveTopic(com.wolfmq.domain.domain.meta.topic.Topic topic) {
+        public void saveTopic(com.wolfmq.common.domain.meta.topic.Topic topic) {
         }
 
         @Override
-        public void putTopic(com.wolfmq.domain.domain.meta.topic.Topic topic) {
+        public void putTopic(com.wolfmq.common.domain.meta.topic.Topic topic) {
         }
 
         @Override
@@ -292,7 +292,7 @@ class ConsumeQueueFactoryTest {
         }
 
         @Override
-        public com.wolfmq.domain.domain.meta.topic.TopicMap getTopicMap() {
+        public com.wolfmq.common.domain.meta.topic.TopicMap getTopicMap() {
             return null;
         }
 

@@ -1,13 +1,13 @@
 package com.wolfmq.broker.api.validator;
 
-import com.wolfmq.domain.config.business.MessageConfig;
-import com.wolfmq.domain.config.server.BrokerConfig;
-import com.wolfmq.domain.core.constant.code.InvalidCode;
-import com.wolfmq.domain.core.exception.InvalidRequestException;
-import com.wolfmq.domain.domain.consumer.ack.broker.AckRequest;
-import com.wolfmq.domain.domain.consumer.ack.broker.InvisibleRequest;
-import com.wolfmq.domain.domain.consumer.consume.pop.PopRequest;
-import com.wolfmq.domain.domain.meta.topic.TopicValidator;
+import com.wolfmq.common.config.business.MessageConfig;
+import com.wolfmq.common.config.server.BrokerConfig;
+import com.wolfmq.common.core.constant.code.InvalidCode;
+import com.wolfmq.common.core.exception.InvalidRequestException;
+import com.wolfmq.common.domain.consumer.ack.broker.AckRequest;
+import com.wolfmq.common.domain.consumer.ack.broker.InvisibleRequest;
+import com.wolfmq.common.domain.consumer.consume.pop.PopRequest;
+import com.wolfmq.common.domain.meta.topic.TopicValidator;
 
 public class ConsumeValidator {
     private final MessageConfig messageConfig;

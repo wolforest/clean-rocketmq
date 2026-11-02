@@ -1,6 +1,6 @@
 package com.wolfmq.registry.domain.store.model;
 
-import com.wolfmq.domain.domain.meta.DataVersion;
+import com.wolfmq.common.domain.meta.DataVersion;
 import io.netty.channel.Channel;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;

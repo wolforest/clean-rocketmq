@@ -1,10 +1,10 @@
 package com.wolfmq.broker.domain.meta;
 
 import com.wolfmq.broker.infra.embed.EmbedTopicStore;
-import com.wolfmq.domain.config.business.TopicConfig;
-import com.wolfmq.domain.config.server.BrokerConfig;
-import com.wolfmq.domain.server.route.RouteInfo;
-import com.wolfmq.domain.domain.meta.topic.Topic;
+import com.wolfmq.common.config.business.TopicConfig;
+import com.wolfmq.common.config.server.BrokerConfig;
+import com.wolfmq.common.server.route.RouteInfo;
+import com.wolfmq.common.domain.meta.topic.Topic;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;

@@ -2,12 +2,12 @@ package com.wolfmq.broker.infra.task.strategy;
 
 import cn.coderule.common.util.lang.collection.CollectionUtil;
 import com.wolfmq.broker.infra.task.TaskContext;
-import com.wolfmq.domain.config.business.TopicConfig;
-import com.wolfmq.domain.config.server.BrokerConfig;
-import com.wolfmq.domain.server.task.QueueTask;
-import com.wolfmq.domain.server.task.StoreTask;
-import com.wolfmq.domain.server.task.TaskFactory;
-import com.wolfmq.domain.server.task.TaskStrategy;
+import com.wolfmq.common.config.business.TopicConfig;
+import com.wolfmq.common.config.server.BrokerConfig;
+import com.wolfmq.common.server.task.QueueTask;
+import com.wolfmq.common.server.task.StoreTask;
+import com.wolfmq.common.server.task.TaskFactory;
+import com.wolfmq.common.server.task.TaskStrategy;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;

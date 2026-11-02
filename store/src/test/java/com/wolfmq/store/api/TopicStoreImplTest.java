@@ -1,8 +1,8 @@
 package com.wolfmq.store.api;
 
-import com.wolfmq.domain.domain.meta.topic.Topic;
-import com.wolfmq.domain.domain.meta.topic.TopicRequest;
-import com.wolfmq.domain.domain.meta.service.TopicService;
+import com.wolfmq.common.domain.meta.topic.Topic;
+import com.wolfmq.common.domain.meta.topic.TopicRequest;
+import com.wolfmq.common.domain.meta.service.TopicService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

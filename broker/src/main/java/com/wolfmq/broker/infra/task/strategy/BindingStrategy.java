@@ -1,7 +1,7 @@
 package com.wolfmq.broker.infra.task.strategy;
 
 import com.wolfmq.broker.infra.task.TaskContext;
-import com.wolfmq.domain.server.task.TaskStrategy;
+import com.wolfmq.common.server.task.TaskStrategy;
 
 public class BindingStrategy implements TaskStrategy {
     private final TaskContext taskContext;

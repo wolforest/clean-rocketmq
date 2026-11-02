@@ -1,9 +1,9 @@
 package com.wolfmq.broker.infra.task;
 
-import com.wolfmq.domain.config.server.BrokerConfig;
-import com.wolfmq.domain.config.business.TaskConfig;
-import com.wolfmq.domain.server.task.StoreTask;
-import com.wolfmq.domain.server.task.TaskFactory;
+import com.wolfmq.common.config.server.BrokerConfig;
+import com.wolfmq.common.config.business.TaskConfig;
+import com.wolfmq.common.server.task.StoreTask;
+import com.wolfmq.common.server.task.TaskFactory;
 import java.io.Serializable;
 import lombok.Data;
 

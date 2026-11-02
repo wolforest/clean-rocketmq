@@ -1,9 +1,9 @@
 package com.wolfmq.store.domain.consumequeue.service;
 
-import com.wolfmq.domain.config.store.ConsumeQueueConfig;
-import com.wolfmq.domain.domain.consumequeue.ConsumeQueue;
-import com.wolfmq.domain.server.store.CheckPoint;
-import com.wolfmq.domain.domain.commitlog.route.OffsetCodec;
+import com.wolfmq.common.config.store.ConsumeQueueConfig;
+import com.wolfmq.common.domain.consumequeue.ConsumeQueue;
+import com.wolfmq.common.server.store.CheckPoint;
+import com.wolfmq.common.domain.commitlog.route.OffsetCodec;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

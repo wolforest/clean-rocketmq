@@ -1,6 +1,5 @@
 package com.wolfmq.broker.domain.consumer.revive;
 
-import com.wolfmq.domain.config.server.BrokerConfig;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

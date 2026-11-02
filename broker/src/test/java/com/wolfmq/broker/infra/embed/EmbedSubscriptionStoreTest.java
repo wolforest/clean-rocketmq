@@ -1,7 +1,7 @@
 package com.wolfmq.broker.infra.embed;
 
-import com.wolfmq.domain.domain.meta.subscription.SubscriptionGroup;
-import com.wolfmq.domain.server.store.api.meta.SubscriptionStore;
+import com.wolfmq.common.domain.meta.subscription.SubscriptionGroup;
+import com.wolfmq.common.server.store.api.meta.SubscriptionStore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

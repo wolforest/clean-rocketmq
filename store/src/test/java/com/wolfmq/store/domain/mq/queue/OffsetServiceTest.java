@@ -1,13 +1,13 @@
 package com.wolfmq.store.domain.mq.queue;
 
-import com.wolfmq.domain.config.business.MessageConfig;
-import com.wolfmq.domain.config.server.StoreConfig;
-import com.wolfmq.domain.domain.consumer.consume.ConsumeStrategy;
-import com.wolfmq.domain.domain.commitlog.CommitLog;
-import com.wolfmq.domain.domain.mq.dto.DequeueRequest;
-import com.wolfmq.domain.domain.mq.dto.DequeueResult;
-import com.wolfmq.domain.domain.meta.service.ConsumeOffsetService;
-import com.wolfmq.domain.domain.meta.service.ConsumeOrderService;
+import com.wolfmq.common.config.business.MessageConfig;
+import com.wolfmq.common.config.server.StoreConfig;
+import com.wolfmq.common.domain.consumer.consume.ConsumeStrategy;
+import com.wolfmq.common.domain.commitlog.CommitLog;
+import com.wolfmq.common.domain.mq.dto.DequeueRequest;
+import com.wolfmq.common.domain.mq.dto.DequeueResult;
+import com.wolfmq.common.domain.meta.service.ConsumeOffsetService;
+import com.wolfmq.common.domain.meta.service.ConsumeOrderService;
 import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueProxy;
 import com.wolfmq.store.domain.mq.ack.AckService;
 import org.junit.jupiter.api.Test;

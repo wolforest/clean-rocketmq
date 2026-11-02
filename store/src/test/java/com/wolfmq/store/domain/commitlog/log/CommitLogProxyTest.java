@@ -1,12 +1,12 @@
 package com.wolfmq.store.domain.commitlog.log;
 
-import com.wolfmq.domain.config.store.CommitConfig;
-import com.wolfmq.domain.domain.message.MessageBO;
-import com.wolfmq.domain.domain.commitlog.CommitLog;
-import com.wolfmq.domain.domain.mq.dto.EnqueueFuture;
-import com.wolfmq.domain.core.mmap.InsertResult;
-import com.wolfmq.domain.core.mmap.SelectedMappedBuffer;
-import com.wolfmq.domain.test.MessageMock;
+import com.wolfmq.common.config.store.CommitConfig;
+import com.wolfmq.common.domain.message.MessageBO;
+import com.wolfmq.common.domain.commitlog.CommitLog;
+import com.wolfmq.common.domain.mq.dto.EnqueueFuture;
+import com.wolfmq.common.core.mmap.InsertResult;
+import com.wolfmq.common.core.mmap.SelectedMappedBuffer;
+import com.wolfmq.common.test.MessageMock;
 import com.wolfmq.store.domain.commitlog.CommitLogProxy;
 import com.wolfmq.store.domain.commitlog.route.TopicPartitioner;
 import org.junit.jupiter.api.BeforeEach;

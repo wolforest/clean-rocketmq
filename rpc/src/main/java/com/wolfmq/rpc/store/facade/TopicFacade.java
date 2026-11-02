@@ -1,7 +1,7 @@
 package com.wolfmq.rpc.store.facade;
 
-import com.wolfmq.domain.domain.meta.topic.Topic;
-import com.wolfmq.domain.domain.meta.topic.TopicRequest;
+import com.wolfmq.common.domain.meta.topic.Topic;
+import com.wolfmq.common.domain.meta.topic.TopicRequest;
 import java.util.concurrent.CompletableFuture;
 
 public interface TopicFacade {

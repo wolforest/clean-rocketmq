@@ -2,7 +2,7 @@ package com.wolfmq.rpc.common.rpc.netty.service.helper;
 
 import cn.coderule.common.lang.concurrent.thread.DefaultThreadFactory;
 import cn.coderule.common.util.lang.ThreadUtil;
-import com.wolfmq.domain.config.network.RpcServerConfig;
+import com.wolfmq.common.config.network.RpcServerConfig;
 import com.wolfmq.rpc.common.rpc.netty.handler.RequestCodeCounter;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;

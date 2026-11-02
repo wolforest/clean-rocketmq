@@ -1,8 +1,8 @@
 package com.wolfmq.broker.infra.embed;
 
-import com.wolfmq.domain.server.store.api.MQStore;
-import com.wolfmq.domain.domain.mq.dto.EnqueueRequest;
-import com.wolfmq.domain.domain.mq.dto.EnqueueResult;
+import com.wolfmq.common.server.store.api.MQStore;
+import com.wolfmq.common.domain.mq.dto.EnqueueRequest;
+import com.wolfmq.common.domain.mq.dto.EnqueueResult;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

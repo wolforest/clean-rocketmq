@@ -1,7 +1,7 @@
 package com.wolfmq.store.infra.file;
 
-import com.wolfmq.domain.config.server.StoreConfig;
-import com.wolfmq.domain.core.mmap.MappedFile;
+import com.wolfmq.common.config.server.StoreConfig;
+import com.wolfmq.common.core.mmap.MappedFile;
 import com.wolfmq.store.infra.memory.TransientPool;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

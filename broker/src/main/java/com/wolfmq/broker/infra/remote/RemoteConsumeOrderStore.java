@@ -1,7 +1,7 @@
 package com.wolfmq.broker.infra.remote;
 
-import com.wolfmq.domain.config.server.BrokerConfig;
-import com.wolfmq.domain.domain.meta.order.OrderRequest;
+import com.wolfmq.common.config.server.BrokerConfig;
+import com.wolfmq.common.domain.meta.order.OrderRequest;
 import com.wolfmq.rpc.common.rpc.RpcClient;
 import com.wolfmq.rpc.store.facade.ConsumeOrderFacade;
 

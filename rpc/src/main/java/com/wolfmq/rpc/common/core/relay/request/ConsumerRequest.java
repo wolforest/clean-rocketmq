@@ -1,6 +1,6 @@
 package com.wolfmq.rpc.common.core.relay.request;
 
-import com.wolfmq.domain.server.RequestContext;
+import com.wolfmq.common.server.RequestContext;
 import java.io.Serializable;
 import lombok.Data;
 

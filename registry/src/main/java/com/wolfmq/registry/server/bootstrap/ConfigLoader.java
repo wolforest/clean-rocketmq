@@ -1,9 +1,9 @@
 package com.wolfmq.registry.server.bootstrap;
 
 import cn.coderule.common.convention.container.ApplicationContext;
-import com.wolfmq.domain.config.network.RpcClientConfig;
-import com.wolfmq.domain.config.network.RpcServerConfig;
-import com.wolfmq.domain.config.server.RegistryConfig;
+import com.wolfmq.common.config.network.RpcClientConfig;
+import com.wolfmq.common.config.network.RpcServerConfig;
+import com.wolfmq.common.config.server.RegistryConfig;
 
 public class ConfigLoader {
     public static void load(ApplicationContext context) {

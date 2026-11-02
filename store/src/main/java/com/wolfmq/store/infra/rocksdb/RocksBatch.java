@@ -1,6 +1,6 @@
 package com.wolfmq.store.infra.rocksdb;
 
-import com.wolfmq.domain.core.kv.KVBatch;
+import com.wolfmq.common.core.kv.KVBatch;
 import java.nio.ByteBuffer;
 import org.rocksdb.WriteBatch;
 

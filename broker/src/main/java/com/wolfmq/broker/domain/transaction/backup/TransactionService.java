@@ -1,8 +1,8 @@
 package com.wolfmq.broker.domain.transaction.backup;
 
 import com.wolfmq.rpc.common.core.relay.response.TransactionResult;
-import com.wolfmq.domain.domain.message.MessageBO;
-import com.wolfmq.domain.server.RequestContext;
+import com.wolfmq.common.domain.message.MessageBO;
+import com.wolfmq.common.server.RequestContext;
 import java.util.List;
 
 

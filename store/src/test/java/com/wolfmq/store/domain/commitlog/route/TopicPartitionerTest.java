@@ -1,6 +1,6 @@
 package com.wolfmq.store.domain.commitlog.route;
 
-import com.wolfmq.domain.config.store.CommitConfig;
+import com.wolfmq.common.config.store.CommitConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

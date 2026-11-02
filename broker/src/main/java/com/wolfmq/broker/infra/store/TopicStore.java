@@ -2,9 +2,9 @@ package com.wolfmq.broker.infra.store;
 
 import com.wolfmq.broker.infra.embed.EmbedTopicStore;
 import com.wolfmq.broker.infra.remote.RemoteTopicStore;
-import com.wolfmq.domain.config.server.BrokerConfig;
-import com.wolfmq.domain.domain.meta.topic.Topic;
-import com.wolfmq.domain.domain.meta.topic.TopicRequest;
+import com.wolfmq.common.config.server.BrokerConfig;
+import com.wolfmq.common.domain.meta.topic.Topic;
+import com.wolfmq.common.domain.meta.topic.TopicRequest;
 import com.wolfmq.rpc.store.facade.TopicFacade;
 import java.util.concurrent.CompletableFuture;
 

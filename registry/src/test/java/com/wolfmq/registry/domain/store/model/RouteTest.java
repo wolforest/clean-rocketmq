@@ -1,8 +1,8 @@
 package com.wolfmq.registry.domain.store.model;
 
-import com.wolfmq.domain.server.registry.GroupInfo;
-import com.wolfmq.domain.server.registry.StoreInfo;
-import com.wolfmq.domain.domain.meta.topic.Topic;
+import com.wolfmq.common.server.registry.GroupInfo;
+import com.wolfmq.common.server.registry.StoreInfo;
+import com.wolfmq.common.domain.meta.topic.Topic;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -231,13 +231,13 @@ public class RouteTest {
 
     @Test
     void testSaveQueueMap() {
-        com.wolfmq.domain.domain.meta.statictopic.TopicQueueMappingInfo mappingInfo =
-            new com.wolfmq.domain.domain.meta.statictopic.TopicQueueMappingInfo();
+        com.wolfmq.common.domain.meta.statictopic.TopicQueueMappingInfo mappingInfo =
+            new com.wolfmq.common.domain.meta.statictopic.TopicQueueMappingInfo();
         mappingInfo.setBname("broker-a");
 
         route.saveQueueMap("test-topic", mappingInfo);
 
-        Map<String, com.wolfmq.domain.domain.meta.statictopic.TopicQueueMappingInfo> queueMap =
+        Map<String, com.wolfmq.common.domain.meta.statictopic.TopicQueueMappingInfo> queueMap =
             route.getQueueMap("test-topic");
 
         assertNotNull(queueMap);

@@ -14,7 +14,7 @@ import com.wolfmq.broker.infra.remote.RemoteSubscriptionStore;
 import com.wolfmq.broker.infra.remote.RemoteTimerStore;
 import com.wolfmq.broker.infra.remote.RemoteTopicStore;
 import cn.coderule.common.convention.container.ApplicationContext;
-import com.wolfmq.domain.config.server.BrokerConfig;
+import com.wolfmq.common.config.server.BrokerConfig;
 
 public class StoreBootstrap implements Lifecycle {
     private final ApplicationContext context;

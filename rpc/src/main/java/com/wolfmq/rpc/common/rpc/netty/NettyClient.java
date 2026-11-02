@@ -2,7 +2,7 @@ package com.wolfmq.rpc.common.rpc.netty;
 
 import cn.coderule.common.lang.concurrent.thread.DefaultThreadFactory;
 import com.wolfmq.rpc.common.rpc.RpcClient;
-import com.wolfmq.domain.config.network.RpcClientConfig;
+import com.wolfmq.common.config.network.RpcClientConfig;
 import com.wolfmq.rpc.common.rpc.netty.codec.NettyDecoder;
 import com.wolfmq.rpc.common.rpc.netty.codec.NettyEncoder;
 import com.wolfmq.rpc.common.rpc.netty.service.NettyService;

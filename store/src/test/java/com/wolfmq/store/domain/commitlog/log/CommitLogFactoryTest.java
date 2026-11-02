@@ -1,8 +1,8 @@
 package com.wolfmq.store.domain.commitlog.log;
 
-import com.wolfmq.domain.config.server.StoreConfig;
-import com.wolfmq.domain.config.store.CommitConfig;
-import com.wolfmq.domain.server.store.CheckPoint;
+import com.wolfmq.common.config.server.StoreConfig;
+import com.wolfmq.common.config.store.CommitConfig;
+import com.wolfmq.common.server.store.CheckPoint;
 import com.wolfmq.store.infra.file.AllocateMappedFileService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

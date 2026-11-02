@@ -1,7 +1,7 @@
 package com.wolfmq.broker.domain.timer.service;
 
-import com.wolfmq.domain.domain.message.MessageBO;
-import com.wolfmq.domain.domain.timer.model.TimerEvent;
+import com.wolfmq.common.domain.message.MessageBO;
+import com.wolfmq.common.domain.timer.model.TimerEvent;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

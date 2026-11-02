@@ -5,9 +5,9 @@ import apache.rocketmq.v2.AckMessageRequest;
 import apache.rocketmq.v2.AckMessageResultEntry;
 import apache.rocketmq.v2.Code;
 import apache.rocketmq.v2.Status;
-import com.wolfmq.domain.server.RequestContext;
-import com.wolfmq.domain.domain.consumer.ack.broker.AckRequest;
-import com.wolfmq.domain.domain.consumer.ack.broker.AckResult;
+import com.wolfmq.common.server.RequestContext;
+import com.wolfmq.common.domain.consumer.ack.broker.AckRequest;
+import com.wolfmq.common.domain.consumer.ack.broker.AckResult;
 import com.wolfmq.rpc.common.grpc.response.ResponseBuilder;
 
 public class AckConverter {

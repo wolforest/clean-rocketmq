@@ -1,6 +1,6 @@
 package com.wolfmq.rpc.common.rpc.core.invoke;
 
-import com.wolfmq.domain.core.constant.code.LanguageCode;
+import com.wolfmq.common.core.constant.code.LanguageCode;
 import com.wolfmq.rpc.common.rpc.core.enums.RemotingCommandType;
 import com.wolfmq.rpc.common.rpc.core.enums.SerializeType;
 import com.wolfmq.rpc.common.rpc.core.exception.RemotingCommandException;

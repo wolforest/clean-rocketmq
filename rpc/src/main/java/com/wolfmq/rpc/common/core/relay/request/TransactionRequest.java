@@ -1,7 +1,7 @@
 package com.wolfmq.rpc.common.core.relay.request;
 
-import com.wolfmq.domain.server.RequestContext;
-import com.wolfmq.domain.domain.message.MessageBO;
+import com.wolfmq.common.server.RequestContext;
+import com.wolfmq.common.domain.message.MessageBO;
 import java.io.Serializable;
 import lombok.Data;
 

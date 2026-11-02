@@ -1,6 +1,6 @@
 package com.wolfmq.rpc.common.grpc;
 
-import com.wolfmq.domain.server.RequestContext;
+import com.wolfmq.common.server.RequestContext;
 import io.grpc.Metadata;
 import org.junit.jupiter.api.Test;
 

@@ -1,23 +1,23 @@
 package com.wolfmq.store.domain.consumequeue.it;
 
-import com.wolfmq.domain.server.store.CheckPoint;
+import com.wolfmq.common.server.store.CheckPoint;
 
 
 import cn.coderule.common.convention.container.ApplicationContext;
 
-import com.wolfmq.domain.config.server.StoreConfig;
-import com.wolfmq.domain.config.store.CommitConfig;
-import com.wolfmq.domain.config.store.ConsumeQueueConfig;
-import com.wolfmq.domain.domain.meta.topic.Topic;
-import com.wolfmq.domain.domain.consumequeue.ConsumeQueue;
-import com.wolfmq.domain.domain.meta.service.TopicService;
-import com.wolfmq.domain.test.ConfigMock;
+import com.wolfmq.common.config.server.StoreConfig;
+import com.wolfmq.common.config.store.CommitConfig;
+import com.wolfmq.common.config.store.ConsumeQueueConfig;
+import com.wolfmq.common.domain.meta.topic.Topic;
+import com.wolfmq.common.domain.consumequeue.ConsumeQueue;
+import com.wolfmq.common.domain.meta.service.TopicService;
+import com.wolfmq.common.test.ConfigMock;
 import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueFactory;
 import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueProxy;
 import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueFlusher;
 import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueLoader;
 import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueRecovery;
-import com.wolfmq.domain.domain.commitlog.route.OffsetCodec;
+import com.wolfmq.common.domain.commitlog.route.OffsetCodec;
 import com.wolfmq.store.infra.file.AllocateMappedFileService;
 import com.wolfmq.store.server.bootstrap.StoreCheckpoint;
 import org.junit.jupiter.api.AfterEach;

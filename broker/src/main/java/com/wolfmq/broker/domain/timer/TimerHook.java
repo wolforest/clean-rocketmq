@@ -1,15 +1,15 @@
 package com.wolfmq.broker.domain.timer;
 
-import com.wolfmq.domain.config.business.TimerConfig;
-import com.wolfmq.domain.config.server.BrokerConfig;
-import com.wolfmq.domain.core.constant.code.InvalidCode;
-import com.wolfmq.domain.core.exception.InvalidRequestException;
-import com.wolfmq.domain.domain.message.MessageBO;
-import com.wolfmq.domain.domain.producer.ProduceContext;
-import com.wolfmq.domain.domain.producer.hook.ProduceHook;
+import com.wolfmq.common.config.business.TimerConfig;
+import com.wolfmq.common.config.server.BrokerConfig;
+import com.wolfmq.common.core.constant.code.InvalidCode;
+import com.wolfmq.common.core.exception.InvalidRequestException;
+import com.wolfmq.common.domain.message.MessageBO;
+import com.wolfmq.common.domain.producer.ProduceContext;
+import com.wolfmq.common.domain.producer.hook.ProduceHook;
 import lombok.extern.slf4j.Slf4j;
 
-import static com.wolfmq.domain.domain.timer.model.TimerConstants.TIMER_TOPIC;
+import static com.wolfmq.common.domain.timer.model.TimerConstants.TIMER_TOPIC;
 
 @Slf4j
 public class TimerHook implements ProduceHook {

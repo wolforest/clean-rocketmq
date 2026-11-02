@@ -1,7 +1,7 @@
 package com.wolfmq.broker.server.grpc.service.consume;
 
 import com.wolfmq.broker.api.ConsumerController;
-import com.wolfmq.domain.config.server.BrokerConfig;
+import com.wolfmq.common.config.server.BrokerConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;

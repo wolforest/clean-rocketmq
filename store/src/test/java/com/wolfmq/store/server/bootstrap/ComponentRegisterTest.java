@@ -2,15 +2,15 @@ package com.wolfmq.store.server.bootstrap;
 
 import com.wolfmq.store.infra.StoreScheduler;
 
-import com.wolfmq.domain.server.store.CheckPoint;
+import com.wolfmq.common.server.store.CheckPoint;
 
 
 import cn.coderule.common.convention.container.ApplicationContext;
 
 import cn.coderule.common.convention.service.LifecycleManager;
-import com.wolfmq.domain.config.server.StoreConfig;
-import com.wolfmq.domain.config.store.StorePath;
-import com.wolfmq.domain.test.ConfigMock;
+import com.wolfmq.common.config.server.StoreConfig;
+import com.wolfmq.common.config.store.StorePath;
+import com.wolfmq.common.test.ConfigMock;
 import com.wolfmq.rpc.common.rpc.netty.NettyClient;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

@@ -3,7 +3,7 @@ package com.wolfmq.broker.server.grpc.service.channel;
 import apache.rocketmq.v2.Status;
 import apache.rocketmq.v2.TelemetryCommand;
 import com.wolfmq.broker.server.grpc.interceptor.PipelineExecutor;
-import com.wolfmq.domain.server.RequestContext;
+import com.wolfmq.common.server.RequestContext;
 import com.wolfmq.rpc.broker.grpc.ContextStreamObserver;
 import com.wolfmq.rpc.common.grpc.activity.ActivityHelper;
 import io.grpc.stub.StreamObserver;

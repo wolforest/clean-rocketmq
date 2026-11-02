@@ -1,8 +1,8 @@
 package com.wolfmq.store.infra.rocksdb;
 
-import com.wolfmq.domain.config.store.KVConfig;
-import com.wolfmq.domain.core.kv.KVDatabase;
-import com.wolfmq.domain.core.kv.KVTable;
+import com.wolfmq.common.config.store.KVConfig;
+import com.wolfmq.common.core.kv.KVDatabase;
+import com.wolfmq.common.core.kv.KVTable;
 import lombok.Getter;
 import org.rocksdb.RocksDB;
 

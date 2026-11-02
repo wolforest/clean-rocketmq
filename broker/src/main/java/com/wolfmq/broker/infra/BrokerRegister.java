@@ -1,14 +1,14 @@
 package com.wolfmq.broker.infra;
 
 import cn.coderule.common.convention.service.Lifecycle;
-import com.wolfmq.domain.config.server.BrokerConfig;
+import com.wolfmq.common.config.server.BrokerConfig;
 import com.wolfmq.rpc.common.rpc.netty.NettyClient;
 import com.wolfmq.rpc.registry.RegistryClient;
 import com.wolfmq.rpc.registry.client.DefaultRegistryClient;
-import com.wolfmq.domain.server.registry.BrokerInfo;
-import com.wolfmq.domain.server.heartbeat.HeartBeat;
-import com.wolfmq.domain.server.registry.ServerInfo;
-import com.wolfmq.domain.server.route.RouteInfo;
+import com.wolfmq.common.server.registry.BrokerInfo;
+import com.wolfmq.common.server.heartbeat.HeartBeat;
+import com.wolfmq.common.server.registry.ServerInfo;
+import com.wolfmq.common.server.route.RouteInfo;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 

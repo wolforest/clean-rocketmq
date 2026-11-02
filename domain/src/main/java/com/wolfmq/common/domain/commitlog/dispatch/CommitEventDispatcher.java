@@ -1,0 +1,9 @@
+package com.wolfmq.common.domain.commitlog.dispatch;
+
+public interface CommitEventDispatcher {
+    long getDispatchedOffset();
+    void setDispatchedOffset(long offset);
+
+    void registerHandler(CommitHandler handler);
+    void dispatch(CommitEvent event);
+}

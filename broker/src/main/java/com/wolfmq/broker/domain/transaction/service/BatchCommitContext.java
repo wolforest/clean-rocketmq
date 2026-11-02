@@ -1,6 +1,6 @@
 package com.wolfmq.broker.domain.transaction.service;
 
-import com.wolfmq.domain.domain.message.MessageBO;
+import com.wolfmq.common.domain.message.MessageBO;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;

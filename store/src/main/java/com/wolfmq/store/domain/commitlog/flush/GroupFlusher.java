@@ -1,12 +1,12 @@
 package com.wolfmq.store.domain.commitlog.flush;
 
-import com.wolfmq.domain.server.store.CheckPoint;
+import com.wolfmq.common.server.store.CheckPoint;
 import com.wolfmq.store.domain.commitlog.vo.GroupCommitRequest;
 import cn.coderule.common.util.lang.ThreadUtil;
-import com.wolfmq.domain.domain.mq.dto.EnqueueStatus;
-import com.wolfmq.domain.core.mmap.MappedFileQueue;
-import com.wolfmq.domain.core.lock.commitlog.CommitLogLock;
-import com.wolfmq.domain.core.lock.commitlog.CommitLogSpinLock;
+import com.wolfmq.common.domain.mq.dto.EnqueueStatus;
+import com.wolfmq.common.core.mmap.MappedFileQueue;
+import com.wolfmq.common.core.lock.commitlog.CommitLogLock;
+import com.wolfmq.common.core.lock.commitlog.CommitLogSpinLock;
 import java.util.LinkedList;
 import lombok.extern.slf4j.Slf4j;
 

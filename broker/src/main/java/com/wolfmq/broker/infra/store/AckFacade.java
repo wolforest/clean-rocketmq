@@ -2,10 +2,10 @@ package com.wolfmq.broker.infra.store;
 
 import com.wolfmq.broker.infra.embed.EmbedAckStore;
 import com.wolfmq.broker.infra.remote.RemoteAckStore;
-import com.wolfmq.domain.config.server.BrokerConfig;
-import com.wolfmq.domain.domain.consumer.ack.AckInfo;
-import com.wolfmq.domain.domain.consumer.consume.pop.checkpoint.PopCheckPoint;
-import com.wolfmq.domain.server.store.api.meta.AckStore;
+import com.wolfmq.common.config.server.BrokerConfig;
+import com.wolfmq.common.domain.consumer.ack.AckInfo;
+import com.wolfmq.common.domain.consumer.consume.pop.checkpoint.PopCheckPoint;
+import com.wolfmq.common.server.store.api.meta.AckStore;
 
 @Deprecated
 public class AckFacade implements AckStore {

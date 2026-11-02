@@ -1,12 +1,12 @@
 package com.wolfmq.store.api;
 
-import com.wolfmq.domain.domain.meta.offset.GroupResult;
-import com.wolfmq.domain.domain.meta.offset.OffsetFilter;
-import com.wolfmq.domain.domain.meta.offset.OffsetRequest;
-import com.wolfmq.domain.domain.meta.offset.OffsetResult;
-import com.wolfmq.domain.domain.meta.offset.TopicResult;
-import com.wolfmq.domain.server.store.api.meta.ConsumeOffsetStore;
-import com.wolfmq.domain.domain.meta.service.ConsumeOffsetService;
+import com.wolfmq.common.domain.meta.offset.GroupResult;
+import com.wolfmq.common.domain.meta.offset.OffsetFilter;
+import com.wolfmq.common.domain.meta.offset.OffsetRequest;
+import com.wolfmq.common.domain.meta.offset.OffsetResult;
+import com.wolfmq.common.domain.meta.offset.TopicResult;
+import com.wolfmq.common.server.store.api.meta.ConsumeOffsetStore;
+import com.wolfmq.common.domain.meta.service.ConsumeOffsetService;
 import java.util.Set;
 
 public class ConsumeOffsetStoreImpl implements ConsumeOffsetStore {

@@ -3,17 +3,17 @@ package com.wolfmq.broker.api;
 import com.wolfmq.broker.api.validator.GroupValidator;
 import com.wolfmq.broker.api.validator.ConsumeValidator;
 import com.wolfmq.broker.domain.consumer.Consumer;
-import com.wolfmq.domain.config.business.MessageConfig;
-import com.wolfmq.domain.config.server.BrokerConfig;
-import com.wolfmq.domain.domain.consumer.ack.broker.AckRequest;
-import com.wolfmq.domain.domain.consumer.ConsumerInfo;
-import com.wolfmq.domain.domain.consumer.ack.broker.InvisibleRequest;
-import com.wolfmq.domain.domain.consumer.consume.pop.PopRequest;
-import com.wolfmq.domain.domain.consumer.ack.broker.AckResult;
-import com.wolfmq.domain.domain.consumer.consume.pop.PopResult;
-import com.wolfmq.domain.domain.consumer.running.ConsumerGroupInfo;
-import com.wolfmq.domain.server.RequestContext;
-import com.wolfmq.domain.domain.meta.subscription.SubscriptionGroup;
+import com.wolfmq.common.config.business.MessageConfig;
+import com.wolfmq.common.config.server.BrokerConfig;
+import com.wolfmq.common.domain.consumer.ack.broker.AckRequest;
+import com.wolfmq.common.domain.consumer.ConsumerInfo;
+import com.wolfmq.common.domain.consumer.ack.broker.InvisibleRequest;
+import com.wolfmq.common.domain.consumer.consume.pop.PopRequest;
+import com.wolfmq.common.domain.consumer.ack.broker.AckResult;
+import com.wolfmq.common.domain.consumer.consume.pop.PopResult;
+import com.wolfmq.common.domain.consumer.running.ConsumerGroupInfo;
+import com.wolfmq.common.server.RequestContext;
+import com.wolfmq.common.domain.meta.subscription.SubscriptionGroup;
 import java.util.concurrent.CompletableFuture;
 
 public class ConsumerController {

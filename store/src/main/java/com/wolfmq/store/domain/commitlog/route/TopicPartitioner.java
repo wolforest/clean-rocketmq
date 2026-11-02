@@ -1,8 +1,8 @@
 package com.wolfmq.store.domain.commitlog.route;
 
 import cn.coderule.common.util.lang.string.StringUtil;
-import com.wolfmq.domain.config.store.CommitConfig;
-import com.wolfmq.domain.domain.meta.service.TopicService;
+import com.wolfmq.common.config.store.CommitConfig;
+import com.wolfmq.common.domain.meta.service.TopicService;
 
 public class TopicPartitioner {
     private final CommitConfig commitConfig;

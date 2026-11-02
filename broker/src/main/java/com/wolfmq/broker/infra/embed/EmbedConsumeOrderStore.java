@@ -1,7 +1,7 @@
 package com.wolfmq.broker.infra.embed;
 
-import com.wolfmq.domain.domain.meta.order.OrderRequest;
-import com.wolfmq.domain.server.store.api.meta.ConsumeOrderStore;
+import com.wolfmq.common.domain.meta.order.OrderRequest;
+import com.wolfmq.common.server.store.api.meta.ConsumeOrderStore;
 import com.wolfmq.rpc.store.facade.ConsumeOrderFacade;
 
 public class EmbedConsumeOrderStore extends AbstractEmbedStore implements ConsumeOrderFacade {

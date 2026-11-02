@@ -1,7 +1,7 @@
 package com.wolfmq.store.server.ha.core.monitor;
 
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
-import com.wolfmq.domain.config.server.StoreConfig;
+import com.wolfmq.common.config.server.StoreConfig;
 import java.util.concurrent.atomic.AtomicLong;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;

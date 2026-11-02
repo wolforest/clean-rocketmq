@@ -1,8 +1,8 @@
 package com.wolfmq.store.server.rpc.processor;
 
 import cn.coderule.common.util.lang.string.StringUtil;
-import com.wolfmq.domain.core.constant.MQConstants;
-import com.wolfmq.domain.server.store.api.meta.ConsumeOffsetStore;
+import com.wolfmq.common.core.constant.MQConstants;
+import com.wolfmq.common.server.store.api.meta.ConsumeOffsetStore;
 import com.wolfmq.rpc.common.rpc.RpcProcessor;
 import com.wolfmq.rpc.common.rpc.core.exception.RemotingCommandException;
 import com.wolfmq.rpc.common.rpc.core.invoke.RpcCommand;

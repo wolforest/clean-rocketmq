@@ -1,6 +1,6 @@
 package com.wolfmq.store.domain.commitlog.vo;
 
-import com.wolfmq.domain.domain.mq.dto.EnqueueStatus;
+import com.wolfmq.common.domain.mq.dto.EnqueueStatus;
 import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.CompletableFuture;

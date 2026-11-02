@@ -1,6 +1,6 @@
 package com.wolfmq.registry.domain.store.service;
 
-import com.wolfmq.domain.config.server.RegistryConfig;
+import com.wolfmq.common.config.server.RegistryConfig;
 import com.wolfmq.registry.domain.store.StoreRegistry;
 import com.wolfmq.rpc.registry.protocol.header.UnRegisterBrokerRequestHeader;
 import org.junit.jupiter.api.Test;

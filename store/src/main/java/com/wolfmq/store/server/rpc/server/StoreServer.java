@@ -1,10 +1,10 @@
 package com.wolfmq.store.server.rpc.server;
 
 import cn.coderule.common.convention.service.Lifecycle;
-import com.wolfmq.domain.config.server.StoreConfig;
+import com.wolfmq.common.config.server.StoreConfig;
 import com.wolfmq.rpc.common.rpc.RpcProcessor;
 import com.wolfmq.rpc.common.rpc.RpcServer;
-import com.wolfmq.domain.config.network.RpcServerConfig;
+import com.wolfmq.common.config.network.RpcServerConfig;
 import com.wolfmq.rpc.common.rpc.netty.NettyServer;
 import lombok.extern.slf4j.Slf4j;
 

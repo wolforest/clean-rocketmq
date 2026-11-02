@@ -2,8 +2,8 @@ package com.wolfmq.broker.server.grpc.converter;
 
 import apache.rocketmq.v2.Code;
 import apache.rocketmq.v2.SendMessageResponse;
-import com.wolfmq.domain.domain.mq.dto.EnqueueStatus;
-import com.wolfmq.domain.domain.mq.dto.EnqueueResult;
+import com.wolfmq.common.domain.mq.dto.EnqueueStatus;
+import com.wolfmq.common.domain.mq.dto.EnqueueResult;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collections;

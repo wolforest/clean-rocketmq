@@ -1,7 +1,7 @@
 package com.wolfmq.registry.domain.property;
 
-import com.wolfmq.domain.config.network.RpcServerConfig;
-import com.wolfmq.domain.config.server.RegistryConfig;
+import com.wolfmq.common.config.network.RpcServerConfig;
+import com.wolfmq.common.config.server.RegistryConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

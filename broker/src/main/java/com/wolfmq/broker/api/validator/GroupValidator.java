@@ -1,11 +1,11 @@
 package com.wolfmq.broker.api.validator;
 
 import cn.coderule.common.util.lang.string.StringUtil;
-import com.wolfmq.domain.core.constant.MQConstants;
-import com.wolfmq.domain.core.constant.code.InvalidCode;
-import com.wolfmq.domain.core.exception.InvalidParameterException;
+import com.wolfmq.common.core.constant.MQConstants;
+import com.wolfmq.common.core.constant.code.InvalidCode;
+import com.wolfmq.common.core.exception.InvalidParameterException;
 
-import static com.wolfmq.domain.domain.meta.topic.TopicValidator.isTopicOrGroupIllegal;
+import static com.wolfmq.common.domain.meta.topic.TopicValidator.isTopicOrGroupIllegal;
 
 public class GroupValidator {
     public static final int CHARACTER_MAX_LENGTH = 255;

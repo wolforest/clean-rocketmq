@@ -1,7 +1,7 @@
 package com.wolfmq.store.server.ha;
 
 import cn.coderule.common.convention.service.Lifecycle;
-import com.wolfmq.domain.config.server.StoreConfig;
+import com.wolfmq.common.config.server.StoreConfig;
 import com.wolfmq.store.server.bootstrap.StoreRegister;
 import cn.coderule.common.convention.container.ApplicationContext;
 import com.wolfmq.store.server.ha.core.ClusterService;

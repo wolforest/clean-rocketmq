@@ -1,6 +1,6 @@
 package com.wolfmq.broker.server.grpc.service.channel;
 
-import com.wolfmq.domain.config.network.GrpcConfig;
+import com.wolfmq.common.config.network.GrpcConfig;
 import com.wolfmq.rpc.common.core.relay.response.Result;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,9 +32,9 @@ class ChannelManagerTest {
     @Test
     void testAddResult() {
         CompletableFuture<Result<String>> future = new CompletableFuture<>();
-        
+
         String id = channelManager.addResult(future);
-        
+
         assertNotNull(id);
         assertFalse(id.isEmpty());
     }
@@ -43,9 +43,9 @@ class ChannelManagerTest {
     void testGetAndRemoveResult() {
         CompletableFuture<Result<String>> future = new CompletableFuture<>();
         String id = channelManager.addResult(future);
-        
+
         CompletableFuture<Result<String>> retrieved = channelManager.getAndRemoveResult(id);
-        
+
         assertNotNull(retrieved);
         assertSame(future, retrieved);
     }
@@ -60,10 +60,10 @@ class ChannelManagerTest {
     void testGetAndRemoveResultRemovesFromMap() {
         CompletableFuture<Result<String>> future = new CompletableFuture<>();
         String id = channelManager.addResult(future);
-        
+
         channelManager.getAndRemoveResult(id);
         CompletableFuture<Result<String>> secondRetrieve = channelManager.getAndRemoveResult(id);
-        
+
         assertNull(secondRetrieve);
     }
 

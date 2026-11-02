@@ -4,7 +4,7 @@ import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.lang.type.Pair;
 import cn.coderule.common.util.lang.bean.ExceptionUtil;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
-import com.wolfmq.domain.core.exception.AbortProcessException;
+import com.wolfmq.common.core.exception.AbortProcessException;
 import com.wolfmq.rpc.common.rpc.RpcHook;
 import com.wolfmq.rpc.common.rpc.RpcProcessor;
 import com.wolfmq.rpc.common.rpc.core.invoke.RequestTask;

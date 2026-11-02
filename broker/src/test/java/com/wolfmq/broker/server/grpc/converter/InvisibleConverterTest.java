@@ -4,9 +4,9 @@ import apache.rocketmq.v2.ChangeInvisibleDurationRequest;
 import apache.rocketmq.v2.ChangeInvisibleDurationResponse;
 import apache.rocketmq.v2.Code;
 import apache.rocketmq.v2.Resource;
-import com.wolfmq.domain.server.RequestContext;
-import com.wolfmq.domain.domain.consumer.ack.broker.AckResult;
-import com.wolfmq.domain.domain.consumer.ack.broker.InvisibleRequest;
+import com.wolfmq.common.server.RequestContext;
+import com.wolfmq.common.domain.consumer.ack.broker.AckResult;
+import com.wolfmq.common.domain.consumer.ack.broker.InvisibleRequest;
 import com.google.protobuf.Duration;
 import org.junit.jupiter.api.Test;
 

@@ -7,7 +7,7 @@ import cn.coderule.common.convention.service.Lifecycle;
 import com.wolfmq.rpc.common.rpc.RpcClient;
 import com.wolfmq.rpc.common.rpc.netty.NettyClient;
 import com.wolfmq.rpc.registry.route.RouteLoader;
-import com.wolfmq.domain.config.server.BrokerConfig;
+import com.wolfmq.common.config.server.BrokerConfig;
 
 public class RemoteStoreBootstrap implements Lifecycle {
     private final ApplicationContext context;

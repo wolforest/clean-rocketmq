@@ -2,13 +2,13 @@ package com.wolfmq.registry.domain.store.service;
 
 import cn.coderule.common.lang.concurrent.thread.DefaultThreadFactory;
 import cn.coderule.common.util.lang.ThreadUtil;
-import com.wolfmq.domain.config.server.RegistryConfig;
+import com.wolfmq.common.config.server.RegistryConfig;
 import com.wolfmq.registry.domain.store.StoreRegistry;
 import com.wolfmq.registry.domain.store.model.Route;
 import com.wolfmq.registry.domain.store.model.StoreHealthInfo;
 import com.wolfmq.rpc.common.rpc.netty.service.helper.NettyHelper;
-import com.wolfmq.domain.server.registry.GroupInfo;
-import com.wolfmq.domain.server.registry.StoreInfo;
+import com.wolfmq.common.server.registry.GroupInfo;
+import com.wolfmq.common.server.registry.StoreInfo;
 import com.wolfmq.rpc.registry.protocol.header.UnRegisterBrokerRequestHeader;
 import java.util.Map;
 import java.util.concurrent.ScheduledExecutorService;

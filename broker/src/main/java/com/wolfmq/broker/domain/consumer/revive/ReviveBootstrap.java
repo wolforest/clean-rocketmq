@@ -9,9 +9,9 @@ import com.wolfmq.broker.infra.store.ConsumeOffsetStore;
 import com.wolfmq.broker.infra.store.MQStore;
 import com.wolfmq.broker.infra.store.SubscriptionStore;
 import com.wolfmq.broker.infra.store.TopicStore;
-import com.wolfmq.domain.config.server.BrokerConfig;
-import com.wolfmq.domain.domain.meta.topic.KeyBuilder;
-import com.wolfmq.domain.core.event.ServerEvent;
+import com.wolfmq.common.config.server.BrokerConfig;
+import com.wolfmq.common.domain.meta.topic.KeyBuilder;
+import com.wolfmq.common.core.event.ServerEvent;
 import java.util.ArrayList;
 import java.util.List;
 

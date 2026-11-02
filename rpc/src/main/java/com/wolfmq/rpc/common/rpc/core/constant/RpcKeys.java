@@ -1,7 +1,7 @@
 package com.wolfmq.rpc.common.rpc.core.constant;
 
 import com.wolfmq.rpc.common.core.constants.HAProxyConstants;
-import com.wolfmq.domain.core.constant.code.LanguageCode;
+import com.wolfmq.common.core.constant.code.LanguageCode;
 import io.netty.util.AttributeKey;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

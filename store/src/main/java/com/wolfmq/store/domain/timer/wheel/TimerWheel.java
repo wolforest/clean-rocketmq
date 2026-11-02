@@ -4,7 +4,7 @@ import cn.coderule.common.convention.ability.Flushable;
 import cn.coderule.common.util.io.DirUtil;
 import cn.coderule.common.util.io.FileUtil;
 import cn.coderule.common.util.lang.ByteUtil;
-import com.wolfmq.domain.domain.timer.wheel.Slot;
+import com.wolfmq.common.domain.timer.wheel.Slot;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;

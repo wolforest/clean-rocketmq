@@ -3,7 +3,7 @@ package com.wolfmq.rpc.common.rpc.config;
 
 import cn.coderule.common.util.io.FileUtil;
 import cn.coderule.common.util.lang.bean.BeanUtil;
-import com.wolfmq.domain.domain.meta.DataVersion;
+import com.wolfmq.common.domain.meta.DataVersion;
 import com.alibaba.fastjson2.JSON;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;

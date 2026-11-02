@@ -1,6 +1,6 @@
 package com.wolfmq.store.server.ha.server;
 
-import com.wolfmq.domain.config.server.StoreConfig;
+import com.wolfmq.common.config.server.StoreConfig;
 import com.wolfmq.store.server.ha.server.processor.CommitLogSynchronizer;
 import java.util.concurrent.atomic.AtomicLong;
 

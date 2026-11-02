@@ -1,17 +1,17 @@
 package com.wolfmq.broker.domain.producer;
 
 import com.wolfmq.broker.domain.transaction.Transaction;
-import com.wolfmq.domain.config.server.BrokerConfig;
-import com.wolfmq.domain.domain.message.property.MessageConst;
-import com.wolfmq.domain.domain.mq.dto.EnqueueStatus;
-import com.wolfmq.domain.core.constant.code.InvalidCode;
-import com.wolfmq.domain.core.exception.InvalidParameterException;
-import com.wolfmq.domain.domain.mq.MessageQueue;
-import com.wolfmq.domain.server.RequestContext;
-import com.wolfmq.domain.domain.message.MessageBO;
-import com.wolfmq.domain.domain.meta.topic.Topic;
-import com.wolfmq.domain.domain.mq.dto.EnqueueRequest;
-import com.wolfmq.domain.domain.mq.dto.EnqueueResult;
+import com.wolfmq.common.config.server.BrokerConfig;
+import com.wolfmq.common.domain.message.property.MessageConst;
+import com.wolfmq.common.domain.mq.dto.EnqueueStatus;
+import com.wolfmq.common.core.constant.code.InvalidCode;
+import com.wolfmq.common.core.exception.InvalidParameterException;
+import com.wolfmq.common.domain.mq.MessageQueue;
+import com.wolfmq.common.server.RequestContext;
+import com.wolfmq.common.domain.message.MessageBO;
+import com.wolfmq.common.domain.meta.topic.Topic;
+import com.wolfmq.common.domain.mq.dto.EnqueueRequest;
+import com.wolfmq.common.domain.mq.dto.EnqueueResult;
 
 import com.wolfmq.rpc.store.facade.MQFacade;
 import com.wolfmq.rpc.store.facade.TopicFacade;

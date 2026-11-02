@@ -1,14 +1,14 @@
 package com.wolfmq.store.domain.mq.ack;
 
-import com.wolfmq.domain.core.lock.queue.DequeueLock;
-import com.wolfmq.domain.domain.meta.service.ConsumeOffsetService;
-import com.wolfmq.domain.domain.meta.service.ConsumeOrderService;
-import com.wolfmq.domain.domain.consumer.ack.AckConverter;
-import com.wolfmq.domain.domain.consumer.ack.AckInfo;
-import com.wolfmq.domain.domain.consumer.ack.broker.AckResult;
-import com.wolfmq.domain.domain.consumer.ack.store.AckMessage;
-import com.wolfmq.domain.domain.consumer.consume.InflightCounter;
-import com.wolfmq.domain.domain.meta.order.OrderRequest;
+import com.wolfmq.common.core.lock.queue.DequeueLock;
+import com.wolfmq.common.domain.meta.service.ConsumeOffsetService;
+import com.wolfmq.common.domain.meta.service.ConsumeOrderService;
+import com.wolfmq.common.domain.consumer.ack.AckConverter;
+import com.wolfmq.common.domain.consumer.ack.AckInfo;
+import com.wolfmq.common.domain.consumer.ack.broker.AckResult;
+import com.wolfmq.common.domain.consumer.ack.store.AckMessage;
+import com.wolfmq.common.domain.consumer.consume.InflightCounter;
+import com.wolfmq.common.domain.meta.order.OrderRequest;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

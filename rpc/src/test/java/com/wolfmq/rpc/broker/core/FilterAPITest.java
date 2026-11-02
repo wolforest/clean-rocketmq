@@ -1,7 +1,7 @@
 package com.wolfmq.rpc.broker.core;
 
-import com.wolfmq.domain.domain.consumer.consume.ExpressionType;
-import com.wolfmq.domain.server.heartbeat.SubscriptionData;
+import com.wolfmq.common.domain.consumer.consume.ExpressionType;
+import com.wolfmq.common.server.heartbeat.SubscriptionData;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

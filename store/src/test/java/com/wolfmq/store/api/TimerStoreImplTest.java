@@ -1,8 +1,8 @@
 package com.wolfmq.store.api;
 
-import com.wolfmq.domain.domain.timer.model.ScanResult;
-import com.wolfmq.domain.domain.timer.model.TimerEvent;
-import com.wolfmq.domain.domain.timer.state.TimerCheckpoint;
+import com.wolfmq.common.domain.timer.model.ScanResult;
+import com.wolfmq.common.domain.timer.model.TimerEvent;
+import com.wolfmq.common.domain.timer.state.TimerCheckpoint;
 import com.wolfmq.store.domain.timer.service.TimerService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -1,7 +1,7 @@
 package com.wolfmq.rpc.store.facade;
 
-import com.wolfmq.domain.domain.meta.subscription.SubscriptionGroup;
-import com.wolfmq.domain.domain.meta.subscription.SubscriptionRequest;
+import com.wolfmq.common.domain.meta.subscription.SubscriptionGroup;
+import com.wolfmq.common.domain.meta.subscription.SubscriptionRequest;
 import java.util.concurrent.CompletableFuture;
 
 public interface SubscriptionFacade {

@@ -3,8 +3,8 @@ package com.wolfmq.broker.domain.transaction.service;
 import com.wolfmq.broker.infra.store.ConsumeOffsetStore;
 import com.wolfmq.broker.infra.store.MQStore;
 import com.wolfmq.broker.infra.store.TopicStore;
-import com.wolfmq.domain.config.server.BrokerConfig;
-import com.wolfmq.domain.domain.transaction.CommitBuffer;
+import com.wolfmq.common.config.server.BrokerConfig;
+import com.wolfmq.common.domain.transaction.CommitBuffer;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

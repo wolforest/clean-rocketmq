@@ -1,12 +1,12 @@
 package com.wolfmq.broker.domain.consumer.renew;
 
 import cn.coderule.common.convention.service.Lifecycle;
-import com.wolfmq.domain.config.business.MessageConfig;
-import com.wolfmq.domain.config.server.BrokerConfig;
-import com.wolfmq.domain.domain.consumer.receipt.MessageReceipt;
-import com.wolfmq.domain.domain.consumer.receipt.ReceiptHandleGroup;
-import com.wolfmq.domain.domain.consumer.receipt.ReceiptHandleGroupKey;
-import com.wolfmq.domain.domain.consumer.receipt.ReceiptHandler;
+import com.wolfmq.common.config.business.MessageConfig;
+import com.wolfmq.common.config.server.BrokerConfig;
+import com.wolfmq.common.domain.consumer.receipt.MessageReceipt;
+import com.wolfmq.common.domain.consumer.receipt.ReceiptHandleGroup;
+import com.wolfmq.common.domain.consumer.receipt.ReceiptHandleGroupKey;
+import com.wolfmq.common.domain.consumer.receipt.ReceiptHandler;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;

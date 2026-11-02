@@ -1,18 +1,18 @@
 package com.wolfmq.store.domain.commitlog;
 
 import cn.coderule.common.convention.service.Lifecycle;
-import com.wolfmq.domain.config.server.StoreConfig;
-import com.wolfmq.domain.config.store.CommitConfig;
-import com.wolfmq.domain.server.store.api.CommitLogStore;
-import com.wolfmq.domain.domain.commitlog.CommitLog;
-import com.wolfmq.domain.domain.meta.service.TopicService;
-import com.wolfmq.domain.server.store.CheckPoint;
+import com.wolfmq.common.config.server.StoreConfig;
+import com.wolfmq.common.config.store.CommitConfig;
+import com.wolfmq.common.server.store.api.CommitLogStore;
+import com.wolfmq.common.domain.commitlog.CommitLog;
+import com.wolfmq.common.domain.meta.service.TopicService;
+import com.wolfmq.common.server.store.CheckPoint;
 import com.wolfmq.store.api.CommitLogStoreImpl;
 import com.wolfmq.store.domain.commitlog.log.CommitLogFactory;
 import com.wolfmq.store.domain.commitlog.route.TopicPartitioner;
 import com.wolfmq.store.infra.file.AllocateMappedFileService;
 import cn.coderule.common.convention.container.ApplicationContext;
-import com.wolfmq.domain.core.constant.ContextNamespace;
+import com.wolfmq.common.core.constant.ContextNamespace;
 import java.util.List;
 
 /**

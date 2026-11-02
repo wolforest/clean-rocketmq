@@ -1,7 +1,7 @@
 package com.wolfmq.store.api;
 
-import com.wolfmq.domain.core.mmap.InsertResult;
-import com.wolfmq.domain.core.mmap.SelectedMappedBuffer;
+import com.wolfmq.common.core.mmap.InsertResult;
+import com.wolfmq.common.core.mmap.SelectedMappedBuffer;
 import com.wolfmq.store.domain.commitlog.CommitLogProxy;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

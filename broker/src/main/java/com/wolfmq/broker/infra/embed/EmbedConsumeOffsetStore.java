@@ -1,12 +1,12 @@
 package com.wolfmq.broker.infra.embed;
 
-import com.wolfmq.domain.domain.meta.offset.GroupResult;
-import com.wolfmq.domain.domain.meta.offset.OffsetFilter;
-import com.wolfmq.domain.domain.meta.offset.OffsetRequest;
-import com.wolfmq.domain.domain.meta.offset.OffsetResult;
-import com.wolfmq.domain.domain.meta.offset.TopicResult;
+import com.wolfmq.common.domain.meta.offset.GroupResult;
+import com.wolfmq.common.domain.meta.offset.OffsetFilter;
+import com.wolfmq.common.domain.meta.offset.OffsetRequest;
+import com.wolfmq.common.domain.meta.offset.OffsetResult;
+import com.wolfmq.common.domain.meta.offset.TopicResult;
 import com.wolfmq.rpc.store.facade.ConsumeOffsetFacade;
-import com.wolfmq.domain.server.store.api.meta.ConsumeOffsetStore;
+import com.wolfmq.common.server.store.api.meta.ConsumeOffsetStore;
 
 public class EmbedConsumeOffsetStore extends AbstractEmbedStore implements ConsumeOffsetFacade {
     private final ConsumeOffsetStore consumeOffsetStore;

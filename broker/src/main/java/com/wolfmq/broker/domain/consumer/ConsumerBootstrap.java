@@ -1,6 +1,6 @@
 package com.wolfmq.broker.domain.consumer;
 
-import com.wolfmq.domain.core.constant.ContextNamespace;
+import com.wolfmq.common.core.constant.ContextNamespace;
 
 import cn.coderule.common.convention.container.ApplicationContext;
 
@@ -16,7 +16,7 @@ import com.wolfmq.broker.domain.consumer.pop.PopService;
 import com.wolfmq.broker.domain.consumer.renew.RenewBootstrap;
 import com.wolfmq.broker.domain.consumer.revive.ReviveBootstrap;
 import com.wolfmq.broker.infra.store.SubscriptionStore;
-import com.wolfmq.domain.config.server.BrokerConfig;
+import com.wolfmq.common.config.server.BrokerConfig;
 
 public class ConsumerBootstrap implements Lifecycle {
     private final ApplicationContext context;

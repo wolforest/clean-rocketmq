@@ -1,7 +1,7 @@
 package com.wolfmq.broker.domain.consumer.consumer;
 
-import com.wolfmq.domain.domain.consumer.consume.ConsumeContext;
-import com.wolfmq.domain.domain.consumer.hook.ConsumeHook;
+import com.wolfmq.common.domain.consumer.consume.ConsumeContext;
+import com.wolfmq.common.domain.consumer.hook.ConsumeHook;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -23,7 +23,7 @@ class ConsumeHookManagerTest {
         mockHook1 = mock(ConsumeHook.class);
         mockHook2 = mock(ConsumeHook.class);
         context = new ConsumeContext();
-        
+
         when(mockHook1.hookName()).thenReturn("Hook1");
         when(mockHook2.hookName()).thenReturn("Hook2");
     }
@@ -38,7 +38,7 @@ class ConsumeHookManagerTest {
     void testRegisterHook() {
         hookManager.registerHook(mockHook1);
         List<String> hookNames = hookManager.getHookNameList();
-        
+
         assertEquals(1, hookNames.size());
         assertEquals("Hook1", hookNames.get(0));
     }
@@ -48,7 +48,7 @@ class ConsumeHookManagerTest {
         hookManager.registerHook(mockHook1);
         hookManager.registerHook(mockHook2);
         List<String> hookNames = hookManager.getHookNameList();
-        
+
         assertEquals(2, hookNames.size());
         assertTrue(hookNames.contains("Hook1"));
         assertTrue(hookNames.contains("Hook2"));
@@ -64,9 +64,9 @@ class ConsumeHookManagerTest {
     void testPreConsumeWithHooks() {
         hookManager.registerHook(mockHook1);
         hookManager.registerHook(mockHook2);
-        
+
         hookManager.preConsume(context);
-        
+
         verify(mockHook1).preConsume(context);
         verify(mockHook2).preConsume(context);
     }
@@ -81,9 +81,9 @@ class ConsumeHookManagerTest {
     void testPostConsumeWithHooks() {
         hookManager.registerHook(mockHook1);
         hookManager.registerHook(mockHook2);
-        
+
         hookManager.PostConsume(context);
-        
+
         verify(mockHook1).PostConsume(context);
         verify(mockHook2).PostConsume(context);
     }

@@ -1,6 +1,6 @@
 package com.wolfmq.broker.infra.embed;
 
-import com.wolfmq.domain.server.store.api.TimerStore;
+import com.wolfmq.common.server.store.api.TimerStore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

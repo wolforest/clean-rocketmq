@@ -6,13 +6,13 @@ import cn.coderule.common.util.lang.time.DateUtil;
 import com.wolfmq.broker.domain.transaction.check.context.CheckContext;
 import com.wolfmq.broker.domain.transaction.check.context.TransactionContext;
 import com.wolfmq.broker.domain.transaction.service.TransactionMessageService;
-import com.wolfmq.domain.config.business.MessageConfig;
-import com.wolfmq.domain.config.business.TransactionConfig;
-import com.wolfmq.domain.config.server.BrokerConfig;
-import com.wolfmq.domain.domain.message.property.MessageConst;
-import com.wolfmq.domain.domain.mq.dto.DequeueResult;
-import com.wolfmq.domain.domain.message.MessageBO;
-import com.wolfmq.domain.domain.mq.dto.EnqueueResult;
+import com.wolfmq.common.config.business.MessageConfig;
+import com.wolfmq.common.config.business.TransactionConfig;
+import com.wolfmq.common.config.server.BrokerConfig;
+import com.wolfmq.common.domain.message.property.MessageConst;
+import com.wolfmq.common.domain.mq.dto.DequeueResult;
+import com.wolfmq.common.domain.message.MessageBO;
+import com.wolfmq.common.domain.mq.dto.EnqueueResult;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

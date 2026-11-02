@@ -1,10 +1,10 @@
 package com.wolfmq.broker.domain.timer.service;
 
-import com.wolfmq.domain.domain.message.property.MessageConst;
-import com.wolfmq.domain.domain.message.MessageBO;
-import com.wolfmq.domain.domain.timer.model.TimerConstants;
-import com.wolfmq.domain.domain.timer.model.TimerEvent;
-import com.wolfmq.domain.domain.timer.wheel.TimerUtils;
+import com.wolfmq.common.domain.message.property.MessageConst;
+import com.wolfmq.common.domain.message.MessageBO;
+import com.wolfmq.common.domain.timer.model.TimerConstants;
+import com.wolfmq.common.domain.timer.model.TimerEvent;
+import com.wolfmq.common.domain.timer.wheel.TimerUtils;
 
 public class TimerConverter {
     public static TimerEvent toEvent(MessageBO messageBO, long enqueueTime, int magic) {

@@ -1,8 +1,8 @@
 package com.wolfmq.store.api;
 
-import com.wolfmq.domain.core.mmap.InsertResult;
-import com.wolfmq.domain.core.mmap.SelectedMappedBuffer;
-import com.wolfmq.domain.server.store.api.CommitLogStore;
+import com.wolfmq.common.core.mmap.InsertResult;
+import com.wolfmq.common.core.mmap.SelectedMappedBuffer;
+import com.wolfmq.common.server.store.api.CommitLogStore;
 import com.wolfmq.store.domain.commitlog.CommitLogProxy;
 
 public class CommitLogStoreImpl implements CommitLogStore {

@@ -4,8 +4,8 @@ package com.wolfmq.broker.infra.task;
 import cn.coderule.common.convention.container.ApplicationContext;
 
 import cn.coderule.common.convention.service.Lifecycle;
-import com.wolfmq.domain.config.server.BrokerConfig;
-import com.wolfmq.domain.server.task.TaskLoader;
+import com.wolfmq.common.config.server.BrokerConfig;
+import com.wolfmq.common.server.task.TaskLoader;
 
 public class TaskBootstrap implements Lifecycle {
     private final ApplicationContext context;

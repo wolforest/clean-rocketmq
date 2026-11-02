@@ -4,7 +4,7 @@ package com.wolfmq.registry.domain.store;
 import cn.coderule.common.convention.container.ApplicationContext;
 
 import cn.coderule.common.convention.service.Lifecycle;
-import com.wolfmq.domain.config.server.RegistryConfig;
+import com.wolfmq.common.config.server.RegistryConfig;
 import com.wolfmq.registry.domain.kv.KVService;
 import com.wolfmq.registry.domain.store.model.Route;
 import com.wolfmq.registry.domain.store.service.ChannelCloser;

@@ -3,8 +3,8 @@ package com.wolfmq.broker.domain.transaction.check.service;
 import com.wolfmq.broker.domain.transaction.check.context.CheckContext;
 import com.wolfmq.broker.domain.transaction.check.context.TransactionContext;
 import com.wolfmq.broker.domain.transaction.service.TransactionMessageService;
-import com.wolfmq.domain.domain.mq.MessageQueue;
-import com.wolfmq.domain.domain.mq.dto.DequeueResult;
+import com.wolfmq.common.domain.mq.MessageQueue;
+import com.wolfmq.common.domain.mq.dto.DequeueResult;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

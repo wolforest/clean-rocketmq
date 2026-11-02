@@ -1,8 +1,8 @@
 package com.wolfmq.registry.domain.store.service;
 
-import com.wolfmq.domain.config.server.RegistryConfig;
-import com.wolfmq.domain.server.registry.ClusterInfo;
-import com.wolfmq.domain.server.registry.GroupInfo;
+import com.wolfmq.common.config.server.RegistryConfig;
+import com.wolfmq.common.server.registry.ClusterInfo;
+import com.wolfmq.common.server.registry.GroupInfo;
 import com.wolfmq.registry.domain.store.model.Route;
 import com.wolfmq.rpc.registry.protocol.body.BrokerMemberGroup;
 import org.junit.jupiter.api.BeforeEach;

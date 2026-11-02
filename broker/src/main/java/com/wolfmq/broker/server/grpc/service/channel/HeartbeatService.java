@@ -10,7 +10,7 @@ import com.wolfmq.broker.api.ConsumerController;
 import com.wolfmq.broker.api.ProducerController;
 import com.wolfmq.broker.api.RouteController;
 import com.wolfmq.broker.api.TransactionController;
-import com.wolfmq.domain.server.RequestContext;
+import com.wolfmq.common.server.RequestContext;
 import com.wolfmq.rpc.common.grpc.response.ResponseBuilder;
 import java.util.concurrent.CompletableFuture;
 import lombok.extern.slf4j.Slf4j;

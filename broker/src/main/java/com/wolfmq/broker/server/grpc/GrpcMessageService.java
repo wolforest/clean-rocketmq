@@ -33,7 +33,7 @@ import com.wolfmq.broker.server.grpc.activity.ConsumerActivity;
 import com.wolfmq.broker.server.grpc.activity.ProducerActivity;
 import com.wolfmq.broker.server.grpc.activity.RouteActivity;
 import com.wolfmq.broker.server.grpc.activity.TransactionActivity;
-import com.wolfmq.domain.server.RequestContext;
+import com.wolfmq.common.server.RequestContext;
 import io.grpc.stub.StreamObserver;
 import lombok.extern.slf4j.Slf4j;
 

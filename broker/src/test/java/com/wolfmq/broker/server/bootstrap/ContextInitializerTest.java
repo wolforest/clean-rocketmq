@@ -25,7 +25,7 @@ class ContextInitializerTest {
 
         assertDoesNotThrow(initializer::initialize);
 
-        assertNotNull(context.getBean(com.wolfmq.domain.config.server.BrokerConfig.class));
+        assertNotNull(context.getBean(com.wolfmq.common.config.server.BrokerConfig.class));
     }
 
     @Test

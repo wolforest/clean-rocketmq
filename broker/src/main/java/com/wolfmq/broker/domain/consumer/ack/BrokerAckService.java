@@ -1,13 +1,13 @@
 package com.wolfmq.broker.domain.consumer.ack;
 
 import com.wolfmq.broker.domain.consumer.consumer.ConsumerManager;
-import com.wolfmq.domain.server.ClientChannelInfo;
-import com.wolfmq.domain.domain.consumer.ack.AckConverter;
-import com.wolfmq.domain.domain.consumer.ack.broker.AckRequest;
-import com.wolfmq.domain.domain.consumer.ack.broker.AckResult;
-import com.wolfmq.domain.domain.consumer.ack.store.AckMessage;
-import com.wolfmq.domain.domain.consumer.receipt.MessageReceipt;
-import com.wolfmq.domain.domain.consumer.receipt.ReceiptHandler;
+import com.wolfmq.common.server.ClientChannelInfo;
+import com.wolfmq.common.domain.consumer.ack.AckConverter;
+import com.wolfmq.common.domain.consumer.ack.broker.AckRequest;
+import com.wolfmq.common.domain.consumer.ack.broker.AckResult;
+import com.wolfmq.common.domain.consumer.ack.store.AckMessage;
+import com.wolfmq.common.domain.consumer.receipt.MessageReceipt;
+import com.wolfmq.common.domain.consumer.receipt.ReceiptHandler;
 import com.wolfmq.rpc.store.facade.MQFacade;
 import java.util.concurrent.CompletableFuture;
 import lombok.extern.slf4j.Slf4j;

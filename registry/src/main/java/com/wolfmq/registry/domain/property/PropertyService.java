@@ -1,8 +1,8 @@
 package com.wolfmq.registry.domain.property;
 
-import com.wolfmq.domain.config.server.RegistryConfig;
+import com.wolfmq.common.config.server.RegistryConfig;
 import com.wolfmq.rpc.common.rpc.config.Configuration;
-import com.wolfmq.domain.config.network.RpcServerConfig;
+import com.wolfmq.common.config.network.RpcServerConfig;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Properties;

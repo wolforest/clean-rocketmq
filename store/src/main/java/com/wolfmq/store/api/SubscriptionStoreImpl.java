@@ -1,9 +1,9 @@
 package com.wolfmq.store.api;
 
-import com.wolfmq.domain.domain.meta.subscription.SubscriptionGroup;
-import com.wolfmq.domain.domain.meta.subscription.SubscriptionRequest;
-import com.wolfmq.domain.server.store.api.meta.SubscriptionStore;
-import com.wolfmq.domain.domain.meta.service.SubscriptionService;
+import com.wolfmq.common.domain.meta.subscription.SubscriptionGroup;
+import com.wolfmq.common.domain.meta.subscription.SubscriptionRequest;
+import com.wolfmq.common.server.store.api.meta.SubscriptionStore;
+import com.wolfmq.common.domain.meta.service.SubscriptionService;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

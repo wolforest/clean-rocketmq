@@ -1,6 +1,6 @@
 package com.wolfmq.rpc.common.rpc.netty.service.helper;
 
-import com.wolfmq.domain.config.network.RpcServerConfig;
+import com.wolfmq.common.config.network.RpcServerConfig;
 import com.wolfmq.rpc.common.rpc.netty.handler.RequestCodeCounter;
 import org.junit.jupiter.api.Test;
 

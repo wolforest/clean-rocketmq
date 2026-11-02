@@ -5,7 +5,7 @@ import cn.coderule.common.lang.concurrent.thread.DefaultThreadFactory;
 import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.common.util.lang.ThreadUtil;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
-import com.wolfmq.domain.config.network.RpcClientConfig;
+import com.wolfmq.common.config.network.RpcClientConfig;
 import com.wolfmq.rpc.common.rpc.netty.NettyClient;
 import io.netty.channel.Channel;
 import io.netty.util.HashedWheelTimer;

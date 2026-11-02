@@ -1,6 +1,6 @@
 package com.wolfmq.rpc.broker.rpc.protocol.body;
 
-import com.wolfmq.domain.core.constant.code.LanguageCode;
+import com.wolfmq.common.core.constant.code.LanguageCode;
 import com.wolfmq.rpc.common.rpc.protocol.codec.RpcSerializable;
 
 public class ProducerInfo extends RpcSerializable {

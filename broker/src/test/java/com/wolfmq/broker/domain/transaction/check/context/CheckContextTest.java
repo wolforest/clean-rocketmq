@@ -1,6 +1,6 @@
 package com.wolfmq.broker.domain.transaction.check.context;
 
-import com.wolfmq.domain.config.business.TransactionConfig;
+import com.wolfmq.common.config.business.TransactionConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -69,7 +69,7 @@ class CheckContextTest {
     void testIncreaseMessageCheckCount() {
         checkContext.increaseMessageCheckCount();
         assertEquals(1, checkContext.getMessageCheckCount());
-        
+
         checkContext.increaseMessageCheckCount();
         assertEquals(2, checkContext.getMessageCheckCount());
     }
@@ -99,7 +99,7 @@ class CheckContextTest {
     void testInitOffset() {
         checkContext.setPrepareOffset(50);
         checkContext.initOffset(100);
-        
+
         assertEquals(50, checkContext.getNextPrepareOffset());
         assertEquals(50, checkContext.getPrepareCounter());
         assertEquals(100, checkContext.getNextOperationOffset());
@@ -121,7 +121,7 @@ class CheckContextTest {
     void testAddOperationOffset() {
         checkContext.addOperationOffset(100);
         checkContext.addOperationOffset(200);
-        
+
         assertEquals(2, checkContext.getOperationOffsetList().size());
         assertTrue(checkContext.getOperationOffsetList().contains(100L));
         assertTrue(checkContext.getOperationOffsetList().contains(200L));
@@ -138,7 +138,7 @@ class CheckContextTest {
     void testRemovePrepareOffset() {
         checkContext.linkOffset(100, 200);
         checkContext.removePrepareOffset(100);
-        
+
         assertFalse(checkContext.containsPrepareOffset(100));
         assertTrue(checkContext.getOperationOffsetList().contains(200L));
     }
@@ -148,9 +148,9 @@ class CheckContextTest {
         Set<Long> prepareOffsets = new HashSet<>();
         prepareOffsets.add(100L);
         prepareOffsets.add(101L);
-        
+
         checkContext.putOffsetMap(200L, prepareOffsets);
-        
+
         assertEquals(prepareOffsets, checkContext.getOperationMap().get(200L));
     }
 
@@ -159,7 +159,7 @@ class CheckContextTest {
         checkContext.setOperationOffset(100);
         checkContext.addOperationOffset(100);
         checkContext.addOperationOffset(101);
-        
+
         long result = checkContext.calculateOperationOffset();
         assertEquals(102, result);
     }
@@ -169,7 +169,7 @@ class CheckContextTest {
         checkContext.setOperationOffset(100);
         checkContext.addOperationOffset(100);
         checkContext.addOperationOffset(102);
-        
+
         long result = checkContext.calculateOperationOffset();
         assertEquals(101, result);
     }

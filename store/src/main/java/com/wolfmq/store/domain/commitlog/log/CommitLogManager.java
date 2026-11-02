@@ -2,8 +2,8 @@ package com.wolfmq.store.domain.commitlog.log;
 
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
-import com.wolfmq.domain.config.store.CommitConfig;
-import com.wolfmq.domain.domain.commitlog.CommitLog;
+import com.wolfmq.common.config.store.CommitConfig;
+import com.wolfmq.common.domain.commitlog.CommitLog;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import lombok.extern.slf4j.Slf4j;

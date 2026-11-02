@@ -1,15 +1,15 @@
 package com.wolfmq.broker.server.bootstrap;
 
 import cn.coderule.common.convention.container.ApplicationContext;
-import com.wolfmq.domain.config.business.TimerConfig;
-import com.wolfmq.domain.config.business.TransactionConfig;
-import com.wolfmq.domain.config.network.RpcClientConfig;
-import com.wolfmq.domain.config.network.RpcServerConfig;
-import com.wolfmq.domain.config.server.BrokerConfig;
-import com.wolfmq.domain.config.network.GrpcConfig;
-import com.wolfmq.domain.config.business.MessageConfig;
-import com.wolfmq.domain.config.business.TopicConfig;
-import com.wolfmq.domain.config.business.TaskConfig;
+import com.wolfmq.common.config.business.TimerConfig;
+import com.wolfmq.common.config.business.TransactionConfig;
+import com.wolfmq.common.config.network.RpcClientConfig;
+import com.wolfmq.common.config.network.RpcServerConfig;
+import com.wolfmq.common.config.server.BrokerConfig;
+import com.wolfmq.common.config.network.GrpcConfig;
+import com.wolfmq.common.config.business.MessageConfig;
+import com.wolfmq.common.config.business.TopicConfig;
+import com.wolfmq.common.config.business.TaskConfig;
 
 public class ConfigLoader {
     public static void load(ApplicationContext context) {

@@ -3,11 +3,11 @@ package com.wolfmq.broker.domain.transaction.service;
 import com.wolfmq.broker.domain.transaction.receipt.Receipt;
 import com.wolfmq.broker.domain.transaction.receipt.ReceiptRegistry;
 import com.wolfmq.broker.infra.store.MQStore;
-import com.wolfmq.domain.config.business.TransactionConfig;
-import com.wolfmq.domain.domain.mq.dto.EnqueueRequest;
-import com.wolfmq.domain.domain.mq.dto.EnqueueResult;
-import com.wolfmq.domain.server.RequestContext;
-import com.wolfmq.domain.domain.message.MessageBO;
+import com.wolfmq.common.config.business.TransactionConfig;
+import com.wolfmq.common.domain.mq.dto.EnqueueRequest;
+import com.wolfmq.common.domain.mq.dto.EnqueueResult;
+import com.wolfmq.common.server.RequestContext;
+import com.wolfmq.common.domain.message.MessageBO;
 import java.util.concurrent.CompletableFuture;
 import lombok.extern.slf4j.Slf4j;
 

@@ -1,12 +1,12 @@
 package com.wolfmq.store.domain.mq.ack;
 
-import com.wolfmq.domain.config.server.StoreConfig;
-import com.wolfmq.domain.domain.mq.dto.EnqueueStatus;
-import com.wolfmq.domain.domain.consumer.ack.AckInfo;
-import com.wolfmq.domain.domain.consumer.ack.broker.AckResult;
-import com.wolfmq.domain.domain.consumer.ack.store.AckMessage;
-import com.wolfmq.domain.domain.mq.dto.EnqueueResult;
-import com.wolfmq.domain.domain.meta.topic.KeyBuilder;
+import com.wolfmq.common.config.server.StoreConfig;
+import com.wolfmq.common.domain.mq.dto.EnqueueStatus;
+import com.wolfmq.common.domain.consumer.ack.AckInfo;
+import com.wolfmq.common.domain.consumer.ack.broker.AckResult;
+import com.wolfmq.common.domain.consumer.ack.store.AckMessage;
+import com.wolfmq.common.domain.mq.dto.EnqueueResult;
+import com.wolfmq.common.domain.meta.topic.KeyBuilder;
 import com.wolfmq.store.domain.mq.queue.EnqueueService;
 import org.junit.jupiter.api.Test;
 

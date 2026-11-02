@@ -3,7 +3,7 @@ package com.wolfmq.broker.server.grpc;
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.lang.concurrent.thread.pool.ThreadPoolFactory;
 import cn.coderule.common.lang.exception.SystemException;
-import com.wolfmq.domain.config.network.GrpcConfig;
+import com.wolfmq.common.config.network.GrpcConfig;
 import com.wolfmq.rpc.common.grpc.interceptor.ContextInterceptor;
 import com.wolfmq.rpc.common.grpc.interceptor.GlobalExceptionInterceptor;
 import com.wolfmq.rpc.common.grpc.interceptor.HeaderInterceptor;

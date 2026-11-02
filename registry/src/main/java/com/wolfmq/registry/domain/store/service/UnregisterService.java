@@ -1,7 +1,7 @@
 package com.wolfmq.registry.domain.store.service;
 
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
-import com.wolfmq.domain.config.server.RegistryConfig;
+import com.wolfmq.common.config.server.RegistryConfig;
 import com.wolfmq.registry.domain.store.StoreRegistry;
 import com.wolfmq.rpc.registry.protocol.header.UnRegisterBrokerRequestHeader;
 import java.util.HashSet;

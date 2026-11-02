@@ -1,13 +1,13 @@
 package com.wolfmq.broker.domain.meta;
 
 import com.wolfmq.broker.infra.embed.EmbedTopicStore;
-import com.wolfmq.domain.config.server.BrokerConfig;
-import com.wolfmq.domain.config.business.TopicConfig;
-import com.wolfmq.domain.domain.meta.topic.Topic;
-import com.wolfmq.domain.server.registry.GroupInfo;
-import com.wolfmq.domain.server.route.QueueInfo;
-import com.wolfmq.domain.server.route.RouteInfo;
-import com.wolfmq.domain.domain.meta.topic.TopicRequest;
+import com.wolfmq.common.config.server.BrokerConfig;
+import com.wolfmq.common.config.business.TopicConfig;
+import com.wolfmq.common.domain.meta.topic.Topic;
+import com.wolfmq.common.server.registry.GroupInfo;
+import com.wolfmq.common.server.route.QueueInfo;
+import com.wolfmq.common.server.route.RouteInfo;
+import com.wolfmq.common.domain.meta.topic.TopicRequest;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;

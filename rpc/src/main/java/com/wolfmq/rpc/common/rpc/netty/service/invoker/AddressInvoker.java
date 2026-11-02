@@ -3,7 +3,7 @@ package com.wolfmq.rpc.common.rpc.netty.service.invoker;
 import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.common.util.net.NetworkUtil;
-import com.wolfmq.domain.config.network.RpcClientConfig;
+import com.wolfmq.common.config.network.RpcClientConfig;
 import com.wolfmq.rpc.common.rpc.core.exception.RemotingConnectException;
 import com.wolfmq.rpc.common.rpc.core.exception.RemotingTimeoutException;
 import com.wolfmq.rpc.common.rpc.core.exception.RemotingTooMuchRequestException;

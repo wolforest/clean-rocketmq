@@ -1,8 +1,8 @@
 package com.wolfmq.store.domain.index;
 
-import com.wolfmq.domain.domain.commitlog.dispatch.CommitEvent;
-import com.wolfmq.domain.domain.index.IndexService;
-import com.wolfmq.domain.domain.commitlog.dispatch.CommitHandler;
+import com.wolfmq.common.domain.commitlog.dispatch.CommitEvent;
+import com.wolfmq.common.domain.index.IndexService;
+import com.wolfmq.common.domain.commitlog.dispatch.CommitHandler;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -26,7 +26,7 @@ public class IndexCommitHandlerTest {
 
     @Test
     void testHandleWithNormalMessageBuildsIndex() {
-        com.wolfmq.domain.domain.message.MessageBO messageBO = com.wolfmq.domain.domain.message.MessageBO.builder()
+        com.wolfmq.common.domain.message.MessageBO messageBO = com.wolfmq.common.domain.message.MessageBO.builder()
             .topic("testTopic")
             .commitOffset(100L)
             .storeTimestamp(System.currentTimeMillis())

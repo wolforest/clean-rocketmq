@@ -1,6 +1,6 @@
 package com.wolfmq.store.server.ha.core;
 
-import com.wolfmq.domain.config.server.StoreConfig;
+import com.wolfmq.common.config.server.StoreConfig;
 import com.wolfmq.store.server.bootstrap.StoreRegister;
 import org.junit.jupiter.api.Test;
 

@@ -1,6 +1,6 @@
 package com.wolfmq.broker.server.grpc;
 
-import com.wolfmq.domain.config.network.GrpcConfig;
+import com.wolfmq.common.config.network.GrpcConfig;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

@@ -1,6 +1,6 @@
 package com.wolfmq.rpc.broker.grpc;
 
-import com.wolfmq.domain.server.RequestContext;
+import com.wolfmq.common.server.RequestContext;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

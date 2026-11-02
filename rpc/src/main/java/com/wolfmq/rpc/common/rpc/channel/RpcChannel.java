@@ -3,7 +3,7 @@ package com.wolfmq.rpc.common.rpc.channel;
 
 import cn.coderule.common.util.net.NetworkUtil;
 import com.wolfmq.rpc.common.core.channel.ChannelHelper;
-import com.wolfmq.domain.server.heartbeat.SubscriptionData;
+import com.wolfmq.common.server.heartbeat.SubscriptionData;
 import com.wolfmq.rpc.common.core.channel.ClientChannel;
 import com.wolfmq.rpc.common.core.channel.ChannelExtendAttributeGetter;
 import com.wolfmq.rpc.common.core.channel.ChannelProtocolType;

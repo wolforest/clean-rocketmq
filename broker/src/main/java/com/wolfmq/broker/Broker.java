@@ -2,7 +2,7 @@ package com.wolfmq.broker;
 
 import cn.coderule.common.convention.container.ApplicationContext;
 import cn.coderule.common.convention.service.Lifecycle;
-import com.wolfmq.domain.core.constant.ContextNamespace;
+import com.wolfmq.common.core.constant.ContextNamespace;
 import cn.coderule.common.convention.service.LifecycleManager;
 import com.wolfmq.broker.server.ComponentRegister;
 import com.wolfmq.broker.server.bootstrap.ContextInitializer;

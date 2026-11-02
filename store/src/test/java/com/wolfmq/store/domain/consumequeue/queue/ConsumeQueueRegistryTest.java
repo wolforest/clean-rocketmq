@@ -1,6 +1,6 @@
 package com.wolfmq.store.domain.consumequeue.queue;
 
-import com.wolfmq.domain.domain.consumequeue.ConsumeQueue;
+import com.wolfmq.common.domain.consumequeue.ConsumeQueue;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

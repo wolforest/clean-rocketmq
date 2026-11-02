@@ -1,6 +1,6 @@
 package com.wolfmq.rpc.store.facade;
 
-import com.wolfmq.domain.domain.meta.order.OrderRequest;
+import com.wolfmq.common.domain.meta.order.OrderRequest;
 
 public interface ConsumeOrderFacade {
     boolean isLocked(OrderRequest request);

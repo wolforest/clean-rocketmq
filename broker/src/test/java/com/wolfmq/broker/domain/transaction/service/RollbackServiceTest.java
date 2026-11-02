@@ -1,8 +1,8 @@
 package com.wolfmq.broker.domain.transaction.service;
 
-import com.wolfmq.domain.domain.message.MessageBO;
-import com.wolfmq.domain.domain.transaction.CommitResult;
-import com.wolfmq.domain.domain.transaction.SubmitRequest;
+import com.wolfmq.common.domain.message.MessageBO;
+import com.wolfmq.common.domain.transaction.CommitResult;
+import com.wolfmq.common.domain.transaction.SubmitRequest;
 import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.CompletableFuture;

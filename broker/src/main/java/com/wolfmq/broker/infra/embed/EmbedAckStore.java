@@ -1,8 +1,8 @@
 package com.wolfmq.broker.infra.embed;
 
-import com.wolfmq.domain.domain.consumer.ack.AckInfo;
-import com.wolfmq.domain.domain.consumer.consume.pop.checkpoint.PopCheckPoint;
-import com.wolfmq.domain.server.store.api.meta.AckStore;
+import com.wolfmq.common.domain.consumer.ack.AckInfo;
+import com.wolfmq.common.domain.consumer.consume.pop.checkpoint.PopCheckPoint;
+import com.wolfmq.common.server.store.api.meta.AckStore;
 
 @Deprecated
 public class EmbedAckStore extends AbstractEmbedStore implements AckStore {

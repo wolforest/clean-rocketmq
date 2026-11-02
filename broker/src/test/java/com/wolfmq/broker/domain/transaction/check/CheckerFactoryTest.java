@@ -1,7 +1,7 @@
 package com.wolfmq.broker.domain.transaction.check;
 
 import com.wolfmq.broker.domain.transaction.check.context.TransactionContext;
-import com.wolfmq.domain.domain.transaction.CommitBuffer;
+import com.wolfmq.common.domain.transaction.CommitBuffer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;

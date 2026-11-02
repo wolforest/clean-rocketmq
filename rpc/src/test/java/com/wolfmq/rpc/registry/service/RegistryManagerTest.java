@@ -1,6 +1,6 @@
 package com.wolfmq.rpc.registry.service;
 
-import com.wolfmq.domain.config.network.RpcClientConfig;
+import com.wolfmq.common.config.network.RpcClientConfig;
 import com.wolfmq.rpc.common.rpc.netty.NettyClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

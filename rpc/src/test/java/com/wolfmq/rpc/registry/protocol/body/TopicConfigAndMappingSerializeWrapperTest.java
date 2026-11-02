@@ -1,7 +1,7 @@
 package com.wolfmq.rpc.registry.protocol.body;
 
-import com.wolfmq.domain.domain.meta.DataVersion;
-import com.wolfmq.domain.domain.meta.statictopic.TopicQueueMappingInfo;
+import com.wolfmq.common.domain.meta.DataVersion;
+import com.wolfmq.common.domain.meta.statictopic.TopicQueueMappingInfo;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;

@@ -1,12 +1,12 @@
 
 package com.wolfmq.rpc.broker.rpc.protocol.body;
 
-import com.wolfmq.domain.domain.mq.MessageQueue;
-import com.wolfmq.domain.domain.consumer.consume.ConsumeType;
-import com.wolfmq.domain.domain.consumer.running.ConsumeStatus;
-import com.wolfmq.domain.domain.consumer.running.PopProcessQueueInfo;
-import com.wolfmq.domain.domain.consumer.running.ProcessQueueInfo;
-import com.wolfmq.domain.server.heartbeat.SubscriptionData;
+import com.wolfmq.common.domain.mq.MessageQueue;
+import com.wolfmq.common.domain.consumer.consume.ConsumeType;
+import com.wolfmq.common.domain.consumer.running.ConsumeStatus;
+import com.wolfmq.common.domain.consumer.running.PopProcessQueueInfo;
+import com.wolfmq.common.domain.consumer.running.ProcessQueueInfo;
+import com.wolfmq.common.server.heartbeat.SubscriptionData;
 import com.wolfmq.rpc.common.rpc.protocol.codec.RpcSerializable;
 import java.util.Iterator;
 import java.util.Map.Entry;

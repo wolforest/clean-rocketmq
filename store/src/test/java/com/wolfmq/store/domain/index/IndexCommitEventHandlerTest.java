@@ -1,7 +1,7 @@
 package com.wolfmq.store.domain.index;
 
-import com.wolfmq.domain.domain.commitlog.dispatch.CommitEvent;
-import com.wolfmq.domain.domain.index.IndexService;
+import com.wolfmq.common.domain.commitlog.dispatch.CommitEvent;
+import com.wolfmq.common.domain.index.IndexService;
 import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.*;

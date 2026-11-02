@@ -1,8 +1,8 @@
 package com.wolfmq.broker.domain.consumer.renew;
 
-import com.wolfmq.domain.config.business.MessageConfig;
-import com.wolfmq.domain.config.server.BrokerConfig;
-import com.wolfmq.domain.domain.consumer.receipt.ReceiptHandleGroupKey;
+import com.wolfmq.common.config.business.MessageConfig;
+import com.wolfmq.common.config.server.BrokerConfig;
+import com.wolfmq.common.domain.consumer.receipt.ReceiptHandleGroupKey;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelId;
 import org.junit.jupiter.api.BeforeEach;
@@ -44,7 +44,7 @@ class DefaultReceiptHandlerTest {
 
     @Test
     void testGetEntrySetEmpty() {
-        Set<java.util.Map.Entry<ReceiptHandleGroupKey, com.wolfmq.domain.domain.consumer.receipt.ReceiptHandleGroup>> entries = receiptHandler.getEntrySet();
+        Set<java.util.Map.Entry<ReceiptHandleGroupKey, com.wolfmq.common.domain.consumer.receipt.ReceiptHandleGroup>> entries = receiptHandler.getEntrySet();
         assertTrue(entries.isEmpty());
     }
 

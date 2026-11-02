@@ -1,7 +1,7 @@
 package com.wolfmq.store.server.ha.core.monitor;
 
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
-import com.wolfmq.domain.config.server.StoreConfig;
+import com.wolfmq.common.config.server.StoreConfig;
 import com.wolfmq.store.server.ha.client.HAClient;
 import com.wolfmq.store.server.ha.server.HAServer;
 import com.wolfmq.store.server.ha.core.ConnectionState;

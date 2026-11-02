@@ -1,6 +1,6 @@
 package com.wolfmq.rpc.store.client.meta;
 
-import com.wolfmq.domain.domain.meta.order.OrderRequest;
+import com.wolfmq.common.domain.meta.order.OrderRequest;
 import com.wolfmq.rpc.common.rpc.RpcClient;
 import com.wolfmq.rpc.store.StoreClient;
 import com.wolfmq.rpc.store.client.AbstractStoreClient;

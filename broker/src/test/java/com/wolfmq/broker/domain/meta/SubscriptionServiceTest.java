@@ -1,7 +1,7 @@
 package com.wolfmq.broker.domain.meta;
 
 import com.wolfmq.broker.infra.store.SubscriptionStore;
-import com.wolfmq.domain.domain.meta.subscription.SubscriptionGroup;
+import com.wolfmq.common.domain.meta.subscription.SubscriptionGroup;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -35,7 +35,7 @@ class SubscriptionServiceTest {
         String topicName = "TestTopic";
         String groupName = "TestGroup";
         SubscriptionGroup expectedGroup = new SubscriptionGroup();
-        
+
         when(subscriptionStore.getGroupAsync(topicName, groupName))
             .thenReturn(CompletableFuture.completedFuture(expectedGroup));
 
@@ -50,7 +50,7 @@ class SubscriptionServiceTest {
         String topicName = "TestTopic";
         String groupName = "TestGroup";
         SubscriptionGroup expectedGroup = new SubscriptionGroup();
-        
+
         when(subscriptionStore.getGroupAsync(topicName, groupName))
             .thenReturn(CompletableFuture.completedFuture(expectedGroup));
 
@@ -63,10 +63,10 @@ class SubscriptionServiceTest {
     void testGetGroupException() {
         String topicName = "TestTopic";
         String groupName = "TestGroup";
-        
+
         CompletableFuture<SubscriptionGroup> failedFuture = new CompletableFuture<>();
         failedFuture.completeExceptionally(new RuntimeException("test error"));
-        
+
         when(subscriptionStore.getGroupAsync(topicName, groupName))
             .thenReturn(failedFuture);
 
@@ -79,10 +79,10 @@ class SubscriptionServiceTest {
     void testIsConsumeOrderlyTrue() {
         String topicName = "TestTopic";
         String groupName = "TestGroup";
-        
+
         SubscriptionGroup group = new SubscriptionGroup();
         group.setConsumeMessageOrderly(true);
-        
+
         when(subscriptionStore.getGroupAsync(topicName, groupName))
             .thenReturn(CompletableFuture.completedFuture(group));
 
@@ -95,10 +95,10 @@ class SubscriptionServiceTest {
     void testIsConsumeOrderlyFalse() {
         String topicName = "TestTopic";
         String groupName = "TestGroup";
-        
+
         SubscriptionGroup group = new SubscriptionGroup();
         group.setConsumeMessageOrderly(false);
-        
+
         when(subscriptionStore.getGroupAsync(topicName, groupName))
             .thenReturn(CompletableFuture.completedFuture(group));
 
@@ -111,7 +111,7 @@ class SubscriptionServiceTest {
     void testIsConsumeOrderlyNullGroup() {
         String topicName = "TestTopic";
         String groupName = "TestGroup";
-        
+
         when(subscriptionStore.getGroupAsync(topicName, groupName))
             .thenReturn(CompletableFuture.completedFuture(null));
 

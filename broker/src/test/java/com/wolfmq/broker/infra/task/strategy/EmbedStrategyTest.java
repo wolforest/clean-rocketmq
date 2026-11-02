@@ -1,12 +1,12 @@
 package com.wolfmq.broker.infra.task.strategy;
 
 import com.wolfmq.broker.infra.task.TaskContext;
-import com.wolfmq.domain.config.business.TaskConfig;
-import com.wolfmq.domain.config.business.TopicConfig;
-import com.wolfmq.domain.config.server.BrokerConfig;
-import com.wolfmq.domain.server.task.QueueTask;
-import com.wolfmq.domain.server.task.StoreTask;
-import com.wolfmq.domain.server.task.TaskFactory;
+import com.wolfmq.common.config.business.TaskConfig;
+import com.wolfmq.common.config.business.TopicConfig;
+import com.wolfmq.common.config.server.BrokerConfig;
+import com.wolfmq.common.server.task.QueueTask;
+import com.wolfmq.common.server.task.StoreTask;
+import com.wolfmq.common.server.task.TaskFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;

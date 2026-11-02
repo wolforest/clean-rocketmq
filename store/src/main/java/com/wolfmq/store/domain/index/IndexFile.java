@@ -1,6 +1,6 @@
 package com.wolfmq.store.domain.index;
 
-import com.wolfmq.domain.core.mmap.MappedFile;
+import com.wolfmq.common.core.mmap.MappedFile;
 import com.wolfmq.store.infra.file.DefaultMappedFile;
 import java.nio.MappedByteBuffer;
 import java.util.ArrayList;

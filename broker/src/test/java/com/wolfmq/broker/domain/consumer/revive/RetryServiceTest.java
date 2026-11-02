@@ -1,15 +1,15 @@
 package com.wolfmq.broker.domain.consumer.revive;
 
-import com.wolfmq.domain.config.server.BrokerConfig;
-import com.wolfmq.domain.domain.consumer.consume.pop.checkpoint.PopCheckPoint;
-import com.wolfmq.domain.domain.message.MessageBO;
-import com.wolfmq.domain.domain.meta.offset.OffsetRequest;
-import com.wolfmq.domain.domain.meta.offset.OffsetResult;
-import com.wolfmq.domain.domain.meta.topic.TopicRequest;
-import com.wolfmq.domain.domain.mq.dto.EnqueueRequest;
-import com.wolfmq.domain.domain.mq.dto.EnqueueResult;
-import com.wolfmq.domain.domain.mq.dto.EnqueueStatus;
-import com.wolfmq.domain.core.mmap.InsertResult;
+import com.wolfmq.common.config.server.BrokerConfig;
+import com.wolfmq.common.domain.consumer.consume.pop.checkpoint.PopCheckPoint;
+import com.wolfmq.common.domain.message.MessageBO;
+import com.wolfmq.common.domain.meta.offset.OffsetRequest;
+import com.wolfmq.common.domain.meta.offset.OffsetResult;
+import com.wolfmq.common.domain.meta.topic.TopicRequest;
+import com.wolfmq.common.domain.mq.dto.EnqueueRequest;
+import com.wolfmq.common.domain.mq.dto.EnqueueResult;
+import com.wolfmq.common.domain.mq.dto.EnqueueStatus;
+import com.wolfmq.common.core.mmap.InsertResult;
 import com.wolfmq.rpc.store.facade.ConsumeOffsetFacade;
 import com.wolfmq.rpc.store.facade.MQFacade;
 import com.wolfmq.rpc.store.facade.TopicFacade;

@@ -2,7 +2,7 @@ package com.wolfmq.broker.domain.transaction;
 
 import com.wolfmq.broker.domain.transaction.receipt.Receipt;
 import com.wolfmq.broker.domain.transaction.receipt.ReceiptRegistry;
-import com.wolfmq.domain.config.business.TransactionConfig;
+import com.wolfmq.common.config.business.TransactionConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

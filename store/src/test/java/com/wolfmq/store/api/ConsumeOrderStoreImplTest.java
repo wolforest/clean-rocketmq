@@ -1,7 +1,7 @@
 package com.wolfmq.store.api;
 
-import com.wolfmq.domain.domain.meta.order.OrderRequest;
-import com.wolfmq.domain.domain.meta.service.ConsumeOrderService;
+import com.wolfmq.common.domain.meta.order.OrderRequest;
+import com.wolfmq.common.domain.meta.service.ConsumeOrderService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

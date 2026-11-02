@@ -1,7 +1,7 @@
 package com.wolfmq.store.server.bootstrap;
 
 import cn.coderule.common.convention.container.ApplicationContext;
-import com.wolfmq.domain.config.server.StoreConfig;
+import com.wolfmq.common.config.server.StoreConfig;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

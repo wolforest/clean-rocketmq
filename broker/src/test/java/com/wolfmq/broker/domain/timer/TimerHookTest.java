@@ -1,9 +1,9 @@
 package com.wolfmq.broker.domain.timer;
 
-import com.wolfmq.domain.config.business.TimerConfig;
-import com.wolfmq.domain.config.server.BrokerConfig;
-import com.wolfmq.domain.domain.message.MessageBO;
-import com.wolfmq.domain.domain.producer.ProduceContext;
+import com.wolfmq.common.config.business.TimerConfig;
+import com.wolfmq.common.config.server.BrokerConfig;
+import com.wolfmq.common.domain.message.MessageBO;
+import com.wolfmq.common.domain.producer.ProduceContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -117,7 +117,7 @@ class TimerHookTest {
         ProduceContext context = new ProduceContext();
         context.setMessageBO(message);
 
-        assertThrows(com.wolfmq.domain.core.exception.InvalidRequestException.class, () -> {
+        assertThrows(com.wolfmq.common.core.exception.InvalidRequestException.class, () -> {
             timerHook.preProduce(context);
         });
     }

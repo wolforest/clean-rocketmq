@@ -13,7 +13,7 @@ import com.wolfmq.rpc.common.rpc.netty.handler.NettyServerHandler;
 import com.wolfmq.rpc.common.rpc.netty.handler.RequestCodeCounter;
 import com.wolfmq.rpc.common.rpc.netty.handler.ServerConnectionHandler;
 import com.wolfmq.rpc.common.rpc.netty.service.NettyService;
-import com.wolfmq.domain.config.network.RpcServerConfig;
+import com.wolfmq.common.config.network.RpcServerConfig;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.ChannelFuture;

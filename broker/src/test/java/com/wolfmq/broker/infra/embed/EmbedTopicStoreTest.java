@@ -1,7 +1,7 @@
 package com.wolfmq.broker.infra.embed;
 
-import com.wolfmq.domain.domain.meta.topic.Topic;
-import com.wolfmq.domain.server.store.api.meta.TopicStore;
+import com.wolfmq.common.domain.meta.topic.Topic;
+import com.wolfmq.common.server.store.api.meta.TopicStore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

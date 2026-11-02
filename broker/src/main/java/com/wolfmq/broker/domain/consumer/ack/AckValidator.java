@@ -1,12 +1,12 @@
 package com.wolfmq.broker.domain.consumer.ack;
 
-import com.wolfmq.domain.core.constant.code.InvalidCode;
-import com.wolfmq.domain.core.exception.InvalidRequestException;
-import com.wolfmq.domain.domain.consumer.ack.AckInfo;
-import com.wolfmq.domain.domain.consumer.ack.store.AckMessage;
-import com.wolfmq.domain.domain.consumer.consume.mq.QueueRequest;
-import com.wolfmq.domain.domain.consumer.consume.mq.QueueResult;
-import com.wolfmq.domain.domain.meta.topic.Topic;
+import com.wolfmq.common.core.constant.code.InvalidCode;
+import com.wolfmq.common.core.exception.InvalidRequestException;
+import com.wolfmq.common.domain.consumer.ack.AckInfo;
+import com.wolfmq.common.domain.consumer.ack.store.AckMessage;
+import com.wolfmq.common.domain.consumer.consume.mq.QueueRequest;
+import com.wolfmq.common.domain.consumer.consume.mq.QueueResult;
+import com.wolfmq.common.domain.meta.topic.Topic;
 import com.wolfmq.rpc.store.facade.MQFacade;
 import com.wolfmq.rpc.store.facade.TopicFacade;
 import lombok.extern.slf4j.Slf4j;

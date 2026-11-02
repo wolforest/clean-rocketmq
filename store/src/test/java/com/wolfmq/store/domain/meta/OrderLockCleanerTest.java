@@ -1,13 +1,13 @@
 package com.wolfmq.store.domain.meta;
 
-import com.wolfmq.domain.domain.meta.order.ConsumeOrder;
-import com.wolfmq.domain.domain.meta.order.OrderInfo;
-import com.wolfmq.domain.domain.meta.order.OrderRequest;
-import com.wolfmq.domain.domain.meta.order.OrderUtils;
-import com.wolfmq.domain.domain.meta.subscription.SubscriptionGroup;
-import com.wolfmq.domain.domain.meta.topic.Topic;
-import com.wolfmq.domain.domain.meta.service.SubscriptionService;
-import com.wolfmq.domain.domain.meta.service.TopicService;
+import com.wolfmq.common.domain.meta.order.ConsumeOrder;
+import com.wolfmq.common.domain.meta.order.OrderInfo;
+import com.wolfmq.common.domain.meta.order.OrderRequest;
+import com.wolfmq.common.domain.meta.order.OrderUtils;
+import com.wolfmq.common.domain.meta.subscription.SubscriptionGroup;
+import com.wolfmq.common.domain.meta.topic.Topic;
+import com.wolfmq.common.domain.meta.service.SubscriptionService;
+import com.wolfmq.common.domain.meta.service.TopicService;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;

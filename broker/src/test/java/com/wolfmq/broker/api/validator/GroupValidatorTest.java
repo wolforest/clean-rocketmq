@@ -1,6 +1,6 @@
 package com.wolfmq.broker.api.validator;
 
-import com.wolfmq.domain.core.exception.InvalidParameterException;
+import com.wolfmq.common.core.exception.InvalidParameterException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

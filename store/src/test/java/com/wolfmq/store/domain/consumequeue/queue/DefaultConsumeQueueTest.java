@@ -1,16 +1,16 @@
 package com.wolfmq.store.domain.consumequeue.queue;
 
-import com.wolfmq.domain.config.server.StoreConfig;
-import com.wolfmq.domain.config.store.ConsumeQueueConfig;
-import com.wolfmq.domain.config.store.StorePath;
-import com.wolfmq.domain.domain.consumequeue.QueueType;
-import com.wolfmq.domain.domain.commitlog.dispatch.CommitEvent;
-import com.wolfmq.domain.domain.consumequeue.QueueUnit;
-import com.wolfmq.domain.domain.consumequeue.ConsumeQueue;
-import com.wolfmq.domain.domain.message.MessageBO;
-import com.wolfmq.domain.test.ConfigMock;
-import com.wolfmq.domain.test.MessageMock;
-import com.wolfmq.domain.test.QueueMock;
+import com.wolfmq.common.config.server.StoreConfig;
+import com.wolfmq.common.config.store.ConsumeQueueConfig;
+import com.wolfmq.common.config.store.StorePath;
+import com.wolfmq.common.domain.consumequeue.QueueType;
+import com.wolfmq.common.domain.commitlog.dispatch.CommitEvent;
+import com.wolfmq.common.domain.consumequeue.QueueUnit;
+import com.wolfmq.common.domain.consumequeue.ConsumeQueue;
+import com.wolfmq.common.domain.message.MessageBO;
+import com.wolfmq.common.test.ConfigMock;
+import com.wolfmq.common.test.MessageMock;
+import com.wolfmq.common.test.QueueMock;
 import com.wolfmq.store.server.bootstrap.StoreCheckpoint;
 import java.nio.file.Path;
 import java.util.List;

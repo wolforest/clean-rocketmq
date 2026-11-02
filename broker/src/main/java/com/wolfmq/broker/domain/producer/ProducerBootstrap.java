@@ -1,6 +1,6 @@
 package com.wolfmq.broker.domain.producer;
 
-import com.wolfmq.domain.core.constant.ContextNamespace;
+import com.wolfmq.common.core.constant.ContextNamespace;
 
 import cn.coderule.common.convention.container.ApplicationContext;
 
@@ -10,7 +10,7 @@ import com.wolfmq.broker.domain.meta.RouteService;
 import com.wolfmq.broker.domain.transaction.Transaction;
 import com.wolfmq.broker.infra.store.MQStore;
 import com.wolfmq.broker.infra.store.TopicStore;
-import com.wolfmq.domain.config.server.BrokerConfig;
+import com.wolfmq.common.config.server.BrokerConfig;
 
 public class ProducerBootstrap implements Lifecycle {
     private final ApplicationContext context;

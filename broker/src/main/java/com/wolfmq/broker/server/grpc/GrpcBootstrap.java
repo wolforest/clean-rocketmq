@@ -5,8 +5,8 @@ import cn.coderule.common.convention.container.ApplicationContext;
 
 import com.wolfmq.broker.server.grpc.service.MessageBootstrap;
 import cn.coderule.common.convention.service.Lifecycle;
-import com.wolfmq.domain.config.server.BrokerConfig;
-import com.wolfmq.domain.config.network.GrpcConfig;
+import com.wolfmq.common.config.server.BrokerConfig;
+import com.wolfmq.common.config.network.GrpcConfig;
 
 public class GrpcBootstrap implements Lifecycle {
     private final ApplicationContext context;

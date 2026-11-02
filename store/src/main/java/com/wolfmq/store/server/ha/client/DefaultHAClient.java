@@ -2,8 +2,8 @@ package com.wolfmq.store.server.ha.client;
 
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 import cn.coderule.common.util.net.NetworkUtil;
-import com.wolfmq.domain.config.server.StoreConfig;
-import com.wolfmq.domain.server.store.api.CommitLogStore;
+import com.wolfmq.common.config.server.StoreConfig;
+import com.wolfmq.common.server.store.api.CommitLogStore;
 import com.wolfmq.rpc.common.rpc.netty.service.helper.NettyHelper;
 import com.wolfmq.store.server.ha.core.ConnectionState;
 import com.wolfmq.store.server.ha.core.monitor.FlowMonitor;

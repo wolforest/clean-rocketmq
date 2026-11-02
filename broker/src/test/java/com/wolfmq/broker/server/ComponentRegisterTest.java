@@ -1,8 +1,8 @@
 package com.wolfmq.broker.server;
 
 import cn.coderule.common.convention.container.ApplicationContext;
-import com.wolfmq.domain.config.server.BrokerConfig;
-import com.wolfmq.domain.test.ConfigMock;
+import com.wolfmq.common.config.server.BrokerConfig;
+import com.wolfmq.common.test.ConfigMock;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

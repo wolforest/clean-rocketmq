@@ -1,11 +1,11 @@
 package com.wolfmq.store.domain.commitlog.log;
 
-import com.wolfmq.domain.domain.message.MessageBO;
-import com.wolfmq.domain.domain.commitlog.CommitLog;
-import com.wolfmq.domain.core.mmap.MappedFile;
-import com.wolfmq.domain.core.mmap.MappedFileQueue;
-import com.wolfmq.domain.server.store.CheckPoint;
-import com.wolfmq.domain.server.store.Offset;
+import com.wolfmq.common.domain.message.MessageBO;
+import com.wolfmq.common.domain.commitlog.CommitLog;
+import com.wolfmq.common.core.mmap.MappedFile;
+import com.wolfmq.common.core.mmap.MappedFileQueue;
+import com.wolfmq.common.server.store.CheckPoint;
+import com.wolfmq.common.server.store.Offset;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;

@@ -2,8 +2,8 @@ package com.wolfmq.broker.infra.store;
 
 import com.wolfmq.broker.infra.embed.EmbedConsumeOrderStore;
 import com.wolfmq.broker.infra.remote.RemoteConsumeOrderStore;
-import com.wolfmq.domain.config.server.BrokerConfig;
-import com.wolfmq.domain.domain.meta.order.OrderRequest;
+import com.wolfmq.common.config.server.BrokerConfig;
+import com.wolfmq.common.domain.meta.order.OrderRequest;
 import com.wolfmq.rpc.store.facade.ConsumeOrderFacade;
 
 public class ConsumeOrderStore implements ConsumeOrderFacade {

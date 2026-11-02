@@ -3,7 +3,7 @@ package com.wolfmq.store.server.ha.server;
 import cn.coderule.common.convention.service.LifecycleManager;
 import cn.coderule.common.lang.concurrent.thread.WakeupCoordinator;
 import cn.coderule.common.util.net.NetworkUtil;
-import com.wolfmq.domain.config.server.StoreConfig;
+import com.wolfmq.common.config.server.StoreConfig;
 import com.wolfmq.store.server.ha.core.HAConnection;
 import com.wolfmq.store.server.ha.core.HAContext;
 import com.wolfmq.store.server.ha.server.socket.DefaultAcceptService;

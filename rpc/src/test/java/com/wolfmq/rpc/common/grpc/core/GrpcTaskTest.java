@@ -1,6 +1,6 @@
 package com.wolfmq.rpc.common.grpc.core;
 
-import com.wolfmq.domain.server.RequestContext;
+import com.wolfmq.common.server.RequestContext;
 import io.grpc.stub.StreamObserver;
 import org.junit.jupiter.api.Test;
 

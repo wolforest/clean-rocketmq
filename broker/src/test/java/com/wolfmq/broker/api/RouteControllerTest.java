@@ -3,7 +3,7 @@ package com.wolfmq.broker.api;
 import com.wolfmq.broker.domain.meta.BrokerTopicService;
 import com.wolfmq.broker.domain.meta.RouteService;
 import com.wolfmq.broker.domain.meta.SubscriptionService;
-import com.wolfmq.domain.domain.meta.topic.Topic;
+import com.wolfmq.common.domain.meta.topic.Topic;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

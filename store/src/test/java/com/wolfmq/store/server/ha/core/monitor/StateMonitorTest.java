@@ -1,6 +1,6 @@
 package com.wolfmq.store.server.ha.core.monitor;
 
-import com.wolfmq.domain.config.server.StoreConfig;
+import com.wolfmq.common.config.server.StoreConfig;
 import com.wolfmq.store.server.ha.client.HAClient;
 import com.wolfmq.store.server.ha.core.ConnectionState;
 import com.wolfmq.store.server.ha.core.HAConnection;
@@ -10,11 +10,6 @@ import org.junit.jupiter.api.Test;
 
 import java.net.InetSocketAddress;
 import java.nio.channels.SocketChannel;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;

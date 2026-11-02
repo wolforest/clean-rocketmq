@@ -1,9 +1,9 @@
 package com.wolfmq.broker.server.grpc.service.consume;
 
-import com.wolfmq.domain.server.RequestContext;
-import com.wolfmq.domain.server.heartbeat.SubscriptionData;
-import com.wolfmq.domain.domain.consumer.hook.PopFilter.FilterResult;
-import com.wolfmq.domain.domain.message.MessageBO;
+import com.wolfmq.common.server.RequestContext;
+import com.wolfmq.common.server.heartbeat.SubscriptionData;
+import com.wolfmq.common.domain.consumer.hook.PopFilter.FilterResult;
+import com.wolfmq.common.domain.message.MessageBO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

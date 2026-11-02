@@ -7,8 +7,8 @@ import cn.coderule.common.convention.service.Lifecycle;
 import com.wolfmq.broker.domain.consumer.consumer.ConsumerManager;
 import com.wolfmq.broker.infra.store.MQStore;
 import com.wolfmq.broker.infra.store.TopicStore;
-import com.wolfmq.domain.config.server.BrokerConfig;
-import com.wolfmq.domain.domain.consumer.receipt.ReceiptHandler;
+import com.wolfmq.common.config.server.BrokerConfig;
+import com.wolfmq.common.domain.consumer.receipt.ReceiptHandler;
 import com.wolfmq.rpc.store.facade.MQFacade;
 import com.wolfmq.rpc.store.facade.TopicFacade;
 

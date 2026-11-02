@@ -2,7 +2,7 @@ package com.wolfmq.broker.domain.transaction.receipt;
 
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 import cn.coderule.common.util.lang.ThreadUtil;
-import com.wolfmq.domain.config.business.TransactionConfig;
+import com.wolfmq.common.config.business.TransactionConfig;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

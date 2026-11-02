@@ -2,14 +2,14 @@ package com.wolfmq.rpc.registry;
 
 import cn.coderule.common.convention.service.Lifecycle;
 import com.wolfmq.rpc.registry.protocol.body.RegisterStoreResult;
-import com.wolfmq.domain.server.registry.BrokerInfo;
-import com.wolfmq.domain.server.registry.ClusterInfo;
-import com.wolfmq.domain.server.registry.GroupInfo;
-import com.wolfmq.domain.server.heartbeat.HeartBeat;
-import com.wolfmq.domain.server.registry.ServerInfo;
-import com.wolfmq.domain.server.registry.StoreInfo;
-import com.wolfmq.domain.server.route.RouteInfo;
-import com.wolfmq.domain.server.route.TopicInfo;
+import com.wolfmq.common.server.registry.BrokerInfo;
+import com.wolfmq.common.server.registry.ClusterInfo;
+import com.wolfmq.common.server.registry.GroupInfo;
+import com.wolfmq.common.server.heartbeat.HeartBeat;
+import com.wolfmq.common.server.registry.ServerInfo;
+import com.wolfmq.common.server.registry.StoreInfo;
+import com.wolfmq.common.server.route.RouteInfo;
+import com.wolfmq.common.server.route.TopicInfo;
 import java.util.List;
 
 public interface RegistryClient extends Lifecycle {

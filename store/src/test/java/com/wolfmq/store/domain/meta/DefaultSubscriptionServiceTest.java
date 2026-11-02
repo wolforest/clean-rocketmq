@@ -1,9 +1,9 @@
 package com.wolfmq.store.domain.meta;
 
-import com.wolfmq.domain.core.constant.MQConstants;
-import com.wolfmq.domain.domain.meta.service.ConsumeOffsetService;
-import com.wolfmq.domain.domain.meta.subscription.SubscriptionGroup;
-import com.wolfmq.domain.server.store.StoreState;
+import com.wolfmq.common.core.constant.MQConstants;
+import com.wolfmq.common.domain.meta.service.ConsumeOffsetService;
+import com.wolfmq.common.domain.meta.subscription.SubscriptionGroup;
+import com.wolfmq.common.server.store.StoreState;
 import java.nio.file.Path;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;

@@ -1,11 +1,11 @@
 
 package com.wolfmq.rpc.registry.protocol.body;
 
-import com.wolfmq.domain.core.constant.MQConstants;
-import com.wolfmq.domain.domain.meta.topic.Topic;
-import com.wolfmq.domain.domain.meta.DataVersion;
+import com.wolfmq.common.core.constant.MQConstants;
+import com.wolfmq.common.domain.meta.topic.Topic;
+import com.wolfmq.common.domain.meta.DataVersion;
 import com.wolfmq.rpc.common.rpc.protocol.codec.RpcSerializable;
-import com.wolfmq.domain.domain.meta.statictopic.TopicQueueMappingInfo;
+import com.wolfmq.common.domain.meta.statictopic.TopicQueueMappingInfo;
 import com.alibaba.fastjson2.JSON;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

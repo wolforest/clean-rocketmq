@@ -4,9 +4,9 @@
  * $Id: CreateTopicRequestHeader.java 1835 2013-05-16 02:00:50Z vintagewang@apache.org $
  */package com.wolfmq.rpc.store.protocol.header;
 
-import com.wolfmq.domain.domain.message.enums.TagType;
-import com.wolfmq.domain.domain.meta.topic.Topic;
-import com.wolfmq.domain.core.attribute.AttributeParser;
+import com.wolfmq.common.domain.message.enums.TagType;
+import com.wolfmq.common.domain.meta.topic.Topic;
+import com.wolfmq.common.core.attribute.AttributeParser;
 import com.wolfmq.rpc.common.rpc.core.annotation.CFNotNull;
 import com.wolfmq.rpc.common.rpc.core.annotation.CFNullable;
 import com.wolfmq.rpc.common.rpc.core.annotation.RocketMQAction;

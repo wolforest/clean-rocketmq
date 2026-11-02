@@ -2,8 +2,8 @@ package com.wolfmq.broker.server.grpc.interceptor;
 
 import com.wolfmq.broker.server.grpc.service.channel.ChannelManager;
 import com.wolfmq.broker.server.grpc.service.channel.SettingManager;
-import com.wolfmq.domain.core.event.ProducerEvent;
-import com.wolfmq.domain.server.ClientChannelInfo;
+import com.wolfmq.common.core.event.ProducerEvent;
+import com.wolfmq.common.server.ClientChannelInfo;
 import io.netty.channel.Channel;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

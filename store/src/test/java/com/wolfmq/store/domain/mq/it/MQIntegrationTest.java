@@ -1,19 +1,19 @@
 package com.wolfmq.store.domain.mq.it;
 
-import com.wolfmq.domain.config.server.StoreConfig;
-import com.wolfmq.domain.domain.message.enums.MessageStatus;
-import com.wolfmq.domain.core.lock.queue.DequeueLock;
-import com.wolfmq.domain.domain.consumer.consume.InflightCounter;
-import com.wolfmq.domain.domain.consumer.consume.mq.MessageRequest;
-import com.wolfmq.domain.domain.consumer.consume.mq.MessageResult;
-import com.wolfmq.domain.domain.message.MessageBO;
-import com.wolfmq.domain.domain.mq.dto.DequeueRequest;
-import com.wolfmq.domain.domain.mq.dto.DequeueResult;
-import com.wolfmq.domain.domain.mq.dto.EnqueueFuture;
-import com.wolfmq.domain.domain.mq.dto.EnqueueResult;
-import com.wolfmq.domain.test.MessageMock;
-import com.wolfmq.domain.domain.meta.service.ConsumeOffsetService;
-import com.wolfmq.domain.domain.meta.service.ConsumeOrderService;
+import com.wolfmq.common.config.server.StoreConfig;
+import com.wolfmq.common.domain.message.enums.MessageStatus;
+import com.wolfmq.common.core.lock.queue.DequeueLock;
+import com.wolfmq.common.domain.consumer.consume.InflightCounter;
+import com.wolfmq.common.domain.consumer.consume.mq.MessageRequest;
+import com.wolfmq.common.domain.consumer.consume.mq.MessageResult;
+import com.wolfmq.common.domain.message.MessageBO;
+import com.wolfmq.common.domain.mq.dto.DequeueRequest;
+import com.wolfmq.common.domain.mq.dto.DequeueResult;
+import com.wolfmq.common.domain.mq.dto.EnqueueFuture;
+import com.wolfmq.common.domain.mq.dto.EnqueueResult;
+import com.wolfmq.common.test.MessageMock;
+import com.wolfmq.common.domain.meta.service.ConsumeOffsetService;
+import com.wolfmq.common.domain.meta.service.ConsumeOrderService;
 import com.wolfmq.store.domain.mq.DefaultMQService;
 import com.wolfmq.store.domain.mq.ack.AckOffset;
 import com.wolfmq.store.domain.mq.ack.AckService;
@@ -98,7 +98,7 @@ class MQIntegrationTest extends BaseMQIntegrationTest {
     @Test
     void testDequeueServiceWithFlowControl() {
         StoreConfig localConfig = new StoreConfig();
-        localConfig.setMessage(new com.wolfmq.domain.config.business.MessageConfig());
+        localConfig.setMessage(new com.wolfmq.common.config.business.MessageConfig());
         localConfig.getMessage().setEnablePopThreshold(true);
         localConfig.getMessage().setPopInflightThreshold(1);
 
@@ -129,7 +129,7 @@ class MQIntegrationTest extends BaseMQIntegrationTest {
     @Test
     void testDequeueServiceWithLockFailure() {
         StoreConfig localConfig = new StoreConfig();
-        localConfig.setMessage(new com.wolfmq.domain.config.business.MessageConfig());
+        localConfig.setMessage(new com.wolfmq.common.config.business.MessageConfig());
 
         DequeueLock dequeueLock = mock(DequeueLock.class);
         when(dequeueLock.tryLock(any(DequeueRequest.class))).thenReturn(false);
@@ -158,7 +158,7 @@ class MQIntegrationTest extends BaseMQIntegrationTest {
     @Test
     void testDequeueServiceSuccessfulDequeue() {
         StoreConfig localConfig = new StoreConfig();
-        localConfig.setMessage(new com.wolfmq.domain.config.business.MessageConfig());
+        localConfig.setMessage(new com.wolfmq.common.config.business.MessageConfig());
 
         DequeueLock dequeueLock = new DequeueLock();
         InflightCounter counter = new InflightCounter();
@@ -234,7 +234,7 @@ class MQIntegrationTest extends BaseMQIntegrationTest {
     @Test
     void testDequeueServiceNotFoundMessages() {
         StoreConfig localConfig = new StoreConfig();
-        localConfig.setMessage(new com.wolfmq.domain.config.business.MessageConfig());
+        localConfig.setMessage(new com.wolfmq.common.config.business.MessageConfig());
 
         DequeueLock dequeueLock = new DequeueLock();
         InflightCounter counter = new InflightCounter();
@@ -300,7 +300,7 @@ class MQIntegrationTest extends BaseMQIntegrationTest {
         AckOffset ackOffset = mock(AckOffset.class);
         AckService ackService = new AckService(
             localConfig, "REVIVE_TOPIC",
-            new com.wolfmq.domain.domain.consumer.ack.AckBuffer(localConfig.getMessage()),
+            new com.wolfmq.common.domain.consumer.ack.AckBuffer(localConfig.getMessage()),
             mock(EnqueueService.class), ackOffset
         );
 
@@ -326,7 +326,7 @@ class MQIntegrationTest extends BaseMQIntegrationTest {
     @Test
     void testAckServiceAddCheckpointAndAck() {
         StoreConfig localConfig = new StoreConfig();
-        localConfig.setMessage(new com.wolfmq.domain.config.business.MessageConfig());
+        localConfig.setMessage(new com.wolfmq.common.config.business.MessageConfig());
         localConfig.getMessage().setEnablePopBufferMerge(true);
 
         AckOffset ackOffset = mock(AckOffset.class);
@@ -334,12 +334,12 @@ class MQIntegrationTest extends BaseMQIntegrationTest {
 
         AckService ackService = new AckService(
             localConfig, "REVIVE_TOPIC",
-            new com.wolfmq.domain.domain.consumer.ack.AckBuffer(localConfig.getMessage()),
+            new com.wolfmq.common.domain.consumer.ack.AckBuffer(localConfig.getMessage()),
             enqueueService, ackOffset
         );
 
-        com.wolfmq.domain.domain.consumer.consume.pop.checkpoint.PopCheckPoint point =
-            com.wolfmq.domain.domain.consumer.consume.pop.checkpoint.PopCheckPoint.builder()
+        com.wolfmq.common.domain.consumer.consume.pop.checkpoint.PopCheckPoint point =
+            com.wolfmq.common.domain.consumer.consume.pop.checkpoint.PopCheckPoint.builder()
                 .topic("ACK_TOPIC")
                 .cid("ACK_GROUP")
                 .queueId(0)
@@ -350,13 +350,13 @@ class MQIntegrationTest extends BaseMQIntegrationTest {
                 .num((byte) 1)
                 .build();
 
-        com.wolfmq.domain.domain.consumer.consume.pop.checkpoint.PopCheckPointWrapper wrapper =
-            new com.wolfmq.domain.domain.consumer.consume.pop.checkpoint.PopCheckPointWrapper(
+        com.wolfmq.common.domain.consumer.consume.pop.checkpoint.PopCheckPointWrapper wrapper =
+            new com.wolfmq.common.domain.consumer.consume.pop.checkpoint.PopCheckPointWrapper(
                 1, -1, point, 11
             );
 
-        com.wolfmq.domain.domain.consumer.ack.AckBuffer ackBuffer =
-            new com.wolfmq.domain.domain.consumer.ack.AckBuffer(localConfig.getMessage());
+        com.wolfmq.common.domain.consumer.ack.AckBuffer ackBuffer =
+            new com.wolfmq.common.domain.consumer.ack.AckBuffer(localConfig.getMessage());
 
         ackBuffer.enqueue(wrapper);
         assertTrue(ackBuffer.getTotalSize() > 0, "ack buffer should contain checkpoint after enqueue");
@@ -368,7 +368,7 @@ class MQIntegrationTest extends BaseMQIntegrationTest {
 
     @Test
     void testAckOffsetAckAndNack() {
-        com.wolfmq.domain.core.lock.queue.DequeueLock dequeueLock = new com.wolfmq.domain.core.lock.queue.DequeueLock();
+        com.wolfmq.common.core.lock.queue.DequeueLock dequeueLock = new com.wolfmq.common.core.lock.queue.DequeueLock();
         InflightCounter inflightCounter = new InflightCounter();
 
         ConsumeOffsetService consumeOffsetService =

@@ -1,8 +1,8 @@
 package com.wolfmq.broker.domain.meta;
 
-import com.wolfmq.domain.domain.message.enums.MessageType;
-import com.wolfmq.domain.domain.meta.topic.Topic;
-import com.wolfmq.domain.domain.meta.topic.TopicRequest;
+import com.wolfmq.common.domain.message.enums.MessageType;
+import com.wolfmq.common.domain.meta.topic.Topic;
+import com.wolfmq.common.domain.meta.topic.TopicRequest;
 import com.wolfmq.rpc.store.facade.TopicFacade;
 import java.util.concurrent.CompletableFuture;
 

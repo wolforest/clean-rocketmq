@@ -1,13 +1,13 @@
 package com.wolfmq.broker.domain.consumer.renew;
 
 import com.wolfmq.broker.domain.consumer.ack.InvisibleService;
-import com.wolfmq.domain.domain.consumer.receipt.EventListener;
-import com.wolfmq.domain.server.RequestContext;
-import com.wolfmq.domain.domain.consumer.ack.broker.AckResult;
-import com.wolfmq.domain.domain.consumer.ack.broker.InvisibleRequest;
-import com.wolfmq.domain.domain.consumer.receipt.MessageReceipt;
-import com.wolfmq.domain.domain.consumer.receipt.ReceiptHandleGroupKey;
-import com.wolfmq.domain.domain.consumer.revive.RenewEvent;
+import com.wolfmq.common.domain.consumer.receipt.EventListener;
+import com.wolfmq.common.server.RequestContext;
+import com.wolfmq.common.domain.consumer.ack.broker.AckResult;
+import com.wolfmq.common.domain.consumer.ack.broker.InvisibleRequest;
+import com.wolfmq.common.domain.consumer.receipt.MessageReceipt;
+import com.wolfmq.common.domain.consumer.receipt.ReceiptHandleGroupKey;
+import com.wolfmq.common.domain.consumer.revive.RenewEvent;
 import java.util.concurrent.CompletableFuture;
 
 public class RenewListener implements EventListener<RenewEvent> {

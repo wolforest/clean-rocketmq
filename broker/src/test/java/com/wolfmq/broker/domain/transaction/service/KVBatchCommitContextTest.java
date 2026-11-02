@@ -1,6 +1,6 @@
 package com.wolfmq.broker.domain.transaction.service;
 
-import com.wolfmq.domain.domain.message.MessageBO;
+import com.wolfmq.common.domain.message.MessageBO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

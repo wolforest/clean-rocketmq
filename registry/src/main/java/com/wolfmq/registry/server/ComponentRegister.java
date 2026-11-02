@@ -2,7 +2,7 @@ package com.wolfmq.registry.server;
 
 import cn.coderule.common.convention.container.ApplicationContext;
 import cn.coderule.common.convention.service.LifecycleManager;
-import com.wolfmq.domain.config.server.RegistryConfig;
+import com.wolfmq.common.config.server.RegistryConfig;
 import com.wolfmq.registry.domain.broker.BrokerBootstrap;
 import com.wolfmq.registry.domain.kv.KVBootstrap;
 import com.wolfmq.registry.domain.property.PropertyBootstrap;
@@ -10,7 +10,7 @@ import com.wolfmq.registry.domain.store.StoreBootstrap;
 import com.wolfmq.registry.server.bootstrap.ExecutorFactory;
 import com.wolfmq.registry.server.rpc.HaClient;
 import com.wolfmq.registry.server.rpc.RpcBootstrap;
-import com.wolfmq.domain.config.network.RpcClientConfig;
+import com.wolfmq.common.config.network.RpcClientConfig;
 
 /**
  * Component register, all components registered

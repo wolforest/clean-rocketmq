@@ -1,6 +1,6 @@
 package com.wolfmq.broker.domain.transaction.receipt;
 
-import com.wolfmq.domain.config.business.TransactionConfig;
+import com.wolfmq.common.config.business.TransactionConfig;
 import java.util.Iterator;
 import java.util.NavigableSet;
 import java.util.NoSuchElementException;

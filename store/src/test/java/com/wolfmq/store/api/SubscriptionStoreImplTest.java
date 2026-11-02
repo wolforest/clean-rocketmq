@@ -1,8 +1,8 @@
 package com.wolfmq.store.api;
 
-import com.wolfmq.domain.domain.meta.subscription.SubscriptionGroup;
-import com.wolfmq.domain.domain.meta.subscription.SubscriptionRequest;
-import com.wolfmq.domain.domain.meta.service.SubscriptionService;
+import com.wolfmq.common.domain.meta.subscription.SubscriptionGroup;
+import com.wolfmq.common.domain.meta.subscription.SubscriptionRequest;
+import com.wolfmq.common.domain.meta.service.SubscriptionService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

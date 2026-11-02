@@ -1,7 +1,7 @@
 package com.wolfmq.registry.domain.kv;
 
 import cn.coderule.common.util.io.FileUtil;
-import com.wolfmq.domain.config.server.RegistryConfig;
+import com.wolfmq.common.config.server.RegistryConfig;
 import com.wolfmq.rpc.registry.protocol.body.KVTable;
 import java.util.HashMap;
 import java.util.Map.Entry;

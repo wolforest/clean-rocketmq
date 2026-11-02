@@ -1,7 +1,7 @@
 package com.wolfmq.broker.domain.meta;
 
 import com.wolfmq.broker.infra.store.SubscriptionStore;
-import com.wolfmq.domain.domain.meta.subscription.SubscriptionGroup;
+import com.wolfmq.common.domain.meta.subscription.SubscriptionGroup;
 import java.util.concurrent.CompletableFuture;
 import lombok.extern.slf4j.Slf4j;
 

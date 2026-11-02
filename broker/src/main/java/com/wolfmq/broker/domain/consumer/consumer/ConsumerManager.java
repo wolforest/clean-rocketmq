@@ -1,12 +1,12 @@
 package com.wolfmq.broker.domain.consumer.consumer;
 
-import com.wolfmq.domain.config.server.BrokerConfig;
-import com.wolfmq.domain.domain.consumer.ConsumerInfo;
-import com.wolfmq.domain.domain.consumer.running.ConsumerGroupInfo;
-import com.wolfmq.domain.core.event.ConsumerEvent;
-import com.wolfmq.domain.server.ClientChannelInfo;
-import com.wolfmq.domain.server.heartbeat.SubscriptionData;
-import com.wolfmq.domain.domain.consumer.hook.ConsumerListener;
+import com.wolfmq.common.config.server.BrokerConfig;
+import com.wolfmq.common.domain.consumer.ConsumerInfo;
+import com.wolfmq.common.domain.consumer.running.ConsumerGroupInfo;
+import com.wolfmq.common.core.event.ConsumerEvent;
+import com.wolfmq.common.server.ClientChannelInfo;
+import com.wolfmq.common.server.heartbeat.SubscriptionData;
+import com.wolfmq.common.domain.consumer.hook.ConsumerListener;
 import com.wolfmq.rpc.common.rpc.netty.service.helper.NettyHelper;
 import io.netty.channel.Channel;
 import java.util.ArrayList;

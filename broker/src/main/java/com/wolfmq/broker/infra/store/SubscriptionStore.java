@@ -2,9 +2,9 @@ package com.wolfmq.broker.infra.store;
 
 import com.wolfmq.broker.infra.embed.EmbedSubscriptionStore;
 import com.wolfmq.broker.infra.remote.RemoteSubscriptionStore;
-import com.wolfmq.domain.config.server.BrokerConfig;
-import com.wolfmq.domain.domain.meta.subscription.SubscriptionGroup;
-import com.wolfmq.domain.domain.meta.subscription.SubscriptionRequest;
+import com.wolfmq.common.config.server.BrokerConfig;
+import com.wolfmq.common.domain.meta.subscription.SubscriptionGroup;
+import com.wolfmq.common.domain.meta.subscription.SubscriptionRequest;
 import com.wolfmq.rpc.store.facade.SubscriptionFacade;
 import java.util.concurrent.CompletableFuture;
 

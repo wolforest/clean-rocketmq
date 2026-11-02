@@ -3,7 +3,7 @@ package com.wolfmq.rpc.common.grpc.channel;
 import apache.rocketmq.v2.Message;
 import apache.rocketmq.v2.RecoverOrphanedTransactionCommand;
 import apache.rocketmq.v2.TelemetryCommand;
-import com.wolfmq.domain.domain.message.MessageBO;
+import com.wolfmq.common.domain.message.MessageBO;
 import com.wolfmq.rpc.common.core.relay.RelayService;
 import com.wolfmq.rpc.common.core.relay.request.ConsumeRequest;
 import com.wolfmq.rpc.common.core.relay.request.ConsumerRequest;

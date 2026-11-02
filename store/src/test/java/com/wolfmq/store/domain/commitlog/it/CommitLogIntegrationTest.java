@@ -1,7 +1,7 @@
 package com.wolfmq.store.domain.commitlog.it;
 
-import com.wolfmq.domain.core.mmap.InsertResult;
-import com.wolfmq.domain.core.mmap.SelectedMappedBuffer;
+import com.wolfmq.common.core.mmap.InsertResult;
+import com.wolfmq.common.core.mmap.SelectedMappedBuffer;
 import org.junit.jupiter.api.Test;
 import java.nio.charset.StandardCharsets;
 

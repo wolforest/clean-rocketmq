@@ -1,14 +1,14 @@
 package com.wolfmq.store.domain.dispatcher.it;
 
 
-import com.wolfmq.domain.config.store.CommitConfig;
-import com.wolfmq.domain.domain.commitlog.dispatch.CommitEvent;
-import com.wolfmq.domain.domain.message.MessageBO;
-import com.wolfmq.domain.test.MessageMock;
+import com.wolfmq.common.config.store.CommitConfig;
+import com.wolfmq.common.domain.commitlog.dispatch.CommitEvent;
+import com.wolfmq.common.domain.message.MessageBO;
+import com.wolfmq.common.test.MessageMock;
 import com.wolfmq.store.domain.dispatcher.CommitListener;
 import com.wolfmq.store.domain.dispatcher.DispatchManager;
 import com.wolfmq.store.domain.dispatcher.DispatchQueue;
-import com.wolfmq.domain.server.store.CheckPoint;
+import com.wolfmq.common.server.store.CheckPoint;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

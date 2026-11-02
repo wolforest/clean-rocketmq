@@ -1,16 +1,16 @@
 package com.wolfmq.store.domain.mq;
 
 import cn.coderule.common.convention.service.Lifecycle;
-import com.wolfmq.domain.config.server.StoreConfig;
-import com.wolfmq.domain.core.lock.queue.DequeueLock;
-import com.wolfmq.domain.server.store.api.MQStore;
-import com.wolfmq.domain.domain.commitlog.CommitLog;
+import com.wolfmq.common.config.server.StoreConfig;
+import com.wolfmq.common.core.lock.queue.DequeueLock;
+import com.wolfmq.common.server.store.api.MQStore;
+import com.wolfmq.common.domain.commitlog.CommitLog;
 import com.wolfmq.store.domain.commitlog.CommitLogProxy;
 import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueProxy;
-import com.wolfmq.domain.domain.meta.service.ConsumeOffsetService;
-import com.wolfmq.domain.domain.meta.service.ConsumeOrderService;
-import com.wolfmq.domain.domain.mq.MQService;
-import com.wolfmq.domain.domain.consumer.consume.InflightCounter;
+import com.wolfmq.common.domain.meta.service.ConsumeOffsetService;
+import com.wolfmq.common.domain.meta.service.ConsumeOrderService;
+import com.wolfmq.common.domain.mq.MQService;
+import com.wolfmq.common.domain.consumer.consume.InflightCounter;
 import com.wolfmq.store.api.MQStoreImpl;
 import com.wolfmq.store.domain.mq.ack.AckBootstrap;
 import com.wolfmq.store.domain.mq.ack.AckService;
@@ -20,7 +20,7 @@ import com.wolfmq.store.domain.mq.queue.EnqueueService;
 import com.wolfmq.store.domain.mq.queue.MessageService;
 import com.wolfmq.store.domain.mq.queue.OffsetService;
 import cn.coderule.common.convention.container.ApplicationContext;
-import com.wolfmq.domain.core.constant.ContextNamespace;
+import com.wolfmq.common.core.constant.ContextNamespace;
 import com.wolfmq.store.server.ha.server.processor.CommitLogSynchronizer;
 import lombok.extern.slf4j.Slf4j;
 

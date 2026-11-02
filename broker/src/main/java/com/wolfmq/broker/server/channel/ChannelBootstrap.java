@@ -4,7 +4,7 @@ import cn.coderule.common.convention.container.ApplicationContext;
 import cn.coderule.common.convention.service.Lifecycle;
 import com.wolfmq.broker.api.ConsumerController;
 import com.wolfmq.broker.api.ProducerController;
-import com.wolfmq.domain.config.server.BrokerConfig;
+import com.wolfmq.common.config.server.BrokerConfig;
 
 public class ChannelBootstrap implements Lifecycle {
     private final ApplicationContext context;

@@ -5,7 +5,7 @@ import apache.rocketmq.v2.EndTransactionResponse;
 import apache.rocketmq.v2.Status;
 import com.wolfmq.broker.server.grpc.interceptor.PipelineExecutor;
 import com.wolfmq.broker.server.grpc.service.TransactionService;
-import com.wolfmq.domain.server.RequestContext;
+import com.wolfmq.common.server.RequestContext;
 import com.wolfmq.rpc.common.grpc.activity.ActivityHelper;
 import io.grpc.stub.StreamObserver;
 import java.util.concurrent.ThreadPoolExecutor;

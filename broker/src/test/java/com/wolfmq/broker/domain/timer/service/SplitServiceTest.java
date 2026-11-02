@@ -1,6 +1,6 @@
 package com.wolfmq.broker.domain.timer.service;
 
-import com.wolfmq.domain.domain.timer.model.TimerEvent;
+import com.wolfmq.common.domain.timer.model.TimerEvent;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;

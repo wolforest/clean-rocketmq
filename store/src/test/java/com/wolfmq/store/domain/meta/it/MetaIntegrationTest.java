@@ -1,16 +1,16 @@
 package com.wolfmq.store.domain.meta.it;
 
-import com.wolfmq.domain.server.store.StoreState;
+import com.wolfmq.common.server.store.StoreState;
 
 
 import cn.coderule.common.convention.container.ApplicationContext;
 
-import com.wolfmq.domain.config.server.StoreConfig;
-import com.wolfmq.domain.domain.meta.order.OrderRequest;
-import com.wolfmq.domain.domain.meta.subscription.SubscriptionGroup;
-import com.wolfmq.domain.domain.meta.topic.Topic;
-import com.wolfmq.domain.domain.meta.service.ConsumeOffsetService;
-import com.wolfmq.domain.test.ConfigMock;
+import com.wolfmq.common.config.server.StoreConfig;
+import com.wolfmq.common.domain.meta.order.OrderRequest;
+import com.wolfmq.common.domain.meta.subscription.SubscriptionGroup;
+import com.wolfmq.common.domain.meta.topic.Topic;
+import com.wolfmq.common.domain.meta.service.ConsumeOffsetService;
+import com.wolfmq.common.test.ConfigMock;
 import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueProxy;
 import com.wolfmq.store.domain.meta.DefaultConsumeOffsetService;
 import com.wolfmq.store.domain.meta.DefaultConsumeOrderService;
@@ -271,8 +271,8 @@ void testConsumeOrderStoreAndReload() {
 
         assertDoesNotThrow(() -> service.load());
 
-        assertTrue(service.exists(com.wolfmq.domain.domain.meta.topic.TopicValidator.RMQ_SYS_SELF_TEST_TOPIC), "SELF_TEST_TOPIC should exist after load");
-        assertTrue(service.exists(com.wolfmq.domain.domain.meta.topic.TopicValidator.RMQ_SYS_SCHEDULE_TOPIC), "SCHEDULE topic should exist after load");
+        assertTrue(service.exists(com.wolfmq.common.domain.meta.topic.TopicValidator.RMQ_SYS_SELF_TEST_TOPIC), "SELF_TEST_TOPIC should exist after load");
+        assertTrue(service.exists(com.wolfmq.common.domain.meta.topic.TopicValidator.RMQ_SYS_SCHEDULE_TOPIC), "SCHEDULE topic should exist after load");
     }
 
     @Test

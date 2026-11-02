@@ -1,8 +1,8 @@
 package com.wolfmq.store.infra.file;
 
-import com.wolfmq.domain.core.mmap.InsertStatus;
-import com.wolfmq.domain.core.mmap.InsertResult;
-import com.wolfmq.domain.core.mmap.MappedFile;
+import com.wolfmq.common.core.mmap.InsertStatus;
+import com.wolfmq.common.core.mmap.InsertResult;
+import com.wolfmq.common.core.mmap.MappedFile;
 import java.nio.file.Path;
 import java.util.List;
 import org.junit.jupiter.api.Test;

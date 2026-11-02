@@ -1,8 +1,8 @@
 package com.wolfmq.store.api;
 
-import com.wolfmq.domain.domain.meta.order.OrderRequest;
-import com.wolfmq.domain.server.store.api.meta.ConsumeOrderStore;
-import com.wolfmq.domain.domain.meta.service.ConsumeOrderService;
+import com.wolfmq.common.domain.meta.order.OrderRequest;
+import com.wolfmq.common.server.store.api.meta.ConsumeOrderStore;
+import com.wolfmq.common.domain.meta.service.ConsumeOrderService;
 
 public class ConsumeOrderStoreImpl implements ConsumeOrderStore {
     private final ConsumeOrderService consumeOrderService;

@@ -1,9 +1,9 @@
 
 package com.wolfmq.rpc.registry.protocol.body;
 
-import com.wolfmq.domain.domain.meta.DataVersion;
+import com.wolfmq.common.domain.meta.DataVersion;
 import com.wolfmq.rpc.common.rpc.protocol.codec.RpcSerializable;
-import com.wolfmq.domain.domain.meta.statictopic.TopicQueueMappingDetail;
+import com.wolfmq.common.domain.meta.statictopic.TopicQueueMappingDetail;
 import java.util.Map;
 
 

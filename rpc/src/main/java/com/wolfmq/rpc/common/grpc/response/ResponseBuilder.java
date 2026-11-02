@@ -4,8 +4,8 @@ package com.wolfmq.rpc.common.grpc.response;
 import apache.rocketmq.v2.Code;
 import apache.rocketmq.v2.Status;
 import cn.coderule.common.util.lang.bean.ExceptionUtil;
-import com.wolfmq.domain.core.exception.InvalidParameterException;
-import com.wolfmq.domain.core.exception.InvalidRequestException;
+import com.wolfmq.common.core.exception.InvalidParameterException;
+import com.wolfmq.common.core.exception.InvalidRequestException;
 import com.wolfmq.rpc.common.rpc.core.exception.RemotingTimeoutException;
 import com.wolfmq.rpc.common.rpc.protocol.code.ResponseCode;
 import java.util.Map;
@@ -65,7 +65,7 @@ public class ResponseBuilder {
             return buildStatus(code, parameterException.getMessage());
         }
 
-        if (t instanceof com.wolfmq.domain.core.exception.RpcException rpcException) {
+        if (t instanceof com.wolfmq.common.core.exception.RpcException rpcException) {
             if (ResponseCode.TOPIC_NOT_EXIST == rpcException.getCode()) {
                 return buildStatus(Code.TOPIC_NOT_FOUND, rpcException.getMessage());
             }

@@ -3,11 +3,11 @@ package com.wolfmq.broker.infra.task;
 import com.wolfmq.broker.infra.task.strategy.BindingStrategy;
 import com.wolfmq.broker.infra.task.strategy.EmbedStrategy;
 import com.wolfmq.broker.infra.task.strategy.ShardingStrategy;
-import com.wolfmq.domain.config.server.BrokerConfig;
-import com.wolfmq.domain.config.business.TaskConfig;
-import com.wolfmq.domain.server.task.TaskFactory;
-import com.wolfmq.domain.server.task.TaskLoader;
-import com.wolfmq.domain.server.task.TaskStrategy;
+import com.wolfmq.common.config.server.BrokerConfig;
+import com.wolfmq.common.config.business.TaskConfig;
+import com.wolfmq.common.server.task.TaskFactory;
+import com.wolfmq.common.server.task.TaskLoader;
+import com.wolfmq.common.server.task.TaskStrategy;
 
 public class DefaultTaskLoader implements TaskLoader {
     private final TaskContext taskContext;

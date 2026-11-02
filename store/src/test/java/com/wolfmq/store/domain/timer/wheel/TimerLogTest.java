@@ -1,7 +1,7 @@
 package com.wolfmq.store.domain.timer.wheel;
 
-import com.wolfmq.domain.core.mmap.SelectedMappedBuffer;
-import com.wolfmq.domain.domain.timer.wheel.Block;
+import com.wolfmq.common.core.mmap.SelectedMappedBuffer;
+import com.wolfmq.common.domain.timer.wheel.Block;
 import java.nio.file.Path;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;

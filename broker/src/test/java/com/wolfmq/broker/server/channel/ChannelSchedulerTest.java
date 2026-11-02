@@ -2,7 +2,7 @@ package com.wolfmq.broker.server.channel;
 
 import com.wolfmq.broker.api.ConsumerController;
 import com.wolfmq.broker.api.ProducerController;
-import com.wolfmq.domain.config.server.BrokerConfig;
+import com.wolfmq.common.config.server.BrokerConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;

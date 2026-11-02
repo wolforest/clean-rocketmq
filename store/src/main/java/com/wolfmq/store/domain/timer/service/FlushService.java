@@ -1,7 +1,7 @@
 package com.wolfmq.store.domain.timer.service;
 
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
-import com.wolfmq.domain.config.server.StoreConfig;
+import com.wolfmq.common.config.server.StoreConfig;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

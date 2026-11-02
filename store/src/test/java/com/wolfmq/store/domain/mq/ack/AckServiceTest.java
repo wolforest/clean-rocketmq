@@ -1,10 +1,10 @@
 package com.wolfmq.store.domain.mq.ack;
 
-import com.wolfmq.domain.config.business.MessageConfig;
-import com.wolfmq.domain.config.server.StoreConfig;
-import com.wolfmq.domain.domain.consumer.ack.AckBuffer;
-import com.wolfmq.domain.domain.consumer.consume.pop.checkpoint.PopCheckPoint;
-import com.wolfmq.domain.domain.consumer.consume.pop.checkpoint.PopCheckPointWrapper;
+import com.wolfmq.common.config.business.MessageConfig;
+import com.wolfmq.common.config.server.StoreConfig;
+import com.wolfmq.common.domain.consumer.ack.AckBuffer;
+import com.wolfmq.common.domain.consumer.consume.pop.checkpoint.PopCheckPoint;
+import com.wolfmq.common.domain.consumer.consume.pop.checkpoint.PopCheckPointWrapper;
 import com.wolfmq.store.domain.mq.queue.EnqueueService;
 import org.junit.jupiter.api.Test;
 

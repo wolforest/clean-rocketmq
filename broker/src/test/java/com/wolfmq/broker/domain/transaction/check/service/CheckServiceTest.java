@@ -1,6 +1,6 @@
 package com.wolfmq.broker.domain.transaction.check.service;
 
-import com.wolfmq.domain.config.business.TransactionConfig;
+import com.wolfmq.common.config.business.TransactionConfig;
 import com.wolfmq.broker.domain.transaction.receipt.ReceiptRegistry;
 import org.junit.jupiter.api.Test;
 

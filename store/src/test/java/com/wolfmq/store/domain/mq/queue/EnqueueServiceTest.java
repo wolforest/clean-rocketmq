@@ -2,13 +2,13 @@ package com.wolfmq.store.domain.mq.queue;
 
 import cn.coderule.common.convention.container.ApplicationContext;
 
-import com.wolfmq.domain.config.server.StoreConfig;
-import com.wolfmq.domain.core.mmap.InsertStatus;
-import com.wolfmq.domain.domain.message.MessageBO;
-import com.wolfmq.domain.domain.mq.dto.EnqueueFuture;
-import com.wolfmq.domain.domain.mq.dto.EnqueueResult;
-import com.wolfmq.domain.core.mmap.InsertResult;
-import com.wolfmq.domain.test.MessageMock;
+import com.wolfmq.common.config.server.StoreConfig;
+import com.wolfmq.common.core.mmap.InsertStatus;
+import com.wolfmq.common.domain.message.MessageBO;
+import com.wolfmq.common.domain.mq.dto.EnqueueFuture;
+import com.wolfmq.common.domain.mq.dto.EnqueueResult;
+import com.wolfmq.common.core.mmap.InsertResult;
+import com.wolfmq.common.test.MessageMock;
 import com.wolfmq.store.domain.commitlog.CommitLogProxy;
 import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueProxy;
 import com.wolfmq.store.server.ha.server.processor.CommitLogSynchronizer;

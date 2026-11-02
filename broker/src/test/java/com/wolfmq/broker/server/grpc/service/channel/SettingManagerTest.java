@@ -2,7 +2,7 @@ package com.wolfmq.broker.server.grpc.service.channel;
 
 import apache.rocketmq.v2.ClientType;
 import apache.rocketmq.v2.Settings;
-import com.wolfmq.domain.config.network.GrpcConfig;
+import com.wolfmq.common.config.network.GrpcConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -29,7 +29,7 @@ class SettingManagerTest {
         when(grpcConfig.getProducerMaxAttempts()).thenReturn(3);
         when(grpcConfig.isEnableMessageTypeCheck()).thenReturn(true);
         when(grpcConfig.getMaxMessageSize()).thenReturn(4194304);
-        
+
         settingManager = new SettingManager(grpcConfig);
     }
 

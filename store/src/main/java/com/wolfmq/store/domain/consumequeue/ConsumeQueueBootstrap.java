@@ -1,10 +1,10 @@
 package com.wolfmq.store.domain.consumequeue;
 
 import cn.coderule.common.convention.service.Lifecycle;
-import com.wolfmq.domain.config.server.StoreConfig;
-import com.wolfmq.domain.config.store.CommitConfig;
-import com.wolfmq.domain.config.store.ConsumeQueueConfig;
-import com.wolfmq.domain.domain.meta.service.TopicService;
+import com.wolfmq.common.config.server.StoreConfig;
+import com.wolfmq.common.config.store.CommitConfig;
+import com.wolfmq.common.config.store.ConsumeQueueConfig;
+import com.wolfmq.common.domain.meta.service.TopicService;
 import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueFactory;
 import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueProxy;
 import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueFlusher;
@@ -12,7 +12,7 @@ import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueLoader;
 import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueRecovery;
 import com.wolfmq.store.domain.dispatcher.CommitHandlerManager;
 import cn.coderule.common.convention.container.ApplicationContext;
-import com.wolfmq.domain.server.store.CheckPoint;
+import com.wolfmq.common.server.store.CheckPoint;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

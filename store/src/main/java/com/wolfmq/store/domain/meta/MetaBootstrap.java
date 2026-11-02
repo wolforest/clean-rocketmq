@@ -1,22 +1,22 @@
 package com.wolfmq.store.domain.meta;
 
 import cn.coderule.common.convention.service.Lifecycle;
-import com.wolfmq.domain.config.server.StoreConfig;
-import com.wolfmq.domain.server.store.api.meta.ConsumeOffsetStore;
-import com.wolfmq.domain.server.store.api.meta.SubscriptionStore;
-import com.wolfmq.domain.server.store.api.meta.TopicStore;
+import com.wolfmq.common.config.server.StoreConfig;
+import com.wolfmq.common.server.store.api.meta.ConsumeOffsetStore;
+import com.wolfmq.common.server.store.api.meta.SubscriptionStore;
+import com.wolfmq.common.server.store.api.meta.TopicStore;
 import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueProxy;
-import com.wolfmq.domain.domain.meta.service.ConsumeOffsetService;
-import com.wolfmq.domain.domain.meta.service.ConsumeOrderService;
-import com.wolfmq.domain.domain.meta.service.SubscriptionService;
-import com.wolfmq.domain.domain.meta.service.TopicService;
+import com.wolfmq.common.domain.meta.service.ConsumeOffsetService;
+import com.wolfmq.common.domain.meta.service.ConsumeOrderService;
+import com.wolfmq.common.domain.meta.service.SubscriptionService;
+import com.wolfmq.common.domain.meta.service.TopicService;
 import com.wolfmq.store.api.ConsumeOffsetStoreImpl;
 import com.wolfmq.store.api.SubscriptionStoreImpl;
 import com.wolfmq.store.api.TopicStoreImpl;
 import cn.coderule.common.convention.container.ApplicationContext;
-import com.wolfmq.domain.core.constant.ContextNamespace;
-import com.wolfmq.domain.config.store.StorePath;
-import com.wolfmq.domain.server.store.StoreState;
+import com.wolfmq.common.core.constant.ContextNamespace;
+import com.wolfmq.common.config.store.StorePath;
+import com.wolfmq.common.server.store.StoreState;
 import com.wolfmq.store.server.bootstrap.StoreRegister;
 
 public class MetaBootstrap implements Lifecycle {

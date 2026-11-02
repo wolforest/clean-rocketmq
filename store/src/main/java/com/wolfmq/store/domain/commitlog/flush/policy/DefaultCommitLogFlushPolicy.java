@@ -1,21 +1,21 @@
 package com.wolfmq.store.domain.commitlog.flush.policy;
 
-import com.wolfmq.domain.domain.mq.dto.EnqueueStatus;
-import com.wolfmq.domain.domain.commitlog.flush.CommitLogFlushPolicy;
-import com.wolfmq.domain.server.store.CheckPoint;
+import com.wolfmq.common.domain.mq.dto.EnqueueStatus;
+import com.wolfmq.common.domain.commitlog.flush.CommitLogFlushPolicy;
+import com.wolfmq.common.server.store.CheckPoint;
 import com.wolfmq.store.domain.commitlog.flush.FlushWatcher;
 import com.wolfmq.store.domain.commitlog.flush.Flusher;
 import com.wolfmq.store.domain.commitlog.flush.GroupFlusher;
 import com.wolfmq.store.domain.commitlog.flush.IntervalCommitter;
 import com.wolfmq.store.domain.commitlog.flush.IntervalFlusher;
 import com.wolfmq.store.domain.commitlog.vo.GroupCommitRequest;
-import com.wolfmq.domain.config.store.CommitConfig;
-import com.wolfmq.domain.domain.commitlog.flush.FlushType;
-import com.wolfmq.domain.domain.mq.dto.EnqueueResult;
-import com.wolfmq.domain.domain.mq.dto.EnqueueFuture;
-import com.wolfmq.domain.core.mmap.InsertResult;
-import com.wolfmq.domain.domain.message.MessageBO;
-import com.wolfmq.domain.core.mmap.MappedFileQueue;
+import com.wolfmq.common.config.store.CommitConfig;
+import com.wolfmq.common.domain.commitlog.flush.FlushType;
+import com.wolfmq.common.domain.mq.dto.EnqueueResult;
+import com.wolfmq.common.domain.mq.dto.EnqueueFuture;
+import com.wolfmq.common.core.mmap.InsertResult;
+import com.wolfmq.common.domain.message.MessageBO;
+import com.wolfmq.common.core.mmap.MappedFileQueue;
 import java.util.concurrent.CompletableFuture;
 
 /**

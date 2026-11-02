@@ -2,15 +2,15 @@ package com.wolfmq.registry.server.rpc;
 
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.util.lang.collection.MapUtil;
-import com.wolfmq.domain.config.server.RegistryConfig;
+import com.wolfmq.common.config.server.RegistryConfig;
 import com.wolfmq.registry.domain.store.model.Route;
 import com.wolfmq.registry.domain.store.model.StoreStatusInfo;
 import com.wolfmq.rpc.common.rpc.RpcClient;
-import com.wolfmq.domain.config.network.RpcClientConfig;
+import com.wolfmq.common.config.network.RpcClientConfig;
 import com.wolfmq.rpc.common.rpc.core.invoke.RpcCommand;
 import com.wolfmq.rpc.common.rpc.netty.NettyClient;
 import com.wolfmq.rpc.common.rpc.protocol.code.RequestCode;
-import com.wolfmq.domain.server.registry.GroupInfo;
+import com.wolfmq.common.server.registry.GroupInfo;
 import com.wolfmq.rpc.registry.protocol.header.NotifyMinBrokerIdChangeRequestHeader;
 import java.util.ArrayList;
 import java.util.Collections;

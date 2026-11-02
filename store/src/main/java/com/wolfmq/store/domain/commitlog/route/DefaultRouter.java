@@ -1,9 +1,9 @@
 package com.wolfmq.store.domain.commitlog.route;
 
-import com.wolfmq.domain.config.store.CommitConfig;
-import com.wolfmq.domain.domain.commitlog.CommitLog;
-import com.wolfmq.domain.domain.commitlog.route.CommitLogRouter;
-import com.wolfmq.domain.domain.message.MessageBO;
+import com.wolfmq.common.config.store.CommitConfig;
+import com.wolfmq.common.domain.commitlog.CommitLog;
+import com.wolfmq.common.domain.commitlog.route.CommitLogRouter;
+import com.wolfmq.common.domain.message.MessageBO;
 import com.wolfmq.store.domain.commitlog.log.CommitLogManager;
 
 public class DefaultRouter implements CommitLogRouter {

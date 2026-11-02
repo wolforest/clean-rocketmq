@@ -1,8 +1,8 @@
 package com.wolfmq.store.domain.mq.ack;
 
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
-import com.wolfmq.domain.config.business.MessageConfig;
-import com.wolfmq.domain.domain.consumer.ack.AckBuffer;
+import com.wolfmq.common.config.business.MessageConfig;
+import com.wolfmq.common.domain.consumer.ack.AckBuffer;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

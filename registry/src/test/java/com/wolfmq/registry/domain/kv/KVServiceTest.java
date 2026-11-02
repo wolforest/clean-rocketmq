@@ -1,6 +1,6 @@
 package com.wolfmq.registry.domain.kv;
 
-import com.wolfmq.domain.config.server.RegistryConfig;
+import com.wolfmq.common.config.server.RegistryConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -22,7 +22,7 @@ public class KVServiceTest {
     @Test
     void testPutAndGetKVConfig() {
         kvService.putKVConfig("namespace1", "key1", "value1");
-        
+
         String value = kvService.getKVConfig("namespace1", "key1");
         assertEquals("value1", value);
     }
@@ -31,7 +31,7 @@ public class KVServiceTest {
     void testPutKVConfigUpdatesValue() {
         kvService.putKVConfig("namespace1", "key1", "value1");
         kvService.putKVConfig("namespace1", "key1", "value2");
-        
+
         String value = kvService.getKVConfig("namespace1", "key1");
         assertEquals("value2", value);
     }
@@ -51,9 +51,9 @@ public class KVServiceTest {
     @Test
     void testDeleteKVConfig() {
         kvService.putKVConfig("namespace1", "key1", "value1");
-        
+
         kvService.deleteKVConfig("namespace1", "key1");
-        
+
         String value = kvService.getKVConfig("namespace1", "key1");
         assertNull(value);
     }
@@ -67,7 +67,7 @@ public class KVServiceTest {
     void testMultipleNamespaces() {
         kvService.putKVConfig("ns1", "key1", "value1");
         kvService.putKVConfig("ns2", "key1", "value2");
-        
+
         assertEquals("value1", kvService.getKVConfig("ns1", "key1"));
         assertEquals("value2", kvService.getKVConfig("ns2", "key1"));
     }
@@ -77,7 +77,7 @@ public class KVServiceTest {
         kvService.putKVConfig("ns1", "key1", "value1");
         kvService.putKVConfig("ns1", "key2", "value2");
         kvService.putKVConfig("ns1", "key3", "value3");
-        
+
         assertEquals("value1", kvService.getKVConfig("ns1", "key1"));
         assertEquals("value2", kvService.getKVConfig("ns1", "key2"));
         assertEquals("value3", kvService.getKVConfig("ns1", "key3"));
@@ -92,9 +92,9 @@ public class KVServiceTest {
     void testGetKVListByNamespace() {
         kvService.putKVConfig("ns1", "key1", "value1");
         kvService.putKVConfig("ns1", "key2", "value2");
-        
+
         byte[] result = kvService.getKVListByNamespace("ns1");
-        
+
         assertNotNull(result);
         assertTrue(result.length > 0);
     }

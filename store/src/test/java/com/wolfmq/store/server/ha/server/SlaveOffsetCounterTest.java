@@ -1,6 +1,6 @@
 package com.wolfmq.store.server.ha.server;
 
-import com.wolfmq.domain.config.server.StoreConfig;
+import com.wolfmq.common.config.server.StoreConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -38,21 +38,21 @@ class SlaveOffsetCounterTest {
     @Test
     void testIsSlaveOkWithNoConnections() {
         when(storeConfig.getMaxSlaveGap()).thenReturn(1000);
-        
+
         assertFalse(slaveOffsetCounter.isSlaveOk(100));
     }
 
     @Test
     void testUpdate() {
         slaveOffsetCounter.update(100L);
-        
+
         assertEquals(100, slaveOffsetCounter.getMaxOffset());
     }
 
     @Test
     void testSetMaxOffset() {
         slaveOffsetCounter.setMaxOffset(500L);
-        
+
         assertEquals(500, slaveOffsetCounter.getMaxOffset());
     }
 
@@ -60,7 +60,7 @@ class SlaveOffsetCounterTest {
     void testSetMaxOffsetTwice() {
         slaveOffsetCounter.setMaxOffset(500L);
         slaveOffsetCounter.setMaxOffset(300L);
-        
+
         assertEquals(500, slaveOffsetCounter.getMaxOffset());
     }
 

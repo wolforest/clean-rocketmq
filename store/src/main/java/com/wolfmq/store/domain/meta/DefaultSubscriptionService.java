@@ -3,11 +3,11 @@ package com.wolfmq.store.domain.meta;
 import cn.coderule.common.util.io.FileUtil;
 import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.common.util.lang.string.JSONUtil;
-import com.wolfmq.domain.domain.meta.subscription.SubscriptionGroup;
-import com.wolfmq.domain.domain.meta.subscription.SubscriptionMap;
-import com.wolfmq.domain.domain.meta.service.ConsumeOffsetService;
-import com.wolfmq.domain.domain.meta.service.SubscriptionService;
-import com.wolfmq.domain.server.store.StoreState;
+import com.wolfmq.common.domain.meta.subscription.SubscriptionGroup;
+import com.wolfmq.common.domain.meta.subscription.SubscriptionMap;
+import com.wolfmq.common.domain.meta.service.ConsumeOffsetService;
+import com.wolfmq.common.domain.meta.service.SubscriptionService;
+import com.wolfmq.common.server.store.StoreState;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 

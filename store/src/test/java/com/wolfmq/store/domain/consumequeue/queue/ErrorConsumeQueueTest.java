@@ -1,7 +1,7 @@
 package com.wolfmq.store.domain.consumequeue.queue;
 
-import com.wolfmq.domain.domain.consumequeue.QueueType;
-import com.wolfmq.domain.domain.consumequeue.QueueUnit;
+import com.wolfmq.common.domain.consumequeue.QueueType;
+import com.wolfmq.common.domain.consumequeue.QueueUnit;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

@@ -1,8 +1,8 @@
 package com.wolfmq.store.domain.dispatcher;
 
-import com.wolfmq.domain.config.store.CommitConfig;
-import com.wolfmq.domain.domain.commitlog.CommitLog;
-import com.wolfmq.domain.server.store.CheckPoint;
+import com.wolfmq.common.config.store.CommitConfig;
+import com.wolfmq.common.domain.commitlog.CommitLog;
+import com.wolfmq.common.server.store.CheckPoint;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;

@@ -1,7 +1,7 @@
 package com.wolfmq.store.domain.dispatcher;
 
-import com.wolfmq.domain.domain.commitlog.dispatch.CommitEvent;
-import com.wolfmq.domain.test.MessageMock;
+import com.wolfmq.common.domain.commitlog.dispatch.CommitEvent;
+import com.wolfmq.common.test.MessageMock;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -16,7 +16,7 @@ class DispatcherTest {
 
     @BeforeEach
     void setUp() {
-        queue = new DispatchQueue(new com.wolfmq.domain.config.store.CommitConfig());
+        queue = new DispatchQueue(new com.wolfmq.common.config.store.CommitConfig());
         handlerManager = new CommitHandlerManager();
     }
 

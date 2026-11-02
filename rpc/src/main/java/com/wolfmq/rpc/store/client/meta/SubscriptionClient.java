@@ -1,7 +1,7 @@
 package com.wolfmq.rpc.store.client.meta;
 
-import com.wolfmq.domain.domain.meta.subscription.SubscriptionGroup;
-import com.wolfmq.domain.domain.meta.subscription.SubscriptionRequest;
+import com.wolfmq.common.domain.meta.subscription.SubscriptionGroup;
+import com.wolfmq.common.domain.meta.subscription.SubscriptionRequest;
 import com.wolfmq.rpc.common.rpc.RpcClient;
 import com.wolfmq.rpc.store.StoreClient;
 import com.wolfmq.rpc.store.client.AbstractStoreClient;

@@ -1,12 +1,12 @@
 package com.wolfmq.store.domain.mq.ack;
 
-import com.wolfmq.domain.config.server.StoreConfig;
-import com.wolfmq.domain.domain.consumer.ack.AckConverter;
-import com.wolfmq.domain.domain.consumer.ack.broker.AckResult;
-import com.wolfmq.domain.domain.consumer.ack.store.AckMessage;
-import com.wolfmq.domain.domain.consumer.consume.pop.checkpoint.PopCheckPoint;
-import com.wolfmq.domain.domain.message.MessageBO;
-import com.wolfmq.domain.domain.mq.dto.EnqueueResult;
+import com.wolfmq.common.config.server.StoreConfig;
+import com.wolfmq.common.domain.consumer.ack.AckConverter;
+import com.wolfmq.common.domain.consumer.ack.broker.AckResult;
+import com.wolfmq.common.domain.consumer.ack.store.AckMessage;
+import com.wolfmq.common.domain.consumer.consume.pop.checkpoint.PopCheckPoint;
+import com.wolfmq.common.domain.message.MessageBO;
+import com.wolfmq.common.domain.mq.dto.EnqueueResult;
 import com.wolfmq.store.domain.mq.queue.EnqueueService;
 import lombok.extern.slf4j.Slf4j;
 

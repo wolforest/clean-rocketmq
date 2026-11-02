@@ -1,8 +1,8 @@
 package com.wolfmq.broker.domain.consumer.revive;
 
 import cn.coderule.common.convention.service.Lifecycle;
-import com.wolfmq.domain.server.task.QueueTask;
-import com.wolfmq.domain.server.task.TaskFactory;
+import com.wolfmq.common.server.task.QueueTask;
+import com.wolfmq.common.server.task.TaskFactory;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import lombok.extern.slf4j.Slf4j;

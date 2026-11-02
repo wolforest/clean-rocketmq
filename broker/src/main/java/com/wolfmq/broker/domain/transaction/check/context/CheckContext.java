@@ -1,7 +1,7 @@
 package com.wolfmq.broker.domain.transaction.check.context;
 
-import com.wolfmq.domain.config.business.TransactionConfig;
-import com.wolfmq.domain.domain.mq.MessageQueue;
+import com.wolfmq.common.config.business.TransactionConfig;
+import com.wolfmq.common.domain.mq.MessageQueue;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;

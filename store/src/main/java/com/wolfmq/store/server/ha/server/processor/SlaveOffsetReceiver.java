@@ -2,7 +2,7 @@ package com.wolfmq.store.server.ha.server.processor;
 
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
-import com.wolfmq.domain.config.server.StoreConfig;
+import com.wolfmq.common.config.server.StoreConfig;
 import com.wolfmq.store.server.ha.client.DefaultHAClient;
 import com.wolfmq.store.server.ha.core.ConnectionState;
 import com.wolfmq.store.server.ha.core.HAConnection;

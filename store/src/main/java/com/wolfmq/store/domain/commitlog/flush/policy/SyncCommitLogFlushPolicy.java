@@ -1,10 +1,10 @@
 package com.wolfmq.store.domain.commitlog.flush.policy;
 
-import com.wolfmq.domain.domain.mq.dto.EnqueueFuture;
-import com.wolfmq.domain.core.mmap.InsertResult;
-import com.wolfmq.domain.domain.message.MessageBO;
-import com.wolfmq.domain.domain.commitlog.flush.CommitLogFlushPolicy;
-import com.wolfmq.domain.core.mmap.MappedFileQueue;
+import com.wolfmq.common.domain.mq.dto.EnqueueFuture;
+import com.wolfmq.common.core.mmap.InsertResult;
+import com.wolfmq.common.domain.message.MessageBO;
+import com.wolfmq.common.domain.commitlog.flush.CommitLogFlushPolicy;
+import com.wolfmq.common.core.mmap.MappedFileQueue;
 import lombok.extern.slf4j.Slf4j;
 
 /**

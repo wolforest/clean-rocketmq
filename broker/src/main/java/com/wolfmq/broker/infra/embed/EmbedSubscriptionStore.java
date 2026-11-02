@@ -1,9 +1,9 @@
 package com.wolfmq.broker.infra.embed;
 
-import com.wolfmq.domain.domain.meta.subscription.SubscriptionGroup;
-import com.wolfmq.domain.domain.meta.subscription.SubscriptionRequest;
+import com.wolfmq.common.domain.meta.subscription.SubscriptionGroup;
+import com.wolfmq.common.domain.meta.subscription.SubscriptionRequest;
 import com.wolfmq.rpc.store.facade.SubscriptionFacade;
-import com.wolfmq.domain.server.store.api.meta.SubscriptionStore;
+import com.wolfmq.common.server.store.api.meta.SubscriptionStore;
 import java.util.concurrent.CompletableFuture;
 
 public class EmbedSubscriptionStore extends AbstractEmbedStore implements SubscriptionFacade {

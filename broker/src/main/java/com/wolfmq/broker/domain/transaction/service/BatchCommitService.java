@@ -2,13 +2,13 @@ package com.wolfmq.broker.domain.transaction.service;
 
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 import com.wolfmq.broker.infra.store.MQStore;
-import com.wolfmq.domain.config.business.TransactionConfig;
-import com.wolfmq.domain.domain.mq.MessageQueue;
-import com.wolfmq.domain.domain.message.MessageBO;
-import com.wolfmq.domain.domain.mq.dto.EnqueueRequest;
-import com.wolfmq.domain.domain.mq.dto.EnqueueResult;
-import com.wolfmq.domain.domain.transaction.CommitBuffer;
-import com.wolfmq.domain.domain.transaction.OffsetQueue;
+import com.wolfmq.common.config.business.TransactionConfig;
+import com.wolfmq.common.domain.mq.MessageQueue;
+import com.wolfmq.common.domain.message.MessageBO;
+import com.wolfmq.common.domain.mq.dto.EnqueueRequest;
+import com.wolfmq.common.domain.mq.dto.EnqueueResult;
+import com.wolfmq.common.domain.transaction.CommitBuffer;
+import com.wolfmq.common.domain.transaction.OffsetQueue;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 

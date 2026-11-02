@@ -1,10 +1,10 @@
 package com.wolfmq.registry.server.rpc;
 
 import cn.coderule.common.convention.service.Lifecycle;
-import com.wolfmq.domain.config.server.RegistryConfig;
+import com.wolfmq.common.config.server.RegistryConfig;
 import com.wolfmq.rpc.common.rpc.RpcProcessor;
 import com.wolfmq.rpc.common.rpc.RpcServer;
-import com.wolfmq.domain.config.network.RpcServerConfig;
+import com.wolfmq.common.config.network.RpcServerConfig;
 import com.wolfmq.rpc.common.rpc.netty.NettyServer;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;

@@ -7,8 +7,8 @@ import cn.coderule.common.convention.service.Lifecycle;
 import com.wolfmq.broker.domain.consumer.ack.InvisibleService;
 import com.wolfmq.broker.domain.consumer.consumer.ConsumerManager;
 import com.wolfmq.broker.infra.store.SubscriptionStore;
-import com.wolfmq.domain.config.server.BrokerConfig;
-import com.wolfmq.domain.domain.consumer.receipt.ReceiptHandler;
+import com.wolfmq.common.config.server.BrokerConfig;
+import com.wolfmq.common.domain.consumer.receipt.ReceiptHandler;
 
 public class RenewBootstrap implements Lifecycle {
     private final ApplicationContext context;

@@ -1,12 +1,12 @@
 package com.wolfmq.store.domain.consumequeue.service;
 
-import com.wolfmq.domain.config.store.ConsumeQueueConfig;
-import com.wolfmq.domain.domain.consumequeue.QueueUnit;
-import com.wolfmq.domain.domain.consumequeue.ConsumeQueue;
-import com.wolfmq.domain.core.mmap.MappedFile;
-import com.wolfmq.domain.core.mmap.MappedFileQueue;
-import com.wolfmq.domain.server.store.CheckPoint;
-import com.wolfmq.domain.server.store.Offset;
+import com.wolfmq.common.config.store.ConsumeQueueConfig;
+import com.wolfmq.common.domain.consumequeue.QueueUnit;
+import com.wolfmq.common.domain.consumequeue.ConsumeQueue;
+import com.wolfmq.common.core.mmap.MappedFile;
+import com.wolfmq.common.core.mmap.MappedFileQueue;
+import com.wolfmq.common.server.store.CheckPoint;
+import com.wolfmq.common.server.store.Offset;
 import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueRegistry;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;

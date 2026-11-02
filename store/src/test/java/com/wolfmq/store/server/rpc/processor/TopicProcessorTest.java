@@ -1,7 +1,7 @@
 package com.wolfmq.store.server.rpc.processor;
 
-import com.wolfmq.domain.config.business.TopicConfig;
-import com.wolfmq.domain.server.store.api.meta.TopicStore;
+import com.wolfmq.common.config.business.TopicConfig;
+import com.wolfmq.common.server.store.api.meta.TopicStore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
