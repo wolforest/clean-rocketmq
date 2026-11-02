@@ -10,6 +10,7 @@ import com.wolfmq.common.config.business.TimerConfig;
 import com.wolfmq.common.config.business.TopicConfig;
 import com.wolfmq.common.config.network.RpcClientConfig;
 import com.wolfmq.common.config.network.RpcServerConfig;
+import com.wolfmq.common.config.store.CheckpointConfig;
 import com.wolfmq.common.config.store.CommitConfig;
 import com.wolfmq.common.config.store.ConsumeQueueConfig;
 import com.wolfmq.common.config.store.IndexConfig;
@@ -101,6 +102,7 @@ public class StoreConfig extends ServerIdentity {
     private boolean assignConsumeOffset = false;
 
     private Common common;
+    private CheckpointConfig checkpoint = new CheckpointConfig();
     private MessageConfig message = new MessageConfig();
     private TopicConfig topic = new TopicConfig();
 
