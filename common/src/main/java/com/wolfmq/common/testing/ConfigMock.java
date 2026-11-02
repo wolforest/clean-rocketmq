@@ -1,4 +1,4 @@
-package com.wolfmq.common.test;
+package com.wolfmq.common.testing;
 
 import com.wolfmq.common.config.business.MessageConfig;
 import com.wolfmq.common.config.business.TaskConfig;

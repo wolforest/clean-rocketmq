@@ -1,7 +1,7 @@
 package com.wolfmq.broker.infra;
 
 import com.wolfmq.common.config.server.BrokerConfig;
-import com.wolfmq.common.test.ConfigMock;
+import com.wolfmq.common.testing.ConfigMock;
 import com.wolfmq.rpc.common.rpc.netty.NettyClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

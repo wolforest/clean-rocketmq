@@ -15,7 +15,7 @@ import com.wolfmq.common.domain.meta.service.ConsumeOrderService;
 import com.wolfmq.common.domain.mq.MQService;
 import com.wolfmq.common.domain.consumer.consume.InflightCounter;
 import com.wolfmq.common.core.lock.queue.DequeueLock;
-import com.wolfmq.common.test.ConfigMock;
+import com.wolfmq.common.testing.ConfigMock;
 import com.wolfmq.store.domain.commitlog.CommitLogProxy;
 import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueProxy;
 import com.wolfmq.store.domain.meta.DefaultConsumeOffsetService;

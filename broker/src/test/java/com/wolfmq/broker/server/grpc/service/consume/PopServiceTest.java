@@ -3,7 +3,7 @@ package com.wolfmq.broker.server.grpc.service.consume;
 import com.wolfmq.broker.api.ConsumerController;
 import com.wolfmq.broker.server.grpc.service.channel.SettingManager;
 import com.wolfmq.common.config.server.BrokerConfig;
-import com.wolfmq.common.test.ConfigMock;
+import com.wolfmq.common.testing.ConfigMock;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

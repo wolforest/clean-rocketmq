@@ -11,7 +11,7 @@ import com.wolfmq.common.domain.mq.dto.DequeueRequest;
 import com.wolfmq.common.domain.mq.dto.DequeueResult;
 import com.wolfmq.common.domain.mq.dto.EnqueueFuture;
 import com.wolfmq.common.domain.mq.dto.EnqueueResult;
-import com.wolfmq.common.test.MessageMock;
+import com.wolfmq.common.testing.MessageMock;
 import com.wolfmq.common.domain.meta.service.ConsumeOffsetService;
 import com.wolfmq.common.domain.meta.service.ConsumeOrderService;
 import com.wolfmq.store.domain.mq.DefaultMQService;

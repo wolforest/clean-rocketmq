@@ -11,7 +11,7 @@ import com.wolfmq.common.domain.meta.service.ConsumeOffsetService;
 import com.wolfmq.common.domain.meta.service.ConsumeOrderService;
 import com.wolfmq.common.domain.meta.service.TopicService;
 import com.wolfmq.common.server.store.CheckPoint;
-import com.wolfmq.common.test.ConfigMock;
+import com.wolfmq.common.testing.ConfigMock;
 import com.wolfmq.store.domain.commitlog.log.CommitLogFactory;
 import com.wolfmq.store.domain.commitlog.CommitLogProxy;
 import com.wolfmq.common.domain.commitlog.route.OffsetCodec;

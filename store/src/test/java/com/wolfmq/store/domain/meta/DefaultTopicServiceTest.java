@@ -6,7 +6,7 @@ import com.wolfmq.common.domain.meta.service.ConsumeOffsetService;
 import com.wolfmq.common.domain.meta.topic.KeyBuilder;
 import com.wolfmq.common.domain.meta.topic.Topic;
 import com.wolfmq.common.domain.meta.topic.TopicValidator;
-import com.wolfmq.common.test.ConfigMock;
+import com.wolfmq.common.testing.ConfigMock;
 import com.wolfmq.common.server.store.StoreState;
 import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueProxy;
 import com.wolfmq.store.server.bootstrap.StoreRegister;

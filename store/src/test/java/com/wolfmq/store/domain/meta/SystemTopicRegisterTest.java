@@ -7,7 +7,7 @@ import com.wolfmq.common.domain.meta.topic.Topic;
 import com.wolfmq.common.domain.meta.topic.TopicValidator;
 import com.wolfmq.common.domain.meta.service.TopicService;
 import com.wolfmq.common.domain.timer.model.TimerConstants;
-import com.wolfmq.common.test.ConfigMock;
+import com.wolfmq.common.testing.ConfigMock;
 import java.nio.file.Path;
 import java.util.List;
 import org.junit.jupiter.api.Test;

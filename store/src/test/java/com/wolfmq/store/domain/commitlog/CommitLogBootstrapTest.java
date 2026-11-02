@@ -9,7 +9,7 @@ import cn.coderule.common.convention.container.ApplicationContext;
 import com.wolfmq.common.config.server.StoreConfig;
 import com.wolfmq.common.config.store.StorePath;
 import com.wolfmq.common.server.store.api.CommitLogStore;
-import com.wolfmq.common.test.ConfigMock;
+import com.wolfmq.common.testing.ConfigMock;
 import com.wolfmq.common.domain.meta.service.TopicService;
 import com.wolfmq.store.infra.file.AllocateMappedFileService;
 import com.wolfmq.store.server.bootstrap.StoreCheckpoint;

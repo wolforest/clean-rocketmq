@@ -2,7 +2,7 @@ package com.wolfmq.store.domain.meta;
 
 import com.wolfmq.common.config.server.StoreConfig;
 import com.wolfmq.common.domain.meta.order.OrderRequest;
-import com.wolfmq.common.test.ConfigMock;
+import com.wolfmq.common.testing.ConfigMock;
 import java.nio.file.Path;
 import java.util.List;
 import org.junit.jupiter.api.Test;

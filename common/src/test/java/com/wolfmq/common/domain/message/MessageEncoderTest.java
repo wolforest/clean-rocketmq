@@ -3,7 +3,7 @@ package com.wolfmq.common.domain.message;
 import com.wolfmq.common.config.business.MessageConfig;
 import com.wolfmq.common.domain.message.codec.MessageEncoder;
 import com.wolfmq.common.domain.message.enums.MessageVersion;
-import com.wolfmq.common.test.MessageMock;
+import com.wolfmq.common.testing.MessageMock;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import org.junit.jupiter.api.BeforeEach;

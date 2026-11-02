@@ -6,7 +6,7 @@ import com.wolfmq.common.domain.message.enums.MessageStatus;
 import com.wolfmq.common.domain.consumequeue.QueueUnit;
 import com.wolfmq.common.domain.mq.dto.DequeueResult;
 import com.wolfmq.common.domain.message.MessageBO;
-import com.wolfmq.common.test.MessageMock;
+import com.wolfmq.common.testing.MessageMock;
 import com.wolfmq.store.domain.commitlog.CommitLogProxy;
 import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueProxy;
 import java.util.List;

@@ -2,7 +2,7 @@ package com.wolfmq.store.domain.timer.rocksdb;
 
 import com.wolfmq.common.config.server.StoreConfig;
 import com.wolfmq.common.domain.timer.model.TimerEvent;
-import com.wolfmq.common.test.ConfigMock;
+import com.wolfmq.common.testing.ConfigMock;
 import java.nio.file.Path;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;

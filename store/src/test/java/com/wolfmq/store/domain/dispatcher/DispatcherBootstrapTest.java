@@ -8,7 +8,7 @@ import cn.coderule.common.convention.container.ApplicationContext;
 import com.wolfmq.common.config.server.StoreConfig;
 import com.wolfmq.common.config.store.StorePath;
 import com.wolfmq.common.domain.meta.service.TopicService;
-import com.wolfmq.common.test.ConfigMock;
+import com.wolfmq.common.testing.ConfigMock;
 import com.wolfmq.store.domain.commitlog.CommitLogProxy;
 import com.wolfmq.store.domain.commitlog.route.TopicPartitioner;
 import com.wolfmq.store.server.bootstrap.StoreCheckpoint;

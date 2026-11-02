@@ -3,7 +3,7 @@ package com.wolfmq.store.domain.mq;
 import com.wolfmq.common.domain.mq.dto.DequeueRequest;
 import com.wolfmq.common.domain.mq.dto.DequeueResult;
 import com.wolfmq.common.domain.message.MessageBO;
-import com.wolfmq.common.test.MessageMock;
+import com.wolfmq.common.testing.MessageMock;
 import com.wolfmq.store.domain.mq.queue.DequeueService;
 import com.wolfmq.store.domain.mq.queue.EnqueueService;
 import com.wolfmq.store.domain.mq.queue.MessageService;

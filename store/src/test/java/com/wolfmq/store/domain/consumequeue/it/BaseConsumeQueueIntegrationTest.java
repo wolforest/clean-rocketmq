@@ -11,7 +11,7 @@ import com.wolfmq.common.config.store.ConsumeQueueConfig;
 import com.wolfmq.common.domain.meta.topic.Topic;
 import com.wolfmq.common.domain.consumequeue.ConsumeQueue;
 import com.wolfmq.common.domain.meta.service.TopicService;
-import com.wolfmq.common.test.ConfigMock;
+import com.wolfmq.common.testing.ConfigMock;
 import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueFactory;
 import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueProxy;
 import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueFlusher;

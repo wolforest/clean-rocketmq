@@ -6,7 +6,7 @@ import cn.coderule.common.convention.container.ApplicationContext;
 import com.wolfmq.common.config.server.StoreConfig;
 import com.wolfmq.common.config.store.IndexConfig;
 import com.wolfmq.common.config.store.StorePath;
-import com.wolfmq.common.test.ConfigMock;
+import com.wolfmq.common.testing.ConfigMock;
 import com.wolfmq.store.domain.dispatcher.CommitHandlerManager;
 import java.nio.file.Path;
 import org.junit.jupiter.api.AfterEach;

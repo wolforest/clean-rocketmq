@@ -1,4 +1,4 @@
-package com.wolfmq.common.test;
+package com.wolfmq.common.testing;
 
 import com.wolfmq.common.domain.message.MessageBO;
 import java.net.InetSocketAddress;

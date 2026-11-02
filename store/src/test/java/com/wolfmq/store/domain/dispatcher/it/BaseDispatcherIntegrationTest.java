@@ -8,7 +8,7 @@ import com.wolfmq.common.config.store.CommitConfig;
 import com.wolfmq.common.server.store.api.CommitLogStore;
 import com.wolfmq.common.domain.commitlog.CommitLog;
 import com.wolfmq.common.server.store.CheckPoint;
-import com.wolfmq.common.test.ConfigMock;
+import com.wolfmq.common.testing.ConfigMock;
 import com.wolfmq.store.api.CommitLogStoreImpl;
 import com.wolfmq.store.domain.commitlog.log.CommitLogFactory;
 import com.wolfmq.store.domain.commitlog.CommitLogProxy;

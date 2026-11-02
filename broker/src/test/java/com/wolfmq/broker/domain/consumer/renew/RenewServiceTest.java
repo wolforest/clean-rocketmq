@@ -4,7 +4,7 @@ import com.wolfmq.broker.domain.consumer.consumer.ConsumerManager;
 import com.wolfmq.broker.infra.store.SubscriptionStore;
 import com.wolfmq.common.config.server.BrokerConfig;
 import com.wolfmq.common.domain.consumer.receipt.ReceiptHandler;
-import com.wolfmq.common.test.ConfigMock;
+import com.wolfmq.common.testing.ConfigMock;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

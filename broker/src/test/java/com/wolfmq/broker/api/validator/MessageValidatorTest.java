@@ -7,7 +7,7 @@ import com.wolfmq.common.config.server.BrokerConfig;
 import com.wolfmq.common.domain.message.property.MessageConst;
 import com.wolfmq.common.core.exception.InvalidRequestException;
 import com.wolfmq.common.domain.message.MessageBO;
-import com.wolfmq.common.test.MessageMock;
+import com.wolfmq.common.testing.MessageMock;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

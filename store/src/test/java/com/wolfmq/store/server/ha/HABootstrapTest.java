@@ -5,7 +5,7 @@ import cn.coderule.common.convention.container.ApplicationContext;
 
 import com.wolfmq.common.config.server.StoreConfig;
 import com.wolfmq.common.config.store.StorePath;
-import com.wolfmq.common.test.ConfigMock;
+import com.wolfmq.common.testing.ConfigMock;
 import com.wolfmq.store.server.bootstrap.StoreRegister;
 import com.wolfmq.store.server.ha.server.processor.CommitLogSynchronizer;
 import java.nio.file.Path;

@@ -4,7 +4,7 @@ package com.wolfmq.store.domain.dispatcher.it;
 import com.wolfmq.common.config.store.CommitConfig;
 import com.wolfmq.common.domain.commitlog.dispatch.CommitEvent;
 import com.wolfmq.common.domain.message.MessageBO;
-import com.wolfmq.common.test.MessageMock;
+import com.wolfmq.common.testing.MessageMock;
 import com.wolfmq.store.domain.dispatcher.CommitListener;
 import com.wolfmq.store.domain.dispatcher.DispatchManager;
 import com.wolfmq.store.domain.dispatcher.DispatchQueue;
