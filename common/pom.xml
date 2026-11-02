@@ -10,7 +10,7 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>domain</artifactId>
+    <artifactId>common</artifactId>
     <version>${revision}</version>
 
     <properties>

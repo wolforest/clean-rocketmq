@@ -17,7 +17,7 @@
     <description>wolfmq</description>
 
     <modules>
-        <module>domain</module>
+        <module>common</module>
         <module>rpc</module>
         <module>registry</module>
         <module>store</module>
@@ -37,7 +37,7 @@
         <dependencies>
             <dependency>
                 <groupId>com.wolfmq</groupId>
-                <artifactId>domain</artifactId>
+                <artifactId>common</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
