@@ -28,8 +28,6 @@ public class OffsetRecorder {
         initOffsetMap();
     }
 
-
-
     public void setMaxOffset(long maxOffset) {
         int shardId = offsetCodec.getShardId(maxOffset);
         maxOffsetMap.merge(shardId, maxOffset, Math::max);
