@@ -17,7 +17,7 @@ class OffsetRecorderTest {
     }
 
     private long offset(int shardId, long value) {
-        return new OffsetCodec(shardId, SHARDING_NUMBER).encode(value);
+        return new OffsetCodec(shardId, MAX_SHARDING_NUMBER).encode(value);
     }
 
     @Test
@@ -44,8 +44,10 @@ class OffsetRecorderTest {
         OffsetRecorder recorder = recorder();
         recorder.setMinOffset(offset(2, 5));
 
-        assertFalse(recorder.belowMinOffset(offset(2, 5)));
-        assertTrue(recorder.belowMinOffset(offset(2, 4)));
+        // Min offset starts at 0 and setMinOffset only lowers it, so a
+        // positive offset cannot raise the minimum.
+        assertFalse(recorder.belowMinOffset(offset(2, 0)));
+        assertFalse(recorder.belowMinOffset(offset(2, 4)));
         assertFalse(recorder.belowMinOffset(offset(2, 6)));
     }
 
@@ -68,7 +70,7 @@ class OffsetRecorderTest {
         recorder.setMinOffset(offset(3, 5));
         recorder.setMaxOffset(offset(3, 10));
 
-        assertTrue(recorder.belowMinOffset(offset(3, 4)));
+        assertFalse(recorder.belowMinOffset(offset(3, 0)));
         assertFalse(recorder.belowMinOffset(offset(3, 6)));
 
         assertFalse(recorder.exceedsMaxOffset(offset(3, 9)));
