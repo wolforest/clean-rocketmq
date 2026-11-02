@@ -90,7 +90,7 @@ public class ConsumeQueueRecovery implements ConsumeQueueRegistry {
             return null;
         }
 
-        Map<String, ConcurrentMap<Integer, Long>> topicOffsetMap = offset.getTopicOffsetMap();
+        Map<String, ConcurrentMap<Integer, Long>> topicOffsetMap = offset.getQueueOffsetMap();
         if (null == topicOffsetMap || topicOffsetMap.isEmpty()) {
             return null;
         }
