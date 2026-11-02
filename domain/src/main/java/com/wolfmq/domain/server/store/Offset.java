@@ -16,6 +16,13 @@ public class Offset implements Serializable {
      * shardId -> offset
      */
     @Setter
+    private ConcurrentMap<Integer, Long> masterOffsetMap
+        = new ConcurrentHashMap<>(16);
+
+    /**
+     * shardId -> offset
+     */
+    @Setter
     private ConcurrentMap<Integer, Long> commitOffsetMap
         = new ConcurrentHashMap<>(16);
 
@@ -27,12 +34,18 @@ public class Offset implements Serializable {
         = new ConcurrentHashMap<>(16);
 
     /**
+     * shardId -> offset
+     */
+    @Setter
+    private ConcurrentMap<Integer, Long> indexOffsetMap
+        = new ConcurrentHashMap<>(16);
+
+    /**
      * topic -> queueId : offset
      */
     @Setter
-    private ConcurrentMap<String, ConcurrentMap<Integer, Long>> topicOffsetMap
+    private ConcurrentMap<String, ConcurrentMap<Integer, Long>> queueOffsetMap
         = new ConcurrentHashMap<>(16);
-
 
 
     public void setCommitLogOffset(long commitLogOffset) {
@@ -88,10 +101,10 @@ public class Offset implements Serializable {
     }
 
     public long getQueueOffset(String topic, Integer queueId) {
-        ConcurrentMap<Integer, Long> queueOffsets = topicOffsetMap.get(topic);
+        ConcurrentMap<Integer, Long> queueOffsets = queueOffsetMap.get(topic);
         if (queueOffsets == null) {
             queueOffsets = new ConcurrentHashMap<>(16);
-            ConcurrentMap<Integer, Long> old = topicOffsetMap.putIfAbsent(topic, queueOffsets);
+            ConcurrentMap<Integer, Long> old = queueOffsetMap.putIfAbsent(topic, queueOffsets);
             if (old != null) {
                 queueOffsets = old;
             }
@@ -102,14 +115,14 @@ public class Offset implements Serializable {
     }
 
     public void setQueueOffset(String topic, Integer queueId, long offset) {
-        ConcurrentMap<Integer, Long> queueOffsets = topicOffsetMap.get(topic);
+        ConcurrentMap<Integer, Long> queueOffsets = queueOffsetMap.get(topic);
         if (queueOffsets != null) {
             queueOffsets.put(queueId, offset);
             return;
         }
 
         queueOffsets = new ConcurrentHashMap<>(16);
-        ConcurrentMap<Integer, Long> old = topicOffsetMap.putIfAbsent(topic, queueOffsets);
+        ConcurrentMap<Integer, Long> old = queueOffsetMap.putIfAbsent(topic, queueOffsets);
 
         if (old == null) {
             queueOffsets.put(queueId, offset);
@@ -134,15 +147,15 @@ public class Offset implements Serializable {
 
     private void deepCopyTopicOffsetMap(Offset tmp) {
         ConcurrentMap<String, ConcurrentMap<Integer, Long>> topicMap
-            = new ConcurrentHashMap<>(topicOffsetMap.size());
+            = new ConcurrentHashMap<>(queueOffsetMap.size());
 
-        for (String topic : topicOffsetMap.keySet()) {
-            ConcurrentMap<Integer, Long> queueOffsets = topicOffsetMap.get(topic);
+        for (String topic : queueOffsetMap.keySet()) {
+            ConcurrentMap<Integer, Long> queueOffsets = queueOffsetMap.get(topic);
             ConcurrentMap<Integer, Long> tmpQueueOffsets = new ConcurrentHashMap<>(queueOffsets);
             topicMap.put(topic, tmpQueueOffsets);
         }
 
-        tmp.setTopicOffsetMap(topicMap);
+        tmp.setQueueOffsetMap(topicMap);
     }
 
     private void deepCopyCommitOffsetMap(Offset tmp) {
