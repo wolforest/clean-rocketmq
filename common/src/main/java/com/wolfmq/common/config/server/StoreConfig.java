@@ -17,6 +17,7 @@ import com.wolfmq.common.config.store.IndexConfig;
 import com.wolfmq.common.config.store.MetaConfig;
 import com.wolfmq.common.config.store.StorePath;
 import com.wolfmq.common.domain.meta.topic.constant.PermName;
+import com.wolfmq.common.server.registry.RegistryUtils;
 import java.io.File;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
@@ -30,7 +31,6 @@ public class StoreConfig extends ServerIdentity {
     private int port = ConfigAttribute.STORE_PORT;
 
     private String rootDir = System.getProperty("user.home") + File.separator + "mq";
-    @EqualsAndHashCode.Exclude
     private transient StorePath path = new StorePath(rootDir);
     /**
      *
@@ -45,7 +45,7 @@ public class StoreConfig extends ServerIdentity {
 
 
     private String registryAddress = "127.0.0.1:9876";
-    // private String registryAddress = System.getProperty(RegistryUtils.NAMESRV_ADDR_PROPERTY, System.getenv(RegistryUtils.NAMESRV_ADDR_ENV));
+    //private String registryAddress = System.getProperty(RegistryUtils.NAMESRV_ADDR_PROPERTY, System.getenv(RegistryUtils.NAMESRV_ADDR_ENV));
 
     private boolean fetchRegistryAddressByDns = false;
     private boolean fetchRegistryAddressByHttp = false;
@@ -122,15 +122,8 @@ public class StoreConfig extends ServerIdentity {
         return new InetSocketAddress(host, port);
     }
 
-    public StorePath getPath() {
-        if (path == null) {
-            path = new StorePath(rootDir);
-        }
-        return path;
-    }
-
     public void setRootDir(String rootDir) {
         this.rootDir = rootDir;
-        getPath().setRootPath(rootDir);
+        path.setRootPath(rootDir);
     }
 }
