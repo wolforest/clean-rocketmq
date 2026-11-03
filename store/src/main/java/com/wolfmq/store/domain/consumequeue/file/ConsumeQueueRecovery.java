@@ -21,7 +21,7 @@ public class ConsumeQueueRecovery implements ConsumeQueueRegistry {
     private final ConsumeQueueConfig config;
     private final CheckPoint checkPoint;
 
-    private final Set<ConsumeQueue> queueSet = new LinkedHashSet<>(128);
+    private final Set<FileConsumeQueue> queueSet = new LinkedHashSet<>(128);
 
     public ConsumeQueueRecovery(ConsumeQueueConfig config, CheckPoint checkPoint) {
         this.config = config;
@@ -29,7 +29,11 @@ public class ConsumeQueueRecovery implements ConsumeQueueRegistry {
     }
     @Override
     public void register(ConsumeQueue queue) {
-        queueSet.add(queue);
+        if (!(queue instanceof FileConsumeQueue)) {
+            return;
+        }
+
+        queueSet.add((FileConsumeQueue) queue);
     }
 
     public void recover() {
