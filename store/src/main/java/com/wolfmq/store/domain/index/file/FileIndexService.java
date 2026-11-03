@@ -1,4 +1,4 @@
-package com.wolfmq.store.domain.index;
+package com.wolfmq.store.domain.index.file;
 
 import cn.coderule.common.util.lang.string.StringUtil;
 import com.wolfmq.common.config.server.StoreConfig;
@@ -15,7 +15,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class DefaultIndexService implements IndexService {
+public class FileIndexService implements IndexService {
 
     private static final int MAX_TRY_IDX_CREATE = 3;
 
@@ -26,14 +26,14 @@ public class DefaultIndexService implements IndexService {
     private final ArrayList<IndexFile> indexFileList = new ArrayList<>();
     private final ReentrantReadWriteLock readWriteLock = new ReentrantReadWriteLock();
 
-    public DefaultIndexService(StoreConfig storeConfig) {
+    public FileIndexService(StoreConfig storeConfig) {
         IndexConfig indexConfig = storeConfig.getIndex();
         this.maxHashSlotNum = indexConfig.getMaxHashSlotNum();
         this.maxIndexNum = indexConfig.getMaxIndexNum();
         this.storePath = storeConfig.getPath().getIndexPath();
     }
 
-    public DefaultIndexService(int maxHashSlotNum, int maxIndexNum, String storePath) {
+    public FileIndexService(int maxHashSlotNum, int maxIndexNum, String storePath) {
         this.maxHashSlotNum = maxHashSlotNum;
         this.maxIndexNum = maxIndexNum;
         this.storePath = storePath;
@@ -218,7 +218,7 @@ public class DefaultIndexService implements IndexService {
         readWriteLock.writeLock().lock();
         try {
             if (!indexFileList.isEmpty()) {
-                IndexFile lastFile = indexFileList.get(indexFileList.size() - 1);
+                IndexFile lastFile = indexFileList.getLast();
                 if (!lastFile.isFull()) {
                     return lastFile;
                 }

@@ -1,5 +1,6 @@
 package com.wolfmq.store.domain.index;
 
+import com.wolfmq.store.domain.index.file.IndexFile;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 

@@ -5,6 +5,8 @@ import lombok.Data;
 
 @Data
 public class IndexConfig implements Serializable {
+    private boolean enableTagIndex = false;
+
     private int maxHashSlotNum = 500_000;
     private int maxIndexNum = 20_000_000;
 

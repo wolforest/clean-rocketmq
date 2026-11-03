@@ -1,4 +1,4 @@
-package com.wolfmq.store.domain.index;
+package com.wolfmq.store.domain.index.file;
 
 import com.wolfmq.common.core.mmap.MappedFile;
 import com.wolfmq.store.infra.file.DefaultMappedFile;

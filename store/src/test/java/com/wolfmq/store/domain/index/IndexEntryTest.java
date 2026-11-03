@@ -1,5 +1,6 @@
 package com.wolfmq.store.domain.index;
 
+import com.wolfmq.store.domain.index.file.IndexEntry;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

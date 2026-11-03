@@ -1,4 +1,4 @@
-package com.wolfmq.store.domain.index;
+package com.wolfmq.store.domain.index.file;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

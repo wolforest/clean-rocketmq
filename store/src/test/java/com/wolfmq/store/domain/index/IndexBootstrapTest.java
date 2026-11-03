@@ -7,6 +7,7 @@ import com.wolfmq.common.config.server.StoreConfig;
 import com.wolfmq.common.config.store.IndexConfig;
 import com.wolfmq.common.testing.ConfigMock;
 import com.wolfmq.store.domain.dispatcher.CommitHandlerManager;
+import com.wolfmq.store.domain.index.file.FileIndexService;
 import java.nio.file.Path;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -42,7 +43,7 @@ class IndexBootstrapTest {
         IndexBootstrap bootstrap = new IndexBootstrap(context);
         bootstrap.initialize();
 
-        DefaultIndexService service = context.getBean(DefaultIndexService.class);
+        FileIndexService service = context.getBean(FileIndexService.class);
         assertNotNull(service);
 
         assertNotNull(handlerManager);

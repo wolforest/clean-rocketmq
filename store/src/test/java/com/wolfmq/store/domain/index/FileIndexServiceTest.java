@@ -2,6 +2,7 @@ package com.wolfmq.store.domain.index;
 
 import com.wolfmq.common.domain.index.IndexService;
 import com.wolfmq.common.domain.index.QueryOffsetResult;
+import com.wolfmq.store.domain.index.file.FileIndexService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -9,49 +10,49 @@ import java.io.File;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class DefaultIndexServiceTest {
+public class FileIndexServiceTest {
 
     @TempDir
     File tempDir;
 
-    private DefaultIndexService createService() {
-        return new DefaultIndexService(100, 1000, tempDir.getAbsolutePath());
+    private FileIndexService createService() {
+        return new FileIndexService(100, 1000, tempDir.getAbsolutePath());
     }
 
     @Test
     void testImplementsIndexService() {
-        DefaultIndexService service = createService();
+        FileIndexService service = createService();
         assertInstanceOf(IndexService.class, service);
     }
 
     @Test
     void testConstructor() {
-        DefaultIndexService service = createService();
+        FileIndexService service = createService();
         assertNotNull(service);
     }
 
     @Test
     void testBuildIndexWithNullKeysDoesNotThrow() {
-        DefaultIndexService service = createService();
+        FileIndexService service = createService();
         assertDoesNotThrow(() -> service.buildIndex("topic", null, 0, System.currentTimeMillis()));
     }
 
     @Test
     void testBuildIndexWithEmptyKeysDoesNotThrow() {
-        DefaultIndexService service = createService();
+        FileIndexService service = createService();
         assertDoesNotThrow(() -> service.buildIndex("topic", "", 0, System.currentTimeMillis()));
     }
 
     @Test
     void testBuildIndexCreatesIndexFile() {
-        DefaultIndexService service = createService();
+        FileIndexService service = createService();
         long timestamp = System.currentTimeMillis();
         service.buildIndex("testTopic", "key1", 100L, timestamp);
     }
 
     @Test
     void testQueryOffsetWithEmptyKeyReturnsEmptyResult() {
-        DefaultIndexService service = createService();
+        FileIndexService service = createService();
         QueryOffsetResult result = service.queryOffset("topic", "", 10, 0, 0);
         assertNotNull(result);
         assertTrue(result.getPhyOffsets().isEmpty());
@@ -59,7 +60,7 @@ public class DefaultIndexServiceTest {
 
     @Test
     void testQueryOffsetWithNullKeyReturnsEmptyResult() {
-        DefaultIndexService service = createService();
+        FileIndexService service = createService();
         QueryOffsetResult result = service.queryOffset("topic", null, 10, 0, 0);
         assertNotNull(result);
         assertTrue(result.getPhyOffsets().isEmpty());
@@ -67,7 +68,7 @@ public class DefaultIndexServiceTest {
 
     @Test
     void testQueryOffsetReturnsResultWithMetadata() {
-        DefaultIndexService service = createService();
+        FileIndexService service = createService();
         long timestamp = System.currentTimeMillis();
         service.buildIndex("testTopic", "key1", 100L, timestamp);
 
@@ -79,20 +80,20 @@ public class DefaultIndexServiceTest {
 
     @Test
     void testStartAndShutdownDoNotThrow() {
-        DefaultIndexService service = createService();
+        FileIndexService service = createService();
         assertDoesNotThrow(service::start);
         assertDoesNotThrow(service::shutdown);
     }
 
     @Test
     void testLoadReturnsTrue() {
-        DefaultIndexService service = createService();
+        FileIndexService service = createService();
         assertTrue(service.load(true));
     }
 
     @Test
     void testGetTotalSize() {
-        DefaultIndexService service = createService();
+        FileIndexService service = createService();
         long timestamp = System.currentTimeMillis();
         service.buildIndex("testTopic", "key1", 100L, timestamp);
         assertTrue(service.getTotalSize() > 0);
@@ -100,13 +101,13 @@ public class DefaultIndexServiceTest {
 
     @Test
     void testDestroy() {
-        DefaultIndexService service = createService();
+        FileIndexService service = createService();
         assertDoesNotThrow(service::destroy);
     }
 
     @Test
     void testDeleteExpiredFile() {
-        DefaultIndexService service = createService();
+        FileIndexService service = createService();
         assertDoesNotThrow(() -> service.deleteExpiredFile(0));
     }
 }
