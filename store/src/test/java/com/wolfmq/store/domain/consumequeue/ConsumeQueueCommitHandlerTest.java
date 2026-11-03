@@ -2,7 +2,7 @@ package com.wolfmq.store.domain.consumequeue;
 
 import com.wolfmq.common.domain.message.MessageBO;
 import com.wolfmq.common.domain.commitlog.dispatch.CommitEvent;
-import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueProxy;
+import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueProxy;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

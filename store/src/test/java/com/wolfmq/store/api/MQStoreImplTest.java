@@ -10,7 +10,7 @@ import com.wolfmq.common.domain.mq.dto.EnqueueRequest;
 import com.wolfmq.common.domain.mq.dto.EnqueueResult;
 import com.wolfmq.common.domain.mq.MQService;
 import com.wolfmq.common.domain.message.MessageBO;
-import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueProxy;
+import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueProxy;
 import com.wolfmq.store.domain.mq.ack.AckService;
 import com.wolfmq.store.domain.mq.ack.InvisibleService;
 import org.junit.jupiter.api.BeforeEach;

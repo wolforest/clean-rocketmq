@@ -1,4 +1,4 @@
-package com.wolfmq.store.domain.consumequeue.queue;
+package com.wolfmq.store.domain.consumequeue.error;
 
 import com.wolfmq.common.config.server.StoreConfig;
 import com.wolfmq.common.config.store.ConsumeQueueConfig;
@@ -11,6 +11,7 @@ import com.wolfmq.common.domain.message.MessageBO;
 import com.wolfmq.common.testing.ConfigMock;
 import com.wolfmq.common.testing.MessageMock;
 import com.wolfmq.common.testing.QueueMock;
+import com.wolfmq.store.domain.consumequeue.file.FileConsumeQueue;
 import com.wolfmq.store.server.bootstrap.StoreCheckpoint;
 import java.nio.file.Path;
 import java.util.List;
@@ -19,7 +20,7 @@ import org.junit.jupiter.api.io.TempDir;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class DefaultConsumeQueueTest {
+class FileConsumeQueueTest {
     public static int MMAP_FILE_SIZE = 20 * 1000;
 
     @Test
@@ -229,7 +230,7 @@ class DefaultConsumeQueueTest {
 
     @Test
     void testGetMaxCommitLogOffset(@TempDir Path tmpDir) {
-        DefaultConsumeQueue queue = (DefaultConsumeQueue) createConsumeQueue(tmpDir.toString());
+        FileConsumeQueue queue = (FileConsumeQueue) createConsumeQueue(tmpDir.toString());
 
         assertEquals(0L, queue.getMaxCommitOffset());
 
@@ -245,7 +246,7 @@ class DefaultConsumeQueueTest {
 
     @Test
     void testSetMaxCommitLogOffset(@TempDir Path tmpDir) {
-        DefaultConsumeQueue queue = (DefaultConsumeQueue) createConsumeQueue(tmpDir.toString());
+        FileConsumeQueue queue = (FileConsumeQueue) createConsumeQueue(tmpDir.toString());
 
         queue.setMaxCommitOffset(500L);
         assertEquals(500L, queue.getMaxCommitOffset());
@@ -352,7 +353,7 @@ class DefaultConsumeQueueTest {
 
         StoreCheckpoint checkpoint = new StoreCheckpoint(StorePath.getCheckpointPath());
 
-        return new DefaultConsumeQueue(
+        return new FileConsumeQueue(
             topic,
             queueId,
             queueConfig,

@@ -8,7 +8,7 @@ import com.wolfmq.common.domain.meta.topic.Topic;
 import com.wolfmq.common.domain.meta.topic.TopicValidator;
 import com.wolfmq.common.testing.ConfigMock;
 import com.wolfmq.common.server.store.StoreState;
-import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueProxy;
+import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueProxy;
 import com.wolfmq.store.server.bootstrap.StoreRegister;
 import java.nio.file.Path;
 import java.util.Set;

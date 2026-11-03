@@ -1,4 +1,4 @@
-package com.wolfmq.store.domain.consumequeue.queue;
+package com.wolfmq.store.domain.consumequeue.file;
 
 import cn.coderule.common.util.lang.ThreadUtil;
 import com.wolfmq.common.config.store.ConsumeQueueConfig;
@@ -24,12 +24,15 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * @renamed from DefaultConsumeQueue to FileConsumeQueue
+ */
 @Slf4j
-public class DefaultConsumeQueue implements ConsumeQueue {
-    private static final AtomicLongFieldUpdater<DefaultConsumeQueue> MAX_OFFSET_UPDATER
-        = AtomicLongFieldUpdater.newUpdater(DefaultConsumeQueue.class, "maxOffset");
-    private static final AtomicLongFieldUpdater<DefaultConsumeQueue> MIN_OFFSET_UPDATER
-        = AtomicLongFieldUpdater.newUpdater(DefaultConsumeQueue.class, "minOffset");
+public class FileConsumeQueue implements ConsumeQueue {
+    private static final AtomicLongFieldUpdater<FileConsumeQueue> MAX_OFFSET_UPDATER
+        = AtomicLongFieldUpdater.newUpdater(FileConsumeQueue.class, "maxOffset");
+    private static final AtomicLongFieldUpdater<FileConsumeQueue> MIN_OFFSET_UPDATER
+        = AtomicLongFieldUpdater.newUpdater(FileConsumeQueue.class, "minOffset");
 
     @Getter
     private final String topic;
@@ -50,7 +53,7 @@ public class DefaultConsumeQueue implements ConsumeQueue {
     private volatile long minOffset = 0;
     private volatile long maxOffset = 0;
 
-    public DefaultConsumeQueue(String topic, int queueId, ConsumeQueueConfig config, CheckPoint checkpoint) {
+    public FileConsumeQueue(String topic, int queueId, ConsumeQueueConfig config, CheckPoint checkpoint) {
         this.topic = topic;
         this.queueId = queueId;
         this.config = config;

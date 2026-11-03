@@ -6,7 +6,7 @@ import com.wolfmq.common.domain.message.enums.MessageStatus;
 import com.wolfmq.common.domain.mq.dto.DequeueRequest;
 import com.wolfmq.common.domain.mq.dto.DequeueResult;
 import com.wolfmq.common.domain.message.MessageBO;
-import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueProxy;
+import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueProxy;
 
 public class NextOffsetSetter {
     private final StoreConfig storeConfig;

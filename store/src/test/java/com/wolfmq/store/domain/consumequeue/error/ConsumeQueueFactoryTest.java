@@ -1,4 +1,4 @@
-package com.wolfmq.store.domain.consumequeue.queue;
+package com.wolfmq.store.domain.consumequeue.error;
 
 import com.wolfmq.common.config.server.StoreConfig;
 import com.wolfmq.common.config.store.ConsumeQueueConfig;
@@ -6,6 +6,8 @@ import com.wolfmq.common.config.store.StorePath;
 import com.wolfmq.common.domain.consumequeue.ConsumeQueue;
 import com.wolfmq.common.domain.meta.service.TopicService;
 import com.wolfmq.common.testing.ConfigMock;
+import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueFactory;
+import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueRegistry;
 import com.wolfmq.store.server.bootstrap.StoreCheckpoint;
 import java.nio.file.Path;
 import java.util.Set;

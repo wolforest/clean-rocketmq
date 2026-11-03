@@ -6,7 +6,7 @@ import com.wolfmq.common.domain.mq.dto.EnqueueFuture;
 import com.wolfmq.common.core.lock.queue.EnqueueLock;
 import com.wolfmq.common.domain.message.MessageBO;
 import com.wolfmq.store.domain.commitlog.CommitLogProxy;
-import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueProxy;
+import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueProxy;
 import com.wolfmq.store.server.ha.server.processor.CommitLogSynchronizer;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;

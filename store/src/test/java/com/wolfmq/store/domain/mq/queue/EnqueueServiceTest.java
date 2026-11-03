@@ -10,7 +10,7 @@ import com.wolfmq.common.domain.mq.dto.EnqueueResult;
 import com.wolfmq.common.core.mmap.InsertResult;
 import com.wolfmq.common.testing.MessageMock;
 import com.wolfmq.store.domain.commitlog.CommitLogProxy;
-import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueProxy;
+import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueProxy;
 import com.wolfmq.store.server.ha.server.processor.CommitLogSynchronizer;
 import java.util.concurrent.CompletableFuture;
 import org.junit.jupiter.api.Test;

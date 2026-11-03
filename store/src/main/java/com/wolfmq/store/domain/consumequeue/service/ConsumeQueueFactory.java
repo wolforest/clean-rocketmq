@@ -1,9 +1,11 @@
-package com.wolfmq.store.domain.consumequeue.queue;
+package com.wolfmq.store.domain.consumequeue.service;
 
 import com.wolfmq.common.config.store.ConsumeQueueConfig;
 import com.wolfmq.common.domain.consumequeue.ConsumeQueue;
 import com.wolfmq.common.domain.meta.service.TopicService;
 import com.wolfmq.common.server.store.CheckPoint;
+import com.wolfmq.store.domain.consumequeue.file.FileConsumeQueue;
+import com.wolfmq.store.domain.consumequeue.error.ErrorConsumeQueue;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -98,7 +100,7 @@ public class ConsumeQueueFactory implements ConsumeQueueRegistry {
     }
 
     private ConsumeQueue createConsumeQueue(String topic, int queueId) {
-        return new DefaultConsumeQueue(topic, queueId, config, checkpoint);
+        return new FileConsumeQueue(topic, queueId, config, checkpoint);
     }
 
     private ConcurrentMap<Integer, ConsumeQueue> initQueueMap(String topic) {

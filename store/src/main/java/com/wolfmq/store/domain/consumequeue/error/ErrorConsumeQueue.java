@@ -1,4 +1,4 @@
-package com.wolfmq.store.domain.consumequeue.queue;
+package com.wolfmq.store.domain.consumequeue.error;
 
 import com.wolfmq.common.domain.consumequeue.QueueType;
 import com.wolfmq.common.domain.commitlog.dispatch.CommitEvent;

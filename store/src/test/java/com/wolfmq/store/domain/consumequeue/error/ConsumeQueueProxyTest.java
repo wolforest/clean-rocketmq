@@ -1,9 +1,11 @@
-package com.wolfmq.store.domain.consumequeue.queue;
+package com.wolfmq.store.domain.consumequeue.error;
 
 import com.wolfmq.common.config.store.ConsumeQueueConfig;
 import com.wolfmq.common.domain.consumequeue.ConsumeQueue;
 import com.wolfmq.common.domain.meta.service.TopicService;
 import com.wolfmq.common.server.store.CheckPoint;
+import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueFactory;
+import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueProxy;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

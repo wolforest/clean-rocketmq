@@ -1,4 +1,4 @@
-package com.wolfmq.store.domain.consumequeue.service;
+package com.wolfmq.store.domain.consumequeue.file;
 
 import com.wolfmq.common.config.store.ConsumeQueueConfig;
 import com.wolfmq.common.domain.consumequeue.QueueUnit;
@@ -7,7 +7,7 @@ import com.wolfmq.common.core.mmap.MappedFile;
 import com.wolfmq.common.core.mmap.MappedFileQueue;
 import com.wolfmq.common.server.store.CheckPoint;
 import com.wolfmq.common.server.store.Offset;
-import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueRegistry;
+import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueRegistry;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;

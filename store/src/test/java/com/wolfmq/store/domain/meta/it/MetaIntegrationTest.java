@@ -11,7 +11,7 @@ import com.wolfmq.common.domain.meta.subscription.SubscriptionGroup;
 import com.wolfmq.common.domain.meta.topic.Topic;
 import com.wolfmq.common.domain.meta.service.ConsumeOffsetService;
 import com.wolfmq.common.testing.ConfigMock;
-import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueProxy;
+import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueProxy;
 import com.wolfmq.store.domain.meta.DefaultConsumeOffsetService;
 import com.wolfmq.store.domain.meta.DefaultConsumeOrderService;
 import com.wolfmq.store.domain.meta.DefaultSubscriptionService;

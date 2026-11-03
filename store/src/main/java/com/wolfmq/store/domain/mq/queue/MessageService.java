@@ -8,7 +8,7 @@ import com.wolfmq.common.domain.consumer.consume.mq.MessageRequest;
 import com.wolfmq.common.domain.consumer.consume.mq.MessageResult;
 import com.wolfmq.common.domain.message.MessageBO;
 import com.wolfmq.store.domain.commitlog.CommitLogProxy;
-import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueProxy;
+import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueProxy;
 import java.util.List;
 import lombok.NonNull;
 

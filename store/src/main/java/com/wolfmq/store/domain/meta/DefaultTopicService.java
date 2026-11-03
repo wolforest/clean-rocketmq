@@ -6,7 +6,7 @@ import cn.coderule.common.util.lang.string.JSONUtil;
 import com.wolfmq.common.config.server.StoreConfig;
 import com.wolfmq.common.domain.meta.topic.Topic;
 import com.wolfmq.common.domain.meta.topic.TopicMap;
-import com.wolfmq.store.domain.consumequeue.queue.ConsumeQueueProxy;
+import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueProxy;
 import com.wolfmq.common.domain.meta.service.ConsumeOffsetService;
 import com.wolfmq.common.domain.meta.service.TopicService;
 import com.wolfmq.common.domain.meta.topic.KeyBuilder;
