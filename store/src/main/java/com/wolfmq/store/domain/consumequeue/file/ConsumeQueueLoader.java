@@ -12,14 +12,18 @@ import lombok.extern.slf4j.Slf4j;
 public class ConsumeQueueLoader implements ConsumeQueueRegistry {
     private final ConsumeQueueConfig config;
 
-    private final Set<ConsumeQueue> queueSet = new LinkedHashSet<>(128);
+    private final Set<FileConsumeQueue> queueSet = new LinkedHashSet<>(128);
 
     public ConsumeQueueLoader(ConsumeQueueConfig config) {
         this.config = config;
     }
     @Override
     public void register(ConsumeQueue queue) {
-        queueSet.add(queue);
+        if (!(queue instanceof FileConsumeQueue)) {
+            return;
+        }
+
+        queueSet.add((FileConsumeQueue) queue);
     }
 
     public void load() {
