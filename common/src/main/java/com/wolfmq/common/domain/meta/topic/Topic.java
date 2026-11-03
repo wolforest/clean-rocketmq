@@ -41,7 +41,7 @@ public class Topic implements Serializable {
     @Builder.Default
     private int perm = 0;
     @Builder.Default
-    private TagType tagType = TagType.SINGLE_TAG;
+    private TagMode tagMode = TagMode.SINGLE_TAG;
     @Builder.Default
     private int topicSysFlag = 0;
     @Builder.Default
@@ -66,7 +66,7 @@ public class Topic implements Serializable {
         this.readQueueNums = other.readQueueNums;
         this.writeQueueNums = other.writeQueueNums;
         this.perm = other.perm;
-        this.tagType = other.tagType;
+        this.tagMode = other.tagMode;
         this.topicSysFlag = other.topicSysFlag;
         this.order = other.order;
         this.attributes = other.attributes;
@@ -146,7 +146,7 @@ public class Topic implements Serializable {
         sb.append(this.perm);
         sb.append(SEPARATOR);
         //[4]
-        sb.append(this.tagType);
+        sb.append(this.tagMode);
         sb.append(SEPARATOR);
         //[5]
         if (attributes != null) {
@@ -166,7 +166,7 @@ public class Topic implements Serializable {
         this.readQueueNums = Integer.parseInt(strs[1]);
         this.writeQueueNums = Integer.parseInt(strs[2]);
         this.perm = Integer.parseInt(strs[3]);
-        this.tagType = TagType.valueOf(strs[4]);
+        this.tagMode = TagMode.valueOf(strs[4]);
         decodeAttributes(strs);
 
         this.messageType = getTopicType();
@@ -214,7 +214,7 @@ public class Topic implements Serializable {
         if (!Objects.equals(topicName, that.topicName)) {
             return false;
         }
-        if (tagType != that.tagType) {
+        if (tagMode != that.tagMode) {
             return false;
         }
         return Objects.equals(attributes, that.attributes);
@@ -226,7 +226,7 @@ public class Topic implements Serializable {
         result = 31 * result + readQueueNums;
         result = 31 * result + writeQueueNums;
         result = 31 * result + perm;
-        result = 31 * result + (tagType != null ? tagType.hashCode() : 0);
+        result = 31 * result + (tagMode != null ? tagMode.hashCode() : 0);
         result = 31 * result + topicSysFlag;
         result = 31 * result + (order ? 1 : 0);
         result = 31 * result + (attributes != null ? attributes.hashCode() : 0);
@@ -237,7 +237,7 @@ public class Topic implements Serializable {
     public String toString() {
         return "Topic [topicName=" + topicName + ", readQueueNums=" + readQueueNums
             + ", writeQueueNums=" + writeQueueNums + ", perm=0"
-            + ", topicFilterType=" + tagType + ", topicSysFlag=" + topicSysFlag + ", order=" + order
+            + ", topicFilterType=" + tagMode + ", topicSysFlag=" + topicSysFlag + ", order=" + order
             + ", attributes=" + attributes + "]";
     }
 }

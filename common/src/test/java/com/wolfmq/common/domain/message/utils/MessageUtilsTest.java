@@ -1,6 +1,6 @@
 package com.wolfmq.common.domain.message.utils;
 
-import com.wolfmq.common.domain.meta.topic.TagType;
+import com.wolfmq.common.domain.meta.topic.TagMode;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
@@ -83,7 +83,7 @@ class MessageUtilsTest {
 
     @Test
     void getTagsCode_withTagType() {
-        long code = MessageUtils.getTagsCode(TagType.SINGLE_TAG, "tagA");
+        long code = MessageUtils.getTagsCode(TagMode.SINGLE_TAG, "tagA");
         assertEquals("tagA".hashCode(), code);
     }
 

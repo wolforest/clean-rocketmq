@@ -5,7 +5,7 @@ import cn.coderule.common.util.lang.collection.MapUtil;
 import com.wolfmq.common.core.constant.MQConstants;
 import com.wolfmq.common.domain.message.enums.MessageStatus;
 import com.wolfmq.common.domain.message.enums.MessageVersion;
-import com.wolfmq.common.domain.meta.topic.TagType;
+import com.wolfmq.common.domain.meta.topic.TagMode;
 import com.wolfmq.common.domain.message.property.MessageConst;
 import com.wolfmq.common.domain.message.property.MessageSysFlag;
 import com.wolfmq.common.domain.transaction.TransactionUtil;
@@ -288,12 +288,12 @@ public class MessageBO extends Message implements Serializable {
         this.putProperty(MessageConst.PROPERTY_UNIQ_CLIENT_MESSAGE_ID_KEYIDX, tags);
     }
 
-    public TagType getTagType() {
+    public TagMode getTagType() {
         if ((this.sysFlag & MessageSysFlag.MULTI_TAGS_FLAG) == MessageSysFlag.MULTI_TAGS_FLAG) {
-            return TagType.MULTI_TAG;
+            return TagMode.MULTI_TAG;
         }
 
-        return TagType.SINGLE_TAG;
+        return TagMode.SINGLE_TAG;
     }
 
     public void setReconsumeTime(String reconsumeTimes) {

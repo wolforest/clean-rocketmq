@@ -2,7 +2,7 @@ package com.wolfmq.common.domain.message.utils;
 
 import cn.coderule.common.util.lang.ByteUtil;
 import cn.coderule.common.util.lang.string.StringUtil;
-import com.wolfmq.common.domain.meta.topic.TagType;
+import com.wolfmq.common.domain.meta.topic.TagMode;
 import com.wolfmq.common.domain.message.property.MessageId;
 import java.net.Inet4Address;
 import java.net.InetAddress;
@@ -49,7 +49,7 @@ public class MessageUtils {
         return tags.hashCode();
     }
 
-    public static long getTagsCode(TagType tagType, String tags) {
+    public static long getTagsCode(TagMode tagMode, String tags) {
         return getTagsCode(tags);
     }
 

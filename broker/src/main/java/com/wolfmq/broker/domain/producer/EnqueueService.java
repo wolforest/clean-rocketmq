@@ -221,7 +221,7 @@ public class EnqueueService implements Lifecycle {
         MessageBO message = produceContext.getMessageBO();
         Topic topic = produceContext.getTopic();
 
-        long tagCode = MessageUtils.getTagsCode(topic.getTagType(), message.getTags());
+        long tagCode = MessageUtils.getTagsCode(topic.getTagMode(), message.getTags());
         message.setTagsCode(tagCode);
     }
 

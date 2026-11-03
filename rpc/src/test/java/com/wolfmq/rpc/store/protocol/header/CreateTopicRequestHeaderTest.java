@@ -1,6 +1,6 @@
 package com.wolfmq.rpc.store.protocol.header;
 
-import com.wolfmq.common.domain.meta.topic.TagType;
+import com.wolfmq.common.domain.meta.topic.TagMode;
 import com.wolfmq.common.domain.meta.topic.Topic;
 import com.wolfmq.rpc.common.rpc.core.exception.RemotingCommandException;
 import org.junit.jupiter.api.Test;
@@ -115,9 +115,9 @@ public class CreateTopicRequestHeaderTest {
         CreateTopicRequestHeader header = new CreateTopicRequestHeader();
         header.setTopicFilterType("MULTI_TAG");
 
-        TagType type = header.getTopicFilterTypeEnum();
+        TagMode type = header.getTopicFilterTypeEnum();
 
-        assertEquals(TagType.MULTI_TAG, type);
+        assertEquals(TagMode.MULTI_TAG, type);
     }
 
     @Test

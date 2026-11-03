@@ -4,7 +4,7 @@
  * $Id: CreateTopicRequestHeader.java 1835 2013-05-16 02:00:50Z vintagewang@apache.org $
  */package com.wolfmq.rpc.store.protocol.header;
 
-import com.wolfmq.common.domain.meta.topic.TagType;
+import com.wolfmq.common.domain.meta.topic.TagMode;
 import com.wolfmq.common.domain.meta.topic.Topic;
 import com.wolfmq.common.core.attribute.AttributeParser;
 import com.wolfmq.rpc.common.rpc.core.annotation.CFNotNull;
@@ -66,14 +66,14 @@ public class CreateTopicRequestHeader extends RpcRequestHeader {
     @Override
     public void checkFields() throws RemotingCommandException {
         try {
-            TagType.valueOf(this.topicFilterType);
+            TagMode.valueOf(this.topicFilterType);
         } catch (Exception e) {
             throw new RemotingCommandException("topicFilterType = [" + topicFilterType + "] value invalid", e);
         }
     }
 
-    public TagType getTopicFilterTypeEnum() {
-        return TagType.valueOf(this.topicFilterType);
+    public TagMode getTopicFilterTypeEnum() {
+        return TagMode.valueOf(this.topicFilterType);
     }
 
     @Override
