@@ -8,7 +8,7 @@ import com.wolfmq.common.domain.mq.dto.DequeueResult;
 import com.wolfmq.common.domain.message.MessageBO;
 import com.wolfmq.common.testing.MessageMock;
 import com.wolfmq.store.domain.commitlog.CommitLogFacade;
-import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueProxy;
+import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueFacade;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
@@ -23,8 +23,8 @@ class MessageServiceTest {
     @Test
     void getMessageReturnsNotFoundWhenInvalid() {
         CommitLogFacade commitLog = mock(CommitLogFacade.class);
-        ConsumeQueueProxy consumeQueueProxy = mock(ConsumeQueueProxy.class);
-        MessageService service = new MessageService(commitLog, consumeQueueProxy);
+        ConsumeQueueFacade consumeQueueFacade = mock(ConsumeQueueFacade.class);
+        MessageService service = new MessageService(commitLog, consumeQueueFacade);
 
         MessageBO invalid = MessageBO.notFound();
         when(commitLog.select(7L)).thenReturn(invalid);
@@ -37,8 +37,8 @@ class MessageServiceTest {
     @Test
     void getSkipsNullMessagesAndSetsStatus() {
         CommitLogFacade commitLog = mock(CommitLogFacade.class);
-        ConsumeQueueProxy consumeQueueProxy = mock(ConsumeQueueProxy.class);
-        MessageService service = new MessageService(commitLog, consumeQueueProxy);
+        ConsumeQueueFacade consumeQueueFacade = mock(ConsumeQueueFacade.class);
+        MessageService service = new MessageService(commitLog, consumeQueueFacade);
 
         QueueUnit first = QueueUnit.builder()
             .commitOffset(10)
@@ -49,7 +49,7 @@ class MessageServiceTest {
             .messageSize(7)
             .build();
 
-        when(consumeQueueProxy.get("TOPIC_A", 0, 1, 2)).thenReturn(List.of(first, second));
+        when(consumeQueueFacade.get("TOPIC_A", 0, 1, 2)).thenReturn(List.of(first, second));
 
         MessageBO message = MessageMock.createMessage("TOPIC_A", 0, 1);
         message.setStatus(MessageStatus.FOUND);

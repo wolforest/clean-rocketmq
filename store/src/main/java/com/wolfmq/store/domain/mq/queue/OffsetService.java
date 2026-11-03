@@ -9,7 +9,7 @@ import com.wolfmq.common.domain.mq.dto.DequeueResult;
 import com.wolfmq.common.domain.consumer.consume.pop.helper.PopConverter;
 import com.wolfmq.common.domain.meta.order.OrderRequest;
 import com.wolfmq.common.domain.commitlog.CommitLog;
-import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueProxy;
+import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueFacade;
 import com.wolfmq.common.domain.meta.service.ConsumeOffsetService;
 import com.wolfmq.common.domain.meta.service.ConsumeOrderService;
 import com.wolfmq.store.domain.mq.ack.AckService;
@@ -21,7 +21,7 @@ public class OffsetService {
 
     private final CommitLog commitLog;
     private final AckService ackService;
-    private final ConsumeQueueProxy consumeQueue;
+    private final ConsumeQueueFacade consumeQueue;
 
     private final ConsumeOffsetService consumeOffsetService;
     private final ConsumeOrderService consumeOrderService;
@@ -32,7 +32,7 @@ public class OffsetService {
         StoreConfig storeConfig,
         CommitLog commitLog,
         AckService ackService,
-        ConsumeQueueProxy consumeQueue,
+        ConsumeQueueFacade consumeQueue,
         ConsumeOffsetService consumeOffsetService,
         ConsumeOrderService consumeOrderService
     ) {

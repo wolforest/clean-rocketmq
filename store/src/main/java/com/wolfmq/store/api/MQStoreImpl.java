@@ -13,7 +13,7 @@ import com.wolfmq.common.domain.consumer.consume.dto.QueueResult;
 import com.wolfmq.common.domain.mq.dto.EnqueueRequest;
 import com.wolfmq.common.domain.mq.dto.EnqueueResult;
 import com.wolfmq.common.server.store.api.MQStore;
-import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueProxy;
+import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueFacade;
 import com.wolfmq.common.domain.mq.MQService;
 import com.wolfmq.store.domain.mq.ack.AckService;
 import com.wolfmq.store.domain.mq.ack.InvisibleService;
@@ -23,19 +23,19 @@ public class MQStoreImpl implements MQStore {
     private final MQService mqService;
     private final AckService ackService;
     private final InvisibleService invisibleService;
-    private final ConsumeQueueProxy consumeQueueProxy;
+    private final ConsumeQueueFacade consumeQueueFacade;
 
     public MQStoreImpl(
         MQService mqService,
         AckService ackService,
         InvisibleService invisibleService,
-        ConsumeQueueProxy consumeQueueProxy
+        ConsumeQueueFacade consumeQueueFacade
     ) {
         this.ackService = ackService;
         this.invisibleService = invisibleService;
 
         this.mqService = mqService;
-        this.consumeQueueProxy = consumeQueueProxy;
+        this.consumeQueueFacade = consumeQueueFacade;
     }
 
     @Override
@@ -100,7 +100,7 @@ public class MQStoreImpl implements MQStore {
 
     @Override
     public QueueResult getMinOffset(QueueRequest request) {
-        long minOffset = consumeQueueProxy.getMinOffset(
+        long minOffset = consumeQueueFacade.getMinOffset(
             request.getTopicName(),
             request.getQueueId()
         );
@@ -110,7 +110,7 @@ public class MQStoreImpl implements MQStore {
 
     @Override
     public QueueResult getMaxOffset(QueueRequest request) {
-        long maxOffset = consumeQueueProxy.getMaxOffset(
+        long maxOffset = consumeQueueFacade.getMaxOffset(
             request.getTopicName(),
             request.getQueueId()
         );

@@ -6,7 +6,7 @@ import com.wolfmq.common.domain.mq.dto.EnqueueFuture;
 import com.wolfmq.common.core.lock.queue.EnqueueLock;
 import com.wolfmq.common.domain.message.MessageBO;
 import com.wolfmq.store.domain.commitlog.CommitLogFacade;
-import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueProxy;
+import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueFacade;
 import com.wolfmq.store.server.ha.server.processor.CommitLogSynchronizer;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
@@ -15,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class EnqueueService {
     private final StoreConfig storeConfig;
-    private final ConsumeQueueProxy consumeQueueProxy;
+    private final ConsumeQueueFacade consumeQueueFacade;
     private final CommitLogFacade commitLogFacade;
 
     private CommitLogSynchronizer commitLogSynchronizer;
@@ -24,11 +24,11 @@ public class EnqueueService {
     public EnqueueService(
         StoreConfig storeConfig,
         CommitLogFacade commitLogFacade,
-        ConsumeQueueProxy consumeQueueProxy) {
+        ConsumeQueueFacade consumeQueueFacade) {
 
         this.storeConfig = storeConfig;
         this.commitLogFacade = commitLogFacade;
-        this.consumeQueueProxy = consumeQueueProxy;
+        this.consumeQueueFacade = consumeQueueFacade;
 
         this.enqueueLock = new EnqueueLock();
     }
@@ -75,7 +75,7 @@ public class EnqueueService {
             return;
         }
 
-        long queueOffset = consumeQueueProxy.assignOffset(messageBO.getTopic(), messageBO.getQueueId());
+        long queueOffset = consumeQueueFacade.assignOffset(messageBO.getTopic(), messageBO.getQueueId());
         messageBO.setQueueOffset(queueOffset);
     }
 
@@ -84,7 +84,7 @@ public class EnqueueService {
             return;
         }
 
-        consumeQueueProxy.increaseOffset(messageBO.getTopic(), messageBO.getQueueId());
+        consumeQueueFacade.increaseOffset(messageBO.getTopic(), messageBO.getQueueId());
     }
 
     private void lockMessageQueue(String topic, int queueId) {

@@ -24,7 +24,7 @@ import com.wolfmq.store.domain.mq.queue.MessageService;
 import com.wolfmq.store.domain.commitlog.log.CommitLogFactory;
 import com.wolfmq.store.domain.commitlog.CommitLogFacade;
 import com.wolfmq.store.domain.commitlog.route.TopicPartitioner;
-import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueProxy;
+import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueFacade;
 import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueFactory;
 import com.wolfmq.store.domain.consumequeue.file.ConsumeQueueFlusher;
 import com.wolfmq.store.domain.consumequeue.file.ConsumeQueueLoader;
@@ -140,10 +140,10 @@ class TimerIntegrationTest {
         factory.addCreateHook(recovery);
         factory.createAll();
 
-        ConsumeQueueProxy consumeQueueProxy = new ConsumeQueueProxy(factory);
-        context.register(consumeQueueProxy, ConsumeQueueProxy.class);
+        ConsumeQueueFacade consumeQueueFacade = new ConsumeQueueFacade(factory);
+        context.register(consumeQueueFacade, ConsumeQueueFacade.class);
 
-        messageService = new MessageService(commitLogFacade, consumeQueueProxy);
+        messageService = new MessageService(commitLogFacade, consumeQueueFacade);
         context.register(messageService, MessageService.class);
     }
 

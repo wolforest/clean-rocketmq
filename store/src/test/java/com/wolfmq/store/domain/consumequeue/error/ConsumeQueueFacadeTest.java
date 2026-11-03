@@ -5,17 +5,17 @@ import com.wolfmq.common.domain.consumequeue.ConsumeQueue;
 import com.wolfmq.common.domain.meta.service.TopicService;
 import com.wolfmq.common.server.store.checkpoint.bakeup.CheckPoint;
 import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueFactory;
-import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueProxy;
+import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueFacade;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-public class ConsumeQueueProxyTest {
+public class ConsumeQueueFacadeTest {
 
     private ConsumeQueueFactory factory;
-    private ConsumeQueueProxy manager;
+    private ConsumeQueueFacade manager;
     private TopicService topicService;
 
     @BeforeEach
@@ -24,7 +24,7 @@ public class ConsumeQueueProxyTest {
         topicService = mock(TopicService.class);
         CheckPoint checkpoint = mock(CheckPoint.class);
         factory = spy(new ConsumeQueueFactory(config, topicService, checkpoint));
-        manager = new ConsumeQueueProxy(factory);
+        manager = new ConsumeQueueFacade(factory);
     }
 
     @Test

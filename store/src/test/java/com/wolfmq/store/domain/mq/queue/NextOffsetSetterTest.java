@@ -7,7 +7,7 @@ import com.wolfmq.common.domain.mq.dto.DequeueResult;
 import com.wolfmq.common.domain.message.MessageBO;
 import com.wolfmq.common.testing.ConfigMock;
 import com.wolfmq.common.testing.MessageMock;
-import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueProxy;
+import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueFacade;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -26,7 +26,7 @@ class NextOffsetSetterTest {
         storeConfig.setGroupNo(1);
         storeConfig.getMeta().setEnableOffsetCheckInSlave(false);
 
-        ConsumeQueueProxy consumeQueue = mock(ConsumeQueueProxy.class);
+        ConsumeQueueFacade consumeQueue = mock(ConsumeQueueFacade.class);
         when(consumeQueue.existsQueue("TOPIC_A", 0)).thenReturn(false);
 
         NextOffsetSetter setter = new NextOffsetSetter(storeConfig, consumeQueue);
@@ -52,7 +52,7 @@ class NextOffsetSetterTest {
         Path tempDir = Files.createTempDirectory("mq-next-offset2");
         StoreConfig storeConfig = ConfigMock.createStoreConfig(tempDir.toString());
 
-        ConsumeQueueProxy consumeQueue = mock(ConsumeQueueProxy.class);
+        ConsumeQueueFacade consumeQueue = mock(ConsumeQueueFacade.class);
         when(consumeQueue.existsQueue("TOPIC_B", 1)).thenReturn(true);
         when(consumeQueue.getMinOffset("GROUP_B", 1)).thenReturn(1L);
         when(consumeQueue.getMaxOffset("GROUP_B", 1)).thenReturn(10L);

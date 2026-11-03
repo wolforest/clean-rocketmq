@@ -9,11 +9,12 @@ import java.util.List;
  * @renamed from ConsumeQueueGateway to ConsumeQueueFacade
  * @renamed from ConsumeQueueFacade to ConsumeQueueManager
  * @renamed from ConsumeQueueManager to ConsumeQueueProxy
+ * @renamed from ConsumeQueueProxy to ConsumeQueueFacade
  */
-public class ConsumeQueueProxy {
+public class ConsumeQueueFacade {
     private final ConsumeQueueFactory consumeQueueFactory;
 
-    public ConsumeQueueProxy(ConsumeQueueFactory consumeQueueFactory) {
+    public ConsumeQueueFacade(ConsumeQueueFactory consumeQueueFactory) {
         this.consumeQueueFactory = consumeQueueFactory;
     }
 

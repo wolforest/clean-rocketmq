@@ -6,7 +6,7 @@ import com.wolfmq.common.config.store.CommitConfig;
 import com.wolfmq.common.config.store.ConsumeQueueConfig;
 import com.wolfmq.common.domain.meta.service.TopicService;
 import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueFactory;
-import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueProxy;
+import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueFacade;
 import com.wolfmq.store.domain.consumequeue.file.ConsumeQueueFlusher;
 import com.wolfmq.store.domain.consumequeue.file.ConsumeQueueLoader;
 import com.wolfmq.store.domain.consumequeue.file.ConsumeQueueRecovery;
@@ -25,7 +25,7 @@ public class ConsumeQueueBootstrap implements Lifecycle {
     private ConsumeQueueFlusher flusher;
     private ConsumeQueueLoader loader;
     private ConsumeQueueRecovery recovery;
-    private ConsumeQueueProxy consumeQueueProxy;
+    private ConsumeQueueFacade consumeQueueFacade;
 
     public ConsumeQueueBootstrap(ApplicationContext context) {
         this.context = context;
@@ -66,8 +66,8 @@ public class ConsumeQueueBootstrap implements Lifecycle {
         recovery = new ConsumeQueueRecovery(consumeQueueConfig, checkPoint);
 
         ConsumeQueueFactory consumeQueueFactory = initConsumeQueueFactory();
-        consumeQueueProxy = new ConsumeQueueProxy(consumeQueueFactory);
-        context.register(consumeQueueProxy);
+        consumeQueueFacade = new ConsumeQueueFacade(consumeQueueFactory);
+        context.register(consumeQueueFacade);
     }
 
     private ConsumeQueueFactory initConsumeQueueFactory() {
@@ -88,7 +88,7 @@ public class ConsumeQueueBootstrap implements Lifecycle {
 
     private void registerDispatchHandler() {
         CommitHandlerManager handlerManager = context.getBean(CommitHandlerManager.class);
-        ConsumeQueueCommitHandler handler = new ConsumeQueueCommitHandler(consumeQueueProxy);
+        ConsumeQueueCommitHandler handler = new ConsumeQueueCommitHandler(consumeQueueFacade);
         handlerManager.registerHandler(handler);
     }
 }

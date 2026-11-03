@@ -5,7 +5,7 @@ import com.wolfmq.common.config.server.StoreConfig;
 import com.wolfmq.common.server.store.api.meta.ConsumeOffsetStore;
 import com.wolfmq.common.server.store.api.meta.SubscriptionStore;
 import com.wolfmq.common.server.store.api.meta.TopicStore;
-import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueProxy;
+import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueFacade;
 import com.wolfmq.common.domain.meta.service.ConsumeOffsetService;
 import com.wolfmq.common.domain.meta.service.ConsumeOrderService;
 import com.wolfmq.common.domain.meta.service.SubscriptionService;
@@ -54,10 +54,10 @@ public class MetaBootstrap implements Lifecycle {
     }
 
     private void injectDependency() {
-        ConsumeQueueProxy consumeQueueProxy = context.getBean(ConsumeQueueProxy.class);
+        ConsumeQueueFacade consumeQueueFacade = context.getBean(ConsumeQueueFacade.class);
         StoreRegister storeRegister = context.getBean(StoreRegister.class);
 
-        topicService.inject(consumeQueueProxy, storeRegister);
+        topicService.inject(consumeQueueFacade, storeRegister);
     }
 
     private void initConsumerOffset() {

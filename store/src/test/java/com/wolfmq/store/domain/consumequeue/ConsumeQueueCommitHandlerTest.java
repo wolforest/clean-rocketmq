@@ -2,7 +2,7 @@ package com.wolfmq.store.domain.consumequeue;
 
 import com.wolfmq.common.domain.message.MessageBO;
 import com.wolfmq.common.domain.commitlog.dispatch.CommitEvent;
-import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueProxy;
+import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueFacade;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -12,7 +12,7 @@ public class ConsumeQueueCommitHandlerTest {
 
     @Test
     void testConstructor() {
-        ConsumeQueueProxy manager = mock(ConsumeQueueProxy.class);
+        ConsumeQueueFacade manager = mock(ConsumeQueueFacade.class);
 
         ConsumeQueueCommitHandler handler = new ConsumeQueueCommitHandler(manager);
 
@@ -21,7 +21,7 @@ public class ConsumeQueueCommitHandlerTest {
 
     @Test
     void testHandleNormalMessage() {
-        ConsumeQueueProxy manager = mock(ConsumeQueueProxy.class);
+        ConsumeQueueFacade manager = mock(ConsumeQueueFacade.class);
         ConsumeQueueCommitHandler handler = new ConsumeQueueCommitHandler(manager);
 
         MessageBO messageBO = mock(MessageBO.class);
@@ -36,7 +36,7 @@ public class ConsumeQueueCommitHandlerTest {
 
     @Test
     void testHandleSkipNonNormalMessage() {
-        ConsumeQueueProxy manager = mock(ConsumeQueueProxy.class);
+        ConsumeQueueFacade manager = mock(ConsumeQueueFacade.class);
         ConsumeQueueCommitHandler handler = new ConsumeQueueCommitHandler(manager);
 
         MessageBO messageBO = mock(MessageBO.class);
