@@ -12,7 +12,7 @@ import com.wolfmq.common.domain.consumequeue.ConsumeQueue;
 import com.wolfmq.common.core.mmap.MappedFile;
 import com.wolfmq.common.core.mmap.MappedFileQueue;
 import com.wolfmq.store.infra.file.DefaultMappedFileQueue;
-import com.wolfmq.common.server.store.CheckPoint;
+import com.wolfmq.common.server.store.checkpoint.bakeup.CheckPoint;
 import java.io.File;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;

@@ -2,7 +2,7 @@ package com.wolfmq.store.server.bootstrap;
 
 import cn.coderule.common.util.io.DirUtil;
 import cn.coderule.common.util.io.FileUtil;
-import com.wolfmq.common.server.store.Offset;
+import com.wolfmq.common.server.store.checkpoint.bakeup.Offset;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

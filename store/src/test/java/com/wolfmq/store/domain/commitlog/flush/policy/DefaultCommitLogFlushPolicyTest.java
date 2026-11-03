@@ -6,7 +6,7 @@ import com.wolfmq.common.domain.message.MessageBO;
 import com.wolfmq.common.domain.mq.dto.EnqueueFuture;
 import com.wolfmq.common.core.mmap.InsertResult;
 import com.wolfmq.common.core.mmap.MappedFileQueue;
-import com.wolfmq.common.server.store.CheckPoint;
+import com.wolfmq.common.server.store.checkpoint.bakeup.CheckPoint;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

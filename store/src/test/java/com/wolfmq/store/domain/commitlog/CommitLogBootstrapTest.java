@@ -1,6 +1,6 @@
 package com.wolfmq.store.domain.commitlog;
 
-import com.wolfmq.common.server.store.CheckPoint;
+import com.wolfmq.common.server.store.checkpoint.bakeup.CheckPoint;
 
 import com.wolfmq.common.core.constant.ContextNamespace;
 

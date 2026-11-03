@@ -1,6 +1,6 @@
 package com.wolfmq.store.domain.consumequeue;
 
-import com.wolfmq.common.server.store.CheckPoint;
+import com.wolfmq.common.server.store.checkpoint.bakeup.CheckPoint;
 
 
 import cn.coderule.common.convention.container.ApplicationContext;

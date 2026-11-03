@@ -1,4 +1,4 @@
-package com.wolfmq.common.server.store;
+package com.wolfmq.common.server.store.checkpoint.bakeup;
 
 public interface CheckPoint {
     boolean isShutdownSuccessful();

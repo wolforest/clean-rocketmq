@@ -6,7 +6,7 @@ import com.wolfmq.common.config.store.CommitConfig;
 import com.wolfmq.common.domain.commitlog.CommitLog;
 import com.wolfmq.common.domain.commitlog.flush.CommitLogFlushPolicy;
 import com.wolfmq.common.core.mmap.MappedFileQueue;
-import com.wolfmq.common.server.store.CheckPoint;
+import com.wolfmq.common.server.store.checkpoint.bakeup.CheckPoint;
 import com.wolfmq.store.domain.commitlog.flush.policy.DefaultCommitLogFlushPolicy;
 import com.wolfmq.store.infra.file.AllocateMappedFileService;
 import com.wolfmq.store.infra.file.DefaultMappedFileQueue;

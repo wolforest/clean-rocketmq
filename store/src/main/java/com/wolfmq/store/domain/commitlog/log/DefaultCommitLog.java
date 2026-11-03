@@ -5,7 +5,7 @@ import com.wolfmq.common.core.constant.code.InvalidCode;
 import com.wolfmq.common.core.exception.InvalidRequestException;
 import com.wolfmq.common.domain.message.codec.MessageEncoder;
 import com.wolfmq.common.domain.commitlog.flush.CommitLogFlushPolicy;
-import com.wolfmq.common.server.store.CheckPoint;
+import com.wolfmq.common.server.store.checkpoint.bakeup.CheckPoint;
 import com.wolfmq.store.domain.commitlog.vo.InsertContext;
 import com.wolfmq.common.config.store.CommitConfig;
 import com.wolfmq.common.config.business.MessageConfig;

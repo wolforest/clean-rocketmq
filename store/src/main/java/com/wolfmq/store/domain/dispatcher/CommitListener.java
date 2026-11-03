@@ -6,7 +6,7 @@ import com.wolfmq.common.config.store.CommitConfig;
 import com.wolfmq.common.domain.message.MessageBO;
 import com.wolfmq.common.domain.commitlog.dispatch.CommitEvent;
 import com.wolfmq.common.domain.commitlog.CommitLog;
-import com.wolfmq.common.server.store.CheckPoint;
+import com.wolfmq.common.server.store.checkpoint.bakeup.CheckPoint;
 import java.util.concurrent.atomic.AtomicLong;
 import lombok.extern.slf4j.Slf4j;
 
