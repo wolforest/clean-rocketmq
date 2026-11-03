@@ -7,25 +7,25 @@ import com.wolfmq.common.domain.consumequeue.QueueUnit;
 import com.wolfmq.common.domain.consumer.consume.dto.MessageRequest;
 import com.wolfmq.common.domain.consumer.consume.dto.MessageResult;
 import com.wolfmq.common.domain.message.MessageBO;
-import com.wolfmq.store.domain.commitlog.CommitLogProxy;
+import com.wolfmq.store.domain.commitlog.CommitLogFacade;
 import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueProxy;
 import java.util.List;
 import lombok.NonNull;
 
 public class MessageService {
-    private final CommitLogProxy commitLogProxy;
+    private final CommitLogFacade commitLogFacade;
     private final ConsumeQueueProxy consumeQueueProxy;
 
     public MessageService(
-        CommitLogProxy commitLogProxy,
+        CommitLogFacade commitLogFacade,
         ConsumeQueueProxy consumeQueueProxy
     ) {
-        this.commitLogProxy = commitLogProxy;
+        this.commitLogFacade = commitLogFacade;
         this.consumeQueueProxy = consumeQueueProxy;
     }
 
     public MessageResult getMessage(MessageRequest request) {
-        MessageBO message = commitLogProxy.select(request.getOffset());
+        MessageBO message = commitLogFacade.select(request.getOffset());
 
         if (!message.isValid()) {
             return MessageResult.notFound();
@@ -61,7 +61,7 @@ public class MessageService {
         MessageBO messageBO;
 
         for (QueueUnit unit : unitList) {
-            messageBO = commitLogProxy.select(unit.getCommitOffset(), unit.getMessageSize());
+            messageBO = commitLogFacade.select(unit.getCommitOffset(), unit.getMessageSize());
             if (messageBO == null) {
                 continue;
             }

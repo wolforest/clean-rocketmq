@@ -5,7 +5,7 @@ import com.wolfmq.common.domain.mq.dto.EnqueueResult;
 import com.wolfmq.common.domain.mq.dto.EnqueueFuture;
 import com.wolfmq.common.core.lock.queue.EnqueueLock;
 import com.wolfmq.common.domain.message.MessageBO;
-import com.wolfmq.store.domain.commitlog.CommitLogProxy;
+import com.wolfmq.store.domain.commitlog.CommitLogFacade;
 import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueProxy;
 import com.wolfmq.store.server.ha.server.processor.CommitLogSynchronizer;
 import java.util.concurrent.CompletableFuture;
@@ -16,18 +16,18 @@ import lombok.extern.slf4j.Slf4j;
 public class EnqueueService {
     private final StoreConfig storeConfig;
     private final ConsumeQueueProxy consumeQueueProxy;
-    private final CommitLogProxy commitLogProxy;
+    private final CommitLogFacade commitLogFacade;
 
     private CommitLogSynchronizer commitLogSynchronizer;
     private final EnqueueLock enqueueLock;
 
     public EnqueueService(
         StoreConfig storeConfig,
-        CommitLogProxy commitLogProxy,
+        CommitLogFacade commitLogFacade,
         ConsumeQueueProxy consumeQueueProxy) {
 
         this.storeConfig = storeConfig;
-        this.commitLogProxy = commitLogProxy;
+        this.commitLogFacade = commitLogFacade;
         this.consumeQueueProxy = consumeQueueProxy;
 
         this.enqueueLock = new EnqueueLock();
@@ -55,7 +55,7 @@ public class EnqueueService {
 
         try {
             assignConsumeOffset(messageBO);
-            EnqueueFuture result = commitLogProxy.insert(messageBO);
+            EnqueueFuture result = commitLogFacade.insert(messageBO);
 
             if (result.isInsertSuccess()) {
                 increaseConsumeOffset(messageBO);

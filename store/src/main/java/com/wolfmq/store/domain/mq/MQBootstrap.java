@@ -5,7 +5,7 @@ import com.wolfmq.common.config.server.StoreConfig;
 import com.wolfmq.common.core.lock.queue.DequeueLock;
 import com.wolfmq.common.server.store.api.MQStore;
 import com.wolfmq.common.domain.commitlog.CommitLog;
-import com.wolfmq.store.domain.commitlog.CommitLogProxy;
+import com.wolfmq.store.domain.commitlog.CommitLogFacade;
 import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueProxy;
 import com.wolfmq.common.domain.meta.service.ConsumeOffsetService;
 import com.wolfmq.common.domain.meta.service.ConsumeOrderService;
@@ -86,12 +86,12 @@ public class MQBootstrap implements Lifecycle {
     }
 
     private void initPubService() {
-        CommitLogProxy commitLogProxy = context.getBean(CommitLogProxy.class);
+        CommitLogFacade commitLogFacade = context.getBean(CommitLogFacade.class);
         StoreConfig storeConfig  = context.getBean(StoreConfig.class);
         ConsumeQueueProxy consumeQueue = context.getBean(ConsumeQueueProxy.class);
 
-        this.enqueueService = new EnqueueService(storeConfig, commitLogProxy, consumeQueue);
-        this.messageService = new MessageService(commitLogProxy, consumeQueue);
+        this.enqueueService = new EnqueueService(storeConfig, commitLogFacade, consumeQueue);
+        this.messageService = new MessageService(commitLogFacade, consumeQueue);
         context.register(this.enqueueService, EnqueueService.class);
         context.register(this.messageService, MessageService.class);
     }

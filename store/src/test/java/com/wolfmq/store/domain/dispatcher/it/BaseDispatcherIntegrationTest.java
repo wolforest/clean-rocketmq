@@ -11,7 +11,7 @@ import com.wolfmq.common.server.store.checkpoint.bakeup.CheckPoint;
 import com.wolfmq.common.testing.ConfigMock;
 import com.wolfmq.store.api.CommitLogStoreImpl;
 import com.wolfmq.store.domain.commitlog.log.CommitLogFactory;
-import com.wolfmq.store.domain.commitlog.CommitLogProxy;
+import com.wolfmq.store.domain.commitlog.CommitLogFacade;
 import com.wolfmq.store.domain.commitlog.route.TopicPartitioner;
 import com.wolfmq.store.domain.dispatcher.CommitHandlerManager;
 import com.wolfmq.store.domain.dispatcher.CommitListener;
@@ -36,7 +36,7 @@ public abstract class BaseDispatcherIntegrationTest {
 
     protected StoreConfig storeConfig;
     protected AllocateMappedFileService allocateService;
-    protected CommitLogProxy commitLogProxy;
+    protected CommitLogFacade commitLogFacade;
     protected CommitLogStore commitLogStore;
     protected CommitHandlerManager handlerManager;
     protected DispatchQueue dispatchQueue;
@@ -68,15 +68,15 @@ public abstract class BaseDispatcherIntegrationTest {
 
     @AfterEach
     void tearDownInfrastructure() throws Exception {
-        if (commitLogProxy != null) {
-            commitLogProxy.shutdown();
+        if (commitLogFacade != null) {
+            commitLogFacade.shutdown();
         }
         if (allocateService != null) {
             allocateService.shutdown();
         }
         for (int shardId = 0; shardId < maxShard(); shardId++) {
             try {
-                CommitLog cl = commitLogProxy.selectByShardId(shardId);
+                CommitLog cl = commitLogFacade.selectByShardId(shardId);
                 if (cl != null) {
                     cl.destroy();
                 }
@@ -109,27 +109,27 @@ public abstract class BaseDispatcherIntegrationTest {
         List<CommitLog> logList = factory.createByConfig();
 
         TopicPartitioner partitioner = new TopicPartitioner(commitConfig);
-        commitLogProxy = new CommitLogProxy(commitConfig, partitioner);
-        commitLogProxy.addCommitLog(logList);
+        commitLogFacade = new CommitLogFacade(commitConfig, partitioner);
+        commitLogFacade.addCommitLog(logList);
 
         context.register(partitioner);
-        context.register(commitLogProxy);
+        context.register(commitLogFacade);
 
-        commitLogStore = new CommitLogStoreImpl(commitLogProxy);
+        commitLogStore = new CommitLogStoreImpl(commitLogFacade);
 
-        commitLogProxy.initialize();
-        commitLogProxy.start();
+        commitLogFacade.initialize();
+        commitLogFacade.start();
 
         ensureMappedFileExists();
     }
 
     private void ensureMappedFileExists() {
-        CommitLog cl = commitLogProxy.selectByShardId(0);
+        CommitLog cl = commitLogFacade.selectByShardId(0);
         cl.getMappedFileQueue().getOrCreateMappedFileForSize(100);
     }
 
     protected CommitListener createCommitListener() {
-        CommitLog commitLog = commitLogProxy.selectByShardId(0);
+        CommitLog commitLog = commitLogFacade.selectByShardId(0);
         return new CommitListener(dispatchQueue, commitLog, context.getBean(CheckPoint.class), storeConfig.getCommit());
     }
 

@@ -19,9 +19,10 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * @renamed from CommitLogFacade to CommitLogManager
  * @renamed from CommitLogManager to CommitLogProxy
+ * @renamed from CommitLogProxy to CommitLogFacade
  */
 @Slf4j
-public class CommitLogProxy implements Lifecycle {
+public class CommitLogFacade implements Lifecycle {
     private final CommitConfig config;
     private final TopicPartitioner partitioner;
 
@@ -30,7 +31,7 @@ public class CommitLogProxy implements Lifecycle {
 
     private List<CommitLog> commitLogList = null;
 
-    public CommitLogProxy(CommitConfig config, TopicPartitioner partitioner) {
+    public CommitLogFacade(CommitConfig config, TopicPartitioner partitioner) {
         this.config = config;
         this.partitioner = partitioner;
 

@@ -7,7 +7,7 @@ import com.wolfmq.common.domain.mq.dto.EnqueueFuture;
 import com.wolfmq.common.core.mmap.InsertResult;
 import com.wolfmq.common.core.mmap.SelectedMappedBuffer;
 import com.wolfmq.common.testing.MessageMock;
-import com.wolfmq.store.domain.commitlog.CommitLogProxy;
+import com.wolfmq.store.domain.commitlog.CommitLogFacade;
 import com.wolfmq.store.domain.commitlog.route.TopicPartitioner;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,12 +19,12 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-class CommitLogProxyTest {
+class CommitLogFacadeTest {
 
     private static final int MAX_SHARDING = 10;
 
     private TopicPartitioner partitioner;
-    private CommitLogProxy manager;
+    private CommitLogFacade manager;
     private CommitConfig config;
 
     @BeforeEach
@@ -32,7 +32,7 @@ class CommitLogProxyTest {
         config = new CommitConfig();
         config.setMaxShardingNumber(MAX_SHARDING);
         partitioner = new TopicPartitioner(config);
-        manager = new CommitLogProxy(config, partitioner);
+        manager = new CommitLogFacade(config, partitioner);
     }
 
     @Test
@@ -52,7 +52,7 @@ class CommitLogProxyTest {
     @Test
     void testAddMultipleCommitLogs() {
         config.setShardingNumber(MAX_SHARDING);
-        CommitLogProxy tmpManager = new CommitLogProxy(config, partitioner);
+        CommitLogFacade tmpManager = new CommitLogFacade(config, partitioner);
         for (int i = 0; i < MAX_SHARDING; i++) {
             CommitLog commitLog = createMockCommitLog(i);
             tmpManager.addCommitLog(commitLog);
@@ -67,7 +67,7 @@ class CommitLogProxyTest {
     @Test
     void testAddCommitLogList() {
         config.setShardingNumber(3);
-        CommitLogProxy tmpManager = new CommitLogProxy(config, partitioner);
+        CommitLogFacade tmpManager = new CommitLogFacade(config, partitioner);
 
         List<CommitLog> logList = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
@@ -368,9 +368,9 @@ class CommitLogProxyTest {
     void testCalculateThreadId_SingleDigit() throws Exception {
         CommitConfig config = new CommitConfig();
         TopicPartitioner partitioner = new TopicPartitioner(config);
-        CommitLogProxy manager = new CommitLogProxy(config, partitioner);
+        CommitLogFacade manager = new CommitLogFacade(config, partitioner);
 
-        Method method = CommitLogProxy.class.getDeclaredMethod("calculateThreadId");
+        Method method = CommitLogFacade.class.getDeclaredMethod("calculateThreadId");
         method.setAccessible(true);
 
         Thread testThread = new Thread(() -> {
@@ -390,9 +390,9 @@ class CommitLogProxyTest {
     void testCalculateThreadId_TwoDigits() throws Exception {
         CommitConfig config = new CommitConfig();
         TopicPartitioner partitioner = new TopicPartitioner(config);
-        CommitLogProxy manager = new CommitLogProxy(config, partitioner);
+        CommitLogFacade manager = new CommitLogFacade(config, partitioner);
 
-        Method method = CommitLogProxy.class.getDeclaredMethod("calculateThreadId");
+        Method method = CommitLogFacade.class.getDeclaredMethod("calculateThreadId");
         method.setAccessible(true);
 
         Thread testThread = new Thread(() -> {
@@ -412,9 +412,9 @@ class CommitLogProxyTest {
     void testCalculateThreadId_NoNumericSuffix() throws Exception {
         CommitConfig config = new CommitConfig();
         TopicPartitioner partitioner = new TopicPartitioner(config);
-        CommitLogProxy manager = new CommitLogProxy(config, partitioner);
+        CommitLogFacade manager = new CommitLogFacade(config, partitioner);
 
-        Method method = CommitLogProxy.class.getDeclaredMethod("calculateThreadId");
+        Method method = CommitLogFacade.class.getDeclaredMethod("calculateThreadId");
         method.setAccessible(true);
 
         Thread testThread = new Thread(() -> {
@@ -433,9 +433,9 @@ class CommitLogProxyTest {
     void testCalculateThreadId_NonNumericSuffix() throws Exception {
         CommitConfig config = new CommitConfig();
         TopicPartitioner partitioner = new TopicPartitioner(config);
-        CommitLogProxy manager = new CommitLogProxy(config, partitioner);
+        CommitLogFacade manager = new CommitLogFacade(config, partitioner);
 
-        Method method = CommitLogProxy.class.getDeclaredMethod("calculateThreadId");
+        Method method = CommitLogFacade.class.getDeclaredMethod("calculateThreadId");
         method.setAccessible(true);
 
         Thread testThread = new Thread(() -> {
@@ -454,9 +454,9 @@ class CommitLogProxyTest {
     void testCalculateThreadId_ThreadPoolFormat() throws Exception {
         CommitConfig config = new CommitConfig();
         TopicPartitioner partitioner = new TopicPartitioner(config);
-        CommitLogProxy manager = new CommitLogProxy(config, partitioner);
+        CommitLogFacade manager = new CommitLogFacade(config, partitioner);
 
-        Method method = CommitLogProxy.class.getDeclaredMethod("calculateThreadId");
+        Method method = CommitLogFacade.class.getDeclaredMethod("calculateThreadId");
         method.setAccessible(true);
 
         Thread testThread = new Thread(() -> {
@@ -475,9 +475,9 @@ class CommitLogProxyTest {
     void testCalculateThreadId_LongThreadName() throws Exception {
         CommitConfig config = new CommitConfig();
         TopicPartitioner partitioner = new TopicPartitioner(config);
-        CommitLogProxy manager = new CommitLogProxy(config, partitioner);
+        CommitLogFacade manager = new CommitLogFacade(config, partitioner);
 
-        Method method = CommitLogProxy.class.getDeclaredMethod("calculateThreadId");
+        Method method = CommitLogFacade.class.getDeclaredMethod("calculateThreadId");
         method.setAccessible(true);
 
         Thread testThread = new Thread(() -> {
@@ -496,9 +496,9 @@ class CommitLogProxyTest {
     void testCalculateThreadId_SingleCharThreadName() throws Exception {
         CommitConfig config = new CommitConfig();
         TopicPartitioner partitioner = new TopicPartitioner(config);
-        CommitLogProxy manager = new CommitLogProxy(config, partitioner);
+        CommitLogFacade manager = new CommitLogFacade(config, partitioner);
 
-        Method method = CommitLogProxy.class.getDeclaredMethod("calculateThreadId");
+        Method method = CommitLogFacade.class.getDeclaredMethod("calculateThreadId");
         method.setAccessible(true);
 
         Thread testThread = new Thread(() -> {
@@ -517,9 +517,9 @@ class CommitLogProxyTest {
     void testCalculateThreadId_TwoCharNumeric() throws Exception {
         CommitConfig config = new CommitConfig();
         TopicPartitioner partitioner = new TopicPartitioner(config);
-        CommitLogProxy manager = new CommitLogProxy(config, partitioner);
+        CommitLogFacade manager = new CommitLogFacade(config, partitioner);
 
-        Method method = CommitLogProxy.class.getDeclaredMethod("calculateThreadId");
+        Method method = CommitLogFacade.class.getDeclaredMethod("calculateThreadId");
         method.setAccessible(true);
 
         Thread testThread = new Thread(() -> {
@@ -538,9 +538,9 @@ class CommitLogProxyTest {
     void testCalculateThreadId_ThreeDigitOverflow() throws Exception {
         CommitConfig config = new CommitConfig();
         TopicPartitioner partitioner = new TopicPartitioner(config);
-        CommitLogProxy manager = new CommitLogProxy(config, partitioner);
+        CommitLogFacade manager = new CommitLogFacade(config, partitioner);
 
-        Method method = CommitLogProxy.class.getDeclaredMethod("calculateThreadId");
+        Method method = CommitLogFacade.class.getDeclaredMethod("calculateThreadId");
         method.setAccessible(true);
 
         Thread testThread = new Thread(() -> {
@@ -559,9 +559,9 @@ class CommitLogProxyTest {
     void testCalculateThreadId_MixedSuffix() throws Exception {
         CommitConfig config = new CommitConfig();
         TopicPartitioner partitioner = new TopicPartitioner(config);
-        CommitLogProxy manager = new CommitLogProxy(config, partitioner);
+        CommitLogFacade manager = new CommitLogFacade(config, partitioner);
 
-        Method method = CommitLogProxy.class.getDeclaredMethod("calculateThreadId");
+        Method method = CommitLogFacade.class.getDeclaredMethod("calculateThreadId");
         method.setAccessible(true);
 
         Thread testThread = new Thread(() -> {

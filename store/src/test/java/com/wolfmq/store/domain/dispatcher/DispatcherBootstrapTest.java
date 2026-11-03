@@ -9,7 +9,7 @@ import com.wolfmq.common.config.server.StoreConfig;
 import com.wolfmq.common.config.store.StorePath;
 import com.wolfmq.common.domain.meta.service.TopicService;
 import com.wolfmq.common.testing.ConfigMock;
-import com.wolfmq.store.domain.commitlog.CommitLogProxy;
+import com.wolfmq.store.domain.commitlog.CommitLogFacade;
 import com.wolfmq.store.domain.commitlog.route.TopicPartitioner;
 import com.wolfmq.store.server.bootstrap.StoreCheckpoint;
 import java.nio.file.Path;
@@ -48,11 +48,11 @@ class DispatcherBootstrapTest {
         TopicService topicService = mock(TopicService.class);
         context.register(topicService, TopicService.class);
 
-        CommitLogProxy commitLogProxy = new CommitLogProxy(
+        CommitLogFacade commitLogFacade = new CommitLogFacade(
             storeConfig.getCommit(),
             new TopicPartitioner(storeConfig.getCommit(), topicService)
         );
-        context.register(commitLogProxy);
+        context.register(commitLogFacade);
 
         DispatcherBootstrap bootstrap = new DispatcherBootstrap(context);
         bootstrap.initialize();

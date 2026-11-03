@@ -51,7 +51,7 @@ class CommitLogBootstrapTest {
         CommitLogBootstrap bootstrap = new CommitLogBootstrap(context);
         bootstrap.initialize();
 
-        CommitLogProxy manager = context.getBean(CommitLogProxy.class);
+        CommitLogFacade manager = context.getBean(CommitLogFacade.class);
         assertNotNull(manager);
 
         CommitLogStore store = context.getBean(CommitLogStore.class, ContextNamespace.API);

@@ -7,7 +7,7 @@ import com.wolfmq.common.domain.consumequeue.QueueUnit;
 import com.wolfmq.common.domain.mq.dto.DequeueResult;
 import com.wolfmq.common.domain.message.MessageBO;
 import com.wolfmq.common.testing.MessageMock;
-import com.wolfmq.store.domain.commitlog.CommitLogProxy;
+import com.wolfmq.store.domain.commitlog.CommitLogFacade;
 import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueProxy;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -22,7 +22,7 @@ class MessageServiceTest {
 
     @Test
     void getMessageReturnsNotFoundWhenInvalid() {
-        CommitLogProxy commitLog = mock(CommitLogProxy.class);
+        CommitLogFacade commitLog = mock(CommitLogFacade.class);
         ConsumeQueueProxy consumeQueueProxy = mock(ConsumeQueueProxy.class);
         MessageService service = new MessageService(commitLog, consumeQueueProxy);
 
@@ -36,7 +36,7 @@ class MessageServiceTest {
 
     @Test
     void getSkipsNullMessagesAndSetsStatus() {
-        CommitLogProxy commitLog = mock(CommitLogProxy.class);
+        CommitLogFacade commitLog = mock(CommitLogFacade.class);
         ConsumeQueueProxy consumeQueueProxy = mock(ConsumeQueueProxy.class);
         MessageService service = new MessageService(commitLog, consumeQueueProxy);
 

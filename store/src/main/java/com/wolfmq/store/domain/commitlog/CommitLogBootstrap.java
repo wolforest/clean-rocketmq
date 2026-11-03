@@ -23,7 +23,7 @@ import java.util.List;
 public class CommitLogBootstrap implements Lifecycle {
     private final ApplicationContext context;
 
-    private CommitLogProxy commitLogProxy;
+    private CommitLogFacade commitLogFacade;
 
     public CommitLogBootstrap(ApplicationContext context) {
         this.context = context;
@@ -32,19 +32,19 @@ public class CommitLogBootstrap implements Lifecycle {
     @Override
     public void initialize() throws Exception {
         initCommitLog();
-        commitLogProxy.initialize();
+        commitLogFacade.initialize();
 
         registerAPI();
     }
 
     @Override
     public void start() throws Exception {
-        commitLogProxy.start();
+        commitLogFacade.start();
     }
 
     @Override
     public void shutdown() throws Exception {
-        commitLogProxy.shutdown();
+        commitLogFacade.shutdown();
     }
 
     private void initCommitLog() {
@@ -58,15 +58,15 @@ public class CommitLogBootstrap implements Lifecycle {
         List<CommitLog> logList = commitLogFactory.createByConfig();
 
         TopicPartitioner partitioner = new TopicPartitioner(commitConfig, topicService);
-        commitLogProxy = new CommitLogProxy(commitConfig, partitioner);
-        commitLogProxy.addCommitLog(logList);
+        commitLogFacade = new CommitLogFacade(commitConfig, partitioner);
+        commitLogFacade.addCommitLog(logList);
 
         context.register(partitioner);
-        context.register(commitLogProxy);
+        context.register(commitLogFacade);
     }
 
     private void registerAPI() {
-        CommitLogStore api = new CommitLogStoreImpl(commitLogProxy);
+        CommitLogStore api = new CommitLogStoreImpl(commitLogFacade);
         context.register(api, CommitLogStore.class, ContextNamespace.API);
     }
 }

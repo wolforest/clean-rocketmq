@@ -16,7 +16,7 @@ import com.wolfmq.common.domain.mq.MQService;
 import com.wolfmq.common.domain.consumer.consume.InflightCounter;
 import com.wolfmq.common.core.lock.queue.DequeueLock;
 import com.wolfmq.common.testing.ConfigMock;
-import com.wolfmq.store.domain.commitlog.CommitLogProxy;
+import com.wolfmq.store.domain.commitlog.CommitLogFacade;
 import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueProxy;
 import com.wolfmq.store.domain.meta.DefaultConsumeOffsetService;
 import com.wolfmq.store.domain.meta.DefaultConsumeOrderService;
@@ -54,7 +54,7 @@ class MQBootstrapTest {
         context.register(storeConfig);
         StoreCheckpoint __cp = new StoreCheckpoint(tempDir.toString()); context.register(__cp, CheckPoint.class);
 
-        context.register(mock(CommitLogProxy.class), CommitLogProxy.class);
+        context.register(mock(CommitLogFacade.class), CommitLogFacade.class);
         context.register(mock(ConsumeQueueProxy.class), ConsumeQueueProxy.class);
         context.register(mock(ConsumeOffsetService.class), ConsumeOffsetService.class);
         context.register(mock(ConsumeOrderService.class), ConsumeOrderService.class);

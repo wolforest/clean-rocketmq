@@ -9,7 +9,7 @@ import com.wolfmq.common.domain.mq.dto.EnqueueFuture;
 import com.wolfmq.common.domain.mq.dto.EnqueueResult;
 import com.wolfmq.common.core.mmap.InsertResult;
 import com.wolfmq.common.testing.MessageMock;
-import com.wolfmq.store.domain.commitlog.CommitLogProxy;
+import com.wolfmq.store.domain.commitlog.CommitLogFacade;
 import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueProxy;
 import com.wolfmq.store.server.ha.server.processor.CommitLogSynchronizer;
 import java.util.concurrent.CompletableFuture;
@@ -30,7 +30,7 @@ class EnqueueServiceTest {
     void enqueueAsyncAssignsAndIncreasesOffsetWhenInsertSuccess() {
         StoreConfig storeConfig = new StoreConfig();
         storeConfig.setAssignConsumeOffset(true);
-        CommitLogProxy commitLog = mock(CommitLogProxy.class);
+        CommitLogFacade commitLog = mock(CommitLogFacade.class);
         ConsumeQueueProxy consumeQueueProxy = mock(ConsumeQueueProxy.class);
         CommitLogSynchronizer synchronizer = mock(CommitLogSynchronizer.class);
 
@@ -60,7 +60,7 @@ class EnqueueServiceTest {
         StoreConfig storeConfig = new StoreConfig();
         storeConfig.setAssignConsumeOffset(false);
 
-        CommitLogProxy commitLog = mock(CommitLogProxy.class);
+        CommitLogFacade commitLog = mock(CommitLogFacade.class);
         ConsumeQueueProxy consumeQueueProxy = mock(ConsumeQueueProxy.class);
         CommitLogSynchronizer synchronizer = mock(CommitLogSynchronizer.class);
 

@@ -13,7 +13,7 @@ import com.wolfmq.common.core.mmap.MappedFileQueue;
 import com.wolfmq.common.testing.ConfigMock;
 import com.wolfmq.common.testing.MessageMock;
 import com.wolfmq.store.domain.commitlog.flush.policy.EmptyCommitLogFlushPolicy;
-import com.wolfmq.store.domain.commitlog.CommitLogProxy;
+import com.wolfmq.store.domain.commitlog.CommitLogFacade;
 import com.wolfmq.store.domain.commitlog.log.DefaultCommitLog;
 import com.wolfmq.store.domain.commitlog.route.TopicPartitioner;
 import com.wolfmq.store.infra.file.DefaultMappedFileQueue;
@@ -77,7 +77,7 @@ public class CommitLogManagerBenchmark {
     public static void benchmarkSingleThread_CommitLogManager_1Shard() {
         String dir = System.getProperty("java.io.tmpdir") + "/benchmark-manager1-" + System.currentTimeMillis();
         DirUtil.createIfNotExists(dir);
-        CommitLogProxy manager = createCommitLogManager(dir, 1, 1);
+        CommitLogFacade manager = createCommitLogManager(dir, 1, 1);
 
         MessageEncoder encoder = new MessageEncoder(createStoreConfig(dir).getMessage());
 
@@ -103,7 +103,7 @@ public class CommitLogManagerBenchmark {
         for (int threads : threadCounts) {
             String dir = System.getProperty("java.io.tmpdir") + "/benchmark-shard1-" + threads + "-" + System.currentTimeMillis();
             DirUtil.createIfNotExists(dir);
-            CommitLogProxy manager = createCommitLogManager(dir, shardCount, 1);
+            CommitLogFacade manager = createCommitLogManager(dir, shardCount, 1);
 
             MessageEncoder encoder = new MessageEncoder(createStoreConfig(dir).getMessage());
 
@@ -143,7 +143,7 @@ public class CommitLogManagerBenchmark {
         for (int threads : threadCounts) {
             String dir = System.getProperty("java.io.tmpdir") + "/benchmark-shard10-" + threads + "-" + System.currentTimeMillis();
             DirUtil.createIfNotExists(dir);
-            CommitLogProxy manager = createCommitLogManager(dir, shardCount, shardCount);
+            CommitLogFacade manager = createCommitLogManager(dir, shardCount, shardCount);
 
             MessageEncoder encoder = new MessageEncoder(createStoreConfig(dir).getMessage());
 
@@ -162,7 +162,7 @@ public class CommitLogManagerBenchmark {
         for (int threads : threadCounts) {
             String dir = System.getProperty("java.io.tmpdir") + "/benchmark-shard2-" + threads + "-" + System.currentTimeMillis();
             DirUtil.createIfNotExists(dir);
-            CommitLogProxy manager = createCommitLogManager(dir, shardCount, shardCount);
+            CommitLogFacade manager = createCommitLogManager(dir, shardCount, shardCount);
 
             MessageEncoder encoder = new MessageEncoder(createStoreConfig(dir).getMessage());
 
@@ -184,7 +184,7 @@ public class CommitLogManagerBenchmark {
         for (int threads : threadCounts) {
             String dir = System.getProperty("java.io.tmpdir") + "/benchmark-shard5-" + threads + "-" + System.currentTimeMillis();
             DirUtil.createIfNotExists(dir);
-            CommitLogProxy manager = createCommitLogManager(dir, shardCount, shardCount);
+            CommitLogFacade manager = createCommitLogManager(dir, shardCount, shardCount);
 
             MessageEncoder encoder = new MessageEncoder(createStoreConfig(dir).getMessage());
 
@@ -206,7 +206,7 @@ public class CommitLogManagerBenchmark {
         for (int threads : threadCounts) {
             String dir = System.getProperty("java.io.tmpdir") + "/benchmark-shard10-" + threads + "-" + System.currentTimeMillis();
             DirUtil.createIfNotExists(dir);
-            CommitLogProxy manager = createCommitLogManager(dir, shardCount, shardCount);
+            CommitLogFacade manager = createCommitLogManager(dir, shardCount, shardCount);
 
             MessageEncoder encoder = new MessageEncoder(createStoreConfig(dir).getMessage());
 
@@ -228,7 +228,7 @@ public class CommitLogManagerBenchmark {
         for (int shardCount : shardCounts) {
             String dir = System.getProperty("java.io.tmpdir") + "/benchmark-scale-" + shardCount + "-" + System.currentTimeMillis();
             DirUtil.createIfNotExists(dir);
-            CommitLogProxy manager = createCommitLogManager(dir, shardCount, shardCount);
+            CommitLogFacade manager = createCommitLogManager(dir, shardCount, shardCount);
 
             MessageEncoder encoder = new MessageEncoder(createStoreConfig(dir).getMessage());
 
@@ -269,7 +269,7 @@ public class CommitLogManagerBenchmark {
 
         String dir1 = System.getProperty("java.io.tmpdir") + "/benchmark-compare-1shard-" + System.currentTimeMillis();
         DirUtil.createIfNotExists(dir1);
-        CommitLogProxy manager1 = createCommitLogManager(dir1, 1, 1);
+        CommitLogFacade manager1 = createCommitLogManager(dir1, 1, 1);
         MessageEncoder encoder1 = new MessageEncoder(createStoreConfig(dir1).getMessage());
         warmup(manager1, encoder1, 1);
         runMultiThreadBenchmarkWithTopics(manager1, encoder1, threads, 1, topicCount, BENCHMARK_ITERATIONS,
@@ -279,7 +279,7 @@ public class CommitLogManagerBenchmark {
 
         String dir5 = System.getProperty("java.io.tmpdir") + "/benchmark-compare-2shards-" + System.currentTimeMillis();
         DirUtil.createIfNotExists(dir5);
-        CommitLogProxy manager5 = createCommitLogManager(dir5, 2, 2);
+        CommitLogFacade manager5 = createCommitLogManager(dir5, 2, 2);
         MessageEncoder encoder5 = new MessageEncoder(createStoreConfig(dir5).getMessage());
         warmup(manager5, encoder5, 2);
         runMultiThreadBenchmarkWithTopics(manager5, encoder5, threads, 2, topicCount, BENCHMARK_ITERATIONS,
@@ -294,7 +294,7 @@ public class CommitLogManagerBenchmark {
 
         String dir1 = System.getProperty("java.io.tmpdir") + "/benchmark-compare-1shard-" + System.currentTimeMillis();
         DirUtil.createIfNotExists(dir1);
-        CommitLogProxy manager1 = createCommitLogManager(dir1, 1, 1);
+        CommitLogFacade manager1 = createCommitLogManager(dir1, 1, 1);
         MessageEncoder encoder1 = new MessageEncoder(createStoreConfig(dir1).getMessage());
         warmup(manager1, encoder1, 1);
         runMultiThreadBenchmarkWithTopics(manager1, encoder1, threads, 1, topicCount, BENCHMARK_ITERATIONS,
@@ -304,7 +304,7 @@ public class CommitLogManagerBenchmark {
 
         String dir5 = System.getProperty("java.io.tmpdir") + "/benchmark-compare-5shards-" + System.currentTimeMillis();
         DirUtil.createIfNotExists(dir5);
-        CommitLogProxy manager5 = createCommitLogManager(dir5, 5, 5);
+        CommitLogFacade manager5 = createCommitLogManager(dir5, 5, 5);
         MessageEncoder encoder5 = new MessageEncoder(createStoreConfig(dir5).getMessage());
         warmup(manager5, encoder5, 5);
         runMultiThreadBenchmarkWithTopics(manager5, encoder5, threads, 5, topicCount, BENCHMARK_ITERATIONS,
@@ -321,19 +321,19 @@ public class CommitLogManagerBenchmark {
         }
     }
 
-    private static void warmup(CommitLogProxy manager, MessageEncoder encoder, int shardCount) {
+    private static void warmup(CommitLogFacade manager, MessageEncoder encoder, int shardCount) {
         for (int i = 0; i < WARMUP_ITERATIONS; i++) {
             MessageBO message = createMessage(encoder, "topic-" + (i % Math.max(10, shardCount * 2)));
             manager.insert(message);
         }
     }
 
-    private static void runMultiThreadBenchmark(CommitLogProxy manager, MessageEncoder encoder,
+    private static void runMultiThreadBenchmark(CommitLogFacade manager, MessageEncoder encoder,
         int threadCount, int shardCount, int iterations, String name) {
         runMultiThreadBenchmark(manager, encoder, threadCount, shardCount, iterations, name, false);
     }
 
-    private static void runMultiThreadBenchmark(CommitLogProxy manager, MessageEncoder encoder,
+    private static void runMultiThreadBenchmark(CommitLogFacade manager, MessageEncoder encoder,
                                         int threadCount, int shardCount, int iterations, String name, boolean bindCpu) {
         int iterationsPerThread = iterations / threadCount;
         CountDownLatch latch = new CountDownLatch(threadCount);
@@ -367,7 +367,7 @@ public class CommitLogManagerBenchmark {
         printResult(name, threadCount, shardCount, iterations, totalTimeMs);
     }
 
-    private static void runMultiThreadBenchmarkWithTopics(CommitLogProxy manager, MessageEncoder encoder,
+    private static void runMultiThreadBenchmarkWithTopics(CommitLogFacade manager, MessageEncoder encoder,
                                                    int threadCount, int shardCount, int topicCount,
                                                    int iterations, String name) {
         int iterationsPerThread = iterations / threadCount;
@@ -438,18 +438,18 @@ public class CommitLogManagerBenchmark {
             " | time=" + timeMs + "ms | throughput=" + String.format("%.2f", throughput) + " msg/s");
     }
 
-    private static CommitLogProxy createCommitLogManager(String baseDir, int maxSharding, int shardCount) {
+    private static CommitLogFacade createCommitLogManager(String baseDir, int maxSharding, int shardCount) {
         return createCommitLogManager(baseDir, maxSharding, shardCount, false);
     }
 
-    private static CommitLogProxy createCommitLogManager(String baseDir, int maxSharding, int shardCount, boolean bindCpu) {
+    private static CommitLogFacade createCommitLogManager(String baseDir, int maxSharding, int shardCount, boolean bindCpu) {
         StoreConfig storeConfig = createStoreConfig(baseDir);
         CommitConfig commitConfig = storeConfig.getCommit();
         commitConfig.setMaxShardingNumber(maxSharding);
         commitConfig.setShardingNumber(shardCount);
 
         TopicPartitioner partitioner = new TopicPartitioner(commitConfig);
-        CommitLogProxy manager = new CommitLogProxy(commitConfig, partitioner);
+        CommitLogFacade manager = new CommitLogFacade(commitConfig, partitioner);
 
         for (int i = 0; i < shardCount; i++) {
             String dir = baseDir + "/commitlog-" + i;
@@ -486,7 +486,7 @@ public class CommitLogManagerBenchmark {
         return messageBO;
     }
 
-    private static void shutdown(CommitLogProxy manager) {
+    private static void shutdown(CommitLogFacade manager) {
         try {
             manager.shutdown();
         } catch (Exception e) {

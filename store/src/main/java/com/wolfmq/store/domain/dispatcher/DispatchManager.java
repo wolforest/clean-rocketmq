@@ -4,7 +4,7 @@ import cn.coderule.common.convention.service.Lifecycle;
 import com.wolfmq.common.config.store.CommitConfig;
 import com.wolfmq.common.domain.commitlog.CommitLog;
 import com.wolfmq.common.server.store.checkpoint.bakeup.CheckPoint;
-import com.wolfmq.store.domain.commitlog.CommitLogProxy;
+import com.wolfmq.store.domain.commitlog.CommitLogFacade;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +18,7 @@ public class DispatchManager implements Lifecycle {
 
     private final CheckPoint checkPoint;
     private final DispatchQueue queue;
-    private final CommitLogProxy commitLogProxy;
+    private final CommitLogFacade commitLogFacade;
     private final CommitHandlerManager handlerManager;
 
     private final List<CommitListener> listenerList = new ArrayList<>();
@@ -27,12 +27,12 @@ public class DispatchManager implements Lifecycle {
     public DispatchManager(
         CommitConfig config,
         CheckPoint checkPoint,
-        CommitLogProxy commitLogProxy,
+        CommitLogFacade commitLogFacade,
         CommitHandlerManager handlerManager
     ) {
         this.config = config;
         this.checkPoint = checkPoint;
-        this.commitLogProxy = commitLogProxy;
+        this.commitLogFacade = commitLogFacade;
         this.handlerManager = handlerManager;
         this.queue = new DispatchQueue(config);
     }
@@ -67,7 +67,7 @@ public class DispatchManager implements Lifecycle {
 
     private void createListeners() {
         for (int i = 0; i < config.getShardingNumber(); i++) {
-            CommitLog commitLog = commitLogProxy.selectByShardId(i);
+            CommitLog commitLog = commitLogFacade.selectByShardId(i);
             CommitListener listener = new CommitListener(queue, commitLog, checkPoint, config);
             listenerList.add(listener);
         }
