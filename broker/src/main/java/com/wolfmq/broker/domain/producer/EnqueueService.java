@@ -15,7 +15,7 @@ import com.wolfmq.common.domain.message.enums.MessageType;
 import com.wolfmq.common.core.exception.InvalidParameterException;
 import com.wolfmq.common.domain.mq.MessageQueue;
 import com.wolfmq.common.domain.message.MessageBO;
-import com.wolfmq.common.server.RequestContext;
+import com.wolfmq.common.server.broker.RequestContext;
 import com.wolfmq.common.domain.meta.topic.Topic;
 import com.wolfmq.common.domain.producer.ProduceContext;
 import com.wolfmq.rpc.store.facade.MQFacade;

@@ -2,7 +2,7 @@ package com.wolfmq.broker.server.grpc.converter;
 
 import apache.rocketmq.v2.QueryAssignmentRequest;
 import apache.rocketmq.v2.QueryAssignmentResponse;
-import com.wolfmq.common.server.route.RouteInfo;
+import com.wolfmq.common.server.registry.route.RouteInfo;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

@@ -1,4 +1,4 @@
-package com.wolfmq.common.server.heartbeat;
+package com.wolfmq.common.server.registry.heartbeat;
 
 import com.wolfmq.common.domain.consumer.consume.constant.ExpressionType;
 import com.alibaba.fastjson2.annotation.JSONField;

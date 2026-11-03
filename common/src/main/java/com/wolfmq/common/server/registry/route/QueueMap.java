@@ -1,4 +1,4 @@
-package com.wolfmq.common.server.route;
+package com.wolfmq.common.server.registry.route;
 
 import com.wolfmq.common.core.constant.MQConstants;
 import java.io.Serializable;

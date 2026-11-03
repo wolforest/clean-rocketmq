@@ -8,7 +8,7 @@ import com.wolfmq.common.config.business.TransactionConfig;
 import com.wolfmq.common.config.server.BrokerConfig;
 import com.wolfmq.common.domain.meta.topic.constant.PermName;
 import com.wolfmq.common.domain.mq.MessageQueue;
-import com.wolfmq.common.server.RequestContext;
+import com.wolfmq.common.server.broker.RequestContext;
 import com.wolfmq.common.domain.consumer.consume.dto.MessageRequest;
 import com.wolfmq.common.domain.consumer.consume.dto.MessageResult;
 import com.wolfmq.common.domain.consumer.consume.dto.QueueRequest;

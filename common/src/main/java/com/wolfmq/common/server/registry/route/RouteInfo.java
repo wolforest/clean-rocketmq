@@ -2,7 +2,7 @@
 
 /**
  * $Id: TopicRouteData.java 1835 2013-05-16 02:00:50Z vintagewang@apache.org $
- */package com.wolfmq.common.server.route;
+ */package com.wolfmq.common.server.registry.route;
 
 import cn.coderule.common.util.lang.string.JSONUtil;
 import com.wolfmq.common.server.registry.GroupInfo;

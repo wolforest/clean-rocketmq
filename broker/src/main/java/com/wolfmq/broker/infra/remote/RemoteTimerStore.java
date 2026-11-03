@@ -1,7 +1,7 @@
 package com.wolfmq.broker.infra.remote;
 
 import com.wolfmq.common.config.server.BrokerConfig;
-import com.wolfmq.common.server.RequestContext;
+import com.wolfmq.common.server.broker.RequestContext;
 import com.wolfmq.common.domain.timer.model.ScanResult;
 import com.wolfmq.common.domain.timer.model.TimerEvent;
 import com.wolfmq.common.domain.timer.state.TimerCheckpoint;

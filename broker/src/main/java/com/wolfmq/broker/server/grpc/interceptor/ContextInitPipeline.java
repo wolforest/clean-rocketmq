@@ -2,7 +2,7 @@ package com.wolfmq.broker.server.grpc.interceptor;
 
 import cn.coderule.common.util.lang.string.StringUtil;
 import com.wolfmq.rpc.common.core.channel.ChannelProtocolType;
-import com.wolfmq.common.server.RequestContext;
+import com.wolfmq.common.server.broker.RequestContext;
 import com.wolfmq.rpc.common.grpc.RequestPipeline;
 import com.wolfmq.rpc.common.grpc.core.constants.GrpcConstants;
 import com.google.protobuf.GeneratedMessage;

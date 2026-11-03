@@ -5,7 +5,7 @@ import cn.coderule.common.util.lang.collection.CollectionUtil;
 import com.wolfmq.broker.server.grpc.service.channel.ChannelManager;
 import com.wolfmq.broker.server.grpc.service.channel.SettingManager;
 import com.wolfmq.common.core.event.ConsumerEvent;
-import com.wolfmq.common.server.ClientChannelInfo;
+import com.wolfmq.common.server.broker.ClientChannelInfo;
 import com.wolfmq.common.domain.consumer.hook.ConsumerListener;
 import com.wolfmq.rpc.common.grpc.channel.GrpcChannel;
 import com.wolfmq.rpc.common.core.channel.ChannelHelper;

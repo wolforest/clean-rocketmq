@@ -2,8 +2,8 @@ package com.wolfmq.common.domain.meta.topic.dto;
 
 import com.wolfmq.common.core.constant.MQConstants;
 import com.wolfmq.common.server.registry.GroupInfo;
-import com.wolfmq.common.server.route.QueueInfo;
-import com.wolfmq.common.server.route.RouteInfo;
+import com.wolfmq.common.server.registry.route.QueueInfo;
+import com.wolfmq.common.server.registry.route.RouteInfo;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

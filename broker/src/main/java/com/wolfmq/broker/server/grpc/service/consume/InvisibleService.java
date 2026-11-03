@@ -4,7 +4,7 @@ import apache.rocketmq.v2.ChangeInvisibleDurationRequest;
 import apache.rocketmq.v2.ChangeInvisibleDurationResponse;
 import com.wolfmq.broker.api.ConsumerController;
 import com.wolfmq.broker.server.grpc.converter.InvisibleConverter;
-import com.wolfmq.common.server.RequestContext;
+import com.wolfmq.common.server.broker.RequestContext;
 import com.wolfmq.common.domain.consumer.ack.broker.InvisibleRequest;
 import java.util.concurrent.CompletableFuture;
 import lombok.extern.slf4j.Slf4j;

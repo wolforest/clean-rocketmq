@@ -1,6 +1,6 @@
-package com.wolfmq.common.server.selector;
+package com.wolfmq.common.server.broker;
 
-import com.wolfmq.common.server.route.RouteInfo;
+import com.wolfmq.common.server.registry.route.RouteInfo;
 import com.wolfmq.common.domain.meta.topic.dto.TopicRouteWrapper;
 import com.google.common.base.MoreObjects;
 

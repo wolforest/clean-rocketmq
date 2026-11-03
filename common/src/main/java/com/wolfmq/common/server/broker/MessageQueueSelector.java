@@ -1,7 +1,7 @@
-package com.wolfmq.common.server.selector;
+package com.wolfmq.common.server.broker;
 
 import cn.coderule.common.util.lang.string.StringUtil;
-import com.wolfmq.common.server.route.QueueInfo;
+import com.wolfmq.common.server.registry.route.QueueInfo;
 import com.wolfmq.common.domain.meta.topic.constant.PermName;
 import com.wolfmq.common.domain.mq.MessageQueue;
 import com.wolfmq.common.domain.meta.topic.dto.TopicRouteWrapper;

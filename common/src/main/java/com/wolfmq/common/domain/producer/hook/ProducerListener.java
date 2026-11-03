@@ -1,7 +1,7 @@
 package com.wolfmq.common.domain.producer.hook;
 
 import com.wolfmq.common.core.event.ProducerEvent;
-import com.wolfmq.common.server.ClientChannelInfo;
+import com.wolfmq.common.server.broker.ClientChannelInfo;
 
 /**
  * producer manager will call this listener when something happen

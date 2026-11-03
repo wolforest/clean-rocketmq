@@ -1,6 +1,6 @@
 package com.wolfmq.common.domain.cluster.selector;
 
-import com.wolfmq.common.server.selector.LatencyFaultToleranceImpl;
+import com.wolfmq.common.server.broker.LatencyFaultToleranceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

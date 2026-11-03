@@ -6,9 +6,9 @@ import com.wolfmq.rpc.common.rpc.netty.NettyClient;
 import com.wolfmq.rpc.registry.RegistryClient;
 import com.wolfmq.rpc.registry.client.DefaultRegistryClient;
 import com.wolfmq.common.server.registry.BrokerInfo;
-import com.wolfmq.common.server.heartbeat.HeartBeat;
+import com.wolfmq.common.server.registry.heartbeat.HeartBeat;
 import com.wolfmq.common.server.registry.ServerInfo;
-import com.wolfmq.common.server.route.RouteInfo;
+import com.wolfmq.common.server.registry.route.RouteInfo;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 

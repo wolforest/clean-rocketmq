@@ -1,7 +1,7 @@
 package com.wolfmq.broker.domain.consumer.ack;
 
 import com.wolfmq.broker.domain.consumer.consumer.ConsumerManager;
-import com.wolfmq.common.server.ClientChannelInfo;
+import com.wolfmq.common.server.broker.ClientChannelInfo;
 import com.wolfmq.common.domain.consumer.ack.AckConverter;
 import com.wolfmq.common.domain.consumer.ack.broker.AckRequest;
 import com.wolfmq.common.domain.consumer.ack.broker.AckResult;

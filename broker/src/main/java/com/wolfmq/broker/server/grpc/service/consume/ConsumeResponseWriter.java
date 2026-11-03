@@ -9,7 +9,7 @@ import com.wolfmq.rpc.common.grpc.channel.GrpcConverter;
 import com.wolfmq.common.domain.message.property.MessageConst;
 import com.wolfmq.common.domain.consumer.ack.broker.InvisibleRequest;
 import com.wolfmq.common.domain.consumer.consume.pop.PopResult;
-import com.wolfmq.common.server.RequestContext;
+import com.wolfmq.common.server.broker.RequestContext;
 import com.wolfmq.common.domain.message.MessageBO;
 import com.wolfmq.rpc.common.grpc.response.ResponseBuilder;
 import com.wolfmq.rpc.common.grpc.response.ResponseWriter;

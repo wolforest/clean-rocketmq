@@ -2,8 +2,8 @@ package com.wolfmq.rpc.registry.route;
 
 import com.wolfmq.common.domain.mq.MessageQueue;
 import com.wolfmq.common.server.registry.GroupInfo;
-import com.wolfmq.common.server.route.PublishInfo;
-import com.wolfmq.common.server.route.RouteInfo;
+import com.wolfmq.common.server.registry.route.PublishInfo;
+import com.wolfmq.common.server.registry.route.RouteInfo;
 import com.google.common.collect.Sets;
 import java.io.Serializable;
 import java.util.Map;

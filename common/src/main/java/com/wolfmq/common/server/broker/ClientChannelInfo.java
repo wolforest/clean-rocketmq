@@ -1,4 +1,4 @@
-package com.wolfmq.common.server;
+package com.wolfmq.common.server.broker;
 
 import com.wolfmq.common.core.constant.code.LanguageCode;
 import io.netty.channel.Channel;

@@ -1,6 +1,6 @@
 package com.wolfmq.common.domain.store.domain.mq;
 
-import com.wolfmq.common.server.heartbeat.SubscriptionData;
+import com.wolfmq.common.server.registry.heartbeat.SubscriptionData;
 import com.wolfmq.common.domain.mq.filter.DefaultMessageFilter;
 import org.junit.jupiter.api.Test;
 

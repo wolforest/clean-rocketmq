@@ -2,7 +2,7 @@ package com.wolfmq.broker.domain.meta;
 
 import com.wolfmq.common.config.server.BrokerConfig;
 import com.wolfmq.common.core.exception.InvalidConfigException;
-import com.wolfmq.common.server.RequestContext;
+import com.wolfmq.common.server.broker.RequestContext;
 import com.wolfmq.rpc.registry.route.RouteLoader;
 import org.junit.jupiter.api.Test;
 

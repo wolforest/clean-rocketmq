@@ -16,7 +16,7 @@
  */
 package com.wolfmq.common.domain.mq.filter;
 
-import com.wolfmq.common.server.heartbeat.SubscriptionData;
+import com.wolfmq.common.server.registry.heartbeat.SubscriptionData;
 import com.wolfmq.common.domain.consumequeue.ConsumeUnit;
 import java.nio.ByteBuffer;
 import java.util.Map;

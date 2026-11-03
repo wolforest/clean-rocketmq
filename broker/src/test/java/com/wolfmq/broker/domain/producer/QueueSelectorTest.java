@@ -3,7 +3,7 @@ package com.wolfmq.broker.domain.producer;
 import com.wolfmq.broker.domain.meta.RouteService;
 import com.wolfmq.common.core.exception.BrokerException;
 import com.wolfmq.common.domain.message.MessageBO;
-import com.wolfmq.common.server.RequestContext;
+import com.wolfmq.common.server.broker.RequestContext;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

@@ -1,6 +1,6 @@
 package com.wolfmq.common.domain.consumer.consume.dto;
 
-import com.wolfmq.common.server.RequestContext;
+import com.wolfmq.common.server.broker.RequestContext;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

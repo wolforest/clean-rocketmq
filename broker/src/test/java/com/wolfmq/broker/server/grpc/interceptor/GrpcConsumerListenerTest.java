@@ -4,7 +4,7 @@ import apache.rocketmq.v2.Settings;
 import com.wolfmq.broker.server.grpc.service.channel.ChannelManager;
 import com.wolfmq.broker.server.grpc.service.channel.SettingManager;
 import com.wolfmq.common.core.event.ConsumerEvent;
-import com.wolfmq.common.server.ClientChannelInfo;
+import com.wolfmq.common.server.broker.ClientChannelInfo;
 import com.wolfmq.rpc.common.core.channel.ChannelHelper;
 import com.wolfmq.rpc.common.grpc.channel.GrpcChannel;
 import io.netty.channel.Channel;

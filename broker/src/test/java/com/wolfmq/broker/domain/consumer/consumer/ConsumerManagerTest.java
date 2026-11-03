@@ -1,10 +1,10 @@
 package com.wolfmq.broker.domain.consumer.consumer;
 
 import com.wolfmq.common.config.server.BrokerConfig;
-import com.wolfmq.common.server.ClientChannelInfo;
+import com.wolfmq.common.server.broker.ClientChannelInfo;
 import com.wolfmq.common.domain.consumer.ConsumerInfo;
 import com.wolfmq.common.domain.consumer.running.ConsumerGroupInfo;
-import com.wolfmq.common.server.heartbeat.SubscriptionData;
+import com.wolfmq.common.server.registry.heartbeat.SubscriptionData;
 import io.netty.channel.Channel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

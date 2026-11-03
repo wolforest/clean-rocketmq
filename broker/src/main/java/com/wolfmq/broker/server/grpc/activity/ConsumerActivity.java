@@ -18,7 +18,7 @@ import com.wolfmq.broker.server.grpc.service.consume.GrpcAckService;
 import com.wolfmq.broker.server.grpc.service.consume.InvisibleService;
 import com.wolfmq.broker.server.grpc.service.consume.GrpcOffsetService;
 import com.wolfmq.broker.server.grpc.service.consume.PopService;
-import com.wolfmq.common.server.RequestContext;
+import com.wolfmq.common.server.broker.RequestContext;
 import com.wolfmq.rpc.common.grpc.activity.ActivityHelper;
 import io.grpc.stub.StreamObserver;
 import java.util.concurrent.ThreadPoolExecutor;

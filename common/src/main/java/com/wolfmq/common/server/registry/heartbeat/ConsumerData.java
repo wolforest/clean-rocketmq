@@ -2,7 +2,7 @@
 
 /**
  * $Id: ConsumerData.java 1835 2013-05-16 02:00:50Z vintagewang@apache.org $
- */package com.wolfmq.common.server.heartbeat;
+ */package com.wolfmq.common.server.registry.heartbeat;
 
 import com.wolfmq.common.domain.consumer.consume.constant.ConsumeStrategy;
 import com.wolfmq.common.domain.consumer.consume.constant.ConsumeType;

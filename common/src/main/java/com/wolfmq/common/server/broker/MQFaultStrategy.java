@@ -1,7 +1,7 @@
 
-package com.wolfmq.common.server.selector;
+package com.wolfmq.common.server.broker;
 
-import com.wolfmq.common.server.route.PublishInfo;
+import com.wolfmq.common.server.registry.route.PublishInfo;
 import com.wolfmq.common.domain.mq.MessageQueue;
 
 public class MQFaultStrategy {

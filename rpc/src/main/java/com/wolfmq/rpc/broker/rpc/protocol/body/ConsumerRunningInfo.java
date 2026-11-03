@@ -6,7 +6,7 @@ import com.wolfmq.common.domain.consumer.consume.constant.ConsumeType;
 import com.wolfmq.common.domain.consumer.running.ConsumeStatus;
 import com.wolfmq.common.domain.consumer.running.PopProcessQueueInfo;
 import com.wolfmq.common.domain.consumer.running.ProcessQueueInfo;
-import com.wolfmq.common.server.heartbeat.SubscriptionData;
+import com.wolfmq.common.server.registry.heartbeat.SubscriptionData;
 import com.wolfmq.rpc.common.rpc.protocol.codec.RpcSerializable;
 import java.util.Iterator;
 import java.util.Map.Entry;

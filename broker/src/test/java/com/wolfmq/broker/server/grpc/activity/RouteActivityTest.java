@@ -10,7 +10,7 @@ import apache.rocketmq.v2.Resource;
 import com.wolfmq.broker.api.RouteController;
 import com.wolfmq.broker.server.grpc.interceptor.PipelineExecutor;
 import com.wolfmq.common.config.network.GrpcConfig;
-import com.wolfmq.common.server.RequestContext;
+import com.wolfmq.common.server.broker.RequestContext;
 import io.grpc.stub.StreamObserver;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

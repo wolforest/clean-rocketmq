@@ -4,7 +4,7 @@ import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.lang.concurrent.thread.DefaultThreadFactory;
 import cn.coderule.common.util.lang.ThreadUtil;
 import com.wolfmq.common.config.network.GrpcConfig;
-import com.wolfmq.common.server.RequestContext;
+import com.wolfmq.common.server.broker.RequestContext;
 import com.wolfmq.rpc.broker.grpc.ResultFuture;
 import com.wolfmq.rpc.common.core.relay.response.Result;
 import com.wolfmq.rpc.common.grpc.channel.GrpcChannel;

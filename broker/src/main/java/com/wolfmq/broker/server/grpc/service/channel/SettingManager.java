@@ -10,7 +10,7 @@ import cn.coderule.common.util.lang.collection.ArrayUtil;
 import com.wolfmq.broker.api.ConsumerController;
 import com.wolfmq.common.config.network.GrpcConfig;
 import com.wolfmq.common.domain.consumer.running.ConsumerGroupInfo;
-import com.wolfmq.common.server.RequestContext;
+import com.wolfmq.common.server.broker.RequestContext;
 import com.wolfmq.common.domain.meta.subscription.CustomizedRetryPolicy;
 import com.wolfmq.common.domain.meta.subscription.ExponentialRetryPolicy;
 import com.wolfmq.common.domain.meta.subscription.GroupRetryPolicy;

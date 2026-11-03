@@ -2,7 +2,7 @@ package com.wolfmq.broker.domain.consumer.renew;
 
 import com.wolfmq.broker.domain.consumer.ack.InvisibleService;
 import com.wolfmq.common.domain.consumer.receipt.EventListener;
-import com.wolfmq.common.server.RequestContext;
+import com.wolfmq.common.server.broker.RequestContext;
 import com.wolfmq.common.domain.consumer.ack.broker.AckResult;
 import com.wolfmq.common.domain.consumer.ack.broker.InvisibleRequest;
 import com.wolfmq.common.domain.consumer.receipt.MessageReceipt;

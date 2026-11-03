@@ -1,6 +1,6 @@
 package com.wolfmq.common.domain.producer;
 
-import com.wolfmq.common.server.RequestContext;
+import com.wolfmq.common.server.broker.RequestContext;
 import com.wolfmq.common.domain.message.MessageBO;
 import com.wolfmq.common.domain.meta.topic.Topic;
 import com.wolfmq.common.domain.mq.MessageQueue;

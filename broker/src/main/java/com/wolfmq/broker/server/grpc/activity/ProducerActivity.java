@@ -10,7 +10,7 @@ import com.wolfmq.broker.server.grpc.converter.MessageConverter;
 import com.wolfmq.broker.server.grpc.converter.ProducerConverter;
 import com.wolfmq.broker.server.grpc.interceptor.PipelineExecutor;
 import com.wolfmq.common.core.constant.code.InvalidCode;
-import com.wolfmq.common.server.RequestContext;
+import com.wolfmq.common.server.broker.RequestContext;
 import com.wolfmq.common.domain.message.MessageBO;
 import com.wolfmq.rpc.common.grpc.activity.ActivityHelper;
 import com.wolfmq.common.core.exception.InvalidRequestException;

@@ -1,8 +1,8 @@
 package com.wolfmq.rpc.registry.route;
 
 import com.wolfmq.common.domain.mq.MessageQueue;
-import com.wolfmq.common.server.route.PublishInfo;
-import com.wolfmq.common.server.route.RouteInfo;
+import com.wolfmq.common.server.registry.route.PublishInfo;
+import com.wolfmq.common.server.registry.route.RouteInfo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

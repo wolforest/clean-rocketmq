@@ -8,8 +8,8 @@ import apache.rocketmq.v2.QueryAssignmentResponse;
 import apache.rocketmq.v2.QueryRouteRequest;
 import apache.rocketmq.v2.QueryRouteResponse;
 import apache.rocketmq.v2.Resource;
-import com.wolfmq.common.server.route.QueueInfo;
-import com.wolfmq.common.server.route.RouteInfo;
+import com.wolfmq.common.server.registry.route.QueueInfo;
+import com.wolfmq.common.server.registry.route.RouteInfo;
 import com.wolfmq.common.server.registry.GroupInfo;
 import org.junit.jupiter.api.Test;
 

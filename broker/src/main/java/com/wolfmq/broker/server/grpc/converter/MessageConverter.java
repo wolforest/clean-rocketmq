@@ -10,7 +10,7 @@ import com.wolfmq.common.domain.message.property.MessageConst;
 import com.wolfmq.common.domain.message.property.MessageSysFlag;
 import com.wolfmq.common.core.constant.code.InvalidCode;
 import com.wolfmq.common.domain.message.MessageBO;
-import com.wolfmq.common.server.RequestContext;
+import com.wolfmq.common.server.broker.RequestContext;
 import com.wolfmq.common.core.exception.InvalidRequestException;
 import com.google.protobuf.Timestamp;
 import com.google.protobuf.util.Durations;

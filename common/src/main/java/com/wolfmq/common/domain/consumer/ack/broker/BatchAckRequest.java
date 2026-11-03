@@ -1,6 +1,6 @@
 package com.wolfmq.common.domain.consumer.ack.broker;
 
-import com.wolfmq.common.server.RequestContext;
+import com.wolfmq.common.server.broker.RequestContext;
 import com.wolfmq.common.domain.consumer.receipt.MessageIdReceipt;
 import com.wolfmq.common.domain.consumer.receipt.ReceiptHandle;
 import java.io.Serializable;

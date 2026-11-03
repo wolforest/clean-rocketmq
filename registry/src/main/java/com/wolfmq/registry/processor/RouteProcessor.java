@@ -11,7 +11,7 @@ import com.wolfmq.rpc.common.rpc.protocol.code.RequestCode;
 import com.wolfmq.rpc.common.rpc.protocol.code.ResponseCode;
 import com.wolfmq.rpc.common.rpc.protocol.code.SystemResponseCode;
 import com.wolfmq.rpc.registry.protocol.header.GetRouteInfoRequestHeader;
-import com.wolfmq.common.server.route.RouteInfo;
+import com.wolfmq.common.server.registry.route.RouteInfo;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;

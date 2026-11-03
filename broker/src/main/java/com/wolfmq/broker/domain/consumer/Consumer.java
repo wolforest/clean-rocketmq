@@ -11,7 +11,7 @@ import com.wolfmq.common.domain.consumer.ack.broker.AckRequest;
 import com.wolfmq.common.domain.consumer.ack.broker.InvisibleRequest;
 import com.wolfmq.common.domain.consumer.consume.pop.PopRequest;
 import com.wolfmq.common.domain.consumer.running.ConsumerGroupInfo;
-import com.wolfmq.common.server.RequestContext;
+import com.wolfmq.common.server.broker.RequestContext;
 import com.wolfmq.common.domain.meta.subscription.SubscriptionGroup;
 import com.wolfmq.rpc.store.facade.SubscriptionFacade;
 import java.util.concurrent.CompletableFuture;

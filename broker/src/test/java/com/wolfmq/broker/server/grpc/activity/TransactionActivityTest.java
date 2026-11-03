@@ -4,7 +4,7 @@ import apache.rocketmq.v2.EndTransactionRequest;
 import apache.rocketmq.v2.EndTransactionResponse;
 import com.wolfmq.broker.server.grpc.interceptor.PipelineExecutor;
 import com.wolfmq.broker.server.grpc.service.TransactionService;
-import com.wolfmq.common.server.RequestContext;
+import com.wolfmq.common.server.broker.RequestContext;
 import io.grpc.stub.StreamObserver;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

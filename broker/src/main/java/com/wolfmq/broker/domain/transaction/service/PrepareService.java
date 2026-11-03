@@ -6,7 +6,7 @@ import com.wolfmq.broker.infra.store.MQStore;
 import com.wolfmq.common.config.business.TransactionConfig;
 import com.wolfmq.common.domain.mq.dto.EnqueueRequest;
 import com.wolfmq.common.domain.mq.dto.EnqueueResult;
-import com.wolfmq.common.server.RequestContext;
+import com.wolfmq.common.server.broker.RequestContext;
 import com.wolfmq.common.domain.message.MessageBO;
 import java.util.concurrent.CompletableFuture;
 import lombok.extern.slf4j.Slf4j;

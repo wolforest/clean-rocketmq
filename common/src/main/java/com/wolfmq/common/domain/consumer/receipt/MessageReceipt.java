@@ -1,7 +1,7 @@
 
 package com.wolfmq.common.domain.consumer.receipt;
 
-import com.wolfmq.common.server.RequestContext;
+import com.wolfmq.common.server.broker.RequestContext;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import io.netty.channel.Channel;

@@ -2,7 +2,7 @@ package com.wolfmq.rpc.common.grpc.activity;
 
 import apache.rocketmq.v2.Code;
 import apache.rocketmq.v2.Status;
-import com.wolfmq.common.server.RequestContext;
+import com.wolfmq.common.server.broker.RequestContext;
 import com.wolfmq.rpc.common.grpc.core.GrpcTask;
 import com.wolfmq.rpc.common.grpc.response.ResponseBuilder;
 import com.wolfmq.rpc.common.grpc.response.ResponseWriter;

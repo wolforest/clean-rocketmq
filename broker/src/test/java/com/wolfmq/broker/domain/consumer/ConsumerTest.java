@@ -4,7 +4,7 @@ import com.wolfmq.broker.domain.consumer.ack.BrokerAckService;
 import com.wolfmq.broker.domain.consumer.ack.InvisibleService;
 import com.wolfmq.broker.domain.consumer.consumer.ConsumerManager;
 import com.wolfmq.broker.domain.consumer.pop.PopService;
-import com.wolfmq.common.server.RequestContext;
+import com.wolfmq.common.server.broker.RequestContext;
 import com.wolfmq.common.domain.consumer.ConsumerInfo;
 import com.wolfmq.rpc.store.facade.SubscriptionFacade;
 import org.junit.jupiter.api.BeforeEach;

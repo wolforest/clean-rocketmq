@@ -17,7 +17,7 @@
 
 package com.wolfmq.rpc.broker.grpc;
 
-import com.wolfmq.common.server.RequestContext;
+import com.wolfmq.common.server.broker.RequestContext;
 
 public interface ContextStreamObserver<V> {
 

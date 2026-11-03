@@ -1,4 +1,4 @@
-package com.wolfmq.common.server.heartbeat;
+package com.wolfmq.common.server.registry.heartbeat;
 
 import com.wolfmq.common.domain.meta.DataVersion;
 import com.wolfmq.common.server.registry.ServerInfo;

@@ -1,6 +1,6 @@
-package com.wolfmq.common.server.route;
+package com.wolfmq.common.server.registry.route;
 
-import com.wolfmq.common.server.RequestType;
+import com.wolfmq.common.server.broker.RequestType;
 import com.wolfmq.common.domain.meta.topic.Topic;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;

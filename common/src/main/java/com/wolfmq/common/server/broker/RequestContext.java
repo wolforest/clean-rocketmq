@@ -1,4 +1,4 @@
-package com.wolfmq.common.server;
+package com.wolfmq.common.server.broker;
 
 import io.netty.channel.Channel;
 import java.io.Serializable;

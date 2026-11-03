@@ -1,7 +1,7 @@
 package com.wolfmq.common.domain.mq.dto;
 
 import com.wolfmq.common.domain.consumer.consume.constant.ConsumeStrategy;
-import com.wolfmq.common.server.RequestContext;
+import com.wolfmq.common.server.broker.RequestContext;
 import com.wolfmq.common.domain.mq.filter.MessageFilter;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;

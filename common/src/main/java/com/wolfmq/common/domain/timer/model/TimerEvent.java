@@ -1,6 +1,6 @@
 package com.wolfmq.common.domain.timer.model;
 
-import com.wolfmq.common.server.RequestContext;
+import com.wolfmq.common.server.broker.RequestContext;
 import com.wolfmq.common.domain.message.MessageBO;
 import java.io.Serializable;
 import java.util.Set;

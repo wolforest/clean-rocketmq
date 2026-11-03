@@ -18,7 +18,7 @@ import com.wolfmq.common.domain.message.property.MessageConst;
 import com.wolfmq.common.domain.transaction.TransactionType;
 import com.wolfmq.common.domain.mq.dto.EnqueueStatus;
 import com.wolfmq.common.core.exception.InvalidRequestException;
-import com.wolfmq.common.server.RequestContext;
+import com.wolfmq.common.server.broker.RequestContext;
 import com.wolfmq.common.domain.message.MessageBO;
 import com.wolfmq.common.domain.mq.dto.EnqueueRequest;
 import com.wolfmq.common.domain.mq.dto.EnqueueResult;

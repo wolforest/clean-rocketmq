@@ -9,7 +9,7 @@ import com.wolfmq.broker.domain.transaction.service.SubscribeService;
 import com.wolfmq.common.domain.transaction.TransactionType;
 import com.wolfmq.common.core.exception.InvalidRequestException;
 import com.wolfmq.common.domain.mq.dto.EnqueueResult;
-import com.wolfmq.common.server.RequestContext;
+import com.wolfmq.common.server.broker.RequestContext;
 import com.wolfmq.common.domain.message.MessageBO;
 import com.wolfmq.common.domain.transaction.CommitResult;
 import com.wolfmq.common.domain.transaction.SubmitRequest;

@@ -1,6 +1,6 @@
 package com.wolfmq.common.domain.cluster;
 
-import com.wolfmq.common.server.ClientChannelInfo;
+import com.wolfmq.common.server.broker.ClientChannelInfo;
 import com.wolfmq.common.core.constant.code.LanguageCode;
 import io.netty.channel.Channel;
 import org.junit.jupiter.api.Test;

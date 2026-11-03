@@ -1,7 +1,7 @@
 package com.wolfmq.broker.domain.producer;
 
 import com.wolfmq.common.config.server.BrokerConfig;
-import com.wolfmq.common.server.ClientChannelInfo;
+import com.wolfmq.common.server.broker.ClientChannelInfo;
 import io.netty.channel.Channel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

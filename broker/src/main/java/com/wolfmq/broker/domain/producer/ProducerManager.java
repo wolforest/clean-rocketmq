@@ -5,7 +5,7 @@ import cn.coderule.common.util.lang.collection.MapUtil;
 import com.wolfmq.rpc.common.core.channel.ClientChannel;
 import com.wolfmq.common.config.server.BrokerConfig;
 import com.wolfmq.common.core.event.ProducerEvent;
-import com.wolfmq.common.server.ClientChannelInfo;
+import com.wolfmq.common.server.broker.ClientChannelInfo;
 import com.wolfmq.common.domain.producer.hook.ProducerListener;
 import com.wolfmq.rpc.broker.rpc.protocol.body.ProducerInfo;
 import com.wolfmq.rpc.broker.rpc.protocol.body.ProducerTableInfo;

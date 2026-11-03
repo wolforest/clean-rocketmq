@@ -12,7 +12,7 @@ import com.wolfmq.broker.server.grpc.converter.RouteConverter;
 import com.wolfmq.broker.server.grpc.interceptor.PipelineExecutor;
 import com.wolfmq.common.config.network.GrpcConfig;
 import com.wolfmq.common.domain.message.enums.MessageType;
-import com.wolfmq.common.server.RequestContext;
+import com.wolfmq.common.server.broker.RequestContext;
 import com.wolfmq.rpc.common.grpc.activity.ActivityHelper;
 import io.grpc.stub.StreamObserver;
 import java.util.ArrayList;

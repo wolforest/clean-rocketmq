@@ -3,8 +3,8 @@ package com.wolfmq.common.domain.consumer;
 import com.wolfmq.common.domain.consumer.consume.constant.ConsumeStrategy;
 import com.wolfmq.common.domain.consumer.consume.constant.ConsumeType;
 import com.wolfmq.common.domain.message.enums.MessageModel;
-import com.wolfmq.common.server.RequestContext;
-import com.wolfmq.common.server.heartbeat.SubscriptionData;
+import com.wolfmq.common.server.broker.RequestContext;
+import com.wolfmq.common.server.registry.heartbeat.SubscriptionData;
 import org.junit.jupiter.api.Test;
 
 import java.util.Set;

@@ -16,7 +16,7 @@
  */
 package com.wolfmq.rpc.common.grpc;
 
-import com.wolfmq.common.server.RequestContext;
+import com.wolfmq.common.server.broker.RequestContext;
 import com.google.protobuf.GeneratedMessage;
 import io.grpc.Metadata;
 

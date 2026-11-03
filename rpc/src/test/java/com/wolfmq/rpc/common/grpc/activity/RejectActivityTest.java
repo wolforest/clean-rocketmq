@@ -1,6 +1,6 @@
 package com.wolfmq.rpc.common.grpc.activity;
 
-import com.wolfmq.common.server.RequestContext;
+import com.wolfmq.common.server.broker.RequestContext;
 import com.wolfmq.rpc.common.grpc.core.GrpcTask;
 import apache.rocketmq.v2.Status;
 import io.grpc.stub.StreamObserver;

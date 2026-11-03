@@ -7,8 +7,8 @@ import com.wolfmq.common.core.constant.code.BrokerExceptionCode;
 import com.wolfmq.common.core.exception.BrokerException;
 import com.wolfmq.common.domain.mq.MessageQueue;
 import com.wolfmq.common.domain.message.MessageBO;
-import com.wolfmq.common.server.selector.MessageQueueView;
-import com.wolfmq.common.server.RequestContext;
+import com.wolfmq.common.server.broker.MessageQueueView;
+import com.wolfmq.common.server.broker.RequestContext;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 

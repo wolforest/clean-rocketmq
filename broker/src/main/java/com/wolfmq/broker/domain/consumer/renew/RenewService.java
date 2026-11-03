@@ -11,7 +11,7 @@ import com.wolfmq.common.config.business.MessageConfig;
 import com.wolfmq.common.config.server.BrokerConfig;
 import com.wolfmq.common.core.constant.code.BrokerExceptionCode;
 import com.wolfmq.common.core.exception.BrokerException;
-import com.wolfmq.common.server.ClientChannelInfo;
+import com.wolfmq.common.server.broker.ClientChannelInfo;
 import com.wolfmq.common.domain.consumer.ack.broker.AckResult;
 import com.wolfmq.common.domain.consumer.receipt.MessageReceipt;
 import com.wolfmq.common.domain.consumer.receipt.ReceiptHandle;

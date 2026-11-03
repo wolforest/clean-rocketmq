@@ -10,7 +10,7 @@ import com.wolfmq.broker.api.ConsumerController;
 import com.wolfmq.broker.server.grpc.converter.AckConverter;
 import com.wolfmq.common.config.business.MessageConfig;
 import com.wolfmq.common.config.server.BrokerConfig;
-import com.wolfmq.common.server.RequestContext;
+import com.wolfmq.common.server.broker.RequestContext;
 import com.wolfmq.common.domain.consumer.ack.broker.AckRequest;
 import com.wolfmq.rpc.common.grpc.response.ResponseBuilder;
 import java.util.ArrayList;

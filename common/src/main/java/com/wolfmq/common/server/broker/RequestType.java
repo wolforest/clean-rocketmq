@@ -1,5 +1,5 @@
 
-package com.wolfmq.common.server;
+package com.wolfmq.common.server.broker;
 
 import cn.coderule.common.util.lang.string.StringUtil;
 import lombok.Getter;

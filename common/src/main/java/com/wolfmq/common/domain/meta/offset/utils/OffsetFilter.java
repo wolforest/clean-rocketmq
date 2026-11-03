@@ -1,6 +1,6 @@
 package com.wolfmq.common.domain.meta.offset.utils;
 
-import com.wolfmq.common.server.RequestContext;
+import com.wolfmq.common.server.broker.RequestContext;
 import java.io.Serializable;
 import lombok.Data;
 

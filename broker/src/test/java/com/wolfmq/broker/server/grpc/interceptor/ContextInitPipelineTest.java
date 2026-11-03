@@ -1,6 +1,6 @@
 package com.wolfmq.broker.server.grpc.interceptor;
 
-import com.wolfmq.common.server.RequestContext;
+import com.wolfmq.common.server.broker.RequestContext;
 import com.wolfmq.rpc.common.grpc.core.constants.GrpcConstants;
 import com.google.protobuf.GeneratedMessage;
 import io.grpc.Context;

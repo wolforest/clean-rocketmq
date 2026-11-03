@@ -5,7 +5,7 @@ import apache.rocketmq.v2.AckMessageRequest;
 import apache.rocketmq.v2.AckMessageResultEntry;
 import apache.rocketmq.v2.Code;
 import apache.rocketmq.v2.Resource;
-import com.wolfmq.common.server.RequestContext;
+import com.wolfmq.common.server.broker.RequestContext;
 import com.wolfmq.common.domain.consumer.ack.broker.AckRequest;
 import com.wolfmq.common.domain.consumer.ack.broker.AckResult;
 import org.junit.jupiter.api.Test;

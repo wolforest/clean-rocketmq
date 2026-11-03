@@ -1,4 +1,4 @@
-package com.wolfmq.common.server.selector;
+package com.wolfmq.common.server.broker;
 
 public interface Resolver {
 

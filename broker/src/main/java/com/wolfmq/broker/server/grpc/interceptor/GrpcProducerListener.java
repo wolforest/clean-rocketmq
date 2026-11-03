@@ -3,7 +3,7 @@ package com.wolfmq.broker.server.grpc.interceptor;
 import com.wolfmq.broker.server.grpc.service.channel.ChannelManager;
 import com.wolfmq.broker.server.grpc.service.channel.SettingManager;
 import com.wolfmq.common.core.event.ProducerEvent;
-import com.wolfmq.common.server.ClientChannelInfo;
+import com.wolfmq.common.server.broker.ClientChannelInfo;
 import com.wolfmq.common.domain.producer.hook.ProducerListener;
 import lombok.extern.slf4j.Slf4j;
 

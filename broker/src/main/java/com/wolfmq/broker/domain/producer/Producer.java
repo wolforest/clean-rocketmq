@@ -1,7 +1,7 @@
 package com.wolfmq.broker.domain.producer;
 
-import com.wolfmq.common.server.ClientChannelInfo;
-import com.wolfmq.common.server.RequestContext;
+import com.wolfmq.common.server.broker.ClientChannelInfo;
+import com.wolfmq.common.server.broker.RequestContext;
 import com.wolfmq.common.domain.message.MessageBO;
 import com.wolfmq.common.domain.mq.dto.EnqueueResult;
 import java.util.List;

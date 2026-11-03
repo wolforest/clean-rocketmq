@@ -1,6 +1,6 @@
 package com.wolfmq.common.domain.producer;
 
-import com.wolfmq.common.server.ClientChannelInfo;
+import com.wolfmq.common.server.broker.ClientChannelInfo;
 import java.io.Serializable;
 import lombok.Data;
 
