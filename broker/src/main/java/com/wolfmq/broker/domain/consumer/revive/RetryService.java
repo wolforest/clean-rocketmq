@@ -6,7 +6,7 @@ import com.wolfmq.common.domain.meta.offset.OffsetRequest;
 import com.wolfmq.common.domain.meta.topic.TopicRequest;
 import com.wolfmq.common.domain.mq.dto.EnqueueRequest;
 import com.wolfmq.common.domain.mq.dto.EnqueueResult;
-import com.wolfmq.common.domain.message.enums.TagType;
+import com.wolfmq.common.domain.meta.topic.TagType;
 import com.wolfmq.common.domain.consumer.consume.pop.checkpoint.PopCheckPoint;
 import com.wolfmq.common.domain.consumer.consume.pop.helper.PopConverter;
 import com.wolfmq.common.domain.message.MessageBO;

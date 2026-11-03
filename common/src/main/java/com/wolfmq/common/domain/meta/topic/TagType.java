@@ -1,4 +1,4 @@
-package com.wolfmq.common.domain.message.enums;
+package com.wolfmq.common.domain.meta.topic;
 
 public enum TagType {
     SINGLE_TAG,

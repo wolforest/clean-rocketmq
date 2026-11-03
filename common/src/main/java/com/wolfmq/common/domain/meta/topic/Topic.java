@@ -6,7 +6,6 @@ import com.wolfmq.common.domain.mq.MessageQueue;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.TypeReference;
 import com.alibaba.fastjson2.annotation.JSONField;
-import com.wolfmq.common.domain.message.enums.TagType;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;
