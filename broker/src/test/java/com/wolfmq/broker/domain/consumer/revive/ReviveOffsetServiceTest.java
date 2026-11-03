@@ -1,7 +1,7 @@
 package com.wolfmq.broker.domain.consumer.revive;
 
-import com.wolfmq.common.domain.consumer.consume.mq.QueueRequest;
-import com.wolfmq.common.domain.consumer.consume.mq.QueueResult;
+import com.wolfmq.common.domain.consumer.consume.dto.QueueRequest;
+import com.wolfmq.common.domain.consumer.consume.dto.QueueResult;
 import com.wolfmq.common.domain.consumer.revive.ReviveBuffer;
 import com.wolfmq.common.domain.meta.offset.OffsetRequest;
 import com.wolfmq.common.domain.meta.offset.OffsetResult;

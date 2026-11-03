@@ -1,6 +1,6 @@
 package com.wolfmq.common.domain.consumer.consume.pop;
 
-import com.wolfmq.common.domain.consumer.consume.ConsumeStrategy;
+import com.wolfmq.common.domain.consumer.consume.constant.ConsumeStrategy;
 import com.wolfmq.common.server.RequestContext;
 import com.wolfmq.common.server.heartbeat.SubscriptionData;
 import com.wolfmq.common.domain.consumer.hook.PopFilter;

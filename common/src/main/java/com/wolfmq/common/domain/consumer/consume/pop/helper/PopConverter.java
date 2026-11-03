@@ -3,7 +3,7 @@ package com.wolfmq.common.domain.consumer.consume.pop.helper;
 import com.wolfmq.common.core.constant.MQConstants;
 import com.wolfmq.common.domain.message.property.MessageConst;
 import com.wolfmq.common.domain.consumer.consume.pop.PopConstants;
-import com.wolfmq.common.domain.consumer.consume.PopStatus;
+import com.wolfmq.common.domain.consumer.consume.constant.PopStatus;
 import com.wolfmq.common.domain.message.enums.MessageStatus;
 import com.wolfmq.common.domain.consumer.ack.AckInfo;
 import com.wolfmq.common.domain.mq.dto.DequeueRequest;

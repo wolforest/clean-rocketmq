@@ -1,11 +1,11 @@
 package com.wolfmq.store.api;
 
-import com.wolfmq.common.domain.consumer.consume.mq.QueueRequest;
-import com.wolfmq.common.domain.consumer.consume.mq.QueueResult;
+import com.wolfmq.common.domain.consumer.consume.dto.QueueRequest;
+import com.wolfmq.common.domain.consumer.consume.dto.QueueResult;
 import com.wolfmq.common.domain.mq.dto.DequeueRequest;
 import com.wolfmq.common.domain.mq.dto.DequeueResult;
-import com.wolfmq.common.domain.consumer.consume.mq.MessageRequest;
-import com.wolfmq.common.domain.consumer.consume.mq.MessageResult;
+import com.wolfmq.common.domain.consumer.consume.dto.MessageRequest;
+import com.wolfmq.common.domain.consumer.consume.dto.MessageResult;
 import com.wolfmq.common.domain.mq.dto.EnqueueRequest;
 import com.wolfmq.common.domain.mq.dto.EnqueueResult;
 import com.wolfmq.common.domain.mq.MQService;

@@ -2,7 +2,7 @@
 package com.wolfmq.rpc.broker.rpc.protocol.body;
 
 import com.wolfmq.common.domain.mq.MessageQueue;
-import com.wolfmq.common.domain.consumer.consume.ConsumeType;
+import com.wolfmq.common.domain.consumer.consume.constant.ConsumeType;
 import com.wolfmq.common.domain.consumer.running.ConsumeStatus;
 import com.wolfmq.common.domain.consumer.running.PopProcessQueueInfo;
 import com.wolfmq.common.domain.consumer.running.ProcessQueueInfo;

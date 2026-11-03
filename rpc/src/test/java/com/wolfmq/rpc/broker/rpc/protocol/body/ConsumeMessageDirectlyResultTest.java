@@ -1,6 +1,6 @@
 package com.wolfmq.rpc.broker.rpc.protocol.body;
 
-import com.wolfmq.common.domain.consumer.consume.CMResult;
+import com.wolfmq.common.domain.consumer.consume.constant.CMResult;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

@@ -4,8 +4,8 @@
  * $Id: ConsumerData.java 1835 2013-05-16 02:00:50Z vintagewang@apache.org $
  */package com.wolfmq.common.server.heartbeat;
 
-import com.wolfmq.common.domain.consumer.consume.ConsumeStrategy;
-import com.wolfmq.common.domain.consumer.consume.ConsumeType;
+import com.wolfmq.common.domain.consumer.consume.constant.ConsumeStrategy;
+import com.wolfmq.common.domain.consumer.consume.constant.ConsumeType;
 import com.wolfmq.common.domain.message.enums.MessageModel;
 import java.util.HashSet;
 import java.util.Set;

@@ -16,7 +16,7 @@ import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.common.util.net.NetworkUtil;
 import com.wolfmq.common.domain.message.property.MessageConst;
 import com.wolfmq.common.domain.message.property.MessageSysFlag;
-import com.wolfmq.common.domain.consumer.consume.ExpressionType;
+import com.wolfmq.common.domain.consumer.consume.constant.ExpressionType;
 import com.wolfmq.common.domain.message.MessageBO;
 import com.wolfmq.common.domain.message.utils.MessageUtils;
 import com.wolfmq.common.domain.message.utils.NamespaceUtils;

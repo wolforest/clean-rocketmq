@@ -1,9 +1,8 @@
+package com.wolfmq.common.domain.consumer.consume.constant;
 
+import lombok.Getter;
 
-/**
- * $Id: ConsumeType.java 1835 2013-05-16 02:00:50Z vintagewang@apache.org $
- */package com.wolfmq.common.domain.consumer.consume;
-
+@Getter
 public enum ConsumeType {
 
     CONSUME_ACTIVELY("PULL"),
@@ -18,7 +17,4 @@ public enum ConsumeType {
         this.typeCN = typeCN;
     }
 
-    public String getTypeCN() {
-        return typeCN;
-    }
 }

@@ -11,7 +11,7 @@ import com.wolfmq.rpc.common.grpc.channel.GrpcConverter;
 import com.wolfmq.broker.server.grpc.service.channel.SettingManager;
 import com.wolfmq.common.config.network.GrpcConfig;
 import com.wolfmq.common.config.server.BrokerConfig;
-import com.wolfmq.common.domain.consumer.consume.ConsumeStrategy;
+import com.wolfmq.common.domain.consumer.consume.constant.ConsumeStrategy;
 import com.wolfmq.common.server.RequestContext;
 import com.wolfmq.common.server.heartbeat.SubscriptionData;
 import com.wolfmq.common.domain.consumer.consume.pop.PopRequest;

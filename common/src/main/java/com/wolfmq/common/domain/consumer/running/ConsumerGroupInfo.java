@@ -1,7 +1,7 @@
 package com.wolfmq.common.domain.consumer.running;
 
-import com.wolfmq.common.domain.consumer.consume.ConsumeStrategy;
-import com.wolfmq.common.domain.consumer.consume.ConsumeType;
+import com.wolfmq.common.domain.consumer.consume.constant.ConsumeStrategy;
+import com.wolfmq.common.domain.consumer.consume.constant.ConsumeType;
 import com.wolfmq.common.domain.message.enums.MessageModel;
 import com.wolfmq.common.server.ClientChannelInfo;
 import com.wolfmq.common.server.heartbeat.SubscriptionData;

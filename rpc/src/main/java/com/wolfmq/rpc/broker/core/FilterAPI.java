@@ -1,6 +1,6 @@
 package com.wolfmq.rpc.broker.core;
 
-import com.wolfmq.common.domain.consumer.consume.ExpressionType;
+import com.wolfmq.common.domain.consumer.consume.constant.ExpressionType;
 import com.wolfmq.common.server.heartbeat.SubscriptionData;
 import java.util.Arrays;
 import org.apache.commons.lang3.StringUtils;

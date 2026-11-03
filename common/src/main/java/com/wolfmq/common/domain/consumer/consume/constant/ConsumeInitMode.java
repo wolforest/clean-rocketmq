@@ -1,4 +1,4 @@
-package com.wolfmq.common.domain.consumer.consume;
+package com.wolfmq.common.domain.consumer.consume.constant;
 
 /**
  * the mode of the start consume offset in queue

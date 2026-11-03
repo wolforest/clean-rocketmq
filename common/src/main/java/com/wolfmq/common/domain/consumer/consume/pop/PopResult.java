@@ -1,6 +1,6 @@
 package com.wolfmq.common.domain.consumer.consume.pop;
 
-import com.wolfmq.common.domain.consumer.consume.PopStatus;
+import com.wolfmq.common.domain.consumer.consume.constant.PopStatus;
 import com.wolfmq.common.domain.message.MessageBO;
 import java.io.Serializable;
 import java.util.ArrayList;

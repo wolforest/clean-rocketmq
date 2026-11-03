@@ -1,4 +1,4 @@
-package com.wolfmq.common.domain.consumer.consume;
+package com.wolfmq.common.domain.consumer.consume.constant;
 
 import lombok.Getter;
 

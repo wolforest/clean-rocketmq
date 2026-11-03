@@ -1,5 +1,5 @@
 
-package com.wolfmq.common.domain.consumer.consume;
+package com.wolfmq.common.domain.consumer.consume.constant;
 
 public class ExpressionType {
 

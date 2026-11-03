@@ -2,7 +2,7 @@ package com.wolfmq.store.domain.mq.queue;
 
 import com.wolfmq.common.config.business.MessageConfig;
 import com.wolfmq.common.config.server.StoreConfig;
-import com.wolfmq.common.domain.consumer.consume.ConsumeStrategy;
+import com.wolfmq.common.domain.consumer.consume.constant.ConsumeStrategy;
 import com.wolfmq.common.domain.commitlog.CommitLog;
 import com.wolfmq.common.domain.mq.dto.DequeueRequest;
 import com.wolfmq.common.domain.mq.dto.DequeueResult;

@@ -10,7 +10,7 @@ import com.wolfmq.broker.api.ConsumerController;
 import com.wolfmq.broker.api.ProducerController;
 import com.wolfmq.broker.api.RouteController;
 import com.wolfmq.broker.api.TransactionController;
-import com.wolfmq.common.domain.consumer.consume.CMResult;
+import com.wolfmq.common.domain.consumer.consume.constant.CMResult;
 import com.wolfmq.common.server.RequestContext;
 import com.wolfmq.rpc.broker.grpc.ContextStreamObserver;
 import com.wolfmq.rpc.broker.rpc.protocol.body.ConsumeMessageDirectlyResult;

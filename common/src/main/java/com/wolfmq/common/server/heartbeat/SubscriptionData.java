@@ -1,6 +1,6 @@
 package com.wolfmq.common.server.heartbeat;
 
-import com.wolfmq.common.domain.consumer.consume.ExpressionType;
+import com.wolfmq.common.domain.consumer.consume.constant.ExpressionType;
 import com.alibaba.fastjson2.annotation.JSONField;
 import java.util.HashSet;
 import java.util.Set;

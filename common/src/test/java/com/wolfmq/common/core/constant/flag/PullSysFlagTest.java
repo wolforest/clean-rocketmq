@@ -1,6 +1,6 @@
 package com.wolfmq.common.core.constant.flag;
 
-import com.wolfmq.common.domain.consumer.consume.PullSysFlag;
+import com.wolfmq.common.domain.consumer.consume.constant.PullSysFlag;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

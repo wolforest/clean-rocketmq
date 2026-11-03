@@ -1,7 +1,7 @@
 package com.wolfmq.common.domain.mq;
 
-import com.wolfmq.common.domain.consumer.consume.mq.MessageRequest;
-import com.wolfmq.common.domain.consumer.consume.mq.MessageResult;
+import com.wolfmq.common.domain.consumer.consume.dto.MessageRequest;
+import com.wolfmq.common.domain.consumer.consume.dto.MessageResult;
 import com.wolfmq.common.domain.message.MessageBO;
 import com.wolfmq.common.domain.mq.dto.DequeueRequest;
 import com.wolfmq.common.domain.mq.dto.DequeueResult;

@@ -1,7 +1,7 @@
 
 package com.wolfmq.rpc.broker.rpc.protocol.body;
 
-import com.wolfmq.common.domain.consumer.consume.CMResult;
+import com.wolfmq.common.domain.consumer.consume.constant.CMResult;
 import com.wolfmq.rpc.common.rpc.protocol.codec.RpcSerializable;
 
 public class ConsumeMessageDirectlyResult extends RpcSerializable {

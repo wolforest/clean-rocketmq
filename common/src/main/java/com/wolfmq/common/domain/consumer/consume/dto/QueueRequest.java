@@ -1,4 +1,4 @@
-package com.wolfmq.common.domain.consumer.consume.mq;
+package com.wolfmq.common.domain.consumer.consume.dto;
 
 import com.wolfmq.common.server.RequestContext;
 import java.io.Serializable;

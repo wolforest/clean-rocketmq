@@ -1,8 +1,8 @@
 package com.wolfmq.common.domain.consumer;
 
 import com.wolfmq.common.domain.consumer.running.ConsumerGroupInfo;
-import com.wolfmq.common.domain.consumer.consume.ConsumeStrategy;
-import com.wolfmq.common.domain.consumer.consume.ConsumeType;
+import com.wolfmq.common.domain.consumer.consume.constant.ConsumeStrategy;
+import com.wolfmq.common.domain.consumer.consume.constant.ConsumeType;
 import com.wolfmq.common.domain.message.enums.MessageModel;
 import com.wolfmq.common.server.ClientChannelInfo;
 import com.wolfmq.common.server.RequestContext;
