@@ -1,4 +1,4 @@
-package com.wolfmq.common.domain.meta.offset;
+package com.wolfmq.common.domain.meta.offset.dto;
 
 import com.wolfmq.common.server.RequestContext;
 import java.io.Serializable;

@@ -1,8 +1,8 @@
 package com.wolfmq.broker.infra.embed;
 
 import com.wolfmq.common.config.server.BrokerConfig;
-import com.wolfmq.common.domain.meta.offset.OffsetRequest;
-import com.wolfmq.common.domain.meta.offset.OffsetResult;
+import com.wolfmq.common.domain.meta.offset.dto.OffsetRequest;
+import com.wolfmq.common.domain.meta.offset.dto.OffsetResult;
 import com.wolfmq.common.server.store.api.meta.ConsumeOffsetStore;
 import com.wolfmq.common.testing.ConfigMock;
 import org.junit.jupiter.api.BeforeEach;

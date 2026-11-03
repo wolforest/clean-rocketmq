@@ -1,10 +1,10 @@
 package com.wolfmq.rpc.store.facade;
 
-import com.wolfmq.common.domain.meta.offset.GroupResult;
-import com.wolfmq.common.domain.meta.offset.OffsetFilter;
-import com.wolfmq.common.domain.meta.offset.OffsetRequest;
-import com.wolfmq.common.domain.meta.offset.OffsetResult;
-import com.wolfmq.common.domain.meta.offset.TopicResult;
+import com.wolfmq.common.domain.meta.offset.dto.GroupResult;
+import com.wolfmq.common.domain.meta.offset.utils.OffsetFilter;
+import com.wolfmq.common.domain.meta.offset.dto.OffsetRequest;
+import com.wolfmq.common.domain.meta.offset.dto.OffsetResult;
+import com.wolfmq.common.domain.meta.offset.dto.TopicResult;
 
 public interface ConsumeOffsetFacade {
     OffsetResult getOffset(OffsetRequest request);

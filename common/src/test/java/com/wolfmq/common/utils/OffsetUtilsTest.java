@@ -1,6 +1,6 @@
 package com.wolfmq.common.utils;
 
-import com.wolfmq.common.domain.meta.offset.OffsetUtils;
+import com.wolfmq.common.domain.meta.offset.utils.OffsetUtils;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

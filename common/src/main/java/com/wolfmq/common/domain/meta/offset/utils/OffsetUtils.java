@@ -1,4 +1,4 @@
-package com.wolfmq.common.domain.meta.offset;
+package com.wolfmq.common.domain.meta.offset.utils;
 
 import cn.coderule.common.util.lang.string.StringUtil;
 import java.text.NumberFormat;

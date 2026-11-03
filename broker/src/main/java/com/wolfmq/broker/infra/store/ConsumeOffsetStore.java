@@ -3,11 +3,11 @@ package com.wolfmq.broker.infra.store;
 import com.wolfmq.broker.infra.embed.EmbedConsumeOffsetStore;
 import com.wolfmq.broker.infra.remote.RemoteConsumeOffsetStore;
 import com.wolfmq.common.config.server.BrokerConfig;
-import com.wolfmq.common.domain.meta.offset.GroupResult;
-import com.wolfmq.common.domain.meta.offset.OffsetFilter;
-import com.wolfmq.common.domain.meta.offset.OffsetRequest;
-import com.wolfmq.common.domain.meta.offset.OffsetResult;
-import com.wolfmq.common.domain.meta.offset.TopicResult;
+import com.wolfmq.common.domain.meta.offset.dto.GroupResult;
+import com.wolfmq.common.domain.meta.offset.utils.OffsetFilter;
+import com.wolfmq.common.domain.meta.offset.dto.OffsetRequest;
+import com.wolfmq.common.domain.meta.offset.dto.OffsetResult;
+import com.wolfmq.common.domain.meta.offset.dto.TopicResult;
 import com.wolfmq.rpc.store.facade.ConsumeOffsetFacade;
 
 public class ConsumeOffsetStore implements ConsumeOffsetFacade {

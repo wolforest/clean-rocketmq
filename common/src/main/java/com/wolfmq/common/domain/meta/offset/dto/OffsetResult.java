@@ -1,4 +1,4 @@
-package com.wolfmq.common.domain.meta.offset;
+package com.wolfmq.common.domain.meta.offset.dto;
 
 import java.io.Serializable;
 import lombok.Data;
