@@ -9,13 +9,7 @@ public class TopicConfig implements Serializable {
     private int maxTopicLength = 127;
 
     private boolean enableAutoCreation = true;
-    /**
-     * enable tag sharding. if true:
-     * message in consume queue will be sharded by tag.
-     * message with same tag will be stored in same consume queue.
-     * this will improve performance when filter message by tag.
-     */
-    private boolean enableTagSharding = false;
+
     /**
      * enable tag index. if true:
      * message in consume queue will be indexed by tag.
