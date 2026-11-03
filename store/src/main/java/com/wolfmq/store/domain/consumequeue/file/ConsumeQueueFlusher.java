@@ -14,7 +14,7 @@ public class ConsumeQueueFlusher extends ServiceThread implements ConsumeQueueRe
     private final ConsumeQueueConfig config;
 
     private long lastFlushTime = 0;
-    private final Set<ConsumeQueue> queueSet = new LinkedHashSet<>(128);
+    private final Set<FileConsumeQueue> queueSet = new LinkedHashSet<>(128);
 
     public ConsumeQueueFlusher(ConsumeQueueConfig config) {
         this.config = config;
@@ -22,7 +22,11 @@ public class ConsumeQueueFlusher extends ServiceThread implements ConsumeQueueRe
 
     @Override
     public void register(ConsumeQueue queue) {
-        queueSet.add(queue);
+        if (!(queue instanceof FileConsumeQueue)) {
+            return;
+        }
+
+        queueSet.add((FileConsumeQueue) queue);
     }
 
     @Override
