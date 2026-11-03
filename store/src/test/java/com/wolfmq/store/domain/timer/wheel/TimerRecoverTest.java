@@ -2,7 +2,6 @@ package com.wolfmq.store.domain.timer.wheel;
 
 import com.wolfmq.common.config.business.TimerConfig;
 import com.wolfmq.common.config.server.StoreConfig;
-import com.wolfmq.common.config.store.StorePath;
 import com.wolfmq.common.testing.ConfigMock;
 import com.wolfmq.store.domain.mq.queue.MessageService;
 import com.wolfmq.store.domain.timer.service.CheckpointService;
@@ -23,10 +22,9 @@ class TimerRecoverTest {
         timerConfig.setTotalSlots(8);
         timerConfig.setPrecision(1000);
 
-        StorePath.initPath(tempDir.toString());
-        TimerLog timerLog = new TimerLog(StorePath.getTimerLogPath(), timerConfig.getTimerLogFileSize());
-        TimerWheel timerWheel = new TimerWheel(StorePath.getTimerWheelPath(), timerConfig.getTotalSlots(), timerConfig.getPrecision());
-        CheckpointService checkpointService = new CheckpointService(StorePath.getTimerCheckPath());
+        TimerLog timerLog = new TimerLog(storeConfig.getPath().getTimerLogPath(), timerConfig.getTimerLogFileSize());
+        TimerWheel timerWheel = new TimerWheel(storeConfig.getPath().getTimerWheelPath(), timerConfig.getTotalSlots(), timerConfig.getPrecision());
+        CheckpointService checkpointService = new CheckpointService(storeConfig.getPath().getTimerCheckPath());
         MessageService messageService = mock(MessageService.class);
 
         TimerRecover recover = new TimerRecover(storeConfig, timerLog, timerWheel, checkpointService, messageService);

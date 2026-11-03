@@ -10,7 +10,7 @@ import com.wolfmq.store.server.bootstrap.StoreArgument;
 import com.wolfmq.store.server.bootstrap.StoreCheckpoint;
 import cn.coderule.common.convention.container.ApplicationContext;
 import com.wolfmq.common.core.constant.ContextNamespace;
-import com.wolfmq.common.config.store.StorePath;
+import com.wolfmq.common.config.server.StoreConfig;
 import com.wolfmq.common.server.store.checkpoint.bakeup.CheckPoint;
 import lombok.Getter;
 import lombok.NonNull;
@@ -53,10 +53,11 @@ public class Store implements Lifecycle {
     public void initialize() throws Exception {
         ContextInitializer.init(argument, context);
 
-        startupLock = new StartupLock(StorePath.getLockFile());
-        shutdownLock = new ShutdownLock(StorePath.getAbortFile());
+        StoreConfig storeConfig = context.getBean(StoreConfig.class);
+        startupLock = new StartupLock(storeConfig.getPath().getLockFile());
+        shutdownLock = new ShutdownLock(storeConfig.getPath().getAbortFile());
 
-        this.initCheckPoint();
+        this.initCheckPoint(storeConfig);
         this.componentManager = new ComponentRegister(context).register();
         this.componentManager.initialize();
     }
@@ -92,10 +93,10 @@ public class Store implements Lifecycle {
         this.componentManager.cleanup();
     }
 
-    private void initCheckPoint() {
+    private void initCheckPoint(StoreConfig storeConfig) {
         boolean isShutdownSuccessful = !shutdownLock.isLocked();
 
-        StoreCheckpoint checkpoint = new StoreCheckpoint(StorePath.getCheckpointPath());
+        StoreCheckpoint checkpoint = new StoreCheckpoint(storeConfig.getPath().getCheckpointPath());
         checkpoint.setShutdownSuccessful(isShutdownSuccessful);
 
         context.register(checkpoint, CheckPoint.class);

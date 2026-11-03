@@ -2,7 +2,6 @@ package com.wolfmq.store.domain.consumequeue.error;
 
 import com.wolfmq.common.config.server.StoreConfig;
 import com.wolfmq.common.config.store.ConsumeQueueConfig;
-import com.wolfmq.common.config.store.StorePath;
 import com.wolfmq.common.domain.consumequeue.QueueType;
 import com.wolfmq.common.domain.commitlog.dispatch.CommitEvent;
 import com.wolfmq.common.domain.consumequeue.QueueUnit;
@@ -351,11 +350,12 @@ class FileConsumeQueueTest {
         ConsumeQueueConfig queueConfig = storeConfig.getConsumeQueue();
         queueConfig.setFileSize(MMAP_FILE_SIZE);
 
-        StoreCheckpoint checkpoint = new StoreCheckpoint(StorePath.getCheckpointPath());
+        StoreCheckpoint checkpoint = new StoreCheckpoint(storeConfig.getPath().getCheckpointPath());
 
         return new FileConsumeQueue(
             topic,
             queueId,
+            storeConfig,
             queueConfig,
             checkpoint
         );

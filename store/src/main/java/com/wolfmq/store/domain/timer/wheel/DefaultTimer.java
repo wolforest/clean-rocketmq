@@ -6,7 +6,6 @@ import com.wolfmq.common.config.server.StoreConfig;
 import com.wolfmq.common.domain.timer.model.ScanResult;
 import com.wolfmq.common.domain.timer.model.TimerEvent;
 import com.wolfmq.common.domain.timer.Timer;
-import com.wolfmq.common.config.store.StorePath;
 import com.wolfmq.common.domain.timer.state.TimerCheckpoint;
 import com.wolfmq.store.domain.mq.queue.MessageService;
 import com.wolfmq.store.domain.timer.service.CheckpointService;
@@ -94,7 +93,7 @@ public class DefaultTimer implements Timer, Flushable {
         TimerConfig timerConfig = storeConfig.getTimer();
 
         return new TimerLog(
-            StorePath.getTimerLogPath(),
+            storeConfig.getPath().getTimerLogPath(),
             timerConfig.getTimerLogFileSize()
         );
     }
@@ -103,7 +102,7 @@ public class DefaultTimer implements Timer, Flushable {
         TimerConfig timerConfig = storeConfig.getTimer();
 
         return new TimerWheel(
-            StorePath.getTimerWheelPath(),
+            storeConfig.getPath().getTimerWheelPath(),
             timerConfig.getTotalSlots(),
             timerConfig.getPrecision()
         );

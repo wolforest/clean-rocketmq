@@ -7,7 +7,6 @@ import cn.coderule.common.convention.container.ApplicationContext;
 
 import com.wolfmq.common.config.server.StoreConfig;
 import com.wolfmq.common.config.store.CommitConfig;
-import com.wolfmq.common.config.store.StorePath;
 import com.wolfmq.common.domain.meta.service.TopicService;
 import com.wolfmq.common.testing.ConfigMock;
 import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueFacade;
@@ -31,7 +30,6 @@ class ConsumeQueueBootstrapTest {
 
     @BeforeEach
     void setUp() {
-        StorePath.initPath(tempDir.toString());
     }
 
     @AfterEach
@@ -41,7 +39,6 @@ class ConsumeQueueBootstrapTest {
     @Test
     void initialize_ShouldRegisterConsumeQueueManager(@TempDir Path anotherDir) {
         StoreConfig storeConfig = ConfigMock.createStoreConfig(anotherDir.toString());
-        StorePath.initPath(anotherDir.toString());
         storeConfig.setCommit(new CommitConfig());
 
         context.register(storeConfig);

@@ -51,7 +51,7 @@ public class CommitLogFactory {
     }
 
     private DefaultMappedFileQueue initMappedFileQueue(int shardId) {
-        String dir = storeConfig.getRootDir()
+        String dir = storeConfig.getPath().getRootPath()
             + File.separator
             + commitConfig.getDirName()
             + File.separator

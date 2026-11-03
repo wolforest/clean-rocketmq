@@ -6,7 +6,6 @@ import com.wolfmq.common.server.store.checkpoint.bakeup.CheckPoint;
 import cn.coderule.common.convention.container.ApplicationContext;
 
 import com.wolfmq.common.config.server.StoreConfig;
-import com.wolfmq.common.config.store.StorePath;
 import com.wolfmq.common.domain.consumer.consume.InflightCounter;
 import com.wolfmq.common.core.lock.queue.DequeueLock;
 import com.wolfmq.common.testing.ConfigMock;
@@ -35,7 +34,6 @@ class AckBootstrapTest {
 
     @BeforeEach
     void setUp() {
-        StorePath.initPath(tempDir.toString());
 
         storeConfig = ConfigMock.createStoreConfig(tempDir.toString());
         context.register(storeConfig);

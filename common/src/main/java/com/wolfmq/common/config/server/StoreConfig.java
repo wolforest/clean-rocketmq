@@ -15,6 +15,7 @@ import com.wolfmq.common.config.store.CommitConfig;
 import com.wolfmq.common.config.store.ConsumeQueueConfig;
 import com.wolfmq.common.config.store.IndexConfig;
 import com.wolfmq.common.config.store.MetaConfig;
+import com.wolfmq.common.config.store.StorePath;
 import com.wolfmq.common.domain.meta.topic.constant.PermName;
 import java.io.File;
 import java.net.InetSocketAddress;
@@ -29,6 +30,8 @@ public class StoreConfig extends ServerIdentity {
     private int port = ConfigAttribute.STORE_PORT;
 
     private String rootDir = System.getProperty("user.home") + File.separator + "mq";
+    @EqualsAndHashCode.Exclude
+    private transient StorePath path = new StorePath(rootDir);
     /**
      *
      */
@@ -117,5 +120,17 @@ public class StoreConfig extends ServerIdentity {
 
     public SocketAddress getHostAddress() {
         return new InetSocketAddress(host, port);
+    }
+
+    public StorePath getPath() {
+        if (path == null) {
+            path = new StorePath(rootDir);
+        }
+        return path;
+    }
+
+    public void setRootDir(String rootDir) {
+        this.rootDir = rootDir;
+        getPath().setRootPath(rootDir);
     }
 }

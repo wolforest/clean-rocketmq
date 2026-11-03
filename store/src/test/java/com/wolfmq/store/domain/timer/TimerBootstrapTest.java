@@ -5,7 +5,6 @@ import com.wolfmq.common.core.constant.ContextNamespace;
 import cn.coderule.common.convention.container.ApplicationContext;
 
 import com.wolfmq.common.config.server.StoreConfig;
-import com.wolfmq.common.config.store.StorePath;
 import com.wolfmq.common.server.store.api.TimerStore;
 import com.wolfmq.common.testing.ConfigMock;
 import com.wolfmq.store.domain.mq.queue.MessageService;
@@ -29,7 +28,6 @@ class TimerBootstrapTest {
         storeConfig.getTimer().setWheelSlots(4);
         storeConfig.getTimer().setPrecision(1000);
 
-        StorePath.initPath(tempDir.toString());
         MessageService messageService = mock(MessageService.class);
 
         context.register(storeConfig);

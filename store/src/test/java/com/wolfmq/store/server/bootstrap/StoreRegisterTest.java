@@ -3,7 +3,6 @@ package com.wolfmq.store.server.bootstrap;
 import cn.coderule.common.convention.container.ApplicationContext;
 
 import com.wolfmq.common.config.server.StoreConfig;
-import com.wolfmq.common.config.store.StorePath;
 import com.wolfmq.common.domain.meta.service.TopicService;
 import com.wolfmq.common.domain.meta.topic.Topic;
 import com.wolfmq.common.domain.meta.topic.constant.PermName;
@@ -32,7 +31,6 @@ class StoreRegisterTest {
 
     @BeforeEach
     void setUp() {
-        StorePath.initPath(tempDir.toString());
 
         storeConfig = ConfigMock.createStoreConfig(tempDir.toString());
         storeConfig.setCluster("default-cluster");

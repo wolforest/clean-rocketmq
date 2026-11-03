@@ -1,5 +1,6 @@
 package com.wolfmq.store.domain.consumequeue.service;
 
+import com.wolfmq.common.config.server.StoreConfig;
 import com.wolfmq.common.config.store.ConsumeQueueConfig;
 import com.wolfmq.common.domain.consumequeue.ConsumeQueue;
 import com.wolfmq.common.domain.meta.service.TopicService;
@@ -16,6 +17,7 @@ public class ConsumeQueueFactory implements ConsumeQueueRegistry {
     private static final int TOPIC_MAP_SIZE = 32;
     private static final int QUEUE_MAP_SIZE = 128;
 
+    private final StoreConfig storeConfig;
     private final ConsumeQueueConfig config;
     private final TopicService topicService;
     private final CheckPoint checkpoint;
@@ -27,7 +29,13 @@ public class ConsumeQueueFactory implements ConsumeQueueRegistry {
      */
     protected final ConcurrentMap<String, ConcurrentMap<Integer, ConsumeQueue>> topicMap;
 
-    public ConsumeQueueFactory(ConsumeQueueConfig config, TopicService topicService, CheckPoint checkpoint) {
+    public ConsumeQueueFactory(
+        StoreConfig storeConfig,
+        ConsumeQueueConfig config,
+        TopicService topicService,
+        CheckPoint checkpoint
+    ) {
+        this.storeConfig = storeConfig;
         this.config = config;
         this.topicService = topicService;
         this.checkpoint = checkpoint;
@@ -100,7 +108,7 @@ public class ConsumeQueueFactory implements ConsumeQueueRegistry {
     }
 
     private ConsumeQueue createConsumeQueue(String topic, int queueId) {
-        return new FileConsumeQueue(topic, queueId, config, checkpoint);
+        return new FileConsumeQueue(topic, queueId, storeConfig, config, checkpoint);
     }
 
     private ConcurrentMap<Integer, ConsumeQueue> initQueueMap(String topic) {

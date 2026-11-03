@@ -2,14 +2,20 @@ package com.wolfmq.common.config.store;
 
 import cn.coderule.common.util.io.DirUtil;
 import java.io.File;
+import lombok.Data;
 
+@Data
 public class StorePath {
-    private static String ROOT_PATH;
+    private String rootPath;
 
-    public static void initPath(String rootPath) {
-        ROOT_PATH = rootPath;
+    public StorePath(String rootPath) {
+        this.rootPath = rootPath;
 
-        DirUtil.createIfNotExists(ROOT_PATH);
+        createDirectories();
+    }
+
+    private void createDirectories() {
+        DirUtil.createIfNotExists(rootPath);
         DirUtil.createIfNotExists(getMetaPath());
         DirUtil.createIfNotExists(getIndexPath());
         DirUtil.createIfNotExists(getCommitLogPath());
@@ -17,101 +23,103 @@ public class StorePath {
         DirUtil.createIfNotExists(getConsumeQueuePath());
     }
 
-    public static String getMetaPath() {
-        return ROOT_PATH + File.separator + "config";
+    public String getMetaPath() {
+        return rootPath + File.separator + "config";
     }
 
-    public static String getCommitLogPath() {
-        return ROOT_PATH + File.separator + "commitlog";
+    public String getCommitLogPath() {
+        return rootPath + File.separator + "commitlog";
     }
 
-    public static String getConsumeQueuePath() {
-        return ROOT_PATH + File.separator + "consumequeue";
+    public String getConsumeQueuePath() {
+        return rootPath + File.separator + "consumequeue";
     }
 
-    public static String getConsumeQueueExtPath() {
-        return ROOT_PATH + File.separator + "consumequeue_ext";
-    }
-    public static String getBatchConsumeQueuePath() {
-        return ROOT_PATH + File.separator + "batchconsumequeue";
+    public String getConsumeQueueExtPath() {
+        return rootPath + File.separator + "consumequeue_ext";
     }
 
-    public static String getIndexPath() {
-        return ROOT_PATH + File.separator + "index";
+    public String getBatchConsumeQueuePath() {
+        return rootPath + File.separator + "batchconsumequeue";
     }
 
-    public static String getCheckpointPath() {
-        return ROOT_PATH + File.separator + "checkpoint";
+    public String getIndexPath() {
+        return rootPath + File.separator + "index";
     }
 
-    public static String getAbortFile() {
-        return ROOT_PATH + File.separator + "abort";
+    public String getCheckpointPath() {
+        return rootPath + File.separator + "checkpoint";
     }
 
-    public static String getLockFile() {
-        return ROOT_PATH + File.separator + "lock";
+    public String getAbortFile() {
+        return rootPath + File.separator + "abort";
     }
 
-    public static String getDelayOffsetPath() {
-        return ROOT_PATH + File.separator + "config" + File.separator + "delayOffset.json";
+    public String getLockFile() {
+        return rootPath + File.separator + "lock";
     }
 
-    public static String getTransactionStateTablePath() {
-        return ROOT_PATH + File.separator + "transaction" + File.separator + "statetable";
+    public String getDelayOffsetPath() {
+        return rootPath + File.separator + "config" + File.separator + "delayOffset.json";
     }
 
-    public static String getTransactionRedoLogPath() {
-        return ROOT_PATH + File.separator + "transaction" + File.separator + "redolog";
+    public String getTransactionStateTablePath() {
+        return rootPath + File.separator + "transaction" + File.separator + "statetable";
     }
 
-    public static String getTopicPath() {
-        return ROOT_PATH + File.separator + "config" + File.separator + "topics.json";
+    public String getTransactionRedoLogPath() {
+        return rootPath + File.separator + "transaction" + File.separator + "redolog";
     }
 
-    public static String getTopicQueueMappingPath() {
-        return ROOT_PATH + File.separator + "config" + File.separator + "topicQueueMapping.json";
+    public String getTopicPath() {
+        return rootPath + File.separator + "config" + File.separator + "topics.json";
     }
 
-    public static String getConsumerOffsetPath() {
-        return ROOT_PATH + File.separator + "config" + File.separator + "consumerOffset.json";
+    public String getTopicQueueMappingPath() {
+        return rootPath + File.separator + "config" + File.separator + "topicQueueMapping.json";
     }
 
-    public static String getLmqConsumerOffsetPath() {
-        return ROOT_PATH + File.separator + "config" + File.separator + "lmqConsumerOffset.json";
+    public String getConsumerOffsetPath() {
+        return rootPath + File.separator + "config" + File.separator + "consumerOffset.json";
     }
 
-    public static String getConsumerOrderInfoPath() {
-        return ROOT_PATH + File.separator + "config" + File.separator + "consumerOrderInfo.json";
+    public String getLmqConsumerOffsetPath() {
+        return rootPath + File.separator + "config" + File.separator + "lmqConsumerOffset.json";
     }
 
-    public static String getSubscriptionGroupPath() {
-        return ROOT_PATH + File.separator + "config" + File.separator + "subscriptionGroup.json";
-    }
-    public static String getTimerCheckPath() {
-        return ROOT_PATH + File.separator + "config" + File.separator + "timercheck";
+    public String getConsumerOrderInfoPath() {
+        return rootPath + File.separator + "config" + File.separator + "consumerOrderInfo.json";
     }
 
-    public static String getTimerLogPath() {
-        return ROOT_PATH + File.separator + "timerlog";
+    public String getSubscriptionGroupPath() {
+        return rootPath + File.separator + "config" + File.separator + "subscriptionGroup.json";
     }
 
-    public static String getTimerWheelPath() {
-        return ROOT_PATH + File.separator + "timerwheel";
+    public String getTimerCheckPath() {
+        return rootPath + File.separator + "config" + File.separator + "timercheck";
     }
 
-    public static String getTimerMetricsPath() {
-        return ROOT_PATH + File.separator + "config" + File.separator + "timermetrics";
-    }
-    public static String getTransactionMetricsPath() {
-        return ROOT_PATH + File.separator + "config" + File.separator + "transactionMetrics";
+    public String getTimerLogPath() {
+        return rootPath + File.separator + "timerlog";
     }
 
-    public static String getConsumerFilterPath() {
-        return ROOT_PATH + File.separator + "config" + File.separator + "consumerFilter.json";
+    public String getTimerWheelPath() {
+        return rootPath + File.separator + "timerwheel";
     }
 
-    public static String getMessageRequestModePath() {
-        return ROOT_PATH + File.separator + "config" + File.separator + "messageRequestMode.json";
+    public String getTimerMetricsPath() {
+        return rootPath + File.separator + "config" + File.separator + "timermetrics";
     }
 
+    public String getTransactionMetricsPath() {
+        return rootPath + File.separator + "config" + File.separator + "transactionMetrics";
+    }
+
+    public String getConsumerFilterPath() {
+        return rootPath + File.separator + "config" + File.separator + "consumerFilter.json";
+    }
+
+    public String getMessageRequestModePath() {
+        return rootPath + File.separator + "config" + File.separator + "messageRequestMode.json";
+    }
 }

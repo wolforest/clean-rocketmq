@@ -1,8 +1,8 @@
 package com.wolfmq.store.domain.consumequeue.file;
 
 import cn.coderule.common.util.lang.ThreadUtil;
+import com.wolfmq.common.config.server.StoreConfig;
 import com.wolfmq.common.config.store.ConsumeQueueConfig;
-import com.wolfmq.common.config.store.StorePath;
 import com.wolfmq.common.domain.consumequeue.QueueType;
 import com.wolfmq.common.domain.commitlog.dispatch.CommitEvent;
 import com.wolfmq.common.domain.message.MessageBO;
@@ -41,6 +41,7 @@ public class FileConsumeQueue implements ConsumeQueue {
     @Getter
     private MappedFileQueue mappedFileQueue;
 
+    private final StoreConfig storeConfig;
     private final ConsumeQueueConfig config;
     private final CheckPoint checkpoint;
     private final ByteBuffer writeBuffer;
@@ -53,9 +54,16 @@ public class FileConsumeQueue implements ConsumeQueue {
     private volatile long minOffset = 0;
     private volatile long maxOffset = 0;
 
-    public FileConsumeQueue(String topic, int queueId, ConsumeQueueConfig config, CheckPoint checkpoint) {
+    public FileConsumeQueue(
+        String topic,
+        int queueId,
+        StoreConfig storeConfig,
+        ConsumeQueueConfig config,
+        CheckPoint checkpoint
+    ) {
         this.topic = topic;
         this.queueId = queueId;
+        this.storeConfig = storeConfig;
         this.config = config;
         this.checkpoint = checkpoint;
 
@@ -214,7 +222,7 @@ public class FileConsumeQueue implements ConsumeQueue {
     }
 
     private void initMappedFileQueue() {
-        String path = StorePath.getConsumeQueuePath()
+        String path = storeConfig.getPath().getConsumeQueuePath()
             + File.separator
             + topic
             + File.separator

@@ -119,7 +119,7 @@ public abstract class BaseConsumeQueueIntegrationTest {
         OffsetCodec offsetCodec = new OffsetCodec(commitConfig.getMaxShardingNumber());
         recovery = new ConsumeQueueRecovery(cqConfig, checkpoint);
 
-        consumeQueueFactory = new ConsumeQueueFactory(cqConfig, topicService, checkpoint);
+        consumeQueueFactory = new ConsumeQueueFactory(storeConfig, cqConfig, topicService, checkpoint);
         consumeQueueFactory.addCreateHook(flusher);
         consumeQueueFactory.addCreateHook(loader);
         consumeQueueFactory.addCreateHook(recovery);

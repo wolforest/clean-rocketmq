@@ -2,7 +2,6 @@ package com.wolfmq.store.domain.timer.wheel;
 
 import com.wolfmq.common.config.business.TimerConfig;
 import com.wolfmq.common.config.server.StoreConfig;
-import com.wolfmq.common.config.store.StorePath;
 import com.wolfmq.common.domain.message.property.MessageConst;
 import com.wolfmq.common.domain.message.MessageBO;
 import com.wolfmq.common.domain.timer.model.ScanResult;
@@ -29,8 +28,7 @@ class DefaultTimerTest {
         timerConfig.setWheelSlots(4);
         timerConfig.setPrecision(1000);
 
-        StorePath.initPath(tempDir.toString());
-        CheckpointService checkpointService = new CheckpointService(StorePath.getTimerCheckPath());
+        CheckpointService checkpointService = new CheckpointService(storeConfig.getPath().getTimerCheckPath());
         MessageService messageService = mock(MessageService.class);
 
         DefaultTimer timer = new DefaultTimer(storeConfig, checkpointService, messageService);

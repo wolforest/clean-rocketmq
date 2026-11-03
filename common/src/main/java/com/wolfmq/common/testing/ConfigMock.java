@@ -13,7 +13,6 @@ import com.wolfmq.common.config.server.StoreConfig;
 import com.wolfmq.common.config.store.CommitConfig;
 import com.wolfmq.common.config.store.ConsumeQueueConfig;
 import com.wolfmq.common.config.store.MetaConfig;
-import com.wolfmq.common.config.store.StorePath;
 
 public class ConfigMock {
     public static StoreConfig createStoreConfig(String rootPath) {
@@ -28,7 +27,6 @@ public class ConfigMock {
         storeConfig.setMeta(new MetaConfig());
         storeConfig.setRpcClient(new RpcClientConfig());
 
-        StorePath.initPath(rootPath);
         return storeConfig;
     }
 

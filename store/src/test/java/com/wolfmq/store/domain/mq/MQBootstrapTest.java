@@ -7,7 +7,6 @@ import com.wolfmq.common.core.constant.ContextNamespace;
 import cn.coderule.common.convention.container.ApplicationContext;
 
 import com.wolfmq.common.config.server.StoreConfig;
-import com.wolfmq.common.config.store.StorePath;
 import com.wolfmq.common.server.store.api.MQStore;
 import com.wolfmq.common.domain.commitlog.CommitLog;
 import com.wolfmq.common.domain.meta.service.ConsumeOffsetService;
@@ -48,7 +47,6 @@ class MQBootstrapTest {
 
     @BeforeEach
     void setUp() {
-        StorePath.initPath(tempDir.toString());
 
         storeConfig = ConfigMock.createStoreConfig(tempDir.toString());
         context.register(storeConfig);

@@ -2,7 +2,6 @@ package com.wolfmq.store.domain.timer.wheel;
 
 import com.wolfmq.common.config.business.TimerConfig;
 import com.wolfmq.common.config.server.StoreConfig;
-import com.wolfmq.common.config.store.StorePath;
 import com.wolfmq.common.domain.message.property.MessageConst;
 import com.wolfmq.common.domain.message.MessageBO;
 import com.wolfmq.common.domain.timer.model.TimerEvent;
@@ -26,9 +25,8 @@ class TaskAdderTest {
         timerConfig.setWheelSlots(4);
         timerConfig.setPrecision(1000);
 
-        StorePath.initPath(tempDir.toString());
-        TimerLog timerLog = new TimerLog(StorePath.getTimerLogPath(), timerConfig.getTimerLogFileSize());
-        TimerWheel timerWheel = new TimerWheel(StorePath.getTimerWheelPath(), timerConfig.getTotalSlots(), timerConfig.getPrecision());
+        TimerLog timerLog = new TimerLog(storeConfig.getPath().getTimerLogPath(), timerConfig.getTimerLogFileSize());
+        TimerWheel timerWheel = new TimerWheel(storeConfig.getPath().getTimerWheelPath(), timerConfig.getTotalSlots(), timerConfig.getPrecision());
 
         TaskAdder adder = new TaskAdder(storeConfig, timerLog, timerWheel);
 

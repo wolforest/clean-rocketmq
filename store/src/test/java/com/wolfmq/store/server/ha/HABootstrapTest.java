@@ -4,7 +4,6 @@ package com.wolfmq.store.server.ha;
 import cn.coderule.common.convention.container.ApplicationContext;
 
 import com.wolfmq.common.config.server.StoreConfig;
-import com.wolfmq.common.config.store.StorePath;
 import com.wolfmq.common.testing.ConfigMock;
 import com.wolfmq.store.server.bootstrap.StoreRegister;
 import com.wolfmq.store.server.ha.server.processor.CommitLogSynchronizer;
@@ -26,7 +25,6 @@ class HABootstrapTest {
 
     @BeforeEach
     void setUp() {
-        StorePath.initPath(tempDir.toString());
     }
 
     @AfterEach
@@ -36,7 +34,6 @@ class HABootstrapTest {
     @Test
     void initialize_ShouldRegisterCommitLogSynchronizer(@TempDir Path anotherDir) throws Exception {
         StoreConfig storeConfig = ConfigMock.createStoreConfig(anotherDir.toString());
-        StorePath.initPath(anotherDir.toString());
 
         StoreRegister storeRegister = mock(StoreRegister.class);
         context.register(storeConfig);

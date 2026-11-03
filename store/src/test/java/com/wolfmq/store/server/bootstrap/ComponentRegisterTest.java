@@ -9,7 +9,6 @@ import cn.coderule.common.convention.container.ApplicationContext;
 
 import cn.coderule.common.convention.service.LifecycleManager;
 import com.wolfmq.common.config.server.StoreConfig;
-import com.wolfmq.common.config.store.StorePath;
 import com.wolfmq.common.testing.ConfigMock;
 import com.wolfmq.rpc.common.rpc.netty.NettyClient;
 import org.junit.jupiter.api.AfterEach;
@@ -31,7 +30,6 @@ class ComponentRegisterTest {
 
     @BeforeEach
     void setUp() {
-        StorePath.initPath(tempDir.toString());
     }
 
     @AfterEach

@@ -71,8 +71,10 @@ public class ConsumeQueueBootstrap implements Lifecycle {
     }
 
     private ConsumeQueueFactory initConsumeQueueFactory() {
+        StoreConfig storeConfig = context.getBean(StoreConfig.class);
         TopicService topicService = context.getBean(TopicService.class);
         ConsumeQueueFactory consumeQueueFactory = new ConsumeQueueFactory(
+            storeConfig,
             consumeQueueConfig,
             topicService,
             context.getBean(CheckPoint.class)

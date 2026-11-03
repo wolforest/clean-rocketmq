@@ -2,7 +2,6 @@ package com.wolfmq.store.domain.timer;
 
 import cn.coderule.common.convention.service.Lifecycle;
 import com.wolfmq.common.config.server.StoreConfig;
-import com.wolfmq.common.config.store.StorePath;
 import com.wolfmq.common.server.store.api.TimerStore;
 import com.wolfmq.store.api.TimerStoreImpl;
 import com.wolfmq.store.domain.mq.queue.MessageService;
@@ -25,7 +24,7 @@ public class TimerBootstrap implements Lifecycle {
         StoreConfig storeConfig = context.getBean(StoreConfig.class);
         MessageService messageService = context.getBean(MessageService.class);
 
-        String checkpointPath = StorePath.getTimerCheckPath();
+        String checkpointPath = storeConfig.getPath().getTimerCheckPath();
         CheckpointService checkpointService = new CheckpointService(checkpointPath);
 
         timerService = new TimerService(storeConfig, checkpointService, messageService);

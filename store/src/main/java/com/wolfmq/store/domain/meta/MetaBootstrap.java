@@ -15,7 +15,6 @@ import com.wolfmq.store.api.SubscriptionStoreImpl;
 import com.wolfmq.store.api.TopicStoreImpl;
 import cn.coderule.common.convention.container.ApplicationContext;
 import com.wolfmq.common.core.constant.ContextNamespace;
-import com.wolfmq.common.config.store.StorePath;
 import com.wolfmq.common.server.store.StoreState;
 import com.wolfmq.store.server.bootstrap.StoreRegister;
 
@@ -62,7 +61,7 @@ public class MetaBootstrap implements Lifecycle {
 
     private void initConsumerOffset() {
         StoreConfig storeConfig = context.getBean(StoreConfig.class);
-        offsetService = new DefaultConsumeOffsetService(storeConfig, StorePath.getConsumerOffsetPath());
+        offsetService = new DefaultConsumeOffsetService(storeConfig, storeConfig.getPath().getConsumerOffsetPath());
         context.register(offsetService, ConsumeOffsetService.class);
 
         offsetService.load();
@@ -75,7 +74,7 @@ public class MetaBootstrap implements Lifecycle {
     private void initTopic() {
         StoreConfig storeConfig = context.getBean(StoreConfig.class);
         StoreState storeState = context.getBean(StoreState.class);
-        topicService = new DefaultTopicService(storeState, storeConfig, StorePath.getTopicPath(), offsetService);
+        topicService = new DefaultTopicService(storeState, storeConfig, storeConfig.getPath().getTopicPath(), offsetService);
         context.register(topicService, TopicService.class);
 
         topicService.load();
@@ -86,7 +85,8 @@ public class MetaBootstrap implements Lifecycle {
     }
 
     private void initSubscription() {
-        String storePath = StorePath.getSubscriptionGroupPath();
+        StoreConfig storeConfig = context.getBean(StoreConfig.class);
+        String storePath = storeConfig.getPath().getSubscriptionGroupPath();
         StoreState storeState = context.getBean(StoreState.class);
         subscriptionService = new DefaultSubscriptionService(storeState, storePath, offsetService);
         context.register(subscriptionService, SubscriptionService.class);
@@ -100,7 +100,7 @@ public class MetaBootstrap implements Lifecycle {
 
     private void initConsumeOrder() {
         StoreConfig storeConfig = context.getBean(StoreConfig.class);
-        String storePath = StorePath.getConsumerOrderInfoPath();
+        String storePath = storeConfig.getPath().getConsumerOrderInfoPath();
 
         OrderLockCleaner cleaner = new OrderLockCleaner(topicService, subscriptionService);
         orderService = new DefaultConsumeOrderService(storeConfig, storePath, cleaner);

@@ -2,7 +2,6 @@ package com.wolfmq.store.domain.consumequeue.error;
 
 import com.wolfmq.common.config.server.StoreConfig;
 import com.wolfmq.common.config.store.ConsumeQueueConfig;
-import com.wolfmq.common.config.store.StorePath;
 import com.wolfmq.common.domain.consumequeue.ConsumeQueue;
 import com.wolfmq.common.domain.meta.service.TopicService;
 import com.wolfmq.common.domain.meta.topic.utils.TopicMap;
@@ -36,9 +35,9 @@ class ConsumeQueueFactoryTest {
         StoreConfig storeConfig = ConfigMock.createStoreConfig(tmpDir.toString());
         ConsumeQueueConfig config = storeConfig.getConsumeQueue();
         this.topicService = new MockTopicService();
-        StoreCheckpoint checkpoint = new StoreCheckpoint(StorePath.getCheckpointPath());
+        StoreCheckpoint checkpoint = new StoreCheckpoint(storeConfig.getPath().getCheckpointPath());
 
-        factory = new ConsumeQueueFactory(config, topicService, checkpoint);
+        factory = new ConsumeQueueFactory(storeConfig, config, topicService, checkpoint);
     }
 
     @Test

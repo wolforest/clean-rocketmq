@@ -4,7 +4,6 @@ package com.wolfmq.store.server.rpc;
 import cn.coderule.common.convention.container.ApplicationContext;
 
 import com.wolfmq.common.config.server.StoreConfig;
-import com.wolfmq.common.config.store.StorePath;
 import com.wolfmq.common.server.store.api.TimerStore;
 import com.wolfmq.common.server.store.api.meta.ConsumeOffsetStore;
 import com.wolfmq.common.server.store.api.meta.SubscriptionStore;
@@ -30,7 +29,6 @@ class RpcBootstrapTest {
 
     @BeforeEach
     void setUp() {
-        StorePath.initPath(tempDir.toString());
     }
 
     @AfterEach
@@ -40,7 +38,6 @@ class RpcBootstrapTest {
     @Test
     void initialize_ShouldCreateServerAndProcessors(@TempDir Path anotherDir) throws Exception {
         StoreConfig storeConfig = ConfigMock.createStoreConfig(anotherDir.toString());
-        StorePath.initPath(anotherDir.toString());
 
         context.register(storeConfig);
         context.register(mock(TopicStore.class), TopicStore.class);

@@ -3,7 +3,6 @@ package com.wolfmq.store.domain.index;
 import cn.coderule.common.util.lang.string.StringUtil;
 import com.wolfmq.common.config.server.StoreConfig;
 import com.wolfmq.common.config.store.IndexConfig;
-import com.wolfmq.common.config.store.StorePath;
 import com.wolfmq.common.domain.message.property.MessageConst;
 import com.wolfmq.common.domain.index.IndexService;
 import com.wolfmq.common.domain.index.QueryOffsetResult;
@@ -31,7 +30,7 @@ public class DefaultIndexService implements IndexService {
         IndexConfig indexConfig = storeConfig.getIndex();
         this.maxHashSlotNum = indexConfig.getMaxHashSlotNum();
         this.maxIndexNum = indexConfig.getMaxIndexNum();
-        this.storePath = StorePath.getIndexPath();
+        this.storePath = storeConfig.getPath().getIndexPath();
     }
 
     public DefaultIndexService(int maxHashSlotNum, int maxIndexNum, String storePath) {

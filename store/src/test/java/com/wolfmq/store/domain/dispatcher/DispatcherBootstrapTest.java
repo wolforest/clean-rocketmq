@@ -6,7 +6,6 @@ import com.wolfmq.common.server.store.checkpoint.bakeup.CheckPoint;
 import cn.coderule.common.convention.container.ApplicationContext;
 
 import com.wolfmq.common.config.server.StoreConfig;
-import com.wolfmq.common.config.store.StorePath;
 import com.wolfmq.common.domain.meta.service.TopicService;
 import com.wolfmq.common.testing.ConfigMock;
 import com.wolfmq.store.domain.commitlog.CommitLogFacade;
@@ -30,7 +29,6 @@ class DispatcherBootstrapTest {
 
     @BeforeEach
     void setUp() {
-        StorePath.initPath(tempDir.toString());
     }
 
     @AfterEach
@@ -40,7 +38,6 @@ class DispatcherBootstrapTest {
     @Test
     void initialize_ShouldRegisterDispatchManagerAndHandlerManager(@TempDir Path anotherDir) throws Exception {
         StoreConfig storeConfig = ConfigMock.createStoreConfig(anotherDir.toString());
-        StorePath.initPath(anotherDir.toString());
 
         context.register(storeConfig);
         StoreCheckpoint __cp = new StoreCheckpoint(anotherDir.toString()); context.register(__cp, CheckPoint.class);

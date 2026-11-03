@@ -134,7 +134,7 @@ class TimerIntegrationTest {
         OffsetCodec offsetCodec = new OffsetCodec(commitConfig.getMaxShardingNumber());
         ConsumeQueueRecovery recovery = new ConsumeQueueRecovery(cqConfig, checkpoint);
 
-        ConsumeQueueFactory factory = new ConsumeQueueFactory(cqConfig, topicService, checkpoint);
+        ConsumeQueueFactory factory = new ConsumeQueueFactory(storeConfig, cqConfig, topicService, checkpoint);
         factory.addCreateHook(flusher);
         factory.addCreateHook(loader);
         factory.addCreateHook(recovery);

@@ -12,7 +12,6 @@ import com.wolfmq.common.config.business.TimerConfig;
 import com.wolfmq.common.config.business.TopicConfig;
 import com.wolfmq.common.config.store.IndexConfig;
 import com.wolfmq.common.config.store.MetaConfig;
-import com.wolfmq.common.config.store.StorePath;
 
 public class ContextInitializer {
     private final StoreArgument argument;
@@ -45,8 +44,6 @@ public class ContextInitializer {
         storeConfig.setMeta(new MetaConfig());
         storeConfig.setRpcClient(new RpcClientConfig());
         storeConfig.setIndex(new IndexConfig());
-
-        StorePath.initPath(storeConfig.getRootDir());
 
         context.register(storeConfig);
         context.register(new StoreState(), StoreState.class);
