@@ -51,7 +51,6 @@ class ReviveContextTest {
             null,
             null,
             null,
-            null,
             null
         );
 
