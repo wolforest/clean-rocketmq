@@ -67,7 +67,7 @@ public class FileConsumeQueue implements ConsumeQueue {
 
     @Override
     public QueueType getQueueType() {
-        return QueueType.DEFAULT;
+        return QueueType.FILE;
     }
 
     @Override

@@ -32,7 +32,7 @@ class ConsumeQueueIntegrationTest extends BaseConsumeQueueIntegrationTest {
         assertNotNull(queue);
         assertEquals(TEST_TOPIC, queue.getTopic());
         assertEquals(TEST_QUEUE_ID, queue.getQueueId());
-        assertEquals(QueueType.DEFAULT, queue.getQueueType());
+        assertEquals(QueueType.FILE, queue.getQueueType());
     }
 
     @Test

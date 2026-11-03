@@ -83,7 +83,7 @@ class FileConsumeQueueTest {
     @Test
     void testGetQueueType(@TempDir Path tmpDir) {
         ConsumeQueue queue = createConsumeQueue(tmpDir.toString());
-        assertEquals(QueueType.DEFAULT, queue.getQueueType());
+        assertEquals(QueueType.FILE, queue.getQueueType());
         queue.destroy();
     }
 
