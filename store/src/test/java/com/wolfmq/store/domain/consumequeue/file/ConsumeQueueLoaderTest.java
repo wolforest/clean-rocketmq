@@ -1,9 +1,8 @@
-package com.wolfmq.store.domain.consumequeue.service;
+package com.wolfmq.store.domain.consumequeue.file;
 
 import com.wolfmq.common.config.store.ConsumeQueueConfig;
-import com.wolfmq.common.domain.consumequeue.ConsumeQueue;
 import com.wolfmq.common.core.mmap.MappedFileQueue;
-import com.wolfmq.store.domain.consumequeue.file.ConsumeQueueLoader;
+import com.wolfmq.common.domain.consumequeue.ConsumeQueue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -22,17 +21,15 @@ public class ConsumeQueueLoaderTest {
     }
 
     @Test
-    void testGetServiceNameNotApplicable() {
+    void testConstructor() {
         assertNotNull(loader);
     }
 
     @Test
-    void testRegisterAddsQueue() {
+    void testRegisterIgnoresNonFileQueue() {
         ConsumeQueue queue = mock(ConsumeQueue.class);
         loader.register(queue);
-
-        ConsumeQueue queue2 = mock(ConsumeQueue.class);
-        loader.register(queue2);
+        loader.load();
 
         verify(queue, never()).getMappedFileQueue();
     }
@@ -44,7 +41,7 @@ public class ConsumeQueueLoaderTest {
 
     @Test
     void testLoadCallsMappedFileQueueLoadAndCheckSelf() {
-        ConsumeQueue queue = mock(ConsumeQueue.class);
+        FileConsumeQueue queue = mock(FileConsumeQueue.class);
         MappedFileQueue mfq = mock(MappedFileQueue.class);
         when(queue.getMappedFileQueue()).thenReturn(mfq);
 
@@ -57,8 +54,8 @@ public class ConsumeQueueLoaderTest {
 
     @Test
     void testLoadWithMultipleQueues() {
-        ConsumeQueue queue1 = mock(ConsumeQueue.class);
-        ConsumeQueue queue2 = mock(ConsumeQueue.class);
+        FileConsumeQueue queue1 = mock(FileConsumeQueue.class);
+        FileConsumeQueue queue2 = mock(FileConsumeQueue.class);
         MappedFileQueue mfq1 = mock(MappedFileQueue.class);
         MappedFileQueue mfq2 = mock(MappedFileQueue.class);
         when(queue1.getMappedFileQueue()).thenReturn(mfq1);
