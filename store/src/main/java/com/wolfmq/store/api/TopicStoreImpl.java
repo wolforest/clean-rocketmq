@@ -1,7 +1,7 @@
 package com.wolfmq.store.api;
 
 import com.wolfmq.common.domain.meta.topic.Topic;
-import com.wolfmq.common.domain.meta.topic.TopicRequest;
+import com.wolfmq.common.domain.meta.topic.dto.TopicRequest;
 import com.wolfmq.common.server.store.api.meta.TopicStore;
 import com.wolfmq.common.domain.meta.service.TopicService;
 

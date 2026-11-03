@@ -5,7 +5,7 @@ import com.wolfmq.broker.domain.transaction.Transaction;
 import com.wolfmq.common.domain.message.property.MessageSysFlag;
 import com.wolfmq.common.core.constant.code.InvalidCode;
 import com.wolfmq.common.core.exception.InvalidRequestException;
-import com.wolfmq.common.domain.meta.topic.TopicValidator;
+import com.wolfmq.common.domain.meta.topic.utils.TopicValidator;
 import com.wolfmq.common.domain.transaction.SubmitRequest;
 import com.wolfmq.common.server.RequestContext;
 import com.wolfmq.common.domain.transaction.CommitResult;

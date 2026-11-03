@@ -1,7 +1,7 @@
 package com.wolfmq.common.server.selector;
 
 import com.wolfmq.common.server.route.RouteInfo;
-import com.wolfmq.common.domain.meta.topic.TopicRouteWrapper;
+import com.wolfmq.common.domain.meta.topic.dto.TopicRouteWrapper;
 import com.google.common.base.MoreObjects;
 
 

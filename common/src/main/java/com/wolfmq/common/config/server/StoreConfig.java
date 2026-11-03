@@ -15,7 +15,7 @@ import com.wolfmq.common.config.store.CommitConfig;
 import com.wolfmq.common.config.store.ConsumeQueueConfig;
 import com.wolfmq.common.config.store.IndexConfig;
 import com.wolfmq.common.config.store.MetaConfig;
-import com.wolfmq.common.domain.meta.topic.PermName;
+import com.wolfmq.common.domain.meta.topic.constant.PermName;
 import java.io.File;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;

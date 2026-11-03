@@ -1,4 +1,4 @@
-package com.wolfmq.common.domain.meta.topic;
+package com.wolfmq.common.domain.meta.topic.constant;
 
 import com.wolfmq.common.domain.message.enums.MessageType;
 import com.wolfmq.common.core.attribute.Attribute;

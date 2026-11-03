@@ -1,6 +1,6 @@
 package com.wolfmq.common.domain.message.utils;
 
-import com.wolfmq.common.domain.meta.topic.TagMode;
+import com.wolfmq.common.domain.meta.topic.constant.TagMode;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;

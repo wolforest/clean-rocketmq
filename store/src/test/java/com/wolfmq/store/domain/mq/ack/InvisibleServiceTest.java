@@ -6,7 +6,7 @@ import com.wolfmq.common.domain.consumer.ack.AckInfo;
 import com.wolfmq.common.domain.consumer.ack.broker.AckResult;
 import com.wolfmq.common.domain.consumer.ack.store.AckMessage;
 import com.wolfmq.common.domain.mq.dto.EnqueueResult;
-import com.wolfmq.common.domain.meta.topic.KeyBuilder;
+import com.wolfmq.common.domain.meta.topic.utils.KeyBuilder;
 import com.wolfmq.store.domain.mq.queue.EnqueueService;
 import org.junit.jupiter.api.Test;
 

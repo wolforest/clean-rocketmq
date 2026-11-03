@@ -1,5 +1,6 @@
 package com.wolfmq.store.domain.meta.it;
 
+import com.wolfmq.common.domain.meta.topic.utils.TopicValidator;
 import com.wolfmq.common.server.store.StoreState;
 
 
@@ -271,8 +272,8 @@ void testConsumeOrderStoreAndReload() {
 
         assertDoesNotThrow(() -> service.load());
 
-        assertTrue(service.exists(com.wolfmq.common.domain.meta.topic.TopicValidator.RMQ_SYS_SELF_TEST_TOPIC), "SELF_TEST_TOPIC should exist after load");
-        assertTrue(service.exists(com.wolfmq.common.domain.meta.topic.TopicValidator.RMQ_SYS_SCHEDULE_TOPIC), "SCHEDULE topic should exist after load");
+        assertTrue(service.exists(TopicValidator.RMQ_SYS_SELF_TEST_TOPIC), "SELF_TEST_TOPIC should exist after load");
+        assertTrue(service.exists(TopicValidator.RMQ_SYS_SCHEDULE_TOPIC), "SCHEDULE topic should exist after load");
     }
 
     @Test

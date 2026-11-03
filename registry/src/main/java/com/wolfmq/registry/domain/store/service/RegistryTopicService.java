@@ -3,7 +3,7 @@ package com.wolfmq.registry.domain.store.service;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
 import cn.coderule.common.util.lang.collection.MapUtil;
 import com.wolfmq.common.config.server.RegistryConfig;
-import com.wolfmq.common.domain.meta.topic.TopicSysFlag;
+import com.wolfmq.common.domain.meta.topic.constant.TopicSysFlag;
 import com.wolfmq.common.domain.message.enums.MessageType;
 import com.wolfmq.common.domain.meta.topic.Topic;
 import com.wolfmq.registry.domain.store.model.Route;

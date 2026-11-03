@@ -1,7 +1,7 @@
 package com.wolfmq.common.domain.consumer.consume.pop;
 
 import com.wolfmq.common.core.constant.MQConstants;
-import com.wolfmq.common.domain.meta.topic.TopicValidator;
+import com.wolfmq.common.domain.meta.topic.utils.TopicValidator;
 
 /**
  *

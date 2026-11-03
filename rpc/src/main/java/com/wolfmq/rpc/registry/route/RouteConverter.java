@@ -3,7 +3,7 @@ package com.wolfmq.rpc.registry.route;
 import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.common.util.lang.collection.MapUtil;
 import com.wolfmq.common.core.constant.MQConstants;
-import com.wolfmq.common.domain.meta.topic.PermName;
+import com.wolfmq.common.domain.meta.topic.constant.PermName;
 import com.wolfmq.common.domain.mq.MessageQueue;
 import com.wolfmq.common.server.registry.GroupInfo;
 import com.wolfmq.common.server.route.PublishInfo;

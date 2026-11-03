@@ -6,7 +6,7 @@ import com.wolfmq.common.core.constant.MQConstants;
 import com.wolfmq.common.domain.message.enums.MessageType;
 import com.wolfmq.common.domain.meta.topic.Topic;
 import com.wolfmq.common.server.store.api.meta.TopicStore;
-import com.wolfmq.common.domain.meta.topic.TopicValidator;
+import com.wolfmq.common.domain.meta.topic.utils.TopicValidator;
 import com.wolfmq.rpc.common.rpc.RpcProcessor;
 import com.wolfmq.rpc.common.rpc.core.exception.RemotingCommandException;
 import com.wolfmq.rpc.common.rpc.core.invoke.RpcCommand;

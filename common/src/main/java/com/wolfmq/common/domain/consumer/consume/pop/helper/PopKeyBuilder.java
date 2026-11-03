@@ -4,7 +4,7 @@ import com.wolfmq.common.domain.consumer.consume.pop.PopConstants;
 import com.wolfmq.common.domain.consumer.ack.AckInfo;
 import com.wolfmq.common.domain.consumer.ack.BatchAckInfo;
 import com.wolfmq.common.domain.consumer.consume.pop.checkpoint.PopCheckPoint;
-import com.wolfmq.common.domain.meta.topic.KeyBuilder;
+import com.wolfmq.common.domain.meta.topic.utils.KeyBuilder;
 
 public class PopKeyBuilder {
 

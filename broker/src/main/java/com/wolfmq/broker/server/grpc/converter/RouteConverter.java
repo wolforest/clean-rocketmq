@@ -16,7 +16,7 @@ import apache.rocketmq.v2.Resource;
 import apache.rocketmq.v2.Status;
 import cn.coderule.common.util.net.Address;
 import com.wolfmq.common.core.constant.MQConstants;
-import com.wolfmq.common.domain.meta.topic.PermName;
+import com.wolfmq.common.domain.meta.topic.constant.PermName;
 import com.wolfmq.common.server.registry.GroupInfo;
 import com.wolfmq.common.server.route.QueueInfo;
 import com.wolfmq.common.server.route.RouteInfo;

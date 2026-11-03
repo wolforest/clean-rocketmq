@@ -1,7 +1,7 @@
 package com.wolfmq.common.domain.transaction;
 
 import com.wolfmq.common.core.constant.MQConstants;
-import com.wolfmq.common.domain.meta.topic.TopicValidator;
+import com.wolfmq.common.domain.meta.topic.utils.TopicValidator;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 

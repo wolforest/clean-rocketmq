@@ -9,7 +9,7 @@ import com.wolfmq.broker.domain.meta.BrokerTopicService;
 import com.wolfmq.common.domain.message.enums.MessageType;
 import com.wolfmq.common.domain.meta.subscription.SubscriptionGroup;
 import com.wolfmq.common.domain.meta.topic.Topic;
-import com.wolfmq.common.domain.meta.topic.TopicValidator;
+import com.wolfmq.common.domain.meta.topic.utils.TopicValidator;
 import com.wolfmq.common.server.RequestContext;
 import com.wolfmq.common.server.route.RouteInfo;
 import java.util.List;

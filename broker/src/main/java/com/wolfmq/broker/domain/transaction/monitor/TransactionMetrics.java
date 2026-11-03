@@ -18,7 +18,7 @@ package com.wolfmq.broker.domain.transaction.monitor;
 
 
 import com.wolfmq.common.domain.meta.DataVersion;
-import com.wolfmq.common.domain.meta.topic.TopicValidator;
+import com.wolfmq.common.domain.meta.topic.utils.TopicValidator;
 import com.wolfmq.rpc.common.rpc.protocol.codec.RpcSerializable;
 import com.google.common.io.Files;
 import java.io.BufferedWriter;

@@ -2,7 +2,7 @@ package com.wolfmq.common.domain.message.utils;
 
 import cn.coderule.common.util.lang.string.StringUtil;
 import com.wolfmq.common.core.constant.MQConstants;
-import com.wolfmq.common.domain.meta.topic.TopicValidator;
+import com.wolfmq.common.domain.meta.topic.utils.TopicValidator;
 
 public class NamespaceUtils {
     public static final char NAMESPACE_SEPARATOR = '%';

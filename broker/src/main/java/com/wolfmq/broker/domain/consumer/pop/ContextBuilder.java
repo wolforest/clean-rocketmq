@@ -2,7 +2,7 @@ package com.wolfmq.broker.domain.consumer.pop;
 
 import com.wolfmq.broker.domain.consumer.consumer.ConsumerManager;
 import com.wolfmq.common.config.server.BrokerConfig;
-import com.wolfmq.common.domain.meta.topic.PermName;
+import com.wolfmq.common.domain.meta.topic.constant.PermName;
 import com.wolfmq.common.core.constant.code.InvalidCode;
 import com.wolfmq.common.core.exception.InvalidRequestException;
 import com.wolfmq.common.server.ClientChannelInfo;
@@ -10,7 +10,7 @@ import com.wolfmq.common.server.heartbeat.SubscriptionData;
 import com.wolfmq.common.domain.consumer.consume.pop.PopContext;
 import com.wolfmq.common.domain.consumer.consume.pop.PopRequest;
 import com.wolfmq.common.domain.meta.subscription.SubscriptionGroup;
-import com.wolfmq.common.domain.meta.topic.KeyBuilder;
+import com.wolfmq.common.domain.meta.topic.utils.KeyBuilder;
 import com.wolfmq.common.domain.meta.topic.Topic;
 import com.wolfmq.rpc.broker.core.FilterAPI;
 import com.wolfmq.rpc.store.facade.SubscriptionFacade;

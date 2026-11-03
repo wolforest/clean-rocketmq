@@ -6,7 +6,7 @@ import com.wolfmq.common.domain.consumer.ack.store.AckMessage;
 import com.wolfmq.common.domain.consumer.consume.InflightCounter;
 import com.wolfmq.common.domain.meta.service.ConsumeOffsetService;
 import com.wolfmq.common.domain.meta.service.ConsumeOrderService;
-import com.wolfmq.common.domain.meta.topic.KeyBuilder;
+import com.wolfmq.common.domain.meta.topic.utils.KeyBuilder;
 import org.junit.jupiter.api.Test;
 
 import static org.mockito.ArgumentMatchers.any;

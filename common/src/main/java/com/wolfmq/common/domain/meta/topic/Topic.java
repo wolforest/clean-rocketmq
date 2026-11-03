@@ -2,6 +2,7 @@ package com.wolfmq.common.domain.meta.topic;
 
 import cn.coderule.common.util.lang.collection.MapUtil;
 import com.wolfmq.common.domain.message.enums.MessageType;
+import com.wolfmq.common.domain.meta.topic.constant.TagMode;
 import com.wolfmq.common.domain.mq.MessageQueue;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.TypeReference;

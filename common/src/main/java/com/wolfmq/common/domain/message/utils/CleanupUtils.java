@@ -2,7 +2,7 @@ package com.wolfmq.common.domain.message.utils;
 
 import com.wolfmq.common.server.store.CleanupPolicy;
 import com.wolfmq.common.domain.meta.topic.Topic;
-import com.wolfmq.common.domain.meta.topic.TopicAttributes;
+import com.wolfmq.common.domain.meta.topic.constant.TopicAttributes;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;

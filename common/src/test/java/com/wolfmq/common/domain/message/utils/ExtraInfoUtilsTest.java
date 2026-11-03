@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 import java.util.Map;
 
-import static com.wolfmq.common.domain.meta.topic.KeyBuilder.POP_ORDER_REVIVE_QUEUE;
+import static com.wolfmq.common.domain.meta.topic.utils.KeyBuilder.POP_ORDER_REVIVE_QUEUE;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ExtraInfoUtilsTest {

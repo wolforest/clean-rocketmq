@@ -2,7 +2,7 @@ package com.wolfmq.common.domain.timer.model;
 
 import com.wolfmq.common.core.constant.MQConstants;
 import com.wolfmq.common.domain.message.property.MessageConst;
-import com.wolfmq.common.domain.meta.topic.TopicValidator;
+import com.wolfmq.common.domain.meta.topic.utils.TopicValidator;
 
 public class TimerConstants {
     public static final String TIMER_TOPIC = TopicValidator.SYSTEM_TOPIC_PREFIX + "wheel_timer";

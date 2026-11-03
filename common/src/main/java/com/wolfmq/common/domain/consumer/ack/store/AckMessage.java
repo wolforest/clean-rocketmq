@@ -3,7 +3,7 @@ package com.wolfmq.common.domain.consumer.ack.store;
 import com.wolfmq.common.server.RequestContext;
 import com.wolfmq.common.domain.consumer.ack.AckInfo;
 import com.wolfmq.common.domain.consumer.receipt.ReceiptHandle;
-import com.wolfmq.common.domain.meta.topic.KeyBuilder;
+import com.wolfmq.common.domain.meta.topic.utils.KeyBuilder;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -5,7 +5,7 @@ import cn.coderule.common.util.lang.collection.MapUtil;
 import com.wolfmq.common.core.constant.MQConstants;
 import com.wolfmq.common.domain.message.enums.MessageStatus;
 import com.wolfmq.common.domain.message.enums.MessageVersion;
-import com.wolfmq.common.domain.meta.topic.TagMode;
+import com.wolfmq.common.domain.meta.topic.constant.TagMode;
 import com.wolfmq.common.domain.message.property.MessageConst;
 import com.wolfmq.common.domain.message.property.MessageSysFlag;
 import com.wolfmq.common.domain.transaction.TransactionUtil;

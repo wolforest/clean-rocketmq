@@ -16,7 +16,7 @@ import com.wolfmq.common.domain.consumer.receipt.MessageReceipt;
 import com.wolfmq.common.domain.consumer.receipt.ReceiptHandle;
 import com.wolfmq.common.domain.message.MessageBO;
 import com.wolfmq.common.domain.meta.order.OrderRequest;
-import com.wolfmq.common.domain.meta.topic.KeyBuilder;
+import com.wolfmq.common.domain.meta.topic.utils.KeyBuilder;
 import com.wolfmq.common.domain.message.utils.MessageUtils;
 import com.alibaba.fastjson2.JSON;
 import java.net.SocketAddress;

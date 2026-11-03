@@ -10,7 +10,7 @@ import com.wolfmq.common.server.selector.MessageQueueSelector;
 import com.wolfmq.common.server.selector.MessageQueueView;
 import com.wolfmq.common.domain.consumer.consume.pop.PopContext;
 import com.wolfmq.common.domain.consumer.consume.pop.PopRequest;
-import com.wolfmq.common.domain.meta.topic.KeyBuilder;
+import com.wolfmq.common.domain.meta.topic.utils.KeyBuilder;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class QueueSelector {

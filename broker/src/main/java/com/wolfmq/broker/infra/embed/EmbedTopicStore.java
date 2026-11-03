@@ -1,7 +1,7 @@
 package com.wolfmq.broker.infra.embed;
 
 import com.wolfmq.common.domain.meta.topic.Topic;
-import com.wolfmq.common.domain.meta.topic.TopicRequest;
+import com.wolfmq.common.domain.meta.topic.dto.TopicRequest;
 import com.wolfmq.rpc.store.facade.TopicFacade;
 import com.wolfmq.common.server.store.api.meta.TopicStore;
 import java.util.concurrent.CompletableFuture;

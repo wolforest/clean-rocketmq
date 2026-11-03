@@ -13,7 +13,7 @@ import com.wolfmq.common.domain.consumer.consume.pop.helper.PopConverter;
 import com.wolfmq.common.domain.consumer.revive.ReviveBuffer;
 import com.wolfmq.common.domain.message.MessageBO;
 import com.wolfmq.common.domain.meta.offset.OffsetRequest;
-import com.wolfmq.common.domain.meta.topic.KeyBuilder;
+import com.wolfmq.common.domain.meta.topic.utils.KeyBuilder;
 import com.wolfmq.common.domain.mq.dto.EnqueueRequest;
 import com.wolfmq.rpc.store.facade.MQFacade;
 import com.wolfmq.rpc.store.facade.ConsumeOffsetFacade;

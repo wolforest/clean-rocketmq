@@ -1,4 +1,4 @@
-package com.wolfmq.common.domain.meta.topic;
+package com.wolfmq.common.domain.meta.topic.utils;
 
 import cn.coderule.common.util.lang.string.StringUtil;
 import com.wolfmq.common.core.constant.code.InvalidCode;

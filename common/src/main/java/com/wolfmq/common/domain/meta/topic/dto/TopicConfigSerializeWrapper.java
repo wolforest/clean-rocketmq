@@ -1,7 +1,8 @@
 
-package com.wolfmq.common.domain.meta.topic;
+package com.wolfmq.common.domain.meta.topic.dto;
 
 import com.wolfmq.common.domain.meta.DataVersion;
+import com.wolfmq.common.domain.meta.topic.Topic;
 import java.io.Serializable;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;

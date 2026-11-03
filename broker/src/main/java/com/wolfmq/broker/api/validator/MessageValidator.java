@@ -8,7 +8,7 @@ import com.wolfmq.common.domain.message.property.MessageConst;
 import com.wolfmq.common.core.constant.code.InvalidCode;
 import com.wolfmq.common.domain.message.MessageBO;
 import com.wolfmq.common.domain.message.codec.MessageEncoder;
-import com.wolfmq.common.domain.meta.topic.TopicValidator;
+import com.wolfmq.common.domain.meta.topic.utils.TopicValidator;
 import com.wolfmq.common.core.exception.InvalidRequestException;
 
 import static cn.coderule.common.util.lang.string.StringUtil.containControlCharacter;

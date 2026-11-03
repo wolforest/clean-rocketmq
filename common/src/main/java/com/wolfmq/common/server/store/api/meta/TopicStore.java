@@ -1,7 +1,7 @@
 package com.wolfmq.common.server.store.api.meta;
 
 import com.wolfmq.common.domain.meta.topic.Topic;
-import com.wolfmq.common.domain.meta.topic.TopicRequest;
+import com.wolfmq.common.domain.meta.topic.dto.TopicRequest;
 
 public interface TopicStore {
     boolean exists(String topicName);

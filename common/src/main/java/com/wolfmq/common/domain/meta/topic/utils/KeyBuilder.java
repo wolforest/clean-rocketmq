@@ -1,4 +1,4 @@
-package com.wolfmq.common.domain.meta.topic;
+package com.wolfmq.common.domain.meta.topic.utils;
 
 import com.wolfmq.common.core.constant.MQConstants;
 import com.wolfmq.common.domain.consumer.consume.pop.PopConstants;

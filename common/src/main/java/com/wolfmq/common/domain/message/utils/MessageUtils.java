@@ -2,7 +2,7 @@ package com.wolfmq.common.domain.message.utils;
 
 import cn.coderule.common.util.lang.ByteUtil;
 import cn.coderule.common.util.lang.string.StringUtil;
-import com.wolfmq.common.domain.meta.topic.TagMode;
+import com.wolfmq.common.domain.meta.topic.constant.TagMode;
 import com.wolfmq.common.domain.message.property.MessageId;
 import java.net.Inet4Address;
 import java.net.InetAddress;

@@ -1,7 +1,7 @@
 package com.wolfmq.broker.infra.embed;
 
 import com.wolfmq.common.config.server.BrokerConfig;
-import com.wolfmq.common.domain.meta.topic.TopicValidator;
+import com.wolfmq.common.domain.meta.topic.utils.TopicValidator;
 import com.wolfmq.common.server.store.api.meta.SubscriptionStore;
 import com.wolfmq.common.server.store.api.meta.TopicStore;
 

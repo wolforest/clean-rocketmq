@@ -1,7 +1,7 @@
 package com.wolfmq.common.server.registry;
 
 import com.wolfmq.common.server.RequestType;
-import com.wolfmq.common.domain.meta.topic.TopicConfigSerializeWrapper;
+import com.wolfmq.common.domain.meta.topic.dto.TopicConfigSerializeWrapper;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

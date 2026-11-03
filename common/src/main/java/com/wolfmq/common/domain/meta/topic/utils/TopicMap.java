@@ -1,8 +1,10 @@
-package com.wolfmq.common.domain.meta.topic;
+package com.wolfmq.common.domain.meta.topic.utils;
 
 import com.wolfmq.common.domain.meta.DataVersion;
 import com.wolfmq.common.core.attribute.AttributeUtils;
 import com.google.common.collect.ImmutableMap;
+import com.wolfmq.common.domain.meta.topic.Topic;
+import com.wolfmq.common.domain.meta.topic.constant.TopicAttributes;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;

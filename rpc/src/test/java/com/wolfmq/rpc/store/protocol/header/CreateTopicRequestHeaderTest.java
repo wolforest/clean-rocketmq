@@ -1,6 +1,6 @@
 package com.wolfmq.rpc.store.protocol.header;
 
-import com.wolfmq.common.domain.meta.topic.TagMode;
+import com.wolfmq.common.domain.meta.topic.constant.TagMode;
 import com.wolfmq.common.domain.meta.topic.Topic;
 import com.wolfmq.rpc.common.rpc.core.exception.RemotingCommandException;
 import org.junit.jupiter.api.Test;

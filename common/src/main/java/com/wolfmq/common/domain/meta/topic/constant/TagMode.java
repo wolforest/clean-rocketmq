@@ -1,4 +1,4 @@
-package com.wolfmq.common.domain.meta.topic;
+package com.wolfmq.common.domain.meta.topic.constant;
 
 /**
  * @renamed from TagType to TagMode

@@ -1,6 +1,7 @@
 package com.wolfmq.common.domain.meta.topic;
 
 import com.wolfmq.common.core.exception.InvalidParameterException;
+import com.wolfmq.common.domain.meta.topic.utils.TopicValidator;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

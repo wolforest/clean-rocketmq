@@ -5,7 +5,7 @@ import com.wolfmq.common.domain.consumer.consume.pop.checkpoint.PopCheckPoint;
 import com.wolfmq.common.domain.message.MessageBO;
 import com.wolfmq.common.domain.meta.offset.OffsetRequest;
 import com.wolfmq.common.domain.meta.offset.OffsetResult;
-import com.wolfmq.common.domain.meta.topic.TopicRequest;
+import com.wolfmq.common.domain.meta.topic.dto.TopicRequest;
 import com.wolfmq.common.domain.mq.dto.EnqueueRequest;
 import com.wolfmq.common.domain.mq.dto.EnqueueResult;
 import com.wolfmq.common.domain.mq.dto.EnqueueStatus;

@@ -1,4 +1,4 @@
-package com.wolfmq.common.domain.meta.topic;
+package com.wolfmq.common.domain.meta.topic.constant;
 
 public class PermName {
     public static final int INDEX_PERM_PRIORITY = 3;

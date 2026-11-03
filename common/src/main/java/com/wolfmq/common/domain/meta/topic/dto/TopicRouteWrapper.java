@@ -1,4 +1,4 @@
-package com.wolfmq.common.domain.meta.topic;
+package com.wolfmq.common.domain.meta.topic.dto;
 
 import com.wolfmq.common.core.constant.MQConstants;
 import com.wolfmq.common.server.registry.GroupInfo;

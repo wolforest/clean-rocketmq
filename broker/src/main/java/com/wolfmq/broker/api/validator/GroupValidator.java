@@ -5,7 +5,7 @@ import com.wolfmq.common.core.constant.MQConstants;
 import com.wolfmq.common.core.constant.code.InvalidCode;
 import com.wolfmq.common.core.exception.InvalidParameterException;
 
-import static com.wolfmq.common.domain.meta.topic.TopicValidator.isTopicOrGroupIllegal;
+import static com.wolfmq.common.domain.meta.topic.utils.TopicValidator.isTopicOrGroupIllegal;
 
 public class GroupValidator {
     public static final int CHARACTER_MAX_LENGTH = 255;

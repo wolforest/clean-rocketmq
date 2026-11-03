@@ -2,9 +2,9 @@ package com.wolfmq.common.server.selector;
 
 import cn.coderule.common.util.lang.string.StringUtil;
 import com.wolfmq.common.server.route.QueueInfo;
-import com.wolfmq.common.domain.meta.topic.PermName;
+import com.wolfmq.common.domain.meta.topic.constant.PermName;
 import com.wolfmq.common.domain.mq.MessageQueue;
-import com.wolfmq.common.domain.meta.topic.TopicRouteWrapper;
+import com.wolfmq.common.domain.meta.topic.dto.TopicRouteWrapper;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Preconditions;
 import com.google.common.math.IntMath;

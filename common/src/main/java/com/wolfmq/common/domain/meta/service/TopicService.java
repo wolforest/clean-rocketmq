@@ -1,7 +1,7 @@
 package com.wolfmq.common.domain.meta.service;
 
 import com.wolfmq.common.domain.meta.topic.Topic;
-import com.wolfmq.common.domain.meta.topic.TopicMap;
+import com.wolfmq.common.domain.meta.topic.utils.TopicMap;
 import java.util.Map;
 
 public interface TopicService extends MetaService {

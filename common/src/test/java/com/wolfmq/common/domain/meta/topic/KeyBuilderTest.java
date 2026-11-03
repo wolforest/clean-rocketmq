@@ -1,5 +1,6 @@
 package com.wolfmq.common.domain.meta.topic;
 
+import com.wolfmq.common.domain.meta.topic.utils.KeyBuilder;
 import org.junit.jupiter.api.Test;
 
 import static com.wolfmq.common.core.constant.MQConstants.RETRY_GROUP_TOPIC_PREFIX;

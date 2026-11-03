@@ -2,7 +2,7 @@
 package com.wolfmq.rpc.registry.protocol.body;
 
 import com.wolfmq.common.domain.meta.DataVersion;
-import com.wolfmq.common.domain.meta.topic.TopicConfigSerializeWrapper;
+import com.wolfmq.common.domain.meta.topic.dto.TopicConfigSerializeWrapper;
 import com.wolfmq.common.domain.meta.statictopic.TopicQueueMappingDetail;
 import com.wolfmq.common.domain.meta.statictopic.TopicQueueMappingInfo;
 import java.util.Map;

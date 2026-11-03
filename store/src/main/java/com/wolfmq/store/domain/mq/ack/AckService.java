@@ -14,7 +14,7 @@ import com.wolfmq.common.domain.consumer.consume.pop.checkpoint.PopCheckPointWra
 import com.wolfmq.common.domain.consumer.consume.pop.helper.PopConverter;
 import com.wolfmq.common.domain.consumer.consume.pop.helper.PopKeyBuilder;
 import com.wolfmq.common.domain.message.MessageBO;
-import com.wolfmq.common.domain.meta.topic.KeyBuilder;
+import com.wolfmq.common.domain.meta.topic.utils.KeyBuilder;
 import com.wolfmq.store.domain.mq.queue.EnqueueService;
 import java.util.concurrent.atomic.AtomicInteger;
 import lombok.extern.slf4j.Slf4j;
