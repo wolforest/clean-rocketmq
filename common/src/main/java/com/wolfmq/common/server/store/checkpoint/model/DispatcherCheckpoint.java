@@ -8,5 +8,6 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class DispatcherCheckpoint extends Checkpoint implements Serializable {
+    // shardId -> commitOffset
     private final ConcurrentSkipListMap<Integer, Long> offsetMap = new ConcurrentSkipListMap<>();
 }
