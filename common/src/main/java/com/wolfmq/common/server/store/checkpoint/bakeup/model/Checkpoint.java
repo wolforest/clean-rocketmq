@@ -1,4 +1,4 @@
-package com.wolfmq.common.server.store.checkpoint.model;
+package com.wolfmq.common.server.store.checkpoint.bakeup.model;
 
 public class Checkpoint {
     protected volatile boolean changed = false;
