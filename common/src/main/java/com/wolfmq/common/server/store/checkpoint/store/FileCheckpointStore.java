@@ -1,25 +1,11 @@
 package com.wolfmq.common.server.store.checkpoint.store;
 
 import com.wolfmq.common.server.store.checkpoint.CheckpointService;
-import java.util.concurrent.ConcurrentSkipListMap;
 import lombok.Data;
 
 @Data
 public class FileCheckpointStore implements CheckpointService, CheckpointStore {
-    private final ConcurrentSkipListMap<Integer, Long> masterOffset = new ConcurrentSkipListMap<>();
-
-    private final ConcurrentSkipListMap<Integer, Long> maxCommitOffset = new ConcurrentSkipListMap<>();
-    private final ConcurrentSkipListMap<Integer, Long> dispatchedOffset = new ConcurrentSkipListMap<>();
-
-    private final ConcurrentSkipListMap<Integer, Long> indexedOffset = new ConcurrentSkipListMap<>();
-
-    // topicName@queueId@shardId -> queueOffset
-    private final ConcurrentSkipListMap<String, Long> queuedOffset = new ConcurrentSkipListMap<>();
-
-    // topicName@queueId -> queueOffset
-    private final ConcurrentSkipListMap<String, Long> maxQueueOffset = new ConcurrentSkipListMap<>();
-    // topicName@queueId -> queueOffset
-    private final ConcurrentSkipListMap<String, Long> minQueueOffset = new ConcurrentSkipListMap<>();
+    private MemoryCheckpointStore memoryStore;
 
     @Override
     public void setCommitOffset(int shard, long commitOffset) {
