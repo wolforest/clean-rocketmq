@@ -1,95 +1,79 @@
 package com.wolfmq.common.server.store.checkpoint;
 
-import com.wolfmq.common.server.store.checkpoint.model.DispatcherCheckpoint;
-import com.wolfmq.common.server.store.checkpoint.model.IndexCheckpoint;
-import com.wolfmq.common.server.store.checkpoint.store.MemoryCheckpointStore;
+public class CheckpointFacade implements Checkpoint {
 
-public class CheckpointFacade {
-    private final MemoryCheckpointStore memoryStore;
+    @Override
+    public void setMaxCommitOffset(int shard, long commitOffset) {
 
-    public CheckpointFacade(MemoryCheckpointStore memoryStore) {
-        this.memoryStore = memoryStore;
     }
 
-    public void updateMaxCommitOffset(int shard, long commitOffset) {
-        memoryStore.getCommit().updateMaxOffset(shard, commitOffset);
-    }
-
+    @Override
     public Long getMaxCommitOffset(int shard) {
-        return memoryStore.getCommit().getMaxOffset(shard);
+        return 0L;
     }
 
-    public void updateMinCommitOffset(int shard, long commitOffset) {
-        memoryStore.getCommit().updateMinOffset(shard, commitOffset);
+    @Override
+    public void setMinCommitOffset(int shard, long commitOffset) {
+
     }
 
+    @Override
     public Long getMinCommitOffset(int shard) {
-        return memoryStore.getCommit().getMinOffset(shard);
+        return 0L;
     }
 
-    public void updateDispatchedOffset(int shard, long commitOffset) {
-        DispatcherCheckpoint checkpoint = memoryStore.getDispatcher();
-        checkpoint.getOffsetMap().merge(shard, commitOffset, Long::max);
+    @Override
+    public void setDispatchedOffset(int shard, long commitOffset) {
+
     }
 
+    @Override
     public Long getDispatchedOffset(int shard) {
-        return memoryStore.getDispatcher().getOffsetMap().get(shard);
+        return 0L;
     }
 
-    public void updateMaxIndexOffset(int shard, long indexOffset) {
-        IndexCheckpoint checkpoint = memoryStore.getIndex();
-        checkpoint.getMaxOffsetMap().merge(shard, indexOffset, Long::max);
+    @Override
+    public void setMaxIndexOffset(int shard, long indexOffset) {
+
     }
 
+    @Override
     public Long getMaxIndexOffset(int shard) {
-        return memoryStore.getIndex().getMaxOffsetMap().get(shard);
+        return 0L;
     }
 
-    public void updateMinIndexOffset(int shard, long indexOffset) {
-        IndexCheckpoint checkpoint = memoryStore.getIndex();
-        checkpoint.getMinOffsetMap().merge(shard, indexOffset, Long::min);
-    }
-
-    public Long getMinIndexOffset(int shard) {
-        return memoryStore.getIndex().getMinOffsetMap().get(shard);
-    }
-
-    /**
-     * Queue checkpoints are stored per topic and queue. Because these facade
-     * methods are shard-scoped, an update is applied to every queue checkpoint
-     * and a read aggregates the value across them.
-     */
-    public void updateMinQueueOffset(String topic, int queueId, int shard, long queueOffset) {
-        memoryStore.getQueue(topic, queueId);
-    }
-
+    @Override
     public Long getMinQueueOffset(String topic, int queueId, int shard) {
-        return null;
+        return 0L;
     }
 
-    public void updateMaxQueueOffset(String topic, int queueId, int shard, long queueOffset) {
+    @Override
+    public void setMaxQueueOffset(String topic, int queueId, int shard, long queueOffset) {
 
     }
 
+    @Override
     public Long getMaxQueueOffset(String topic, int queueId, int shard) {
-        return null;
+        return 0L;
     }
 
-    public void updateMinCommittedQueueOffset(String topic, int queueId, int shard, long commitOffset) {
+    @Override
+    public void setMinCommittedQueueOffset(String topic, int queueId, int shard, long commitOffset) {
 
     }
 
+    @Override
     public Long getMinCommittedQueueOffset(String topic, int queueId, int shard) {
-        return null;
+        return 0L;
     }
 
-    public void updateMaxCommittedQueueOffset(String topic, int queueId, int shard, long commitOffset) {
+    @Override
+    public void setMaxCommittedQueueOffset(String topic, int queueId, int shard, long commitOffset) {
 
     }
 
+    @Override
     public Long getMaxCommittedQueueOffset(String topic, int queueId, int shard) {
-        return null;
+        return 0L;
     }
-
-
 }
