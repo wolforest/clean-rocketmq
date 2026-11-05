@@ -48,23 +48,23 @@ public class MmapCheckpointStore implements CheckpointService, CheckpointStore {
     }
 
     @Override
-    public void setConsumeQueueOffset(String topic, int queueId, int shard, long queueOffset) {
-        memoryStore.setConsumeQueueOffset(topic, queueId, shard, queueOffset);
+    public void setQueueOffset(String topic, int queueId, int shard, long queueOffset) {
+        memoryStore.setQueueOffset(topic, queueId, shard, queueOffset);
     }
 
     @Override
-    public Long getConsumeQueueOffset(String topic, int queueId, int shard) {
-        return memoryStore.getConsumeQueueOffset(topic, queueId, shard);
+    public Long getQueueOffset(String topic, int queueId, int shard) {
+        return memoryStore.getQueueOffset(topic, queueId, shard);
     }
 
     @Override
-    public void setQueuedOffset(String topic, int queueId, int shard, long commitOffset) {
-        memoryStore.setQueuedOffset(topic, queueId, shard, commitOffset);
+    public void setQueueCommitOffset(String topic, int queueId, int shard, long commitOffset) {
+        memoryStore.setQueueCommitOffset(topic, queueId, shard, commitOffset);
     }
 
     @Override
-    public Long getQueuedOffset(String topic, int queueId, int shard) {
-        return memoryStore.getQueuedOffset(topic, queueId, shard);
+    public Long getQueueCommitOffset(String topic, int queueId, int shard) {
+        return memoryStore.getQueueCommitOffset(topic, queueId, shard);
     }
 
     @Override

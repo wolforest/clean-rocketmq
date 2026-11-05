@@ -13,11 +13,11 @@ public class MemoryCheckpointStore implements CheckpointService {
     private final ConcurrentSkipListMap<Integer, Long> dispatchedOffsetMap = new ConcurrentSkipListMap<>();
     private final ConcurrentSkipListMap<Integer, Long> indexedOffsetMap = new ConcurrentSkipListMap<>();
 
-    // topicName@queueId@shardId -> queueOffset
-    private final ConcurrentSkipListMap<String, Long> queuedOffsetMap = new ConcurrentSkipListMap<>();
+    // topicName@queueId@shardId -> commitOffset
+    private final ConcurrentSkipListMap<String, Long> queueCommitOffsetMap = new ConcurrentSkipListMap<>();
 
     // topicName@queueId -> queueOffset
-    private final ConcurrentSkipListMap<String, Long> consumeQueueOffsetMap = new ConcurrentSkipListMap<>();
+    private final ConcurrentSkipListMap<String, Long> queueOffsetMap = new ConcurrentSkipListMap<>();
 
     @Override
     public void setCommitOffset(int shard, long commitOffset) {
@@ -60,8 +60,8 @@ public class MemoryCheckpointStore implements CheckpointService {
     }
 
     @Override
-    public void setConsumeQueueOffset(String topic, int queueId, int shard, long queueOffset) {
-        consumeQueueOffsetMap.merge(
+    public void setQueueOffset(String topic, int queueId, int shard, long queueOffset) {
+        queueOffsetMap.merge(
             buildKey(topic, queueId),
             queueOffset,
             Math::max
@@ -69,25 +69,25 @@ public class MemoryCheckpointStore implements CheckpointService {
     }
 
     @Override
-    public Long getConsumeQueueOffset(String topic, int queueId, int shard) {
-        return consumeQueueOffsetMap.get(
+    public Long getQueueOffset(String topic, int queueId, int shard) {
+        return queueOffsetMap.get(
             buildKey(topic, queueId)
         );
     }
 
     @Override
-    public void setQueuedOffset(String topic, int queueId, int shard, long commitOffset) {
-        queuedOffsetMap.merge(
-            queuedKey(topic, queueId, shard),
+    public void setQueueCommitOffset(String topic, int queueId, int shard, long commitOffset) {
+        queueCommitOffsetMap.merge(
+            buildKey(topic, queueId, shard),
             commitOffset,
             Math::max
         );
     }
 
     @Override
-    public Long getQueuedOffset(String topic, int queueId, int shard) {
-        return queuedOffsetMap.get(
-            queuedKey(topic, queueId, shard)
+    public Long getQueueCommitOffset(String topic, int queueId, int shard) {
+        return queueCommitOffsetMap.get(
+            buildKey(topic, queueId, shard)
         );
     }
 
@@ -97,7 +97,7 @@ public class MemoryCheckpointStore implements CheckpointService {
             + pad2(queueId);
     }
 
-    private String queuedKey(String topic, int queueId, int shard) {
+    private String buildKey(String topic, int queueId, int shard) {
         return buildKey(topic, queueId)
             + KEY_SEPARATOR
             + pad2(shard);

@@ -17,11 +17,11 @@ public interface CheckpointService {
 
     Long getIndexedOffset(int shard);
 
-    void setConsumeQueueOffset(String topic, int queueId, int shard, long queueOffset);
+    void setQueueOffset(String topic, int queueId, int shard, long queueOffset);
 
-    Long getConsumeQueueOffset(String topic, int queueId, int shard);
+    Long getQueueOffset(String topic, int queueId, int shard);
 
-    void setQueuedOffset(String topic, int queueId, int shard, long commitOffset);
+    void setQueueCommitOffset(String topic, int queueId, int shard, long commitOffset);
 
-    Long getQueuedOffset(String topic, int queueId, int shard);
+    Long getQueueCommitOffset(String topic, int queueId, int shard);
 }

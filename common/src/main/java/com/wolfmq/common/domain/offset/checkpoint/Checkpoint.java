@@ -50,22 +50,22 @@ public class Checkpoint implements CheckpointService {
     }
 
     @Override
-    public void setConsumeQueueOffset(String topic, int queueId, int shard, long queueOffset) {
-        store.setConsumeQueueOffset(topic, queueId, shard, queueOffset);
+    public void setQueueOffset(String topic, int queueId, int shard, long queueOffset) {
+        store.setQueueOffset(topic, queueId, shard, queueOffset);
     }
 
     @Override
-    public Long getConsumeQueueOffset(String topic, int queueId, int shard) {
-        return store.getConsumeQueueOffset(topic, queueId, shard);
+    public Long getQueueOffset(String topic, int queueId, int shard) {
+        return store.getQueueOffset(topic, queueId, shard);
     }
 
     @Override
-    public void setQueuedOffset(String topic, int queueId, int shard, long commitOffset) {
-        store.setQueuedOffset(topic, queueId, shard, commitOffset);
+    public void setQueueCommitOffset(String topic, int queueId, int shard, long commitOffset) {
+        store.setQueueCommitOffset(topic, queueId, shard, commitOffset);
     }
 
     @Override
-    public Long getQueuedOffset(String topic, int queueId, int shard) {
-        return store.getQueuedOffset(topic, queueId, shard);
+    public Long getQueueCommitOffset(String topic, int queueId, int shard) {
+        return store.getQueueCommitOffset(topic, queueId, shard);
     }
 }

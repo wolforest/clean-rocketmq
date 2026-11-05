@@ -16,8 +16,8 @@ class FileCheckpointStoreTest {
         store.setDispatchedOffset(2, 200L);
         store.setMasterOffset(3, 300L);
         store.setIndexedOffset(4, 400L);
-        store.setConsumeQueueOffset("topic", 1, 2, 500L);
-        store.setQueuedOffset("topic", 1, 2, 600L);
+        store.setQueueOffset("topic", 1, 2, 500L);
+        store.setQueueCommitOffset("topic", 1, 2, 600L);
 
         store.save();
 
@@ -28,7 +28,7 @@ class FileCheckpointStoreTest {
         assertEquals(200L, loaded.getDispatchedOffset(2));
         assertEquals(300L, loaded.getMasterOffset(3));
         assertEquals(400L, loaded.getIndexedOffset(4));
-        assertEquals(500L, loaded.getConsumeQueueOffset("topic", 1, 2));
-        assertEquals(600L, loaded.getQueuedOffset("topic", 1, 2));
+        assertEquals(500L, loaded.getQueueOffset("topic", 1, 2));
+        assertEquals(600L, loaded.getQueueCommitOffset("topic", 1, 2));
     }
 }
