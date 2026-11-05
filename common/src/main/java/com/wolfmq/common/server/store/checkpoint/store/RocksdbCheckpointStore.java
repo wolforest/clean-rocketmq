@@ -3,6 +3,8 @@ package com.wolfmq.common.server.store.checkpoint.store;
 import com.wolfmq.common.server.store.checkpoint.CheckpointService;
 
 public class RocksdbCheckpointStore implements CheckpointService, CheckpointStore {
+    private MemoryCheckpointStore memoryStore;
+
     @Override
     public void setCommitOffset(int shard, long commitOffset) {
 
