@@ -17,7 +17,7 @@ import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueFacade;
 import com.wolfmq.store.domain.consumequeue.file.ConsumeQueueFlusher;
 import com.wolfmq.store.domain.consumequeue.file.ConsumeQueueLoader;
 import com.wolfmq.store.domain.consumequeue.file.ConsumeQueueRecovery;
-import com.wolfmq.common.domain.commitlog.route.OffsetCodec;
+import com.wolfmq.common.domain.offset.commitlog.OffsetCodec;
 import com.wolfmq.store.infra.file.AllocateMappedFileService;
 import com.wolfmq.store.server.bootstrap.StoreCheckpoint;
 import org.junit.jupiter.api.AfterEach;

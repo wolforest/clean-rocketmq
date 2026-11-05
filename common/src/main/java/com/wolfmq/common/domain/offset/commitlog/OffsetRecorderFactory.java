@@ -1,4 +1,4 @@
-package com.wolfmq.common.domain.commitlog.route;
+package com.wolfmq.common.domain.offset.commitlog;
 
 import com.wolfmq.common.config.store.CommitConfig;
 

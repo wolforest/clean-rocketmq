@@ -1,6 +1,8 @@
 package com.wolfmq.common.domain.commitlog.route;
 
 import com.wolfmq.common.config.store.CommitConfig;
+import com.wolfmq.common.domain.offset.commitlog.OffsetCodec;
+import com.wolfmq.common.domain.offset.commitlog.OffsetRecorder;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

@@ -14,7 +14,7 @@ import com.wolfmq.common.domain.offset.checkpoint.bakeup.CheckPoint;
 import com.wolfmq.common.testing.ConfigMock;
 import com.wolfmq.store.domain.commitlog.log.CommitLogFactory;
 import com.wolfmq.store.domain.commitlog.CommitLogFacade;
-import com.wolfmq.common.domain.commitlog.route.OffsetCodec;
+import com.wolfmq.common.domain.offset.commitlog.OffsetCodec;
 import com.wolfmq.store.domain.commitlog.route.TopicPartitioner;
 import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueFactory;
 import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueFacade;
