@@ -1,6 +1,6 @@
 package com.wolfmq.store.server.bootstrap;
 
-import com.wolfmq.store.infra.StoreScheduler;
+import com.wolfmq.common.server.store.StoreScheduler;
 
 import com.wolfmq.common.server.store.checkpoint.bakeup.CheckPoint;
 

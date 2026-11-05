@@ -1,4 +1,4 @@
-package com.wolfmq.store.infra;
+package com.wolfmq.common.server.store;
 
 import cn.coderule.common.convention.service.Lifecycle;
 import com.wolfmq.common.config.server.StoreConfig;

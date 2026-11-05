@@ -1,6 +1,13 @@
 package com.wolfmq.common.server.store.checkpoint;
 
+import com.wolfmq.common.server.store.checkpoint.store.CheckpointStore;
+
 public class Checkpoint implements CheckpointService {
+    private final CheckpointStore store;
+
+    public Checkpoint(CheckpointStore store) {
+        this.store = store;
+    }
 
     @Override
     public void setCommitOffset(int shard, long commitOffset) {
@@ -11,8 +18,6 @@ public class Checkpoint implements CheckpointService {
     public Long getCommitOffset(int shard) {
         return 0L;
     }
-
-
 
     @Override
     public void setDispatchedOffset(int shard, long commitOffset) {

@@ -1,6 +1,7 @@
 package com.wolfmq.store.infra;
 
 import com.wolfmq.common.config.server.StoreConfig;
+import com.wolfmq.common.server.store.StoreScheduler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

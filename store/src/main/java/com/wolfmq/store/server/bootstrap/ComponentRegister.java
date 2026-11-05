@@ -13,7 +13,7 @@ import com.wolfmq.store.domain.index.IndexBootstrap;
 import com.wolfmq.store.domain.mq.MQBootstrap;
 import com.wolfmq.store.domain.meta.MetaBootstrap;
 import com.wolfmq.store.domain.timer.TimerBootstrap;
-import com.wolfmq.store.infra.StoreScheduler;
+import com.wolfmq.common.server.store.StoreScheduler;
 import com.wolfmq.store.infra.file.AllocateMappedFileService;
 import com.wolfmq.store.infra.memory.TransientPool;
 import com.wolfmq.store.server.ha.HABootstrap;

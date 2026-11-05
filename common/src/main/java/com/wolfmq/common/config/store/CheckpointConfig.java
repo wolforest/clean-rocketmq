@@ -5,5 +5,6 @@ import lombok.Data;
 
 @Data
 public class CheckpointConfig implements Serializable {
+    private int initialDelay = 5000;
     private int flushInterval = 1000;
 }

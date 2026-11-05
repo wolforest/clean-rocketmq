@@ -13,8 +13,12 @@ import lombok.extern.slf4j.Slf4j;
 public class FileCheckpointStore implements CheckpointService, CheckpointStore {
     private static final String CHECKPOINT_FILE = "checkpoint.json";
 
+    private final String storePath;
     private MemoryCheckpointStore memoryStore = new MemoryCheckpointStore();
-    private String storePath;
+
+    public FileCheckpointStore(String storePath) {
+        this.storePath = storePath;
+    }
 
     @Override
     public void setCommitOffset(int shard, long commitOffset) {

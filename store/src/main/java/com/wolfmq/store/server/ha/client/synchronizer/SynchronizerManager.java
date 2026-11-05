@@ -1,7 +1,7 @@
 package com.wolfmq.store.server.ha.client.synchronizer;
 
 import cn.coderule.common.convention.service.Lifecycle;
-import com.wolfmq.store.infra.StoreScheduler;
+import com.wolfmq.common.server.store.StoreScheduler;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
