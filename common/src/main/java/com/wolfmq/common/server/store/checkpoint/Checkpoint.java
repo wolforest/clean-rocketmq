@@ -1,33 +1,67 @@
 package com.wolfmq.common.server.store.checkpoint;
 
-public interface Checkpoint {
-    void setMaxCommitOffset(int shard, long commitOffset);
+public class Checkpoint implements CheckpointService {
 
-    Long getMaxCommitOffset(int shard);
+    @Override
+    public void setCommitOffset(int shard, long commitOffset) {
 
-    void setMinCommitOffset(int shard, long commitOffset);
+    }
 
-    Long getMinCommitOffset(int shard);
+    @Override
+    public Long getCommitOffset(int shard) {
+        return 0L;
+    }
 
-    void setDispatchedOffset(int shard, long commitOffset);
 
-    Long getDispatchedOffset(int shard);
 
-    void setMaxIndexOffset(int shard, long indexOffset);
+    @Override
+    public void setDispatchedOffset(int shard, long commitOffset) {
 
-    Long getMaxIndexOffset(int shard);
+    }
 
-    Long getMinQueueOffset(String topic, int queueId, int shard);
+    @Override
+    public Long getDispatchedOffset(int shard) {
+        return 0L;
+    }
 
-    void setMaxQueueOffset(String topic, int queueId, int shard, long queueOffset);
+    @Override
+    public void setMasterOffset(int shard, long commitOffset) {
 
-    Long getMaxQueueOffset(String topic, int queueId, int shard);
+    }
 
-    void setMinCommittedQueueOffset(String topic, int queueId, int shard, long commitOffset);
+    @Override
+    public Long getMasterOffset(int shard) {
+        return 0L;
+    }
 
-    Long getMinCommittedQueueOffset(String topic, int queueId, int shard);
+    @Override
+    public void setIndexedOffset(int shard, long indexOffset) {
 
-    void setMaxCommittedQueueOffset(String topic, int queueId, int shard, long commitOffset);
+    }
 
-    Long getMaxCommittedQueueOffset(String topic, int queueId, int shard);
+    @Override
+    public Long getIndexedOffset(int shard) {
+        return 0L;
+    }
+
+    @Override
+    public void setConsumeQueueOffset(String topic, int queueId, int shard, long queueOffset) {
+
+    }
+
+    @Override
+    public Long getConsumeQueueOffset(String topic, int queueId, int shard) {
+        return 0L;
+    }
+
+
+    @Override
+    public void setQueuedOffset(String topic, int queueId, int shard, long commitOffset) {
+
+    }
+
+    @Override
+    public Long getQueuedOffset(String topic, int queueId, int shard) {
+        return 0L;
+    }
 }
