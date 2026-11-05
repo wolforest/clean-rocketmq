@@ -8,6 +8,6 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class IndexCheckpoint extends Checkpoint implements Serializable {
+    // shardId -> commitOffset
     private final ConcurrentSkipListMap<Integer, Long> maxOffsetMap = new ConcurrentSkipListMap<>();
-    private final ConcurrentSkipListMap<Integer, Long> minOffsetMap = new ConcurrentSkipListMap<>();
 }
