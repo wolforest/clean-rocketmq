@@ -9,6 +9,8 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class CommitCheckpoint extends Checkpoint implements Serializable {
     private final ConcurrentSkipListMap<Integer, Long> maxOffsetMap = new ConcurrentSkipListMap<>();
+
+    // useless, to do delete
     private final ConcurrentSkipListMap<Integer, Long> minOffsetMap = new ConcurrentSkipListMap<>();
 
     public void updateMaxOffset(int shardId, long offset) {
