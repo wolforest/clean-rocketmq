@@ -12,7 +12,7 @@ import com.wolfmq.common.domain.consumer.consume.pop.checkpoint.PopCheckPoint;
 import com.wolfmq.common.domain.consumer.consume.pop.helper.PopConverter;
 import com.wolfmq.common.domain.consumer.revive.ReviveBuffer;
 import com.wolfmq.common.domain.message.MessageBO;
-import com.wolfmq.common.domain.meta.offset.dto.OffsetRequest;
+import com.wolfmq.common.domain.offset.dto.OffsetRequest;
 import com.wolfmq.common.domain.meta.topic.utils.KeyBuilder;
 import com.wolfmq.common.domain.mq.dto.EnqueueRequest;
 import com.wolfmq.rpc.store.facade.MQFacade;

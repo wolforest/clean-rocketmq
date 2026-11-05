@@ -1,6 +1,6 @@
 package com.wolfmq.common.domain.store.server;
 
-import com.wolfmq.common.server.store.checkpoint.bakeup.Offset;
+import com.wolfmq.common.domain.offset.checkpoint.bakeup.Offset;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

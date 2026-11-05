@@ -2,8 +2,8 @@ package com.wolfmq.store.domain.commitlog.log;
 
 import com.wolfmq.common.domain.commitlog.CommitLog;
 import com.wolfmq.common.core.mmap.MappedFileQueue;
-import com.wolfmq.common.server.store.checkpoint.bakeup.CheckPoint;
-import com.wolfmq.common.server.store.checkpoint.bakeup.Offset;
+import com.wolfmq.common.domain.offset.checkpoint.bakeup.CheckPoint;
+import com.wolfmq.common.domain.offset.checkpoint.bakeup.Offset;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

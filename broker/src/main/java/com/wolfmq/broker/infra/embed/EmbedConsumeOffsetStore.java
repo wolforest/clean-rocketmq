@@ -1,10 +1,10 @@
 package com.wolfmq.broker.infra.embed;
 
-import com.wolfmq.common.domain.meta.offset.dto.GroupResult;
-import com.wolfmq.common.domain.meta.offset.utils.OffsetFilter;
-import com.wolfmq.common.domain.meta.offset.dto.OffsetRequest;
-import com.wolfmq.common.domain.meta.offset.dto.OffsetResult;
-import com.wolfmq.common.domain.meta.offset.dto.TopicResult;
+import com.wolfmq.common.domain.offset.dto.GroupResult;
+import com.wolfmq.common.domain.offset.utils.OffsetFilter;
+import com.wolfmq.common.domain.offset.dto.OffsetRequest;
+import com.wolfmq.common.domain.offset.dto.OffsetResult;
+import com.wolfmq.common.domain.offset.dto.TopicResult;
 import com.wolfmq.rpc.store.facade.ConsumeOffsetFacade;
 import com.wolfmq.common.server.store.api.meta.ConsumeOffsetStore;
 

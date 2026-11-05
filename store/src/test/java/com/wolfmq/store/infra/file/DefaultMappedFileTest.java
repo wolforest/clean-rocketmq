@@ -4,7 +4,7 @@ import cn.coderule.common.util.io.FileUtil;
 import com.wolfmq.common.core.mmap.InsertStatus;
 import com.wolfmq.common.core.mmap.InsertResult;
 import com.wolfmq.common.core.mmap.SelectedMappedBuffer;
-import com.wolfmq.common.domain.meta.offset.utils.OffsetUtils;
+import com.wolfmq.common.domain.offset.utils.OffsetUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;

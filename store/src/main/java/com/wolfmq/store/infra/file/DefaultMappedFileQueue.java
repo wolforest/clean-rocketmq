@@ -4,7 +4,7 @@ import cn.coderule.common.util.io.FileUtil;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
 import com.wolfmq.common.core.mmap.MappedFile;
 import com.wolfmq.common.core.mmap.MappedFileQueue;
-import com.wolfmq.common.domain.meta.offset.utils.OffsetUtils;
+import com.wolfmq.common.domain.offset.utils.OffsetUtils;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;

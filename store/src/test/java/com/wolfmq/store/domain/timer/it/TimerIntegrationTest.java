@@ -36,7 +36,7 @@ import com.wolfmq.common.config.store.CommitConfig;
 import com.wolfmq.common.config.store.ConsumeQueueConfig;
 import com.wolfmq.common.domain.commitlog.CommitLog;
 import com.wolfmq.common.domain.meta.service.TopicService;
-import com.wolfmq.common.server.store.checkpoint.bakeup.CheckPoint;
+import com.wolfmq.common.domain.offset.checkpoint.bakeup.CheckPoint;
 import com.wolfmq.common.domain.message.MessageBO;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

@@ -11,7 +11,7 @@ import com.wolfmq.store.server.bootstrap.StoreCheckpoint;
 import cn.coderule.common.convention.container.ApplicationContext;
 import com.wolfmq.common.core.constant.ContextNamespace;
 import com.wolfmq.common.config.server.StoreConfig;
-import com.wolfmq.common.server.store.checkpoint.bakeup.CheckPoint;
+import com.wolfmq.common.domain.offset.checkpoint.bakeup.CheckPoint;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;

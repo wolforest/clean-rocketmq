@@ -2,7 +2,7 @@ package com.wolfmq.store.server.bootstrap;
 
 import com.wolfmq.common.server.store.StoreScheduler;
 
-import com.wolfmq.common.server.store.checkpoint.bakeup.CheckPoint;
+import com.wolfmq.common.domain.offset.checkpoint.bakeup.CheckPoint;
 
 
 import cn.coderule.common.convention.container.ApplicationContext;

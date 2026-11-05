@@ -1,0 +1,13 @@
+package com.wolfmq.common.domain.offset.checkpoint.bakeup.model;
+
+import java.io.Serializable;
+import java.util.concurrent.ConcurrentSkipListMap;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+@Data
+@EqualsAndHashCode(callSuper = false)
+public class MasterCheckpoint extends Checkpoint implements Serializable {
+    // shardId -> masterCommitOffset
+    private final ConcurrentSkipListMap<Integer, Long> offsetMap = new ConcurrentSkipListMap<>();
+}

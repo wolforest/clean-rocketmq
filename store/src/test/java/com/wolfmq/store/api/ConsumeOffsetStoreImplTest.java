@@ -1,10 +1,10 @@
 package com.wolfmq.store.api;
 
-import com.wolfmq.common.domain.meta.offset.dto.GroupResult;
-import com.wolfmq.common.domain.meta.offset.utils.OffsetFilter;
-import com.wolfmq.common.domain.meta.offset.dto.OffsetRequest;
-import com.wolfmq.common.domain.meta.offset.dto.OffsetResult;
-import com.wolfmq.common.domain.meta.offset.dto.TopicResult;
+import com.wolfmq.common.domain.offset.dto.GroupResult;
+import com.wolfmq.common.domain.offset.utils.OffsetFilter;
+import com.wolfmq.common.domain.offset.dto.OffsetRequest;
+import com.wolfmq.common.domain.offset.dto.OffsetResult;
+import com.wolfmq.common.domain.offset.dto.TopicResult;
 import com.wolfmq.common.domain.meta.service.ConsumeOffsetService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

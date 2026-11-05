@@ -2,7 +2,7 @@ package com.wolfmq.store.domain.consumequeue.service;
 
 import com.wolfmq.common.config.store.ConsumeQueueConfig;
 import com.wolfmq.common.domain.consumequeue.ConsumeQueue;
-import com.wolfmq.common.server.store.checkpoint.bakeup.CheckPoint;
+import com.wolfmq.common.domain.offset.checkpoint.bakeup.CheckPoint;
 import com.wolfmq.common.domain.commitlog.route.OffsetCodec;
 import com.wolfmq.store.domain.consumequeue.file.ConsumeQueueRecovery;
 import org.junit.jupiter.api.BeforeEach;

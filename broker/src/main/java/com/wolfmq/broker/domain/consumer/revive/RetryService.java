@@ -2,7 +2,7 @@ package com.wolfmq.broker.domain.consumer.revive;
 
 import com.wolfmq.common.config.server.BrokerConfig;
 import com.wolfmq.common.domain.consumer.consume.pop.PopConstants;
-import com.wolfmq.common.domain.meta.offset.dto.OffsetRequest;
+import com.wolfmq.common.domain.offset.dto.OffsetRequest;
 import com.wolfmq.common.domain.meta.topic.dto.TopicRequest;
 import com.wolfmq.common.domain.mq.dto.EnqueueRequest;
 import com.wolfmq.common.domain.mq.dto.EnqueueResult;

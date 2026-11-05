@@ -6,7 +6,7 @@ import com.wolfmq.common.config.store.CommitConfig;
 import com.wolfmq.common.server.store.api.CommitLogStore;
 import com.wolfmq.common.domain.commitlog.CommitLog;
 import com.wolfmq.common.domain.meta.service.TopicService;
-import com.wolfmq.common.server.store.checkpoint.bakeup.CheckPoint;
+import com.wolfmq.common.domain.offset.checkpoint.bakeup.CheckPoint;
 import com.wolfmq.store.api.CommitLogStoreImpl;
 import com.wolfmq.store.domain.commitlog.log.CommitLogFactory;
 import com.wolfmq.store.domain.commitlog.route.TopicPartitioner;

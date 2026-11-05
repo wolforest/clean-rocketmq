@@ -12,7 +12,7 @@ import com.wolfmq.store.domain.consumequeue.file.ConsumeQueueLoader;
 import com.wolfmq.store.domain.consumequeue.file.ConsumeQueueRecovery;
 import com.wolfmq.store.domain.dispatcher.CommitHandlerManager;
 import cn.coderule.common.convention.container.ApplicationContext;
-import com.wolfmq.common.server.store.checkpoint.bakeup.CheckPoint;
+import com.wolfmq.common.domain.offset.checkpoint.bakeup.CheckPoint;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

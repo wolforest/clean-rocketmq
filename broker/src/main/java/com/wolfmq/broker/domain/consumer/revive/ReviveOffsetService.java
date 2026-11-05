@@ -3,7 +3,7 @@ package com.wolfmq.broker.domain.consumer.revive;
 import com.wolfmq.common.domain.consumer.consume.pop.PopConstants;
 import com.wolfmq.common.domain.consumer.consume.dto.QueueRequest;
 import com.wolfmq.common.domain.consumer.revive.ReviveBuffer;
-import com.wolfmq.common.domain.meta.offset.dto.OffsetRequest;
+import com.wolfmq.common.domain.offset.dto.OffsetRequest;
 import com.wolfmq.rpc.store.facade.MQFacade;
 import com.wolfmq.rpc.store.facade.ConsumeOffsetFacade;
 import lombok.Getter;

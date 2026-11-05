@@ -3,7 +3,7 @@ package com.wolfmq.store.domain.dispatcher;
 import com.wolfmq.common.config.store.CommitConfig;
 import com.wolfmq.common.domain.commitlog.CommitLog;
 import com.wolfmq.store.domain.commitlog.CommitLogFacade;
-import com.wolfmq.common.server.store.checkpoint.bakeup.CheckPoint;
+import com.wolfmq.common.domain.offset.checkpoint.bakeup.CheckPoint;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;

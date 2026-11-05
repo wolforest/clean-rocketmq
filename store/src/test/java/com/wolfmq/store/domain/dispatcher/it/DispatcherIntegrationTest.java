@@ -8,7 +8,7 @@ import com.wolfmq.common.testing.MessageMock;
 import com.wolfmq.store.domain.dispatcher.CommitListener;
 import com.wolfmq.store.domain.dispatcher.DispatchManager;
 import com.wolfmq.store.domain.dispatcher.DispatchQueue;
-import com.wolfmq.common.server.store.checkpoint.bakeup.CheckPoint;
+import com.wolfmq.common.domain.offset.checkpoint.bakeup.CheckPoint;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

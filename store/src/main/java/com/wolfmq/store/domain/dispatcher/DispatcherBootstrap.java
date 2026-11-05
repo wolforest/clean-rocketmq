@@ -3,7 +3,7 @@ package com.wolfmq.store.domain.dispatcher;
 import cn.coderule.common.convention.service.Lifecycle;
 import com.wolfmq.common.config.server.StoreConfig;
 import com.wolfmq.common.config.store.CommitConfig;
-import com.wolfmq.common.server.store.checkpoint.bakeup.CheckPoint;
+import com.wolfmq.common.domain.offset.checkpoint.bakeup.CheckPoint;
 import com.wolfmq.store.domain.commitlog.CommitLogFacade;
 import cn.coderule.common.convention.container.ApplicationContext;
 

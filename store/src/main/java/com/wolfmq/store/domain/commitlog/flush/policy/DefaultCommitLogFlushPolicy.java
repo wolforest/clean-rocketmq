@@ -2,7 +2,7 @@ package com.wolfmq.store.domain.commitlog.flush.policy;
 
 import com.wolfmq.common.domain.mq.dto.EnqueueStatus;
 import com.wolfmq.common.domain.commitlog.flush.CommitLogFlushPolicy;
-import com.wolfmq.common.server.store.checkpoint.bakeup.CheckPoint;
+import com.wolfmq.common.domain.offset.checkpoint.bakeup.CheckPoint;
 import com.wolfmq.store.domain.commitlog.flush.FlushWatcher;
 import com.wolfmq.store.domain.commitlog.flush.Flusher;
 import com.wolfmq.store.domain.commitlog.flush.GroupFlusher;
