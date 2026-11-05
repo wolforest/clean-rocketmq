@@ -8,9 +8,16 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class QueueCheckpoint extends Checkpoint implements Serializable {
-    private final ConcurrentSkipListMap<Integer, Long> maxOffsetMap = new ConcurrentSkipListMap<>();
-    private final ConcurrentSkipListMap<Integer, Long> minOffsetMap = new ConcurrentSkipListMap<>();
 
-    private final ConcurrentSkipListMap<Integer, Long> maxCommitOffsetMap = new ConcurrentSkipListMap<>();
-    private final ConcurrentSkipListMap<Integer, Long> minCommitOffsetMap = new ConcurrentSkipListMap<>();
+    // topicName@queueId -> queueOffset
+    private final ConcurrentSkipListMap<String, Long> maxOffsetMap = new ConcurrentSkipListMap<>();
+    // topicName@queueId -> queueOffset
+    private final ConcurrentSkipListMap<String, Long> minOffsetMap = new ConcurrentSkipListMap<>();
+
+    /**
+     * topicName@queueId@shardId -> commitOffset
+     * 20 * 10 * 10     = 2,000
+     * 100 * 10 * 10    = 10,000
+     */
+    private final ConcurrentSkipListMap<String, Long> maxCommitOffsetMap = new ConcurrentSkipListMap<>();
 }
