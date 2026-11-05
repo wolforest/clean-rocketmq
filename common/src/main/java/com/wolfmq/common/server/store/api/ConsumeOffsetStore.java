@@ -1,4 +1,4 @@
-package com.wolfmq.common.server.store.api.meta;
+package com.wolfmq.common.server.store.api;
 
 import com.wolfmq.common.domain.offset.dto.GroupResult;
 import com.wolfmq.common.domain.offset.utils.OffsetFilter;

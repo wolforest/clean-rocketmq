@@ -18,6 +18,7 @@ public class OffsetRequest implements Serializable {
     private String storeGroup;
     private String topicName;
     private String consumerGroup;
+    private String tagName;
     private int queueId;
 
     private long newOffset;

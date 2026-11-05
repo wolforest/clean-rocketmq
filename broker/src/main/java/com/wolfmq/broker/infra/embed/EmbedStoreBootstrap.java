@@ -7,7 +7,7 @@ import com.wolfmq.common.config.server.BrokerConfig;
 import com.wolfmq.common.core.constant.ContextNamespace;
 import com.wolfmq.common.server.store.api.MQStore;
 import com.wolfmq.common.server.store.api.TimerStore;
-import com.wolfmq.common.server.store.api.meta.ConsumeOffsetStore;
+import com.wolfmq.common.server.store.api.ConsumeOffsetStore;
 import com.wolfmq.common.server.store.api.meta.SubscriptionStore;
 import com.wolfmq.common.server.store.api.meta.TopicStore;
 import com.wolfmq.store.Store;

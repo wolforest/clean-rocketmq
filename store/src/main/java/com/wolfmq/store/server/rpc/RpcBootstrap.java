@@ -4,7 +4,7 @@ import cn.coderule.common.convention.service.Lifecycle;
 import com.wolfmq.common.config.server.StoreConfig;
 import com.wolfmq.common.config.business.TopicConfig;
 import com.wolfmq.common.server.store.api.TimerStore;
-import com.wolfmq.common.server.store.api.meta.ConsumeOffsetStore;
+import com.wolfmq.common.server.store.api.ConsumeOffsetStore;
 import com.wolfmq.common.server.store.api.meta.SubscriptionStore;
 import com.wolfmq.common.server.store.api.meta.TopicStore;
 import com.wolfmq.common.config.network.RpcServerConfig;

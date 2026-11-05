@@ -7,7 +7,7 @@ import com.wolfmq.rpc.store.facade.MQFacade;
 import com.wolfmq.rpc.store.facade.ConsumeOffsetFacade;
 import com.wolfmq.rpc.store.facade.SubscriptionFacade;
 import com.wolfmq.rpc.store.facade.TopicFacade;
-import com.wolfmq.common.domain.meta.service.ConsumeOffsetService;
+import com.wolfmq.common.domain.offset.consume.ConsumeOffsetService;
 import com.wolfmq.common.domain.meta.service.SubscriptionService;
 import com.wolfmq.common.domain.meta.service.TopicService;
 import com.wolfmq.common.domain.mq.MQService;

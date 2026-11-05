@@ -1,4 +1,4 @@
-package com.wolfmq.store.domain.mq.queue;
+package com.wolfmq.store.domain.mq.offset;
 
 import com.wolfmq.common.config.server.StoreConfig;
 import com.wolfmq.common.config.store.MetaConfig;

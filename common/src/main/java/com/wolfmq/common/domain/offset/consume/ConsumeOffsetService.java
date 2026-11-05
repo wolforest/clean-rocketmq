@@ -1,5 +1,6 @@
-package com.wolfmq.common.domain.meta.service;
+package com.wolfmq.common.domain.offset.consume;
 
+import com.wolfmq.common.domain.meta.service.MetaService;
 import java.util.Set;
 
 public interface ConsumeOffsetService extends MetaService {

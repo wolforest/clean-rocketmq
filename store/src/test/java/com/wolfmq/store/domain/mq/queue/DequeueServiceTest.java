@@ -11,6 +11,7 @@ import com.wolfmq.common.domain.mq.dto.DequeueResult;
 import com.wolfmq.common.domain.meta.service.ConsumeOrderService;
 import com.wolfmq.common.testing.MessageMock;
 import com.wolfmq.store.domain.mq.ack.AckService;
+import com.wolfmq.store.domain.mq.offset.OffsetService;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 

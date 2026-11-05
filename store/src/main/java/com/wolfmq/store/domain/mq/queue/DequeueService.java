@@ -13,6 +13,7 @@ import com.wolfmq.common.domain.consumer.consume.pop.checkpoint.PopCheckPoint;
 import com.wolfmq.common.domain.consumer.consume.pop.helper.PopConverter;
 import com.wolfmq.common.domain.meta.order.OrderRequest;
 import com.wolfmq.store.domain.mq.ack.AckService;
+import com.wolfmq.store.domain.mq.offset.OffsetService;
 import java.util.concurrent.CompletableFuture;
 import lombok.extern.slf4j.Slf4j;
 

@@ -1,7 +1,7 @@
 package com.wolfmq.store.domain.meta;
 
 import com.wolfmq.common.core.constant.MQConstants;
-import com.wolfmq.common.domain.meta.service.ConsumeOffsetService;
+import com.wolfmq.common.domain.offset.consume.ConsumeOffsetService;
 import com.wolfmq.common.domain.meta.subscription.SubscriptionGroup;
 import com.wolfmq.common.server.store.StoreState;
 import java.nio.file.Path;

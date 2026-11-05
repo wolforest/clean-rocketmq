@@ -8,6 +8,7 @@ import com.wolfmq.common.domain.message.MessageBO;
 import com.wolfmq.common.testing.ConfigMock;
 import com.wolfmq.common.testing.MessageMock;
 import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueFacade;
+import com.wolfmq.store.domain.mq.offset.NextOffsetSetter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;

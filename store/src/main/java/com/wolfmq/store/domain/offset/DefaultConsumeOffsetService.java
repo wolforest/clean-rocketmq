@@ -1,11 +1,11 @@
-package com.wolfmq.store.domain.meta;
+package com.wolfmq.store.domain.offset;
 
 import cn.coderule.common.util.io.FileUtil;
 import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.common.util.lang.string.JSONUtil;
 import com.wolfmq.common.config.server.StoreConfig;
 import com.wolfmq.common.domain.offset.consume.ConsumeOffset;
-import com.wolfmq.common.domain.meta.service.ConsumeOffsetService;
+import com.wolfmq.common.domain.offset.consume.ConsumeOffsetService;
 import java.util.Set;
 
 public class DefaultConsumeOffsetService implements ConsumeOffsetService {

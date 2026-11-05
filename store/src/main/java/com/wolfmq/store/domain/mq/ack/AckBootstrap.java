@@ -7,7 +7,7 @@ import com.wolfmq.common.core.lock.queue.DequeueLock;
 import com.wolfmq.common.domain.consumer.ack.AckBuffer;
 import com.wolfmq.common.domain.consumer.consume.InflightCounter;
 import com.wolfmq.common.domain.meta.topic.utils.KeyBuilder;
-import com.wolfmq.store.domain.meta.DefaultConsumeOffsetService;
+import com.wolfmq.store.domain.offset.DefaultConsumeOffsetService;
 import com.wolfmq.store.domain.meta.DefaultConsumeOrderService;
 import com.wolfmq.store.domain.mq.queue.EnqueueService;
 import cn.coderule.common.convention.container.ApplicationContext;

@@ -12,7 +12,7 @@ import com.wolfmq.common.domain.mq.dto.DequeueResult;
 import com.wolfmq.common.domain.mq.dto.EnqueueFuture;
 import com.wolfmq.common.domain.mq.dto.EnqueueResult;
 import com.wolfmq.common.testing.MessageMock;
-import com.wolfmq.common.domain.meta.service.ConsumeOffsetService;
+import com.wolfmq.common.domain.offset.consume.ConsumeOffsetService;
 import com.wolfmq.common.domain.meta.service.ConsumeOrderService;
 import com.wolfmq.store.domain.mq.DefaultMQService;
 import com.wolfmq.store.domain.mq.ack.AckOffset;
@@ -20,7 +20,7 @@ import com.wolfmq.store.domain.mq.ack.AckService;
 import com.wolfmq.store.domain.mq.queue.DequeueService;
 import com.wolfmq.store.domain.mq.queue.EnqueueService;
 import com.wolfmq.store.domain.mq.queue.MessageService;
-import com.wolfmq.store.domain.mq.queue.OffsetService;
+import com.wolfmq.store.domain.mq.offset.OffsetService;
 import com.wolfmq.store.server.ha.server.processor.CommitLogSynchronizer;
 import org.junit.jupiter.api.Test;
 

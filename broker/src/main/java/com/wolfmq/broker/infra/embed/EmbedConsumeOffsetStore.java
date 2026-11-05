@@ -6,7 +6,7 @@ import com.wolfmq.common.domain.offset.dto.OffsetRequest;
 import com.wolfmq.common.domain.offset.dto.OffsetResult;
 import com.wolfmq.common.domain.offset.dto.TopicResult;
 import com.wolfmq.rpc.store.facade.ConsumeOffsetFacade;
-import com.wolfmq.common.server.store.api.meta.ConsumeOffsetStore;
+import com.wolfmq.common.server.store.api.ConsumeOffsetStore;
 
 public class EmbedConsumeOffsetStore extends AbstractEmbedStore implements ConsumeOffsetFacade {
     private final ConsumeOffsetStore consumeOffsetStore;

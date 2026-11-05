@@ -5,7 +5,7 @@ import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.common.util.lang.string.JSONUtil;
 import com.wolfmq.common.domain.meta.subscription.SubscriptionGroup;
 import com.wolfmq.common.domain.meta.subscription.SubscriptionMap;
-import com.wolfmq.common.domain.meta.service.ConsumeOffsetService;
+import com.wolfmq.common.domain.offset.consume.ConsumeOffsetService;
 import com.wolfmq.common.domain.meta.service.SubscriptionService;
 import com.wolfmq.common.server.store.StoreState;
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package com.wolfmq.store.domain.mq.queue;
+package com.wolfmq.store.domain.mq.offset;
 
 import com.wolfmq.common.config.business.MessageConfig;
 import com.wolfmq.common.config.server.StoreConfig;
@@ -10,7 +10,7 @@ import com.wolfmq.common.domain.consumer.consume.pop.helper.PopConverter;
 import com.wolfmq.common.domain.meta.order.OrderRequest;
 import com.wolfmq.common.domain.commitlog.CommitLog;
 import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueFacade;
-import com.wolfmq.common.domain.meta.service.ConsumeOffsetService;
+import com.wolfmq.common.domain.offset.consume.ConsumeOffsetService;
 import com.wolfmq.common.domain.meta.service.ConsumeOrderService;
 import com.wolfmq.store.domain.mq.ack.AckService;
 import lombok.extern.slf4j.Slf4j;

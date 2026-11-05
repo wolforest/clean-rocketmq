@@ -1,6 +1,6 @@
 package com.wolfmq.store.server.rpc.processor;
 
-import com.wolfmq.common.server.store.api.meta.ConsumeOffsetStore;
+import com.wolfmq.common.server.store.api.ConsumeOffsetStore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
