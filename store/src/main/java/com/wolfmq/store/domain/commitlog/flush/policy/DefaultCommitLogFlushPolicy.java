@@ -1,6 +1,6 @@
 package com.wolfmq.store.domain.commitlog.flush.policy;
 
-import com.wolfmq.common.domain.mq.dto.EnqueueStatus;
+import com.wolfmq.common.domain.messagequeue.dto.EnqueueStatus;
 import com.wolfmq.common.domain.commitlog.flush.CommitLogFlushPolicy;
 import com.wolfmq.common.domain.offset.checkpoint.bakeup.CheckPoint;
 import com.wolfmq.store.domain.commitlog.flush.FlushWatcher;
@@ -11,8 +11,8 @@ import com.wolfmq.store.domain.commitlog.flush.IntervalFlusher;
 import com.wolfmq.store.domain.commitlog.vo.GroupCommitRequest;
 import com.wolfmq.common.config.store.CommitConfig;
 import com.wolfmq.common.domain.commitlog.flush.FlushType;
-import com.wolfmq.common.domain.mq.dto.EnqueueResult;
-import com.wolfmq.common.domain.mq.dto.EnqueueFuture;
+import com.wolfmq.common.domain.messagequeue.dto.EnqueueResult;
+import com.wolfmq.common.domain.messagequeue.dto.EnqueueFuture;
 import com.wolfmq.common.core.mmap.InsertResult;
 import com.wolfmq.common.domain.message.MessageBO;
 import com.wolfmq.common.core.mmap.MappedFileQueue;

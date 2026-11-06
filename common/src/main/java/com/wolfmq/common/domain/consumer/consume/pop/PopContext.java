@@ -2,7 +2,7 @@ package com.wolfmq.common.domain.consumer.consume.pop;
 
 import com.wolfmq.common.config.business.MessageConfig;
 import com.wolfmq.common.config.server.BrokerConfig;
-import com.wolfmq.common.domain.mq.MessageQueue;
+import com.wolfmq.common.domain.messagequeue.MessageQueue;
 import com.wolfmq.common.domain.meta.topic.Topic;
 import io.netty.channel.Channel;
 import java.io.Serializable;

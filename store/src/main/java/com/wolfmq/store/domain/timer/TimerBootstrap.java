@@ -4,7 +4,7 @@ import cn.coderule.common.convention.service.Lifecycle;
 import com.wolfmq.common.config.server.StoreConfig;
 import com.wolfmq.common.server.store.api.TimerStore;
 import com.wolfmq.store.api.TimerStoreImpl;
-import com.wolfmq.store.domain.mq.queue.MessageService;
+import com.wolfmq.store.domain.messagequeue.queue.MessageService;
 import com.wolfmq.store.domain.timer.service.CheckpointService;
 import com.wolfmq.store.domain.timer.service.TimerService;
 import cn.coderule.common.convention.container.ApplicationContext;

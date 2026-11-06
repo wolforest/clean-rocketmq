@@ -1,6 +1,6 @@
 package com.wolfmq.store.domain.commitlog.vo;
 
-import com.wolfmq.common.domain.mq.dto.EnqueueStatus;
+import com.wolfmq.common.domain.messagequeue.dto.EnqueueStatus;
 import java.io.Serializable;
 import java.util.concurrent.CompletableFuture;
 import lombok.AllArgsConstructor;

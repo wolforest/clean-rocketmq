@@ -1,7 +1,7 @@
 package com.wolfmq.broker.domain.consumer.revive;
 
 import com.wolfmq.common.config.business.MessageConfig;
-import com.wolfmq.common.domain.mq.dto.DequeueResult;
+import com.wolfmq.common.domain.messagequeue.dto.DequeueResult;
 import com.wolfmq.rpc.store.facade.MQFacade;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

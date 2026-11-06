@@ -1,7 +1,7 @@
 package com.wolfmq.broker.domain.transaction.service;
 
 import com.wolfmq.common.domain.message.MessageBO;
-import com.wolfmq.common.domain.mq.dto.EnqueueResult;
+import com.wolfmq.common.domain.messagequeue.dto.EnqueueResult;
 import com.wolfmq.common.domain.transaction.CommitResult;
 import com.wolfmq.common.domain.transaction.SubmitRequest;
 import org.junit.jupiter.api.Test;

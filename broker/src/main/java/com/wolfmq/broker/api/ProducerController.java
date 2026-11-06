@@ -12,7 +12,7 @@ import com.wolfmq.common.core.exception.InvalidParameterException;
 import com.wolfmq.common.server.broker.ClientChannelInfo;
 import com.wolfmq.common.server.broker.RequestContext;
 import com.wolfmq.common.domain.message.MessageBO;
-import com.wolfmq.common.domain.mq.dto.EnqueueResult;
+import com.wolfmq.common.domain.messagequeue.dto.EnqueueResult;
 import com.wolfmq.common.domain.message.codec.MessageIDSetter;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;

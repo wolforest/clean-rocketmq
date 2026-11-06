@@ -4,7 +4,7 @@ import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.common.util.lang.collection.MapUtil;
 import com.wolfmq.common.core.constant.MQConstants;
 import com.wolfmq.common.domain.meta.topic.constant.PermName;
-import com.wolfmq.common.domain.mq.MessageQueue;
+import com.wolfmq.common.domain.messagequeue.MessageQueue;
 import com.wolfmq.common.server.registry.GroupInfo;
 import com.wolfmq.common.server.registry.route.PublishInfo;
 import com.wolfmq.common.server.registry.route.QueueInfo;

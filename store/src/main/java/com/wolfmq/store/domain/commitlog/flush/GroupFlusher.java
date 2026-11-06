@@ -3,7 +3,7 @@ package com.wolfmq.store.domain.commitlog.flush;
 import com.wolfmq.common.domain.offset.checkpoint.bakeup.CheckPoint;
 import com.wolfmq.store.domain.commitlog.vo.GroupCommitRequest;
 import cn.coderule.common.util.lang.ThreadUtil;
-import com.wolfmq.common.domain.mq.dto.EnqueueStatus;
+import com.wolfmq.common.domain.messagequeue.dto.EnqueueStatus;
 import com.wolfmq.common.core.mmap.MappedFileQueue;
 import com.wolfmq.common.core.lock.commitlog.CommitLogLock;
 import com.wolfmq.common.core.lock.commitlog.CommitLogSpinLock;

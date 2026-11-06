@@ -2,7 +2,7 @@ package com.wolfmq.common.server.registry.route;
 
 import cn.coderule.common.lang.concurrent.thread.local.ThreadLocalSequence;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
-import com.wolfmq.common.domain.mq.MessageQueue;
+import com.wolfmq.common.domain.messagequeue.MessageQueue;
 import com.wolfmq.common.server.broker.QueueFilter;
 import com.google.common.base.Preconditions;
 import java.io.Serializable;

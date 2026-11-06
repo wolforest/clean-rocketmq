@@ -2,7 +2,7 @@ package com.wolfmq.common.core.lock.queue;
 
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 import com.wolfmq.common.core.lock.TimedLock;
-import com.wolfmq.common.domain.mq.dto.DequeueRequest;
+import com.wolfmq.common.domain.messagequeue.dto.DequeueRequest;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

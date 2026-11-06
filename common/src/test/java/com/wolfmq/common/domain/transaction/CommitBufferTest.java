@@ -1,7 +1,7 @@
 package com.wolfmq.common.domain.transaction;
 
 import com.wolfmq.common.config.business.TransactionConfig;
-import com.wolfmq.common.domain.mq.MessageQueue;
+import com.wolfmq.common.domain.messagequeue.MessageQueue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

@@ -2,8 +2,8 @@ package com.wolfmq.store.server.ha.server.processor;
 
 import com.wolfmq.common.config.server.StoreConfig;
 import com.wolfmq.common.domain.message.MessageBO;
-import com.wolfmq.common.domain.mq.dto.EnqueueFuture;
-import com.wolfmq.common.domain.mq.dto.EnqueueResult;
+import com.wolfmq.common.domain.messagequeue.dto.EnqueueFuture;
+import com.wolfmq.common.domain.messagequeue.dto.EnqueueResult;
 import com.wolfmq.common.core.mmap.InsertResult;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

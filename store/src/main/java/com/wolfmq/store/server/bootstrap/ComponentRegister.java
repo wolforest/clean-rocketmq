@@ -10,7 +10,7 @@ import com.wolfmq.store.domain.commitlog.CommitLogBootstrap;
 import com.wolfmq.store.domain.consumequeue.ConsumeQueueBootstrap;
 import com.wolfmq.store.domain.dispatcher.DispatcherBootstrap;
 import com.wolfmq.store.domain.index.IndexBootstrap;
-import com.wolfmq.store.domain.mq.MQBootstrap;
+import com.wolfmq.store.domain.messagequeue.MQBootstrap;
 import com.wolfmq.store.domain.meta.MetaBootstrap;
 import com.wolfmq.store.domain.timer.TimerBootstrap;
 import com.wolfmq.common.server.store.StoreScheduler;

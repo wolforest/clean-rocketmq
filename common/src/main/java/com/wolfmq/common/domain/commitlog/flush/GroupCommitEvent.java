@@ -1,7 +1,7 @@
 package com.wolfmq.common.domain.commitlog.flush;
 
-import com.wolfmq.common.domain.mq.dto.EnqueueStatus;
-import com.wolfmq.common.domain.mq.dto.EnqueueFuture;
+import com.wolfmq.common.domain.messagequeue.dto.EnqueueStatus;
+import com.wolfmq.common.domain.messagequeue.dto.EnqueueFuture;
 import com.wolfmq.common.core.mmap.InsertResult;
 import java.io.Serializable;
 import java.util.concurrent.CompletableFuture;

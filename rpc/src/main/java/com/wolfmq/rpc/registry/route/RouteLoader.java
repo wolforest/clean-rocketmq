@@ -7,7 +7,7 @@ import cn.coderule.common.util.lang.ThreadUtil;
 import cn.coderule.common.util.lang.collection.CollectionUtil;
 import com.wolfmq.common.core.constant.MQConstants;
 import com.wolfmq.common.core.exception.RpcException;
-import com.wolfmq.common.domain.mq.MessageQueue;
+import com.wolfmq.common.domain.messagequeue.MessageQueue;
 import com.wolfmq.common.domain.message.utils.NamespaceUtils;
 import com.wolfmq.rpc.common.rpc.protocol.code.ResponseCode;
 import com.wolfmq.rpc.registry.RegistryClient;

@@ -8,11 +8,11 @@ import com.wolfmq.common.config.business.TransactionConfig;
 import com.wolfmq.common.config.server.BrokerConfig;
 import com.wolfmq.common.domain.message.property.MessageConst;
 import com.wolfmq.common.domain.message.enums.MessageStatus;
-import com.wolfmq.common.domain.mq.dto.EnqueueStatus;
-import com.wolfmq.common.domain.mq.MessageQueue;
+import com.wolfmq.common.domain.messagequeue.dto.EnqueueStatus;
+import com.wolfmq.common.domain.messagequeue.MessageQueue;
 import com.wolfmq.common.domain.message.MessageBO;
-import com.wolfmq.common.domain.mq.dto.DequeueResult;
-import com.wolfmq.common.domain.mq.dto.EnqueueResult;
+import com.wolfmq.common.domain.messagequeue.dto.DequeueResult;
+import com.wolfmq.common.domain.messagequeue.dto.EnqueueResult;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

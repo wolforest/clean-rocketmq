@@ -10,7 +10,7 @@ import com.wolfmq.rpc.store.facade.TopicFacade;
 import com.wolfmq.common.domain.offset.consume.ConsumeOffsetService;
 import com.wolfmq.common.domain.meta.service.SubscriptionService;
 import com.wolfmq.common.domain.meta.service.TopicService;
-import com.wolfmq.common.domain.mq.MQService;
+import com.wolfmq.common.domain.messagequeue.MQService;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

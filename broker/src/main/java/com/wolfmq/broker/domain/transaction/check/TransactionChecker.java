@@ -8,9 +8,9 @@ import com.wolfmq.broker.domain.transaction.check.service.OperationMessageLoader
 import com.wolfmq.broker.domain.transaction.check.service.PrepareMessageChecker;
 import com.wolfmq.broker.domain.transaction.service.TransactionMessageService;
 import com.wolfmq.common.config.business.TransactionConfig;
-import com.wolfmq.common.domain.mq.MessageQueue;
+import com.wolfmq.common.domain.messagequeue.MessageQueue;
 import com.wolfmq.common.server.task.QueueTask;
-import com.wolfmq.common.domain.mq.dto.DequeueResult;
+import com.wolfmq.common.domain.messagequeue.dto.DequeueResult;
 import com.wolfmq.common.domain.transaction.CheckBuffer;
 import com.wolfmq.common.domain.transaction.TransactionUtil;
 import java.util.Set;

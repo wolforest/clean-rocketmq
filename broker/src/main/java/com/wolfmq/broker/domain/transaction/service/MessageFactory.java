@@ -1,7 +1,7 @@
 package com.wolfmq.broker.domain.transaction.service;
 
 import com.wolfmq.common.config.server.BrokerConfig;
-import com.wolfmq.common.domain.mq.MessageQueue;
+import com.wolfmq.common.domain.messagequeue.MessageQueue;
 import com.wolfmq.common.domain.message.codec.MessageIDSetter;
 import com.wolfmq.common.domain.transaction.SubmitRequest;
 import com.wolfmq.common.domain.transaction.TransactionUtil;

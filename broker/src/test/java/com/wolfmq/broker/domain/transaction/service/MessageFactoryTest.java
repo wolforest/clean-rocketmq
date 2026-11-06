@@ -4,7 +4,7 @@ import com.wolfmq.common.config.business.TransactionConfig;
 import com.wolfmq.common.config.server.BrokerConfig;
 import com.wolfmq.common.domain.message.property.MessageConst;
 import com.wolfmq.common.domain.message.property.MessageSysFlag;
-import com.wolfmq.common.domain.mq.MessageQueue;
+import com.wolfmq.common.domain.messagequeue.MessageQueue;
 import com.wolfmq.common.domain.message.MessageBO;
 import com.wolfmq.common.domain.transaction.CommitBuffer;
 import com.wolfmq.common.domain.transaction.OffsetQueue;

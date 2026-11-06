@@ -1,7 +1,7 @@
 package com.wolfmq.common.domain.commitlog.flush;
 
 import cn.coderule.common.convention.service.Lifecycle;
-import com.wolfmq.common.domain.mq.dto.EnqueueFuture;
+import com.wolfmq.common.domain.messagequeue.dto.EnqueueFuture;
 import com.wolfmq.common.core.mmap.InsertResult;
 import com.wolfmq.common.domain.message.MessageBO;
 

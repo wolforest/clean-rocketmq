@@ -1,7 +1,7 @@
 package com.wolfmq.store.domain.commitlog.vo;
 
 import com.wolfmq.common.domain.message.MessageBO;
-import com.wolfmq.common.domain.mq.dto.EnqueueResult;
+import com.wolfmq.common.domain.messagequeue.dto.EnqueueResult;
 import com.wolfmq.common.core.mmap.MappedFile;
 import com.wolfmq.common.domain.message.codec.MessageEncoder;
 import org.junit.jupiter.api.Test;

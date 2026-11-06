@@ -4,7 +4,7 @@ import apache.rocketmq.v2.Code;
 import apache.rocketmq.v2.SendMessageResponse;
 import apache.rocketmq.v2.SendResultEntry;
 import cn.coderule.common.util.lang.string.StringUtil;
-import com.wolfmq.common.domain.mq.dto.EnqueueResult;
+import com.wolfmq.common.domain.messagequeue.dto.EnqueueResult;
 import com.wolfmq.rpc.common.grpc.response.ResponseBuilder;
 import java.util.HashSet;
 import java.util.List;

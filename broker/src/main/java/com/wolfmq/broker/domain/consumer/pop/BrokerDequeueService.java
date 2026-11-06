@@ -1,8 +1,8 @@
 package com.wolfmq.broker.domain.consumer.pop;
 
 import com.wolfmq.common.server.broker.RequestContext;
-import com.wolfmq.common.domain.mq.dto.DequeueRequest;
-import com.wolfmq.common.domain.mq.dto.DequeueResult;
+import com.wolfmq.common.domain.messagequeue.dto.DequeueRequest;
+import com.wolfmq.common.domain.messagequeue.dto.DequeueResult;
 import com.wolfmq.common.domain.consumer.consume.dto.QueueRequest;
 import com.wolfmq.common.domain.consumer.consume.pop.PopContext;
 import com.wolfmq.common.domain.consumer.consume.pop.PopRequest;

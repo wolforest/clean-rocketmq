@@ -2,7 +2,7 @@ package com.wolfmq.common.domain.transaction;
 
 import cn.coderule.common.util.lang.string.StringUtil;
 import com.wolfmq.common.config.business.TransactionConfig;
-import com.wolfmq.common.domain.mq.MessageQueue;
+import com.wolfmq.common.domain.messagequeue.MessageQueue;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;

@@ -2,7 +2,7 @@ package com.wolfmq.rpc.registry.route;
 
 import com.wolfmq.common.server.registry.route.QueueInfo;
 import com.wolfmq.common.server.registry.route.RouteInfo;
-import com.wolfmq.common.domain.mq.MessageQueue;
+import com.wolfmq.common.domain.messagequeue.MessageQueue;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;

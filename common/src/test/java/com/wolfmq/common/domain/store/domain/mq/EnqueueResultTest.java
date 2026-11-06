@@ -1,8 +1,8 @@
 package com.wolfmq.common.domain.store.domain.mq;
 
 import com.wolfmq.common.domain.message.MessageBO;
-import com.wolfmq.common.domain.mq.dto.EnqueueResult;
-import com.wolfmq.common.domain.mq.dto.EnqueueStatus;
+import com.wolfmq.common.domain.messagequeue.dto.EnqueueResult;
+import com.wolfmq.common.domain.messagequeue.dto.EnqueueStatus;
 import com.wolfmq.common.core.mmap.InsertResult;
 import org.junit.jupiter.api.Test;
 

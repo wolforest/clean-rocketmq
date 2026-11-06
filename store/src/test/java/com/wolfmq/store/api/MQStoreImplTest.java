@@ -2,17 +2,17 @@ package com.wolfmq.store.api;
 
 import com.wolfmq.common.domain.consumer.consume.dto.QueueRequest;
 import com.wolfmq.common.domain.consumer.consume.dto.QueueResult;
-import com.wolfmq.common.domain.mq.dto.DequeueRequest;
-import com.wolfmq.common.domain.mq.dto.DequeueResult;
+import com.wolfmq.common.domain.messagequeue.dto.DequeueRequest;
+import com.wolfmq.common.domain.messagequeue.dto.DequeueResult;
 import com.wolfmq.common.domain.consumer.consume.dto.MessageRequest;
 import com.wolfmq.common.domain.consumer.consume.dto.MessageResult;
-import com.wolfmq.common.domain.mq.dto.EnqueueRequest;
-import com.wolfmq.common.domain.mq.dto.EnqueueResult;
-import com.wolfmq.common.domain.mq.MQService;
+import com.wolfmq.common.domain.messagequeue.dto.EnqueueRequest;
+import com.wolfmq.common.domain.messagequeue.dto.EnqueueResult;
+import com.wolfmq.common.domain.messagequeue.MQService;
 import com.wolfmq.common.domain.message.MessageBO;
 import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueFacade;
-import com.wolfmq.store.domain.mq.ack.AckService;
-import com.wolfmq.store.domain.mq.ack.InvisibleService;
+import com.wolfmq.store.domain.messagequeue.ack.AckService;
+import com.wolfmq.store.domain.messagequeue.ack.InvisibleService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

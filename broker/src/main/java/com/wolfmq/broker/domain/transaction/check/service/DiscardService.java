@@ -4,7 +4,7 @@ import com.wolfmq.broker.domain.transaction.service.TransactionMessageService;
 import com.wolfmq.common.config.server.BrokerConfig;
 import com.wolfmq.common.domain.message.MessageBO;
 import com.wolfmq.common.domain.meta.topic.Topic;
-import com.wolfmq.common.domain.mq.dto.EnqueueResult;
+import com.wolfmq.common.domain.messagequeue.dto.EnqueueResult;
 import java.util.concurrent.ThreadLocalRandom;
 import lombok.extern.slf4j.Slf4j;
 

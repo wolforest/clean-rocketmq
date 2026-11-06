@@ -1,7 +1,7 @@
 package com.wolfmq.common.domain.store.domain.mq;
 
 import com.wolfmq.common.server.registry.heartbeat.SubscriptionData;
-import com.wolfmq.common.domain.mq.filter.DefaultMessageFilter;
+import com.wolfmq.common.domain.messagequeue.filter.DefaultMessageFilter;
 import org.junit.jupiter.api.Test;
 
 import java.nio.ByteBuffer;

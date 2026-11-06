@@ -3,7 +3,7 @@ package com.wolfmq.store.domain.timer.wheel;
 import com.wolfmq.common.config.business.TimerConfig;
 import com.wolfmq.common.config.server.StoreConfig;
 import com.wolfmq.common.testing.ConfigMock;
-import com.wolfmq.store.domain.mq.queue.MessageService;
+import com.wolfmq.store.domain.messagequeue.queue.MessageService;
 import com.wolfmq.store.domain.timer.service.CheckpointService;
 import java.nio.file.Path;
 import org.junit.jupiter.api.Test;

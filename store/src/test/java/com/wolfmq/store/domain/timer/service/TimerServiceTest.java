@@ -8,7 +8,7 @@ import com.wolfmq.common.domain.timer.model.ScanResult;
 import com.wolfmq.common.domain.timer.model.TimerEvent;
 import com.wolfmq.common.testing.ConfigMock;
 import com.wolfmq.common.testing.MessageMock;
-import com.wolfmq.store.domain.mq.queue.MessageService;
+import com.wolfmq.store.domain.messagequeue.queue.MessageService;
 import java.nio.file.Path;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;

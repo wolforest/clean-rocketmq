@@ -2,7 +2,7 @@ package com.wolfmq.common.core.exception;
 
 import cn.coderule.common.lang.exception.BusinessException;
 import com.wolfmq.common.domain.message.enums.MessageStatus;
-import com.wolfmq.common.domain.mq.dto.DequeueResult;
+import com.wolfmq.common.domain.messagequeue.dto.DequeueResult;
 import java.util.List;
 import lombok.Getter;
 

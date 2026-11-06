@@ -1,7 +1,7 @@
 package com.wolfmq.common.core.exception;
 
 import cn.coderule.common.lang.exception.BusinessException;
-import com.wolfmq.common.domain.mq.dto.EnqueueStatus;
+import com.wolfmq.common.domain.messagequeue.dto.EnqueueStatus;
 import lombok.Getter;
 
 @Getter

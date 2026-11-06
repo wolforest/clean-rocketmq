@@ -1,6 +1,6 @@
 package com.wolfmq.rpc.registry.route;
 
-import com.wolfmq.common.domain.mq.MessageQueue;
+import com.wolfmq.common.domain.messagequeue.MessageQueue;
 import com.wolfmq.common.server.registry.GroupInfo;
 import com.wolfmq.common.server.registry.route.PublishInfo;
 import com.wolfmq.common.server.registry.route.RouteInfo;

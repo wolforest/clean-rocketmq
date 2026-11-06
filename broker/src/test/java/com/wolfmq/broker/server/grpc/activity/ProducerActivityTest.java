@@ -7,7 +7,7 @@ import apache.rocketmq.v2.SendMessageResponse;
 import com.wolfmq.broker.api.ProducerController;
 import com.wolfmq.broker.server.grpc.interceptor.PipelineExecutor;
 import com.wolfmq.common.server.broker.RequestContext;
-import com.wolfmq.common.domain.mq.dto.EnqueueResult;
+import com.wolfmq.common.domain.messagequeue.dto.EnqueueResult;
 import io.grpc.stub.StreamObserver;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
