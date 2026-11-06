@@ -4,7 +4,7 @@ import com.wolfmq.common.config.store.CommitConfig;
 import com.wolfmq.common.domain.commitlog.CommitLog;
 import com.wolfmq.common.domain.commitlog.route.CommitLogRouter;
 import com.wolfmq.common.domain.message.MessageBO;
-import com.wolfmq.store.domain.commitlog.log.CommitLogManager;
+import com.wolfmq.store.domain.commitlog.file.CommitLogManager;
 
 public class DefaultRouter implements CommitLogRouter {
     private final CommitConfig config;

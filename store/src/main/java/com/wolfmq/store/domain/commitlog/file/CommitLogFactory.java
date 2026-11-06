@@ -1,4 +1,4 @@
-package com.wolfmq.store.domain.commitlog.log;
+package com.wolfmq.store.domain.commitlog.file;
 
 import cn.coderule.common.util.io.DirUtil;
 import com.wolfmq.common.config.server.StoreConfig;

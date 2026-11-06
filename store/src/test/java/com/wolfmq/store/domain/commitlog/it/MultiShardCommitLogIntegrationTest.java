@@ -12,7 +12,7 @@ import com.wolfmq.common.core.mmap.InsertResult;
 import com.wolfmq.common.core.mmap.SelectedMappedBuffer;
 import com.wolfmq.common.testing.ConfigMock;
 import com.wolfmq.store.api.CommitLogStoreImpl;
-import com.wolfmq.store.domain.commitlog.log.CommitLogFactory;
+import com.wolfmq.store.domain.commitlog.file.CommitLogFactory;
 import com.wolfmq.store.domain.commitlog.CommitLogFacade;
 import com.wolfmq.common.domain.offset.commitlog.OffsetCodec;
 import com.wolfmq.store.domain.commitlog.route.TopicPartitioner;

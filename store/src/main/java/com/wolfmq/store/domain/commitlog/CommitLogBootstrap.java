@@ -8,7 +8,7 @@ import com.wolfmq.common.domain.commitlog.CommitLog;
 import com.wolfmq.common.domain.meta.service.TopicService;
 import com.wolfmq.common.domain.offset.checkpoint.bakeup.CheckPoint;
 import com.wolfmq.store.api.CommitLogStoreImpl;
-import com.wolfmq.store.domain.commitlog.log.CommitLogFactory;
+import com.wolfmq.store.domain.commitlog.file.CommitLogFactory;
 import com.wolfmq.store.domain.commitlog.route.TopicPartitioner;
 import com.wolfmq.store.infra.file.AllocateMappedFileService;
 import cn.coderule.common.convention.container.ApplicationContext;

@@ -1,4 +1,4 @@
-package com.wolfmq.store.domain.commitlog.log;
+package com.wolfmq.store.domain.commitlog.file;
 
 import com.wolfmq.common.config.store.CommitConfig;
 import com.wolfmq.common.domain.message.MessageBO;

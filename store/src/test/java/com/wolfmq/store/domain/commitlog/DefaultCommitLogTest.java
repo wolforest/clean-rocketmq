@@ -17,7 +17,7 @@ import com.wolfmq.common.core.mmap.SelectedMappedBuffer;
 import com.wolfmq.common.testing.ConfigMock;
 import com.wolfmq.common.testing.MessageMock;
 import com.wolfmq.store.domain.commitlog.flush.policy.SyncCommitLogFlushPolicy;
-import com.wolfmq.store.domain.commitlog.log.DefaultCommitLog;
+import com.wolfmq.store.domain.commitlog.file.DefaultCommitLog;
 import com.wolfmq.store.infra.file.DefaultMappedFileQueue;
 import java.nio.file.Path;
 import java.util.Set;

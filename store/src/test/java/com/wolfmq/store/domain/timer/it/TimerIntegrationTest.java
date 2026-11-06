@@ -21,7 +21,7 @@ import com.wolfmq.store.domain.timer.wheel.TaskScanner;
 import com.wolfmq.store.domain.timer.wheel.TimerLog;
 import com.wolfmq.store.domain.timer.wheel.TimerWheel;
 import com.wolfmq.store.domain.mq.queue.MessageService;
-import com.wolfmq.store.domain.commitlog.log.CommitLogFactory;
+import com.wolfmq.store.domain.commitlog.file.CommitLogFactory;
 import com.wolfmq.store.domain.commitlog.CommitLogFacade;
 import com.wolfmq.store.domain.commitlog.route.TopicPartitioner;
 import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueFacade;

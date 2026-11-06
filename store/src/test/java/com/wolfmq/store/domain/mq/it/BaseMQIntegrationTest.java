@@ -12,7 +12,7 @@ import com.wolfmq.common.domain.meta.service.ConsumeOrderService;
 import com.wolfmq.common.domain.meta.service.TopicService;
 import com.wolfmq.common.domain.offset.checkpoint.bakeup.CheckPoint;
 import com.wolfmq.common.testing.ConfigMock;
-import com.wolfmq.store.domain.commitlog.log.CommitLogFactory;
+import com.wolfmq.store.domain.commitlog.file.CommitLogFactory;
 import com.wolfmq.store.domain.commitlog.CommitLogFacade;
 import com.wolfmq.common.domain.offset.commitlog.OffsetCodec;
 import com.wolfmq.store.domain.commitlog.route.TopicPartitioner;

@@ -14,7 +14,7 @@ import com.wolfmq.common.testing.ConfigMock;
 import com.wolfmq.common.testing.MessageMock;
 import com.wolfmq.store.domain.commitlog.flush.policy.EmptyCommitLogFlushPolicy;
 import com.wolfmq.store.domain.commitlog.CommitLogFacade;
-import com.wolfmq.store.domain.commitlog.log.DefaultCommitLog;
+import com.wolfmq.store.domain.commitlog.file.DefaultCommitLog;
 import com.wolfmq.store.domain.commitlog.route.TopicPartitioner;
 import com.wolfmq.store.infra.file.DefaultMappedFileQueue;
 import java.util.concurrent.ExecutionException;
