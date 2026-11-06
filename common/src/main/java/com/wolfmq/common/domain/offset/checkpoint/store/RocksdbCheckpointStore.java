@@ -1,6 +1,7 @@
 package com.wolfmq.common.domain.offset.checkpoint.store;
 
 import com.wolfmq.common.domain.offset.checkpoint.CheckpointService;
+import java.util.Map;
 import lombok.Data;
 
 @Data
@@ -35,6 +36,11 @@ public class RocksdbCheckpointStore implements CheckpointService, CheckpointStor
     @Override
     public Long getMasterOffset(int shard) {
         return memoryStore.getMasterOffset(shard);
+    }
+
+    @Override
+    public void setMasterOffset(Map<Integer, Long> offsetMap) {
+        memoryStore.setMasterOffset(offsetMap);
     }
 
     @Override

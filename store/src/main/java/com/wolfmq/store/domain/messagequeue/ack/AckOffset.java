@@ -1,7 +1,7 @@
 package com.wolfmq.store.domain.messagequeue.ack;
 
 import com.wolfmq.common.core.lock.queue.DequeueLock;
-import com.wolfmq.common.domain.offset.service.ConsumeOffsetService;
+import com.wolfmq.common.domain.offset.ConsumeOffsetService;
 import com.wolfmq.common.domain.meta.service.ConsumeOrderService;
 import com.wolfmq.common.domain.consumer.ack.AckConverter;
 import com.wolfmq.common.domain.consumer.ack.AckInfo;

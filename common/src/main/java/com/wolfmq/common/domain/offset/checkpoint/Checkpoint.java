@@ -1,6 +1,8 @@
 package com.wolfmq.common.domain.offset.checkpoint;
 
+import cn.coderule.common.util.lang.collection.MapUtil;
 import com.wolfmq.common.domain.offset.checkpoint.store.CheckpointStore;
+import java.util.Map;
 
 public class Checkpoint implements CheckpointService {
     private final CheckpointStore store;
@@ -37,6 +39,15 @@ public class Checkpoint implements CheckpointService {
     @Override
     public Long getMasterOffset(int shard) {
         return store.getMasterOffset(shard);
+    }
+
+    @Override
+    public void setMasterOffset(Map<Integer, Long> offsetMap) {
+        if (MapUtil.isEmpty(offsetMap)) {
+            return;
+        }
+
+        store.setMasterOffset(offsetMap);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.wolfmq.common.domain.offset.checkpoint.store;
 
 import com.wolfmq.common.domain.offset.checkpoint.CheckpointService;
+import java.util.Map;
 import java.util.concurrent.ConcurrentSkipListMap;
 import lombok.Data;
 
@@ -47,6 +48,11 @@ public class MemoryCheckpointStore implements CheckpointService {
     @Override
     public Long getMasterOffset(int shard) {
         return masterOffsetMap.get(shard);
+    }
+
+    @Override
+    public void setMasterOffset(Map<Integer, Long> offsetMap) {
+        masterOffsetMap.putAll(offsetMap);
     }
 
     @Override

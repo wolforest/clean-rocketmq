@@ -7,7 +7,7 @@ import com.wolfmq.common.config.server.StoreConfig;
 import com.wolfmq.common.config.store.CommitConfig;
 import com.wolfmq.common.config.store.ConsumeQueueConfig;
 import com.wolfmq.common.domain.commitlog.CommitLog;
-import com.wolfmq.common.domain.offset.service.ConsumeOffsetService;
+import com.wolfmq.common.domain.offset.ConsumeOffsetService;
 import com.wolfmq.common.domain.meta.service.ConsumeOrderService;
 import com.wolfmq.common.domain.meta.service.TopicService;
 import com.wolfmq.common.domain.offset.checkpoint.bakeup.CheckPoint;

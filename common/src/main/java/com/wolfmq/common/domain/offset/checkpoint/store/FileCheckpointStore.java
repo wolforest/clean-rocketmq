@@ -5,6 +5,7 @@ import cn.coderule.common.util.lang.string.JSONUtil;
 import cn.coderule.common.util.lang.string.StringUtil;
 import com.wolfmq.common.domain.offset.checkpoint.CheckpointService;
 import java.io.File;
+import java.util.Map;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
@@ -48,6 +49,11 @@ public class FileCheckpointStore implements CheckpointService, CheckpointStore {
     @Override
     public Long getMasterOffset(int shard) {
         return memoryStore.getMasterOffset(shard);
+    }
+
+    @Override
+    public void setMasterOffset(Map<Integer, Long> offsetMap) {
+        memoryStore.setMasterOffset(offsetMap);
     }
 
     @Override

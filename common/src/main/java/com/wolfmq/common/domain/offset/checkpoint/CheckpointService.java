@@ -1,5 +1,7 @@
 package com.wolfmq.common.domain.offset.checkpoint;
 
+import java.util.Map;
+
 public interface CheckpointService {
     void setCommitOffset(int shard, long commitOffset);
 
@@ -12,6 +14,8 @@ public interface CheckpointService {
     void setMasterOffset(int shard, long commitOffset);
 
     Long getMasterOffset(int shard);
+
+    void setMasterOffset(Map<Integer, Long> offsetMap);
 
     void setIndexedOffset(int shard, long indexOffset);
 

@@ -3,6 +3,7 @@ package com.wolfmq.common.domain.offset.commitlog;
 import com.wolfmq.common.config.store.CommitConfig;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class OffsetRecorder {
     private final CommitConfig config;

@@ -6,7 +6,7 @@ import com.wolfmq.common.server.store.api.ConsumeOffsetStore;
 import com.wolfmq.common.server.store.api.meta.SubscriptionStore;
 import com.wolfmq.common.server.store.api.meta.TopicStore;
 import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueFacade;
-import com.wolfmq.common.domain.offset.service.ConsumeOffsetService;
+import com.wolfmq.common.domain.offset.ConsumeOffsetService;
 import com.wolfmq.common.domain.meta.service.ConsumeOrderService;
 import com.wolfmq.common.domain.meta.service.SubscriptionService;
 import com.wolfmq.common.domain.meta.service.TopicService;
