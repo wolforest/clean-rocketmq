@@ -2,6 +2,6 @@ package com.wolfmq.common.domain.retention;
 
 public enum RetentionStrategy {
     CLEANUP,
-    COMPRESSION,
+    COMPACTION,
     TRANSFER,
 }
