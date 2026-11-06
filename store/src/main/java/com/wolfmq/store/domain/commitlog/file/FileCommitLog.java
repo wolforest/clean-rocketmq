@@ -34,7 +34,7 @@ import lombok.extern.slf4j.Slf4j;
  *  - FlushManager
  */
 @Slf4j
-public class DefaultCommitLog implements CommitLog {
+public class FileCommitLog implements CommitLog {
     @Getter
     private final int shardId;
 
@@ -50,7 +50,7 @@ public class DefaultCommitLog implements CommitLog {
     private final CommitLogLock commitLogLock;
     private ThreadLocal<EnqueueThreadLocal> localEncoder;
 
-    public DefaultCommitLog(
+    public FileCommitLog(
         StoreConfig storeConfig,
         int shardId,
         MappedFileQueue mappedFileQueue,
@@ -59,7 +59,7 @@ public class DefaultCommitLog implements CommitLog {
         this(storeConfig, shardId, mappedFileQueue, flushPolicy, null);
     }
 
-    public DefaultCommitLog(
+    public FileCommitLog(
         StoreConfig storeConfig,
         int shardId,
         MappedFileQueue mappedFileQueue,

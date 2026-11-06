@@ -47,7 +47,7 @@ public class CommitLogFactory {
     public CommitLog createByShardId(int shardId) {
         MappedFileQueue fileQueue = initMappedFileQueue(shardId);
         CommitLogFlushPolicy flushPolicy = initFlushPolicy(shardId, fileQueue);
-        return new DefaultCommitLog(storeConfig, shardId, fileQueue, flushPolicy, checkpoint);
+        return new FileCommitLog(storeConfig, shardId, fileQueue, flushPolicy, checkpoint);
     }
 
     private DefaultMappedFileQueue initMappedFileQueue(int shardId) {

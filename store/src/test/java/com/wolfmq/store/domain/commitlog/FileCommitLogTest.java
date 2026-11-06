@@ -17,7 +17,7 @@ import com.wolfmq.common.core.mmap.SelectedMappedBuffer;
 import com.wolfmq.common.testing.ConfigMock;
 import com.wolfmq.common.testing.MessageMock;
 import com.wolfmq.store.domain.commitlog.flush.policy.SyncCommitLogFlushPolicy;
-import com.wolfmq.store.domain.commitlog.file.DefaultCommitLog;
+import com.wolfmq.store.domain.commitlog.file.FileCommitLog;
 import com.wolfmq.store.infra.file.DefaultMappedFileQueue;
 import java.nio.file.Path;
 import java.util.Set;
@@ -27,7 +27,7 @@ import org.junit.jupiter.api.io.TempDir;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class DefaultCommitLogTest {
+class FileCommitLogTest {
     public static int MMAP_FILE_SIZE = 1024 * 1024;
 
     // ==================== Existing Tests ====================
@@ -457,7 +457,7 @@ class DefaultCommitLogTest {
     void testGetMappedFileQueue(@TempDir Path tmpDir) {
         String dir = tmpDir.toString();
         StoreConfig storeConfig = ConfigMock.createStoreConfig(dir);
-        DefaultCommitLog commitLog = (DefaultCommitLog) createCommitLog(dir, storeConfig);
+        FileCommitLog commitLog = (FileCommitLog) createCommitLog(dir, storeConfig);
 
         MappedFileQueue queue = commitLog.getMappedFileQueue();
         assertNotNull(queue);
@@ -528,7 +528,7 @@ class DefaultCommitLogTest {
         commitConfig.setFileSize(MMAP_FILE_SIZE);
 
         CommitLogFlushPolicy flusher = new SyncCommitLogFlushPolicy(queue);
-        return new DefaultCommitLog(storeConfig, 0, queue, flusher);
+        return new FileCommitLog(storeConfig, 0, queue, flusher);
     }
 
     private MessageBO createMessage(MessageEncoder encoder) {

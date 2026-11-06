@@ -14,7 +14,7 @@ import com.wolfmq.common.testing.ConfigMock;
 import com.wolfmq.common.testing.MessageMock;
 import com.wolfmq.store.domain.commitlog.flush.policy.EmptyCommitLogFlushPolicy;
 import com.wolfmq.store.domain.commitlog.CommitLogFacade;
-import com.wolfmq.store.domain.commitlog.file.DefaultCommitLog;
+import com.wolfmq.store.domain.commitlog.file.FileCommitLog;
 import com.wolfmq.store.domain.commitlog.route.TopicPartitioner;
 import com.wolfmq.store.infra.file.DefaultMappedFileQueue;
 import java.util.concurrent.ExecutionException;
@@ -470,7 +470,7 @@ public class CommitLogManagerBenchmark {
     private static CommitLog createCommitLog(String dir, StoreConfig storeConfig, int shardId) {
         MappedFileQueue queue = new DefaultMappedFileQueue(dir, MMAP_FILE_SIZE);
         CommitLogFlushPolicy flusher = new EmptyCommitLogFlushPolicy(queue);
-        return new DefaultCommitLog(storeConfig, shardId, queue, flusher);
+        return new FileCommitLog(storeConfig, shardId, queue, flusher);
     }
 
     private static MessageBO createMessage(MessageEncoder encoder, String topic) {
