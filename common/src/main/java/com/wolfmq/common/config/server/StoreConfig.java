@@ -15,6 +15,7 @@ import com.wolfmq.common.config.store.CommitConfig;
 import com.wolfmq.common.config.store.ConsumeQueueConfig;
 import com.wolfmq.common.config.store.IndexConfig;
 import com.wolfmq.common.config.store.MetaConfig;
+import com.wolfmq.common.config.store.RetentionConfig;
 import com.wolfmq.common.config.store.StorePath;
 import com.wolfmq.common.domain.meta.topic.constant.PermName;
 import com.wolfmq.common.server.registry.RegistryUtils;
@@ -105,6 +106,7 @@ public class StoreConfig extends ServerIdentity {
     private boolean assignConsumeOffset = false;
 
     private Common common;
+    private RetentionConfig retention = new RetentionConfig();
     private CheckpointConfig checkpoint = new CheckpointConfig();
     private MessageConfig message = new MessageConfig();
     private TopicConfig topic = new TopicConfig();
