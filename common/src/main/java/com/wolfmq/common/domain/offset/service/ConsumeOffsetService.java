@@ -1,4 +1,4 @@
-package com.wolfmq.common.domain.offset.consume;
+package com.wolfmq.common.domain.offset.service;
 
 import com.wolfmq.common.domain.meta.service.MetaService;
 import java.util.Set;

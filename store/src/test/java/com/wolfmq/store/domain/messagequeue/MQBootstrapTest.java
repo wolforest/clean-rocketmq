@@ -9,7 +9,7 @@ import cn.coderule.common.convention.container.ApplicationContext;
 import com.wolfmq.common.config.server.StoreConfig;
 import com.wolfmq.common.server.store.api.MQStore;
 import com.wolfmq.common.domain.commitlog.CommitLog;
-import com.wolfmq.common.domain.offset.consume.ConsumeOffsetService;
+import com.wolfmq.common.domain.offset.service.ConsumeOffsetService;
 import com.wolfmq.common.domain.meta.service.ConsumeOrderService;
 import com.wolfmq.common.domain.messagequeue.MQService;
 import com.wolfmq.common.domain.consumer.consume.InflightCounter;

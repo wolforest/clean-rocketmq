@@ -12,7 +12,7 @@ import com.wolfmq.common.domain.messagequeue.dto.DequeueResult;
 import com.wolfmq.common.domain.messagequeue.dto.EnqueueFuture;
 import com.wolfmq.common.domain.messagequeue.dto.EnqueueResult;
 import com.wolfmq.common.testing.MessageMock;
-import com.wolfmq.common.domain.offset.consume.ConsumeOffsetService;
+import com.wolfmq.common.domain.offset.service.ConsumeOffsetService;
 import com.wolfmq.common.domain.meta.service.ConsumeOrderService;
 import com.wolfmq.store.domain.messagequeue.DefaultMQService;
 import com.wolfmq.store.domain.messagequeue.ack.AckOffset;

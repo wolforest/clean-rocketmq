@@ -7,7 +7,7 @@ import com.wolfmq.common.config.server.StoreConfig;
 import com.wolfmq.common.domain.meta.topic.Topic;
 import com.wolfmq.common.domain.meta.topic.utils.TopicMap;
 import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueFacade;
-import com.wolfmq.common.domain.offset.consume.ConsumeOffsetService;
+import com.wolfmq.common.domain.offset.service.ConsumeOffsetService;
 import com.wolfmq.common.domain.meta.service.TopicService;
 import com.wolfmq.common.domain.meta.topic.utils.KeyBuilder;
 import com.wolfmq.store.server.bootstrap.StoreRegister;

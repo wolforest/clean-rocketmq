@@ -2,7 +2,7 @@ package com.wolfmq.store.domain.meta;
 
 import com.wolfmq.common.config.server.StoreConfig;
 import com.wolfmq.common.core.constant.MQConstants;
-import com.wolfmq.common.domain.offset.consume.ConsumeOffsetService;
+import com.wolfmq.common.domain.offset.service.ConsumeOffsetService;
 import com.wolfmq.common.domain.meta.topic.utils.KeyBuilder;
 import com.wolfmq.common.domain.meta.topic.Topic;
 import com.wolfmq.common.domain.meta.topic.utils.TopicValidator;

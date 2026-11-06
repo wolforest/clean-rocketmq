@@ -4,7 +4,7 @@ import com.wolfmq.common.core.lock.queue.DequeueLock;
 import com.wolfmq.common.domain.consumer.ack.AckInfo;
 import com.wolfmq.common.domain.consumer.ack.store.AckMessage;
 import com.wolfmq.common.domain.consumer.consume.InflightCounter;
-import com.wolfmq.common.domain.offset.consume.ConsumeOffsetService;
+import com.wolfmq.common.domain.offset.service.ConsumeOffsetService;
 import com.wolfmq.common.domain.meta.service.ConsumeOrderService;
 import com.wolfmq.common.domain.meta.topic.utils.KeyBuilder;
 import org.junit.jupiter.api.Test;

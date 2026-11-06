@@ -10,7 +10,7 @@ import com.wolfmq.common.config.server.StoreConfig;
 import com.wolfmq.common.domain.meta.order.OrderRequest;
 import com.wolfmq.common.domain.meta.subscription.SubscriptionGroup;
 import com.wolfmq.common.domain.meta.topic.Topic;
-import com.wolfmq.common.domain.offset.consume.ConsumeOffsetService;
+import com.wolfmq.common.domain.offset.service.ConsumeOffsetService;
 import com.wolfmq.common.testing.ConfigMock;
 import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueFacade;
 import com.wolfmq.store.domain.offset.DefaultConsumeOffsetService;
