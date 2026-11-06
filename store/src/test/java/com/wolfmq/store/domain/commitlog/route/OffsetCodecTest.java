@@ -34,13 +34,21 @@ class OffsetCodecTest {
     @Test
     void testDecode_ZeroOffset() {
         OffsetCodec codec = new OffsetCodec(1, MAX_SHARDING);
+        assertEquals(1, codec.encode(0));
         assertEquals(0, codec.decode(1));
     }
 
     @Test
     void testDecode_PositiveOffset() {
         OffsetCodec codec = new OffsetCodec(2, MAX_SHARDING);
+        assertEquals(2, codec.encode(0));
         assertEquals(0, codec.decode(2));
+
+        assertEquals(102, codec.encode(1));
+        assertEquals(1, codec.decode(102));
+
+        assertEquals(202, codec.encode(2));
+        assertEquals(2, codec.decode(202));
     }
 
     @Test
