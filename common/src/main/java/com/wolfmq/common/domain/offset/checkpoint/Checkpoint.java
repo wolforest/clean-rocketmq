@@ -61,13 +61,13 @@ public class Checkpoint implements CheckpointService {
     }
 
     @Override
-    public void setQueueOffset(String topic, int queueId, int shard, long queueOffset) {
-        store.setQueueOffset(topic, queueId, shard, queueOffset);
+    public void setQueueOffset(String topic, int queueId, long queueOffset) {
+        store.setQueueOffset(topic, queueId, queueOffset);
     }
 
     @Override
-    public Long getQueueOffset(String topic, int queueId, int shard) {
-        return store.getQueueOffset(topic, queueId, shard);
+    public Long getQueueOffset(String topic, int queueId) {
+        return store.getQueueOffset(topic, queueId);
     }
 
     @Override
