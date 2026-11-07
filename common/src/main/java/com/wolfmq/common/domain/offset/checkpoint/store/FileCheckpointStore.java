@@ -67,13 +67,13 @@ public class FileCheckpointStore implements CheckpointService, CheckpointStore {
     }
 
     @Override
-    public void setQueueOffset(String topic, int queueId, int shard, long queueOffset) {
-        memoryStore.setQueueOffset(topic, queueId, shard, queueOffset);
+    public void setQueueOffset(String topic, int queueId, long queueOffset) {
+        memoryStore.setQueueOffset(topic, queueId, queueOffset);
     }
 
     @Override
-    public Long getQueueOffset(String topic, int queueId, int shard) {
-        return memoryStore.getQueueOffset(topic, queueId, shard);
+    public Long getQueueOffset(String topic, int queueId) {
+        return memoryStore.getQueueOffset(topic, queueId);
     }
 
     @Override
