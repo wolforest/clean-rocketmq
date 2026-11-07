@@ -2,6 +2,7 @@ package com.wolfmq.store.domain.timer.service;
 
 import com.wolfmq.common.domain.timer.model.ScanResult;
 import com.wolfmq.common.domain.timer.model.TimerEvent;
+import com.wolfmq.store.domain.timer.BlackHoleTimer;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
