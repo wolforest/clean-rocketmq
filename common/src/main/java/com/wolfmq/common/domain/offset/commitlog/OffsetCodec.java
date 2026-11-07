@@ -30,6 +30,10 @@ public class OffsetCodec {
     }
 
     public int getShardId(long offset) {
+        if (offset < 0) {
+            throw new IllegalArgumentException("offset can't be negative");
+        }
+
         return (int) (offset % maxShardingNumber);
     }
 }
