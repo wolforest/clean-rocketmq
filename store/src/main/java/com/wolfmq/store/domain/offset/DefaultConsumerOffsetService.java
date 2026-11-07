@@ -5,16 +5,16 @@ import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.common.util.lang.string.JSONUtil;
 import com.wolfmq.common.config.server.StoreConfig;
 import com.wolfmq.common.domain.offset.consume.ConsumeOffset;
-import com.wolfmq.common.domain.offset.ConsumeOffsetService;
+import com.wolfmq.common.domain.offset.ConsumerOffsetService;
 import java.util.Set;
 
-public class DefaultConsumeOffsetService implements ConsumeOffsetService {
+public class DefaultConsumerOffsetService implements ConsumerOffsetService {
     private final String storePath;
     private final StoreConfig storeConfig;
 
     private ConsumeOffset consumeOffset;
 
-    public DefaultConsumeOffsetService(StoreConfig storeConfig, String storePath) {
+    public DefaultConsumerOffsetService(StoreConfig storeConfig, String storePath) {
         this.storePath = storePath;
         this.storeConfig = storeConfig;
     }

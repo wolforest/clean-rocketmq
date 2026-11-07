@@ -6,7 +6,7 @@ import com.wolfmq.common.domain.consumer.consume.constant.ConsumeStrategy;
 import com.wolfmq.common.domain.commitlog.CommitLog;
 import com.wolfmq.common.domain.messagequeue.dto.DequeueRequest;
 import com.wolfmq.common.domain.messagequeue.dto.DequeueResult;
-import com.wolfmq.common.domain.offset.ConsumeOffsetService;
+import com.wolfmq.common.domain.offset.ConsumerOffsetService;
 import com.wolfmq.common.domain.meta.service.ConsumeOrderService;
 import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueFacade;
 import com.wolfmq.store.domain.messagequeue.ack.AckService;
@@ -30,10 +30,10 @@ class OffsetServiceTest {
         CommitLog commitLog = mock(CommitLog.class);
         AckService ackService = mock(AckService.class);
         ConsumeQueueFacade consumeQueue = mock(ConsumeQueueFacade.class);
-        ConsumeOffsetService consumeOffsetService = mock(ConsumeOffsetService.class);
+        ConsumerOffsetService consumerOffsetService = mock(ConsumerOffsetService.class);
         ConsumeOrderService consumeOrderService = mock(ConsumeOrderService.class);
 
-        when(consumeOffsetService.getOffset("GROUP_A", "TOPIC_A", 0)).thenReturn(5L);
+        when(consumerOffsetService.getOffset("GROUP_A", "TOPIC_A", 0)).thenReturn(5L);
         when(ackService.getBufferedOffset("GROUP_A", "TOPIC_A", 0)).thenReturn(12L);
 
         OffsetService service = new OffsetService(
@@ -41,7 +41,7 @@ class OffsetServiceTest {
             commitLog,
             ackService,
             consumeQueue,
-            consumeOffsetService,
+            consumerOffsetService,
             consumeOrderService
         );
 
@@ -64,10 +64,10 @@ class OffsetServiceTest {
         CommitLog commitLog = mock(CommitLog.class);
         AckService ackService = mock(AckService.class);
         ConsumeQueueFacade consumeQueue = mock(ConsumeQueueFacade.class);
-        ConsumeOffsetService consumeOffsetService = mock(ConsumeOffsetService.class);
+        ConsumerOffsetService consumerOffsetService = mock(ConsumerOffsetService.class);
         ConsumeOrderService consumeOrderService = mock(ConsumeOrderService.class);
 
-        when(consumeOffsetService.getOffset("GROUP_B", "TOPIC_B", 1)).thenReturn(-1L);
+        when(consumerOffsetService.getOffset("GROUP_B", "TOPIC_B", 1)).thenReturn(-1L);
         when(consumeQueue.getMinOffset("TOPIC_B", 1)).thenReturn(3L);
         when(ackService.getBufferedOffset("GROUP_B", "TOPIC_B", 1)).thenReturn(-1L);
 
@@ -76,7 +76,7 @@ class OffsetServiceTest {
             commitLog,
             ackService,
             consumeQueue,
-            consumeOffsetService,
+            consumerOffsetService,
             consumeOrderService
         );
 
@@ -89,7 +89,7 @@ class OffsetServiceTest {
 
         long offset = service.getOffset(request);
         assertEquals(3L, offset);
-        verify(consumeOffsetService).getOffset("GROUP_B", "TOPIC_B", 1);
+        verify(consumerOffsetService).getOffset("GROUP_B", "TOPIC_B", 1);
         verifyNoInteractions(consumeOrderService);
     }
 
@@ -101,7 +101,7 @@ class OffsetServiceTest {
         CommitLog commitLog = mock(CommitLog.class);
         AckService ackService = mock(AckService.class);
         ConsumeQueueFacade consumeQueue = mock(ConsumeQueueFacade.class);
-        ConsumeOffsetService consumeOffsetService = mock(ConsumeOffsetService.class);
+        ConsumerOffsetService consumerOffsetService = mock(ConsumerOffsetService.class);
         ConsumeOrderService consumeOrderService = mock(ConsumeOrderService.class);
 
         OffsetService service = new OffsetService(
@@ -109,7 +109,7 @@ class OffsetServiceTest {
             commitLog,
             ackService,
             consumeQueue,
-            consumeOffsetService,
+            consumerOffsetService,
             consumeOrderService
         );
 
@@ -126,6 +126,6 @@ class OffsetServiceTest {
         service.updateOffset(request, result);
 
         verify(consumeOrderService).lock(any());
-        verify(consumeOffsetService).putOffset("GROUP_C", "TOPIC_C", 2, 7L);
+        verify(consumerOffsetService).putOffset("GROUP_C", "TOPIC_C", 2, 7L);
     }
 }

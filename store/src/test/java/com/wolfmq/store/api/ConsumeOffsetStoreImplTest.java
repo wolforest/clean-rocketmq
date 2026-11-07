@@ -5,7 +5,7 @@ import com.wolfmq.common.domain.offset.utils.OffsetFilter;
 import com.wolfmq.common.domain.offset.dto.OffsetRequest;
 import com.wolfmq.common.domain.offset.dto.OffsetResult;
 import com.wolfmq.common.domain.offset.dto.TopicResult;
-import com.wolfmq.common.domain.offset.ConsumeOffsetService;
+import com.wolfmq.common.domain.offset.ConsumerOffsetService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -16,12 +16,12 @@ import static org.mockito.Mockito.*;
 
 class ConsumeOffsetStoreImplTest {
 
-    private ConsumeOffsetService offsetService;
+    private ConsumerOffsetService offsetService;
     private ConsumeOffsetStoreImpl store;
 
     @BeforeEach
     void setUp() {
-        offsetService = mock(ConsumeOffsetService.class);
+        offsetService = mock(ConsumerOffsetService.class);
         store = new ConsumeOffsetStoreImpl(offsetService);
     }
 

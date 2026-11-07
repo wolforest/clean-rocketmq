@@ -9,7 +9,7 @@ import com.wolfmq.common.config.server.StoreConfig;
 import com.wolfmq.common.domain.consumer.consume.InflightCounter;
 import com.wolfmq.common.core.lock.queue.DequeueLock;
 import com.wolfmq.common.testing.ConfigMock;
-import com.wolfmq.store.domain.offset.DefaultConsumeOffsetService;
+import com.wolfmq.store.domain.offset.DefaultConsumerOffsetService;
 import com.wolfmq.store.domain.meta.DefaultConsumeOrderService;
 import com.wolfmq.store.domain.messagequeue.queue.EnqueueService;
 import com.wolfmq.store.server.bootstrap.StoreCheckpoint;
@@ -41,7 +41,7 @@ class AckBootstrapTest {
 
         context.register(new DequeueLock());
         context.register(new InflightCounter());
-        context.register(mock(DefaultConsumeOffsetService.class), DefaultConsumeOffsetService.class);
+        context.register(mock(DefaultConsumerOffsetService.class), DefaultConsumerOffsetService.class);
         context.register(mock(DefaultConsumeOrderService.class), DefaultConsumeOrderService.class);
         context.register(mock(EnqueueService.class), EnqueueService.class);
     }

@@ -7,7 +7,7 @@ import com.wolfmq.common.config.server.StoreConfig;
 import com.wolfmq.common.domain.meta.topic.Topic;
 import com.wolfmq.common.domain.meta.topic.utils.TopicMap;
 import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueFacade;
-import com.wolfmq.common.domain.offset.ConsumeOffsetService;
+import com.wolfmq.common.domain.offset.ConsumerOffsetService;
 import com.wolfmq.common.domain.meta.service.TopicService;
 import com.wolfmq.common.domain.meta.topic.utils.KeyBuilder;
 import com.wolfmq.store.server.bootstrap.StoreRegister;
@@ -20,7 +20,7 @@ public class DefaultTopicService implements TopicService {
     private final StoreState storeState;
     private final StoreConfig storeConfig;
     private final String storePath;
-    private final ConsumeOffsetService consumeOffsetService;
+    private final ConsumerOffsetService consumerOffsetService;
 
     // dependency from other package, injected by module manager
     private ConsumeQueueFacade consumeQueueFacade;
@@ -33,13 +33,13 @@ public class DefaultTopicService implements TopicService {
         StoreState storeState,
         StoreConfig storeConfig,
         String storePath,
-        ConsumeOffsetService consumeOffsetService
+        ConsumerOffsetService consumerOffsetService
     ) {
         this.storeState = storeState;
         this.storePath = storePath;
         this.storeConfig = storeConfig;
 
-        this.consumeOffsetService = consumeOffsetService;
+        this.consumerOffsetService = consumerOffsetService;
         this.topicMap = new TopicMap();
     }
 
@@ -119,7 +119,7 @@ public class DefaultTopicService implements TopicService {
     }
 
     private void deleteRetryTopic(String topicName) {
-        Set<String> groupSet = consumeOffsetService.findGroupByTopic(topicName);
+        Set<String> groupSet = consumerOffsetService.findGroupByTopic(topicName);
         for (String group : groupSet) {
             String retryTopic = KeyBuilder.buildPopRetryTopic(topicName, group);
             if (topicMap.exists(retryTopic)) {
@@ -129,7 +129,7 @@ public class DefaultTopicService implements TopicService {
     }
 
     private void cleanTopicInfo(String topicName) {
-        consumeOffsetService.deleteByTopic(topicName);
+        consumerOffsetService.deleteByTopic(topicName);
         consumeQueueFacade.deleteByTopic(topicName);
 
         topicMap.deleteTopic(topicName, storeState.getStateMachineVersion());

@@ -10,7 +10,7 @@ import com.wolfmq.common.domain.consumer.consume.pop.helper.PopConverter;
 import com.wolfmq.common.domain.meta.order.OrderRequest;
 import com.wolfmq.common.domain.commitlog.CommitLog;
 import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueFacade;
-import com.wolfmq.common.domain.offset.ConsumeOffsetService;
+import com.wolfmq.common.domain.offset.ConsumerOffsetService;
 import com.wolfmq.common.domain.meta.service.ConsumeOrderService;
 import com.wolfmq.store.domain.messagequeue.ack.AckService;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +23,7 @@ public class OffsetService {
     private final AckService ackService;
     private final ConsumeQueueFacade consumeQueue;
 
-    private final ConsumeOffsetService consumeOffsetService;
+    private final ConsumerOffsetService consumerOffsetService;
     private final ConsumeOrderService consumeOrderService;
 
     private final NextOffsetSetter nextOffsetSetter;
@@ -33,7 +33,7 @@ public class OffsetService {
         CommitLog commitLog,
         AckService ackService,
         ConsumeQueueFacade consumeQueue,
-        ConsumeOffsetService consumeOffsetService,
+        ConsumerOffsetService consumerOffsetService,
         ConsumeOrderService consumeOrderService
     ) {
         this.messageConfig = storeConfig.getMessage();
@@ -42,7 +42,7 @@ public class OffsetService {
         this.ackService = ackService;
         this.consumeQueue = consumeQueue;
 
-        this.consumeOffsetService = consumeOffsetService;
+        this.consumerOffsetService = consumerOffsetService;
         this.consumeOrderService = consumeOrderService;
 
         this.nextOffsetSetter = new NextOffsetSetter(storeConfig, consumeQueue);
@@ -100,7 +100,7 @@ public class OffsetService {
             return;
         }
 
-        consumeOffsetService.putOffset(
+        consumerOffsetService.putOffset(
             request.getConsumerGroup(),
             request.getTopicName(),
             request.getQueueId(),
@@ -109,7 +109,7 @@ public class OffsetService {
     }
 
     private long getConsumeOffset(DequeueRequest request) {
-        return consumeOffsetService.getOffset(
+        return consumerOffsetService.getOffset(
             request.getConsumerGroup(),
             request.getTopicName(),
             request.getQueueId()

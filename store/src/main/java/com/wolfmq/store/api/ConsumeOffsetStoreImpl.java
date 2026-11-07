@@ -6,13 +6,13 @@ import com.wolfmq.common.domain.offset.dto.OffsetRequest;
 import com.wolfmq.common.domain.offset.dto.OffsetResult;
 import com.wolfmq.common.domain.offset.dto.TopicResult;
 import com.wolfmq.common.server.store.api.ConsumeOffsetStore;
-import com.wolfmq.common.domain.offset.ConsumeOffsetService;
+import com.wolfmq.common.domain.offset.ConsumerOffsetService;
 import java.util.Set;
 
 public class ConsumeOffsetStoreImpl implements ConsumeOffsetStore {
-    private final ConsumeOffsetService offsetService;
+    private final ConsumerOffsetService offsetService;
 
-    public ConsumeOffsetStoreImpl(ConsumeOffsetService offsetService) {
+    public ConsumeOffsetStoreImpl(ConsumerOffsetService offsetService) {
         this.offsetService = offsetService;
     }
 

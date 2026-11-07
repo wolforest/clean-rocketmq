@@ -5,7 +5,7 @@ import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.common.util.lang.string.JSONUtil;
 import com.wolfmq.common.domain.meta.subscription.SubscriptionGroup;
 import com.wolfmq.common.domain.meta.subscription.SubscriptionMap;
-import com.wolfmq.common.domain.offset.ConsumeOffsetService;
+import com.wolfmq.common.domain.offset.ConsumerOffsetService;
 import com.wolfmq.common.domain.meta.service.SubscriptionService;
 import com.wolfmq.common.server.store.StoreState;
 import lombok.Getter;
@@ -15,18 +15,18 @@ import lombok.extern.slf4j.Slf4j;
 public class DefaultSubscriptionService implements SubscriptionService {
     private final StoreState storeState;
     private final String storePath;
-    private final ConsumeOffsetService consumeOffsetService;
+    private final ConsumerOffsetService consumerOffsetService;
     @Getter
     private SubscriptionMap subscriptionMap;
 
     public DefaultSubscriptionService(
         StoreState storeState,
         String storePath,
-        ConsumeOffsetService consumeOffsetService
+        ConsumerOffsetService consumerOffsetService
     ) {
         this.storeState = storeState;
         this.storePath = storePath;
-        this.consumeOffsetService = consumeOffsetService;
+        this.consumerOffsetService = consumerOffsetService;
 
         subscriptionMap = new SubscriptionMap();
     }
@@ -61,7 +61,7 @@ public class DefaultSubscriptionService implements SubscriptionService {
             return;
         }
 
-        consumeOffsetService.deleteByGroup(groupName);
+        consumerOffsetService.deleteByGroup(groupName);
     }
 
     @Override

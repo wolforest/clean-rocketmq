@@ -6,7 +6,7 @@ import com.wolfmq.common.server.store.api.ConsumeOffsetStore;
 import com.wolfmq.common.server.store.api.meta.SubscriptionStore;
 import com.wolfmq.common.server.store.api.meta.TopicStore;
 import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueFacade;
-import com.wolfmq.common.domain.offset.ConsumeOffsetService;
+import com.wolfmq.common.domain.offset.ConsumerOffsetService;
 import com.wolfmq.common.domain.meta.service.ConsumeOrderService;
 import com.wolfmq.common.domain.meta.service.SubscriptionService;
 import com.wolfmq.common.domain.meta.service.TopicService;
@@ -16,7 +16,7 @@ import com.wolfmq.store.api.TopicStoreImpl;
 import cn.coderule.common.convention.container.ApplicationContext;
 import com.wolfmq.common.core.constant.ContextNamespace;
 import com.wolfmq.common.server.store.StoreState;
-import com.wolfmq.store.domain.offset.DefaultConsumeOffsetService;
+import com.wolfmq.store.domain.offset.DefaultConsumerOffsetService;
 import com.wolfmq.store.server.bootstrap.StoreRegister;
 
 public class MetaBootstrap implements Lifecycle {
@@ -25,7 +25,7 @@ public class MetaBootstrap implements Lifecycle {
     private DefaultTopicService topicService;
     private SubscriptionService subscriptionService;
 
-    private ConsumeOffsetService offsetService;
+    private ConsumerOffsetService offsetService;
     private ConsumeOrderService orderService;
 
     public MetaBootstrap(ApplicationContext context) {
@@ -62,8 +62,8 @@ public class MetaBootstrap implements Lifecycle {
 
     private void initConsumerOffset() {
         StoreConfig storeConfig = context.getBean(StoreConfig.class);
-        offsetService = new DefaultConsumeOffsetService(storeConfig, storeConfig.getPath().getConsumerOffsetPath());
-        context.register(offsetService, ConsumeOffsetService.class);
+        offsetService = new DefaultConsumerOffsetService(storeConfig, storeConfig.getPath().getConsumerOffsetPath());
+        context.register(offsetService, ConsumerOffsetService.class);
 
         offsetService.load();
 

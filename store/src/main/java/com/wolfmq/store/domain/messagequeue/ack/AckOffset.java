@@ -1,7 +1,7 @@
 package com.wolfmq.store.domain.messagequeue.ack;
 
 import com.wolfmq.common.core.lock.queue.DequeueLock;
-import com.wolfmq.common.domain.offset.ConsumeOffsetService;
+import com.wolfmq.common.domain.offset.ConsumerOffsetService;
 import com.wolfmq.common.domain.meta.service.ConsumeOrderService;
 import com.wolfmq.common.domain.consumer.ack.AckConverter;
 import com.wolfmq.common.domain.consumer.ack.AckInfo;
@@ -14,18 +14,18 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class AckOffset {
     private final DequeueLock dequeueLock;
-    private final ConsumeOffsetService consumeOffsetService;
+    private final ConsumerOffsetService consumerOffsetService;
     private final ConsumeOrderService consumeOrderService;
     private final InflightCounter inflightCounter;
 
     public AckOffset(
         DequeueLock dequeueLock,
         InflightCounter inflightCounter,
-        ConsumeOffsetService consumeOffsetService,
+        ConsumerOffsetService consumerOffsetService,
         ConsumeOrderService consumeOrderService
     ) {
         this.dequeueLock = dequeueLock;
-        this.consumeOffsetService = consumeOffsetService;
+        this.consumerOffsetService = consumerOffsetService;
         this.consumeOrderService = consumeOrderService;
         this.inflightCounter = inflightCounter;
     }
@@ -63,7 +63,7 @@ public class AckOffset {
         AckInfo ackInfo = ackMessage.getAckInfo();
         long ackOffset = ackInfo.getAckOffset();
 
-        long offset = consumeOffsetService.getOffset(
+        long offset = consumerOffsetService.getOffset(
             ackInfo.getConsumerGroup(),
             ackInfo.getTopic(),
             ackInfo.getQueueId()
@@ -89,7 +89,7 @@ public class AckOffset {
     }
 
     private void updateOffset(AckInfo ackInfo, long nextOffset) {
-        boolean hasResetOffset = consumeOffsetService.containsResetOffset(
+        boolean hasResetOffset = consumerOffsetService.containsResetOffset(
             ackInfo.getConsumerGroup(),
             ackInfo.getTopic(),
             ackInfo.getQueueId()
@@ -99,7 +99,7 @@ public class AckOffset {
             return;
         }
 
-        consumeOffsetService.putOffset(
+        consumerOffsetService.putOffset(
             ackInfo.getConsumerGroup(),
             ackInfo.getTopic(),
             ackInfo.getQueueId(),

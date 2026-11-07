@@ -1,7 +1,7 @@
 package com.wolfmq.store.domain.meta;
 
 import com.wolfmq.common.core.constant.MQConstants;
-import com.wolfmq.common.domain.offset.ConsumeOffsetService;
+import com.wolfmq.common.domain.offset.ConsumerOffsetService;
 import com.wolfmq.common.domain.meta.subscription.SubscriptionGroup;
 import com.wolfmq.common.server.store.StoreState;
 import java.nio.file.Path;
@@ -19,7 +19,7 @@ class DefaultSubscriptionServiceTest {
 
     @Test
     void load_WhenFileMissing_ShouldRegisterSystemGroups() {
-        ConsumeOffsetService offsetService = mock(ConsumeOffsetService.class);
+        ConsumerOffsetService offsetService = mock(ConsumerOffsetService.class);
         DefaultSubscriptionService service = new DefaultSubscriptionService(
             storeState,
             tempDir.resolve("subscription.json").toString(),
@@ -37,7 +37,7 @@ class DefaultSubscriptionServiceTest {
     @Test
     void saveAndDeleteGroup_ShouldPersistAndCleanOffsetWhenRequested() {
         storeState.setStateMachineVersion(1024L);
-        ConsumeOffsetService offsetService = mock(ConsumeOffsetService.class);
+        ConsumerOffsetService offsetService = mock(ConsumerOffsetService.class);
         String storePath = tempDir.resolve("subscription.json").toString();
         DefaultSubscriptionService service = new DefaultSubscriptionService(storeState, storePath, offsetService);
 

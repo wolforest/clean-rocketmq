@@ -12,7 +12,7 @@ import com.wolfmq.common.domain.messagequeue.dto.DequeueResult;
 import com.wolfmq.common.domain.messagequeue.dto.EnqueueFuture;
 import com.wolfmq.common.domain.messagequeue.dto.EnqueueResult;
 import com.wolfmq.common.testing.MessageMock;
-import com.wolfmq.common.domain.offset.ConsumeOffsetService;
+import com.wolfmq.common.domain.offset.ConsumerOffsetService;
 import com.wolfmq.common.domain.meta.service.ConsumeOrderService;
 import com.wolfmq.store.domain.messagequeue.DefaultMQService;
 import com.wolfmq.store.domain.messagequeue.ack.AckOffset;
@@ -371,12 +371,12 @@ class MQIntegrationTest extends BaseMQIntegrationTest {
         com.wolfmq.common.core.lock.queue.DequeueLock dequeueLock = new com.wolfmq.common.core.lock.queue.DequeueLock();
         InflightCounter inflightCounter = new InflightCounter();
 
-        ConsumeOffsetService consumeOffsetService =
-            mock(ConsumeOffsetService.class);
+        ConsumerOffsetService consumerOffsetService =
+            mock(ConsumerOffsetService.class);
         ConsumeOrderService consumeOrderService =
             mock(ConsumeOrderService.class);
 
-        AckOffset ackOffset = new AckOffset(dequeueLock, inflightCounter, consumeOffsetService, consumeOrderService);
+        AckOffset ackOffset = new AckOffset(dequeueLock, inflightCounter, consumerOffsetService, consumeOrderService);
 
         assertNotNull(ackOffset);
     }

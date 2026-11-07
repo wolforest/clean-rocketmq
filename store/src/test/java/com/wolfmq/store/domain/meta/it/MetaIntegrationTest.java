@@ -10,10 +10,10 @@ import com.wolfmq.common.config.server.StoreConfig;
 import com.wolfmq.common.domain.meta.order.OrderRequest;
 import com.wolfmq.common.domain.meta.subscription.SubscriptionGroup;
 import com.wolfmq.common.domain.meta.topic.Topic;
-import com.wolfmq.common.domain.offset.ConsumeOffsetService;
+import com.wolfmq.common.domain.offset.ConsumerOffsetService;
 import com.wolfmq.common.testing.ConfigMock;
 import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueFacade;
-import com.wolfmq.store.domain.offset.DefaultConsumeOffsetService;
+import com.wolfmq.store.domain.offset.DefaultConsumerOffsetService;
 import com.wolfmq.store.domain.meta.DefaultConsumeOrderService;
 import com.wolfmq.store.domain.meta.DefaultSubscriptionService;
 import com.wolfmq.store.domain.meta.DefaultTopicService;
@@ -55,7 +55,7 @@ class MetaIntegrationTest {
     @Test
     void testConsumeOffsetLoadStoreAndReload() {
         String storePath = tmpDir.resolve("offset.json").toString();
-        DefaultConsumeOffsetService service = new DefaultConsumeOffsetService(storeConfig, storePath);
+        DefaultConsumerOffsetService service = new DefaultConsumerOffsetService(storeConfig, storePath);
         service.load();
 
         service.putOffset("groupA", "topicA", 0, 100L);
@@ -63,7 +63,7 @@ class MetaIntegrationTest {
         service.putOffset("groupB", "topicB", 0, 300L);
         service.store();
 
-        DefaultConsumeOffsetService reloaded = new DefaultConsumeOffsetService(storeConfig, storePath);
+        DefaultConsumerOffsetService reloaded = new DefaultConsumerOffsetService(storeConfig, storePath);
         reloaded.load();
 
         assertEquals(100L, reloaded.getOffset("groupA", "topicA", 0));
@@ -75,7 +75,7 @@ class MetaIntegrationTest {
     @Test
     void testConsumeOffsetDeleteByTopic() {
         String storePath = tmpDir.resolve("offset-del-topic.json").toString();
-        DefaultConsumeOffsetService service = new DefaultConsumeOffsetService(storeConfig, storePath);
+        DefaultConsumerOffsetService service = new DefaultConsumerOffsetService(storeConfig, storePath);
         service.load();
 
         service.putOffset("groupA", "topicX", 0, 50L);
@@ -92,7 +92,7 @@ class MetaIntegrationTest {
     @Test
     void testConsumeOffsetDeleteByGroup() {
         String storePath = tmpDir.resolve("offset-del-group.json").toString();
-        DefaultConsumeOffsetService service = new DefaultConsumeOffsetService(storeConfig, storePath);
+        DefaultConsumerOffsetService service = new DefaultConsumerOffsetService(storeConfig, storePath);
         service.load();
 
         service.putOffset("groupA", "topicX", 0, 50L);
@@ -107,7 +107,7 @@ class MetaIntegrationTest {
     @Test
     void testConsumeOffsetFindTopicByGroupAndGroupByTopic() {
         String storePath = tmpDir.resolve("offset-find.json").toString();
-        DefaultConsumeOffsetService service = new DefaultConsumeOffsetService(storeConfig, storePath);
+        DefaultConsumerOffsetService service = new DefaultConsumerOffsetService(storeConfig, storePath);
         service.load();
 
         service.putOffset("g1", "t1", 0, 10L);
@@ -126,7 +126,7 @@ class MetaIntegrationTest {
     @Test
     void testConsumeOffsetGetAndRemove() {
         String storePath = tmpDir.resolve("offset-remove.json").toString();
-        DefaultConsumeOffsetService service = new DefaultConsumeOffsetService(storeConfig, storePath);
+        DefaultConsumerOffsetService service = new DefaultConsumerOffsetService(storeConfig, storePath);
         service.load();
 
         service.putOffset("g1", "t1", 0, 100L);
@@ -142,7 +142,7 @@ class MetaIntegrationTest {
     @Test
     void testConsumeOffsetContainsResetOffset() {
         String storePath = tmpDir.resolve("offset-reset.json").toString();
-        DefaultConsumeOffsetService service = new DefaultConsumeOffsetService(storeConfig, storePath);
+        DefaultConsumerOffsetService service = new DefaultConsumerOffsetService(storeConfig, storePath);
         service.load();
 
         assertFalse(service.containsResetOffset("g1", "t1", 0));
@@ -262,7 +262,7 @@ void testConsumeOrderStoreAndReload() {
     @Test
     void testTopicServiceLoadRegistersSystemTopics() {
         String storePath = tmpDir.resolve("topic-sys.json").toString();
-        ConsumeOffsetService offsetService = mock(ConsumeOffsetService.class);
+        ConsumerOffsetService offsetService = mock(ConsumerOffsetService.class);
         StoreRegister storeRegister = mock(StoreRegister.class);
         ConsumeQueueFacade cqManager =
             mock(ConsumeQueueFacade.class);
@@ -279,7 +279,7 @@ void testConsumeOrderStoreAndReload() {
     @Test
     void testTopicServicePutAndExists() {
         String storePath = tmpDir.resolve("topic-put.json").toString();
-        ConsumeOffsetService offsetService = mock(ConsumeOffsetService.class);
+        ConsumerOffsetService offsetService = mock(ConsumerOffsetService.class);
         StoreRegister storeRegister = mock(StoreRegister.class);
         ConsumeQueueFacade cqManager =
             mock(ConsumeQueueFacade.class);
@@ -299,7 +299,7 @@ void testConsumeOrderStoreAndReload() {
     @Test
     void testTopicServiceSaveAndReload() {
         String storePath = tmpDir.resolve("topic-save.json").toString();
-        ConsumeOffsetService offsetService = mock(ConsumeOffsetService.class);
+        ConsumerOffsetService offsetService = mock(ConsumerOffsetService.class);
         StoreRegister storeRegister = mock(StoreRegister.class);
         ConsumeQueueFacade cqManager =
             mock(ConsumeQueueFacade.class);
@@ -323,7 +323,7 @@ void testConsumeOrderStoreAndReload() {
     @Test
     void testTopicServiceGetTopic() {
         String storePath = tmpDir.resolve("topic-get.json").toString();
-        ConsumeOffsetService offsetService = mock(ConsumeOffsetService.class);
+        ConsumerOffsetService offsetService = mock(ConsumerOffsetService.class);
         StoreRegister storeRegister = mock(StoreRegister.class);
         ConsumeQueueFacade cqManager =
             mock(ConsumeQueueFacade.class);
@@ -348,7 +348,7 @@ void testConsumeOrderStoreAndReload() {
     @Test
     void testSubscriptionServicePutAndExists() {
         String storePath = tmpDir.resolve("subscription.json").toString();
-        ConsumeOffsetService offsetService = mock(ConsumeOffsetService.class);
+        ConsumerOffsetService offsetService = mock(ConsumerOffsetService.class);
 
         DefaultSubscriptionService service = new DefaultSubscriptionService(context.getBean(StoreState.class), storePath, offsetService);
         service.load();
@@ -364,7 +364,7 @@ void testConsumeOrderStoreAndReload() {
     @Test
     void testSubscriptionServiceSaveAndReload() {
         String storePath = tmpDir.resolve("sub-save.json").toString();
-        ConsumeOffsetService offsetService = mock(ConsumeOffsetService.class);
+        ConsumerOffsetService offsetService = mock(ConsumerOffsetService.class);
 
         DefaultSubscriptionService service1 = new DefaultSubscriptionService(context.getBean(StoreState.class), storePath, offsetService);
         service1.load();
@@ -383,7 +383,7 @@ void testConsumeOrderStoreAndReload() {
     @Test
     void testSubscriptionServiceDeleteGroup() {
         String storePath = tmpDir.resolve("sub-delete.json").toString();
-        ConsumeOffsetService offsetService = mock(ConsumeOffsetService.class);
+        ConsumerOffsetService offsetService = mock(ConsumerOffsetService.class);
 
         DefaultSubscriptionService service = new DefaultSubscriptionService(context.getBean(StoreState.class), storePath, offsetService);
         service.load();
@@ -400,7 +400,7 @@ void testConsumeOrderStoreAndReload() {
     @Test
     void testSubscriptionServiceDeleteGroupWithOffsetCleanup() {
         String storePath = tmpDir.resolve("sub-delete-offset.json").toString();
-        ConsumeOffsetService offsetService = mock(ConsumeOffsetService.class);
+        ConsumerOffsetService offsetService = mock(ConsumerOffsetService.class);
 
         DefaultSubscriptionService service = new DefaultSubscriptionService(context.getBean(StoreState.class), storePath, offsetService);
         service.load();
@@ -420,7 +420,7 @@ void testConsumeOrderStoreAndReload() {
         String offsetPath = tmpDir.resolve("cross-offset.json").toString();
         String topicPath = tmpDir.resolve("cross-topic.json").toString();
 
-        DefaultConsumeOffsetService offsetService = new DefaultConsumeOffsetService(storeConfig, offsetPath);
+        DefaultConsumerOffsetService offsetService = new DefaultConsumerOffsetService(storeConfig, offsetPath);
         offsetService.load();
 
         StoreRegister storeRegister = mock(StoreRegister.class);

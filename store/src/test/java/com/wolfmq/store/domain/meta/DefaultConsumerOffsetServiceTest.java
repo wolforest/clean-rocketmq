@@ -2,14 +2,14 @@ package com.wolfmq.store.domain.meta;
 
 import com.wolfmq.common.config.server.StoreConfig;
 import com.wolfmq.common.testing.ConfigMock;
-import com.wolfmq.store.domain.offset.DefaultConsumeOffsetService;
+import com.wolfmq.store.domain.offset.DefaultConsumerOffsetService;
 import java.nio.file.Path;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class DefaultConsumeOffsetServiceTest {
+class DefaultConsumerOffsetServiceTest {
 
     @TempDir
     Path tempDir;
@@ -18,7 +18,7 @@ class DefaultConsumeOffsetServiceTest {
     void load_WhenFileMissing_ShouldInitializeAndSupportPutGet() {
         StoreConfig storeConfig = ConfigMock.createStoreConfig(tempDir.toString());
         String storePath = tempDir.resolve("consume-offset.json").toString();
-        DefaultConsumeOffsetService service = new DefaultConsumeOffsetService(storeConfig, storePath);
+        DefaultConsumerOffsetService service = new DefaultConsumerOffsetService(storeConfig, storePath);
 
         service.load();
         service.putOffset("g1", "t1", 0, 123L);
@@ -33,12 +33,12 @@ class DefaultConsumeOffsetServiceTest {
         StoreConfig storeConfig = ConfigMock.createStoreConfig(tempDir.toString());
         String storePath = tempDir.resolve("consume-offset.json").toString();
 
-        DefaultConsumeOffsetService service = new DefaultConsumeOffsetService(storeConfig, storePath);
+        DefaultConsumerOffsetService service = new DefaultConsumerOffsetService(storeConfig, storePath);
         service.load();
         service.putOffset("g1", "t1", 1, 456L);
         service.store();
 
-        DefaultConsumeOffsetService reloaded = new DefaultConsumeOffsetService(storeConfig, storePath);
+        DefaultConsumerOffsetService reloaded = new DefaultConsumerOffsetService(storeConfig, storePath);
         reloaded.load();
 
         assertEquals(456L, reloaded.getOffset("g1", "t1", 1));

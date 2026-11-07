@@ -2,7 +2,7 @@ package com.wolfmq.store.domain.meta;
 
 import com.wolfmq.common.config.server.StoreConfig;
 import com.wolfmq.common.core.constant.MQConstants;
-import com.wolfmq.common.domain.offset.ConsumeOffsetService;
+import com.wolfmq.common.domain.offset.ConsumerOffsetService;
 import com.wolfmq.common.domain.meta.topic.utils.KeyBuilder;
 import com.wolfmq.common.domain.meta.topic.Topic;
 import com.wolfmq.common.domain.meta.topic.utils.TopicValidator;
@@ -28,7 +28,7 @@ class DefaultTopicServiceTest {
     void saveTopic_ShouldPersistAndRegisterTopic() {
         storeState.setStateMachineVersion(11L);
         StoreConfig storeConfig = ConfigMock.createStoreConfig(tempDir.toString());
-        ConsumeOffsetService offsetService = mock(ConsumeOffsetService.class);
+        ConsumerOffsetService offsetService = mock(ConsumerOffsetService.class);
         ConsumeQueueFacade consumeQueueFacade = mock(ConsumeQueueFacade.class);
         StoreRegister storeRegister = mock(StoreRegister.class);
         String storePath = tempDir.resolve("topic.json").toString();
@@ -48,7 +48,7 @@ class DefaultTopicServiceTest {
     void deleteTopic_ShouldDeleteMainAndRetryTopics() {
         storeState.setStateMachineVersion(22L);
         StoreConfig storeConfig = ConfigMock.createStoreConfig(tempDir.toString());
-        ConsumeOffsetService offsetService = mock(ConsumeOffsetService.class);
+        ConsumerOffsetService offsetService = mock(ConsumerOffsetService.class);
         ConsumeQueueFacade consumeQueueFacade = mock(ConsumeQueueFacade.class);
         StoreRegister storeRegister = mock(StoreRegister.class);
         String storePath = tempDir.resolve("topic.json").toString();
@@ -78,7 +78,7 @@ class DefaultTopicServiceTest {
     @Test
     void load_WhenFileMissing_ShouldRegisterSystemTopics() {
         StoreConfig storeConfig = ConfigMock.createStoreConfig(tempDir.toString());
-        ConsumeOffsetService offsetService = mock(ConsumeOffsetService.class);
+        ConsumerOffsetService offsetService = mock(ConsumerOffsetService.class);
         DefaultTopicService service = new DefaultTopicService(
             storeState,
             storeConfig,

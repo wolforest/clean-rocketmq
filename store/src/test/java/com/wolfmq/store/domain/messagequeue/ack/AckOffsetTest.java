@@ -4,7 +4,7 @@ import com.wolfmq.common.core.lock.queue.DequeueLock;
 import com.wolfmq.common.domain.consumer.ack.AckInfo;
 import com.wolfmq.common.domain.consumer.ack.store.AckMessage;
 import com.wolfmq.common.domain.consumer.consume.InflightCounter;
-import com.wolfmq.common.domain.offset.ConsumeOffsetService;
+import com.wolfmq.common.domain.offset.ConsumerOffsetService;
 import com.wolfmq.common.domain.meta.service.ConsumeOrderService;
 import com.wolfmq.common.domain.meta.topic.utils.KeyBuilder;
 import org.junit.jupiter.api.Test;
@@ -20,11 +20,11 @@ class AckOffsetTest {
     @Test
     void ackSkipsWhenNotOrderly() {
         DequeueLock dequeueLock = mock(DequeueLock.class);
-        ConsumeOffsetService consumeOffsetService = mock(ConsumeOffsetService.class);
+        ConsumerOffsetService consumerOffsetService = mock(ConsumerOffsetService.class);
         ConsumeOrderService consumeOrderService = mock(ConsumeOrderService.class);
         InflightCounter inflightCounter = mock(InflightCounter.class);
 
-        AckOffset offset = new AckOffset(dequeueLock, inflightCounter, consumeOffsetService, consumeOrderService);
+        AckOffset offset = new AckOffset(dequeueLock, inflightCounter, consumerOffsetService, consumeOrderService);
 
         AckMessage ackMessage = AckMessage.builder()
             .reviveQueueId(1)
@@ -39,19 +39,19 @@ class AckOffsetTest {
 
         offset.ack(ackMessage);
 
-        verifyNoInteractions(dequeueLock, consumeOffsetService, consumeOrderService, inflightCounter);
+        verifyNoInteractions(dequeueLock, consumerOffsetService, consumeOrderService, inflightCounter);
     }
 
     @Test
     void ackSkipsWhenOffsetIsOld() {
         DequeueLock dequeueLock = mock(DequeueLock.class);
-        ConsumeOffsetService consumeOffsetService = mock(ConsumeOffsetService.class);
+        ConsumerOffsetService consumerOffsetService = mock(ConsumerOffsetService.class);
         ConsumeOrderService consumeOrderService = mock(ConsumeOrderService.class);
         InflightCounter inflightCounter = mock(InflightCounter.class);
 
-        when(consumeOffsetService.getOffset("GROUP_A", "TOPIC_A", 0)).thenReturn(10L);
+        when(consumerOffsetService.getOffset("GROUP_A", "TOPIC_A", 0)).thenReturn(10L);
 
-        AckOffset offset = new AckOffset(dequeueLock, inflightCounter, consumeOffsetService, consumeOrderService);
+        AckOffset offset = new AckOffset(dequeueLock, inflightCounter, consumerOffsetService, consumeOrderService);
 
         AckMessage ackMessage = AckMessage.builder()
             .reviveQueueId(KeyBuilder.POP_ORDER_REVIVE_QUEUE)
@@ -72,15 +72,15 @@ class AckOffsetTest {
     @Test
     void ackUpdatesOffsetAndDecrementsCounter() {
         DequeueLock dequeueLock = mock(DequeueLock.class);
-        ConsumeOffsetService consumeOffsetService = mock(ConsumeOffsetService.class);
+        ConsumerOffsetService consumerOffsetService = mock(ConsumerOffsetService.class);
         ConsumeOrderService consumeOrderService = mock(ConsumeOrderService.class);
         InflightCounter inflightCounter = mock(InflightCounter.class);
 
-        when(consumeOffsetService.getOffset("GROUP_A", "TOPIC_A", 0)).thenReturn(5L);
-        when(consumeOffsetService.containsResetOffset("GROUP_A", "TOPIC_A", 0)).thenReturn(false);
+        when(consumerOffsetService.getOffset("GROUP_A", "TOPIC_A", 0)).thenReturn(5L);
+        when(consumerOffsetService.containsResetOffset("GROUP_A", "TOPIC_A", 0)).thenReturn(false);
         when(consumeOrderService.commit(any())).thenReturn(12L);
 
-        AckOffset offset = new AckOffset(dequeueLock, inflightCounter, consumeOffsetService, consumeOrderService);
+        AckOffset offset = new AckOffset(dequeueLock, inflightCounter, consumerOffsetService, consumeOrderService);
 
         AckMessage ackMessage = AckMessage.builder()
             .reviveQueueId(KeyBuilder.POP_ORDER_REVIVE_QUEUE)
@@ -98,7 +98,7 @@ class AckOffsetTest {
         verify(dequeueLock).lock("TOPIC_A", "GROUP_A", 0);
         verify(dequeueLock).unlock("TOPIC_A", "GROUP_A", 0);
         verify(consumeOrderService).commit(any());
-        verify(consumeOffsetService).putOffset("GROUP_A", "TOPIC_A", 0, 12L);
+        verify(consumerOffsetService).putOffset("GROUP_A", "TOPIC_A", 0, 12L);
         verify(inflightCounter).decrement("TOPIC_A", "GROUP_A", 10L, 0, 1);
     }
 }

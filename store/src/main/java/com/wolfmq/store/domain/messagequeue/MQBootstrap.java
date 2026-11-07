@@ -7,7 +7,7 @@ import com.wolfmq.common.server.store.api.MQStore;
 import com.wolfmq.common.domain.commitlog.CommitLog;
 import com.wolfmq.store.domain.commitlog.CommitLogFacade;
 import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueFacade;
-import com.wolfmq.common.domain.offset.ConsumeOffsetService;
+import com.wolfmq.common.domain.offset.ConsumerOffsetService;
 import com.wolfmq.common.domain.meta.service.ConsumeOrderService;
 import com.wolfmq.common.domain.messagequeue.MQService;
 import com.wolfmq.common.domain.consumer.consume.InflightCounter;
@@ -101,12 +101,12 @@ public class MQBootstrap implements Lifecycle {
 
         CommitLog commitLog = context.getBean(CommitLog.class);
         ConsumeQueueFacade consumeQueue = context.getBean(ConsumeQueueFacade.class);
-        ConsumeOffsetService consumeOffsetService = context.getBean(ConsumeOffsetService.class);
+        ConsumerOffsetService consumerOffsetService = context.getBean(ConsumerOffsetService.class);
         ConsumeOrderService orderService = context.getBean(ConsumeOrderService.class);
 
         AckService ackService = context.getBean(AckService.class);
         this.offsetService = new OffsetService(
-            storeConfig, commitLog, ackService, consumeQueue, consumeOffsetService, orderService
+            storeConfig, commitLog, ackService, consumeQueue, consumerOffsetService, orderService
         );
         context.register(offsetService, OffsetService.class);
 
