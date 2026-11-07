@@ -66,7 +66,7 @@ public class MemoryCheckpointStore implements CheckpointService {
     }
 
     @Override
-    public void setQueueOffset(String topic, int queueId, int shard, long queueOffset) {
+    public void setQueueOffset(String topic, int queueId, long queueOffset) {
         queueOffsetMap.merge(
             buildKey(topic, queueId),
             queueOffset,
@@ -75,7 +75,7 @@ public class MemoryCheckpointStore implements CheckpointService {
     }
 
     @Override
-    public Long getQueueOffset(String topic, int queueId, int shard) {
+    public Long getQueueOffset(String topic, int queueId) {
         return queueOffsetMap.get(
             buildKey(topic, queueId)
         );
