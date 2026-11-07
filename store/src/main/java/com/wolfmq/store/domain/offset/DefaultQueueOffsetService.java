@@ -47,7 +47,7 @@ public class DefaultQueueOffsetService extends Checkpoint implements QueueOffset
             return true;
         }
 
-        return commitOffset > oldOffset;
+        return commitOffset >= oldOffset;
     }
 
     @Override
@@ -58,6 +58,6 @@ public class DefaultQueueOffsetService extends Checkpoint implements QueueOffset
             return true;
         }
 
-        return commitOffset > oldOffset;
+        return commitOffset >= oldOffset;
     }
 }
