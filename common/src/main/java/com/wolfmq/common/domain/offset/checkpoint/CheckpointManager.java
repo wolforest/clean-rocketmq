@@ -3,7 +3,6 @@ package com.wolfmq.common.domain.offset.checkpoint;
 import cn.coderule.common.convention.service.Lifecycle;
 import com.wolfmq.common.config.server.StoreConfig;
 import com.wolfmq.common.config.store.CheckpointConfig;
-import com.wolfmq.common.domain.offset.Checkpoint;
 import com.wolfmq.common.domain.offset.checkpoint.store.CheckpointStore;
 import com.wolfmq.common.domain.offset.checkpoint.store.FileCheckpointStore;
 import com.wolfmq.common.server.store.StoreScheduler;

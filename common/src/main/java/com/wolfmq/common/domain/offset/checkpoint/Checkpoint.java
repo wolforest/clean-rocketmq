@@ -1,7 +1,6 @@
-package com.wolfmq.common.domain.offset;
+package com.wolfmq.common.domain.offset.checkpoint;
 
 import cn.coderule.common.util.lang.collection.MapUtil;
-import com.wolfmq.common.domain.offset.checkpoint.CheckpointService;
 import com.wolfmq.common.domain.offset.checkpoint.store.CheckpointStore;
 import java.util.Map;
 

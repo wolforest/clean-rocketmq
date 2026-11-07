@@ -2,7 +2,7 @@ package com.wolfmq.store.domain.offset;
 
 import com.wolfmq.common.config.store.CommitConfig;
 import com.wolfmq.common.domain.offset.QueueOffsetService;
-import com.wolfmq.common.domain.offset.Checkpoint;
+import com.wolfmq.common.domain.offset.checkpoint.Checkpoint;
 import com.wolfmq.common.domain.offset.checkpoint.store.CheckpointStore;
 import com.wolfmq.common.domain.offset.commitlog.OffsetCodec;
 
