@@ -7,6 +7,15 @@ public interface QueueOffsetService extends CheckpointService {
     void setDispatchedOffset(long commitOffset);
     void setIndexedOffset(long commitOffset);
     void setQueueCommitOffset(String topic, int queueId, long commitOffset);
-    boolean exceedsQueueCommitOffset(String topic, int queueId, long commitOffset);
-    boolean exceedsIndexedOffset(long commitOffset);
+
+    /**
+     * Compares the given queueCommitOffset with the queue commit offset in the checkpoint.
+     *
+     * @return true if the given offset is greater than
+     *              or equal to the checkpoint offset
+     *              or the checkpoint offset is null;
+     *         false otherwise.
+     */
+    boolean reachesQueueCommitOffset(String topic, int queueId, long commitOffset);
+    boolean reachesIndexedOffset(long commitOffset);
 }

@@ -40,7 +40,7 @@ public class DefaultQueueOffsetService extends Checkpoint implements QueueOffset
     }
 
     @Override
-    public boolean exceedsQueueCommitOffset(String topic, int queueId, long commitOffset) {
+    public boolean reachesQueueCommitOffset(String topic, int queueId, long commitOffset) {
         int shardId = offsetCodec.getShardId(commitOffset);
         Long oldOffset = getQueueCommitOffset(topic, queueId, shardId);
         if (oldOffset == null) {
@@ -51,7 +51,7 @@ public class DefaultQueueOffsetService extends Checkpoint implements QueueOffset
     }
 
     @Override
-    public boolean exceedsIndexedOffset(long commitOffset) {
+    public boolean reachesIndexedOffset(long commitOffset) {
         int shardId = offsetCodec.getShardId(commitOffset);
         Long oldOffset = getIndexedOffset(shardId);
         if (oldOffset == null) {
