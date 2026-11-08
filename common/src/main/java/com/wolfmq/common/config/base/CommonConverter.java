@@ -2,6 +2,7 @@ package com.wolfmq.common.config.base;
 
 import com.wolfmq.common.domain.commitlog.flush.FlushType;
 import lombok.extern.slf4j.Slf4j;
+import picocli.CommandLine;
 
 /**
  * convert Common template to ConfigAttribute
@@ -59,6 +60,10 @@ public class CommonConverter {
         }
         if (null != common.getMmapFileSize()) {
             ConfigAttribute.MMAP_FILE_SIZE = common.getMmapFileSize();
+        }
+
+        if (null != common.getEnableRocksDB()) {
+            ConfigAttribute.ENABLE_ROCKSDB = common.getEnableRocksDB();
         }
     }
 
