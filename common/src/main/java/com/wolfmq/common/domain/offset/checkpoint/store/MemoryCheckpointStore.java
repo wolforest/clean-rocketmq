@@ -2,23 +2,24 @@ package com.wolfmq.common.domain.offset.checkpoint.store;
 
 import com.wolfmq.common.domain.offset.checkpoint.CheckpointService;
 import java.util.Map;
-import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import lombok.Data;
 
 @Data
 public class MemoryCheckpointStore implements CheckpointService {
     private static final String KEY_SEPARATOR = "@";
 
-    private final ConcurrentSkipListMap<Integer, Long> masterOffsetMap = new ConcurrentSkipListMap<>();
-    private final ConcurrentSkipListMap<Integer, Long> commitOffsetMap = new ConcurrentSkipListMap<>();
-    private final ConcurrentSkipListMap<Integer, Long> dispatchedOffsetMap = new ConcurrentSkipListMap<>();
-    private final ConcurrentSkipListMap<Integer, Long> indexedOffsetMap = new ConcurrentSkipListMap<>();
+    private final ConcurrentMap<Integer, Long> masterOffsetMap = new ConcurrentHashMap<>();
+    private final ConcurrentMap<Integer, Long> commitOffsetMap = new ConcurrentHashMap<>();
+    private final ConcurrentMap<Integer, Long> dispatchedOffsetMap = new ConcurrentHashMap<>();
+    private final ConcurrentMap<Integer, Long> indexedOffsetMap = new ConcurrentHashMap<>();
 
     // topicName@queueId@shardId -> commitOffset
-    private final ConcurrentSkipListMap<String, Long> queueCommitOffsetMap = new ConcurrentSkipListMap<>();
+    private final ConcurrentMap<String, Long> queueCommitOffsetMap = new ConcurrentHashMap<>();
 
     // topicName@queueId -> queueOffset
-    private final ConcurrentSkipListMap<String, Long> queueOffsetMap = new ConcurrentSkipListMap<>();
+    private final ConcurrentMap<String, Long> queueOffsetMap = new ConcurrentHashMap<>();
 
     @Override
     public void updateCommitOffset(int shardId, long commitOffset) {
