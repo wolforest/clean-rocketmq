@@ -1,5 +1,6 @@
 package com.wolfmq.common.config.business;
 
+import com.wolfmq.common.config.base.ConfigAttribute;
 import com.wolfmq.common.domain.message.property.MessageConst;
 import java.io.Serializable;
 import java.time.Duration;
@@ -19,6 +20,16 @@ public class MessageConfig implements Serializable {
 
     private boolean enablePropertyCRC = false;
     private int propertyCRCLength = MessageConst.PROPERTY_CRC32.length() + 1 + 10 + 1;
+
+    /**
+     * performance related property
+     * if true:
+     *    will lock the consume queue while insert message.
+     * if false:
+     *    will assign the consume queue offset asynchronously.
+     *    and improve performance
+     */
+    private boolean enablePreAssignQueueOffset = ConfigAttribute.ENABLE_PRE_ASSIGN_QUEUE_OFFSET;
 
     /**
      * max message group size, 0 or negative number means no limit for proxy

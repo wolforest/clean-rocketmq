@@ -65,6 +65,10 @@ public class CommonConverter {
         if (null != common.getEnableRocksDB()) {
             ConfigAttribute.ENABLE_ROCKSDB = common.getEnableRocksDB();
         }
+
+        if (null != common.getEnablePreAssignQueueOffset()) {
+            ConfigAttribute.ENABLE_PRE_ASSIGN_QUEUE_OFFSET = common.getEnablePreAssignQueueOffset();
+        }
     }
 
     private static FlushType parseFlushType(String flushType) {

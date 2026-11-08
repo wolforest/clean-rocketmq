@@ -19,9 +19,10 @@ public class ConfigAttribute {
     public static int COMMITLOG_SHARDING_NUM = 2;
     public static boolean ENABLE_COMMITLOG_CACHE = false;
 
-    /* special attributes*/
+    /* special attributes */
     public static boolean ENABLE_DISRUPTOR = false;
     public static int MMAP_FILE_SIZE = 1024 * 1024 * 1024;
     public static boolean ENABLE_ROCKSDB = false;
+    public static boolean ENABLE_PRE_ASSIGN_QUEUE_OFFSET = true;
 
 }
