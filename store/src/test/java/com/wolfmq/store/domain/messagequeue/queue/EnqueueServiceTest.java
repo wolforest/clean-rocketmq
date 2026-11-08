@@ -29,7 +29,7 @@ class EnqueueServiceTest {
     @Test
     void enqueueAsyncAssignsAndIncreasesOffsetWhenInsertSuccess() {
         StoreConfig storeConfig = new StoreConfig();
-        storeConfig.setAssignConsumeOffset(true);
+        storeConfig.setEnablePreAssignOffset(true);
         CommitLogFacade commitLog = mock(CommitLogFacade.class);
         ConsumeQueueFacade consumeQueueFacade = mock(ConsumeQueueFacade.class);
         CommitLogSynchronizer synchronizer = mock(CommitLogSynchronizer.class);
@@ -58,7 +58,7 @@ class EnqueueServiceTest {
     @Test
     void enqueueAsyncSkipsOffsetAssignmentWhenDisabled() {
         StoreConfig storeConfig = new StoreConfig();
-        storeConfig.setAssignConsumeOffset(false);
+        storeConfig.setEnablePreAssignOffset(false);
 
         CommitLogFacade commitLog = mock(CommitLogFacade.class);
         ConsumeQueueFacade consumeQueueFacade = mock(ConsumeQueueFacade.class);

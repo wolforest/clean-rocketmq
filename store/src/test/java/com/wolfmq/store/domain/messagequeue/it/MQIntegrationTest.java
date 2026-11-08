@@ -58,7 +58,7 @@ class MQIntegrationTest extends BaseMQIntegrationTest {
     @Test
     void testEnqueueServiceSkipOffsetWhenDisabled() {
         StoreConfig localConfig = new StoreConfig();
-        localConfig.setAssignConsumeOffset(false);
+        localConfig.setEnablePreAssignOffset(false);
 
         CommitLogSynchronizer synchronizer = createSynchronizerMock();
 
@@ -310,7 +310,7 @@ class MQIntegrationTest extends BaseMQIntegrationTest {
 
     @Test
     void testEnqueueServiceAssignOffsetWhenEnabled() {
-        storeConfig.setAssignConsumeOffset(true);
+        storeConfig.setEnablePreAssignOffset(true);
 
         CommitLogSynchronizer synchronizer = createSynchronizerMock();
         EnqueueService service = new EnqueueService(storeConfig, commitLogFacade, consumeQueueFacade);

@@ -18,7 +18,6 @@ import com.wolfmq.common.config.store.MetaConfig;
 import com.wolfmq.common.config.store.RetentionConfig;
 import com.wolfmq.common.config.store.StorePath;
 import com.wolfmq.common.domain.meta.topic.constant.PermName;
-import com.wolfmq.common.server.registry.RegistryUtils;
 import java.io.File;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
@@ -101,9 +100,14 @@ public class StoreConfig extends ServerIdentity {
     private int maxHaTransferSize = 32 * 1024;
 
     /**
-     *
+     * performance related property
+     * if true:
+     *    will lock the consume queue while insert message.
+     * if false:
+     *    will assign the consume queue offset asynchronously.
+     *    and improve performance
      */
-    private boolean assignConsumeOffset = false;
+    private boolean enablePreAssignOffset = ConfigAttribute.ENABLE_PRE_ASSIGN_QUEUE_OFFSET;
 
     private Common common;
     private RetentionConfig retention = new RetentionConfig();

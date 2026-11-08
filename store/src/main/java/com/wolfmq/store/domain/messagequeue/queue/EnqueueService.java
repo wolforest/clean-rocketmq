@@ -70,7 +70,7 @@ public class EnqueueService {
     }
 
     private void assignConsumeOffset(MessageBO messageBO) {
-        if (!storeConfig.isAssignConsumeOffset()) {
+        if (!storeConfig.isEnablePreAssignOffset()) {
             messageBO.setQueueOffset(-1);
             return;
         }
@@ -80,7 +80,7 @@ public class EnqueueService {
     }
 
     private void increaseConsumeOffset(MessageBO messageBO) {
-        if (!storeConfig.isAssignConsumeOffset()) {
+        if (!storeConfig.isEnablePreAssignOffset()) {
             return;
         }
 
@@ -88,7 +88,7 @@ public class EnqueueService {
     }
 
     private void lockMessageQueue(String topic, int queueId) {
-        if (!storeConfig.isAssignConsumeOffset()) {
+        if (!storeConfig.isEnablePreAssignOffset()) {
             return;
         }
 
@@ -96,7 +96,7 @@ public class EnqueueService {
     }
 
     private void unlockMessageQueue(String topic, int queueId) {
-        if (!storeConfig.isAssignConsumeOffset()) {
+        if (!storeConfig.isEnablePreAssignOffset()) {
             return;
         }
 
