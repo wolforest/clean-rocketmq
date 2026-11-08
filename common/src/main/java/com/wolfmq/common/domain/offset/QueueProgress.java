@@ -7,10 +7,10 @@ import com.wolfmq.common.domain.offset.checkpoint.CheckpointService;
  * @renamed from QueueProgressService to QueueProgress
  */
 public interface QueueProgress extends CheckpointService {
-    void setCommitOffset(long commitOffset);
-    void setDispatchedOffset(long commitOffset);
-    void setIndexedOffset(long commitOffset);
-    void setQueueCommitOffset(String topic, int queueId, long commitOffset);
+    void updateCommitOffset(long commitOffset);
+    void updateDispatchedOffset(long commitOffset);
+    void updateIndexedOffset(long commitOffset);
+    void updateQueueCommitOffset(String topic, int queueId, long commitOffset);
 
     /**
      * Compares the given queueCommitOffset with the queue commit offset in the checkpoint.

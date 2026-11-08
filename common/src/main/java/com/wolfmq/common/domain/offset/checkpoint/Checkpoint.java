@@ -12,8 +12,8 @@ public class Checkpoint implements CheckpointService {
     }
 
     @Override
-    public void setCommitOffset(int shardId, long commitOffset) {
-        store.setCommitOffset(shardId, commitOffset);
+    public void updateCommitOffset(int shardId, long commitOffset) {
+        store.updateCommitOffset(shardId, commitOffset);
     }
 
     @Override
@@ -22,8 +22,8 @@ public class Checkpoint implements CheckpointService {
     }
 
     @Override
-    public void setDispatchedOffset(int shardId, long commitOffset) {
-        store.setDispatchedOffset(shardId, commitOffset);
+    public void updateDispatchedOffset(int shardId, long commitOffset) {
+        store.updateDispatchedOffset(shardId, commitOffset);
     }
 
     @Override
@@ -32,8 +32,8 @@ public class Checkpoint implements CheckpointService {
     }
 
     @Override
-    public void setMasterOffset(int shardId, long commitOffset) {
-        store.setMasterOffset(shardId, commitOffset);
+    public void updateMasterOffset(int shardId, long commitOffset) {
+        store.updateMasterOffset(shardId, commitOffset);
     }
 
     @Override
@@ -42,17 +42,17 @@ public class Checkpoint implements CheckpointService {
     }
 
     @Override
-    public void setMasterOffsets(Map<Integer, Long> offsetMap) {
+    public void updateMasterOffsets(Map<Integer, Long> offsetMap) {
         if (MapUtil.isEmpty(offsetMap)) {
             return;
         }
 
-        store.setMasterOffsets(offsetMap);
+        store.updateMasterOffsets(offsetMap);
     }
 
     @Override
-    public void setIndexedOffset(int shardId, long indexOffset) {
-        store.setIndexedOffset(shardId, indexOffset);
+    public void updateIndexedOffset(int shardId, long indexOffset) {
+        store.updateIndexedOffset(shardId, indexOffset);
     }
 
     @Override
@@ -61,8 +61,8 @@ public class Checkpoint implements CheckpointService {
     }
 
     @Override
-    public void setQueueOffset(String topic, int queueId, long queueOffset) {
-        store.setQueueOffset(topic, queueId, queueOffset);
+    public void updateQueueOffset(String topic, int queueId, long queueOffset) {
+        store.updateQueueOffset(topic, queueId, queueOffset);
     }
 
     @Override
@@ -71,8 +71,8 @@ public class Checkpoint implements CheckpointService {
     }
 
     @Override
-    public void setQueueCommitOffset(String topic, int queueId, int shardId, long commitOffset) {
-        store.setQueueCommitOffset(topic, queueId, shardId, commitOffset);
+    public void updateQueueCommitOffset(String topic, int queueId, int shardId, long commitOffset) {
+        store.updateQueueCommitOffset(topic, queueId, shardId, commitOffset);
     }
 
     @Override

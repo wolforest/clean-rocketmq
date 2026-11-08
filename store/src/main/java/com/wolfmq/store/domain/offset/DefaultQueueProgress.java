@@ -16,27 +16,27 @@ public class DefaultQueueProgress extends Checkpoint implements QueueProgress {
     }
 
     @Override
-    public void setCommitOffset(long commitOffset) {
+    public void updateCommitOffset(long commitOffset) {
         int shardId = offsetCodec.getShardId(commitOffset);
-        setCommitOffset(shardId, commitOffset);
+        updateCommitOffset(shardId, commitOffset);
     }
 
     @Override
-    public void setDispatchedOffset(long commitOffset) {
+    public void updateDispatchedOffset(long commitOffset) {
         int shardId = offsetCodec.getShardId(commitOffset);
-        setDispatchedOffset(shardId, commitOffset);
+        updateDispatchedOffset(shardId, commitOffset);
     }
 
     @Override
-    public void setIndexedOffset(long commitOffset) {
+    public void updateIndexedOffset(long commitOffset) {
         int shardId = offsetCodec.getShardId(commitOffset);
-        setIndexedOffset(shardId, commitOffset);
+        updateIndexedOffset(shardId, commitOffset);
     }
 
     @Override
-    public void setQueueCommitOffset(String topic, int queueId, long commitOffset) {
+    public void updateQueueCommitOffset(String topic, int queueId, long commitOffset) {
         int shardId = offsetCodec.getShardId(commitOffset);
-        setQueueCommitOffset(topic, queueId, shardId, commitOffset);
+        updateQueueCommitOffset(topic, queueId, shardId, commitOffset);
     }
 
     @Override

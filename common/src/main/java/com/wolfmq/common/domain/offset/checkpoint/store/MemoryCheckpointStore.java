@@ -21,7 +21,7 @@ public class MemoryCheckpointStore implements CheckpointService {
     private final ConcurrentSkipListMap<String, Long> queueOffsetMap = new ConcurrentSkipListMap<>();
 
     @Override
-    public void setCommitOffset(int shardId, long commitOffset) {
+    public void updateCommitOffset(int shardId, long commitOffset) {
         commitOffsetMap.merge(shardId, commitOffset, Math::max);
     }
 
@@ -31,7 +31,7 @@ public class MemoryCheckpointStore implements CheckpointService {
     }
 
     @Override
-    public void setDispatchedOffset(int shardId, long commitOffset) {
+    public void updateDispatchedOffset(int shardId, long commitOffset) {
         dispatchedOffsetMap.merge(shardId, commitOffset, Math::max);
     }
 
@@ -41,7 +41,7 @@ public class MemoryCheckpointStore implements CheckpointService {
     }
 
     @Override
-    public void setMasterOffset(int shardId, long commitOffset) {
+    public void updateMasterOffset(int shardId, long commitOffset) {
         masterOffsetMap.merge(shardId, commitOffset, Math::max);
     }
 
@@ -51,12 +51,12 @@ public class MemoryCheckpointStore implements CheckpointService {
     }
 
     @Override
-    public void setMasterOffsets(Map<Integer, Long> offsetMap) {
+    public void updateMasterOffsets(Map<Integer, Long> offsetMap) {
         masterOffsetMap.putAll(offsetMap);
     }
 
     @Override
-    public void setIndexedOffset(int shardId, long indexOffset) {
+    public void updateIndexedOffset(int shardId, long indexOffset) {
         indexedOffsetMap.merge(shardId, indexOffset, Math::max);
     }
 
@@ -66,7 +66,7 @@ public class MemoryCheckpointStore implements CheckpointService {
     }
 
     @Override
-    public void setQueueOffset(String topic, int queueId, long queueOffset) {
+    public void updateQueueOffset(String topic, int queueId, long queueOffset) {
         queueOffsetMap.merge(
             buildQueueKey(topic, queueId),
             queueOffset,
@@ -82,7 +82,7 @@ public class MemoryCheckpointStore implements CheckpointService {
     }
 
     @Override
-    public void setQueueCommitOffset(String topic, int queueId, int shardId, long commitOffset) {
+    public void updateQueueCommitOffset(String topic, int queueId, int shardId, long commitOffset) {
         queueCommitOffsetMap.merge(
             buildQueueShardKey(topic, queueId, shardId),
             commitOffset,

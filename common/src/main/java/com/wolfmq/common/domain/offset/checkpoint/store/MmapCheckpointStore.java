@@ -9,8 +9,8 @@ public class MmapCheckpointStore implements CheckpointService, CheckpointStore {
     private MemoryCheckpointStore memoryStore = new MemoryCheckpointStore();
 
     @Override
-    public void setCommitOffset(int shardId, long commitOffset) {
-        memoryStore.setCommitOffset(shardId, commitOffset);
+    public void updateCommitOffset(int shardId, long commitOffset) {
+        memoryStore.updateCommitOffset(shardId, commitOffset);
     }
 
     @Override
@@ -19,8 +19,8 @@ public class MmapCheckpointStore implements CheckpointService, CheckpointStore {
     }
 
     @Override
-    public void setDispatchedOffset(int shardId, long commitOffset) {
-        memoryStore.setDispatchedOffset(shardId, commitOffset);
+    public void updateDispatchedOffset(int shardId, long commitOffset) {
+        memoryStore.updateDispatchedOffset(shardId, commitOffset);
     }
 
     @Override
@@ -29,8 +29,8 @@ public class MmapCheckpointStore implements CheckpointService, CheckpointStore {
     }
 
     @Override
-    public void setMasterOffset(int shardId, long commitOffset) {
-        memoryStore.setMasterOffset(shardId, commitOffset);
+    public void updateMasterOffset(int shardId, long commitOffset) {
+        memoryStore.updateMasterOffset(shardId, commitOffset);
     }
 
     @Override
@@ -39,13 +39,13 @@ public class MmapCheckpointStore implements CheckpointService, CheckpointStore {
     }
 
     @Override
-    public void setMasterOffsets(Map<Integer, Long> offsetMap) {
-        memoryStore.setMasterOffsets(offsetMap);
+    public void updateMasterOffsets(Map<Integer, Long> offsetMap) {
+        memoryStore.updateMasterOffsets(offsetMap);
     }
 
     @Override
-    public void setIndexedOffset(int shardId, long indexOffset) {
-        memoryStore.setIndexedOffset(shardId, indexOffset);
+    public void updateIndexedOffset(int shardId, long indexOffset) {
+        memoryStore.updateIndexedOffset(shardId, indexOffset);
     }
 
     @Override
@@ -54,8 +54,8 @@ public class MmapCheckpointStore implements CheckpointService, CheckpointStore {
     }
 
     @Override
-    public void setQueueOffset(String topic, int queueId, long queueOffset) {
-        memoryStore.setQueueOffset(topic, queueId, queueOffset);
+    public void updateQueueOffset(String topic, int queueId, long queueOffset) {
+        memoryStore.updateQueueOffset(topic, queueId, queueOffset);
     }
 
     @Override
@@ -64,8 +64,8 @@ public class MmapCheckpointStore implements CheckpointService, CheckpointStore {
     }
 
     @Override
-    public void setQueueCommitOffset(String topic, int queueId, int shardId, long commitOffset) {
-        memoryStore.setQueueCommitOffset(topic, queueId, shardId, commitOffset);
+    public void updateQueueCommitOffset(String topic, int queueId, int shardId, long commitOffset) {
+        memoryStore.updateQueueCommitOffset(topic, queueId, shardId, commitOffset);
     }
 
     @Override

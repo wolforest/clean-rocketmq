@@ -12,12 +12,12 @@ class FileCheckpointStoreTest {
     @Test
     void saveAndLoadShouldRestoreOffsets(@TempDir Path tempDir) {
         FileCheckpointStore store = new FileCheckpointStore(tempDir.toString());
-        store.setCommitOffset(1, 100L);
-        store.setDispatchedOffset(2, 200L);
-        store.setMasterOffset(3, 300L);
-        store.setIndexedOffset(4, 400L);
-        store.setQueueOffset("topic", 1, 500L);
-        store.setQueueCommitOffset("topic", 1, 2, 600L);
+        store.updateCommitOffset(1, 100L);
+        store.updateDispatchedOffset(2, 200L);
+        store.updateMasterOffset(3, 300L);
+        store.updateIndexedOffset(4, 400L);
+        store.updateQueueOffset("topic", 1, 500L);
+        store.updateQueueCommitOffset("topic", 1, 2, 600L);
 
         store.save();
 
