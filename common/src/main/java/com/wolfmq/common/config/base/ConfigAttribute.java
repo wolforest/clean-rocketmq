@@ -22,4 +22,6 @@ public class ConfigAttribute {
     /* special attributes*/
     public static boolean ENABLE_DISRUPTOR = false;
     public static int MMAP_FILE_SIZE = 1024 * 1024 * 1024;
+    public static boolean ENABLE_ROCKSDB = false;
+
 }
