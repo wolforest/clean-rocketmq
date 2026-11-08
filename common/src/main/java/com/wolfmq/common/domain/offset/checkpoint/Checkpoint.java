@@ -12,52 +12,52 @@ public class Checkpoint implements CheckpointService {
     }
 
     @Override
-    public void setCommitOffset(int shard, long commitOffset) {
-        store.setCommitOffset(shard, commitOffset);
+    public void setCommitOffset(int shardId, long commitOffset) {
+        store.setCommitOffset(shardId, commitOffset);
     }
 
     @Override
-    public Long getCommitOffset(int shard) {
-        return store.getCommitOffset(shard);
+    public Long getCommitOffset(int shardId) {
+        return store.getCommitOffset(shardId);
     }
 
     @Override
-    public void setDispatchedOffset(int shard, long commitOffset) {
-        store.setDispatchedOffset(shard, commitOffset);
+    public void setDispatchedOffset(int shardId, long commitOffset) {
+        store.setDispatchedOffset(shardId, commitOffset);
     }
 
     @Override
-    public Long getDispatchedOffset(int shard) {
-        return store.getDispatchedOffset(shard);
+    public Long getDispatchedOffset(int shardId) {
+        return store.getDispatchedOffset(shardId);
     }
 
     @Override
-    public void setMasterOffset(int shard, long commitOffset) {
-        store.setMasterOffset(shard, commitOffset);
+    public void setMasterOffset(int shardId, long commitOffset) {
+        store.setMasterOffset(shardId, commitOffset);
     }
 
     @Override
-    public Long getMasterOffset(int shard) {
-        return store.getMasterOffset(shard);
+    public Long getMasterOffset(int shardId) {
+        return store.getMasterOffset(shardId);
     }
 
     @Override
-    public void setMasterOffset(Map<Integer, Long> offsetMap) {
+    public void setMasterOffsets(Map<Integer, Long> offsetMap) {
         if (MapUtil.isEmpty(offsetMap)) {
             return;
         }
 
-        store.setMasterOffset(offsetMap);
+        store.setMasterOffsets(offsetMap);
     }
 
     @Override
-    public void setIndexedOffset(int shard, long indexOffset) {
-        store.setIndexedOffset(shard, indexOffset);
+    public void setIndexedOffset(int shardId, long indexOffset) {
+        store.setIndexedOffset(shardId, indexOffset);
     }
 
     @Override
-    public Long getIndexedOffset(int shard) {
-        return store.getIndexedOffset(shard);
+    public Long getIndexedOffset(int shardId) {
+        return store.getIndexedOffset(shardId);
     }
 
     @Override
@@ -71,12 +71,12 @@ public class Checkpoint implements CheckpointService {
     }
 
     @Override
-    public void setQueueCommitOffset(String topic, int queueId, int shard, long commitOffset) {
-        store.setQueueCommitOffset(topic, queueId, shard, commitOffset);
+    public void setQueueCommitOffset(String topic, int queueId, int shardId, long commitOffset) {
+        store.setQueueCommitOffset(topic, queueId, shardId, commitOffset);
     }
 
     @Override
-    public Long getQueueCommitOffset(String topic, int queueId, int shard) {
-        return store.getQueueCommitOffset(topic, queueId, shard);
+    public Long getQueueCommitOffset(String topic, int queueId, int shardId) {
+        return store.getQueueCommitOffset(topic, queueId, shardId);
     }
 }

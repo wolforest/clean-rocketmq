@@ -21,54 +21,54 @@ public class MemoryCheckpointStore implements CheckpointService {
     private final ConcurrentSkipListMap<String, Long> queueOffsetMap = new ConcurrentSkipListMap<>();
 
     @Override
-    public void setCommitOffset(int shard, long commitOffset) {
-        commitOffsetMap.merge(shard, commitOffset, Math::max);
+    public void setCommitOffset(int shardId, long commitOffset) {
+        commitOffsetMap.merge(shardId, commitOffset, Math::max);
     }
 
     @Override
-    public Long getCommitOffset(int shard) {
-        return commitOffsetMap.get(shard);
+    public Long getCommitOffset(int shardId) {
+        return commitOffsetMap.get(shardId);
     }
 
     @Override
-    public void setDispatchedOffset(int shard, long commitOffset) {
-        dispatchedOffsetMap.merge(shard, commitOffset, Math::max);
+    public void setDispatchedOffset(int shardId, long commitOffset) {
+        dispatchedOffsetMap.merge(shardId, commitOffset, Math::max);
     }
 
     @Override
-    public Long getDispatchedOffset(int shard) {
-        return dispatchedOffsetMap.get(shard);
+    public Long getDispatchedOffset(int shardId) {
+        return dispatchedOffsetMap.get(shardId);
     }
 
     @Override
-    public void setMasterOffset(int shard, long commitOffset) {
-        masterOffsetMap.merge(shard, commitOffset, Math::max);
+    public void setMasterOffset(int shardId, long commitOffset) {
+        masterOffsetMap.merge(shardId, commitOffset, Math::max);
     }
 
     @Override
-    public Long getMasterOffset(int shard) {
-        return masterOffsetMap.get(shard);
+    public Long getMasterOffset(int shardId) {
+        return masterOffsetMap.get(shardId);
     }
 
     @Override
-    public void setMasterOffset(Map<Integer, Long> offsetMap) {
+    public void setMasterOffsets(Map<Integer, Long> offsetMap) {
         masterOffsetMap.putAll(offsetMap);
     }
 
     @Override
-    public void setIndexedOffset(int shard, long indexOffset) {
-        indexedOffsetMap.merge(shard, indexOffset, Math::max);
+    public void setIndexedOffset(int shardId, long indexOffset) {
+        indexedOffsetMap.merge(shardId, indexOffset, Math::max);
     }
 
     @Override
-    public Long getIndexedOffset(int shard) {
-        return indexedOffsetMap.get(shard);
+    public Long getIndexedOffset(int shardId) {
+        return indexedOffsetMap.get(shardId);
     }
 
     @Override
     public void setQueueOffset(String topic, int queueId, long queueOffset) {
         queueOffsetMap.merge(
-            buildKey(topic, queueId),
+            buildQueueKey(topic, queueId),
             queueOffset,
             Math::max
         );
@@ -77,36 +77,36 @@ public class MemoryCheckpointStore implements CheckpointService {
     @Override
     public Long getQueueOffset(String topic, int queueId) {
         return queueOffsetMap.get(
-            buildKey(topic, queueId)
+            buildQueueKey(topic, queueId)
         );
     }
 
     @Override
-    public void setQueueCommitOffset(String topic, int queueId, int shard, long commitOffset) {
+    public void setQueueCommitOffset(String topic, int queueId, int shardId, long commitOffset) {
         queueCommitOffsetMap.merge(
-            buildKey(topic, queueId, shard),
+            buildQueueShardKey(topic, queueId, shardId),
             commitOffset,
             Math::max
         );
     }
 
     @Override
-    public Long getQueueCommitOffset(String topic, int queueId, int shard) {
+    public Long getQueueCommitOffset(String topic, int queueId, int shardId) {
         return queueCommitOffsetMap.get(
-            buildKey(topic, queueId, shard)
+            buildQueueShardKey(topic, queueId, shardId)
         );
     }
 
-    private String buildKey(String topic, int queueId) {
+    private String buildQueueKey(String topic, int queueId) {
         return topic
             + KEY_SEPARATOR
             + pad2(queueId);
     }
 
-    private String buildKey(String topic, int queueId, int shard) {
-        return buildKey(topic, queueId)
+    private String buildQueueShardKey(String topic, int queueId, int shardId) {
+        return buildQueueKey(topic, queueId)
             + KEY_SEPARATOR
-            + pad2(shard);
+            + pad2(shardId);
     }
 
     private String pad2(int value) {

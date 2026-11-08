@@ -3,29 +3,29 @@ package com.wolfmq.common.domain.offset.checkpoint;
 import java.util.Map;
 
 public interface CheckpointService {
-    void setCommitOffset(int shard, long commitOffset);
+    void setCommitOffset(int shardId, long commitOffset);
 
-    Long getCommitOffset(int shard);
+    Long getCommitOffset(int shardId);
 
-    void setDispatchedOffset(int shard, long commitOffset);
+    void setDispatchedOffset(int shardId, long commitOffset);
 
-    Long getDispatchedOffset(int shard);
+    Long getDispatchedOffset(int shardId);
 
-    void setMasterOffset(int shard, long commitOffset);
+    void setMasterOffset(int shardId, long commitOffset);
 
-    Long getMasterOffset(int shard);
+    Long getMasterOffset(int shardId);
 
-    void setMasterOffset(Map<Integer, Long> offsetMap);
+    void setMasterOffsets(Map<Integer, Long> offsetMap);
 
-    void setIndexedOffset(int shard, long indexOffset);
+    void setIndexedOffset(int shardId, long indexOffset);
 
-    Long getIndexedOffset(int shard);
+    Long getIndexedOffset(int shardId);
 
     void setQueueOffset(String topic, int queueId, long queueOffset);
 
     Long getQueueOffset(String topic, int queueId);
 
-    void setQueueCommitOffset(String topic, int queueId, int shard, long commitOffset);
+    void setQueueCommitOffset(String topic, int queueId, int shardId, long commitOffset);
 
-    Long getQueueCommitOffset(String topic, int queueId, int shard);
+    Long getQueueCommitOffset(String topic, int queueId, int shardId);
 }

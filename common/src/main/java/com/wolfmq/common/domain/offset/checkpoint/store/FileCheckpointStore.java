@@ -22,48 +22,48 @@ public class FileCheckpointStore implements CheckpointService, CheckpointStore {
     }
 
     @Override
-    public void setCommitOffset(int shard, long commitOffset) {
-        memoryStore.setCommitOffset(shard, commitOffset);
+    public void setCommitOffset(int shardId, long commitOffset) {
+        memoryStore.setCommitOffset(shardId, commitOffset);
     }
 
     @Override
-    public Long getCommitOffset(int shard) {
-        return memoryStore.getCommitOffset(shard);
+    public Long getCommitOffset(int shardId) {
+        return memoryStore.getCommitOffset(shardId);
     }
 
     @Override
-    public void setDispatchedOffset(int shard, long commitOffset) {
-        memoryStore.setDispatchedOffset(shard, commitOffset);
+    public void setDispatchedOffset(int shardId, long commitOffset) {
+        memoryStore.setDispatchedOffset(shardId, commitOffset);
     }
 
     @Override
-    public Long getDispatchedOffset(int shard) {
-        return memoryStore.getDispatchedOffset(shard);
+    public Long getDispatchedOffset(int shardId) {
+        return memoryStore.getDispatchedOffset(shardId);
     }
 
     @Override
-    public void setMasterOffset(int shard, long commitOffset) {
-        memoryStore.setMasterOffset(shard, commitOffset);
+    public void setMasterOffset(int shardId, long commitOffset) {
+        memoryStore.setMasterOffset(shardId, commitOffset);
     }
 
     @Override
-    public Long getMasterOffset(int shard) {
-        return memoryStore.getMasterOffset(shard);
+    public Long getMasterOffset(int shardId) {
+        return memoryStore.getMasterOffset(shardId);
     }
 
     @Override
-    public void setMasterOffset(Map<Integer, Long> offsetMap) {
-        memoryStore.setMasterOffset(offsetMap);
+    public void setMasterOffsets(Map<Integer, Long> offsetMap) {
+        memoryStore.setMasterOffsets(offsetMap);
     }
 
     @Override
-    public void setIndexedOffset(int shard, long indexOffset) {
-        memoryStore.setIndexedOffset(shard, indexOffset);
+    public void setIndexedOffset(int shardId, long indexOffset) {
+        memoryStore.setIndexedOffset(shardId, indexOffset);
     }
 
     @Override
-    public Long getIndexedOffset(int shard) {
-        return memoryStore.getIndexedOffset(shard);
+    public Long getIndexedOffset(int shardId) {
+        return memoryStore.getIndexedOffset(shardId);
     }
 
     @Override
@@ -77,13 +77,13 @@ public class FileCheckpointStore implements CheckpointService, CheckpointStore {
     }
 
     @Override
-    public void setQueueCommitOffset(String topic, int queueId, int shard, long commitOffset) {
-        memoryStore.setQueueCommitOffset(topic, queueId, shard, commitOffset);
+    public void setQueueCommitOffset(String topic, int queueId, int shardId, long commitOffset) {
+        memoryStore.setQueueCommitOffset(topic, queueId, shardId, commitOffset);
     }
 
     @Override
-    public Long getQueueCommitOffset(String topic, int queueId, int shard) {
-        return memoryStore.getQueueCommitOffset(topic, queueId, shard);
+    public Long getQueueCommitOffset(String topic, int queueId, int shardId) {
+        return memoryStore.getQueueCommitOffset(topic, queueId, shardId);
     }
 
     @Override
