@@ -1,6 +1,7 @@
 package com.wolfmq.common.domain.offset.checkpoint.store;
 
 import com.wolfmq.common.domain.offset.checkpoint.CheckpointService;
+import com.wolfmq.common.domain.offset.utils.KeyUtils;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -8,8 +9,6 @@ import lombok.Data;
 
 @Data
 public class MemoryCheckpointStore implements CheckpointService {
-    private static final String KEY_SEPARATOR = "@";
-
     private final ConcurrentMap<Integer, Long> masterOffsetMap = new ConcurrentHashMap<>();
     private final ConcurrentMap<Integer, Long> commitOffsetMap = new ConcurrentHashMap<>();
     private final ConcurrentMap<Integer, Long> dispatchedOffsetMap = new ConcurrentHashMap<>();
@@ -69,7 +68,7 @@ public class MemoryCheckpointStore implements CheckpointService {
     @Override
     public void updateQueueOffset(String topic, int queueId, long queueOffset) {
         queueOffsetMap.merge(
-            buildQueueKey(topic, queueId),
+            KeyUtils.buildQueueKey(topic, queueId),
             queueOffset,
             Math::max
         );
@@ -78,14 +77,14 @@ public class MemoryCheckpointStore implements CheckpointService {
     @Override
     public Long getQueueOffset(String topic, int queueId) {
         return queueOffsetMap.get(
-            buildQueueKey(topic, queueId)
+            KeyUtils.buildQueueKey(topic, queueId)
         );
     }
 
     @Override
     public void updateQueueCommitOffset(String topic, int queueId, int shardId, long commitOffset) {
         queueCommitOffsetMap.merge(
-            buildQueueShardKey(topic, queueId, shardId),
+            KeyUtils.buildQueueShardKey(topic, queueId, shardId),
             commitOffset,
             Math::max
         );
@@ -94,23 +93,7 @@ public class MemoryCheckpointStore implements CheckpointService {
     @Override
     public Long getQueueCommitOffset(String topic, int queueId, int shardId) {
         return queueCommitOffsetMap.get(
-            buildQueueShardKey(topic, queueId, shardId)
+            KeyUtils.buildQueueShardKey(topic, queueId, shardId)
         );
-    }
-
-    private String buildQueueKey(String topic, int queueId) {
-        return topic
-            + KEY_SEPARATOR
-            + pad2(queueId);
-    }
-
-    private String buildQueueShardKey(String topic, int queueId, int shardId) {
-        return buildQueueKey(topic, queueId)
-            + KEY_SEPARATOR
-            + pad2(shardId);
-    }
-
-    private String pad2(int value) {
-        return String.format("%02d", value);
     }
 }

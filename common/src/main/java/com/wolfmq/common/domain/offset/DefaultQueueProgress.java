@@ -1,18 +1,19 @@
-package com.wolfmq.store.domain.offset;
+package com.wolfmq.common.domain.offset;
 
-import com.wolfmq.common.config.store.CommitConfig;
-import com.wolfmq.common.domain.offset.QueueProgress;
-import com.wolfmq.common.domain.offset.checkpoint.Checkpoint;
+import com.wolfmq.common.domain.offset.checkpoint.CheckpointFacade;
 import com.wolfmq.common.domain.offset.checkpoint.store.CheckpointStore;
 import com.wolfmq.common.domain.offset.commitlog.OffsetCodec;
+import com.wolfmq.common.domain.offset.consumequeue.QueueOffsetAssigner;
 
-public class DefaultQueueProgress extends Checkpoint implements QueueProgress {
+public class DefaultQueueProgress extends CheckpointFacade implements QueueProgress {
     private final OffsetCodec offsetCodec;
+    private final QueueOffsetAssigner queueOffsetAssigner;
 
-    public DefaultQueueProgress(CheckpointStore store, CommitConfig commitConfig) {
+    public DefaultQueueProgress(CheckpointStore store, OffsetCodec offsetCodec, QueueOffsetAssigner queueOffsetAssigner) {
         super(store);
 
-        this.offsetCodec = new OffsetCodec(commitConfig.getMaxShardingNumber());
+        this.offsetCodec = offsetCodec;
+        this.queueOffsetAssigner = queueOffsetAssigner;
     }
 
     @Override
@@ -63,6 +64,16 @@ public class DefaultQueueProgress extends Checkpoint implements QueueProgress {
 
     @Override
     public long assignQueueOffset(String topic, int queueId, int num) {
-        return 0;
+        return queueOffsetAssigner.assign(topic, queueId, num);
+    }
+
+    @Override
+    public void updateQueueOffset(String topic, int queueId, long queueOffset) {
+        queueOffsetAssigner.updateQueueOffset(topic, queueId, queueOffset);
+    }
+
+    @Override
+    public Long getQueueOffset(String topic, int queueId) {
+        return queueOffsetAssigner.getQueueOffset(topic, queueId);
     }
 }
