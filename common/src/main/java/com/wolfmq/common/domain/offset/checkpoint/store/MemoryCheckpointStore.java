@@ -16,10 +16,10 @@ public class MemoryCheckpointStore implements CheckpointService {
     private final ConcurrentMap<Integer, Long> indexedOffsetMap = new ConcurrentHashMap<>();
 
     // topicName@queueId@shardId -> commitOffset
-    private final ConcurrentMap<String, Long> queueCommitOffsetMap = new ConcurrentHashMap<>();
+    private final Map<String, Long> queueCommitOffsetMap = new ConcurrentHashMap<>();
 
     // topicName@queueId -> queueOffset
-    private final ConcurrentMap<String, Long> queueOffsetMap = new ConcurrentHashMap<>();
+    private final Map<String, Long> queueOffsetMap = new ConcurrentHashMap<>();
 
     @Override
     public void updateCommitOffset(int shardId, long commitOffset) {

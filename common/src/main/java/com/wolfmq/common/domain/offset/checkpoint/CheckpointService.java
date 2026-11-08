@@ -3,6 +3,8 @@ package com.wolfmq.common.domain.offset.checkpoint;
 import java.util.Map;
 
 public interface CheckpointService {
+    Map<String, Long> getQueueOffsetMap();
+
     void updateCommitOffset(int shardId, long commitOffset);
 
     Long getCommitOffset(int shardId);

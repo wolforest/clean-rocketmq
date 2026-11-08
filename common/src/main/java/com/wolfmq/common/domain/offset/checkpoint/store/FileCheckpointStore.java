@@ -67,6 +67,11 @@ public class FileCheckpointStore implements CheckpointService, CheckpointStore {
     }
 
     @Override
+    public Map<String, Long> getQueueOffsetMap() {
+        return memoryStore.getQueueOffsetMap();
+    }
+
+    @Override
     public void updateQueueOffset(String topic, int queueId, long queueOffset) {
         memoryStore.updateQueueOffset(topic, queueId, queueOffset);
     }

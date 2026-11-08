@@ -54,6 +54,11 @@ public class RocksdbCheckpointStore implements CheckpointService, CheckpointStor
     }
 
     @Override
+    public Map<String, Long> getQueueOffsetMap() {
+        return memoryStore.getQueueOffsetMap();
+    }
+
+    @Override
     public void updateQueueOffset(String topic, int queueId, long queueOffset) {
         memoryStore.updateQueueOffset(topic, queueId, queueOffset);
     }
