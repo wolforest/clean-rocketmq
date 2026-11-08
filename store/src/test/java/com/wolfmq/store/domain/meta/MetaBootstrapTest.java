@@ -2,12 +2,10 @@ package com.wolfmq.store.domain.meta;
 
 import com.wolfmq.common.domain.offset.checkpoint.bakeup.CheckPoint;
 
-import com.wolfmq.common.core.constant.ContextNamespace;
-
 import cn.coderule.common.convention.container.ApplicationContext;
 
+import com.wolfmq.common.core.constant.ContextNamespace;
 import com.wolfmq.common.config.server.StoreConfig;
-import com.wolfmq.common.server.store.api.ConsumeOffsetStore;
 import com.wolfmq.common.server.store.api.meta.SubscriptionStore;
 import com.wolfmq.common.server.store.StoreState;
 import com.wolfmq.common.server.store.api.meta.TopicStore;
@@ -54,6 +52,7 @@ class MetaBootstrapTest {
         StoreRegister storeRegister = mock(StoreRegister.class);
         context.register(consumeQueueFacade, ConsumeQueueFacade.class);
         context.register(storeRegister, StoreRegister.class);
+        context.register(mock(ConsumerOffsetService.class), ConsumerOffsetService.class);
 
         MetaBootstrap bootstrap = new MetaBootstrap(context);
         bootstrap.initialize();
@@ -66,9 +65,6 @@ class MetaBootstrapTest {
 
         TopicService topicService = context.getBean(TopicService.class);
         assertNotNull(topicService);
-
-        ConsumeOffsetStore offsetStore = context.getBean(ConsumeOffsetStore.class, ContextNamespace.API);
-        assertNotNull(offsetStore);
 
         SubscriptionStore subscriptionStore = context.getBean(SubscriptionStore.class, ContextNamespace.API);
         assertNotNull(subscriptionStore);

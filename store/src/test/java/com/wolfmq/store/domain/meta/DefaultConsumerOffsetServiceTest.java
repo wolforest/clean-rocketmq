@@ -2,7 +2,7 @@ package com.wolfmq.store.domain.meta;
 
 import com.wolfmq.common.config.server.StoreConfig;
 import com.wolfmq.common.testing.ConfigMock;
-import com.wolfmq.store.domain.offset.DefaultConsumerOffsetService;
+import com.wolfmq.common.domain.offset.consumer.DefaultConsumerOffsetService;
 import java.nio.file.Path;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;

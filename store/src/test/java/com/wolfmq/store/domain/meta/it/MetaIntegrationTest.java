@@ -13,7 +13,7 @@ import com.wolfmq.common.domain.meta.topic.Topic;
 import com.wolfmq.common.domain.offset.ConsumerOffsetService;
 import com.wolfmq.common.testing.ConfigMock;
 import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueFacade;
-import com.wolfmq.store.domain.offset.DefaultConsumerOffsetService;
+import com.wolfmq.common.domain.offset.consumer.DefaultConsumerOffsetService;
 import com.wolfmq.store.domain.meta.DefaultConsumeOrderService;
 import com.wolfmq.store.domain.meta.DefaultSubscriptionService;
 import com.wolfmq.store.domain.meta.DefaultTopicService;

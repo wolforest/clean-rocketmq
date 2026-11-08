@@ -17,7 +17,7 @@ import com.wolfmq.common.core.lock.queue.DequeueLock;
 import com.wolfmq.common.testing.ConfigMock;
 import com.wolfmq.store.domain.commitlog.CommitLogFacade;
 import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueFacade;
-import com.wolfmq.store.domain.offset.DefaultConsumerOffsetService;
+import com.wolfmq.common.domain.offset.consumer.DefaultConsumerOffsetService;
 import com.wolfmq.store.domain.meta.DefaultConsumeOrderService;
 import com.wolfmq.store.domain.messagequeue.ack.AckService;
 import com.wolfmq.store.domain.messagequeue.ack.InvisibleService;

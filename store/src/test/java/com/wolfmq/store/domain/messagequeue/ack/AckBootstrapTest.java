@@ -9,7 +9,7 @@ import com.wolfmq.common.config.server.StoreConfig;
 import com.wolfmq.common.domain.consumer.consume.InflightCounter;
 import com.wolfmq.common.core.lock.queue.DequeueLock;
 import com.wolfmq.common.testing.ConfigMock;
-import com.wolfmq.store.domain.offset.DefaultConsumerOffsetService;
+import com.wolfmq.common.domain.offset.consumer.DefaultConsumerOffsetService;
 import com.wolfmq.store.domain.meta.DefaultConsumeOrderService;
 import com.wolfmq.store.domain.messagequeue.queue.EnqueueService;
 import com.wolfmq.store.server.bootstrap.StoreCheckpoint;
