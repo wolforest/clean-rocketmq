@@ -22,4 +22,10 @@ public interface QueueProgress extends CheckpointService {
      */
     boolean reachesQueueCommitOffset(String topic, int queueId, long commitOffset);
     boolean reachesIndexedOffset(long commitOffset);
+
+    long assignQueueOffset(String topic, int queueId, int num);
+
+    default long assignQueueOffset(String topic, int queueId) {
+        return assignQueueOffset(topic, queueId, 1);
+    }
 }

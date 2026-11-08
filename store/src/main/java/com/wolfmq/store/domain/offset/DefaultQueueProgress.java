@@ -60,4 +60,9 @@ public class DefaultQueueProgress extends Checkpoint implements QueueProgress {
 
         return commitOffset >= oldOffset;
     }
+
+    @Override
+    public long assignQueueOffset(String topic, int queueId, int num) {
+        return 0;
+    }
 }
