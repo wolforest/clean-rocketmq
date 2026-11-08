@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 public class TimerConfig implements Serializable {
     private boolean enableTimer = true;
-    private boolean enableRocksDB = false;
+    private boolean enableRocksDB = ConfigAttribute.ENABLE_ROCKSDB;
     private boolean enableWarmup = false;
     private boolean skipUnknownError = false;
     private boolean enableDisruptor = false;
