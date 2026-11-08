@@ -55,9 +55,10 @@ public class MessageBO extends Message implements Serializable {
      * if StoreConfig.enablePreAssignOffset is ture:
      *      set by consumeQueue while inserting CommitLog
      * if false:
-     *      will be -1, then set by consumeQueue asynchronously
+     *      will be set by consumeQueue asynchronously
      */
-    private long queueOffset;
+    @Builder.Default
+    private long queueOffset = -1;
 
     private int sysFlag;
     private long bornTimestamp;
