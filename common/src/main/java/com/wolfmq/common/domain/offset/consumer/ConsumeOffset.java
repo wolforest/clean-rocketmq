@@ -1,4 +1,4 @@
-package com.wolfmq.common.domain.offset.consume;
+package com.wolfmq.common.domain.offset.consumer;
 
 import cn.coderule.common.util.lang.string.StringUtil;
 import com.wolfmq.common.config.server.StoreConfig;

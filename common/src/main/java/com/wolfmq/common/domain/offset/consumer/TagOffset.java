@@ -1,4 +1,4 @@
-package com.wolfmq.common.domain.offset.consume;
+package com.wolfmq.common.domain.offset.consumer;
 
 import com.wolfmq.common.domain.meta.DataVersion;
 import java.io.Serializable;

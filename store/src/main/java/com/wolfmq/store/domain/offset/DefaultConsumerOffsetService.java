@@ -4,7 +4,7 @@ import cn.coderule.common.util.io.FileUtil;
 import cn.coderule.common.util.lang.string.StringUtil;
 import cn.coderule.common.util.lang.string.JSONUtil;
 import com.wolfmq.common.config.server.StoreConfig;
-import com.wolfmq.common.domain.offset.consume.ConsumeOffset;
+import com.wolfmq.common.domain.offset.consumer.ConsumeOffset;
 import com.wolfmq.common.domain.offset.ConsumerOffsetService;
 import java.util.Set;
 
