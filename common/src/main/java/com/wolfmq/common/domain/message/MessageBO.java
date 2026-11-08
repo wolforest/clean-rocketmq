@@ -52,7 +52,10 @@ public class MessageBO extends Message implements Serializable {
 
     private long commitOffset;
     /**
-     * set by consumeQueue while putting process of CommitLog
+     * if StoreConfig.enablePreAssignOffset is ture:
+     *      set by consumeQueue while inserting CommitLog
+     * if false:
+     *      will be -1, then set by consumeQueue asynchronously
      */
     private long queueOffset;
 

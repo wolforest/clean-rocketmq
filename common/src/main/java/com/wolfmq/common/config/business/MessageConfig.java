@@ -1,6 +1,5 @@
 package com.wolfmq.common.config.business;
 
-import com.wolfmq.common.config.base.ConfigAttribute;
 import com.wolfmq.common.domain.message.property.MessageConst;
 import java.io.Serializable;
 import java.time.Duration;
