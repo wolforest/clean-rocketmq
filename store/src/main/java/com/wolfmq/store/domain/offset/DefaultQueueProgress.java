@@ -1,15 +1,15 @@
 package com.wolfmq.store.domain.offset;
 
 import com.wolfmq.common.config.store.CommitConfig;
-import com.wolfmq.common.domain.offset.QueueOffsetService;
+import com.wolfmq.common.domain.offset.QueueProgress;
 import com.wolfmq.common.domain.offset.checkpoint.Checkpoint;
 import com.wolfmq.common.domain.offset.checkpoint.store.CheckpointStore;
 import com.wolfmq.common.domain.offset.commitlog.OffsetCodec;
 
-public class DefaultQueueOffsetService extends Checkpoint implements QueueOffsetService {
+public class DefaultQueueProgress extends Checkpoint implements QueueProgress {
     private final OffsetCodec offsetCodec;
 
-    public DefaultQueueOffsetService(CheckpointStore store, CommitConfig commitConfig) {
+    public DefaultQueueProgress(CheckpointStore store, CommitConfig commitConfig) {
         super(store);
 
         this.offsetCodec = new OffsetCodec(commitConfig.getMaxShardingNumber());
