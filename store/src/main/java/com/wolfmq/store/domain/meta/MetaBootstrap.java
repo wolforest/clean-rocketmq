@@ -2,21 +2,18 @@ package com.wolfmq.store.domain.meta;
 
 import cn.coderule.common.convention.service.Lifecycle;
 import com.wolfmq.common.config.server.StoreConfig;
-import com.wolfmq.common.server.store.api.ConsumeOffsetStore;
+import com.wolfmq.common.domain.offset.ConsumerOffsetService;
 import com.wolfmq.common.server.store.api.meta.SubscriptionStore;
 import com.wolfmq.common.server.store.api.meta.TopicStore;
 import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueFacade;
-import com.wolfmq.common.domain.offset.ConsumerOffsetService;
 import com.wolfmq.common.domain.meta.service.ConsumeOrderService;
 import com.wolfmq.common.domain.meta.service.SubscriptionService;
 import com.wolfmq.common.domain.meta.service.TopicService;
-import com.wolfmq.store.api.ConsumeOffsetStoreImpl;
 import com.wolfmq.store.api.SubscriptionStoreImpl;
 import com.wolfmq.store.api.TopicStoreImpl;
 import cn.coderule.common.convention.container.ApplicationContext;
 import com.wolfmq.common.core.constant.ContextNamespace;
 import com.wolfmq.common.server.store.StoreState;
-import com.wolfmq.store.domain.offset.DefaultConsumerOffsetService;
 import com.wolfmq.store.server.bootstrap.StoreRegister;
 
 public class MetaBootstrap implements Lifecycle {
@@ -25,7 +22,6 @@ public class MetaBootstrap implements Lifecycle {
     private DefaultTopicService topicService;
     private SubscriptionService subscriptionService;
 
-    private ConsumerOffsetService offsetService;
     private ConsumeOrderService orderService;
 
     public MetaBootstrap(ApplicationContext context) {
@@ -34,7 +30,6 @@ public class MetaBootstrap implements Lifecycle {
 
     @Override
     public void initialize() throws Exception {
-        initConsumerOffset();
         initTopic();
         initSubscription();
         initConsumeOrder();
@@ -47,7 +42,6 @@ public class MetaBootstrap implements Lifecycle {
 
     @Override
     public void shutdown() throws Exception {
-        offsetService.store();
         topicService.store();
         subscriptionService.store();
         orderService.store();
@@ -60,21 +54,10 @@ public class MetaBootstrap implements Lifecycle {
         topicService.inject(consumeQueueFacade, storeRegister);
     }
 
-    private void initConsumerOffset() {
-        StoreConfig storeConfig = context.getBean(StoreConfig.class);
-        offsetService = new DefaultConsumerOffsetService(storeConfig, storeConfig.getPath().getConsumerOffsetPath());
-        context.register(offsetService, ConsumerOffsetService.class);
-
-        offsetService.load();
-
-        ConsumeOffsetStore offsetStore = new ConsumeOffsetStoreImpl(offsetService);
-        context.register(offsetStore, ConsumeOffsetStore.class, ContextNamespace.API);
-        context.register(offsetStore, ConsumeOffsetStore.class);
-    }
-
     private void initTopic() {
         StoreConfig storeConfig = context.getBean(StoreConfig.class);
         StoreState storeState = context.getBean(StoreState.class);
+        ConsumerOffsetService offsetService = context.getBean(ConsumerOffsetService.class);
         topicService = new DefaultTopicService(storeState, storeConfig, storeConfig.getPath().getTopicPath(), offsetService);
         context.register(topicService, TopicService.class);
 
@@ -89,6 +72,7 @@ public class MetaBootstrap implements Lifecycle {
         StoreConfig storeConfig = context.getBean(StoreConfig.class);
         String storePath = storeConfig.getPath().getSubscriptionGroupPath();
         StoreState storeState = context.getBean(StoreState.class);
+        ConsumerOffsetService offsetService = context.getBean(ConsumerOffsetService.class);
         subscriptionService = new DefaultSubscriptionService(storeState, storePath, offsetService);
         context.register(subscriptionService, SubscriptionService.class);
 
