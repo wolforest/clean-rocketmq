@@ -12,7 +12,8 @@ import lombok.Getter;
 public class CheckpointManager implements Lifecycle {
     private final CheckpointConfig config;
     @Getter
-    private final Checkpoint checkpoint;
+    private final CheckpointFacade checkpoint;
+    @Getter
     private final CheckpointStore checkpointStore;
     private final StoreScheduler scheduler;
 
@@ -23,7 +24,7 @@ public class CheckpointManager implements Lifecycle {
         String checkpointDir = storeConfig.getPath().getCheckpointPath();
         checkpointStore = new FileCheckpointStore(checkpointDir);
 
-        checkpoint = new Checkpoint(checkpointStore);
+        checkpoint = new CheckpointFacade(checkpointStore);
     }
 
     @Override

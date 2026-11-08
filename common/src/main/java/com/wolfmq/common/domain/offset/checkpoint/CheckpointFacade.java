@@ -4,10 +4,13 @@ import cn.coderule.common.util.lang.collection.MapUtil;
 import com.wolfmq.common.domain.offset.checkpoint.store.CheckpointStore;
 import java.util.Map;
 
-public class Checkpoint implements CheckpointService {
+/**
+ * @renamed from Checkpoint to CheckpointFacade
+ */
+public class CheckpointFacade implements CheckpointService {
     private final CheckpointStore store;
 
-    public Checkpoint(CheckpointStore store) {
+    public CheckpointFacade(CheckpointStore store) {
         this.store = store;
     }
 
@@ -58,6 +61,11 @@ public class Checkpoint implements CheckpointService {
     @Override
     public Long getIndexedOffset(int shardId) {
         return store.getIndexedOffset(shardId);
+    }
+
+    @Override
+    public Map<String, Long> getQueueOffsetMap() {
+        return store.getQueueOffsetMap();
     }
 
     @Override
