@@ -12,6 +12,7 @@ import com.wolfmq.store.domain.dispatcher.DispatcherBootstrap;
 import com.wolfmq.store.domain.index.IndexBootstrap;
 import com.wolfmq.store.domain.messagequeue.MQBootstrap;
 import com.wolfmq.store.domain.meta.MetaBootstrap;
+import com.wolfmq.store.domain.offset.OffsetBootstrap;
 import com.wolfmq.store.domain.timer.TimerBootstrap;
 import com.wolfmq.common.server.store.StoreScheduler;
 import com.wolfmq.store.infra.file.AllocateMappedFileService;
@@ -55,6 +56,7 @@ public class ComponentRegister {
     }
 
     private void registerDomain() {
+        registerOffset();
         registerMeta();
         registerCommitLog();
         registerDispatcher();
@@ -83,6 +85,11 @@ public class ComponentRegister {
 
         manager.register(scheduler);
         context.register(scheduler, StoreScheduler.class);
+    }
+
+    private void registerOffset() {
+        OffsetBootstrap offsetBootstrap = new OffsetBootstrap(context);
+        manager.register(offsetBootstrap);
     }
 
     private void registerMeta() {

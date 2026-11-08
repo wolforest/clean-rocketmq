@@ -25,9 +25,12 @@ public class QueueOffsetAssigner implements Lifecycle {
     public long assign(String topic, int queueId, int num) {
         String key = KeyUtils.buildQueueKey(topic, queueId);
 
-        return offsetMap.computeIfAbsent(
+        long newOffset = offsetMap.computeIfAbsent(
             key, _ -> new AtomicLong(0)
         ).addAndGet(num);
+
+        checkpoint.updateQueueOffset(topic, queueId, newOffset);
+        return newOffset;
     }
 
     public void updateQueueOffset(String topic, int queueId, long queueOffset) {
@@ -36,6 +39,8 @@ public class QueueOffsetAssigner implements Lifecycle {
         offsetMap.computeIfAbsent(
             key, _ -> new AtomicLong(0)
         ).set(queueOffset);
+
+        checkpoint.updateQueueOffset(topic, queueId, queueOffset);
     }
 
     public Long getQueueOffset(String topic, int queueId) {
