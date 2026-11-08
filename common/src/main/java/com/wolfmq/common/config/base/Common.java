@@ -23,6 +23,8 @@ public class Common implements Serializable {
     protected Integer commitLogShardingNum;
     protected Boolean enableCommitLogCache;
 
+    private Boolean enableRocksDB;
+
     protected Boolean enableDisruptor;
 
     protected Integer mmapFileSize;
