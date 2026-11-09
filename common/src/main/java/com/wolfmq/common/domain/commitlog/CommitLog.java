@@ -8,8 +8,6 @@ import com.wolfmq.common.core.mmap.InsertResult;
 import com.wolfmq.common.core.mmap.SelectedMappedBuffer;
 
 public interface CommitLog extends Lifecycle {
-    int getShardId();
-
     MappedFileQueue getMappedFileQueue();
 
     EnqueueFuture insert(MessageBO messageBO);

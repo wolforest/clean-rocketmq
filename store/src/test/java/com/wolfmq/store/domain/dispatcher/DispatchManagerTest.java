@@ -36,7 +36,6 @@ class DispatchManagerTest {
         commitLogFacade = mock(CommitLogFacade.class);
         for (int i = 0; i < 2; i++) {
             CommitLog mockLog = mock(CommitLog.class);
-            when(mockLog.getShardId()).thenReturn(i);
             when(mockLog.getMinOffset()).thenReturn(0L);
             when(mockLog.getMaxOffset()).thenReturn(0L);
             when(commitLogFacade.selectByShardId(i)).thenReturn(mockLog);

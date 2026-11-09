@@ -21,7 +21,6 @@ class CommitListenerTest {
     private CommitLog commitLog;
     private DispatchQueue queue;
     private CheckPoint checkPoint;
-    private final int shardId = 5;
     private CommitConfig commitConfig;
 
     @BeforeEach
@@ -30,7 +29,6 @@ class CommitListenerTest {
         queue = new DispatchQueue(commitConfig);
 
         commitLog = mock(CommitLog.class);
-        when(commitLog.getShardId()).thenReturn(shardId);
         when(commitLog.getMinOffset()).thenReturn(0L);
         when(commitLog.getMaxOffset()).thenReturn(0L);
 
@@ -43,7 +41,7 @@ class CommitListenerTest {
         CommitListener listener = new CommitListener(queue, commitLog, checkPoint, commitConfig);
 
         String serviceName = listener.getServiceName();
-        assertEquals("CommitListener-" + shardId, serviceName);
+        assertEquals("CommitListener-0", serviceName);
     }
 
     @Test
@@ -102,10 +100,7 @@ class CommitListenerTest {
 
     @Test
     void testServiceNameFormat() {
-        for (int id = 0; id < 10; id++) {
-            when(commitLog.getShardId()).thenReturn(id);
-            CommitListener listener = new CommitListener(queue, commitLog, checkPoint, commitConfig);
-            assertEquals("CommitListener-" + id, listener.getServiceName());
-        }
+        CommitListener listener = new CommitListener(queue, commitLog, checkPoint, commitConfig);
+        assertEquals("CommitListener-0", listener.getServiceName());
     }
 }

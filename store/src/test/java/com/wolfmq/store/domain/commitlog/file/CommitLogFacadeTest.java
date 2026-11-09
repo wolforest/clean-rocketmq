@@ -360,7 +360,6 @@ class CommitLogFacadeTest {
 
     private CommitLog createMockCommitLog(int shardId) {
         CommitLog commitLog = mock(CommitLog.class);
-        when(commitLog.getShardId()).thenReturn(shardId);
         return commitLog;
     }
 

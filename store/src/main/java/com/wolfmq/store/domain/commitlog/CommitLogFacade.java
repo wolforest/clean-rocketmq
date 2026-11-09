@@ -11,6 +11,7 @@ import com.wolfmq.common.domain.messagequeue.dto.EnqueueFuture;
 import com.wolfmq.common.core.mmap.InsertResult;
 import com.wolfmq.common.core.mmap.SelectedMappedBuffer;
 import com.wolfmq.store.domain.commitlog.route.TopicPartitioner;
+import com.wolfmq.common.domain.offset.commitlog.OffsetCodec;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
@@ -25,6 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 public class CommitLogFacade implements Lifecycle {
     private final CommitConfig config;
     private final TopicPartitioner partitioner;
+    private final OffsetCodec offsetCodec;
 
     private final CommitLog[] commitLogArray;
     private final ThreadLocal<CommitLog> localCommitLog;
@@ -34,6 +36,7 @@ public class CommitLogFacade implements Lifecycle {
     public CommitLogFacade(CommitConfig config, TopicPartitioner partitioner) {
         this.config = config;
         this.partitioner = partitioner;
+        this.offsetCodec = new OffsetCodec(config.getMaxShardingNumber());
 
         commitLogArray = new CommitLog[config.getShardingNumber()];
         localCommitLog = ThreadLocal.withInitial(this::bindShardingWithCpu);
@@ -57,7 +60,19 @@ public class CommitLogFacade implements Lifecycle {
     }
 
     public void addCommitLog(CommitLog commitLog) {
-        commitLogArray[commitLog.getShardId()] = commitLog;
+        int index = offsetCodec.getShardId(
+            commitLog.getMappedFileQueue().getMinOffset()
+        );
+
+        addCommitLog(index, commitLog);
+    }
+
+    public void addCommitLog(int index, CommitLog commitLog) {
+        if (index < 0 || index >= commitLogArray.length) {
+            throw new IllegalArgumentException("index out of range: " + index);
+        }
+
+        commitLogArray[index] = commitLog;
     }
 
     public void addCommitLog(List<CommitLog> logList) {

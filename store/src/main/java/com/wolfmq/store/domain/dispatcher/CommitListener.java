@@ -7,6 +7,7 @@ import com.wolfmq.common.domain.message.MessageBO;
 import com.wolfmq.common.domain.commitlog.dispatch.CommitEvent;
 import com.wolfmq.common.domain.commitlog.CommitLog;
 import com.wolfmq.common.domain.offset.checkpoint.bakeup.CheckPoint;
+import com.wolfmq.common.domain.offset.commitlog.OffsetCodec;
 import java.util.concurrent.atomic.AtomicLong;
 import lombok.extern.slf4j.Slf4j;
 
@@ -22,6 +23,7 @@ public class CommitListener extends ServiceThread {
     private final CheckPoint checkPoint;
 
     private final int shardId;
+    private final OffsetCodec offsetCodec;
     private final AtomicLong dispatchedOffset = new AtomicLong(-1L);
 
     public CommitListener(
@@ -34,8 +36,10 @@ public class CommitListener extends ServiceThread {
         this.queue = queue;
         this.commitLog = commitLog;
         this.checkPoint = checkPoint;
-        this.shardId = commitLog.getShardId();
         this.commitConfig = commitConfig;
+
+        this.offsetCodec = new OffsetCodec(commitConfig.getMaxShardingNumber());
+        this.shardId = offsetCodec.getShardId(commitLog.getMinOffset());
 
         initDispatchedOffset();
     }

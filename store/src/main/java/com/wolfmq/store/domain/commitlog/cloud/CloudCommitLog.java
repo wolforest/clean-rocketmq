@@ -9,11 +9,6 @@ import com.wolfmq.common.domain.messagequeue.dto.EnqueueFuture;
 
 public class CloudCommitLog implements CommitLog {
     @Override
-    public int getShardId() {
-        return 0;
-    }
-
-    @Override
     public MappedFileQueue getMappedFileQueue() {
         return null;
     }
