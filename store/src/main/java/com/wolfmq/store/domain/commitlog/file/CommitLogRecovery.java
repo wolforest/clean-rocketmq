@@ -1,23 +1,21 @@
 package com.wolfmq.store.domain.commitlog.file;
 
 import com.wolfmq.common.domain.message.MessageBO;
-import com.wolfmq.common.domain.commitlog.CommitLog;
 import com.wolfmq.common.core.mmap.MappedFile;
 import com.wolfmq.common.core.mmap.MappedFileQueue;
-import com.wolfmq.common.domain.offset.checkpoint.bakeup.CheckPoint;
-import com.wolfmq.common.domain.offset.checkpoint.bakeup.Offset;
+import com.wolfmq.common.domain.offset.QueueProgress;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class CommitLogRecovery {
-    private final CommitLog commitLog;
-    private final CheckPoint checkPoint;
+    private final FileCommitLog commitLog;
+    private final QueueProgress queueProgress;
 
-    public CommitLogRecovery(CommitLog commitLog, CheckPoint checkPoint) {
+    public CommitLogRecovery(FileCommitLog commitLog, QueueProgress queueProgress) {
         this.commitLog = commitLog;
-        this.checkPoint = checkPoint;
+        this.queueProgress = queueProgress;
     }
 
     public void recover() {
@@ -26,25 +24,21 @@ public class CommitLogRecovery {
             return;
         }
 
-        recoverMinOffset();
         recoverMaxOffset();
     }
 
-    private void recoverMinOffset() {
-        // recover min offset
-        // and init checkpoint if needed
-    }
-
     private void recoverMaxOffset() {
-        Offset offset = checkPoint.getMaxOffset();
-        long maxOffset = null != offset ? offset.getCommitLogOffset() : -1;
+        Long maxOffset = queueProgress.getCommitOffset(commitLog.getShardId());
+        if (maxOffset != null) {
+            maxOffset = commitLog.getOffsetCodec().decode(maxOffset);
+        }
 
-        if (-1 != maxOffset && checkPoint.isShutdownSuccessful()) {
+        if (null != maxOffset && queueProgress.isShutdownSuccessfully()) {
             recoverToMaxOffset(maxOffset);
             return;
         }
 
-        if (-1 != maxOffset) {
+        if (null != maxOffset) {
             recoverFromOffset(maxOffset);
             return;
         }
