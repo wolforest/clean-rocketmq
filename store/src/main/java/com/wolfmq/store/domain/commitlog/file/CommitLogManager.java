@@ -3,20 +3,33 @@ package com.wolfmq.store.domain.commitlog.file;
 import cn.coderule.common.convention.service.Lifecycle;
 import com.wolfmq.common.config.store.CommitConfig;
 import com.wolfmq.common.domain.commitlog.CommitLog;
+import com.wolfmq.common.domain.message.MessageBO;
 import com.wolfmq.common.domain.offset.commitlog.OffsetCodec;
 import java.util.concurrent.ThreadLocalRandom;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class CommitLogManager implements Lifecycle {
-    private final CommitConfig config;
+    private final CommitConfig commitConfig;
     private final CommitLog[] logArray;
+    private final CommitLogFactory logFactory;
+
+    @Getter
     private final OffsetCodec offsetCodec;
 
-    public CommitLogManager(CommitConfig config) {
-        this.config = config;
-        this.logArray = new CommitLog[config.getShardingNumber()];
+    public CommitLogManager(CommitConfig config, CommitLogFactory logFactory) {
+        this.commitConfig = config;
+        this.logFactory = logFactory;
+
         this.offsetCodec = new OffsetCodec(config.getMaxShardingNumber());
+
+        this.logArray = new CommitLog[config.getShardingNumber()];
+        initLogArray();
+    }
+
+    public CommitLog selectByMessage(MessageBO message) {
+        return selectByRandom();
     }
 
     public CommitLog selectByRandom() {
@@ -27,14 +40,19 @@ public class CommitLogManager implements Lifecycle {
             index = ThreadLocalRandom.current().nextInt(logArray.length);
         }
 
-        return selectByIndex(index);
+        return selectByShard(index);
     }
 
     public CommitLog selectFirst() {
-        return selectByIndex(0);
+        return selectByShard(0);
     }
 
-    public CommitLog selectByIndex(int index) {
+    public CommitLog selectByOffset(long offset) {
+        int shardId = offsetCodec.shardIdOf(offset);
+        return selectByShard(shardId);
+    }
+
+    public CommitLog selectByShard(int index) {
         if (index < 0 || index >= logArray.length) {
             throw new IllegalArgumentException("index out of range: " + index);
         }
@@ -49,14 +67,6 @@ public class CommitLogManager implements Lifecycle {
 
     public void addCommitLog(int index, CommitLog commitLog) {
         logArray[index] = commitLog;
-    }
-
-    @Deprecated
-    public void addCommitLog(CommitLog commitLog) {
-        int index = offsetCodec.getShardId(
-            commitLog.getMappedFileQueue().getMinOffset()
-        );
-        addCommitLog(index, commitLog);
     }
 
     @Override
@@ -92,5 +102,13 @@ public class CommitLogManager implements Lifecycle {
         }
     }
 
+    private void initLogArray() {
+        for (int i = 0; i < commitConfig.getShardingNumber(); i++) {
+            addCommitLog(
+                i,
+                logFactory.createByShardId(i)
+            );
+        }
+    }
 
 }
