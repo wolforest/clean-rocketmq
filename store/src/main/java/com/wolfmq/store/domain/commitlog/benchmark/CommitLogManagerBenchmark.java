@@ -7,15 +7,21 @@ import com.wolfmq.common.config.store.CommitConfig;
 import com.wolfmq.common.domain.message.MessageBO;
 import com.wolfmq.common.domain.message.codec.MessageEncoder;
 import com.wolfmq.common.domain.commitlog.CommitLog;
-import com.wolfmq.common.domain.commitlog.flush.CommitLogFlushPolicy;
+import com.wolfmq.common.domain.offset.QueueProgress;
+import com.wolfmq.common.domain.offset.DefaultQueueProgress;
+import com.wolfmq.common.domain.offset.commitlog.OffsetCodec;
+import com.wolfmq.common.domain.offset.checkpoint.store.MemoryCheckpointStore;
+import com.wolfmq.common.domain.offset.checkpoint.store.FileCheckpointStore;
+import com.wolfmq.common.domain.offset.consumequeue.QueueOffsetAssigner;
 import com.wolfmq.common.domain.messagequeue.dto.EnqueueFuture;
 import com.wolfmq.common.core.mmap.MappedFileQueue;
 import com.wolfmq.common.testing.ConfigMock;
 import com.wolfmq.common.testing.MessageMock;
-import com.wolfmq.store.domain.commitlog.flush.policy.EmptyCommitLogFlushPolicy;
+import com.wolfmq.store.domain.commitlog.flush.handler.EmptyFlushHandler;
 import com.wolfmq.store.domain.commitlog.CommitLogFacade;
+import com.wolfmq.store.domain.commitlog.file.CommitLogFactory;
+import com.wolfmq.store.domain.commitlog.file.CommitLogManager;
 import com.wolfmq.store.domain.commitlog.file.FileCommitLog;
-import com.wolfmq.store.domain.commitlog.route.TopicPartitioner;
 import com.wolfmq.store.infra.file.DefaultMappedFileQueue;
 import java.util.concurrent.ExecutionException;
 import lombok.extern.slf4j.Slf4j;
@@ -448,17 +454,34 @@ public class CommitLogManagerBenchmark {
         commitConfig.setMaxShardingNumber(maxSharding);
         commitConfig.setShardingNumber(shardCount);
 
-        TopicPartitioner partitioner = new TopicPartitioner(commitConfig);
-        CommitLogFacade manager = new CommitLogFacade(commitConfig, partitioner);
+        CommitLogFactory factory = createCommitLogFactory(baseDir, storeConfig, maxSharding);
+        CommitLogManager manager = new CommitLogManager(commitConfig, factory);
+        CommitLogFacade facade = new CommitLogFacade(manager);
 
-        for (int i = 0; i < shardCount; i++) {
-            String dir = baseDir + "/commitlog-" + i;
-            DirUtil.createIfNotExists(dir);
-            CommitLog commitLog = createCommitLog(dir, storeConfig, i);
-            manager.addCommitLog(commitLog);
+        try {
+            facade.getManager().initialize();
+            facade.getManager().start();
+        } catch (Exception e) {
+            throw new IllegalStateException("failed to initialize commitlog", e);
         }
 
-        return manager;
+        return facade;
+    }
+
+    private static QueueProgress createQueueProgress(String baseDir, int maxSharding) {
+        OffsetCodec offsetCodec = new OffsetCodec(maxSharding);
+        QueueOffsetAssigner assigner = new QueueOffsetAssigner(
+            new FileCheckpointStore(baseDir + "/checkpoint")
+        );
+        return new DefaultQueueProgress(
+            new FileCheckpointStore(baseDir + "/checkpoint"),
+            offsetCodec,
+            assigner
+        );
+    }
+
+    private static CommitLogFactory createCommitLogFactory(String baseDir, StoreConfig storeConfig, int maxSharding) {
+        return new CommitLogFactory(storeConfig, createQueueProgress(baseDir, maxSharding), null);
     }
 
     private static StoreConfig createStoreConfig(String dir) {
@@ -469,8 +492,8 @@ public class CommitLogManagerBenchmark {
 
     private static CommitLog createCommitLog(String dir, StoreConfig storeConfig, int shardId) {
         MappedFileQueue queue = new DefaultMappedFileQueue(dir, MMAP_FILE_SIZE);
-        CommitLogFlushPolicy flusher = new EmptyCommitLogFlushPolicy(queue);
-        return new FileCommitLog(storeConfig, shardId, queue, flusher);
+        var flushHandler = new EmptyFlushHandler(queue);
+        return new FileCommitLog(storeConfig, shardId, queue, flushHandler);
     }
 
     private static MessageBO createMessage(MessageEncoder encoder, String topic) {
@@ -486,9 +509,9 @@ public class CommitLogManagerBenchmark {
         return messageBO;
     }
 
-    private static void shutdown(CommitLogFacade manager) {
+    private static void shutdown(CommitLogFacade facade) {
         try {
-            manager.shutdown();
+            facade.getManager().shutdown();
         } catch (Exception e) {
             System.err.println("Failed to shutdown manager: " + e);
         }
