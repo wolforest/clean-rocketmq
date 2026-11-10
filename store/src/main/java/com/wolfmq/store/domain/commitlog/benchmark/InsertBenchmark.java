@@ -9,11 +9,11 @@ import com.wolfmq.common.core.lock.queue.EnqueueLock;
 import com.wolfmq.common.domain.message.MessageBO;
 import com.wolfmq.common.domain.message.codec.MessageEncoder;
 import com.wolfmq.common.domain.commitlog.CommitLog;
-import com.wolfmq.common.domain.commitlog.flush.CommitLogFlushPolicy;
+import com.wolfmq.store.domain.commitlog.flush.handler.FlushHandler;
 import com.wolfmq.common.core.mmap.MappedFileQueue;
 import com.wolfmq.common.testing.ConfigMock;
 import com.wolfmq.common.testing.MessageMock;
-import com.wolfmq.store.domain.commitlog.flush.policy.EmptyCommitLogFlushPolicy;
+import com.wolfmq.store.domain.commitlog.flush.handler.EmptyFlushHandler;
 import com.wolfmq.store.domain.commitlog.file.FileCommitLog;
 import com.wolfmq.store.infra.file.DefaultMappedFileQueue;
 import java.util.ArrayList;
@@ -231,7 +231,7 @@ public class InsertBenchmark {
         CommitConfig commitConfig = storeConfig.getCommit();
         commitConfig.setFileSize(MMAP_FILE_SIZE);
 
-        CommitLogFlushPolicy flusher = new EmptyCommitLogFlushPolicy(queue);
+        FlushHandler flusher = new EmptyFlushHandler(queue);
         return new FileCommitLog(storeConfig, 0, queue, flusher);
     }
 }
