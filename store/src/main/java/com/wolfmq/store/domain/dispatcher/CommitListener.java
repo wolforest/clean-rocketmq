@@ -39,7 +39,7 @@ public class CommitListener extends ServiceThread {
         this.commitConfig = commitConfig;
 
         this.offsetCodec = new OffsetCodec(commitConfig.getMaxShardingNumber());
-        this.shardId = offsetCodec.getShardId(commitLog.getMinOffset());
+        this.shardId = offsetCodec.shardIdOf(commitLog.getMinOffset());
 
         initDispatchedOffset();
     }
