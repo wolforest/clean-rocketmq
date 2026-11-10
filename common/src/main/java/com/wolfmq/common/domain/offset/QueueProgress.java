@@ -7,6 +7,9 @@ import com.wolfmq.common.domain.offset.checkpoint.CheckpointService;
  * @renamed from QueueProgressService to QueueProgress
  */
 public interface QueueProgress extends CheckpointService {
+    boolean isShutdownSuccessfully();
+    void setShutdownSuccessfully(boolean shutdownSuccessfully);
+
     void updateCommitOffset(long commitOffset);
     void updateDispatchedOffset(long commitOffset);
     void updateIndexedOffset(long commitOffset);
