@@ -1,4 +1,4 @@
-package com.wolfmq.store.domain.commitlog.flush;
+package com.wolfmq.store.domain.commitlog.flush.flusher;
 
 import com.wolfmq.common.config.store.CommitConfig;
 import com.wolfmq.common.core.mmap.MappedFileQueue;

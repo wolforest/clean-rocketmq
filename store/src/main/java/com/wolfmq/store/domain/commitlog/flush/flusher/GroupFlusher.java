@@ -1,6 +1,6 @@
-package com.wolfmq.store.domain.commitlog.flush;
+package com.wolfmq.store.domain.commitlog.flush.flusher;
 
-import com.wolfmq.common.domain.offset.checkpoint.bakeup.CheckPoint;
+import com.wolfmq.common.domain.offset.QueueProgress;
 import com.wolfmq.store.domain.commitlog.vo.GroupCommitRequest;
 import cn.coderule.common.util.lang.ThreadUtil;
 import com.wolfmq.common.domain.messagequeue.dto.EnqueueStatus;
@@ -15,16 +15,16 @@ public class GroupFlusher extends Flusher {
     private static final long FLUSH_JOIN_TIME = 5 * 60 * 1000;
 
     private final MappedFileQueue mappedFileQueue;
-    private final CheckPoint checkPoint;
+    private final QueueProgress queueProgress;
 
     private volatile LinkedList<GroupCommitRequest> requestsWrite = new LinkedList<>();
     private volatile LinkedList<GroupCommitRequest> requestsRead = new LinkedList<>();
 
     private final CommitLogLock lock = new CommitLogSpinLock();
 
-    public GroupFlusher(MappedFileQueue mappedFileQueue, CheckPoint checkPoint) {
+    public GroupFlusher(MappedFileQueue mappedFileQueue, QueueProgress queueProgress) {
         this.mappedFileQueue = mappedFileQueue;
-        this.checkPoint = checkPoint;
+        this.queueProgress = queueProgress;
     }
 
     @Override
@@ -81,7 +81,7 @@ public class GroupFlusher extends Flusher {
         // Because of individual messages is set to not sync flush, it
         // will come to this process
         mappedFileQueue.flush(0);
-        checkPoint.getMaxOffset().setCommitLogOffset(maxOffset);
+        queueProgress.updateCommitOffset(maxOffset);
     }
 
     private void flush() {
@@ -101,7 +101,7 @@ public class GroupFlusher extends Flusher {
         }
 
         // write check point
-        checkPoint.getMaxOffset().setCommitLogOffset(tmpOffset);
+        queueProgress.updateCommitOffset(tmpOffset);
         this.requestsRead = new LinkedList<>();
     }
 

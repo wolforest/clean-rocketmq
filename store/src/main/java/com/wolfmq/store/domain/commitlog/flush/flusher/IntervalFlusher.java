@@ -1,8 +1,8 @@
-package com.wolfmq.store.domain.commitlog.flush;
+package com.wolfmq.store.domain.commitlog.flush.flusher;
 
 import com.wolfmq.common.config.store.CommitConfig;
 import com.wolfmq.common.core.mmap.MappedFileQueue;
-import com.wolfmq.common.domain.offset.checkpoint.bakeup.CheckPoint;
+import com.wolfmq.common.domain.offset.QueueProgress;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -11,18 +11,19 @@ public class IntervalFlusher extends Flusher {
 
     private final CommitConfig commitConfig;
     private final MappedFileQueue mappedFileQueue;
-    private final CheckPoint checkPoint;
+    private final QueueProgress queueProgress;
 
     private long lastFlushTime = 0;
 
     public IntervalFlusher(
         CommitConfig commitConfig,
         MappedFileQueue mappedFileQueue,
-        CheckPoint checkPoint) {
+        QueueProgress queueProgress
+    ) {
 
         this.commitConfig = commitConfig;
         this.mappedFileQueue = mappedFileQueue;
-        this.checkPoint = checkPoint;
+        this.queueProgress = queueProgress;
     }
 
     @Override
@@ -53,7 +54,7 @@ public class IntervalFlusher extends Flusher {
             mappedFileQueue.flush(minFlushPages);
 
             if (0 == minFlushPages && maxOffset > 0) {
-                checkPoint.getMaxOffset().setCommitLogOffset(maxOffset);
+                queueProgress.updateCommitOffset(maxOffset);
             }
         } catch (Exception e) {
             log.warn("{} service run flush error", getServiceName(), e);
@@ -89,7 +90,7 @@ public class IntervalFlusher extends Flusher {
             log.info("{} service shutdown, retry {} times {}", getServiceName(), i + 1, status);
         }
 
-        checkPoint.getMaxOffset().setCommitLogOffset(maxOffset);
+        queueProgress.updateCommitOffset(maxOffset);
     }
 
 }

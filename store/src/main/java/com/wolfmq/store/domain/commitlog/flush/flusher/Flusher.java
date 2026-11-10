@@ -1,8 +1,11 @@
-package com.wolfmq.store.domain.commitlog.flush;
+package com.wolfmq.store.domain.commitlog.flush.flusher;
 
 import com.wolfmq.store.domain.commitlog.vo.GroupCommitRequest;
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 
+/**
+ * @renamed from Flusher to AbstractFlusher
+ */
 public abstract class Flusher extends ServiceThread {
     protected static final int RETRY_TIMES = 10;
     protected long maxOffset = 0;
