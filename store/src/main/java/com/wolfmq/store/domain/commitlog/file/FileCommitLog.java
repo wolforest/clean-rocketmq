@@ -4,8 +4,9 @@ import com.wolfmq.common.config.server.StoreConfig;
 import com.wolfmq.common.core.constant.code.InvalidCode;
 import com.wolfmq.common.core.exception.InvalidRequestException;
 import com.wolfmq.common.domain.message.codec.MessageEncoder;
-import com.wolfmq.common.domain.commitlog.flush.CommitLogFlushPolicy;
-import com.wolfmq.common.domain.offset.checkpoint.bakeup.CheckPoint;
+import com.wolfmq.store.domain.commitlog.flush.handler.FlushHandler;
+import com.wolfmq.common.domain.offset.QueueProgress;
+import com.wolfmq.common.domain.offset.commitlog.OffsetCodec;
 import com.wolfmq.store.domain.commitlog.vo.InsertContext;
 import com.wolfmq.common.config.store.CommitConfig;
 import com.wolfmq.common.config.business.MessageConfig;
@@ -37,13 +38,16 @@ import lombok.extern.slf4j.Slf4j;
 public class FileCommitLog implements CommitLog {
     @Getter
     private final int shardId;
+    @Getter
+    private final OffsetCodec offsetCodec;
 
     private final StoreConfig storeConfig;
+    @Getter
     private final CommitConfig commitConfig;
     private final MessageConfig messageConfig;
 
-    private final CommitLogFlushPolicy flushPolicy;
-    private final CheckPoint checkPoint;
+    private final CommitLogRecovery commitLogRecovery;
+    private final FlushHandler flushPolicy;
 
     @Getter
     private final MappedFileQueue mappedFileQueue;
@@ -54,7 +58,7 @@ public class FileCommitLog implements CommitLog {
         StoreConfig storeConfig,
         int shardId,
         MappedFileQueue mappedFileQueue,
-        CommitLogFlushPolicy flushPolicy
+        FlushHandler flushPolicy
     ) {
         this(storeConfig, shardId, mappedFileQueue, flushPolicy, null);
     }
@@ -63,17 +67,19 @@ public class FileCommitLog implements CommitLog {
         StoreConfig storeConfig,
         int shardId,
         MappedFileQueue mappedFileQueue,
-        CommitLogFlushPolicy flushPolicy,
-        CheckPoint checkPoint
+        FlushHandler flushPolicy,
+        QueueProgress queueProgress
     ) {
-        this.shardId = shardId;
         this.storeConfig = storeConfig;
         this.commitConfig = storeConfig.getCommit();
         this.messageConfig = storeConfig.getMessage();
 
-        this.checkPoint = checkPoint;
+        this.shardId = shardId;
+        this.offsetCodec = new OffsetCodec(shardId, commitConfig.getMaxShardingNumber());
+
         this.mappedFileQueue = mappedFileQueue;
         this.flushPolicy = flushPolicy;
+        this.commitLogRecovery = new CommitLogRecovery(this, queueProgress);
 
         this.commitLogLock = new CommitLogReentrantLock();
         initLocalEncoder();
@@ -165,8 +171,8 @@ public class FileCommitLog implements CommitLog {
         byteBuffer.rewind();
 
         MessageBO messageBO = MessageDecoder.decode(buffer.getByteBuffer());
-        buffer.release();
 
+        buffer.release();
         return messageBO;
     }
 
@@ -192,8 +198,6 @@ public class FileCommitLog implements CommitLog {
         return mappedFile.select(position, size);
     }
 
-
-
     @Override
     public void destroy() {
         mappedFileQueue.destroy();
@@ -210,7 +214,7 @@ public class FileCommitLog implements CommitLog {
     }
 
     @Override
-    public long getFlushedOffset() {
+    public long getFlushedPosition() {
         return mappedFileQueue.getFlushPosition();
     }
 
@@ -253,8 +257,10 @@ public class FileCommitLog implements CommitLog {
      * @renamed from assignOffset to assignCommitOffset
      */
     private void assignCommitOffset(MessageBO messageBO, MappedFile mappedFile) {
-        long commitLogOffset = mappedFile.getMinOffset() + mappedFile.getInsertPosition();
-        messageBO.setCommitOffset(commitLogOffset);
+        long commitOffset = mappedFile.getMinOffset() + mappedFile.getInsertPosition();
+
+        commitOffset = offsetCodec.encode(commitOffset);
+        messageBO.setCommitOffset(commitOffset);
     }
 
     private void handleInsertError(InsertResult insertResult) {
@@ -289,7 +295,6 @@ public class FileCommitLog implements CommitLog {
     }
 
     private void recover() {
-        CommitLogRecovery commitLogRecovery = new CommitLogRecovery(this, checkPoint);
         commitLogRecovery.recover();
     }
 }
