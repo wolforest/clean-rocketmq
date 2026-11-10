@@ -1,20 +1,14 @@
 package com.wolfmq.store.domain.commitlog;
 
-import cn.coderule.common.convention.service.Lifecycle;
-import cn.coderule.common.util.lang.collection.CollectionUtil;
-import com.wolfmq.common.config.store.CommitConfig;
 import com.wolfmq.common.core.exception.EnqueueException;
-import com.wolfmq.common.core.exception.InvalidConfigException;
 import com.wolfmq.common.domain.message.MessageBO;
 import com.wolfmq.common.domain.commitlog.CommitLog;
 import com.wolfmq.common.domain.messagequeue.dto.EnqueueFuture;
 import com.wolfmq.common.core.mmap.InsertResult;
 import com.wolfmq.common.core.mmap.SelectedMappedBuffer;
-import com.wolfmq.store.domain.commitlog.route.TopicPartitioner;
 import com.wolfmq.common.domain.offset.commitlog.OffsetCodec;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
+import com.wolfmq.store.domain.commitlog.file.CommitLogManager;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -22,70 +16,20 @@ import lombok.extern.slf4j.Slf4j;
  * @renamed from CommitLogManager to CommitLogProxy
  * @renamed from CommitLogProxy to CommitLogFacade
  */
+@Getter
 @Slf4j
-public class CommitLogFacade implements Lifecycle {
-    private final CommitConfig config;
-    private final TopicPartitioner partitioner;
+public class CommitLogFacade {
+    private final CommitLogManager manager;
     private final OffsetCodec offsetCodec;
 
-    private final CommitLog[] commitLogArray;
-    private final ThreadLocal<CommitLog> localCommitLog;
-
-    private List<CommitLog> commitLogList = null;
-
-    public CommitLogFacade(CommitConfig config, TopicPartitioner partitioner) {
-        this.config = config;
-        this.partitioner = partitioner;
-        this.offsetCodec = new OffsetCodec(config.getMaxShardingNumber());
-
-        commitLogArray = new CommitLog[config.getShardingNumber()];
-        localCommitLog = ThreadLocal.withInitial(this::bindShardingWithCpu);
-    }
-
-    public synchronized CommitLog bindShardingWithCpu() {
-        if (!config.isBindShardingWithCpu()) return null;
-
-        initCommitLogList();
-
-        if (commitLogList.isEmpty()) {
-            return selectByRandom();
-        }
-
-        CommitLog commitLog = commitLogList.removeFirst();
-        if (commitLog != null) {
-            return commitLog;
-        }
-
-        return selectByRandom();
-    }
-
-    public void addCommitLog(CommitLog commitLog) {
-        int index = offsetCodec.getShardId(
-            commitLog.getMappedFileQueue().getMinOffset()
-        );
-
-        addCommitLog(index, commitLog);
-    }
-
-    public void addCommitLog(int index, CommitLog commitLog) {
-        if (index < 0 || index >= commitLogArray.length) {
-            throw new IllegalArgumentException("index out of range: " + index);
-        }
-
-        commitLogArray[index] = commitLog;
-    }
-
-    public void addCommitLog(List<CommitLog> logList) {
-        if (CollectionUtil.isEmpty(logList)) return;
-
-        for (CommitLog commitLog : logList) {
-            addCommitLog(commitLog);
-        }
+    public CommitLogFacade(CommitLogManager manager) {
+        this.manager = manager;
+        this.offsetCodec = manager.getOffsetCodec();
     }
 
     public EnqueueFuture insert(MessageBO messageBO) {
         try {
-            return selectByMessage(messageBO)
+            return manager.selectByMessage(messageBO)
                 .insert(messageBO);
         } catch (EnqueueException e) {
             log.error("[CommitLogManager]insert message failed: {}",  e.getMessage());
@@ -95,8 +39,7 @@ public class CommitLogFacade implements Lifecycle {
 
     public MessageBO select(long offset, int size) {
         try {
-            int shardId = offsetToShardId(offset);
-            CommitLog commitLog = selectByShardId(shardId);
+            CommitLog commitLog = manager.selectByOffset(offset);
             return commitLog.select(offset, size);
         } catch (EnqueueException e) {
             log.error("[CommitLogManager]select message failed: {}",  e.getMessage());
@@ -106,170 +49,56 @@ public class CommitLogFacade implements Lifecycle {
 
     public MessageBO select(long offset) {
         try {
-            int shardId = offsetToShardId(offset);
-            CommitLog commitLog = selectByShardId(shardId);
-            return commitLog.select(offset);
+            CommitLog commitLog = manager.selectByOffset(offset);
+
+            long position = offsetCodec.decode(offset);
+            return commitLog.select(position);
         } catch (EnqueueException e) {
             return MessageBO.notFound();
         }
     }
 
     public InsertResult insert(long offset, byte[] data, int start, int size) {
-        int shardId = offsetToShardId(offset);
-        CommitLog commitLog = selectByShardId(shardId);
-        return commitLog.insert(offset, data, start, size);
+        CommitLog commitLog = manager.selectByOffset(offset);
+
+        long position = offsetCodec.decode(offset);
+        return commitLog.insert(position, data, start, size);
     }
 
     public SelectedMappedBuffer selectBuffer(long offset) {
-        int shardId = offsetToShardId(offset);
-        CommitLog commitLog = selectByShardId(shardId);
-        return commitLog.selectBuffer(offset);
+        CommitLog commitLog = manager.selectByOffset(offset);
+
+        long position = offsetCodec.decode(offset);
+        return commitLog.selectBuffer(position);
     }
 
     public SelectedMappedBuffer selectBuffer(long offset, int size) {
-        int shardId = offsetToShardId(offset);
-        CommitLog commitLog = selectByShardId(shardId);
-        return commitLog.selectBuffer(offset, size);
-    }
+        CommitLog commitLog = manager.selectByOffset(offset);
 
-    public CommitLog selectByShardId(int shardId) {
-        CommitLog commitLog = commitLogArray[shardId];
-        if (commitLog == null) {
-            log.error("[CommitLogManager]shardId of commitLog not found: {}", shardId);
-            throw new IllegalArgumentException("shardId of commitLog not found: " + shardId);
-        }
-
-        return commitLog;
+        long position = offsetCodec.decode(offset);
+        return commitLog.selectBuffer(position, size);
     }
 
     public long getMinOffset(int shardId) {
-        return selectByShardId(shardId).getMinOffset();
+        long offset = manager.selectByShard(shardId)
+            .getMinOffset();
+
+        return offsetCodec.encode(offset);
     }
 
     public long getMaxOffset(int shardId) {
-        return selectByShardId(shardId).getMaxOffset();
+        long offset = manager.selectByShard(shardId)
+            .getMaxOffset();
+
+        return offsetCodec.encode(offset);
     }
 
     public long getFlushedOffset(int shardId) {
-        return selectByShardId(shardId).getFlushedOffset();
+        return manager.selectByShard(shardId).getFlushedPosition();
     }
 
     public long getUnFlushedSize(int shardId) {
-        return selectByShardId(shardId).getUnFlushedSize();
-    }
-
-    public int offsetToShardId(long offset) {
-        if (offset < 0) {
-            throw new IllegalArgumentException("offset must be positive");
-        }
-
-        return (int) (offset % config.getMaxShardingNumber());
-    }
-
-    @Override
-    public void start() throws Exception {
-        for (CommitLog commitLog : commitLogArray) {
-            if (commitLog == null) {
-                continue;
-            }
-
-            commitLog.start();
-        }
-    }
-
-    @Override
-    public void shutdown() throws Exception {
-        for (CommitLog commitLog : commitLogArray) {
-            if (commitLog == null) {
-                continue;
-            }
-
-            commitLog.shutdown();
-        }
-    }
-
-    @Override
-    public void initialize() throws Exception {
-        for (CommitLog commitLog : commitLogArray) {
-            if (commitLog == null) {
-                continue;
-            }
-
-            commitLog.initialize();
-        }
-    }
-
-    private CommitLog selectByMessage(MessageBO messageBO) {
-        if (1 == commitLogArray.length) {
-            return commitLogArray[0];
-        }
-
-        if (config.isBindShardingWithCpu()) {
-            return selectByThreadId();
-        }
-
-        return selectByRandom();
-
-//        if (localCommitLog.get() != null) {
-//            return localCommitLog.get();
-//        }
-//
-//        int shardId = partitioner.partitionByTopic(messageBO.getTopic());
-//        return selectByShardId(shardId);
-    }
-
-    private void initCommitLogList() {
-        if (null != commitLogList) {
-            return;
-        }
-
-        if (commitLogArray.length == 0) {
-            throw new InvalidConfigException("invalid config: bindShardingWithCpu"
-                + " empty commitLog list");
-        }
-
-        commitLogList = new ArrayList<>(List.of(commitLogArray));
-    }
-
-    private CommitLog selectByThreadId() {
-        int index = calculateThreadId();
-        if (index < 0) {
-            return selectByRandom();
-        }
-
-        index = index % commitLogArray.length;
-        return commitLogArray[index];
-    }
-
-    private int calculateThreadId() {
-        String threadName = Thread.currentThread().getName();
-        int length = threadName.length();
-        if (length < 1) {
-            return -1;
-        }
-
-        char one = threadName.charAt(length - 1);
-
-        if (one < '0' || one > '9') {
-            return -1;
-        }
-
-        int index = one - '0';
-        if (length < 2) {
-            return index;
-        }
-
-        char ten = threadName.charAt(length - 2);
-        if (ten >= '0' && ten <= '9') {
-            index = (ten - '0') * 10 + index;
-        }
-
-        return index;
-    }
-
-    private CommitLog selectByRandom() {
-        int index = ThreadLocalRandom.current().nextInt(commitLogArray.length);
-        return commitLogArray[index];
+        return manager.selectByShard(shardId).getUnFlushedSize();
     }
 
 }
