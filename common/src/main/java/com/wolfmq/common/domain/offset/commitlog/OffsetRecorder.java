@@ -3,7 +3,6 @@ package com.wolfmq.common.domain.offset.commitlog;
 import com.wolfmq.common.config.store.CommitConfig;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.atomic.AtomicLong;
 
 public class OffsetRecorder {
     private final CommitConfig config;
@@ -30,23 +29,23 @@ public class OffsetRecorder {
     }
 
     public void setMaxOffset(long maxOffset) {
-        int shardId = offsetCodec.getShardId(maxOffset);
+        int shardId = offsetCodec.shardIdOf(maxOffset);
         maxOffsetMap.merge(shardId, maxOffset, Math::max);
     }
 
     public void setMinOffset(long minOffset) {
-        int shardId = offsetCodec.getShardId(minOffset);
+        int shardId = offsetCodec.shardIdOf(minOffset);
         minOffsetMap.merge(shardId, minOffset, Math::min);
     }
 
     public boolean belowMinOffset(long offset) {
-        int shardId = offsetCodec.getShardId(offset);
+        int shardId = offsetCodec.shardIdOf(offset);
         long minOffset = minOffsetMap.get(shardId);
         return offset < minOffset;
     }
 
     public boolean exceedsMaxOffset(long offset) {
-        int shardId = offsetCodec.getShardId(offset);
+        int shardId = offsetCodec.shardIdOf(offset);
         long maxOffset = maxOffsetMap.get(shardId);
 
         return offset > maxOffset;
