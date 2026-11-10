@@ -23,12 +23,12 @@ public class DefaultRouter implements CommitLogRouter {
     @Override
     public CommitLog route(long offset) {
         int shardId = offsetToShardId(offset);
-        return manager.selectByIndex(shardId);
+        return manager.selectByShard(shardId);
     }
 
     @Override
     public CommitLog route(int shardId) {
-        return manager.selectByIndex(shardId);
+        return manager.selectByShard(shardId);
     }
 
     private int offsetToShardId(long offset) {
