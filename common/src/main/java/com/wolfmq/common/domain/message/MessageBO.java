@@ -49,7 +49,6 @@ public class MessageBO extends Message implements Serializable {
     @Builder.Default
     private boolean appendPropertyCRC = false;
 
-
     private long commitOffset;
     /**
      * if StoreConfig.enablePreAssignOffset is ture:
