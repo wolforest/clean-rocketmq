@@ -1,18 +1,12 @@
 package com.wolfmq.store.domain.commitlog.cloud;
 
 import com.wolfmq.common.core.mmap.InsertResult;
-import com.wolfmq.common.core.mmap.MappedFileQueue;
 import com.wolfmq.common.core.mmap.SelectedMappedBuffer;
 import com.wolfmq.common.domain.commitlog.CommitLog;
 import com.wolfmq.common.domain.message.MessageBO;
 import com.wolfmq.common.domain.messagequeue.dto.EnqueueFuture;
 
 public class CloudCommitLog implements CommitLog {
-    @Override
-    public MappedFileQueue getMappedFileQueue() {
-        return null;
-    }
-
     @Override
     public EnqueueFuture insert(MessageBO messageBO) {
         return null;
@@ -44,7 +38,7 @@ public class CloudCommitLog implements CommitLog {
     }
 
     @Override
-    public long getFlushedOffset() {
+    public long getFlushedPosition() {
         return 0;
     }
 
