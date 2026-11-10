@@ -8,8 +8,13 @@ import com.wolfmq.common.domain.offset.consumequeue.QueueOffsetAssigner;
 public class DefaultQueueProgress extends CheckpointFacade implements QueueProgress {
     private final OffsetCodec offsetCodec;
     private final QueueOffsetAssigner queueOffsetAssigner;
+    private boolean shutdownSuccessfully = false;
 
-    public DefaultQueueProgress(CheckpointStore store, OffsetCodec offsetCodec, QueueOffsetAssigner queueOffsetAssigner) {
+    public DefaultQueueProgress(
+        CheckpointStore store,
+        OffsetCodec offsetCodec,
+        QueueOffsetAssigner queueOffsetAssigner
+    ) {
         super(store);
 
         this.offsetCodec = offsetCodec;
@@ -17,32 +22,42 @@ public class DefaultQueueProgress extends CheckpointFacade implements QueueProgr
     }
 
     @Override
+    public boolean isShutdownSuccessfully() {
+        return shutdownSuccessfully;
+    }
+
+    @Override
+    public void setShutdownSuccessfully(boolean shutdownSuccessfully) {
+        this.shutdownSuccessfully = shutdownSuccessfully;
+    }
+
+    @Override
     public void updateCommitOffset(long commitOffset) {
-        int shardId = offsetCodec.getShardId(commitOffset);
+        int shardId = offsetCodec.shardIdOf(commitOffset);
         updateCommitOffset(shardId, commitOffset);
     }
 
     @Override
     public void updateDispatchedOffset(long commitOffset) {
-        int shardId = offsetCodec.getShardId(commitOffset);
+        int shardId = offsetCodec.shardIdOf(commitOffset);
         updateDispatchedOffset(shardId, commitOffset);
     }
 
     @Override
     public void updateIndexedOffset(long commitOffset) {
-        int shardId = offsetCodec.getShardId(commitOffset);
+        int shardId = offsetCodec.shardIdOf(commitOffset);
         updateIndexedOffset(shardId, commitOffset);
     }
 
     @Override
     public void updateQueueCommitOffset(String topic, int queueId, long commitOffset) {
-        int shardId = offsetCodec.getShardId(commitOffset);
+        int shardId = offsetCodec.shardIdOf(commitOffset);
         updateQueueCommitOffset(topic, queueId, shardId, commitOffset);
     }
 
     @Override
     public boolean reachesQueueCommitOffset(String topic, int queueId, long commitOffset) {
-        int shardId = offsetCodec.getShardId(commitOffset);
+        int shardId = offsetCodec.shardIdOf(commitOffset);
         Long oldOffset = getQueueCommitOffset(topic, queueId, shardId);
         if (oldOffset == null) {
             return true;
@@ -53,7 +68,7 @@ public class DefaultQueueProgress extends CheckpointFacade implements QueueProgr
 
     @Override
     public boolean reachesIndexedOffset(long commitOffset) {
-        int shardId = offsetCodec.getShardId(commitOffset);
+        int shardId = offsetCodec.shardIdOf(commitOffset);
         Long oldOffset = getIndexedOffset(shardId);
         if (oldOffset == null) {
             return true;
