@@ -1,15 +1,12 @@
 package com.wolfmq.common.domain.commitlog;
 
 import cn.coderule.common.convention.service.Lifecycle;
-import com.wolfmq.common.core.mmap.MappedFileQueue;
 import com.wolfmq.common.domain.message.MessageBO;
 import com.wolfmq.common.domain.messagequeue.dto.EnqueueFuture;
 import com.wolfmq.common.core.mmap.InsertResult;
 import com.wolfmq.common.core.mmap.SelectedMappedBuffer;
 
 public interface CommitLog extends Lifecycle {
-    MappedFileQueue getMappedFileQueue();
-
     EnqueueFuture insert(MessageBO messageBO);
 
     MessageBO select(long offset, int size);
@@ -40,10 +37,10 @@ public interface CommitLog extends Lifecycle {
     void assignCommitOffset(MessageBO messageBO);
 
     /**
-     * get flushed offset
+     * get flushed position
      * @return flushedPosition of the mappedFileQueue
      */
-    long getFlushedOffset();
+    long getFlushedPosition();
 
     /**
      * get unFlushed size
