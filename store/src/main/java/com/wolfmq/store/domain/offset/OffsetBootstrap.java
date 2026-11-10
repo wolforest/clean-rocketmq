@@ -12,6 +12,7 @@ import com.wolfmq.common.domain.offset.commitlog.OffsetCodec;
 import com.wolfmq.common.domain.offset.consumequeue.QueueOffsetAssigner;
 import com.wolfmq.common.domain.offset.consumer.DefaultConsumerOffsetService;
 import com.wolfmq.common.server.store.StoreScheduler;
+import com.wolfmq.common.server.store.StoreState;
 import com.wolfmq.common.server.store.api.ConsumeOffsetStore;
 import com.wolfmq.store.api.ConsumeOffsetStoreImpl;
 
@@ -80,6 +81,9 @@ public class OffsetBootstrap implements Lifecycle {
             offsetCodec,
             queueOffsetAssigner
         );
+
+        StoreState storeState = context.getBean(StoreState.class);
+        queueProgress.setShutdownSuccessfully(storeState.isShutdownSuccessfully());
 
         context.register(queueProgress, QueueProgress.class);
     }
