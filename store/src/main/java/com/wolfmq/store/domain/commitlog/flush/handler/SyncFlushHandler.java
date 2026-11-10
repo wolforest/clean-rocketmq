@@ -1,9 +1,8 @@
-package com.wolfmq.store.domain.commitlog.flush.policy;
+package com.wolfmq.store.domain.commitlog.flush.handler;
 
-import com.wolfmq.common.domain.message.MessageBO;
-import com.wolfmq.common.domain.commitlog.flush.CommitLogFlushPolicy;
 import com.wolfmq.common.domain.messagequeue.dto.EnqueueFuture;
 import com.wolfmq.common.core.mmap.InsertResult;
+import com.wolfmq.common.domain.message.MessageBO;
 import com.wolfmq.common.core.mmap.MappedFileQueue;
 import lombok.extern.slf4j.Slf4j;
 
@@ -12,18 +11,34 @@ import lombok.extern.slf4j.Slf4j;
  * for testing
  */
 @Slf4j
-public class EmptyCommitLogFlushPolicy implements CommitLogFlushPolicy {
+public class SyncFlushHandler implements FlushHandler {
     private static final int RETRY_TIMES = 10;
 
     private final MappedFileQueue mappedFileQueue;
 
-    public EmptyCommitLogFlushPolicy(MappedFileQueue mappedFileQueue) {
+    public SyncFlushHandler(MappedFileQueue mappedFileQueue) {
         this.mappedFileQueue = mappedFileQueue;
     }
 
     @Override
     public EnqueueFuture flush(InsertResult insertResult, MessageBO messageBO) {
+        boolean status = forceFlush();
+        if (!status) {
+            return EnqueueFuture.failure();
+        }
+
         return EnqueueFuture.success(insertResult, messageBO);
+    }
+
+    private boolean forceFlush() {
+        boolean result = false;
+        for (int i = 0; i < RETRY_TIMES && !result; i++) {
+            result = mappedFileQueue.flush(0);
+            String status = result ? "OK" : "Not OK";
+            log.info("SyncCommitLogFlusher shutdown, retry {} times {}", i + 1, status);
+        }
+
+        return result;
     }
 
     @Override

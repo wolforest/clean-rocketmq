@@ -1,13 +1,12 @@
-package com.wolfmq.store.domain.commitlog.flush.policy;
+package com.wolfmq.store.domain.commitlog.flush.handler;
 
 import com.wolfmq.common.domain.messagequeue.dto.EnqueueStatus;
-import com.wolfmq.common.domain.commitlog.flush.CommitLogFlushPolicy;
-import com.wolfmq.common.domain.offset.checkpoint.bakeup.CheckPoint;
+import com.wolfmq.common.domain.offset.QueueProgress;
 import com.wolfmq.store.domain.commitlog.flush.FlushWatcher;
-import com.wolfmq.store.domain.commitlog.flush.Flusher;
-import com.wolfmq.store.domain.commitlog.flush.GroupFlusher;
-import com.wolfmq.store.domain.commitlog.flush.IntervalCommitter;
-import com.wolfmq.store.domain.commitlog.flush.IntervalFlusher;
+import com.wolfmq.store.domain.commitlog.flush.flusher.Flusher;
+import com.wolfmq.store.domain.commitlog.flush.flusher.GroupFlusher;
+import com.wolfmq.store.domain.commitlog.flush.flusher.IntervalCommitter;
+import com.wolfmq.store.domain.commitlog.flush.flusher.IntervalFlusher;
 import com.wolfmq.store.domain.commitlog.vo.GroupCommitRequest;
 import com.wolfmq.common.config.store.CommitConfig;
 import com.wolfmq.common.domain.commitlog.flush.FlushType;
@@ -27,34 +26,22 @@ import java.util.concurrent.CompletableFuture;
  *  - flush
  *  - start/shutdown
  */
-public class DefaultCommitLogFlushPolicy implements CommitLogFlushPolicy {
+public class DefaultFlushHandler implements FlushHandler {
     private final CommitConfig commitConfig;
 
-
-    private final int shardId;
     private final Flusher committer;
     private final Flusher flusher;
     private final FlushWatcher flushWatcher;
 
-    public DefaultCommitLogFlushPolicy(
+    public DefaultFlushHandler(
         CommitConfig commitConfig,
         MappedFileQueue mappedFileQueue,
-        CheckPoint checkPoint
+        QueueProgress queueProgress
     ) {
-        this(0, commitConfig, mappedFileQueue, checkPoint);
-    }
-
-    public DefaultCommitLogFlushPolicy(
-        int shardId,
-        CommitConfig commitConfig,
-        MappedFileQueue mappedFileQueue,
-        CheckPoint checkPoint
-    ) {
-        this.shardId = shardId;
         this.commitConfig = commitConfig;
 
         this.flushWatcher = new FlushWatcher();
-        this.flusher = initFlusher(mappedFileQueue, checkPoint);
+        this.flusher = initFlusher(mappedFileQueue, queueProgress);
         this.committer = new IntervalCommitter(commitConfig, mappedFileQueue, flusher);
     }
 
@@ -87,16 +74,16 @@ public class DefaultCommitLogFlushPolicy implements CommitLogFlushPolicy {
         }
     }
 
-    private Flusher initFlusher(MappedFileQueue mappedFileQueue, CheckPoint checkPoint) {
+    private Flusher initFlusher(MappedFileQueue mappedFileQueue, QueueProgress queueProgress) {
         if (FlushType.SYNC.equals(commitConfig.getFlushType())) {
-            return new GroupFlusher(mappedFileQueue, checkPoint);
+            return new GroupFlusher(mappedFileQueue, queueProgress);
         }
 
-        return new IntervalFlusher(commitConfig, mappedFileQueue, checkPoint);
+        return new IntervalFlusher(commitConfig, mappedFileQueue, queueProgress);
     }
 
     private EnqueueFuture syncFlush(InsertResult insertResult, MessageBO messageBO) {
-        flusher.setMaxOffset(insertResult.getWroteOffset());
+        flusher.setMaxOffset(messageBO.getCommitOffset());
 
         if (!messageBO.isWaitStore()) {
             flusher.wakeup();
@@ -111,7 +98,7 @@ public class DefaultCommitLogFlushPolicy implements CommitLogFlushPolicy {
     }
 
     private EnqueueFuture asyncFlush(InsertResult insertResult, MessageBO messageBO) {
-        flusher.setMaxOffset(insertResult.getWroteOffset());
+        flusher.setMaxOffset(messageBO.getCommitOffset());
 
         if (commitConfig.isEnableWriteCache()) {
             committer.wakeup();

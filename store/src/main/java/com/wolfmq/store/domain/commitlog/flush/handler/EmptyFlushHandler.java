@@ -1,0 +1,37 @@
+package com.wolfmq.store.domain.commitlog.flush.handler;
+
+import com.wolfmq.common.domain.message.MessageBO;
+import com.wolfmq.common.domain.messagequeue.dto.EnqueueFuture;
+import com.wolfmq.common.core.mmap.InsertResult;
+import com.wolfmq.common.core.mmap.MappedFileQueue;
+import lombok.extern.slf4j.Slf4j;
+
+/**
+ * simply sync commit log
+ * for testing
+ */
+@Slf4j
+public class EmptyFlushHandler implements FlushHandler {
+    private static final int RETRY_TIMES = 10;
+
+    private final MappedFileQueue mappedFileQueue;
+
+    public EmptyFlushHandler(MappedFileQueue mappedFileQueue) {
+        this.mappedFileQueue = mappedFileQueue;
+    }
+
+    @Override
+    public EnqueueFuture flush(InsertResult insertResult, MessageBO messageBO) {
+        return EnqueueFuture.success(insertResult, messageBO);
+    }
+
+    @Override
+    public void start() throws Exception {
+
+    }
+
+    @Override
+    public void shutdown() throws Exception {
+
+    }
+}
