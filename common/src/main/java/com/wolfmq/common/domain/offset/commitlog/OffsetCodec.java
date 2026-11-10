@@ -1,6 +1,9 @@
 package com.wolfmq.common.domain.offset.commitlog;
 
+import lombok.Getter;
+
 public class OffsetCodec {
+    @Getter
     private final int shardId;
     private final int maxShardingNumber;
 
@@ -29,7 +32,10 @@ public class OffsetCodec {
         return offset / maxShardingNumber;
     }
 
-    public int getShardId(long offset) {
+    /**
+     * @renamed from getShardId to shardIdOf
+     */
+    public int shardIdOf(long offset) {
         if (offset < 0) {
             throw new IllegalArgumentException("offset can't be negative");
         }
