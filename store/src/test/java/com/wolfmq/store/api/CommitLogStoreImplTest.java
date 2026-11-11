@@ -60,7 +60,7 @@ class CommitLogStoreImplTest {
     }
 
     @Test
-    void getFlushedOffset_ShouldDelegateToManager() {
+    void getFlushedPosition_ShouldDelegateToManager() {
         when(commitLogFacade.getFlushedOffset(0)).thenReturn(4000L);
 
         assertEquals(4000L, store.getFlushedOffset(0));
