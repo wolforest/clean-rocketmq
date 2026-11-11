@@ -137,7 +137,7 @@ class DispatcherIntegrationTest extends BaseDispatcherIntegrationTest {
 
         CheckPoint checkpoint = context.getBean(CheckPoint.class);
         DispatchManager dispatchManager = new DispatchManager(
-            config, checkpoint, commitLogFacade, handlerManager);
+            config, checkpoint, commitLogFacade.getManager(), handlerManager);
 
         AtomicInteger counter = registerCountingHandler();
 
@@ -224,7 +224,7 @@ class DispatcherIntegrationTest extends BaseDispatcherIntegrationTest {
 
         CheckPoint checkpoint = context.getBean(CheckPoint.class);
         DispatchManager dispatchManager = new DispatchManager(
-            config, checkpoint, commitLogFacade, handlerManager);
+            config, checkpoint, commitLogFacade.getManager(), handlerManager);
 
         dispatchManager.initialize();
         dispatchManager.start();
