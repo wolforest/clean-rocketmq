@@ -8,6 +8,7 @@ import cn.coderule.common.convention.container.ApplicationContext;
 
 import com.wolfmq.common.config.server.StoreConfig;
 import com.wolfmq.common.server.store.api.CommitLogStore;
+import com.wolfmq.common.domain.offset.QueueProgress;
 import com.wolfmq.common.testing.ConfigMock;
 import com.wolfmq.common.domain.meta.service.TopicService;
 import com.wolfmq.store.infra.file.AllocateMappedFileService;
@@ -44,6 +45,7 @@ class CommitLogBootstrapTest {
         StoreCheckpoint __cp = new StoreCheckpoint(anotherDir.toString()); context.register(__cp, CheckPoint.class);
         context.register(mock(TopicService.class), TopicService.class);
         context.register(mock(AllocateMappedFileService.class));
+        context.register(mock(QueueProgress.class), QueueProgress.class);
 
         CommitLogBootstrap bootstrap = new CommitLogBootstrap(context);
         bootstrap.initialize();
