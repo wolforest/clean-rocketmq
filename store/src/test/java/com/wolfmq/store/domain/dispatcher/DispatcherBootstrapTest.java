@@ -6,10 +6,12 @@ import com.wolfmq.common.domain.offset.checkpoint.bakeup.CheckPoint;
 import cn.coderule.common.convention.container.ApplicationContext;
 
 import com.wolfmq.common.config.server.StoreConfig;
+import com.wolfmq.common.config.store.CommitConfig;
+import com.wolfmq.common.domain.commitlog.CommitLog;
 import com.wolfmq.common.domain.meta.service.TopicService;
 import com.wolfmq.common.testing.ConfigMock;
-import com.wolfmq.store.domain.commitlog.CommitLogFacade;
-import com.wolfmq.store.domain.commitlog.route.TopicPartitioner;
+import com.wolfmq.store.domain.commitlog.file.CommitLogFactory;
+import com.wolfmq.store.domain.commitlog.file.CommitLogManager;
 import com.wolfmq.store.server.bootstrap.StoreCheckpoint;
 import java.nio.file.Path;
 import org.junit.jupiter.api.AfterEach;
@@ -45,11 +47,12 @@ class DispatcherBootstrapTest {
         TopicService topicService = mock(TopicService.class);
         context.register(topicService, TopicService.class);
 
-        CommitLogFacade commitLogFacade = new CommitLogFacade(
-            storeConfig.getCommit(),
-            new TopicPartitioner(storeConfig.getCommit(), topicService)
-        );
-        context.register(commitLogFacade);
+        CommitConfig commitConfig = storeConfig.getCommit();
+        CommitLogFactory logFactory = mock(CommitLogFactory.class);
+        when(logFactory.createByShardId(anyInt())).thenReturn(mock(CommitLog.class));
+
+        CommitLogManager logManager = new CommitLogManager(commitConfig, logFactory);
+        context.register(logManager);
 
         DispatcherBootstrap bootstrap = new DispatcherBootstrap(context);
         bootstrap.initialize();
