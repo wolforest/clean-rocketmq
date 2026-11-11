@@ -8,13 +8,8 @@ import com.wolfmq.common.core.mmap.InsertResult;
 import com.wolfmq.common.core.mmap.SelectedMappedBuffer;
 import com.wolfmq.common.testing.MessageMock;
 import com.wolfmq.store.domain.commitlog.CommitLogFacade;
-import com.wolfmq.store.domain.commitlog.route.TopicPartitioner;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -23,76 +18,76 @@ class CommitLogFacadeTest {
 
     private static final int MAX_SHARDING = 10;
 
-    private TopicPartitioner partitioner;
-    private CommitLogFacade manager;
+    private CommitLogManager manager;
+    private CommitLogFacade facade;
     private CommitConfig config;
 
     @BeforeEach
     void setUp() {
         config = new CommitConfig();
         config.setMaxShardingNumber(MAX_SHARDING);
-        partitioner = new TopicPartitioner(config);
-        manager = new CommitLogFacade(config, partitioner);
+        config.setShardingNumber(MAX_SHARDING);
+
+        // mock the factory so the manager constructor doesn't touch the disk
+        CommitLogFactory factory = mock(CommitLogFactory.class);
+        manager = new CommitLogManager(config, factory);
+        facade = new CommitLogFacade(manager);
     }
 
     @Test
     void testConstructor() {
         assertNotNull(manager);
+        assertNotNull(facade);
+        assertSame(manager, facade.getManager());
+        assertEquals(0, facade.getOffsetCodec().getShardId());
     }
 
     @Test
     void testAddSingleCommitLog() {
         CommitLog commitLog = createMockCommitLog(0);
-        manager.addCommitLog(commitLog);
+        manager.addCommitLog(0, commitLog);
 
-        CommitLog found = manager.selectByShardId(0);
+        CommitLog found = manager.selectByShard(0);
         assertEquals(commitLog, found);
     }
 
     @Test
     void testAddMultipleCommitLogs() {
-        config.setShardingNumber(MAX_SHARDING);
-        CommitLogFacade tmpManager = new CommitLogFacade(config, partitioner);
+        CommitLogManager tmpManager = new CommitLogManager(config, mock(CommitLogFactory.class));
         for (int i = 0; i < MAX_SHARDING; i++) {
             CommitLog commitLog = createMockCommitLog(i);
-            tmpManager.addCommitLog(commitLog);
+            tmpManager.addCommitLog(i, commitLog);
         }
 
         for (int i = 0; i < MAX_SHARDING; i++) {
-            CommitLog found = tmpManager.selectByShardId(i);
+            CommitLog found = tmpManager.selectByShard(i);
             assertNotNull(found);
         }
     }
 
     @Test
-    void testAddCommitLogList() {
-        config.setShardingNumber(3);
-        CommitLogFacade tmpManager = new CommitLogFacade(config, partitioner);
+    void testAddCommitLogsByIndex() {
+        CommitLogManager tmpManager = new CommitLogManager(config, mock(CommitLogFactory.class));
 
-        List<CommitLog> logList = new ArrayList<>();
-        for (int i = 0; i < 3; i++) {
-            logList.add(createMockCommitLog(i));
-        }
+        CommitLog shard0 = createMockCommitLog(0);
+        CommitLog shard1 = createMockCommitLog(1);
+        CommitLog shard2 = createMockCommitLog(2);
 
-        tmpManager.addCommitLog(logList);
+        tmpManager.addCommitLog(0, shard0);
+        tmpManager.addCommitLog(1, shard1);
+        tmpManager.addCommitLog(2, shard2);
 
-        assertEquals(logList.get(0), tmpManager.selectByShardId(0));
-        assertEquals(logList.get(1), tmpManager.selectByShardId(1));
-        assertEquals(logList.get(2), tmpManager.selectByShardId(2));
-    }
-
-    @Test
-    void testAddEmptyCommitLogList() {
-        manager.addCommitLog(new ArrayList<>());
-        assertDoesNotThrow(() -> manager.addCommitLog((List<CommitLog>) null));
+        assertEquals(shard0, tmpManager.selectByShard(0));
+        assertEquals(shard1, tmpManager.selectByShard(1));
+        assertEquals(shard2, tmpManager.selectByShard(2));
     }
 
     @Test
     void testSelectByShardId_Found() {
         CommitLog commitLog = createMockCommitLog(0);
-        manager.addCommitLog(commitLog);
+        manager.addCommitLog(0, commitLog);
 
-        CommitLog found = manager.selectByShardId(0);
+        CommitLog found = manager.selectByShard(0);
         assertNotNull(found);
         assertEquals(commitLog, found);
     }
@@ -101,97 +96,102 @@ class CommitLogFacadeTest {
     void testSelectByShardId_OutOfBounds_EmptyList() {
         assertThrows(
             IllegalArgumentException.class,
-            () -> manager.selectByShardId(0)
+            () -> manager.selectByShard(0)
         );
 
         assertThrows(
-            IndexOutOfBoundsException.class,
-            () -> manager.selectByShardId(11)
+            IllegalArgumentException.class,
+            () -> manager.selectByShard(MAX_SHARDING + 1)
         );
     }
 
     @Test
     void testSelectByShardId_OutOfBounds_BeyondSize() {
         CommitLog commitLog = createMockCommitLog(0);
-        manager.addCommitLog(commitLog);
+        manager.addCommitLog(0, commitLog);
 
         assertThrows(
-            IndexOutOfBoundsException.class,
-            () -> manager.selectByShardId(15)
+            IllegalArgumentException.class,
+            () -> manager.selectByShard(15)
         );
     }
 
     @Test
     void testOffsetToShardId_Zero() {
-        int shardId = manager.offsetToShardId(0);
+        int shardId = manager.getOffsetCodec().shardIdOf(0);
         assertEquals(0, shardId);
     }
 
     @Test
     void testOffsetToShardId_PositiveOffsets() {
-        assertEquals(0, manager.offsetToShardId(0));
-        assertEquals(1, manager.offsetToShardId(1));
-        assertEquals(9, manager.offsetToShardId(9));
-        assertEquals(0, manager.offsetToShardId(10));
-        assertEquals(5, manager.offsetToShardId(15));
-        assertEquals(9, manager.offsetToShardId(19));
-        assertEquals(0, manager.offsetToShardId(20));
+        assertEquals(0, manager.getOffsetCodec().shardIdOf(0));
+        assertEquals(1, manager.getOffsetCodec().shardIdOf(1));
+        assertEquals(9, manager.getOffsetCodec().shardIdOf(9));
+        assertEquals(0, manager.getOffsetCodec().shardIdOf(10));
+        assertEquals(5, manager.getOffsetCodec().shardIdOf(15));
+        assertEquals(9, manager.getOffsetCodec().shardIdOf(19));
+        assertEquals(0, manager.getOffsetCodec().shardIdOf(20));
     }
 
     @Test
     void testOffsetToShardId_NegativeOffset() {
         IllegalArgumentException ex = assertThrows(
             IllegalArgumentException.class,
-            () -> manager.offsetToShardId(-1)
+            () -> manager.getOffsetCodec().shardIdOf(-1)
         );
-        assertEquals("offset must be positive", ex.getMessage());
+        assertEquals("offset can't be negative", ex.getMessage());
     }
 
     @Test
     void testOffsetToShardId_LargeOffset() {
         long largeOffset = 1_000_000L;
-        int shardId = manager.offsetToShardId(largeOffset);
+        int shardId = manager.getOffsetCodec().shardIdOf(largeOffset);
         assertTrue(shardId >= 0 && shardId < MAX_SHARDING);
     }
 
     @Test
     void testOffsetToShardId_Consistency() {
         for (long offset = 0; offset < 1000; offset++) {
-            int shardId = manager.offsetToShardId(offset);
+            int shardId = manager.getOffsetCodec().shardIdOf(offset);
             assertEquals((int) (offset % MAX_SHARDING), shardId);
         }
     }
 
     @Test
     void testInsert_MessageRouting() {
+        // single shard so random routing always selects shard 0
+        CommitConfig singleConfig = new CommitConfig();
+        singleConfig.setMaxShardingNumber(MAX_SHARDING);
+        singleConfig.setShardingNumber(1);
+
+        CommitLogManager singleManager = new CommitLogManager(singleConfig, mock(CommitLogFactory.class));
+        CommitLogFacade singleFacade = new CommitLogFacade(singleManager);
+
         CommitLog shard0 = createMockCommitLog(0);
-        CommitLog shard1 = createMockCommitLog(1);
-        manager.addCommitLog(shard0);
-        manager.addCommitLog(shard1);
+        singleManager.addCommitLog(0, shard0);
 
         MessageBO message = MessageMock.createMessage();
         message.setTopic("TOPIC_A");
         EnqueueFuture future = mock(EnqueueFuture.class);
-        when(shard0.insert(any())).thenReturn(future);
+        when(shard0.insert(any(MessageBO.class))).thenReturn(future);
 
-        int shardId = partitioner.partitionByTopic(message.getTopic());
-        if (shardId == 0) {
-            manager.insert(message);
-            verify(shard0).insert(message);
-        }
+        EnqueueFuture result = singleFacade.insert(message);
+
+        verify(shard0).insert(message);
+        assertEquals(future, result);
     }
 
     @Test
     void testSelect_DelegatesToCorrectShard() {
         CommitLog shard0 = createMockCommitLog(0);
         CommitLog shard1 = createMockCommitLog(1);
-        manager.addCommitLog(shard0);
-        manager.addCommitLog(shard1);
+        manager.addCommitLog(0, shard0);
+        manager.addCommitLog(1, shard1);
 
         MessageBO expectedMessage = MessageMock.createMessage();
         when(shard0.select(anyLong(), anyInt())).thenReturn(expectedMessage);
 
-        MessageBO result = manager.select(0, 100);
+        MessageBO result = facade.select(0, 100);
 
         verify(shard0).select(0, 100);
         assertEquals(expectedMessage, result);
@@ -200,12 +200,12 @@ class CommitLogFacadeTest {
     @Test
     void testSelect_ByOffsetOnly() {
         CommitLog shard0 = createMockCommitLog(0);
-        manager.addCommitLog(shard0);
+        manager.addCommitLog(0, shard0);
 
         MessageBO expectedMessage = MessageMock.createMessage();
         when(shard0.select(anyLong())).thenReturn(expectedMessage);
 
-        MessageBO result = manager.select(0);
+        MessageBO result = facade.select(0);
 
         verify(shard0).select(0);
         assertEquals(expectedMessage, result);
@@ -214,12 +214,12 @@ class CommitLogFacadeTest {
     @Test
     void testSelectBuffer_WithoutSize() {
         CommitLog shard0 = createMockCommitLog(0);
-        manager.addCommitLog(shard0);
+        manager.addCommitLog(0, shard0);
 
         SelectedMappedBuffer buffer = mock(SelectedMappedBuffer.class);
         when(shard0.selectBuffer(anyLong())).thenReturn(buffer);
 
-        SelectedMappedBuffer result = manager.selectBuffer(0);
+        SelectedMappedBuffer result = facade.selectBuffer(0);
 
         verify(shard0).selectBuffer(0);
         assertEquals(buffer, result);
@@ -228,12 +228,12 @@ class CommitLogFacadeTest {
     @Test
     void testSelectBuffer_WithSize() {
         CommitLog shard0 = createMockCommitLog(0);
-        manager.addCommitLog(shard0);
+        manager.addCommitLog(0, shard0);
 
         SelectedMappedBuffer buffer = mock(SelectedMappedBuffer.class);
         when(shard0.selectBuffer(anyLong(), anyInt())).thenReturn(buffer);
 
-        SelectedMappedBuffer result = manager.selectBuffer(0, 100);
+        SelectedMappedBuffer result = facade.selectBuffer(0, 100);
 
         verify(shard0).selectBuffer(0, 100);
         assertEquals(buffer, result);
@@ -242,13 +242,13 @@ class CommitLogFacadeTest {
     @Test
     void testInsert_RawData() {
         CommitLog shard0 = createMockCommitLog(0);
-        manager.addCommitLog(shard0);
+        manager.addCommitLog(0, shard0);
 
         InsertResult insertResult = mock(InsertResult.class);
         when(shard0.insert(anyLong(), any(), anyInt(), anyInt())).thenReturn(insertResult);
 
         byte[] data = new byte[100];
-        InsertResult result = manager.insert(0, data, 0, 100);
+        InsertResult result = facade.insert(0, data, 0, 100);
 
         verify(shard0).insert(0, data, 0, 100);
         assertEquals(insertResult, result);
@@ -258,31 +258,31 @@ class CommitLogFacadeTest {
     void testGetMinOffset() {
         CommitLog shard0 = createMockCommitLog(0);
         when(shard0.getMinOffset()).thenReturn(100L);
-        manager.addCommitLog(shard0);
+        manager.addCommitLog(0, shard0);
 
-        long minOffset = manager.getMinOffset(0);
+        long minOffset = facade.getMinOffset(0);
 
-        assertEquals(100L, minOffset);
+        assertEquals(manager.getOffsetCodec().encode(100L), minOffset);
     }
 
     @Test
     void testGetMaxOffset() {
         CommitLog shard0 = createMockCommitLog(0);
         when(shard0.getMaxOffset()).thenReturn(500L);
-        manager.addCommitLog(shard0);
+        manager.addCommitLog(0, shard0);
 
-        long maxOffset = manager.getMaxOffset(0);
+        long maxOffset = facade.getMaxOffset(0);
 
-        assertEquals(500L, maxOffset);
+        assertEquals(manager.getOffsetCodec().encode(500L), maxOffset);
     }
 
     @Test
-    void testGetFlushedOffset() {
+    void testGetFlushedPosition() {
         CommitLog shard0 = createMockCommitLog(0);
-        when(shard0.getFlushedOffset()).thenReturn(300L);
-        manager.addCommitLog(shard0);
+        when(shard0.getFlushedPosition()).thenReturn(300L);
+        manager.addCommitLog(0, shard0);
 
-        long flushedOffset = manager.getFlushedOffset(0);
+        long flushedOffset = facade.getFlushedOffset(0);
 
         assertEquals(300L, flushedOffset);
     }
@@ -291,9 +291,9 @@ class CommitLogFacadeTest {
     void testGetUnFlushedSize() {
         CommitLog shard0 = createMockCommitLog(0);
         when(shard0.getUnFlushedSize()).thenReturn(50L);
-        manager.addCommitLog(shard0);
+        manager.addCommitLog(0, shard0);
 
-        long unflushedSize = manager.getUnFlushedSize(0);
+        long unflushedSize = facade.getUnFlushedSize(0);
 
         assertEquals(50L, unflushedSize);
     }
@@ -302,8 +302,8 @@ class CommitLogFacadeTest {
     void testLifecycle_Start() throws Exception {
         CommitLog shard0 = createMockCommitLog(0);
         CommitLog shard1 = createMockCommitLog(1);
-        manager.addCommitLog(shard0);
-        manager.addCommitLog(shard1);
+        manager.addCommitLog(0, shard0);
+        manager.addCommitLog(1, shard1);
 
         manager.start();
 
@@ -315,8 +315,8 @@ class CommitLogFacadeTest {
     void testLifecycle_Shutdown() throws Exception {
         CommitLog shard0 = createMockCommitLog(0);
         CommitLog shard1 = createMockCommitLog(1);
-        manager.addCommitLog(shard0);
-        manager.addCommitLog(shard1);
+        manager.addCommitLog(0, shard0);
+        manager.addCommitLog(1, shard1);
 
         manager.shutdown();
 
@@ -328,8 +328,8 @@ class CommitLogFacadeTest {
     void testLifecycle_Initialize() throws Exception {
         CommitLog shard0 = createMockCommitLog(0);
         CommitLog shard1 = createMockCommitLog(1);
-        manager.addCommitLog(shard0);
-        manager.addCommitLog(shard1);
+        manager.addCommitLog(0, shard0);
+        manager.addCommitLog(1, shard1);
 
         manager.initialize();
 
@@ -340,7 +340,7 @@ class CommitLogFacadeTest {
     @Test
     void testLifecycle_FullCycle() throws Exception {
         CommitLog shard0 = createMockCommitLog(0);
-        manager.addCommitLog(shard0);
+        manager.addCommitLog(0, shard0);
 
         manager.initialize();
         manager.start();
@@ -359,219 +359,6 @@ class CommitLogFacadeTest {
     }
 
     private CommitLog createMockCommitLog(int shardId) {
-        CommitLog commitLog = mock(CommitLog.class);
-        return commitLog;
-    }
-
-    @Test
-    void testCalculateThreadId_SingleDigit() throws Exception {
-        CommitConfig config = new CommitConfig();
-        TopicPartitioner partitioner = new TopicPartitioner(config);
-        CommitLogFacade manager = new CommitLogFacade(config, partitioner);
-
-        Method method = CommitLogFacade.class.getDeclaredMethod("calculateThreadId");
-        method.setAccessible(true);
-
-        Thread testThread = new Thread(() -> {
-            try {
-                int result = (int) method.invoke(manager);
-                assertTrue(result >= 0 && result <= 9, "Single digit thread id should be 0-9");
-                assertEquals(5, result);
-            } catch (Exception e) {
-                fail("Exception: " + e.getMessage());
-            }
-        }, "test-thread-5");
-        testThread.start();
-        testThread.join();
-    }
-
-    @Test
-    void testCalculateThreadId_TwoDigits() throws Exception {
-        CommitConfig config = new CommitConfig();
-        TopicPartitioner partitioner = new TopicPartitioner(config);
-        CommitLogFacade manager = new CommitLogFacade(config, partitioner);
-
-        Method method = CommitLogFacade.class.getDeclaredMethod("calculateThreadId");
-        method.setAccessible(true);
-
-        Thread testThread = new Thread(() -> {
-            try {
-                int result = (int) method.invoke(manager);
-                assertTrue(result >= 0 && result <= 99, "Two digit thread id should be 0-99");
-                assertEquals(42, result);
-            } catch (Exception e) {
-                fail("Exception: " + e.getMessage());
-            }
-        }, "worker-thread-42");
-        testThread.start();
-        testThread.join();
-    }
-
-    @Test
-    void testCalculateThreadId_NoNumericSuffix() throws Exception {
-        CommitConfig config = new CommitConfig();
-        TopicPartitioner partitioner = new TopicPartitioner(config);
-        CommitLogFacade manager = new CommitLogFacade(config, partitioner);
-
-        Method method = CommitLogFacade.class.getDeclaredMethod("calculateThreadId");
-        method.setAccessible(true);
-
-        Thread testThread = new Thread(() -> {
-            try {
-                int result = (int) method.invoke(manager);
-                assertEquals(-1, result, "Should return -1 for no numeric suffix");
-            } catch (Exception e) {
-                fail("Exception: " + e.getMessage());
-            }
-        }, "main");
-        testThread.start();
-        testThread.join();
-    }
-
-    @Test
-    void testCalculateThreadId_NonNumericSuffix() throws Exception {
-        CommitConfig config = new CommitConfig();
-        TopicPartitioner partitioner = new TopicPartitioner(config);
-        CommitLogFacade manager = new CommitLogFacade(config, partitioner);
-
-        Method method = CommitLogFacade.class.getDeclaredMethod("calculateThreadId");
-        method.setAccessible(true);
-
-        Thread testThread = new Thread(() -> {
-            try {
-                int result = (int) method.invoke(manager);
-                assertEquals(-1, result, "Should return -1 for non-numeric suffix");
-            } catch (Exception e) {
-                fail("Exception: " + e.getMessage());
-            }
-        }, "Thread-ABC");
-        testThread.start();
-        testThread.join();
-    }
-
-    @Test
-    void testCalculateThreadId_ThreadPoolFormat() throws Exception {
-        CommitConfig config = new CommitConfig();
-        TopicPartitioner partitioner = new TopicPartitioner(config);
-        CommitLogFacade manager = new CommitLogFacade(config, partitioner);
-
-        Method method = CommitLogFacade.class.getDeclaredMethod("calculateThreadId");
-        method.setAccessible(true);
-
-        Thread testThread = new Thread(() -> {
-            try {
-                int result = (int) method.invoke(manager);
-                assertTrue(result >= 0 && result <= 99, "Thread pool format should extract number");
-            } catch (Exception e) {
-                fail("Exception: " + e.getMessage());
-            }
-        }, "producer-thread-pool-12");
-        testThread.start();
-        testThread.join();
-    }
-
-    @Test
-    void testCalculateThreadId_LongThreadName() throws Exception {
-        CommitConfig config = new CommitConfig();
-        TopicPartitioner partitioner = new TopicPartitioner(config);
-        CommitLogFacade manager = new CommitLogFacade(config, partitioner);
-
-        Method method = CommitLogFacade.class.getDeclaredMethod("calculateThreadId");
-        method.setAccessible(true);
-
-        Thread testThread = new Thread(() -> {
-            try {
-                int result = (int) method.invoke(manager);
-                assertEquals(7, result, "Should extract 7 from long thread name");
-            } catch (Exception e) {
-                fail("Exception: " + e.getMessage());
-            }
-        }, "very-long-thread-name-with-many-suffixes-for-testing-7");
-        testThread.start();
-        testThread.join();
-    }
-
-    @Test
-    void testCalculateThreadId_SingleCharThreadName() throws Exception {
-        CommitConfig config = new CommitConfig();
-        TopicPartitioner partitioner = new TopicPartitioner(config);
-        CommitLogFacade manager = new CommitLogFacade(config, partitioner);
-
-        Method method = CommitLogFacade.class.getDeclaredMethod("calculateThreadId");
-        method.setAccessible(true);
-
-        Thread testThread = new Thread(() -> {
-            try {
-                int result = (int) method.invoke(manager);
-                assertEquals(-1, result, "Single char should return -1");
-            } catch (Exception e) {
-                fail("Exception: " + e.getMessage());
-            }
-        }, "T");
-        testThread.start();
-        testThread.join();
-    }
-
-    @Test
-    void testCalculateThreadId_TwoCharNumeric() throws Exception {
-        CommitConfig config = new CommitConfig();
-        TopicPartitioner partitioner = new TopicPartitioner(config);
-        CommitLogFacade manager = new CommitLogFacade(config, partitioner);
-
-        Method method = CommitLogFacade.class.getDeclaredMethod("calculateThreadId");
-        method.setAccessible(true);
-
-        Thread testThread = new Thread(() -> {
-            try {
-                int result = (int) method.invoke(manager);
-                assertEquals(99, result, "Should extract 99 from two-digit suffix");
-            } catch (Exception e) {
-                fail("Exception: " + e.getMessage());
-            }
-        }, "Thread-99");
-        testThread.start();
-        testThread.join();
-    }
-
-    @Test
-    void testCalculateThreadId_ThreeDigitOverflow() throws Exception {
-        CommitConfig config = new CommitConfig();
-        TopicPartitioner partitioner = new TopicPartitioner(config);
-        CommitLogFacade manager = new CommitLogFacade(config, partitioner);
-
-        Method method = CommitLogFacade.class.getDeclaredMethod("calculateThreadId");
-        method.setAccessible(true);
-
-        Thread testThread = new Thread(() -> {
-            try {
-                int result = (int) method.invoke(manager);
-                assertTrue(result >= 0 && result <= 99, "Should handle three digits (only last two)");
-            } catch (Exception e) {
-                fail("Exception: " + e.getMessage());
-            }
-        }, "worker-thread-123");
-        testThread.start();
-        testThread.join();
-    }
-
-    @Test
-    void testCalculateThreadId_MixedSuffix() throws Exception {
-        CommitConfig config = new CommitConfig();
-        TopicPartitioner partitioner = new TopicPartitioner(config);
-        CommitLogFacade manager = new CommitLogFacade(config, partitioner);
-
-        Method method = CommitLogFacade.class.getDeclaredMethod("calculateThreadId");
-        method.setAccessible(true);
-
-        Thread testThread = new Thread(() -> {
-            try {
-                int result = (int) method.invoke(manager);
-                assertEquals(-1, result, "Should return -1 when last char is non-digit");
-            } catch (Exception e) {
-                fail("Exception: " + e.getMessage());
-            }
-        }, "thread-1a");
-        testThread.start();
-        testThread.join();
+        return mock(CommitLog.class);
     }
 }
