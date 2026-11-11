@@ -10,13 +10,14 @@ import com.wolfmq.common.domain.message.MessageBO;
 import com.wolfmq.common.domain.message.codec.MessageEncoder;
 import com.wolfmq.common.domain.messagequeue.dto.EnqueueResult;
 import com.wolfmq.common.domain.commitlog.CommitLog;
-import com.wolfmq.common.domain.commitlog.flush.CommitLogFlushPolicy;
+import com.wolfmq.store.domain.commitlog.flush.handler.FlushHandler;
+import com.wolfmq.common.domain.offset.commitlog.OffsetCodec;
 import com.wolfmq.common.core.mmap.InsertResult;
 import com.wolfmq.common.core.mmap.MappedFileQueue;
 import com.wolfmq.common.core.mmap.SelectedMappedBuffer;
 import com.wolfmq.common.testing.ConfigMock;
 import com.wolfmq.common.testing.MessageMock;
-import com.wolfmq.store.domain.commitlog.flush.policy.SyncCommitLogFlushPolicy;
+import com.wolfmq.store.domain.commitlog.flush.handler.SyncFlushHandler;
 import com.wolfmq.store.domain.commitlog.file.FileCommitLog;
 import com.wolfmq.store.infra.file.DefaultMappedFileQueue;
 import java.nio.file.Path;
@@ -83,8 +84,10 @@ class FileCommitLogTest {
         assertTrue(second.getCommitOffset() >= 0);
         assertTrue(second.getCommitOffset() > first.getCommitOffset());
 
+        // commitOffset is an encoded global offset: position * maxShardingNumber + shardId
+        OffsetCodec offsetCodec = ((FileCommitLog) commitLog).getOffsetCodec();
         long diff = second.getCommitOffset() - first.getCommitOffset();
-        assertEquals(diff, first.getMessageLength());
+        assertEquals(offsetCodec.encode(first.getMessageLength()), diff);
 
         commitLog.destroy();
     }
@@ -139,7 +142,10 @@ class FileCommitLogTest {
             assertTrue(result.isSuccess());
 
             // select and verify body length
-            MessageBO selected = commitLog.select(messageBO.getCommitOffset());
+            // commitOffset is a global offset; FileCommitLog.select expects a local position
+            OffsetCodec offsetCodec = ((FileCommitLog) commitLog).getOffsetCodec();
+            long localOffset = offsetCodec.decode(messageBO.getCommitOffset());
+            MessageBO selected = commitLog.select(localOffset);
             assertNotNull(selected);
             assertTrue(selected.isValid());
             assertEquals(bodySize, selected.getBody().length);
@@ -295,10 +301,11 @@ class FileCommitLogTest {
         commitLog.insert(m2);
         commitLog.insert(m3);
 
-        // offsets should be sequential: 0, len1, len1+len2
+        // offsets should be sequential encoded global offsets: 0, len1, len1+len2
+        OffsetCodec offsetCodec = ((FileCommitLog) commitLog).getOffsetCodec();
         assertEquals(0, m1.getCommitOffset());
-        assertEquals(m1.getMessageLength(), m2.getCommitOffset());
-        assertEquals(m1.getMessageLength() + m2.getMessageLength(), m3.getCommitOffset());
+        assertEquals(offsetCodec.encode(m1.getMessageLength()), m2.getCommitOffset());
+        assertEquals(offsetCodec.encode(m1.getMessageLength() + m2.getMessageLength()), m3.getCommitOffset());
 
         commitLog.destroy();
     }
@@ -369,7 +376,7 @@ class FileCommitLogTest {
         commitLog.insert(messageBO);
 
         // SyncCommitLogFlusher flushes immediately, so flushedOffset should advance
-        long flushedOffset = commitLog.getFlushedOffset();
+        long flushedOffset = commitLog.getFlushedPosition();
         assertTrue(flushedOffset > 0);
         assertEquals(flushedOffset, commitLog.getMaxOffset());
 
@@ -484,7 +491,10 @@ class FileCommitLogTest {
             EnqueueResult result = future.get();
             assertTrue(result.isSuccess());
 
-            MessageBO selected = commitLog.select(messageBO.getCommitOffset());
+            // commitOffset is a global offset; FileCommitLog.select expects a local position
+            OffsetCodec offsetCodec = ((FileCommitLog) commitLog).getOffsetCodec();
+            long localOffset = offsetCodec.decode(messageBO.getCommitOffset());
+            MessageBO selected = commitLog.select(localOffset);
             assertNotNull(selected);
             assertTrue(selected.isValid());
             assertEquals(topic, selected.getTopic());
@@ -527,7 +537,7 @@ class FileCommitLogTest {
         CommitConfig commitConfig = storeConfig.getCommit();
         commitConfig.setFileSize(MMAP_FILE_SIZE);
 
-        CommitLogFlushPolicy flusher = new SyncCommitLogFlushPolicy(queue);
+        FlushHandler flusher = new SyncFlushHandler(queue);
         return new FileCommitLog(storeConfig, 0, queue, flusher);
     }
 
