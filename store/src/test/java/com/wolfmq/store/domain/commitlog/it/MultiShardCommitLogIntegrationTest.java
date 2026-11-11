@@ -7,14 +7,20 @@ import com.wolfmq.common.config.server.StoreConfig;
 import com.wolfmq.common.config.store.CommitConfig;
 import com.wolfmq.common.server.store.api.CommitLogStore;
 import com.wolfmq.common.domain.commitlog.CommitLog;
+import com.wolfmq.common.domain.offset.QueueProgress;
+import com.wolfmq.common.domain.offset.DefaultQueueProgress;
 import com.wolfmq.common.domain.offset.checkpoint.bakeup.CheckPoint;
+import com.wolfmq.common.domain.offset.checkpoint.store.FileCheckpointStore;
+import com.wolfmq.common.domain.offset.commitlog.OffsetCodec;
+import com.wolfmq.common.domain.offset.consumequeue.QueueOffsetAssigner;
 import com.wolfmq.common.core.mmap.InsertResult;
 import com.wolfmq.common.core.mmap.SelectedMappedBuffer;
 import com.wolfmq.common.testing.ConfigMock;
 import com.wolfmq.store.api.CommitLogStoreImpl;
 import com.wolfmq.store.domain.commitlog.file.CommitLogFactory;
+import com.wolfmq.store.domain.commitlog.file.FileCommitLog;
 import com.wolfmq.store.domain.commitlog.CommitLogFacade;
-import com.wolfmq.common.domain.offset.commitlog.OffsetCodec;
+import com.wolfmq.store.domain.commitlog.file.CommitLogManager;
 import com.wolfmq.store.domain.commitlog.route.TopicPartitioner;
 import com.wolfmq.store.infra.file.AllocateMappedFileService;
 import com.wolfmq.store.server.bootstrap.StoreCheckpoint;
@@ -24,7 +30,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -41,6 +46,7 @@ class MultiShardCommitLogIntegrationTest {
 
     private StoreConfig storeConfig;
     private AllocateMappedFileService allocateService;
+    private CommitLogManager logManager;
     private CommitLogFacade commitLogFacade;
     private CommitLogStore commitLogStore;
     private TopicPartitioner partitioner;
@@ -72,15 +78,15 @@ class MultiShardCommitLogIntegrationTest {
 
     @AfterEach
     void tearDown() throws Exception {
-        if (commitLogFacade != null) {
-            commitLogFacade.shutdown();
+        if (logManager != null) {
+            logManager.shutdown();
         }
         if (allocateService != null) {
             allocateService.shutdown();
         }
         for (int shardId = 0; shardId < SHARD_COUNT; shardId++) {
             try {
-                CommitLog cl = commitLogFacade.selectByShardId(shardId);
+                CommitLog cl = logManager.selectByShard(shardId);
                 if (cl != null) {
                     cl.destroy();
                 }
@@ -92,40 +98,55 @@ class MultiShardCommitLogIntegrationTest {
     private void resetStoreContext() {
     }
 
-    private void initCommitLog() throws Exception {
-        CheckPoint ckpt = context.getBean(CheckPoint.class);
+    private void initCommitLog() {
+        QueueProgress queueProgress = createQueueProgress();
         CommitConfig commitConfig = storeConfig.getCommit();
 
-        CommitLogFactory factory = new CommitLogFactory(storeConfig, ckpt, allocateService);
-        List<CommitLog> logList = factory.createByConfig();
+        CommitLogFactory factory = new CommitLogFactory(storeConfig, queueProgress, allocateService);
 
         partitioner = new TopicPartitioner(commitConfig);
-        commitLogFacade = new CommitLogFacade(commitConfig, partitioner);
-        commitLogFacade.addCommitLog(logList);
+        logManager = new CommitLogManager(commitConfig, factory);
+        commitLogFacade = new CommitLogFacade(logManager);
 
         context.register(partitioner);
+        context.register(logManager);
         context.register(commitLogFacade);
 
         offsetCodec = new OffsetCodec(MAX_SHARD);
 
         commitLogStore = new CommitLogStoreImpl(commitLogFacade);
 
-        commitLogFacade.initialize();
-        commitLogFacade.start();
+        try {
+            logManager.initialize();
+            logManager.start();
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
+        }
 
         for (int i = 0; i < SHARD_COUNT; i++) {
-            CommitLog cl = commitLogFacade.selectByShardId(i);
-            cl.getMappedFileQueue().getOrCreateMappedFileForSize(100);
+            CommitLog cl = logManager.selectByShard(i);
+            ((FileCommitLog) cl).getMappedFileQueue().getOrCreateMappedFileForSize(100);
         }
+    }
+
+    private QueueProgress createQueueProgress() {
+        FileCheckpointStore store = new FileCheckpointStore(
+            tmpDir.resolve("queue-progress").toString()
+        );
+
+        OffsetCodec progressCodec = new OffsetCodec(storeConfig.getCommit().getMaxShardingNumber());
+        QueueOffsetAssigner assigner = new QueueOffsetAssigner(store);
+
+        return new DefaultQueueProgress(store, progressCodec, assigner);
     }
 
     @Test
     void testOffsetCodecShardRouting() {
-        assertEquals(0, offsetCodec.getShardId(0));
-        assertEquals(1, offsetCodec.getShardId(1));
-        assertEquals(2, offsetCodec.getShardId(2));
-        assertEquals(0, offsetCodec.getShardId(MAX_SHARD));
-        assertEquals(1, offsetCodec.getShardId(MAX_SHARD + 1));
+        assertEquals(0, offsetCodec.shardIdOf(0));
+        assertEquals(1, offsetCodec.shardIdOf(1));
+        assertEquals(2, offsetCodec.shardIdOf(2));
+        assertEquals(0, offsetCodec.shardIdOf(MAX_SHARD));
+        assertEquals(1, offsetCodec.shardIdOf(MAX_SHARD + 1));
     }
 
     @Test
@@ -135,7 +156,7 @@ class MultiShardCommitLogIntegrationTest {
 
         InsertResult r0 = commitLogStore.insert(0, data0, 0, data0.length);
         assertTrue(r0.isSuccess(), "insert to shard 0 should succeed");
-        assertEquals(0, offsetCodec.getShardId(r0.getWroteOffset()));
+        assertEquals(0, offsetCodec.shardIdOf(r0.getWroteOffset()));
 
         InsertResult r2 = commitLogStore.insert(2, data2, 0, data2.length);
         assertTrue(r2.isSuccess(), "insert to shard 2 should succeed");
