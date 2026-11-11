@@ -40,7 +40,11 @@ class EnqueueServiceTest {
         MessageBO message = MessageMock.createMessage("TOPIC_A", 0, 0);
         when(consumeQueueFacade.assignOffset("TOPIC_A", 0)).thenReturn(5L);
 
-        InsertResult insertResult = new InsertResult(InsertStatus.PUT_OK, 0, 1, 0);
+        InsertResult insertResult = InsertResult.builder()
+            .status(InsertStatus.PUT_OK)
+            .wroteOffset(0)
+            .wroteBytes(1)
+            .build();
         EnqueueFuture future = EnqueueFuture.success(insertResult, message);
         when(commitLog.insert(message)).thenReturn(future);
 
