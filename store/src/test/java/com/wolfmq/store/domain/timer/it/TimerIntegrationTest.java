@@ -22,6 +22,12 @@ import com.wolfmq.store.domain.timer.wheel.TimerLog;
 import com.wolfmq.store.domain.timer.wheel.TimerWheel;
 import com.wolfmq.store.domain.messagequeue.queue.MessageService;
 import com.wolfmq.store.domain.commitlog.file.CommitLogFactory;
+import com.wolfmq.store.domain.commitlog.file.FileCommitLog;
+import com.wolfmq.store.domain.commitlog.file.CommitLogManager;
+import com.wolfmq.common.domain.offset.QueueProgress;
+import com.wolfmq.common.domain.offset.DefaultQueueProgress;
+import com.wolfmq.common.domain.offset.checkpoint.store.FileCheckpointStore;
+import com.wolfmq.common.domain.offset.consumequeue.QueueOffsetAssigner;
 import com.wolfmq.store.domain.commitlog.CommitLogFacade;
 import com.wolfmq.store.domain.commitlog.route.TopicPartitioner;
 import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueFacade;
@@ -64,6 +70,7 @@ class TimerIntegrationTest {
     private CheckpointService checkpointService;
     private StoreConfig storeConfig;
     private AllocateMappedFileService allocateService;
+    private CommitLogManager commitLogManager;
     private CommitLogFacade commitLogFacade;
     private MessageService messageService;
 
@@ -99,25 +106,44 @@ class TimerIntegrationTest {
     private void resetStoreContext() {
     }
 
-    private void initCommitLog() throws Exception {
-        CheckPoint checkpoint = context.getBean(CheckPoint.class);
+    private void initCommitLog() {
+        QueueProgress queueProgress = createQueueProgress();
         CommitConfig commitConfig = storeConfig.getCommit();
 
-        CommitLogFactory factory = new CommitLogFactory(storeConfig, checkpoint, allocateService);
-        List<CommitLog> logList = factory.createByConfig();
+        CommitLogFactory factory = new CommitLogFactory(storeConfig, queueProgress, allocateService);
 
         TopicPartitioner partitioner = new TopicPartitioner(commitConfig);
-        commitLogFacade = new CommitLogFacade(commitConfig, partitioner);
-        commitLogFacade.addCommitLog(logList);
+        commitLogManager = new CommitLogManager(commitConfig, factory);
+        commitLogFacade = new CommitLogFacade(commitLogManager);
 
         context.register(partitioner);
+        context.register(commitLogManager);
         context.register(commitLogFacade);
 
-        commitLogFacade.initialize();
-        commitLogFacade.start();
+        try {
+            commitLogManager.initialize();
+            commitLogManager.start();
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
+        }
 
-        CommitLog cl = commitLogFacade.selectByShardId(0);
-        cl.getMappedFileQueue().getOrCreateMappedFileForSize(100);
+        ensureMappedFileExists();
+    }
+
+    private void ensureMappedFileExists() {
+        CommitLog cl = commitLogManager.selectByShard(0);
+        ((FileCommitLog) cl).getMappedFileQueue().getOrCreateMappedFileForSize(100);
+    }
+
+    private QueueProgress createQueueProgress() {
+        FileCheckpointStore store = new FileCheckpointStore(
+            tmpDir.resolve("queue-progress").toString()
+        );
+
+        OffsetCodec offsetCodec = new OffsetCodec(storeConfig.getCommit().getMaxShardingNumber());
+        QueueOffsetAssigner assigner = new QueueOffsetAssigner(store);
+
+        return new DefaultQueueProgress(store, offsetCodec, assigner);
     }
 
     private void initConsumeQueue() {
@@ -171,8 +197,8 @@ class TimerIntegrationTest {
         if (checkpointService != null) {
             checkpointService.shutdown();
         }
-        if (commitLogFacade != null) {
-            commitLogFacade.shutdown();
+        if (commitLogManager != null) {
+            commitLogManager.shutdown();
         }
         if (allocateService != null) {
             allocateService.shutdown();
