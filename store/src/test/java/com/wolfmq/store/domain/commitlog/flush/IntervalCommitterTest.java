@@ -2,6 +2,8 @@ package com.wolfmq.store.domain.commitlog.flush;
 
 import com.wolfmq.common.config.store.CommitConfig;
 import com.wolfmq.common.core.mmap.MappedFileQueue;
+import com.wolfmq.store.domain.commitlog.flush.flusher.Flusher;
+import com.wolfmq.store.domain.commitlog.flush.flusher.IntervalCommitter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

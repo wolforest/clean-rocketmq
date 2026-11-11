@@ -1,5 +1,6 @@
 package com.wolfmq.store.domain.commitlog.flush;
 
+import com.wolfmq.store.domain.commitlog.flush.flusher.Flusher;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
