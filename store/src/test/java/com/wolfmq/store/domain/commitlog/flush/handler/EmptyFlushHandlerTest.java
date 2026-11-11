@@ -1,4 +1,4 @@
-package com.wolfmq.store.domain.commitlog.flush.policy;
+package com.wolfmq.store.domain.commitlog.flush.handler;
 
 import com.wolfmq.common.domain.message.MessageBO;
 import com.wolfmq.common.core.mmap.InsertResult;
@@ -10,31 +10,18 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-public class SyncCommitLogFlushPolicyTest {
+public class EmptyFlushHandlerTest {
 
-    private MappedFileQueue mappedFileQueue;
-    private SyncCommitLogFlushPolicy policy;
+    private EmptyFlushHandler policy;
 
     @BeforeEach
     void setUp() {
-        mappedFileQueue = mock(MappedFileQueue.class);
-        policy = new SyncCommitLogFlushPolicy(mappedFileQueue);
+        MappedFileQueue mappedFileQueue = mock(MappedFileQueue.class);
+        policy = new EmptyFlushHandler(mappedFileQueue);
     }
 
     @Test
-    void testFlushSuccess() {
-        when(mappedFileQueue.flush(0)).thenReturn(true);
-        InsertResult insertResult = mock(InsertResult.class);
-        MessageBO messageBO = mock(MessageBO.class);
-
-        EnqueueFuture result = policy.flush(insertResult, messageBO);
-
-        assertNotNull(result);
-    }
-
-    @Test
-    void testFlushFailure() {
-        when(mappedFileQueue.flush(0)).thenReturn(false);
+    void testFlushReturnsSuccess() {
         InsertResult insertResult = mock(InsertResult.class);
         MessageBO messageBO = mock(MessageBO.class);
 

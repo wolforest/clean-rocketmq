@@ -1,4 +1,4 @@
-package com.wolfmq.store.domain.commitlog.flush.policy;
+package com.wolfmq.store.domain.commitlog.flush.handler;
 
 import com.wolfmq.common.config.store.CommitConfig;
 import com.wolfmq.common.domain.commitlog.flush.FlushType;
@@ -6,42 +6,42 @@ import com.wolfmq.common.domain.message.MessageBO;
 import com.wolfmq.common.domain.messagequeue.dto.EnqueueFuture;
 import com.wolfmq.common.core.mmap.InsertResult;
 import com.wolfmq.common.core.mmap.MappedFileQueue;
-import com.wolfmq.common.domain.offset.checkpoint.bakeup.CheckPoint;
+import com.wolfmq.common.domain.offset.QueueProgress;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-public class FileCommitLogFlushPolicyTest {
+public class FileFlushHandlerTest {
 
     private CommitConfig commitConfig;
     private MappedFileQueue mappedFileQueue;
-    private CheckPoint checkPoint;
+    private QueueProgress queueProgress;
 
     @BeforeEach
     void setUp() {
         commitConfig = new CommitConfig();
         mappedFileQueue = mock(MappedFileQueue.class);
-        checkPoint = mock(CheckPoint.class);
+        queueProgress = mock(QueueProgress.class);
     }
 
     @Test
     void testConstructorWithShardId() {
-        DefaultCommitLogFlushPolicy policy = new DefaultCommitLogFlushPolicy(1, commitConfig, mappedFileQueue, checkPoint);
+        DefaultFlushHandler policy = new DefaultFlushHandler(commitConfig, mappedFileQueue, queueProgress);
         assertNotNull(policy);
     }
 
     @Test
     void testConstructorWithoutShardId() {
-        DefaultCommitLogFlushPolicy policy = new DefaultCommitLogFlushPolicy(commitConfig, mappedFileQueue, checkPoint);
+        DefaultFlushHandler policy = new DefaultFlushHandler(commitConfig, mappedFileQueue, queueProgress);
         assertNotNull(policy);
     }
 
     @Test
     void testAsyncFlushReturnsSuccess() {
         commitConfig.setFlushType(FlushType.ASYNC);
-        DefaultCommitLogFlushPolicy policy = new DefaultCommitLogFlushPolicy(commitConfig, mappedFileQueue, checkPoint);
+        DefaultFlushHandler policy = new DefaultFlushHandler(commitConfig, mappedFileQueue, queueProgress);
 
         InsertResult insertResult = mock(InsertResult.class);
         when(insertResult.getWroteOffset()).thenReturn(100L);
@@ -56,7 +56,7 @@ public class FileCommitLogFlushPolicyTest {
     @Test
     void testSyncFlushWithoutWait() {
         commitConfig.setFlushType(FlushType.SYNC);
-        DefaultCommitLogFlushPolicy policy = new DefaultCommitLogFlushPolicy(commitConfig, mappedFileQueue, checkPoint);
+        DefaultFlushHandler policy = new DefaultFlushHandler(commitConfig, mappedFileQueue, queueProgress);
 
         InsertResult insertResult = mock(InsertResult.class);
         when(insertResult.getWroteOffset()).thenReturn(100L);
@@ -72,7 +72,7 @@ public class FileCommitLogFlushPolicyTest {
     void testSyncFlushWithWait() {
         commitConfig.setFlushType(FlushType.SYNC);
         commitConfig.setFlushTimeout(5000);
-        DefaultCommitLogFlushPolicy policy = new DefaultCommitLogFlushPolicy(commitConfig, mappedFileQueue, checkPoint);
+        DefaultFlushHandler policy = new DefaultFlushHandler(commitConfig, mappedFileQueue, queueProgress);
 
         InsertResult insertResult = mock(InsertResult.class);
         when(insertResult.getWroteOffset()).thenReturn(100L);
@@ -88,7 +88,7 @@ public class FileCommitLogFlushPolicyTest {
     void testAsyncFlushWithWriteCache() {
         commitConfig.setFlushType(FlushType.ASYNC);
         commitConfig.setEnableWriteCache(true);
-        DefaultCommitLogFlushPolicy policy = new DefaultCommitLogFlushPolicy(commitConfig, mappedFileQueue, checkPoint);
+        DefaultFlushHandler policy = new DefaultFlushHandler(commitConfig, mappedFileQueue, queueProgress);
 
         InsertResult insertResult = mock(InsertResult.class);
         when(insertResult.getWroteOffset()).thenReturn(100L);
@@ -103,7 +103,7 @@ public class FileCommitLogFlushPolicyTest {
     @Test
     void testFlushWithZeroWroteBytes() {
         commitConfig.setFlushType(FlushType.ASYNC);
-        DefaultCommitLogFlushPolicy policy = new DefaultCommitLogFlushPolicy(commitConfig, mappedFileQueue, checkPoint);
+        DefaultFlushHandler policy = new DefaultFlushHandler(commitConfig, mappedFileQueue, queueProgress);
 
         InsertResult insertResult = mock(InsertResult.class);
         when(insertResult.getWroteOffset()).thenReturn(0L);
