@@ -1,9 +1,8 @@
 package com.wolfmq.store.domain.commitlog.file;
 
-import com.wolfmq.common.domain.commitlog.CommitLog;
 import com.wolfmq.common.core.mmap.MappedFileQueue;
-import com.wolfmq.common.domain.offset.checkpoint.bakeup.CheckPoint;
-import com.wolfmq.common.domain.offset.checkpoint.bakeup.Offset;
+import com.wolfmq.common.domain.offset.QueueProgress;
+import com.wolfmq.common.domain.offset.commitlog.OffsetCodec;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -12,15 +11,15 @@ import static org.mockito.Mockito.*;
 
 public class CommitLogRecoveryTest {
 
-    private CommitLog commitLog;
-    private CheckPoint checkPoint;
+    private FileCommitLog commitLog;
+    private QueueProgress queueProgress;
     private CommitLogRecovery recovery;
 
     @BeforeEach
     void setUp() {
-        commitLog = mock(CommitLog.class);
-        checkPoint = mock(CheckPoint.class);
-        recovery = new CommitLogRecovery(commitLog, checkPoint);
+        commitLog = mock(FileCommitLog.class);
+        queueProgress = mock(QueueProgress.class);
+        recovery = new CommitLogRecovery(commitLog, queueProgress);
     }
 
     @Test
@@ -36,7 +35,7 @@ public class CommitLogRecoveryTest {
         MappedFileQueue mfq = mock(MappedFileQueue.class);
         when(commitLog.getMappedFileQueue()).thenReturn(mfq);
         when(mfq.isEmpty()).thenReturn(false);
-        when(checkPoint.getMaxOffset()).thenReturn(null);
+        when(queueProgress.getCommitOffset(commitLog.getShardId())).thenReturn(null);
 
         assertDoesNotThrow(() -> recovery.recover());
     }
@@ -47,10 +46,10 @@ public class CommitLogRecoveryTest {
         when(commitLog.getMappedFileQueue()).thenReturn(mfq);
         when(mfq.isEmpty()).thenReturn(false);
 
-        Offset offset = mock(Offset.class);
-        when(offset.getCommitLogOffset()).thenReturn(100L);
-        when(checkPoint.getMaxOffset()).thenReturn(offset);
-        when(checkPoint.isShutdownSuccessful()).thenReturn(true);
+
+        when(queueProgress.getCommitOffset(commitLog.getShardId())).thenReturn(100L);
+        when(queueProgress.isShutdownSuccessfully()).thenReturn(true);
+        when(commitLog.getOffsetCodec()).thenReturn(new OffsetCodec(1));
 
         assertDoesNotThrow(() -> recovery.recover());
     }
