@@ -10,8 +10,15 @@ import com.wolfmq.common.domain.commitlog.CommitLog;
 import com.wolfmq.common.domain.offset.checkpoint.bakeup.CheckPoint;
 import com.wolfmq.common.testing.ConfigMock;
 import com.wolfmq.store.api.CommitLogStoreImpl;
-import com.wolfmq.store.domain.commitlog.file.CommitLogFactory;
+import com.wolfmq.common.domain.offset.QueueProgress;
+import com.wolfmq.common.domain.offset.DefaultQueueProgress;
+import com.wolfmq.common.domain.offset.commitlog.OffsetCodec;
+import com.wolfmq.common.domain.offset.consumequeue.QueueOffsetAssigner;
+import com.wolfmq.common.domain.offset.checkpoint.store.FileCheckpointStore;
 import com.wolfmq.store.domain.commitlog.CommitLogFacade;
+import com.wolfmq.store.domain.commitlog.file.CommitLogManager;
+import com.wolfmq.store.domain.commitlog.file.CommitLogFactory;
+import com.wolfmq.store.domain.commitlog.file.FileCommitLog;
 import com.wolfmq.store.domain.commitlog.route.TopicPartitioner;
 import com.wolfmq.store.infra.file.AllocateMappedFileService;
 import com.wolfmq.store.server.bootstrap.StoreCheckpoint;
@@ -32,6 +39,7 @@ public abstract class BaseCommitLogIntegrationTest {
 
     protected StoreConfig storeConfig;
     protected AllocateMappedFileService allocateService;
+    protected CommitLogManager logManager;
     protected CommitLogFacade commitLogFacade;
     protected CommitLogStore commitLogStore;
     protected TopicPartitioner partitioner;
@@ -63,15 +71,15 @@ public abstract class BaseCommitLogIntegrationTest {
 
     @AfterEach
     void tearDownInfrastructure() throws Exception {
-        if (commitLogFacade != null) {
-            commitLogFacade.shutdown();
+        if (logManager != null) {
+            logManager.shutdown();
         }
         if (allocateService != null) {
             allocateService.shutdown();
         }
         for (int shardId = 0; shardId < maxShard(); shardId++) {
             try {
-                CommitLog cl = commitLogFacade.selectByShardId(shardId);
+                CommitLog cl = logManager.selectByShard(shardId);
                 if (cl != null) {
                     cl.destroy();
                 }
@@ -92,30 +100,45 @@ public abstract class BaseCommitLogIntegrationTest {
         context.register(checkpoint, CheckPoint.class);
     }
 
-    private void initCommitLog() throws Exception {
-        CheckPoint checkpoint = context.getBean(CheckPoint.class);
+    private void initCommitLog() {
+        QueueProgress queueProgress = createQueueProgress();
         CommitConfig commitConfig = storeConfig.getCommit();
 
-        CommitLogFactory factory = new CommitLogFactory(storeConfig, checkpoint, allocateService);
-        List<CommitLog> logList = factory.createByConfig();
+        CommitLogFactory factory = new CommitLogFactory(storeConfig, queueProgress, allocateService);
 
         partitioner = new TopicPartitioner(commitConfig);
-        commitLogFacade = new CommitLogFacade(commitConfig, partitioner);
-        commitLogFacade.addCommitLog(logList);
+        logManager = new CommitLogManager(commitConfig, factory);
+        commitLogFacade = new CommitLogFacade(logManager);
 
         context.register(partitioner);
+        context.register(logManager);
         context.register(commitLogFacade);
 
         commitLogStore = new CommitLogStoreImpl(commitLogFacade);
 
-        commitLogFacade.initialize();
-        commitLogFacade.start();
+        try {
+            logManager.initialize();
+            logManager.start();
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
+        }
 
         ensureMappedFileExists();
     }
 
     private void ensureMappedFileExists() {
-        CommitLog cl = commitLogFacade.selectByShardId(0);
-        cl.getMappedFileQueue().getOrCreateMappedFileForSize(100);
+        CommitLog cl = logManager.selectByShard(0);
+        ((FileCommitLog) cl).getMappedFileQueue().getOrCreateMappedFileForSize(100);
+    }
+
+    private QueueProgress createQueueProgress() {
+        FileCheckpointStore store = new FileCheckpointStore(
+            tmpDir.resolve("queue-progress").toString()
+        );
+
+        OffsetCodec offsetCodec = new OffsetCodec(storeConfig.getCommit().getMaxShardingNumber());
+        QueueOffsetAssigner assigner = new QueueOffsetAssigner(store);
+
+        return new DefaultQueueProgress(store, offsetCodec, assigner);
     }
 }
