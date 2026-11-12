@@ -4,6 +4,7 @@ import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.convention.service.LifecycleManager;
 import com.wolfmq.common.core.lock.server.StartupLock;
 import com.wolfmq.common.core.lock.server.ShutdownLock;
+import com.wolfmq.common.server.store.StoreState;
 import com.wolfmq.store.server.bootstrap.ContextInitializer;
 import com.wolfmq.store.server.bootstrap.ComponentRegister;
 import com.wolfmq.store.server.bootstrap.StoreArgument;
@@ -95,6 +96,9 @@ public class Store implements Lifecycle {
 
     private void initCheckPoint(StoreConfig storeConfig) {
         boolean isShutdownSuccessful = !shutdownLock.isLocked();
+
+        StoreState storeState = new StoreState();
+        storeState.setShutdownSuccessfully(isShutdownSuccessful);
 
         StoreCheckpoint checkpoint = new StoreCheckpoint(storeConfig.getPath().getCheckpointPath());
         checkpoint.setShutdownSuccessful(isShutdownSuccessful);

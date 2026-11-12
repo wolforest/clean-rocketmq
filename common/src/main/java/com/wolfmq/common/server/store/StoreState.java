@@ -6,5 +6,6 @@ import lombok.Data;
 @Data
 public class StoreState implements Serializable {
     private boolean isolated = false;
+    private boolean shutdownSuccessfully = false;
     private long stateMachineVersion = 0L;
 }
