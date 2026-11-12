@@ -15,6 +15,8 @@ public class InsertResult implements Serializable {
     private InsertStatus status;
     // Where to start writing
     private long wroteOffset;
+    // maybe null
+    private long commitOffset = -1;
     // Write Bytes
     private int wroteBytes;
     // Message storage timestamp
