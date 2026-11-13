@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.wolfmq</groupId>
+        <artifactId>wolfmq</artifactId>
+        <version>${revision}</version>
+        <relativePath>../../pom.xml</relativePath>
+    </parent>
+
+    <groupId>com.wolfmq.test</groupId>
+    <artifactId>integration</artifactId>
+    <version>${revision}</version>
+
+    <properties>
+        <project.root>${basedir}/../..</project.root>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.wolfmq</groupId>
+            <artifactId>store</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.wolfmq</groupId>
+            <artifactId>broker</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+        </dependency>
+    </dependencies>
+
+</project>
