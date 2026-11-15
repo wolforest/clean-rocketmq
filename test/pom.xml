@@ -19,6 +19,7 @@
         <module>api</module>
         <module>integration</module>
         <module>performance</module>
+        <module>quality</module>
         <module>stability</module>
         <module>architecture</module>
     </modules>
