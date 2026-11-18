@@ -5,9 +5,9 @@ import com.wolfmq.common.config.store.CommitConfig;
 import com.wolfmq.common.domain.commitlog.dispatch.CommitEvent;
 import com.wolfmq.common.domain.message.MessageBO;
 import com.wolfmq.common.testing.MessageMock;
-import com.wolfmq.store.domain.dispatcher.CommitListener;
-import com.wolfmq.store.domain.dispatcher.DispatchManager;
-import com.wolfmq.store.domain.dispatcher.DispatchQueue;
+import com.wolfmq.store.domain.dispatcher.dispatch.CommitListener;
+import com.wolfmq.store.domain.dispatcher.exchange.DispatchManager;
+import com.wolfmq.store.domain.dispatcher.dispatch.DispatchQueue;
 import com.wolfmq.common.domain.offset.checkpoint.bakeup.CheckPoint;
 import org.junit.jupiter.api.Test;
 

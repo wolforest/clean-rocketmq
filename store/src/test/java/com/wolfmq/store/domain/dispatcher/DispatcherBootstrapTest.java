@@ -12,6 +12,7 @@ import com.wolfmq.common.domain.meta.service.TopicService;
 import com.wolfmq.common.testing.ConfigMock;
 import com.wolfmq.store.domain.commitlog.file.CommitLogFactory;
 import com.wolfmq.store.domain.commitlog.file.CommitLogManager;
+import com.wolfmq.store.domain.dispatcher.exchange.DispatchManager;
 import com.wolfmq.store.server.bootstrap.StoreCheckpoint;
 import java.nio.file.Path;
 import org.junit.jupiter.api.AfterEach;

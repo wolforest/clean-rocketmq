@@ -4,6 +4,7 @@ import com.wolfmq.common.domain.commitlog.dispatch.CommitEvent;
 import com.wolfmq.common.domain.commitlog.dispatch.CommitHandler;
 import com.wolfmq.common.domain.commitlog.CommitLog;
 import com.wolfmq.common.domain.offset.checkpoint.bakeup.CheckPoint;
+import com.wolfmq.store.domain.dispatcher.backup.DefaultCommitEventDispatcher;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
