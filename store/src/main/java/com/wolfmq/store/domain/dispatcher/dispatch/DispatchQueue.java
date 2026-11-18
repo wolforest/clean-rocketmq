@@ -1,4 +1,4 @@
-package com.wolfmq.store.domain.dispatcher;
+package com.wolfmq.store.domain.dispatcher.dispatch;
 
 import com.wolfmq.common.config.store.CommitConfig;
 import com.wolfmq.common.domain.commitlog.dispatch.CommitEvent;
