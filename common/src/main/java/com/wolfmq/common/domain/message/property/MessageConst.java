@@ -57,6 +57,11 @@ public class MessageConst {
     public static final String PROPERTY_EVENT_NAME = "EVENT_NAME";
 
     /**
+     * exchange related properties, RabbitMQ-compatible
+     */
+    public static final String PROPERTY_EXCHANGE_KEY = "EXCHANGE_KEY";
+
+    /**
      * client can set the unique key of the message
      * or the broker will set the value as uniqueID by SendMessageProcessor
      * use cases:
