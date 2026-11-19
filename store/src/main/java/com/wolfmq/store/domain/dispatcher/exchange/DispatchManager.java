@@ -1,10 +1,14 @@
-package com.wolfmq.store.domain.dispatcher;
+package com.wolfmq.store.domain.dispatcher.exchange;
 
 import cn.coderule.common.convention.service.Lifecycle;
 import com.wolfmq.common.config.store.CommitConfig;
 import com.wolfmq.common.domain.commitlog.CommitLog;
 import com.wolfmq.common.domain.offset.checkpoint.bakeup.CheckPoint;
 import com.wolfmq.store.domain.commitlog.file.CommitLogManager;
+import com.wolfmq.store.domain.dispatcher.CommitHandlerManager;
+import com.wolfmq.store.domain.dispatcher.dispatch.CommitListener;
+import com.wolfmq.store.domain.dispatcher.dispatch.DispatchQueue;
+import com.wolfmq.store.domain.dispatcher.dispatch.Dispatcher;
 import java.util.ArrayList;
 import java.util.List;
 
