@@ -85,14 +85,14 @@ public class CommitLogFacade {
         long offset = manager.selectByShard(shardId)
             .getMinOffset();
 
-        return offsetCodec.encode(offset);
+        return offsetCodec.encode(offset, shardId);
     }
 
     public long getMaxOffset(int shardId) {
         long offset = manager.selectByShard(shardId)
             .getMaxOffset();
 
-        return offsetCodec.encode(offset);
+        return offsetCodec.encode(offset, shardId);
     }
 
     public long getFlushedOffset(int shardId) {
