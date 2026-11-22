@@ -51,7 +51,7 @@ public class MessageBO extends Message implements Serializable {
 
     private long commitOffset;
     /**
-     * if StoreConfig.enablePreAssignOffset is ture:
+     * if StoreConfig.enablePreAssignOffset is true:
      *      set by consumeQueue while inserting CommitLog
      * if false:
      *      will be set by consumeQueue asynchronously
@@ -341,8 +341,7 @@ public class MessageBO extends Message implements Serializable {
      * deliverTime =
      *  * popTime + invisibleTime
      *  * reviveTime - PopConstants.ackTimeInterval
-     *  * reviveTime
-     * reviveTime = popTime + invisibleTime
+     *  * reviveTime = popTime + invisibleTime
      * @param timeMs  deliver time
      */
     public void setDeliverTime(long timeMs) {
