@@ -3,7 +3,7 @@ package com.wolfmq.store.domain.messagequeue.queue;
 import com.wolfmq.common.config.business.MessageConfig;
 import com.wolfmq.common.config.server.StoreConfig;
 import com.wolfmq.common.domain.consumer.consume.constant.ConsumeStrategy;
-import com.wolfmq.common.domain.commitlog.CommitLog;
+import com.wolfmq.store.domain.commitlog.CommitLogFacade;
 import com.wolfmq.common.domain.messagequeue.dto.DequeueRequest;
 import com.wolfmq.common.domain.messagequeue.dto.DequeueResult;
 import com.wolfmq.common.domain.offset.ConsumerOffsetService;
@@ -27,7 +27,7 @@ class OffsetServiceTest {
         StoreConfig storeConfig = new StoreConfig();
         storeConfig.setMessage(new MessageConfig());
 
-        CommitLog commitLog = mock(CommitLog.class);
+        CommitLogFacade commitLogFacade = mock(CommitLogFacade.class);
         AckService ackService = mock(AckService.class);
         ConsumeQueueFacade consumeQueue = mock(ConsumeQueueFacade.class);
         ConsumerOffsetService consumerOffsetService = mock(ConsumerOffsetService.class);
@@ -38,7 +38,7 @@ class OffsetServiceTest {
 
         OffsetService service = new OffsetService(
             storeConfig,
-            commitLog,
+            commitLogFacade,
             ackService,
             consumeQueue,
             consumerOffsetService,
@@ -61,7 +61,7 @@ class OffsetServiceTest {
         StoreConfig storeConfig = new StoreConfig();
         storeConfig.setMessage(new MessageConfig());
 
-        CommitLog commitLog = mock(CommitLog.class);
+        CommitLogFacade commitLogFacade = mock(CommitLogFacade.class);
         AckService ackService = mock(AckService.class);
         ConsumeQueueFacade consumeQueue = mock(ConsumeQueueFacade.class);
         ConsumerOffsetService consumerOffsetService = mock(ConsumerOffsetService.class);
@@ -73,7 +73,7 @@ class OffsetServiceTest {
 
         OffsetService service = new OffsetService(
             storeConfig,
-            commitLog,
+            commitLogFacade,
             ackService,
             consumeQueue,
             consumerOffsetService,
@@ -98,7 +98,7 @@ class OffsetServiceTest {
         StoreConfig storeConfig = new StoreConfig();
         storeConfig.setMessage(new MessageConfig());
 
-        CommitLog commitLog = mock(CommitLog.class);
+        CommitLogFacade commitLogFacade = mock(CommitLogFacade.class);
         AckService ackService = mock(AckService.class);
         ConsumeQueueFacade consumeQueue = mock(ConsumeQueueFacade.class);
         ConsumerOffsetService consumerOffsetService = mock(ConsumerOffsetService.class);
@@ -106,7 +106,7 @@ class OffsetServiceTest {
 
         OffsetService service = new OffsetService(
             storeConfig,
-            commitLog,
+            commitLogFacade,
             ackService,
             consumeQueue,
             consumerOffsetService,

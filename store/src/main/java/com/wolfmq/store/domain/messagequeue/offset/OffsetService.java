@@ -3,12 +3,11 @@ package com.wolfmq.store.domain.messagequeue.offset;
 import com.wolfmq.common.config.business.MessageConfig;
 import com.wolfmq.common.config.server.StoreConfig;
 import com.wolfmq.common.domain.consumequeue.QueueUnit;
-import com.wolfmq.common.core.mmap.SelectedMappedBuffer;
 import com.wolfmq.common.domain.messagequeue.dto.DequeueRequest;
 import com.wolfmq.common.domain.messagequeue.dto.DequeueResult;
 import com.wolfmq.common.domain.consumer.consume.pop.helper.PopConverter;
 import com.wolfmq.common.domain.meta.order.OrderRequest;
-import com.wolfmq.common.domain.commitlog.CommitLog;
+import com.wolfmq.store.domain.commitlog.CommitLogFacade;
 import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueFacade;
 import com.wolfmq.common.domain.offset.ConsumerOffsetService;
 import com.wolfmq.common.domain.meta.service.ConsumeOrderService;
@@ -19,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 public class OffsetService {
     private final MessageConfig messageConfig;
 
-    private final CommitLog commitLog;
+    private final CommitLogFacade commitLogFacade;
     private final AckService ackService;
     private final ConsumeQueueFacade consumeQueue;
 
@@ -30,7 +29,7 @@ public class OffsetService {
 
     public OffsetService(
         StoreConfig storeConfig,
-        CommitLog commitLog,
+        CommitLogFacade commitLogFacade,
         AckService ackService,
         ConsumeQueueFacade consumeQueue,
         ConsumerOffsetService consumerOffsetService,
@@ -38,7 +37,7 @@ public class OffsetService {
     ) {
         this.messageConfig = storeConfig.getMessage();
 
-        this.commitLog = commitLog;
+        this.commitLogFacade = commitLogFacade;
         this.ackService = ackService;
         this.consumeQueue = consumeQueue;
 
@@ -180,11 +179,6 @@ public class OffsetService {
             return false;
         }
 
-        return isOffsetInCommitLog(firstUnit.getQueueOffset(), firstUnit.getMessageSize());
-    }
-
-    private boolean isOffsetInCommitLog(long offset, int size) {
-        SelectedMappedBuffer buffer = commitLog.selectBuffer(offset, size);
-        return buffer != null;
+        return commitLogFacade.existsOffset(firstUnit.getCommitOffset());
     }
 }
