@@ -62,6 +62,11 @@ public class MessageConst {
     public static final String PROPERTY_EXCHANGE_KEY = "EXCHANGE_KEY";
 
     /**
+     * commitlog shard id
+     */
+    public static final String PROPERTY_COMMITLOG_SHARD = "COMMITLOG_SHARD";
+
+    /**
      * client can set the unique key of the message
      * or the broker will set the value as uniqueID by SendMessageProcessor
      * use cases:
@@ -192,5 +197,8 @@ public class MessageConst {
         STRING_HASH_SET.add(PROPERTY_EVENT_TYPE);
         STRING_HASH_SET.add(PROPERTY_EVENT_NAME);
         STRING_HASH_SET.add(PROPERTY_EVENT_ID);
+
+        STRING_HASH_SET.add(PROPERTY_EXCHANGE_KEY);
+        STRING_HASH_SET.add(PROPERTY_COMMITLOG_SHARD);
     }
 }
