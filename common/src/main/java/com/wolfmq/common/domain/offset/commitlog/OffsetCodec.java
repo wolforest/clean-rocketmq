@@ -17,6 +17,10 @@ public class OffsetCodec {
     }
 
     public long encode(long offset) {
+        return encode(offset, this.shardId);
+    }
+
+    public long encode(long offset, int shardId) {
         if (offset < 0) {
             throw new IllegalArgumentException("offset can't be negative");
         }
