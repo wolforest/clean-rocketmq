@@ -40,7 +40,9 @@ public class CommitLogFacade {
     public MessageBO select(long offset, int size) {
         try {
             CommitLog commitLog = manager.selectByOffset(offset);
-            return commitLog.select(offset, size);
+
+            long position = offsetCodec.decode(offset);
+            return commitLog.select(position, size);
         } catch (EnqueueException e) {
             log.error("[CommitLogManager]select message failed: {}",  e.getMessage());
             return MessageBO.notFound();
