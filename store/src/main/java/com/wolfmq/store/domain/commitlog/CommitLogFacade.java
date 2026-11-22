@@ -81,6 +81,16 @@ public class CommitLogFacade {
         return commitLog.selectBuffer(position, size);
     }
 
+    public boolean existsOffset(long offset) {
+        try {
+            SelectedMappedBuffer buffer = selectBuffer(offset);
+            return buffer != null;
+        } catch (Exception e) {
+            log.error("CommitLog does not exists: {}",  e.getMessage());
+            return false;
+        }
+    }
+
     public long getMinOffset(int shardId) {
         long offset = manager.selectByShard(shardId)
             .getMinOffset();
