@@ -49,6 +49,10 @@ public class MessageBO extends Message implements Serializable {
     @Builder.Default
     private boolean appendPropertyCRC = false;
 
+    /**
+     * commitLog shard id, not stored in commitLog
+     */
+    private int commitShard = 0;
     private long commitOffset;
     /**
      * if StoreConfig.enablePreAssignOffset is true:

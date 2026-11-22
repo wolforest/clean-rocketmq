@@ -261,6 +261,7 @@ public class FileCommitLog implements CommitLog {
 
         commitOffset = offsetCodec.encode(commitOffset);
         messageBO.setCommitOffset(commitOffset);
+        messageBO.setCommitShard(this.shardId);
     }
 
     private void handleInsertError(InsertResult insertResult) {
