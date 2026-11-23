@@ -1,24 +1,24 @@
-package com.wolfmq.store.domain.commitlog.flush.handler;
+package com.wolfmq.store.domain.commitlog.flush.manager;
 
 import com.wolfmq.common.domain.message.MessageBO;
 import com.wolfmq.common.core.mmap.InsertResult;
 import com.wolfmq.common.core.mmap.MappedFileQueue;
 import com.wolfmq.common.domain.messagequeue.dto.EnqueueFuture;
-import com.wolfmq.store.domain.commitlog.file.flush.handler.EmptyFlushHandler;
+import com.wolfmq.store.domain.commitlog.file.flush.manager.EmptyFlushManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-public class EmptyFlushHandlerTest {
+public class EmptyFlushManagerTest {
 
-    private EmptyFlushHandler policy;
+    private EmptyFlushManager policy;
 
     @BeforeEach
     void setUp() {
         MappedFileQueue mappedFileQueue = mock(MappedFileQueue.class);
-        policy = new EmptyFlushHandler(mappedFileQueue);
+        policy = new EmptyFlushManager(mappedFileQueue);
     }
 
     @Test

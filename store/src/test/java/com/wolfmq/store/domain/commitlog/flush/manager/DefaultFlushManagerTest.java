@@ -1,4 +1,4 @@
-package com.wolfmq.store.domain.commitlog.flush.handler;
+package com.wolfmq.store.domain.commitlog.flush.manager;
 
 import com.wolfmq.common.config.store.CommitConfig;
 import com.wolfmq.common.domain.commitlog.flush.FlushType;
@@ -7,14 +7,15 @@ import com.wolfmq.common.domain.messagequeue.dto.EnqueueFuture;
 import com.wolfmq.common.core.mmap.InsertResult;
 import com.wolfmq.common.core.mmap.MappedFileQueue;
 import com.wolfmq.common.domain.offset.QueueProgress;
-import com.wolfmq.store.domain.commitlog.file.flush.handler.DefaultFlushHandler;
+import com.wolfmq.store.domain.commitlog.file.flush.manager.FlushManager;
+import com.wolfmq.store.domain.commitlog.file.flush.manager.DefaultFlushManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-public class FileFlushHandlerTest {
+public class DefaultFlushManagerTest {
 
     private CommitConfig commitConfig;
     private MappedFileQueue mappedFileQueue;
@@ -29,20 +30,20 @@ public class FileFlushHandlerTest {
 
     @Test
     void testConstructorWithShardId() {
-        DefaultFlushHandler policy = new DefaultFlushHandler(commitConfig, mappedFileQueue, queueProgress);
-        assertNotNull(policy);
+        DefaultFlushManager manager = new DefaultFlushManager(commitConfig, mappedFileQueue, queueProgress);
+        assertNotNull(manager);
     }
 
     @Test
     void testConstructorWithoutShardId() {
-        DefaultFlushHandler policy = new DefaultFlushHandler(commitConfig, mappedFileQueue, queueProgress);
-        assertNotNull(policy);
+        DefaultFlushManager manager = new DefaultFlushManager(commitConfig, mappedFileQueue, queueProgress);
+        assertNotNull(manager);
     }
 
     @Test
     void testAsyncFlushReturnsSuccess() {
         commitConfig.setFlushType(FlushType.ASYNC);
-        DefaultFlushHandler policy = new DefaultFlushHandler(commitConfig, mappedFileQueue, queueProgress);
+        DefaultFlushManager manager = new DefaultFlushManager(commitConfig, mappedFileQueue, queueProgress);
 
         InsertResult insertResult = mock(InsertResult.class);
         when(insertResult.getWroteOffset()).thenReturn(100L);
@@ -50,14 +51,14 @@ public class FileFlushHandlerTest {
         MessageBO messageBO = mock(MessageBO.class);
         when(messageBO.isWaitStore()).thenReturn(false);
 
-        EnqueueFuture future = policy.flush(insertResult, messageBO);
+        EnqueueFuture future = manager.flush(insertResult, messageBO);
         assertNotNull(future);
     }
 
     @Test
     void testSyncFlushWithoutWait() {
         commitConfig.setFlushType(FlushType.SYNC);
-        DefaultFlushHandler policy = new DefaultFlushHandler(commitConfig, mappedFileQueue, queueProgress);
+        DefaultFlushManager manager = new DefaultFlushManager(commitConfig, mappedFileQueue, queueProgress);
 
         InsertResult insertResult = mock(InsertResult.class);
         when(insertResult.getWroteOffset()).thenReturn(100L);
@@ -65,7 +66,7 @@ public class FileFlushHandlerTest {
         MessageBO messageBO = mock(MessageBO.class);
         when(messageBO.isWaitStore()).thenReturn(false);
 
-        EnqueueFuture future = policy.flush(insertResult, messageBO);
+        EnqueueFuture future = manager.flush(insertResult, messageBO);
         assertNotNull(future);
     }
 
@@ -73,7 +74,7 @@ public class FileFlushHandlerTest {
     void testSyncFlushWithWait() {
         commitConfig.setFlushType(FlushType.SYNC);
         commitConfig.setFlushTimeout(5000);
-        DefaultFlushHandler policy = new DefaultFlushHandler(commitConfig, mappedFileQueue, queueProgress);
+        DefaultFlushManager manager = new DefaultFlushManager(commitConfig, mappedFileQueue, queueProgress);
 
         InsertResult insertResult = mock(InsertResult.class);
         when(insertResult.getWroteOffset()).thenReturn(100L);
@@ -81,7 +82,7 @@ public class FileFlushHandlerTest {
         MessageBO messageBO = mock(MessageBO.class);
         when(messageBO.isWaitStore()).thenReturn(true);
 
-        EnqueueFuture future = policy.flush(insertResult, messageBO);
+        EnqueueFuture future = manager.flush(insertResult, messageBO);
         assertNotNull(future);
     }
 
@@ -89,7 +90,7 @@ public class FileFlushHandlerTest {
     void testAsyncFlushWithWriteCache() {
         commitConfig.setFlushType(FlushType.ASYNC);
         commitConfig.setEnableWriteCache(true);
-        DefaultFlushHandler policy = new DefaultFlushHandler(commitConfig, mappedFileQueue, queueProgress);
+        DefaultFlushManager manager = new DefaultFlushManager(commitConfig, mappedFileQueue, queueProgress);
 
         InsertResult insertResult = mock(InsertResult.class);
         when(insertResult.getWroteOffset()).thenReturn(100L);
@@ -97,14 +98,14 @@ public class FileFlushHandlerTest {
         MessageBO messageBO = mock(MessageBO.class);
         when(messageBO.isWaitStore()).thenReturn(false);
 
-        EnqueueFuture future = policy.flush(insertResult, messageBO);
+        EnqueueFuture future = manager.flush(insertResult, messageBO);
         assertNotNull(future);
     }
 
     @Test
     void testFlushWithZeroWroteBytes() {
         commitConfig.setFlushType(FlushType.ASYNC);
-        DefaultFlushHandler policy = new DefaultFlushHandler(commitConfig, mappedFileQueue, queueProgress);
+        DefaultFlushManager manager = new DefaultFlushManager(commitConfig, mappedFileQueue, queueProgress);
 
         InsertResult insertResult = mock(InsertResult.class);
         when(insertResult.getWroteOffset()).thenReturn(0L);
@@ -112,7 +113,7 @@ public class FileFlushHandlerTest {
         MessageBO messageBO = mock(MessageBO.class);
         when(messageBO.isWaitStore()).thenReturn(false);
 
-        EnqueueFuture future = policy.flush(insertResult, messageBO);
+        EnqueueFuture future = manager.flush(insertResult, messageBO);
         assertNotNull(future);
     }
 }

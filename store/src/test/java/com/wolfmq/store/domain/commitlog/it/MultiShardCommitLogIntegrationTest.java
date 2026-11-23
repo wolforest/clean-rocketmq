@@ -171,11 +171,12 @@ class MultiShardCommitLogIntegrationTest {
 
     @Test
     void testMultiShardMinMaxOffset() {
+        // min/max offsets are encoded global offsets: position * maxShardingNumber + shardId
         for (int shardId = 0; shardId < SHARD_COUNT; shardId++) {
-            assertEquals(0, commitLogStore.getMinOffset(shardId),
-                "minOffset for shard " + shardId + " should start at 0");
-            assertEquals(0, commitLogStore.getMaxOffset(shardId),
-                "maxOffset for shard " + shardId + " should start at 0");
+            assertEquals(shardId, commitLogStore.getMinOffset(shardId),
+                "minOffset for shard " + shardId + " should start at its shard id");
+            assertEquals(shardId, commitLogStore.getMaxOffset(shardId),
+                "maxOffset for shard " + shardId + " should start at its shard id");
         }
 
         byte[] data = "shard-offset-test".getBytes(StandardCharsets.UTF_8);
@@ -185,8 +186,8 @@ class MultiShardCommitLogIntegrationTest {
         assertTrue(maxOffsetShard0 > 0, "shard 0 maxOffset should increase after insert");
 
         for (int shardId = 1; shardId < SHARD_COUNT; shardId++) {
-            assertEquals(0, commitLogStore.getMaxOffset(shardId),
-                "shard " + shardId + " should still have maxOffset=0");
+            assertEquals(shardId, commitLogStore.getMaxOffset(shardId),
+                "shard " + shardId + " should still have maxOffset at its shard id");
         }
     }
 }

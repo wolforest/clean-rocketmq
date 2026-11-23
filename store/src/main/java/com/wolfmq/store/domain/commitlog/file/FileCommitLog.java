@@ -4,7 +4,7 @@ import com.wolfmq.common.config.server.StoreConfig;
 import com.wolfmq.common.core.constant.code.InvalidCode;
 import com.wolfmq.common.core.exception.InvalidRequestException;
 import com.wolfmq.common.domain.message.codec.MessageEncoder;
-import com.wolfmq.store.domain.commitlog.file.flush.handler.FlushHandler;
+import com.wolfmq.store.domain.commitlog.file.flush.manager.FlushManager;
 import com.wolfmq.common.domain.offset.QueueProgress;
 import com.wolfmq.common.domain.offset.commitlog.OffsetCodec;
 import com.wolfmq.store.domain.commitlog.vo.InsertContext;
@@ -47,7 +47,7 @@ public class FileCommitLog implements CommitLog {
     private final MessageConfig messageConfig;
 
     private final CommitLogRecovery commitLogRecovery;
-    private final FlushHandler flushPolicy;
+    private final FlushManager flushManager;
 
     @Getter
     private final MappedFileQueue mappedFileQueue;
@@ -58,16 +58,16 @@ public class FileCommitLog implements CommitLog {
         StoreConfig storeConfig,
         int shardId,
         MappedFileQueue mappedFileQueue,
-        FlushHandler flushPolicy
+        FlushManager flushManager
     ) {
-        this(storeConfig, shardId, mappedFileQueue, flushPolicy, null);
+        this(storeConfig, shardId, mappedFileQueue, flushManager, null);
     }
 
     public FileCommitLog(
         StoreConfig storeConfig,
         int shardId,
         MappedFileQueue mappedFileQueue,
-        FlushHandler flushPolicy,
+        FlushManager flushManager,
         QueueProgress queueProgress
     ) {
         this.storeConfig = storeConfig;
@@ -78,7 +78,7 @@ public class FileCommitLog implements CommitLog {
         this.offsetCodec = new OffsetCodec(shardId, commitConfig.getMaxShardingNumber());
 
         this.mappedFileQueue = mappedFileQueue;
-        this.flushPolicy = flushPolicy;
+        this.flushManager = flushManager;
         this.commitLogRecovery = new CommitLogRecovery(this, queueProgress);
 
         this.commitLogLock = new CommitLogReentrantLock();
@@ -112,7 +112,7 @@ public class FileCommitLog implements CommitLog {
             InsertResult insertResult = mappedFile.insert(messageBuffer);
             handleInsertError(insertResult);
 
-            return flushPolicy.flush(insertResult, messageBO);
+            return flushManager.flush(insertResult, messageBO);
         } catch (EnqueueException messageException) {
             return EnqueueFuture.failure(messageException.getStatus());
         } finally {
@@ -275,12 +275,12 @@ public class FileCommitLog implements CommitLog {
 
     @Override
     public void start() throws Exception {
-        flushPolicy.start();
+        flushManager.start();
     }
 
     @Override
     public void shutdown() throws Exception {
-        flushPolicy.shutdown();
+        flushManager.shutdown();
     }
 
     @Override

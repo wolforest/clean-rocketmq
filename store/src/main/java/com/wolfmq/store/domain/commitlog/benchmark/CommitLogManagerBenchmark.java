@@ -16,7 +16,7 @@ import com.wolfmq.common.domain.messagequeue.dto.EnqueueFuture;
 import com.wolfmq.common.core.mmap.MappedFileQueue;
 import com.wolfmq.common.testing.ConfigMock;
 import com.wolfmq.common.testing.MessageMock;
-import com.wolfmq.store.domain.commitlog.file.flush.handler.EmptyFlushHandler;
+import com.wolfmq.store.domain.commitlog.file.flush.manager.EmptyFlushManager;
 import com.wolfmq.store.domain.commitlog.CommitLogFacade;
 import com.wolfmq.store.domain.commitlog.file.CommitLogFactory;
 import com.wolfmq.store.domain.commitlog.file.CommitLogManager;
@@ -491,8 +491,8 @@ public class CommitLogManagerBenchmark {
 
     private static CommitLog createCommitLog(String dir, StoreConfig storeConfig, int shardId) {
         MappedFileQueue queue = new DefaultMappedFileQueue(dir, MMAP_FILE_SIZE);
-        var flushHandler = new EmptyFlushHandler(queue);
-        return new FileCommitLog(storeConfig, shardId, queue, flushHandler);
+        var flushManager = new EmptyFlushManager(queue);
+        return new FileCommitLog(storeConfig, shardId, queue, flushManager);
     }
 
     private static MessageBO createMessage(MessageEncoder encoder, String topic) {

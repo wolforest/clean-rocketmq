@@ -4,10 +4,10 @@ import cn.coderule.common.util.io.DirUtil;
 import com.wolfmq.common.config.server.StoreConfig;
 import com.wolfmq.common.config.store.CommitConfig;
 import com.wolfmq.common.domain.commitlog.CommitLog;
-import com.wolfmq.store.domain.commitlog.file.flush.handler.FlushHandler;
+import com.wolfmq.store.domain.commitlog.file.flush.manager.FlushManager;
+import com.wolfmq.store.domain.commitlog.file.flush.manager.DefaultFlushManager;
 import com.wolfmq.common.core.mmap.MappedFileQueue;
 import com.wolfmq.common.domain.offset.QueueProgress;
-import com.wolfmq.store.domain.commitlog.file.flush.handler.DefaultFlushHandler;
 import com.wolfmq.store.infra.file.AllocateMappedFileService;
 import com.wolfmq.store.infra.file.DefaultMappedFileQueue;
 import java.io.File;
@@ -46,8 +46,8 @@ public class CommitLogFactory {
 
     public CommitLog createByShardId(int shardId) {
         MappedFileQueue fileQueue = initMappedFileQueue(shardId);
-        FlushHandler flushPolicy = createFlushPolicy(fileQueue);
-        return new FileCommitLog(storeConfig, shardId, fileQueue, flushPolicy, queueProgress);
+        FlushManager flushManager = createFlushManager(fileQueue);
+        return new FileCommitLog(storeConfig, shardId, fileQueue, flushManager, queueProgress);
     }
 
     private DefaultMappedFileQueue initMappedFileQueue(int shardId) {
@@ -62,8 +62,8 @@ public class CommitLogFactory {
         return new DefaultMappedFileQueue(dir, commitConfig.getFileSize(), allocateService);
     }
 
-    private FlushHandler createFlushPolicy(MappedFileQueue mappedFileQueue) {
-        return new DefaultFlushHandler(commitConfig, mappedFileQueue, queueProgress);
+    private FlushManager createFlushManager(MappedFileQueue mappedFileQueue) {
+        return new DefaultFlushManager(commitConfig, mappedFileQueue, queueProgress);
     }
 
 

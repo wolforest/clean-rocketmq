@@ -1,4 +1,4 @@
-package com.wolfmq.store.domain.commitlog.file.flush.handler;
+package com.wolfmq.store.domain.commitlog.file.flush.manager;
 
 import com.wolfmq.common.domain.messagequeue.dto.EnqueueFuture;
 import com.wolfmq.common.core.mmap.InsertResult;
@@ -11,12 +11,12 @@ import lombok.extern.slf4j.Slf4j;
  * for testing
  */
 @Slf4j
-public class SyncFlushHandler implements FlushHandler {
+public class SyncFlushManager implements FlushManager {
     private static final int RETRY_TIMES = 10;
 
     private final MappedFileQueue mappedFileQueue;
 
-    public SyncFlushHandler(MappedFileQueue mappedFileQueue) {
+    public SyncFlushManager(MappedFileQueue mappedFileQueue) {
         this.mappedFileQueue = mappedFileQueue;
     }
 

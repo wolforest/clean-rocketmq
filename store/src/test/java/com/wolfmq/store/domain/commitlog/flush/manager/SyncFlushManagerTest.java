@@ -1,25 +1,25 @@
-package com.wolfmq.store.domain.commitlog.flush.handler;
+package com.wolfmq.store.domain.commitlog.flush.manager;
 
 import com.wolfmq.common.domain.message.MessageBO;
 import com.wolfmq.common.core.mmap.InsertResult;
 import com.wolfmq.common.core.mmap.MappedFileQueue;
 import com.wolfmq.common.domain.messagequeue.dto.EnqueueFuture;
-import com.wolfmq.store.domain.commitlog.file.flush.handler.SyncFlushHandler;
+import com.wolfmq.store.domain.commitlog.file.flush.manager.SyncFlushManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-public class SyncFlushHandlerTest {
+public class SyncFlushManagerTest {
 
     private MappedFileQueue mappedFileQueue;
-    private SyncFlushHandler policy;
+    private SyncFlushManager policy;
 
     @BeforeEach
     void setUp() {
         mappedFileQueue = mock(MappedFileQueue.class);
-        policy = new SyncFlushHandler(mappedFileQueue);
+        policy = new SyncFlushManager(mappedFileQueue);
     }
 
     @Test

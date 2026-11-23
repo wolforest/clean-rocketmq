@@ -1,4 +1,4 @@
-package com.wolfmq.store.domain.commitlog.file.flush.handler;
+package com.wolfmq.store.domain.commitlog.file.flush.manager;
 
 import com.wolfmq.common.domain.messagequeue.dto.EnqueueStatus;
 import com.wolfmq.common.domain.offset.QueueProgress;
@@ -26,14 +26,14 @@ import java.util.concurrent.CompletableFuture;
  *  - flush
  *  - start/shutdown
  */
-public class DefaultFlushHandler implements FlushHandler {
+public class DefaultFlushManager implements FlushManager {
     private final CommitConfig commitConfig;
 
     private final Flusher committer;
     private final Flusher flusher;
     private final FlushWatcher flushWatcher;
 
-    public DefaultFlushHandler(
+    public DefaultFlushManager(
         CommitConfig commitConfig,
         MappedFileQueue mappedFileQueue,
         QueueProgress queueProgress
