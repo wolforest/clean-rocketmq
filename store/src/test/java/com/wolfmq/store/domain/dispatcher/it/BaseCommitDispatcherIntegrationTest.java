@@ -121,6 +121,7 @@ public abstract class BaseCommitDispatcherIntegrationTest {
         context.register(partitioner);
         context.register(logManager);
         context.register(commitLogFacade);
+        context.register(queueProgress, QueueProgress.class);
 
         commitLogStore = new CommitLogStoreImpl(commitLogFacade);
 
@@ -152,7 +153,7 @@ public abstract class BaseCommitDispatcherIntegrationTest {
 
     protected CommitListener createCommitListener() {
         CommitLog commitLog = logManager.selectByShard(0);
-        return new CommitListener(dispatchQueue, commitLog, context.getBean(CheckPoint.class), storeConfig.getCommit());
+        return new CommitListener(dispatchQueue, commitLog, context.getBean(QueueProgress.class), storeConfig.getCommit());
     }
 
     protected AtomicInteger registerCountingHandler() {

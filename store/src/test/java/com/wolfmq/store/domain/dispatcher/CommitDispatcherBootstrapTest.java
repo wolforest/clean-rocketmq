@@ -1,5 +1,6 @@
 package com.wolfmq.store.domain.dispatcher;
 
+import com.wolfmq.common.domain.offset.QueueProgress;
 import com.wolfmq.common.domain.offset.checkpoint.bakeup.CheckPoint;
 
 
@@ -44,6 +45,7 @@ class CommitDispatcherBootstrapTest {
 
         context.register(storeConfig);
         StoreCheckpoint __cp = new StoreCheckpoint(anotherDir.toString()); context.register(__cp, CheckPoint.class);
+        context.register(mock(QueueProgress.class), QueueProgress.class);
 
         TopicService topicService = mock(TopicService.class);
         context.register(topicService, TopicService.class);

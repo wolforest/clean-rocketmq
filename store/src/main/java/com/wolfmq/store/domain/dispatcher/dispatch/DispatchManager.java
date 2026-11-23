@@ -3,7 +3,7 @@ package com.wolfmq.store.domain.dispatcher.dispatch;
 import cn.coderule.common.convention.service.Lifecycle;
 import com.wolfmq.common.config.store.CommitConfig;
 import com.wolfmq.common.domain.commitlog.CommitLog;
-import com.wolfmq.common.domain.offset.checkpoint.bakeup.CheckPoint;
+import com.wolfmq.common.domain.offset.QueueProgress;
 import com.wolfmq.store.domain.commitlog.file.CommitLogManager;
 import com.wolfmq.store.domain.dispatcher.CommitHandlerManager;
 import java.util.ArrayList;
@@ -17,7 +17,7 @@ import java.util.List;
 public class DispatchManager implements Lifecycle {
     private final CommitConfig config;
 
-    private final CheckPoint checkPoint;
+    private final QueueProgress queueProgress;
     private final DispatchQueue queue;
     private final CommitLogManager manager;
     private final CommitHandlerManager handlerManager;
@@ -27,12 +27,12 @@ public class DispatchManager implements Lifecycle {
 
     public DispatchManager(
         CommitConfig config,
-        CheckPoint checkPoint,
+        QueueProgress queueProgress,
         CommitLogManager manager,
         CommitHandlerManager handlerManager
     ) {
         this.config = config;
-        this.checkPoint = checkPoint;
+        this.queueProgress = queueProgress;
         this.manager = manager;
         this.handlerManager = handlerManager;
         this.queue = new DispatchQueue(config);
@@ -69,14 +69,14 @@ public class DispatchManager implements Lifecycle {
     private void createListeners() {
         for (int i = 0; i < config.getShardingNumber(); i++) {
             CommitLog commitLog = manager.selectByShard(i);
-            CommitListener listener = new CommitListener(queue, commitLog, checkPoint, config);
+            CommitListener listener = new CommitListener(queue, commitLog, queueProgress, config);
             listenerList.add(listener);
         }
     }
 
     private void createDispatchers() {
         for (int i = 0; i < config.getDispatchThreads(); i++) {
-            CommitDispatcher dispatcher = new CommitDispatcher(queue, handlerManager);
+            CommitDispatcher dispatcher = new CommitDispatcher(queue, handlerManager, queueProgress);
             dispatcherList.add(dispatcher);
         }
     }

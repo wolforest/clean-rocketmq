@@ -3,7 +3,7 @@ package com.wolfmq.store.domain.dispatcher;
 import com.wolfmq.common.config.store.CommitConfig;
 import com.wolfmq.common.domain.commitlog.CommitLog;
 import com.wolfmq.store.domain.commitlog.file.CommitLogManager;
-import com.wolfmq.common.domain.offset.checkpoint.bakeup.CheckPoint;
+import com.wolfmq.common.domain.offset.QueueProgress;
 import com.wolfmq.store.domain.dispatcher.dispatch.DispatchManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,7 +20,7 @@ class DispatchManagerTest {
     Path tmpDir;
 
     private CommitConfig config;
-    private CheckPoint checkPoint;
+    private QueueProgress queueProgress;
     private CommitLogManager commitLogManager;
     private CommitHandlerManager handlerManager;
     private DispatchManager dispatchManager;
@@ -31,8 +31,7 @@ class DispatchManagerTest {
         config.setShardingNumber(2);
         config.setDispatchThreads(3);
 
-        String checkpointPath = tmpDir.resolve("checkpoint").toString();
-        checkPoint = new StoreCheckpoint(checkpointPath);
+        queueProgress = mock(QueueProgress.class);
 
         commitLogManager = mock(CommitLogManager.class);
         for (int i = 0; i < 2; i++) {
@@ -47,13 +46,13 @@ class DispatchManagerTest {
 
     @Test
     void testInitialize_CreatesCorrectNumber() throws Exception {
-        dispatchManager = new DispatchManager(config, checkPoint, commitLogManager, handlerManager);
+        dispatchManager = new DispatchManager(config, queueProgress, commitLogManager, handlerManager);
         dispatchManager.initialize();
     }
 
     @Test
     void testInitialize_CreatesListeners() throws Exception {
-        dispatchManager = new DispatchManager(config, checkPoint, commitLogManager, handlerManager);
+        dispatchManager = new DispatchManager(config, queueProgress, commitLogManager, handlerManager);
         dispatchManager.initialize();
 
         verify(commitLogManager, times(config.getShardingNumber())).selectByShard(anyInt());
@@ -61,7 +60,7 @@ class DispatchManagerTest {
 
     @Test
     void testStartAll_StartsAllComponents() throws Exception {
-        dispatchManager = new DispatchManager(config, checkPoint, commitLogManager, handlerManager);
+        dispatchManager = new DispatchManager(config, queueProgress, commitLogManager, handlerManager);
         dispatchManager.initialize();
         dispatchManager.start();
 
@@ -72,7 +71,7 @@ class DispatchManagerTest {
 
     @Test
     void testShutdownAll_StopsAllComponents() throws Exception {
-        dispatchManager = new DispatchManager(config, checkPoint, commitLogManager, handlerManager);
+        dispatchManager = new DispatchManager(config, queueProgress, commitLogManager, handlerManager);
         dispatchManager.initialize();
         dispatchManager.start();
 
@@ -84,7 +83,7 @@ class DispatchManagerTest {
 
     @Test
     void testQueueShared() throws Exception {
-        dispatchManager = new DispatchManager(config, checkPoint, commitLogManager, handlerManager);
+        dispatchManager = new DispatchManager(config, queueProgress, commitLogManager, handlerManager);
         dispatchManager.initialize();
         dispatchManager.start();
 
@@ -96,7 +95,7 @@ class DispatchManagerTest {
     @Test
     void testZeroShardingNumber() throws Exception {
         config.setShardingNumber(0);
-        dispatchManager = new DispatchManager(config, checkPoint, commitLogManager, handlerManager);
+        dispatchManager = new DispatchManager(config, queueProgress, commitLogManager, handlerManager);
         dispatchManager.initialize();
 
         dispatchManager.start();
@@ -108,7 +107,7 @@ class DispatchManagerTest {
     @Test
     void testZeroDispatchThreads() throws Exception {
         config.setDispatchThreads(0);
-        dispatchManager = new DispatchManager(config, checkPoint, commitLogManager, handlerManager);
+        dispatchManager = new DispatchManager(config, queueProgress, commitLogManager, handlerManager);
         dispatchManager.initialize();
 
         dispatchManager.start();

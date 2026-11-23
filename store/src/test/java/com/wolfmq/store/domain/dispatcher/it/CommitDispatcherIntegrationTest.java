@@ -8,6 +8,7 @@ import com.wolfmq.common.testing.MessageMock;
 import com.wolfmq.store.domain.dispatcher.dispatch.CommitListener;
 import com.wolfmq.store.domain.dispatcher.dispatch.DispatchManager;
 import com.wolfmq.store.domain.dispatcher.dispatch.DispatchQueue;
+import com.wolfmq.common.domain.offset.QueueProgress;
 import com.wolfmq.common.domain.offset.checkpoint.bakeup.CheckPoint;
 import org.junit.jupiter.api.Test;
 
@@ -135,9 +136,9 @@ class CommitDispatcherIntegrationTest extends BaseCommitDispatcherIntegrationTes
         CommitConfig config = storeConfig.getCommit();
         config.setDispatchThreads(2);
 
-        CheckPoint checkpoint = context.getBean(CheckPoint.class);
+        QueueProgress queueProgress = context.getBean(QueueProgress.class);
         DispatchManager dispatchManager = new DispatchManager(
-            config, checkpoint, commitLogFacade.getManager(), handlerManager);
+            config, queueProgress, commitLogFacade.getManager(), handlerManager);
 
         AtomicInteger counter = registerCountingHandler();
 
@@ -222,9 +223,9 @@ class CommitDispatcherIntegrationTest extends BaseCommitDispatcherIntegrationTes
         CommitConfig config = storeConfig.getCommit();
         config.setDispatchThreads(1);
 
-        CheckPoint checkpoint = context.getBean(CheckPoint.class);
+        QueueProgress queueProgress = context.getBean(QueueProgress.class);
         DispatchManager dispatchManager = new DispatchManager(
-            config, checkpoint, commitLogFacade.getManager(), handlerManager);
+            config, queueProgress, commitLogFacade.getManager(), handlerManager);
 
         dispatchManager.initialize();
         dispatchManager.start();

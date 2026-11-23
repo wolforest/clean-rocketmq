@@ -3,6 +3,7 @@ package com.wolfmq.store.domain.dispatcher.dispatch;
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 import cn.coderule.common.util.lang.ThreadUtil;
 import com.wolfmq.common.domain.commitlog.dispatch.CommitEvent;
+import com.wolfmq.common.domain.offset.QueueProgress;
 import com.wolfmq.store.domain.dispatcher.CommitHandlerManager;
 import lombok.extern.slf4j.Slf4j;
 
@@ -15,10 +16,16 @@ import lombok.extern.slf4j.Slf4j;
 public class CommitDispatcher extends ServiceThread {
     private final DispatchQueue queue;
     private final CommitHandlerManager handlerManager;
+    private final QueueProgress queueProgress;
 
-    public CommitDispatcher(DispatchQueue queue, CommitHandlerManager handlerManager) {
+    public CommitDispatcher(
+        DispatchQueue queue,
+        CommitHandlerManager handlerManager,
+        QueueProgress queueProgress
+    ) {
         this.queue = queue;
         this.handlerManager = handlerManager;
+        this.queueProgress = queueProgress;
     }
 
     @Override

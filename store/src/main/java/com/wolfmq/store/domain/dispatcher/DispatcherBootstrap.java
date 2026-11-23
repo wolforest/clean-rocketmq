@@ -3,7 +3,7 @@ package com.wolfmq.store.domain.dispatcher;
 import cn.coderule.common.convention.service.Lifecycle;
 import com.wolfmq.common.config.server.StoreConfig;
 import com.wolfmq.common.config.store.CommitConfig;
-import com.wolfmq.common.domain.offset.checkpoint.bakeup.CheckPoint;
+import com.wolfmq.common.domain.offset.QueueProgress;
 import com.wolfmq.store.domain.commitlog.file.CommitLogManager;
 import cn.coderule.common.convention.container.ApplicationContext;
 import com.wolfmq.store.domain.dispatcher.dispatch.DispatchManager;
@@ -24,14 +24,14 @@ public class DispatcherBootstrap implements Lifecycle {
     public void initialize() throws Exception {
         StoreConfig storeConfig = context.getBean(StoreConfig.class);
         CommitConfig commitConfig = storeConfig.getCommit();
-        CheckPoint checkPoint = context.getBean(CheckPoint.class);
+        QueueProgress queueProgress = context.getBean(QueueProgress.class);
         CommitLogManager commitLogManager = context.getBean(CommitLogManager.class);
 
         CommitHandlerManager handlerManager = new CommitHandlerManager();
         context.register(handlerManager);
 
         dispatchManager = new DispatchManager(
-            commitConfig, checkPoint, commitLogManager, handlerManager);
+            commitConfig, queueProgress, commitLogManager, handlerManager);
         context.register(dispatchManager);
     }
 
