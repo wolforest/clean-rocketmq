@@ -23,7 +23,7 @@ public class DispatchManager implements Lifecycle {
     private final CommitHandlerManager handlerManager;
 
     private final List<CommitListener> listenerList = new ArrayList<>();
-    private final List<Dispatcher> dispatcherList = new ArrayList<>();
+    private final List<CommitDispatcher> dispatcherList = new ArrayList<>();
 
     public DispatchManager(
         CommitConfig config,
@@ -50,14 +50,14 @@ public class DispatchManager implements Lifecycle {
             listener.start();
         }
 
-        for (Dispatcher dispatcher : dispatcherList) {
+        for (CommitDispatcher dispatcher : dispatcherList) {
             dispatcher.start();
         }
     }
 
     @Override
     public void shutdown() throws Exception {
-        for (Dispatcher dispatcher : dispatcherList) {
+        for (CommitDispatcher dispatcher : dispatcherList) {
             dispatcher.shutdown();
         }
 
@@ -76,7 +76,7 @@ public class DispatchManager implements Lifecycle {
 
     private void createDispatchers() {
         for (int i = 0; i < config.getDispatchThreads(); i++) {
-            Dispatcher dispatcher = new Dispatcher(queue, handlerManager);
+            CommitDispatcher dispatcher = new CommitDispatcher(queue, handlerManager);
             dispatcherList.add(dispatcher);
         }
     }

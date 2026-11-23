@@ -17,7 +17,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class DispatcherIntegrationTest extends BaseDispatcherIntegrationTest {
+class CommitDispatcherIntegrationTest extends BaseCommitDispatcherIntegrationTest {
 
     @Test
     void testCommitListenerDispatchedOffsetInitialization() {

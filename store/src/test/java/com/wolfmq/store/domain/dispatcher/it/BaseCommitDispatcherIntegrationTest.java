@@ -31,7 +31,7 @@ import org.junit.jupiter.api.io.TempDir;
 import java.nio.file.Path;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public abstract class BaseDispatcherIntegrationTest {
+public abstract class BaseCommitDispatcherIntegrationTest {
     protected ApplicationContext context = new ApplicationContext();
 
 

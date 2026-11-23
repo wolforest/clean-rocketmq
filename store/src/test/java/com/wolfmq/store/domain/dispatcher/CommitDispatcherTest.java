@@ -3,7 +3,7 @@ package com.wolfmq.store.domain.dispatcher;
 import com.wolfmq.common.domain.commitlog.dispatch.CommitEvent;
 import com.wolfmq.common.testing.MessageMock;
 import com.wolfmq.store.domain.dispatcher.dispatch.DispatchQueue;
-import com.wolfmq.store.domain.dispatcher.dispatch.Dispatcher;
+import com.wolfmq.store.domain.dispatcher.dispatch.CommitDispatcher;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class DispatcherTest {
+class CommitDispatcherTest {
 
     private DispatchQueue queue;
     private CommitHandlerManager handlerManager;
@@ -24,14 +24,14 @@ class DispatcherTest {
 
     @Test
     void testGetServiceName() {
-        Dispatcher dispatcher = new Dispatcher(queue, handlerManager);
+        CommitDispatcher dispatcher = new CommitDispatcher(queue, handlerManager);
 
         assertEquals("Dispatcher", dispatcher.getServiceName());
     }
 
     @Test
     void testLifecycle() throws Exception {
-        Dispatcher dispatcher = new Dispatcher(queue, handlerManager);
+        CommitDispatcher dispatcher = new CommitDispatcher(queue, handlerManager);
 
         dispatcher.start();
         Thread.sleep(50);
@@ -46,7 +46,7 @@ class DispatcherTest {
 
     @Test
     void testDispatch_EmptyQueue() throws Exception {
-        Dispatcher dispatcher = new Dispatcher(queue, handlerManager);
+        CommitDispatcher dispatcher = new CommitDispatcher(queue, handlerManager);
 
         dispatcher.start();
         Thread.sleep(100);
@@ -59,7 +59,7 @@ class DispatcherTest {
         AtomicInteger counter = new AtomicInteger(0);
         handlerManager.registerHandler((CommitEvent event) -> counter.incrementAndGet());
 
-        Dispatcher dispatcher = new Dispatcher(queue, handlerManager);
+        CommitDispatcher dispatcher = new CommitDispatcher(queue, handlerManager);
         dispatcher.start();
 
         queue.put(CommitEvent.of(MessageMock.createMessage()));
@@ -76,7 +76,7 @@ class DispatcherTest {
         AtomicInteger counter = new AtomicInteger(0);
         handlerManager.registerHandler((CommitEvent event) -> counter.incrementAndGet());
 
-        Dispatcher dispatcher = new Dispatcher(queue, handlerManager);
+        CommitDispatcher dispatcher = new CommitDispatcher(queue, handlerManager);
         dispatcher.start();
 
         for (int i = 0; i < 5; i++) {

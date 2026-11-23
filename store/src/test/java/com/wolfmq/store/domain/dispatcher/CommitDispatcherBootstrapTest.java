@@ -23,7 +23,7 @@ import org.junit.jupiter.api.io.TempDir;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-class DispatcherBootstrapTest {
+class CommitDispatcherBootstrapTest {
     protected ApplicationContext context = new ApplicationContext();
 
 

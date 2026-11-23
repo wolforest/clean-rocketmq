@@ -7,22 +7,23 @@ import com.wolfmq.store.domain.dispatcher.CommitHandlerManager;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * @renamed from CommitDispatcher to Dispatcher
  * @renamed from CommitEventDispatcher to CommitDispatcher
+ * @renamed from CommitDispatcher to Dispatcher
+ * @renamed from Dispatcher to CommitDispatcher
  */
 @Slf4j
-public class Dispatcher extends ServiceThread {
+public class CommitDispatcher extends ServiceThread {
     private final DispatchQueue queue;
     private final CommitHandlerManager handlerManager;
 
-    public Dispatcher(DispatchQueue queue, CommitHandlerManager handlerManager) {
+    public CommitDispatcher(DispatchQueue queue, CommitHandlerManager handlerManager) {
         this.queue = queue;
         this.handlerManager = handlerManager;
     }
 
     @Override
     public String getServiceName() {
-        return Dispatcher.class.getSimpleName();
+        return CommitDispatcher.class.getSimpleName();
     }
 
     @Override
