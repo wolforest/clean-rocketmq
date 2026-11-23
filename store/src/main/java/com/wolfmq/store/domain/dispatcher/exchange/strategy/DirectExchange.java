@@ -5,7 +5,7 @@ import com.wolfmq.store.domain.dispatcher.exchange.Exchange;
 
 public class DirectExchange implements Exchange {
     @Override
-    public void exchange(MessageBO messageBO) {
+    public void route(MessageBO messageBO) {
 
     }
 }

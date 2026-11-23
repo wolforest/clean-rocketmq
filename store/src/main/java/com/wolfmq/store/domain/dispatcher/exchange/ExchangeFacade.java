@@ -4,7 +4,7 @@ import com.wolfmq.common.domain.message.MessageBO;
 
 public class ExchangeFacade implements Exchange {
     @Override
-    public void exchange(MessageBO messageBO) {
+    public void route(MessageBO messageBO) {
 
     }
 }
