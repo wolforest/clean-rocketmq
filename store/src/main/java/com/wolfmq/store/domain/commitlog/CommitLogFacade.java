@@ -38,7 +38,8 @@ public class CommitLogFacade {
     }
 
     /**
-     * insert byte data to commitlog
+     * insert byte data to commitlog.
+     * slave use this method to append data pull from master.
      *
      * @param offset commitOffset, to locate commitLog, but useless while insert
      * @param data data
