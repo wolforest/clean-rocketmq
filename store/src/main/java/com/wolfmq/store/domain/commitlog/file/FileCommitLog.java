@@ -121,7 +121,7 @@ public class FileCommitLog implements CommitLog {
     }
 
     @Override
-    public InsertResult insert(long offset, byte[] data, int start, int size) {
+    public InsertResult insert(long offset, byte[] data, int dataStart, int dataSize) {
         this.commitLogLock.lock();
         try {
             MappedFile mappedFile = mappedFileQueue.getMappedFileByOffset(offset);
@@ -129,7 +129,7 @@ public class FileCommitLog implements CommitLog {
                 return InsertResult.failure();
             }
 
-            return mappedFile.insert(data, start, size);
+            return mappedFile.insert(data, dataStart, dataSize);
         } catch (Exception e) {
             log.error("commitLog insert error", e);
             return InsertResult.failure();

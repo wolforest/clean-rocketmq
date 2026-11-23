@@ -53,11 +53,11 @@ public interface CommitLog extends Lifecycle {
      *
      * @param offset commitLog offset
      * @param data data
-     * @param start data start position
-     * @param size data size
+     * @param dataStart data start position
+     * @param dataSize data size
      * @return insert result
      */
-    InsertResult insert(long offset, byte[] data, int start, int size);
+    InsertResult insert(long offset, byte[] data, int dataStart, int dataSize);
 
     /**
      * Raw data selection for M/S mode

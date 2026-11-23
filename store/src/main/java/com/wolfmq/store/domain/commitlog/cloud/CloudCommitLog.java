@@ -48,7 +48,7 @@ public class CloudCommitLog implements CommitLog {
     }
 
     @Override
-    public InsertResult insert(long offset, byte[] data, int start, int size) {
+    public InsertResult insert(long offset, byte[] data, int dataStart, int dataSize) {
         return null;
     }
 
