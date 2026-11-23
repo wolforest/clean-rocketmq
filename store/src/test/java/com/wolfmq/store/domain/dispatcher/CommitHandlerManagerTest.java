@@ -2,6 +2,7 @@ package com.wolfmq.store.domain.dispatcher;
 
 import com.wolfmq.common.domain.commitlog.dispatch.CommitEvent;
 import com.wolfmq.common.domain.commitlog.dispatch.CommitHandler;
+import com.wolfmq.common.domain.offset.QueueProgress;
 import com.wolfmq.common.testing.MessageMock;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 class CommitHandlerManagerTest {
 
@@ -16,7 +18,7 @@ class CommitHandlerManagerTest {
 
     @BeforeEach
     void setUp() {
-        manager = new CommitHandlerManager();
+        manager = new CommitHandlerManager(mock(QueueProgress.class));
     }
 
     @Test
@@ -45,8 +47,8 @@ class CommitHandlerManagerTest {
         AtomicInteger counter1 = new AtomicInteger(0);
         AtomicInteger counter2 = new AtomicInteger(0);
 
-        manager.register((CommitEvent event) -> counter1.incrementAndGet());
-        manager.register((CommitEvent event) -> counter2.incrementAndGet());
+        manager.register((CommitEvent _) -> counter1.incrementAndGet());
+        manager.register((CommitEvent _) -> counter2.incrementAndGet());
 
         manager.handle(CommitEvent.of(MessageMock.createMessage()));
 
@@ -64,7 +66,7 @@ class CommitHandlerManagerTest {
     @Test
     void testHandle_MultipleEvents() {
         AtomicInteger counter = new AtomicInteger(0);
-        manager.register((CommitEvent event) -> counter.incrementAndGet());
+        manager.register((CommitEvent _) -> counter.incrementAndGet());
 
         for (int i = 0; i < 5; i++) {
             manager.handle(CommitEvent.of(MessageMock.createMessage()));
@@ -76,9 +78,9 @@ class CommitHandlerManagerTest {
     @Test
     void testHandle_MultipleHandlers() {
         AtomicInteger sum = new AtomicInteger(0);
-        manager.register((CommitEvent event) -> sum.addAndGet(1));
-        manager.register((CommitEvent event) -> sum.addAndGet(10));
-        manager.register((CommitEvent event) -> sum.addAndGet(100));
+        manager.register((CommitEvent _) -> sum.addAndGet(1));
+        manager.register((CommitEvent _) -> sum.addAndGet(10));
+        manager.register((CommitEvent _) -> sum.addAndGet(100));
 
         manager.handle(CommitEvent.of(MessageMock.createMessage()));
 
@@ -88,7 +90,7 @@ class CommitHandlerManagerTest {
     @Test
     void testMultipleRegistrations() {
         AtomicInteger counter = new AtomicInteger(0);
-        CommitHandler handler = event -> counter.incrementAndGet();
+        CommitHandler handler = _ -> counter.incrementAndGet();
 
         manager.register(handler);
         manager.register(handler);

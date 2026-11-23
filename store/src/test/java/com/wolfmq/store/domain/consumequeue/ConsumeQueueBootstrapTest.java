@@ -3,6 +3,7 @@ package com.wolfmq.store.domain.consumequeue;
 import com.wolfmq.common.domain.offset.checkpoint.bakeup.CheckPoint;
 
 
+import com.wolfmq.common.domain.offset.QueueProgress;
 import cn.coderule.common.convention.container.ApplicationContext;
 
 import com.wolfmq.common.config.server.StoreConfig;
@@ -24,10 +25,6 @@ import static org.mockito.Mockito.*;
 class ConsumeQueueBootstrapTest {
     protected ApplicationContext context = new ApplicationContext();
 
-
-    @TempDir
-    Path tempDir;
-
     @BeforeEach
     void setUp() {
     }
@@ -48,7 +45,7 @@ class ConsumeQueueBootstrapTest {
         TopicService topicService = mock(TopicService.class);
         context.register(topicService, TopicService.class);
 
-        CommitHandlerManager handlerManager = new CommitHandlerManager();
+        CommitHandlerManager handlerManager = new CommitHandlerManager(mock(QueueProgress.class));
         context.register(handlerManager);
 
         ConsumeQueueBootstrap bootstrap = new ConsumeQueueBootstrap(context);

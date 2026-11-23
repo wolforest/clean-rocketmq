@@ -1,6 +1,7 @@
 package com.wolfmq.store.domain.index;
 
 
+import com.wolfmq.common.domain.offset.QueueProgress;
 import cn.coderule.common.convention.container.ApplicationContext;
 
 import com.wolfmq.common.config.server.StoreConfig;
@@ -12,16 +13,14 @@ import java.nio.file.Path;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import static org.mockito.Mockito.*;
 import org.junit.jupiter.api.io.TempDir;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class IndexBootstrapTest {
     protected ApplicationContext context = new ApplicationContext();
-
-
-    @TempDir
-    Path tempDir;
 
     @BeforeEach
     void setUp() {
@@ -37,7 +36,7 @@ class IndexBootstrapTest {
         storeConfig.setIndex(new IndexConfig());
 
         context.register(storeConfig);
-        CommitHandlerManager handlerManager = new CommitHandlerManager();
+        CommitHandlerManager handlerManager = new CommitHandlerManager(mock(QueueProgress.class));
         context.register(handlerManager);
 
         IndexBootstrap bootstrap = new IndexBootstrap(context);
@@ -50,8 +49,8 @@ class IndexBootstrapTest {
     }
 
     @Test
-    void shutdown_ShouldNotThrowWhenServiceNotInitialized() throws Exception {
+    void shutdown_ShouldNotThrowWhenServiceNotInitialized() {
         IndexBootstrap bootstrap = new IndexBootstrap(context);
-        assertDoesNotThrow(() -> bootstrap.shutdown());
+        assertDoesNotThrow(bootstrap::shutdown);
     }
 }

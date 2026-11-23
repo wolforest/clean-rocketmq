@@ -1,7 +1,6 @@
 package com.wolfmq.store.domain.dispatcher;
 
 import com.wolfmq.common.config.store.CommitConfig;
-import com.wolfmq.common.domain.commitlog.CommitLog;
 import com.wolfmq.common.domain.offset.commitlog.OffsetCodec;
 import com.wolfmq.store.domain.commitlog.file.FileCommitLog;
 import com.wolfmq.store.domain.commitlog.file.CommitLogManager;
@@ -10,8 +9,6 @@ import com.wolfmq.store.domain.dispatcher.dispatch.DispatchManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-import com.wolfmq.store.server.bootstrap.StoreCheckpoint;
-
 import java.nio.file.Path;
 
 import static org.mockito.Mockito.*;
@@ -44,7 +41,7 @@ class DispatchManagerTest {
             when(commitLogManager.selectByShard(i)).thenReturn(mockLog);
         }
 
-        handlerManager = new CommitHandlerManager();
+        handlerManager = new CommitHandlerManager(queueProgress);
     }
 
     @Test

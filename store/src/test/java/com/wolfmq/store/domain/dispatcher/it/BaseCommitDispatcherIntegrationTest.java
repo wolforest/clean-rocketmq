@@ -47,6 +47,7 @@ public abstract class BaseCommitDispatcherIntegrationTest {
     protected CommitLogStore commitLogStore;
     protected CommitHandlerManager handlerManager;
     protected DispatchQueue dispatchQueue;
+    protected QueueProgress queueProgress;
 
     @BeforeEach
     void setUpInfrastructure() throws Exception {
@@ -69,7 +70,7 @@ public abstract class BaseCommitDispatcherIntegrationTest {
 
         initCommitLog();
 
-        handlerManager = new CommitHandlerManager();
+        handlerManager = new CommitHandlerManager(queueProgress);
         dispatchQueue = new DispatchQueue(storeConfig.getCommit());
     }
 
@@ -109,7 +110,7 @@ public abstract class BaseCommitDispatcherIntegrationTest {
     }
 
     private void initCommitLog() {
-        QueueProgress queueProgress = createQueueProgress();
+        queueProgress = createQueueProgress();
         CommitConfig commitConfig = storeConfig.getCommit();
 
         CommitLogFactory factory = new CommitLogFactory(storeConfig, queueProgress, allocateService);
@@ -158,7 +159,7 @@ public abstract class BaseCommitDispatcherIntegrationTest {
 
     protected AtomicInteger registerCountingHandler() {
         AtomicInteger counter = new AtomicInteger(0);
-        handlerManager.register(event -> counter.incrementAndGet());
+        handlerManager.register(_ -> counter.incrementAndGet());
         return counter;
     }
 }

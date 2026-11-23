@@ -22,7 +22,7 @@ class CommitDispatcherTest {
     @BeforeEach
     void setUp() {
         queue = new DispatchQueue(new com.wolfmq.common.config.store.CommitConfig());
-        handlerManager = new CommitHandlerManager();
+        handlerManager = new CommitHandlerManager(queueProgress);
         queueProgress = mock(QueueProgress.class);
     }
 
@@ -61,7 +61,7 @@ class CommitDispatcherTest {
     @Test
     void testDispatch_WithHandler() throws Exception {
         AtomicInteger counter = new AtomicInteger(0);
-        handlerManager.register((CommitEvent event) -> counter.incrementAndGet());
+        handlerManager.register((CommitEvent _) -> counter.incrementAndGet());
 
         CommitDispatcher dispatcher = new CommitDispatcher(queue, handlerManager, queueProgress);
         dispatcher.start();
@@ -78,7 +78,7 @@ class CommitDispatcherTest {
     @Test
     void testDispatch_MultipleEvents() throws Exception {
         AtomicInteger counter = new AtomicInteger(0);
-        handlerManager.register((CommitEvent event) -> counter.incrementAndGet());
+        handlerManager.register((CommitEvent _) -> counter.incrementAndGet());
 
         CommitDispatcher dispatcher = new CommitDispatcher(queue, handlerManager, queueProgress);
         dispatcher.start();

@@ -27,11 +27,12 @@ public class DispatcherBootstrap implements Lifecycle {
         QueueProgress queueProgress = context.getBean(QueueProgress.class);
         CommitLogManager commitLogManager = context.getBean(CommitLogManager.class);
 
-        CommitHandlerManager handlerManager = new CommitHandlerManager();
+        CommitHandlerManager handlerManager = new CommitHandlerManager(queueProgress);
         context.register(handlerManager);
 
         dispatchManager = new DispatchManager(
-            commitConfig, queueProgress, commitLogManager, handlerManager);
+            commitConfig, queueProgress, commitLogManager, handlerManager
+        );
         context.register(dispatchManager);
     }
 
