@@ -37,6 +37,22 @@ public class CommitLogFacade {
         }
     }
 
+    /**
+     * insert byte data to commitlog
+     *
+     * @param offset commitOffset, to locate commitLog, but useless while insert
+     * @param data data
+     * @param dataStart dataStart
+     * @param insertSize insertSize
+     * @return insertResult
+     */
+    public InsertResult insert(long offset, byte[] data, int dataStart, int insertSize) {
+        CommitLog commitLog = manager.selectByOffset(offset);
+
+        long position = offsetCodec.decode(offset);
+        return commitLog.insert(position, data, dataStart, insertSize);
+    }
+
     public MessageBO select(long offset, int size) {
         try {
             CommitLog commitLog = manager.selectByOffset(offset);
@@ -58,13 +74,6 @@ public class CommitLogFacade {
         } catch (EnqueueException e) {
             return MessageBO.notFound();
         }
-    }
-
-    public InsertResult insert(long offset, byte[] data, int start, int size) {
-        CommitLog commitLog = manager.selectByOffset(offset);
-
-        long position = offsetCodec.decode(offset);
-        return commitLog.insert(position, data, start, size);
     }
 
     public SelectedMappedBuffer selectBuffer(long offset) {
