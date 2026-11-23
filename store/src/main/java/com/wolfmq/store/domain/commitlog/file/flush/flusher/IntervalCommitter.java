@@ -15,7 +15,8 @@ public class IntervalCommitter extends Flusher {
     public IntervalCommitter(
         CommitConfig config,
         MappedFileQueue mappedFileQueue,
-        Flusher flusher) {
+        Flusher flusher
+    ) {
 
         this.config = config;
         this.mappedFileQueue = mappedFileQueue;
