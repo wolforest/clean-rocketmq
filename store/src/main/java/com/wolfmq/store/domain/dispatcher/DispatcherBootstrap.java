@@ -6,7 +6,7 @@ import com.wolfmq.common.config.store.CommitConfig;
 import com.wolfmq.common.domain.offset.checkpoint.bakeup.CheckPoint;
 import com.wolfmq.store.domain.commitlog.file.CommitLogManager;
 import cn.coderule.common.convention.container.ApplicationContext;
-import com.wolfmq.store.domain.dispatcher.exchange.DispatchManager;
+import com.wolfmq.store.domain.dispatcher.dispatch.DispatchManager;
 
 /**
  * @renamed from CommitLogDispatcherBootstrap to DispatcherBootstrap
