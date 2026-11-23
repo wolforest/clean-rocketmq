@@ -4,6 +4,7 @@ import com.wolfmq.common.domain.message.MessageBO;
 import com.wolfmq.common.core.mmap.InsertResult;
 import com.wolfmq.common.core.mmap.MappedFileQueue;
 import com.wolfmq.common.domain.messagequeue.dto.EnqueueFuture;
+import com.wolfmq.store.domain.commitlog.file.flush.handler.EmptyFlushHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

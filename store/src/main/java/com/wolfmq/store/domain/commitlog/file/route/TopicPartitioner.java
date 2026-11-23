@@ -1,4 +1,4 @@
-package com.wolfmq.store.domain.commitlog.route;
+package com.wolfmq.store.domain.commitlog.file.route;
 
 import cn.coderule.common.util.lang.string.StringUtil;
 import com.wolfmq.common.config.store.CommitConfig;

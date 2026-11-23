@@ -4,7 +4,7 @@ import com.wolfmq.common.config.server.StoreConfig;
 import com.wolfmq.common.core.constant.code.InvalidCode;
 import com.wolfmq.common.core.exception.InvalidRequestException;
 import com.wolfmq.common.domain.message.codec.MessageEncoder;
-import com.wolfmq.store.domain.commitlog.flush.handler.FlushHandler;
+import com.wolfmq.store.domain.commitlog.file.flush.handler.FlushHandler;
 import com.wolfmq.common.domain.offset.QueueProgress;
 import com.wolfmq.common.domain.offset.commitlog.OffsetCodec;
 import com.wolfmq.store.domain.commitlog.vo.InsertContext;

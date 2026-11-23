@@ -21,7 +21,7 @@ import com.wolfmq.store.domain.commitlog.file.CommitLogFactory;
 import com.wolfmq.store.domain.commitlog.file.FileCommitLog;
 import com.wolfmq.store.domain.commitlog.CommitLogFacade;
 import com.wolfmq.store.domain.commitlog.file.CommitLogManager;
-import com.wolfmq.store.domain.commitlog.route.TopicPartitioner;
+import com.wolfmq.store.domain.commitlog.file.route.TopicPartitioner;
 import com.wolfmq.store.infra.file.AllocateMappedFileService;
 import com.wolfmq.store.server.bootstrap.StoreCheckpoint;
 import org.junit.jupiter.api.AfterEach;

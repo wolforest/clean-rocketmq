@@ -1,4 +1,4 @@
-package com.wolfmq.store.domain.commitlog.flush.handler;
+package com.wolfmq.store.domain.commitlog.file.flush.handler;
 
 import com.wolfmq.common.domain.message.MessageBO;
 import com.wolfmq.common.domain.messagequeue.dto.EnqueueFuture;

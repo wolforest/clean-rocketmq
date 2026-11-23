@@ -1,4 +1,4 @@
-package com.wolfmq.store.domain.commitlog.flush.flusher;
+package com.wolfmq.store.domain.commitlog.file.flush.flusher;
 
 import com.wolfmq.common.domain.offset.QueueProgress;
 import com.wolfmq.store.domain.commitlog.vo.GroupCommitRequest;

@@ -19,7 +19,7 @@ import com.wolfmq.store.domain.commitlog.file.CommitLogFactory;
 import com.wolfmq.store.domain.commitlog.file.FileCommitLog;
 import com.wolfmq.store.domain.commitlog.CommitLogFacade;
 import com.wolfmq.store.domain.commitlog.file.CommitLogManager;
-import com.wolfmq.store.domain.commitlog.route.TopicPartitioner;
+import com.wolfmq.store.domain.commitlog.file.route.TopicPartitioner;
 import com.wolfmq.store.domain.dispatcher.CommitHandlerManager;
 import com.wolfmq.store.domain.dispatcher.dispatch.CommitListener;
 import com.wolfmq.store.domain.dispatcher.dispatch.DispatchQueue;
