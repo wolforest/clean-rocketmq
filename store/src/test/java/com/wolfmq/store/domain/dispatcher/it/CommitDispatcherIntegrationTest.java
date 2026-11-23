@@ -71,8 +71,8 @@ class CommitDispatcherIntegrationTest extends BaseCommitDispatcherIntegrationTes
         AtomicInteger counter1 = new AtomicInteger(0);
         AtomicInteger counter2 = new AtomicInteger(0);
 
-        handlerManager.registerHandler(event -> counter1.incrementAndGet());
-        handlerManager.registerHandler(event -> counter2.incrementAndGet());
+        handlerManager.register(event -> counter1.incrementAndGet());
+        handlerManager.register(event -> counter2.incrementAndGet());
 
         MessageBO message = MessageMock.createMessage();
         CommitEvent event = CommitEvent.of(message);
@@ -86,7 +86,7 @@ class CommitDispatcherIntegrationTest extends BaseCommitDispatcherIntegrationTes
     @Test
     void testCommitHandlerManagerMultipleEvents() {
         AtomicInteger counter = new AtomicInteger(0);
-        handlerManager.registerHandler(event -> counter.incrementAndGet());
+        handlerManager.register(event -> counter.incrementAndGet());
 
         for (int i = 0; i < 5; i++) {
             handlerManager.handle(CommitEvent.of(MessageMock.createMessage()));
@@ -155,7 +155,7 @@ class CommitDispatcherIntegrationTest extends BaseCommitDispatcherIntegrationTes
     @Test
     void testEndToEndPipeline() throws Exception {
         List<String> dispatchedTopics = new CopyOnWriteArrayList<>();
-        handlerManager.registerHandler(event -> dispatchedTopics.add(event.getMessageBO().getTopic()));
+        handlerManager.register(event -> dispatchedTopics.add(event.getMessageBO().getTopic()));
 
         CommitListener listener = createCommitListener();
         listener.start();
@@ -175,7 +175,7 @@ class CommitDispatcherIntegrationTest extends BaseCommitDispatcherIntegrationTes
     @Test
     void testHandlerCapturesEventData() {
         List<CommitEvent> capturedEvents = new CopyOnWriteArrayList<>();
-        handlerManager.registerHandler(capturedEvents::add);
+        handlerManager.register(capturedEvents::add);
 
         MessageBO message = MessageMock.createMessage("CAPTURE_TOPIC", 100);
         CommitEvent event = CommitEvent.of(message, 0);
@@ -192,8 +192,8 @@ class CommitDispatcherIntegrationTest extends BaseCommitDispatcherIntegrationTes
         List<String> handler1Topics = new CopyOnWriteArrayList<>();
         List<String> handler2Topics = new CopyOnWriteArrayList<>();
 
-        handlerManager.registerHandler(event -> handler1Topics.add(event.getMessageBO().getTopic()));
-        handlerManager.registerHandler(event -> handler2Topics.add(event.getMessageBO().getTopic()));
+        handlerManager.register(event -> handler1Topics.add(event.getMessageBO().getTopic()));
+        handlerManager.register(event -> handler2Topics.add(event.getMessageBO().getTopic()));
 
         for (int i = 0; i < 3; i++) {
             handlerManager.handle(CommitEvent.of(MessageMock.createMessage("TOPIC_" + i, 100)));

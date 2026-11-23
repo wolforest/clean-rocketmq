@@ -157,7 +157,7 @@ public abstract class BaseCommitDispatcherIntegrationTest {
 
     protected AtomicInteger registerCountingHandler() {
         AtomicInteger counter = new AtomicInteger(0);
-        handlerManager.registerHandler(event -> counter.incrementAndGet());
+        handlerManager.register(event -> counter.incrementAndGet());
         return counter;
     }
 }

@@ -8,9 +8,15 @@ import java.util.ArrayList;
  * @renamed from CommitEventHandlerManager to CommitHandlerManager
  */
 public class CommitHandlerManager implements CommitHandler {
+    // question: list -> set ?
     private final ArrayList<CommitHandler> handlerList = new ArrayList<>();
 
-    public void registerHandler(CommitHandler handler) {
+    /**
+     * register CommitHandler, and receive CommitEvent
+     *
+     * @renamed from registerHandler to register
+     */
+    public void register(CommitHandler handler) {
         handlerList.add(handler);
     }
 

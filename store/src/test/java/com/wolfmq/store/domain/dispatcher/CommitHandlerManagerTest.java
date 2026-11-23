@@ -24,7 +24,7 @@ class CommitHandlerManagerTest {
         assertTrue(manager.isEmpty());
 
         CommitHandler handler = new MockCommitHandler();
-        manager.registerHandler(handler);
+        manager.register(handler);
 
         assertFalse(manager.isEmpty());
     }
@@ -36,7 +36,7 @@ class CommitHandlerManagerTest {
 
     @Test
     void testIsEmpty_WithHandlers() {
-        manager.registerHandler(new MockCommitHandler());
+        manager.register(new MockCommitHandler());
         assertFalse(manager.isEmpty());
     }
 
@@ -45,8 +45,8 @@ class CommitHandlerManagerTest {
         AtomicInteger counter1 = new AtomicInteger(0);
         AtomicInteger counter2 = new AtomicInteger(0);
 
-        manager.registerHandler((CommitEvent event) -> counter1.incrementAndGet());
-        manager.registerHandler((CommitEvent event) -> counter2.incrementAndGet());
+        manager.register((CommitEvent event) -> counter1.incrementAndGet());
+        manager.register((CommitEvent event) -> counter2.incrementAndGet());
 
         manager.handle(CommitEvent.of(MessageMock.createMessage()));
 
@@ -64,7 +64,7 @@ class CommitHandlerManagerTest {
     @Test
     void testHandle_MultipleEvents() {
         AtomicInteger counter = new AtomicInteger(0);
-        manager.registerHandler((CommitEvent event) -> counter.incrementAndGet());
+        manager.register((CommitEvent event) -> counter.incrementAndGet());
 
         for (int i = 0; i < 5; i++) {
             manager.handle(CommitEvent.of(MessageMock.createMessage()));
@@ -76,9 +76,9 @@ class CommitHandlerManagerTest {
     @Test
     void testHandle_MultipleHandlers() {
         AtomicInteger sum = new AtomicInteger(0);
-        manager.registerHandler((CommitEvent event) -> sum.addAndGet(1));
-        manager.registerHandler((CommitEvent event) -> sum.addAndGet(10));
-        manager.registerHandler((CommitEvent event) -> sum.addAndGet(100));
+        manager.register((CommitEvent event) -> sum.addAndGet(1));
+        manager.register((CommitEvent event) -> sum.addAndGet(10));
+        manager.register((CommitEvent event) -> sum.addAndGet(100));
 
         manager.handle(CommitEvent.of(MessageMock.createMessage()));
 
@@ -90,9 +90,9 @@ class CommitHandlerManagerTest {
         AtomicInteger counter = new AtomicInteger(0);
         CommitHandler handler = event -> counter.incrementAndGet();
 
-        manager.registerHandler(handler);
-        manager.registerHandler(handler);
-        manager.registerHandler(handler);
+        manager.register(handler);
+        manager.register(handler);
+        manager.register(handler);
 
         manager.handle(CommitEvent.of(MessageMock.createMessage()));
 

@@ -91,6 +91,6 @@ public class ConsumeQueueBootstrap implements Lifecycle {
     private void registerDispatchHandler() {
         CommitHandlerManager handlerManager = context.getBean(CommitHandlerManager.class);
         ConsumeQueueCommitHandler handler = new ConsumeQueueCommitHandler(consumeQueueFacade);
-        handlerManager.registerHandler(handler);
+        handlerManager.register(handler);
     }
 }

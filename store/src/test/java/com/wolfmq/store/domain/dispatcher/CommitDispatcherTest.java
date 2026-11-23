@@ -57,7 +57,7 @@ class CommitDispatcherTest {
     @Test
     void testDispatch_WithHandler() throws Exception {
         AtomicInteger counter = new AtomicInteger(0);
-        handlerManager.registerHandler((CommitEvent event) -> counter.incrementAndGet());
+        handlerManager.register((CommitEvent event) -> counter.incrementAndGet());
 
         CommitDispatcher dispatcher = new CommitDispatcher(queue, handlerManager);
         dispatcher.start();
@@ -74,7 +74,7 @@ class CommitDispatcherTest {
     @Test
     void testDispatch_MultipleEvents() throws Exception {
         AtomicInteger counter = new AtomicInteger(0);
-        handlerManager.registerHandler((CommitEvent event) -> counter.incrementAndGet());
+        handlerManager.register((CommitEvent event) -> counter.incrementAndGet());
 
         CommitDispatcher dispatcher = new CommitDispatcher(queue, handlerManager);
         dispatcher.start();

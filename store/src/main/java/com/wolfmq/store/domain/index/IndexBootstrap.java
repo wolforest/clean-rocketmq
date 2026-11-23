@@ -54,6 +54,6 @@ public class IndexBootstrap implements Lifecycle {
     private void registerCommitHandler() {
         CommitHandlerManager handlerManager = context.getBean(CommitHandlerManager.class);
         IndexCommitHandler handler = new IndexCommitHandler(indexService);
-        handlerManager.registerHandler(handler);
+        handlerManager.register(handler);
     }
 }
