@@ -2,6 +2,8 @@ package com.wolfmq.store.domain.dispatcher;
 
 import com.wolfmq.common.config.store.CommitConfig;
 import com.wolfmq.common.domain.commitlog.CommitLog;
+import com.wolfmq.common.domain.offset.commitlog.OffsetCodec;
+import com.wolfmq.store.domain.commitlog.file.FileCommitLog;
 import com.wolfmq.store.domain.commitlog.file.CommitLogManager;
 import com.wolfmq.common.domain.offset.QueueProgress;
 import com.wolfmq.store.domain.dispatcher.dispatch.DispatchManager;
@@ -35,9 +37,10 @@ class DispatchManagerTest {
 
         commitLogManager = mock(CommitLogManager.class);
         for (int i = 0; i < 2; i++) {
-            CommitLog mockLog = mock(CommitLog.class);
+            FileCommitLog mockLog = mock(FileCommitLog.class);
             when(mockLog.getMinOffset()).thenReturn(0L);
             when(mockLog.getMaxOffset()).thenReturn(0L);
+            when(mockLog.getOffsetCodec()).thenReturn(new OffsetCodec(1));
             when(commitLogManager.selectByShard(i)).thenReturn(mockLog);
         }
 

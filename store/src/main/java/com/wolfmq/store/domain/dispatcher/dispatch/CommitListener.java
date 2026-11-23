@@ -7,7 +7,6 @@ import com.wolfmq.common.domain.message.MessageBO;
 import com.wolfmq.common.domain.commitlog.dispatch.CommitEvent;
 import com.wolfmq.common.domain.commitlog.CommitLog;
 import com.wolfmq.common.domain.offset.QueueProgress;
-import com.wolfmq.common.domain.offset.commitlog.OffsetCodec;
 import com.wolfmq.store.domain.commitlog.file.FileCommitLog;
 import java.util.concurrent.atomic.AtomicLong;
 import lombok.extern.slf4j.Slf4j;
@@ -19,12 +18,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class CommitListener extends ServiceThread {
     private final CommitConfig commitConfig;
-    private final CommitLog commitLog;
+    private final FileCommitLog commitLog;
     private final DispatchQueue queue;
     private final QueueProgress queueProgress;
 
-    private final int shardId;
-    private final OffsetCodec offsetCodec;
     private final AtomicLong dispatchedOffset = new AtomicLong(-1L);
 
     public CommitListener(
@@ -33,22 +30,17 @@ public class CommitListener extends ServiceThread {
         QueueProgress queueProgress,
         CommitConfig commitConfig
     ) {
-
         this.queue = queue;
-        this.commitLog = commitLog;
+        this.commitLog = (FileCommitLog) commitLog;
         this.queueProgress = queueProgress;
         this.commitConfig = commitConfig;
 
-        this.shardId = initShardId();
-        offsetCodec = new OffsetCodec(this.shardId, commitConfig.getMaxShardingNumber());
         initDispatchedOffset();
     }
 
-
-
     @Override
     public String getServiceName() {
-        return CommitListener.class.getSimpleName() + "-" + shardId;
+        return CommitListener.class.getSimpleName() + "-" + commitLog.getShardId();
     }
 
     @Override
@@ -84,19 +76,13 @@ public class CommitListener extends ServiceThread {
         return this.dispatchedOffset.addAndGet(delta);
     }
 
-    private int initShardId() {
-        if (commitLog instanceof FileCommitLog) {
-            return  ((FileCommitLog) commitLog).getShardId();
-        }
-
-        return 0;
-    }
-
     private void initDispatchedOffset() {
-        Long checkpointOffset = queueProgress.getDispatchedOffset(shardId);
+        Long checkpointOffset = queueProgress.getDispatchedOffset(commitLog.getShardId());
 
         if (null != checkpointOffset && checkpointOffset > -1) {
-            long offset = offsetCodec.decode(checkpointOffset);
+            long offset = commitLog.getOffsetCodec()
+                .decode(checkpointOffset);
+
             this.dispatchedOffset.set(offset);
             return;
         }
@@ -111,7 +97,7 @@ public class CommitListener extends ServiceThread {
         }
 
         try {
-            CommitEvent event = CommitEvent.of(messageBO, shardId);
+            CommitEvent event = CommitEvent.of(messageBO);
             this.queue.offer(event);
         } catch (InterruptedException e) {
             log.info("{} offer CommitEvent exception. ", this.getServiceName(), e);

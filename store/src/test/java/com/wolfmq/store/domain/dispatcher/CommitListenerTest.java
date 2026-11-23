@@ -2,6 +2,8 @@ package com.wolfmq.store.domain.dispatcher;
 
 import com.wolfmq.common.config.store.CommitConfig;
 import com.wolfmq.common.domain.commitlog.CommitLog;
+import com.wolfmq.store.domain.commitlog.file.FileCommitLog;
+import com.wolfmq.common.domain.offset.commitlog.OffsetCodec;
 import com.wolfmq.common.domain.offset.QueueProgress;
 import com.wolfmq.store.domain.dispatcher.dispatch.CommitListener;
 import com.wolfmq.store.domain.dispatcher.dispatch.DispatchQueue;
@@ -20,7 +22,7 @@ class CommitListenerTest {
     @TempDir
     Path tmpDir;
 
-    private CommitLog commitLog;
+    private FileCommitLog commitLog;
     private DispatchQueue queue;
     private QueueProgress queueProgress;
     private CommitConfig commitConfig;
@@ -30,9 +32,10 @@ class CommitListenerTest {
         commitConfig = new CommitConfig();
         queue = new DispatchQueue(commitConfig);
 
-        commitLog = mock(CommitLog.class);
+        commitLog = mock(FileCommitLog.class);
         when(commitLog.getMinOffset()).thenReturn(0L);
         when(commitLog.getMaxOffset()).thenReturn(0L);
+        when(commitLog.getOffsetCodec()).thenReturn(new OffsetCodec(1));
 
         queueProgress = mock(QueueProgress.class);
     }
