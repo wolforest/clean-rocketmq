@@ -1,6 +1,9 @@
 package com.wolfmq.store.domain.consumequeue.it;
 
+import com.wolfmq.common.domain.offset.DefaultQueueProgress;
 import com.wolfmq.common.domain.offset.QueueProgress;
+import com.wolfmq.common.domain.offset.checkpoint.store.FileCheckpointStore;
+import com.wolfmq.common.domain.offset.consumequeue.QueueOffsetAssigner;
 import com.wolfmq.common.domain.offset.checkpoint.bakeup.CheckPoint;
 
 
@@ -120,7 +123,17 @@ public abstract class BaseConsumeQueueIntegrationTest {
         OffsetCodec offsetCodec = new OffsetCodec(commitConfig.getMaxShardingNumber());
         recovery = new ConsumeQueueRecovery(cqConfig, checkpoint);
 
-        consumeQueueFactory = new ConsumeQueueFactory(storeConfig, cqConfig, topicService, mock(QueueProgress.class));
+        FileCheckpointStore checkpointStore = new FileCheckpointStore(
+            tmpDir.resolve("queue-progress").toString()
+        );
+        QueueOffsetAssigner assigner = new QueueOffsetAssigner(checkpointStore);
+        DefaultQueueProgress queueProgress = new DefaultQueueProgress(
+            checkpointStore,
+            offsetCodec,
+            assigner
+        );
+
+        consumeQueueFactory = new ConsumeQueueFactory(storeConfig, cqConfig, topicService, queueProgress);
         consumeQueueFactory.addCreateHook(flusher);
         consumeQueueFactory.addCreateHook(loader);
         consumeQueueFactory.addCreateHook(recovery);

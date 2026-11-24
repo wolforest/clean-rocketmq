@@ -17,8 +17,6 @@ import java.io.File;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicLongFieldUpdater;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -45,8 +43,6 @@ public class FileConsumeQueue implements ConsumeQueue {
     private final QueueProgress queueProgress;
     private final ByteBuffer writeBuffer;
 
-    private final ConcurrentMap<Integer, Long> commitOffsetMap;
-
     private volatile long minOffset = 0;
     private volatile long maxOffset = 0;
 
@@ -63,7 +59,6 @@ public class FileConsumeQueue implements ConsumeQueue {
         this.queueProgress = queueProgress;
 
         this.writeBuffer = ByteBuffer.allocate(this.queueConfig.getUnitSize());
-        this.commitOffsetMap = new ConcurrentHashMap<>();
 
         initMappedFileQueue();
     }
@@ -357,9 +352,19 @@ public class FileConsumeQueue implements ConsumeQueue {
     }
 
     private boolean preEnqueue(CommitEvent event) {
+        MessageBO messageBO = event.getMessageBO();
         // check commitOffset, skip if
+        long commitOffset = messageBO.getCommitOffset();
+        if (!queueProgress.reachesQueueCommitOffset(topic, queueId, commitOffset)) {
+            return false;
+        }
 
         // assign queue offset if needed
+        if (messageBO.getQueueOffset() < 0) {
+            messageBO.setQueueOffset(
+                increaseOffset()
+            );
+        }
 
         return true;
     }
@@ -369,30 +374,18 @@ public class FileConsumeQueue implements ConsumeQueue {
      * @param event commitLogEvent
      */
     private void postEnqueue(CommitEvent event) {
-        updateCommitOffset(event);
-        saveOffsetToCheckpoint(event);
+        saveCommitOffsetToCheckpoint(event);
+        saveQueueOffsetToCheckpoint(event);
     }
 
-    private void saveOffsetToCheckpoint(CommitEvent event) {
+    private void saveQueueOffsetToCheckpoint(CommitEvent event) {
         long offset = event.getMessageBO().getQueueOffset();
-        Long oldOffset = queueProgress.getQueueOffset(topic, queueId);
-
-        if (oldOffset == null || oldOffset < offset) {
-            queueProgress.updateQueueOffset(topic, queueId, offset);
-        }
+        queueProgress.updateQueueOffset(topic, queueId, offset);
     }
 
-    private void updateCommitOffset(CommitEvent event) {
-        long offset = event.getMessageBO().getCommitOffset()
-            + event.getMessageBO().getMessageLength();
-
-        int shardId = event.getShardId();
-        Long oldOffset = commitOffsetMap.get(shardId);
-        if (oldOffset != null && oldOffset >  offset) {
-            return;
-        }
-
-        commitOffsetMap.put(shardId, offset);
+    private void saveCommitOffsetToCheckpoint(CommitEvent event) {
+        long offset = event.getMessageBO().getCommitOffset();
+        queueProgress.updateQueueCommitOffset(topic, queueId, offset);
     }
 
 }

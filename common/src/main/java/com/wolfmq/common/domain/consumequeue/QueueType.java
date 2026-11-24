@@ -6,4 +6,5 @@ public enum QueueType {
     BATCH, // used in v4.*, useless after v5.*
     ROCKSDB,
     ERROR,
+    EXCHANGE, // RabbitMQ style topic
 }

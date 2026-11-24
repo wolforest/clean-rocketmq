@@ -1,7 +1,11 @@
 package com.wolfmq.store.domain.consumequeue.error;
 
 import com.wolfmq.common.config.server.StoreConfig;
+import com.wolfmq.common.domain.offset.DefaultQueueProgress;
 import com.wolfmq.common.domain.offset.QueueProgress;
+import com.wolfmq.common.domain.offset.checkpoint.store.FileCheckpointStore;
+import com.wolfmq.common.domain.offset.commitlog.OffsetCodec;
+import com.wolfmq.common.domain.offset.consumequeue.QueueOffsetAssigner;
 import com.wolfmq.common.config.store.ConsumeQueueConfig;
 import com.wolfmq.common.domain.consumequeue.QueueType;
 import com.wolfmq.common.domain.commitlog.dispatch.CommitEvent;
@@ -55,7 +59,7 @@ class FileConsumeQueueTest {
         List<QueueUnit> units = queue.get(0, 20);
         assertEquals(10, units.size());
 
-        QueueUnit last = units.get(units.size() - 1);
+        QueueUnit last = units.getLast();
         // assertEquals(event.getMessageBO().getQueueOffset(), last.getQueueOffset());
         assertEquals(event.getMessageBO().getCommitOffset(), last.getCommitOffset());
         assertEquals(event.getMessageBO().getMessageLength(), last.getMessageSize());
@@ -327,8 +331,16 @@ class FileConsumeQueueTest {
             topic,
             queueId,
             storeConfig,
-            mock(QueueProgress.class)
+            createQueueProgress(dir)
         );
+    }
+
+    private QueueProgress createQueueProgress(String dir) {
+        FileCheckpointStore store = new FileCheckpointStore(dir + "/queue-progress");
+        OffsetCodec offsetCodec = new OffsetCodec(1);
+        QueueOffsetAssigner assigner = new QueueOffsetAssigner(store);
+
+        return new DefaultQueueProgress(store, offsetCodec, assigner);
     }
 
     private CommitEvent createCommitEvent(ConsumeQueue queue) {
