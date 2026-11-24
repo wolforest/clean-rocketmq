@@ -79,25 +79,6 @@ public class ErrorConsumeQueue implements ConsumeQueue {
         return 0;
     }
 
-    @Override
-    public void setCommitOffsetMap(ConcurrentMap<Integer, Long> map) {
-
-    }
-
-    @Override
-    public Map<Integer, Long> getCommitOffsetMap() {
-        return Map.of();
-    }
-
-    @Override
-    public Long getCommitOffsetByShardId(int shardId) {
-        return null;
-    }
-
-    @Override
-    public void setCommitOffsetByShardId(int shardId, long offset) {
-
-    }
 
     @Override
     public long increaseOffset() {

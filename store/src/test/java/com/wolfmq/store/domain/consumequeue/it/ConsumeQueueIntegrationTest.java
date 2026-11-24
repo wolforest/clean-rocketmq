@@ -155,20 +155,6 @@ class ConsumeQueueIntegrationTest extends BaseConsumeQueueIntegrationTest {
         assertEquals(QueueType.ERROR, result.getQueueType());
     }
 
-    @Test
-    void testCommitOffsetUpdate() {
-        ConsumeQueue queue = consumeQueueFactory.getOrCreate(TEST_TOPIC, TEST_QUEUE_ID);
-        queue.load();
-
-        assertNull(queue.getCommitOffsetByShardId(0));
-
-        CommitEvent event = createEvent(100L, 128, 100L, 0);
-        queue.enqueue(event);
-
-        Long commitOffset = queue.getCommitOffsetByShardId(0);
-        assertNotNull(commitOffset);
-        assertEquals(228L, commitOffset.longValue());
-    }
 
     @Test
     void testFlushAndDestroy() {

@@ -75,25 +75,6 @@ public class CloudConsumeQueue implements ConsumeQueue {
         return 0;
     }
 
-    @Override
-    public void setCommitOffsetMap(ConcurrentMap<Integer, Long> map) {
-
-    }
-
-    @Override
-    public Map<Integer, Long> getCommitOffsetMap() {
-        return Map.of();
-    }
-
-    @Override
-    public Long getCommitOffsetByShardId(int shardId) {
-        return 0L;
-    }
-
-    @Override
-    public void setCommitOffsetByShardId(int shardId, long offset) {
-
-    }
 
 
     @Override

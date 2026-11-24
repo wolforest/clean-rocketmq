@@ -4,7 +4,6 @@ import com.wolfmq.common.domain.commitlog.dispatch.CommitEvent;
 import com.wolfmq.common.core.mmap.MappedFileQueue;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentMap;
 
 public interface ConsumeQueue {
     QueueType getQueueType();
@@ -23,11 +22,6 @@ public interface ConsumeQueue {
 
     long increaseOffset();
     long rollToOffset(long offset);
-
-    void setCommitOffsetMap(ConcurrentMap<Integer, Long> map);
-    Map<Integer, Long> getCommitOffsetMap();
-    Long getCommitOffsetByShardId(int shardId);
-    void setCommitOffsetByShardId(int shardId, long offset);
 
     MappedFileQueue getMappedFileQueue();
 

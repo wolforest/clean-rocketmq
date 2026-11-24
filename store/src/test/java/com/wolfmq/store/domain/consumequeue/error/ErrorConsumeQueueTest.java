@@ -76,25 +76,6 @@ public class ErrorConsumeQueueTest {
     void testSetOffsetMethodsDoNotThrow() {
         assertDoesNotThrow(() -> ErrorConsumeQueue.INSTANCE.setMinOffset(100));
         assertDoesNotThrow(() -> ErrorConsumeQueue.INSTANCE.setMaxOffset(200));
-        assertDoesNotThrow(() -> ErrorConsumeQueue.INSTANCE.setCommitOffsetByShardId(0, 100L));
-    }
-
-    @Test
-    void testGetCommitOffsetByShardIdReturnsNull() {
-        assertNull(ErrorConsumeQueue.INSTANCE.getCommitOffsetByShardId(0));
-    }
-
-    @Test
-    void testGetCommitOffsetMapReturnsEmptyMap() {
-        Map<Integer, Long> map = ErrorConsumeQueue.INSTANCE.getCommitOffsetMap();
-
-        assertNotNull(map);
-        assertTrue(map.isEmpty());
-    }
-
-    @Test
-    void testSetCommitOffsetMapDoesNotThrow() {
-        assertDoesNotThrow(() -> ErrorConsumeQueue.INSTANCE.setCommitOffsetMap(null));
     }
 
     @Test

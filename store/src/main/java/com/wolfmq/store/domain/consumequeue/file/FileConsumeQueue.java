@@ -21,7 +21,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicLongFieldUpdater;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -46,8 +45,7 @@ public class FileConsumeQueue implements ConsumeQueue {
     private final QueueProgress queueProgress;
     private final ByteBuffer writeBuffer;
 
-    @Getter @Setter
-    private ConcurrentMap<Integer, Long> commitOffsetMap;
+    private final ConcurrentMap<Integer, Long> commitOffsetMap;
 
     private volatile long minOffset = 0;
     private volatile long maxOffset = 0;
@@ -163,16 +161,6 @@ public class FileConsumeQueue implements ConsumeQueue {
         int totalUnits = fileSize / queueConfig.getUnitSize();
 
         return offset + totalUnits - offset % totalUnits;
-    }
-
-    @Override
-    public Long getCommitOffsetByShardId(int shardId) {
-        return commitOffsetMap.get(shardId);
-    }
-
-    @Override
-    public void setCommitOffsetByShardId(int shardId, long offset) {
-        commitOffsetMap.put(shardId, offset);
     }
 
     @Override
