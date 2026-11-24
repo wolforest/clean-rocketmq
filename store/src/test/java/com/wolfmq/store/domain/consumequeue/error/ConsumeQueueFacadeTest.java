@@ -4,6 +4,7 @@ import com.wolfmq.common.config.server.StoreConfig;
 import com.wolfmq.common.config.store.ConsumeQueueConfig;
 import com.wolfmq.common.domain.consumequeue.ConsumeQueue;
 import com.wolfmq.common.domain.meta.service.TopicService;
+import com.wolfmq.common.domain.offset.QueueProgress;
 import com.wolfmq.common.domain.offset.checkpoint.bakeup.CheckPoint;
 import com.wolfmq.common.testing.ConfigMock;
 import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueFactory;
@@ -30,8 +31,7 @@ public class ConsumeQueueFacadeTest {
         StoreConfig storeConfig = ConfigMock.createStoreConfig(tempDir.toString());
         ConsumeQueueConfig config = new ConsumeQueueConfig();
         topicService = mock(TopicService.class);
-        CheckPoint checkpoint = mock(CheckPoint.class);
-        factory = spy(new ConsumeQueueFactory(storeConfig, config, topicService, checkpoint));
+        factory = spy(new ConsumeQueueFactory(storeConfig, config, topicService, mock(QueueProgress.class)));
         manager = new ConsumeQueueFacade(factory);
     }
 

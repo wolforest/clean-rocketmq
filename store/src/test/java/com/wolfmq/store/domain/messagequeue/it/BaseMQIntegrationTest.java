@@ -10,6 +10,7 @@ import com.wolfmq.common.domain.commitlog.CommitLog;
 import com.wolfmq.common.domain.offset.ConsumerOffsetService;
 import com.wolfmq.common.domain.meta.service.ConsumeOrderService;
 import com.wolfmq.common.domain.meta.service.TopicService;
+import com.wolfmq.common.domain.offset.QueueProgress;
 import com.wolfmq.common.domain.offset.checkpoint.bakeup.CheckPoint;
 import com.wolfmq.common.testing.ConfigMock;
 import com.wolfmq.store.domain.commitlog.file.CommitLogFactory;
@@ -160,7 +161,7 @@ public abstract class BaseMQIntegrationTest {
         OffsetCodec offsetCodec = new OffsetCodec(commitConfig.getMaxShardingNumber());
         ConsumeQueueRecovery recovery = new ConsumeQueueRecovery(cqConfig, checkpoint);
 
-        ConsumeQueueFactory factory = new ConsumeQueueFactory(storeConfig, cqConfig, topicService, checkpoint);
+        ConsumeQueueFactory factory = new ConsumeQueueFactory(storeConfig, cqConfig, topicService, mock(QueueProgress.class));
         factory.addCreateHook(flusher);
         factory.addCreateHook(loader);
         factory.addCreateHook(recovery);

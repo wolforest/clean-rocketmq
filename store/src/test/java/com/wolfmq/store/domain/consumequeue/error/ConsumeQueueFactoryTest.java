@@ -4,6 +4,7 @@ import com.wolfmq.common.config.server.StoreConfig;
 import com.wolfmq.common.config.store.ConsumeQueueConfig;
 import com.wolfmq.common.domain.consumequeue.ConsumeQueue;
 import com.wolfmq.common.domain.meta.service.TopicService;
+import com.wolfmq.common.domain.offset.QueueProgress;
 import com.wolfmq.common.domain.meta.topic.utils.TopicMap;
 import com.wolfmq.common.testing.ConfigMock;
 import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueFactory;
@@ -18,6 +19,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 /**
  * Unit tests for ConsumeQueueFactory
@@ -35,9 +37,7 @@ class ConsumeQueueFactoryTest {
         StoreConfig storeConfig = ConfigMock.createStoreConfig(tmpDir.toString());
         ConsumeQueueConfig config = storeConfig.getConsumeQueue();
         this.topicService = new MockTopicService();
-        StoreCheckpoint checkpoint = new StoreCheckpoint(storeConfig.getPath().getCheckpointPath());
-
-        factory = new ConsumeQueueFactory(storeConfig, config, topicService, checkpoint);
+        factory = new ConsumeQueueFactory(storeConfig, config, topicService, mock(QueueProgress.class));
     }
 
     @Test

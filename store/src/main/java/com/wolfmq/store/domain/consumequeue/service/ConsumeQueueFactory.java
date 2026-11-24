@@ -4,7 +4,7 @@ import com.wolfmq.common.config.server.StoreConfig;
 import com.wolfmq.common.config.store.ConsumeQueueConfig;
 import com.wolfmq.common.domain.consumequeue.ConsumeQueue;
 import com.wolfmq.common.domain.meta.service.TopicService;
-import com.wolfmq.common.domain.offset.checkpoint.bakeup.CheckPoint;
+import com.wolfmq.common.domain.offset.QueueProgress;
 import com.wolfmq.store.domain.consumequeue.file.FileConsumeQueue;
 import com.wolfmq.store.domain.consumequeue.error.ErrorConsumeQueue;
 import java.util.ArrayList;
@@ -20,7 +20,7 @@ public class ConsumeQueueFactory implements ConsumeQueueRegistry {
     private final StoreConfig storeConfig;
     private final ConsumeQueueConfig config;
     private final TopicService topicService;
-    private final CheckPoint checkpoint;
+    private final QueueProgress queueProgress;
 
     private final List<ConsumeQueueRegistry> createHooks = new ArrayList<>();
     /**
@@ -33,12 +33,12 @@ public class ConsumeQueueFactory implements ConsumeQueueRegistry {
         StoreConfig storeConfig,
         ConsumeQueueConfig config,
         TopicService topicService,
-        CheckPoint checkpoint
+        QueueProgress queueProgress
     ) {
         this.storeConfig = storeConfig;
         this.config = config;
         this.topicService = topicService;
-        this.checkpoint = checkpoint;
+        this.queueProgress = queueProgress;
 
         this.topicMap = new ConcurrentHashMap<>(TOPIC_MAP_SIZE);
     }
@@ -108,7 +108,7 @@ public class ConsumeQueueFactory implements ConsumeQueueRegistry {
     }
 
     private ConsumeQueue createConsumeQueue(String topic, int queueId) {
-        return new FileConsumeQueue(topic, queueId, storeConfig, config, checkpoint);
+        return new FileConsumeQueue(topic, queueId, storeConfig, queueProgress);
     }
 
     private ConcurrentMap<Integer, ConsumeQueue> initQueueMap(String topic) {

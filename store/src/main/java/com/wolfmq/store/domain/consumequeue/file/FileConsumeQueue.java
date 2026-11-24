@@ -12,7 +12,7 @@ import com.wolfmq.common.domain.consumequeue.ConsumeQueue;
 import com.wolfmq.common.core.mmap.MappedFile;
 import com.wolfmq.common.core.mmap.MappedFileQueue;
 import com.wolfmq.store.infra.file.DefaultMappedFileQueue;
-import com.wolfmq.common.domain.offset.checkpoint.bakeup.CheckPoint;
+import com.wolfmq.common.domain.offset.QueueProgress;
 import java.io.File;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -42,8 +42,8 @@ public class FileConsumeQueue implements ConsumeQueue {
     private MappedFileQueue mappedFileQueue;
 
     private final StoreConfig storeConfig;
-    private final ConsumeQueueConfig config;
-    private final CheckPoint checkpoint;
+    private final ConsumeQueueConfig queueConfig;
+    private final QueueProgress queueProgress;
     private final ByteBuffer writeBuffer;
 
     @Getter @Setter
@@ -58,16 +58,15 @@ public class FileConsumeQueue implements ConsumeQueue {
         String topic,
         int queueId,
         StoreConfig storeConfig,
-        ConsumeQueueConfig config,
-        CheckPoint checkpoint
+        QueueProgress queueProgress
     ) {
         this.topic = topic;
         this.queueId = queueId;
         this.storeConfig = storeConfig;
-        this.config = config;
-        this.checkpoint = checkpoint;
+        this.queueConfig = storeConfig.getConsumeQueue();
+        this.queueProgress = queueProgress;
 
-        this.writeBuffer = ByteBuffer.allocate(config.getUnitSize());
+        this.writeBuffer = ByteBuffer.allocate(this.queueConfig.getUnitSize());
         this.commitOffsetMap = new ConcurrentHashMap<>();
 
         initMappedFileQueue();
@@ -80,14 +79,14 @@ public class FileConsumeQueue implements ConsumeQueue {
 
     @Override
     public int getUnitSize() {
-        return config.getUnitSize();
+        return queueConfig.getUnitSize();
     }
 
     @Override
     public void enqueue(CommitEvent event) {
         if (!preEnqueue(event)) return;
 
-        for (int i = 0; i < config.getMaxEnqueueRetry(); i++) {
+        for (int i = 0; i < queueConfig.getMaxEnqueueRetry(); i++) {
             boolean success = insert(event);
             if (success) {
                 postEnqueue(event);
@@ -107,8 +106,8 @@ public class FileConsumeQueue implements ConsumeQueue {
             return null;
         }
 
-        long offset = index * config.getUnitSize();
-        SelectedMappedBuffer buffer = select(offset, config.getUnitSize());
+        long offset = index * queueConfig.getUnitSize();
+        SelectedMappedBuffer buffer = select(offset, queueConfig.getUnitSize());
         if (buffer == null) {
             return null;
         }
@@ -120,7 +119,7 @@ public class FileConsumeQueue implements ConsumeQueue {
 
     @Override
     public List<QueueUnit> get(long index, int num) {
-        long offset = index * config.getUnitSize();
+        long offset = index * queueConfig.getUnitSize();
         if (offset < MIN_OFFSET_UPDATER.get(this)) {
             return List.of();
         }
@@ -138,7 +137,7 @@ public class FileConsumeQueue implements ConsumeQueue {
 
             QueueUnit unit = createQueueUnit(offset, buffer);
             result.add(unit);
-            offset += config.getUnitSize();
+            offset += queueConfig.getUnitSize();
         }
 
         buffer.release();
@@ -162,8 +161,8 @@ public class FileConsumeQueue implements ConsumeQueue {
 
     @Override
     public long rollToOffset(long offset) {
-        int fileSize = config.getFileSize();
-        int totalUnits = fileSize / config.getUnitSize();
+        int fileSize = queueConfig.getFileSize();
+        int totalUnits = fileSize / queueConfig.getUnitSize();
 
         return offset + totalUnits - offset % totalUnits;
     }
@@ -213,11 +212,11 @@ public class FileConsumeQueue implements ConsumeQueue {
         long tagsCode = byteBuffer.getLong();
 
         return QueueUnit.builder()
-            .queueOffset(offset / config.getUnitSize())
+            .queueOffset(offset / queueConfig.getUnitSize())
             .commitOffset(commitOffset)
             .messageSize(messageSize)
             .tagsCode(tagsCode)
-            .unitSize(config.getUnitSize())
+            .unitSize(queueConfig.getUnitSize())
             .build();
     }
 
@@ -227,7 +226,7 @@ public class FileConsumeQueue implements ConsumeQueue {
             + topic
             + File.separator
             + queueId;
-        this.mappedFileQueue = new DefaultMappedFileQueue(path, config.getFileSize());
+        this.mappedFileQueue = new DefaultMappedFileQueue(path, queueConfig.getFileSize());
     }
 
     private SelectedMappedBuffer select(long offset) {
@@ -236,7 +235,7 @@ public class FileConsumeQueue implements ConsumeQueue {
             return null;
         }
 
-        int position = (int)(offset % config.getFileSize());
+        int position = (int)(offset % queueConfig.getFileSize());
         return mappedFile.select(position);
     }
 
@@ -246,14 +245,14 @@ public class FileConsumeQueue implements ConsumeQueue {
             return null;
         }
 
-        int position = (int)(offset % config.getFileSize());
+        int position = (int)(offset % queueConfig.getFileSize());
         return mappedFile.select(position, size);
     }
 
     private boolean insert(CommitEvent event) {
         MessageBO messageBO = event.getMessageBO();
 
-        long offset = messageBO.getQueueOffset() * config.getUnitSize();
+        long offset = messageBO.getQueueOffset() * queueConfig.getUnitSize();
         if (!validateOffset(messageBO.getQueueOffset(), offset)) {
             return true;
         }
@@ -316,7 +315,7 @@ public class FileConsumeQueue implements ConsumeQueue {
             return last;
         }
 
-        long fileOffset = queueOffset - queueOffset % config.getFileSize();
+        long fileOffset = queueOffset - queueOffset % queueConfig.getFileSize();
         boolean isQueueEmpty = mappedFileQueue.isEmpty();
         MappedFile file = mappedFileQueue.createMappedFileByStartOffset(fileOffset);
         if (file == null) {
@@ -344,13 +343,13 @@ public class FileConsumeQueue implements ConsumeQueue {
     }
 
     private void preFillBlank(final MappedFile mappedFile, final long size) {
-        ByteBuffer byteBuffer = ByteBuffer.allocate(config.getUnitSize());
+        ByteBuffer byteBuffer = ByteBuffer.allocate(queueConfig.getUnitSize());
         byteBuffer.putLong(0L);
         byteBuffer.putInt(Integer.MAX_VALUE);
         byteBuffer.putLong(0L);
 
         int until = (int) (size % mappedFile.getFileSize());
-        for (int i = 0; i < until; i += config.getUnitSize()) {
+        for (int i = 0; i < until; i += queueConfig.getUnitSize()) {
             mappedFile.insert(byteBuffer.array());
         }
     }
@@ -358,17 +357,21 @@ public class FileConsumeQueue implements ConsumeQueue {
     private void setWriteBuffer(CommitEvent event) {
         MessageBO messageBO = event.getMessageBO();
         this.writeBuffer.flip();
-        this.writeBuffer.limit(config.getUnitSize());
+        this.writeBuffer.limit(queueConfig.getUnitSize());
 
         this.writeBuffer.putLong(messageBO.getCommitOffset());
         this.writeBuffer.putInt(messageBO.getMessageLength());
         this.writeBuffer.putLong(messageBO.getTagsCode());
 
         this.writeBuffer.flip();
-        this.writeBuffer.limit(config.getUnitSize());
+        this.writeBuffer.limit(queueConfig.getUnitSize());
     }
 
     private boolean preEnqueue(CommitEvent event) {
+        // check commitOffset, skip if
+
+        // assign queue offset if needed
+
         return true;
     }
 
@@ -383,10 +386,10 @@ public class FileConsumeQueue implements ConsumeQueue {
 
     private void saveOffsetToCheckpoint(CommitEvent event) {
         long offset = event.getMessageBO().getQueueOffset();
-        long oldOffset = checkpoint.getMaxOffset().getQueueOffset(topic, queueId);
+        Long oldOffset = queueProgress.getQueueOffset(topic, queueId);
 
-        if (oldOffset < offset) {
-            checkpoint.getMaxOffset().setQueueOffset(topic, queueId, offset);
+        if (oldOffset == null || oldOffset < offset) {
+            queueProgress.updateQueueOffset(topic, queueId, offset);
         }
     }
 

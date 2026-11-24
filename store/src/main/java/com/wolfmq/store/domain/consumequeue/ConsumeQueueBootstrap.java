@@ -2,7 +2,6 @@ package com.wolfmq.store.domain.consumequeue;
 
 import cn.coderule.common.convention.service.Lifecycle;
 import com.wolfmq.common.config.server.StoreConfig;
-import com.wolfmq.common.config.store.CommitConfig;
 import com.wolfmq.common.config.store.ConsumeQueueConfig;
 import com.wolfmq.common.domain.meta.service.TopicService;
 import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueFactory;
@@ -12,6 +11,7 @@ import com.wolfmq.store.domain.consumequeue.file.ConsumeQueueLoader;
 import com.wolfmq.store.domain.consumequeue.file.ConsumeQueueRecovery;
 import com.wolfmq.store.domain.dispatcher.CommitHandlerManager;
 import cn.coderule.common.convention.container.ApplicationContext;
+import com.wolfmq.common.domain.offset.QueueProgress;
 import com.wolfmq.common.domain.offset.checkpoint.bakeup.CheckPoint;
 import lombok.extern.slf4j.Slf4j;
 
@@ -20,7 +20,6 @@ public class ConsumeQueueBootstrap implements Lifecycle {
     private final ApplicationContext context;
 
     private ConsumeQueueConfig consumeQueueConfig;
-    private CommitConfig commitConfig;
 
     private ConsumeQueueFlusher flusher;
     private ConsumeQueueLoader loader;
@@ -55,7 +54,6 @@ public class ConsumeQueueBootstrap implements Lifecycle {
     private void initConfig() {
         StoreConfig storeConfig = context.getBean(StoreConfig.class);
         consumeQueueConfig = storeConfig.getConsumeQueue();
-        commitConfig = storeConfig.getCommit();
     }
 
     private void initConsumeQueue() {
@@ -71,13 +69,11 @@ public class ConsumeQueueBootstrap implements Lifecycle {
     }
 
     private ConsumeQueueFactory initConsumeQueueFactory() {
-        StoreConfig storeConfig = context.getBean(StoreConfig.class);
-        TopicService topicService = context.getBean(TopicService.class);
         ConsumeQueueFactory consumeQueueFactory = new ConsumeQueueFactory(
-            storeConfig,
+            context.getBean(StoreConfig.class),
             consumeQueueConfig,
-            topicService,
-            context.getBean(CheckPoint.class)
+            context.getBean(TopicService.class),
+            context.getBean(QueueProgress.class)
         );
 
         consumeQueueFactory.addCreateHook(flusher);

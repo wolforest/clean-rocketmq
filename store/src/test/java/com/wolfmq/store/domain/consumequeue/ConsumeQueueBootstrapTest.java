@@ -45,7 +45,10 @@ class ConsumeQueueBootstrapTest {
         TopicService topicService = mock(TopicService.class);
         context.register(topicService, TopicService.class);
 
-        CommitHandlerManager handlerManager = new CommitHandlerManager(mock(QueueProgress.class));
+        QueueProgress queueProgress = mock(QueueProgress.class);
+        context.register(queueProgress, QueueProgress.class);
+
+        CommitHandlerManager handlerManager = new CommitHandlerManager(queueProgress);
         context.register(handlerManager);
 
         ConsumeQueueBootstrap bootstrap = new ConsumeQueueBootstrap(context);

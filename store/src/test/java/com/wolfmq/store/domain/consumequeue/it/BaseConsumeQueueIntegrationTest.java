@@ -1,5 +1,6 @@
 package com.wolfmq.store.domain.consumequeue.it;
 
+import com.wolfmq.common.domain.offset.QueueProgress;
 import com.wolfmq.common.domain.offset.checkpoint.bakeup.CheckPoint;
 
 
@@ -119,7 +120,7 @@ public abstract class BaseConsumeQueueIntegrationTest {
         OffsetCodec offsetCodec = new OffsetCodec(commitConfig.getMaxShardingNumber());
         recovery = new ConsumeQueueRecovery(cqConfig, checkpoint);
 
-        consumeQueueFactory = new ConsumeQueueFactory(storeConfig, cqConfig, topicService, checkpoint);
+        consumeQueueFactory = new ConsumeQueueFactory(storeConfig, cqConfig, topicService, mock(QueueProgress.class));
         consumeQueueFactory.addCreateHook(flusher);
         consumeQueueFactory.addCreateHook(loader);
         consumeQueueFactory.addCreateHook(recovery);

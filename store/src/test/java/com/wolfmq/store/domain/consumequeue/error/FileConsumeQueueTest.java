@@ -1,6 +1,7 @@
 package com.wolfmq.store.domain.consumequeue.error;
 
 import com.wolfmq.common.config.server.StoreConfig;
+import com.wolfmq.common.domain.offset.QueueProgress;
 import com.wolfmq.common.config.store.ConsumeQueueConfig;
 import com.wolfmq.common.domain.consumequeue.QueueType;
 import com.wolfmq.common.domain.commitlog.dispatch.CommitEvent;
@@ -11,13 +12,13 @@ import com.wolfmq.common.testing.ConfigMock;
 import com.wolfmq.common.testing.MessageMock;
 import com.wolfmq.common.testing.QueueMock;
 import com.wolfmq.store.domain.consumequeue.file.FileConsumeQueue;
-import com.wolfmq.store.server.bootstrap.StoreCheckpoint;
 import java.nio.file.Path;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 class FileConsumeQueueTest {
     public static int MMAP_FILE_SIZE = 20 * 1000;
@@ -350,14 +351,11 @@ class FileConsumeQueueTest {
         ConsumeQueueConfig queueConfig = storeConfig.getConsumeQueue();
         queueConfig.setFileSize(MMAP_FILE_SIZE);
 
-        StoreCheckpoint checkpoint = new StoreCheckpoint(storeConfig.getPath().getCheckpointPath());
-
         return new FileConsumeQueue(
             topic,
             queueId,
             storeConfig,
-            queueConfig,
-            checkpoint
+            mock(QueueProgress.class)
         );
     }
 
