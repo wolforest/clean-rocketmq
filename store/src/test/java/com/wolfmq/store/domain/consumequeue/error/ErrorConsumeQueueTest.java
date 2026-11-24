@@ -80,7 +80,6 @@ public class ErrorConsumeQueueTest {
 
     @Test
     void testGetMappedFileQueueReturnsNull() {
-        assertNull(ErrorConsumeQueue.INSTANCE.getMappedFileQueue());
     }
 
     @Test

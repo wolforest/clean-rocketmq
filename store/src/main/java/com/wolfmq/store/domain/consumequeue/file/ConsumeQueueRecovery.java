@@ -2,7 +2,6 @@ package com.wolfmq.store.domain.consumequeue.file;
 
 import com.wolfmq.common.config.store.ConsumeQueueConfig;
 import com.wolfmq.common.domain.consumequeue.QueueUnit;
-import com.wolfmq.common.domain.consumequeue.ConsumeQueue;
 import com.wolfmq.common.core.mmap.MappedFile;
 import com.wolfmq.common.core.mmap.MappedFileQueue;
 import com.wolfmq.common.domain.offset.checkpoint.bakeup.CheckPoint;
@@ -28,12 +27,8 @@ public class ConsumeQueueRecovery implements ConsumeQueueRegistry {
         this.checkPoint = checkPoint;
     }
     @Override
-    public void register(ConsumeQueue queue) {
-        if (!(queue instanceof FileConsumeQueue)) {
-            return;
-        }
-
-        queueSet.add((FileConsumeQueue) queue);
+    public void register(FileConsumeQueue queue) {
+        queueSet.add(queue);
     }
 
     public void recover() {
@@ -50,7 +45,7 @@ public class ConsumeQueueRecovery implements ConsumeQueueRegistry {
         });
     }
 
-    private void recoverMinOffset(ConsumeQueue queue) {
+    private void recoverMinOffset(FileConsumeQueue queue) {
         Long minOffset = getMinOffsetFromCheckPoint(queue);
         if (null != minOffset && checkPoint.isShutdownSuccessful()) {
             recoverToMinOffset(queue, minOffset);
@@ -65,20 +60,20 @@ public class ConsumeQueueRecovery implements ConsumeQueueRegistry {
         recoverByFirstMappedFile(queue);
     }
 
-    private void recoverToMinOffset(ConsumeQueue queue, long minOffset) {
+    private void recoverToMinOffset(FileConsumeQueue queue, long minOffset) {
         queue.setMinOffset(minOffset);
     }
 
-    private void recoverFromMinOffset(ConsumeQueue queue, long minOffset) {
+    private void recoverFromMinOffset(FileConsumeQueue queue, long minOffset) {
         long mappedFileMinOffset = getMappedFileMinOffset(queue);
         queue.setMinOffset(Math.max(mappedFileMinOffset, minOffset));
     }
 
-    private void recoverByFirstMappedFile(ConsumeQueue queue) {
+    private void recoverByFirstMappedFile(FileConsumeQueue queue) {
         queue.setMinOffset(getMappedFileMinOffset(queue));
     }
 
-    private long getMappedFileMinOffset(ConsumeQueue queue) {
+    private long getMappedFileMinOffset(FileConsumeQueue queue) {
         MappedFile mappedFile = queue.getMappedFileQueue().getFirstMappedFile();
         if (null == mappedFile) {
             log.error("[bug] consume queue mapped file is empty");
@@ -88,7 +83,7 @@ public class ConsumeQueueRecovery implements ConsumeQueueRegistry {
         return mappedFile.getMinOffset() / queue.getUnitSize();
     }
 
-    private Long getMinOffsetFromCheckPoint(ConsumeQueue queue) {
+    private Long getMinOffsetFromCheckPoint(FileConsumeQueue queue) {
         Offset offset = checkPoint.getMinOffset();
         if (null == offset) {
             return null;
@@ -107,7 +102,7 @@ public class ConsumeQueueRecovery implements ConsumeQueueRegistry {
         return queueOffsets.get(queue.getQueueId());
     }
 
-    private void recoverMaxOffset(ConsumeQueue queue) {
+    private void recoverMaxOffset(FileConsumeQueue queue) {
         Offset offset = checkPoint.getMaxOffset();
         Long maxOffset = null != offset
             ? offset.getQueueOffset(queue.getTopic(), queue.getQueueId())
@@ -126,7 +121,7 @@ public class ConsumeQueueRecovery implements ConsumeQueueRegistry {
         recoverLastThreeFiles(queue);
     }
 
-    private void recoverToMaxOffset(ConsumeQueue queue, long maxOffset) {
+    private void recoverToMaxOffset(FileConsumeQueue queue, long maxOffset) {
         MappedFile mappedFile = queue.getMappedFileQueue().getMappedFileByOffset(maxOffset);
         if (mappedFile == null) {
             log.error("[bug] can't find MappedFile for offset: {}", maxOffset);
@@ -143,7 +138,7 @@ public class ConsumeQueueRecovery implements ConsumeQueueRegistry {
         queue.setMaxOffset(maxOffset);
     }
 
-    private void recoverFromOffset(ConsumeQueue queue, long startOffset) {
+    private void recoverFromOffset(FileConsumeQueue queue, long startOffset) {
         MappedFileQueue mappedFileQueue = queue.getMappedFileQueue();
         List<MappedFile> mappedFiles = mappedFileQueue.getMappedFiles();
 
@@ -185,7 +180,7 @@ public class ConsumeQueueRecovery implements ConsumeQueueRegistry {
         mappedFileQueue.removeMappedFiles(dirtyFiles);
     }
 
-    private void recoverLastThreeFiles(ConsumeQueue queue) {
+    private void recoverLastThreeFiles(FileConsumeQueue queue) {
         MappedFileQueue mappedFileQueue = queue.getMappedFileQueue();
         MappedFile mappedFile;
         int size = mappedFileQueue.size();
@@ -201,7 +196,7 @@ public class ConsumeQueueRecovery implements ConsumeQueueRegistry {
         recoverFromOffset(queue, mappedFile.getMinOffset());
     }
 
-    private QueueUnit findLastQueueUnit(ConsumeQueue queue, MappedFile mappedFile, Long startOffset) {
+    private QueueUnit findLastQueueUnit(FileConsumeQueue queue, MappedFile mappedFile, Long startOffset) {
         QueueUnit tmp;
         QueueUnit last = null;
         long processOffset = mappedFile.containsOffset(startOffset)

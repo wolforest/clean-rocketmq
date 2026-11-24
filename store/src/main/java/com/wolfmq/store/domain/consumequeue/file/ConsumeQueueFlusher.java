@@ -2,7 +2,6 @@ package com.wolfmq.store.domain.consumequeue.file;
 
 import cn.coderule.common.lang.concurrent.thread.ServiceThread;
 import com.wolfmq.common.config.store.ConsumeQueueConfig;
-import com.wolfmq.common.domain.consumequeue.ConsumeQueue;
 import com.wolfmq.common.core.mmap.MappedFileQueue;
 import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueRegistry;
 import java.util.LinkedHashSet;
@@ -21,12 +20,8 @@ public class ConsumeQueueFlusher extends ServiceThread implements ConsumeQueueRe
     }
 
     @Override
-    public void register(ConsumeQueue queue) {
-        if (!(queue instanceof FileConsumeQueue)) {
-            return;
-        }
-
-        queueSet.add((FileConsumeQueue) queue);
+    public void register(FileConsumeQueue queue) {
+        queueSet.add(queue);
     }
 
     @Override
@@ -60,9 +55,8 @@ public class ConsumeQueueFlusher extends ServiceThread implements ConsumeQueueRe
             minFlushPages = 0;
         }
 
-        for (ConsumeQueue queue : queueSet) {
-            MappedFileQueue mappedFileQueue = queue.getMappedFileQueue();
-            mappedFileQueue.flush(minFlushPages);
+        for (FileConsumeQueue queue : queueSet) {
+            queue.getMappedFileQueue().flush(minFlushPages);
         }
 
         lastFlushTime = now;

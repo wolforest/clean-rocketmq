@@ -89,7 +89,7 @@ public class ConsumeQueueFactory implements ConsumeQueueRegistry {
         ConsumeQueue result = queueMap.putIfAbsent(queueId, queue);
 
         if (result == null) {
-            register(queue);
+            register((FileConsumeQueue) queue);
         }
 
         return result == null ? queue : result;
@@ -99,7 +99,8 @@ public class ConsumeQueueFactory implements ConsumeQueueRegistry {
         createHooks.add(hook);
     }
 
-    public void register(ConsumeQueue queue) {
+    @Override
+    public void register(FileConsumeQueue queue) {
         if (createHooks.isEmpty()) return;
 
         for (ConsumeQueueRegistry hook : createHooks) {

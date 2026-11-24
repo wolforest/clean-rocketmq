@@ -80,11 +80,6 @@ public class RocksdbConsumeQueue implements ConsumeQueue {
     }
 
     @Override
-    public MappedFileQueue getMappedFileQueue() {
-        return null;
-    }
-
-    @Override
     public void load() {
 
     }

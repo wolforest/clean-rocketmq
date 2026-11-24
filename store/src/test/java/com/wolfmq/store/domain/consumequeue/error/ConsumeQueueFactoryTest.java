@@ -7,6 +7,7 @@ import com.wolfmq.common.domain.meta.service.TopicService;
 import com.wolfmq.common.domain.offset.QueueProgress;
 import com.wolfmq.common.domain.meta.topic.utils.TopicMap;
 import com.wolfmq.common.testing.ConfigMock;
+import com.wolfmq.store.domain.consumequeue.file.FileConsumeQueue;
 import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueFactory;
 import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueRegistry;
 import com.wolfmq.store.server.bootstrap.StoreCheckpoint;
@@ -308,7 +309,7 @@ class ConsumeQueueFactoryTest {
         int registerCount = 0;
 
         @Override
-        public void register(ConsumeQueue queue) {
+        public void register(FileConsumeQueue queue) {
             registerCount++;
         }
     }

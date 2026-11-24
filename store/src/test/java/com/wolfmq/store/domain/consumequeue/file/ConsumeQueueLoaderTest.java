@@ -2,7 +2,6 @@ package com.wolfmq.store.domain.consumequeue.file;
 
 import com.wolfmq.common.config.store.ConsumeQueueConfig;
 import com.wolfmq.common.core.mmap.MappedFileQueue;
-import com.wolfmq.common.domain.consumequeue.ConsumeQueue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -23,15 +22,6 @@ public class ConsumeQueueLoaderTest {
     @Test
     void testConstructor() {
         assertNotNull(loader);
-    }
-
-    @Test
-    void testRegisterIgnoresNonFileQueue() {
-        ConsumeQueue queue = mock(ConsumeQueue.class);
-        loader.register(queue);
-        loader.load();
-
-        verify(queue, never()).getMappedFileQueue();
     }
 
     @Test

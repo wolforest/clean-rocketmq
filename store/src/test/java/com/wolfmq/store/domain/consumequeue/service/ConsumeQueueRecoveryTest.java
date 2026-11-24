@@ -1,7 +1,7 @@
 package com.wolfmq.store.domain.consumequeue.service;
 
 import com.wolfmq.common.config.store.ConsumeQueueConfig;
-import com.wolfmq.common.domain.consumequeue.ConsumeQueue;
+import com.wolfmq.store.domain.consumequeue.file.FileConsumeQueue;
 import com.wolfmq.common.domain.offset.checkpoint.bakeup.CheckPoint;
 import com.wolfmq.common.domain.offset.commitlog.OffsetCodec;
 import com.wolfmq.store.domain.consumequeue.file.ConsumeQueueRecovery;
@@ -28,7 +28,7 @@ public class ConsumeQueueRecoveryTest {
 
     @Test
     void testRegisterAddsQueue() {
-        ConsumeQueue queue = mock(ConsumeQueue.class);
+        FileConsumeQueue queue = mock(FileConsumeQueue.class);
         assertDoesNotThrow(() -> recovery.register(queue));
     }
 
@@ -39,8 +39,8 @@ public class ConsumeQueueRecoveryTest {
 
     @Test
     void testRegisterMultipleQueues() {
-        ConsumeQueue queue1 = mock(ConsumeQueue.class);
-        ConsumeQueue queue2 = mock(ConsumeQueue.class);
+        FileConsumeQueue queue1 = mock(FileConsumeQueue.class);
+        FileConsumeQueue queue2 = mock(FileConsumeQueue.class);
         assertDoesNotThrow(() -> recovery.register(queue1));
         assertDoesNotThrow(() -> recovery.register(queue2));
     }

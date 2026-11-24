@@ -1,6 +1,6 @@
 package com.wolfmq.store.domain.consumequeue.error;
 
-import com.wolfmq.common.domain.consumequeue.ConsumeQueue;
+import com.wolfmq.store.domain.consumequeue.file.FileConsumeQueue;
 import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueRegistry;
 import org.junit.jupiter.api.Test;
 
@@ -17,24 +17,24 @@ public class ConsumeQueueRegistryTest {
 
     @Test
     void testRegisterLambda() {
-        ConsumeQueue[] captured = {null};
+        FileConsumeQueue[] captured = {null};
         ConsumeQueueRegistry registry = queue -> captured[0] = queue;
-        ConsumeQueue queue = mock(ConsumeQueue.class);
+        FileConsumeQueue queue = mock(FileConsumeQueue.class);
         registry.register(queue);
         assertSame(queue, captured[0]);
     }
 
     @Test
     void testRegisterWithMock() {
-        ConsumeQueue queue = mock(ConsumeQueue.class);
+        FileConsumeQueue queue = mock(FileConsumeQueue.class);
         ConsumeQueueRegistry registry = q -> {};
         assertDoesNotThrow(() -> registry.register(queue));
     }
 
     @Test
     void testRegisterMultiple() {
-        ConsumeQueue queue1 = mock(ConsumeQueue.class);
-        ConsumeQueue queue2 = mock(ConsumeQueue.class);
+        FileConsumeQueue queue1 = mock(FileConsumeQueue.class);
+        FileConsumeQueue queue2 = mock(FileConsumeQueue.class);
         int[] count = {0};
         ConsumeQueueRegistry registry = q -> count[0]++;
         registry.register(queue1);

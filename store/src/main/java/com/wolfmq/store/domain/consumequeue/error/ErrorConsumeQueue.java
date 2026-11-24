@@ -86,11 +86,6 @@ public class ErrorConsumeQueue implements ConsumeQueue {
     }
 
     @Override
-    public MappedFileQueue getMappedFileQueue() {
-        return null;
-    }
-
-    @Override
     public void load() {
 
     }

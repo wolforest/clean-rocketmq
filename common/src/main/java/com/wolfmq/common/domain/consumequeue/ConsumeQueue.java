@@ -1,7 +1,6 @@
 package com.wolfmq.common.domain.consumequeue;
 
 import com.wolfmq.common.domain.commitlog.dispatch.CommitEvent;
-import com.wolfmq.common.core.mmap.MappedFileQueue;
 import java.util.List;
 import java.util.Map;
 
@@ -22,8 +21,6 @@ public interface ConsumeQueue {
 
     long increaseOffset();
     long rollToOffset(long offset);
-
-    MappedFileQueue getMappedFileQueue();
 
     void load();
     void flush(int minPages);

@@ -1,7 +1,6 @@
 package com.wolfmq.store.domain.consumequeue.file;
 
 import com.wolfmq.common.config.store.ConsumeQueueConfig;
-import com.wolfmq.common.domain.consumequeue.ConsumeQueue;
 import com.wolfmq.common.core.mmap.MappedFileQueue;
 import com.wolfmq.store.domain.consumequeue.service.ConsumeQueueRegistry;
 import java.util.LinkedHashSet;
@@ -18,21 +17,16 @@ public class ConsumeQueueLoader implements ConsumeQueueRegistry {
         this.config = config;
     }
     @Override
-    public void register(ConsumeQueue queue) {
-        if (!(queue instanceof FileConsumeQueue)) {
-            return;
-        }
-
-        queueSet.add((FileConsumeQueue) queue);
+    public void register(FileConsumeQueue queue) {
+        queueSet.add(queue);
     }
 
     public void load() {
         if (queueSet.isEmpty()) return;
 
         queueSet.forEach(queue -> {
-            MappedFileQueue mappedFileQueue = queue.getMappedFileQueue();
-            mappedFileQueue.load();
-            mappedFileQueue.checkSelf();
+            queue.getMappedFileQueue().load();
+            queue.getMappedFileQueue().checkSelf();
         });
     }
 }

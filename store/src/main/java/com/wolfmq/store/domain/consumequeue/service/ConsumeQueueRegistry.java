@@ -1,7 +1,7 @@
 package com.wolfmq.store.domain.consumequeue.service;
 
-import com.wolfmq.common.domain.consumequeue.ConsumeQueue;
+import com.wolfmq.store.domain.consumequeue.file.FileConsumeQueue;
 
 public interface ConsumeQueueRegistry {
-    void register(ConsumeQueue queue);
+    void register(FileConsumeQueue queue);
 }

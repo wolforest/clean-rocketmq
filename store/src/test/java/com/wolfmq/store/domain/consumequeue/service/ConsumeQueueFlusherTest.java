@@ -1,9 +1,8 @@
 package com.wolfmq.store.domain.consumequeue.service;
 
 import com.wolfmq.common.config.store.ConsumeQueueConfig;
-import com.wolfmq.common.domain.consumequeue.ConsumeQueue;
-import com.wolfmq.common.core.mmap.MappedFileQueue;
 import com.wolfmq.store.domain.consumequeue.file.ConsumeQueueFlusher;
+import com.wolfmq.store.domain.consumequeue.file.FileConsumeQueue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -28,24 +27,16 @@ public class ConsumeQueueFlusherTest {
 
     @Test
     void testRegisterAddsQueue() {
-        ConsumeQueue queue = mock(ConsumeQueue.class);
-        flusher.register(queue);
-
-        MappedFileQueue mfq = mock(MappedFileQueue.class);
-        when(queue.getMappedFileQueue()).thenReturn(mfq);
-
-        assertDoesNotThrow(() -> {
-            flusher.register(queue);
-        });
+        FileConsumeQueue queue = mock(FileConsumeQueue.class);
+        assertDoesNotThrow(() -> flusher.register(queue));
     }
 
     @Test
     void testRegisterSameQueueOnlyOnce() {
-        ConsumeQueue queue = mock(ConsumeQueue.class);
-        flusher.register(queue);
-        flusher.register(queue);
-
-        MappedFileQueue mfq = mock(MappedFileQueue.class);
-        when(queue.getMappedFileQueue()).thenReturn(mfq);
+        FileConsumeQueue queue = mock(FileConsumeQueue.class);
+        assertDoesNotThrow(() -> {
+            flusher.register(queue);
+            flusher.register(queue);
+        });
     }
 }
