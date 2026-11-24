@@ -70,14 +70,12 @@ public class ErrorConsumeQueueTest {
         assertEquals(0, ErrorConsumeQueue.INSTANCE.getMaxOffset());
         assertEquals(0, ErrorConsumeQueue.INSTANCE.rollToOffset(100));
         assertEquals(0, ErrorConsumeQueue.INSTANCE.increaseOffset());
-        assertEquals(0, ErrorConsumeQueue.INSTANCE.getMaxCommitOffset());
     }
 
     @Test
     void testSetOffsetMethodsDoNotThrow() {
         assertDoesNotThrow(() -> ErrorConsumeQueue.INSTANCE.setMinOffset(100));
         assertDoesNotThrow(() -> ErrorConsumeQueue.INSTANCE.setMaxOffset(200));
-        assertDoesNotThrow(() -> ErrorConsumeQueue.INSTANCE.setMaxCommitOffset(300));
         assertDoesNotThrow(() -> ErrorConsumeQueue.INSTANCE.setCommitOffsetByShardId(0, 100L));
     }
 

@@ -228,34 +228,6 @@ class FileConsumeQueueTest {
         assertEquals(0, queue.getMinOffset());
     }
 
-    @Test
-    void testGetMaxCommitLogOffset(@TempDir Path tmpDir) {
-        FileConsumeQueue queue = (FileConsumeQueue) createConsumeQueue(tmpDir.toString());
-
-        assertEquals(0L, queue.getMaxCommitOffset());
-
-        for (int i = 0; i < 3; i++) {
-            CommitEvent event = createCommitEventWithCommitOffset(queue, 100L + i * 50);
-            queue.enqueue(event);
-        }
-
-        assertEquals(100L + 2 * 50 + 30, queue.getMaxCommitOffset());
-
-        queue.destroy();
-    }
-
-    @Test
-    void testSetMaxCommitLogOffset(@TempDir Path tmpDir) {
-        FileConsumeQueue queue = (FileConsumeQueue) createConsumeQueue(tmpDir.toString());
-
-        queue.setMaxCommitOffset(500L);
-        assertEquals(500L, queue.getMaxCommitOffset());
-
-        queue.setMaxCommitOffset(100L);
-        assertEquals(100L, queue.getMaxCommitOffset());
-
-        queue.destroy();
-    }
 
     @Test
     void testGetMultiple(@TempDir Path tmpDir) {

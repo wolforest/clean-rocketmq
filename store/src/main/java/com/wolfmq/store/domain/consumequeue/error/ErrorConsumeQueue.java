@@ -100,16 +100,6 @@ public class ErrorConsumeQueue implements ConsumeQueue {
     }
 
     @Override
-    public long getMaxCommitOffset() {
-        return 0;
-    }
-
-    @Override
-    public void setMaxCommitOffset(long maxCommitOffset) {
-
-    }
-
-    @Override
     public long increaseOffset() {
         return 0;
     }

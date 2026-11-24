@@ -29,9 +29,6 @@ public interface ConsumeQueue {
     Long getCommitOffsetByShardId(int shardId);
     void setCommitOffsetByShardId(int shardId, long offset);
 
-    long getMaxCommitOffset();
-    void setMaxCommitOffset(long maxCommitOffset);
-
     MappedFileQueue getMappedFileQueue();
 
     void load();

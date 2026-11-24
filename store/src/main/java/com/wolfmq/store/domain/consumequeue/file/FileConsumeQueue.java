@@ -47,8 +47,6 @@ public class FileConsumeQueue implements ConsumeQueue {
     private final ByteBuffer writeBuffer;
 
     @Getter @Setter
-    private long maxCommitOffset = 0L;
-    @Getter @Setter
     private ConcurrentMap<Integer, Long> commitOffsetMap;
 
     private volatile long minOffset = 0;
@@ -190,7 +188,7 @@ public class FileConsumeQueue implements ConsumeQueue {
     @Override
     public void load() {
         mappedFileQueue.load();
-        // TODO: UPDATE minOffset/maxOffset while loading
+
         setMinOffset(mappedFileQueue.getMinOffset());
         setMaxOffset(mappedFileQueue.getMaxOffset());
     }
@@ -396,11 +394,6 @@ public class FileConsumeQueue implements ConsumeQueue {
     private void updateCommitOffset(CommitEvent event) {
         long offset = event.getMessageBO().getCommitOffset()
             + event.getMessageBO().getMessageLength();
-
-        // to be deleted
-        if (offset > maxCommitOffset) {
-            maxCommitOffset = offset;
-        }
 
         int shardId = event.getShardId();
         Long oldOffset = commitOffsetMap.get(shardId);
