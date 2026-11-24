@@ -18,6 +18,8 @@ public class ConsumeQueueCommitHandler implements CommitHandler {
     @Override
     public void handle(CommitEvent event) {
         MessageBO messageBO = event.getMessageBO();
+        // skip prepare and rollback message
+        // store normal and commit message
         if (!messageBO.isNormalOrCommitMessage()) {
             return;
         }
