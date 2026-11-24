@@ -85,7 +85,6 @@ public class ErrorConsumeQueueTest {
     @Test
     void testLifecycleMethodsDoNotThrow() {
         assertDoesNotThrow(ErrorConsumeQueue.INSTANCE::load);
-        assertDoesNotThrow(() -> ErrorConsumeQueue.INSTANCE.flush(0));
         assertDoesNotThrow(ErrorConsumeQueue.INSTANCE::destroy);
     }
 }

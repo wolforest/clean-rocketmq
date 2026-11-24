@@ -4,6 +4,7 @@ import com.wolfmq.common.domain.consumequeue.QueueType;
 import com.wolfmq.common.domain.commitlog.dispatch.CommitEvent;
 import com.wolfmq.common.domain.consumequeue.QueueUnit;
 import com.wolfmq.common.domain.consumequeue.ConsumeQueue;
+import com.wolfmq.store.domain.consumequeue.file.FileConsumeQueue;
 import com.wolfmq.common.domain.message.MessageBO;
 import org.junit.jupiter.api.Test;
 
@@ -163,8 +164,8 @@ class ConsumeQueueIntegrationTest extends BaseConsumeQueueIntegrationTest {
 
         queue.enqueue(createEvent(100L, 128, 100L, 0));
 
-        queue.flush(0);
-        queue.flush();
+        ((FileConsumeQueue) queue).getMappedFileQueue().flush(0);
+        ((FileConsumeQueue) queue).getMappedFileQueue().flush(0);
 
         QueueUnit unit = queue.get(0);
         assertNotNull(unit);

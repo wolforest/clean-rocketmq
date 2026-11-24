@@ -84,10 +84,6 @@ public class RocksdbConsumeQueue implements ConsumeQueue {
 
     }
 
-    @Override
-    public void flush(int minPages) {
-
-    }
 
     @Override
     public void destroy() {

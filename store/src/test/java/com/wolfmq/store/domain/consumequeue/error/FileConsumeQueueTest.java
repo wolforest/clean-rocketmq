@@ -33,7 +33,7 @@ class FileConsumeQueueTest {
             queue.enqueue(event);
         }
 
-        queue.flush();
+        ((FileConsumeQueue) queue).getMappedFileQueue().flush(0);
 
         QueueUnit first = queue.get(0);
         QueueUnit second = queue.get(1);
@@ -103,7 +103,7 @@ class FileConsumeQueueTest {
         for (int i = 0; i < 5; i++) {
             queue.enqueue(createCommitEvent(queue));
         }
-        queue.flush();
+        ((FileConsumeQueue) queue).getMappedFileQueue().flush(0);
 
         assertEquals(0, queue.getMinOffset());
 
@@ -132,7 +132,7 @@ class FileConsumeQueueTest {
         for (int i = 0; i < 5; i++) {
             queue.enqueue(createCommitEvent(queue));
         }
-        queue.flush();
+        ((FileConsumeQueue) queue).getMappedFileQueue().flush(0);
 
         queue.setMinOffset(2);
 
@@ -183,7 +183,7 @@ class FileConsumeQueueTest {
         for (int i = 0; i < 5; i++) {
             queue.enqueue(createCommitEventWithCommitOffset(queue, 50 + i));
         }
-        queue.flush();
+        ((FileConsumeQueue) queue).getMappedFileQueue().flush(0);
 
         String topic = queue.getTopic();
         int queueId = queue.getQueueId();
@@ -207,8 +207,8 @@ class FileConsumeQueueTest {
             queue.enqueue(createCommitEvent(queue));
         }
 
-        assertDoesNotThrow(() -> queue.flush(0));
-        assertDoesNotThrow(() -> queue.flush(1));
+        assertDoesNotThrow(() -> ((FileConsumeQueue) queue).getMappedFileQueue().flush(0));
+        assertDoesNotThrow(() -> ((FileConsumeQueue) queue).getMappedFileQueue().flush(1));
 
         queue.destroy();
     }
@@ -220,7 +220,7 @@ class FileConsumeQueueTest {
         for (int i = 0; i < 5; i++) {
             queue.enqueue(createCommitEvent(queue));
         }
-        queue.flush();
+        ((FileConsumeQueue) queue).getMappedFileQueue().flush(0);
 
         assertDoesNotThrow(queue::destroy);
 
@@ -236,7 +236,7 @@ class FileConsumeQueueTest {
         for (int i = 0; i < 10; i++) {
             queue.enqueue(createCommitEvent(queue));
         }
-        queue.flush();
+        ((FileConsumeQueue) queue).getMappedFileQueue().flush(0);
 
         List<QueueUnit> all = queue.get(0, 10);
         assertEquals(10, all.size());
@@ -262,7 +262,7 @@ class FileConsumeQueueTest {
             long queueOffset = queue.increaseOffset();
             queue.enqueue(createCommitEventWithConsumeOffset(queue, queueOffset));
         }
-        queue.flush();
+        ((FileConsumeQueue) queue).getMappedFileQueue().flush(0);
 
 
         QueueUnit unit = queue.get(0);
@@ -285,7 +285,7 @@ class FileConsumeQueueTest {
         for (int i = 0; i < 5; i++) {
             queue.enqueue(createCommitEvent(queue));
         }
-        queue.flush();
+        ((FileConsumeQueue) queue).getMappedFileQueue().flush(0);
 
         QueueUnit unit = queue.get(10);
         assertNull(unit);

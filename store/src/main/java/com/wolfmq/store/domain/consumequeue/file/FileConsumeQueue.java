@@ -181,9 +181,12 @@ public class FileConsumeQueue implements ConsumeQueue {
         setMaxOffset(mappedFileQueue.getMaxOffset());
     }
 
-    @Override
+    public void flush() {
+        flush(0);
+    }
+
     public void flush(int minPages) {
-        mappedFileQueue.flush(minPages);
+        this.mappedFileQueue.flush(minPages);
     }
 
     @Override
