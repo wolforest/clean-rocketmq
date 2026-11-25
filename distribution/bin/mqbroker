@@ -24,4 +24,31 @@ fi
 
 export WOLFMQ_HOME
 
-sh ${WOLFMQ_HOME}/bin/runbroker.sh com.wolfmq.broker.Broker $@
+other_args=" "
+config_path=""
+
+while [ $# -gt 0 ]; do
+  case $1 in
+    -p|--configPath)
+      config_path="$2"
+      shift
+      shift
+      ;;
+    *)
+      other_args=${other_args}" "${1}
+      shift
+      ;;
+  esac
+done
+
+if [ -z "$config_path" ] ; then
+  config_path="$WOLFMQ_HOME/conf"
+fi
+
+# make it fully qualified
+case "$config_path" in
+  /*) ;;
+  *) config_path="$(pwd)/$config_path" ;;
+esac
+
+sh ${WOLFMQ_HOME}/bin/runbroker.sh com.wolfmq.broker.Broker ${other_args} -p "${config_path}"
