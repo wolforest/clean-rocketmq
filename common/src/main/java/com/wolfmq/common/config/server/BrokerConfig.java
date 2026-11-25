@@ -14,6 +14,7 @@ import com.wolfmq.common.config.business.TransactionConfig;
 import com.wolfmq.common.config.network.GrpcConfig;
 import com.wolfmq.common.config.network.RpcClientConfig;
 import com.wolfmq.common.config.network.RpcServerConfig;
+import com.wolfmq.common.server.registry.RegistryUtils;
 import java.io.Serializable;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
@@ -52,7 +53,6 @@ public class BrokerConfig extends ServerIdentity implements Serializable {
 
     private boolean enableBrokerRegister = false;
     private String registryAddress = "127.0.0.1:9876";
-    // private String registryAddress = System.getProperty(RegistryUtils.NAMESRV_ADDR_PROPERTY, System.getenv(RegistryUtils.NAMESRV_ADDR_ENV));
     private boolean fetchRegistryAddressByDns = false;
     private boolean fetchRegistryAddressByHttp = false;
     private boolean enableRegistryHeartbeat = false;

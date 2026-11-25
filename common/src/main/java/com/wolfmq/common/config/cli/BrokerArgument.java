@@ -1,5 +1,6 @@
 package com.wolfmq.common.config.cli;
 
+import com.wolfmq.common.server.registry.RegistryUtils;
 import java.io.File;
 import java.io.Serializable;
 import java.net.URL;
@@ -62,6 +63,16 @@ public class BrokerArgument implements Serializable {
             + CliConstants.STORE_CONFIG_FILE;
 
         return storeConfig;
+    }
+
+    public String getRegistry() {
+        if (StringUtil.notBlank(registry)) {
+            return registry;
+        }
+
+        registry = CliConstants.getDefaultRegistry();
+
+        return registry;
     }
 
     public void validate() {
