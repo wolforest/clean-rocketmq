@@ -179,13 +179,13 @@ class CommitDispatcherIntegrationTest extends BaseCommitDispatcherIntegrationTes
         handlerManager.register(capturedEvents::add);
 
         MessageBO message = MessageMock.createMessage("CAPTURE_TOPIC", 100);
-        CommitEvent event = CommitEvent.of(message, 0);
+        CommitEvent event = CommitEvent.of(message);
 
         handlerManager.handle(event);
 
         assertEquals(1, capturedEvents.size());
         assertEquals("CAPTURE_TOPIC", capturedEvents.get(0).getMessageBO().getTopic());
-        assertEquals(0, capturedEvents.get(0).getShardId());
+        assertEquals(0, capturedEvents.get(0).getMessageBO().getCommitShard());
     }
 
     @Test
