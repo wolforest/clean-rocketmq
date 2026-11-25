@@ -2,6 +2,10 @@ package com.wolfmq.broker.server.bootstrap;
 
 import cn.coderule.common.convention.container.ApplicationContext;
 import cn.coderule.common.convention.container.EventBus;
+import com.wolfmq.common.config.cli.BrokerConfigLoader;
+import com.wolfmq.common.config.cli.StoreArgument;
+import com.wolfmq.common.config.server.BrokerConfig;
+import java.io.IOException;
 
 /**
  * context initializer
@@ -10,23 +14,26 @@ import cn.coderule.common.convention.container.EventBus;
  *  - init broker libs
  */
 public class ContextInitializer {
-    private final String[] args;
-    private final BrokerArgument argument;
     private final ApplicationContext context;
+    private final BrokerConfigLoader configLoader;
 
-    public static void init(String[] args, ApplicationContext context) {
+    public static void init(String[] args, ApplicationContext context) throws IOException {
         ContextInitializer initializer = new ContextInitializer(args, context);
         initializer.initialize();
     }
 
     public ContextInitializer(String[] args, ApplicationContext context) {
-        this.args = args;
-        this.argument = new BrokerArgument();
         this.context = context;
+        this.configLoader = new BrokerConfigLoader(args);
     }
 
-    public void initialize() {
-        ConfigLoader.load(context);
+    public void initialize() throws IOException {
+        BrokerConfig brokerConfig = configLoader.load();
+        context.register(brokerConfig);
+
+        StoreArgument storeArgument = configLoader.getArgument().toStoreArgument();
+        context.register(storeArgument);
+
         initLibs();
     }
 

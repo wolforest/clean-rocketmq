@@ -21,12 +21,8 @@ public class Broker implements Lifecycle {
      * main entry of Broker
      * @param args command line argument
      */
-    public static void main(String[] args) {
-        try {
-            new Broker(args).start();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+    public static void main(String[] args) throws Exception {
+        new Broker(args).start();
     }
 
     private final String[] args;

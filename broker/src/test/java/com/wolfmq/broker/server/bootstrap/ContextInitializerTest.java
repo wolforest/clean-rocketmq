@@ -2,6 +2,7 @@ package com.wolfmq.broker.server.bootstrap;
 
 import cn.coderule.common.convention.container.ApplicationContext;
 import cn.coderule.common.convention.container.EventBus;
+import java.io.IOException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -12,15 +13,15 @@ class ContextInitializerTest {
 
     @Test
     void testConstructor() {
-        String[] args = {"-c", "config.properties"};
+        String[] args = {"-p", "config"};
         ContextInitializer initializer = new ContextInitializer(args, context);
 
         assertNotNull(initializer);
     }
 
     @Test
-    void testInitialize() {
-        String[] args = {};
+    void testInitialize() throws IOException {
+        String[] args = {"-b", "broker.yml"};
         ContextInitializer initializer = new ContextInitializer(args, context);
 
         assertDoesNotThrow(initializer::initialize);
@@ -30,14 +31,14 @@ class ContextInitializerTest {
 
     @Test
     void testStaticInit() {
-        String[] args = {};
+        String[] args = {"-b", "broker.yml"};
 
         assertDoesNotThrow(() -> ContextInitializer.init(args, context));
     }
 
     @Test
-    void testInitLibsRegistersEventBus() {
-        String[] args = {};
+    void testInitLibsRegistersEventBus() throws IOException {
+        String[] args = {"-b", "broker.yml"};
         ContextInitializer initializer = new ContextInitializer(args, context);
         initializer.initialize();
 
