@@ -2,12 +2,13 @@ package com.wolfmq.store;
 
 import cn.coderule.common.convention.service.Lifecycle;
 import cn.coderule.common.convention.service.LifecycleManager;
+import com.wolfmq.common.config.cli.StoreArgument;
+import com.wolfmq.common.config.cli.StoreConfigLoader;
 import com.wolfmq.common.core.lock.server.StartupLock;
 import com.wolfmq.common.core.lock.server.ShutdownLock;
 import com.wolfmq.common.server.store.StoreState;
 import com.wolfmq.store.server.bootstrap.ContextInitializer;
 import com.wolfmq.store.server.bootstrap.ComponentRegister;
-import com.wolfmq.store.server.bootstrap.StoreArgument;
 import com.wolfmq.store.server.bootstrap.StoreCheckpoint;
 import cn.coderule.common.convention.container.ApplicationContext;
 import com.wolfmq.common.core.constant.ContextNamespace;
@@ -34,7 +35,7 @@ public class Store implements Lifecycle {
         new Store(args).start();
     }
 
-    private final StoreArgument argument;
+    private final StoreConfigLoader configLoader;
     @Getter private final ApplicationContext context;
     private LifecycleManager componentManager;
 
@@ -42,17 +43,18 @@ public class Store implements Lifecycle {
     private ShutdownLock shutdownLock;
 
     public Store(String[] args) {
-        this(new StoreArgument(args));
+        this.configLoader = new StoreConfigLoader(args);
+        this.context = new ApplicationContext(ContextNamespace.APP);
     }
 
     public Store(@NonNull StoreArgument argument) {
-        this.argument = argument;
+        this.configLoader = new StoreConfigLoader(argument);
         this.context = new ApplicationContext(ContextNamespace.APP);
     }
 
     @Override
     public void initialize() throws Exception {
-        ContextInitializer.init(argument, context);
+        ContextInitializer.init(configLoader, context);
 
         StoreConfig storeConfig = context.getBean(StoreConfig.class);
         startupLock = new StartupLock(storeConfig.getPath().getLockFile());

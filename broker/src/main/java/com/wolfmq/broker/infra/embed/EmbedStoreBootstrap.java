@@ -3,6 +3,7 @@ package com.wolfmq.broker.infra.embed;
 import cn.coderule.common.convention.container.ApplicationContext;
 
 import cn.coderule.common.convention.service.Lifecycle;
+import com.wolfmq.common.config.cli.StoreArgument;
 import com.wolfmq.common.config.server.BrokerConfig;
 import com.wolfmq.common.core.constant.ContextNamespace;
 import com.wolfmq.common.server.store.api.MQStore;
@@ -11,7 +12,6 @@ import com.wolfmq.common.server.store.api.ConsumeOffsetStore;
 import com.wolfmq.common.server.store.api.meta.SubscriptionStore;
 import com.wolfmq.common.server.store.api.meta.TopicStore;
 import com.wolfmq.store.Store;
-import com.wolfmq.store.server.bootstrap.StoreArgument;
 
 public class EmbedStoreBootstrap implements Lifecycle {
     private final ApplicationContext context;
@@ -61,7 +61,7 @@ public class EmbedStoreBootstrap implements Lifecycle {
     }
 
     private void initStore() throws Exception {
-        StoreArgument storeArgument = new StoreArgument();
+        StoreArgument storeArgument = context.getBean(StoreArgument.class);
         store = new Store(storeArgument);
         store.initialize();
 

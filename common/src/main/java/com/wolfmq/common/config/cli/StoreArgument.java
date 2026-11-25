@@ -6,6 +6,7 @@ import java.net.URL;
 import lombok.Data;
 import picocli.CommandLine.Option;
 import cn.coderule.common.util.lang.string.StringUtil;
+import cn.coderule.common.convention.container.ApplicationContext;
 
 @Data
 public class StoreArgument implements Serializable {
@@ -20,6 +21,8 @@ public class StoreArgument implements Serializable {
 
     @Option(names = {"-m", "--mode"}, description = "running mode")
     private String mode;
+
+    private ApplicationContext monitorContext;
 
 
     public String getConfigPath() {

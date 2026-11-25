@@ -17,10 +17,15 @@ public class StoreConfigLoader {
 
     public StoreConfigLoader(String[] args) {
         this.args = args;
+        this.parseArgs();
+    }
+
+    public StoreConfigLoader(StoreArgument argument) {
+        this.args = null;
+        this.argument = argument;
     }
 
     public StoreConfig load() throws IOException {
-        this.parseArgs();
         config = YamlUtil.load(argument.getStoreConfig(), StoreConfig.class);
 
         if (null == config) {
