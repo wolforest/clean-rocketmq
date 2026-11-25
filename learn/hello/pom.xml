@@ -25,6 +25,12 @@
         </dependency>
 
         <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
             <artifactId>wolf-grpc-starter</artifactId>
             <groupId>cn.coderule.starter</groupId>
         </dependency>

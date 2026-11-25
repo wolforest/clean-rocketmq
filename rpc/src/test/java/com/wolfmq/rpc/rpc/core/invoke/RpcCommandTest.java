@@ -1,10 +1,10 @@
 package com.wolfmq.rpc.rpc.core.invoke;
 
 import com.wolfmq.rpc.common.rpc.core.invoke.RpcCommand;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class RpcCommandTest {
 
@@ -13,8 +13,8 @@ public class RpcCommandTest {
         RpcCommand c1 = new RpcCommand();
         RpcCommand c2 = new RpcCommand();
 
-        assertNotSame("testGetOpaque failed", c1.getOpaque(), c2.getOpaque());
-        assertTrue("testGetOpaque failed", c2.getOpaque() > c1.getOpaque());
+        assertNotSame(c1.getOpaque(), c2.getOpaque(), "testGetOpaque failed");
+        assertTrue(c2.getOpaque() > c1.getOpaque(), "testGetOpaque failed");
 
     }
 }
