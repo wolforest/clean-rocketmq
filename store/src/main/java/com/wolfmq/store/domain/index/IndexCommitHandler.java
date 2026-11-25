@@ -23,21 +23,21 @@ public class IndexCommitHandler implements CommitHandler {
         }
 
         String topic = messageBO.getTopic();
-        long phyOffset = messageBO.getCommitOffset();
+        long commitOffset = messageBO.getCommitOffset();
         long storeTimestamp = messageBO.getStoreTimestamp();
 
-        if (StringUtil.isBlank(topic) || phyOffset <= 0) {
+        if (StringUtil.isBlank(topic) || commitOffset <= 0) {
             return;
         }
 
         String keys = messageBO.getKeys();
         if (StringUtil.notBlank(keys)) {
-            indexService.buildIndex(topic, keys, phyOffset, storeTimestamp);
+            indexService.buildIndex(topic, keys, commitOffset, storeTimestamp);
         }
 
         String messageId = messageBO.getMessageId();
         if (StringUtil.notBlank(messageId)) {
-            indexService.buildIndex(topic, messageId.trim(), phyOffset, storeTimestamp);
+            indexService.buildIndex(topic, messageId.trim(), commitOffset, storeTimestamp);
         }
     }
 }
