@@ -23,7 +23,7 @@ class ConsumeQueueIntegrationTest extends BaseConsumeQueueIntegrationTest {
             .build();
         messageBO.setSysFlag(0);
 
-        return CommitEvent.of(messageBO, 0);
+        return CommitEvent.of(messageBO);
     }
 
     @Test
