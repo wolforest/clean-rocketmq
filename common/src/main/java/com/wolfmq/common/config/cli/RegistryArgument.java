@@ -1,19 +1,46 @@
 package com.wolfmq.common.config.cli;
 
+import java.io.File;
 import java.io.Serializable;
+import java.net.URL;
 import lombok.Data;
 import picocli.CommandLine.Option;
+import cn.coderule.common.util.lang.string.StringUtil;
 
 @Data
 public class RegistryArgument implements Serializable {
-    @Option(names = {"-c", "--configFile"}, description = "config file", required = true)
-    private String configFile;
+    @Option(names = {"-p", "--configPath"}, description = "config path")
+    private String configPath;
 
-    @Option(names = {"-m", "--mode"}, description = "running mode")
-    private String mode;
+    @Option(names = {"-r", "--registryConfig"}, description = "registry config file")
+    private String registryConfig;
 
-    @Option(names = {"-r", "--registry"}, description = "registry address: addr1,addr2,...")
-    private String registry;
+
+    public String getConfigPath() {
+        if (StringUtil.notBlank(configPath)) {
+            return configPath;
+        }
+
+        URL resource = this.getClass().getClassLoader().getResource("");
+        if (null == resource) {
+            throw new RuntimeException("Unable to find config path");
+        }
+
+        configPath = resource.getPath();
+        return configPath;
+    }
+
+    public String getRegistryConfig() {
+        if (StringUtil.notBlank(registryConfig)) {
+            return registryConfig;
+        }
+
+        registryConfig = getConfigPath()
+            + File.separator
+            + CliConstants.REGISTRY_CONFIG_FILE;
+
+        return registryConfig;
+    }
 
     public void validate() {
 
