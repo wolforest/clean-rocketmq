@@ -1,0 +1,23 @@
+#!/bin/sh
+
+case $1 in
+    broker)
+        pid=`ps ax | grep -i 'com.wolfmq.broker.Broker' | grep java | grep -v grep | awk '{print $1}'`
+        ;;
+    registry)
+        pid=`ps ax | grep -i 'com.wolfmq.registry.Registry' | grep java | grep -v grep | awk '{print $1}'`
+        ;;
+    *)
+        echo "Usage: sh mqshutdown {broker|registry}"
+        exit 1
+        ;;
+esac
+
+if [ -z "$pid" ] ; then
+    echo "No mq$1 running."
+    exit 1
+fi
+
+echo "The mq$1(${pid}) is running..."
+kill ${pid}
+echo "Send shutdown request to mq$1(${pid}) OK"

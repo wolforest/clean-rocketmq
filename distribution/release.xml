@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<assembly>
+    <id>all</id>
+    <includeBaseDirectory>true</includeBaseDirectory>
+    <formats>
+        <format>dir</format>
+        <format>tar.gz</format>
+        <format>zip</format>
+    </formats>
+
+    <fileSets>
+        <fileSet>
+            <directory>../</directory>
+            <includes>
+                <include>README.md</include>
+            </includes>
+        </fileSet>
+
+        <fileSet>
+            <includes>
+                <include>conf/**</include>
+            </includes>
+        </fileSet>
+
+        <fileSet>
+            <includes>
+                <include>bin/**</include>
+            </includes>
+            <fileMode>0755</fileMode>
+        </fileSet>
+    </fileSets>
+
+    <files>
+        <file>
+            <source>LICENSE-BIN</source>
+            <destName>LICENSE</destName>
+        </file>
+        <file>
+            <source>NOTICE-BIN</source>
+            <destName>NOTICE</destName>
+        </file>
+    </files>
+
+    <moduleSets>
+        <moduleSet>
+            <useAllReactorProjects>true</useAllReactorProjects>
+            <includes>
+                <include>com.wolfmq:registry</include>
+                <include>com.wolfmq:broker</include>
+                <include>com.wolfmq:store</include>
+            </includes>
+            <binaries>
+                <outputDirectory>lib/</outputDirectory>
+                <!--
+                    wolfmq and cn.coderule both publish an artifact named "common";
+                    default naming (artifactId-version.jar) makes them overwrite
+                    each other in lib/, so prefix file names with the groupId.
+                -->
+                <outputFileNameMapping>${artifact.groupId}-${artifact.artifactId}-${artifact.version}.${artifact.extension}</outputFileNameMapping>
+                <unpack>false</unpack>
+                <dependencySets>
+                    <dependencySet>
+                        <outputDirectory>lib/</outputDirectory>
+                        <outputFileNameMapping>${artifact.groupId}-${artifact.artifactId}-${artifact.version}.${artifact.extension}</outputFileNameMapping>
+                    </dependencySet>
+                </dependencySets>
+            </binaries>
+        </moduleSet>
+    </moduleSets>
+</assembly>

@@ -1,0 +1,27 @@
+#!/bin/sh
+
+if [ -z "$WOLFMQ_HOME" ] ; then
+  PRG="$0"
+
+  while [ -h "$PRG" ] ; do
+    ls=`ls -ld "$PRG"`
+    link=`expr "$ls" : '.*-> \(.*\)$'`
+    if expr "$link" : '/.*' > /dev/null; then
+      PRG="$link"
+    else
+      PRG="`dirname "$PRG"`/$link"
+    fi
+  done
+
+  saveddir=`pwd`
+
+  WOLFMQ_HOME=`dirname "$PRG"`/..
+
+  WOLFMQ_HOME=`cd "$WOLFMQ_HOME" && pwd`
+
+  cd "$saveddir"
+fi
+
+export WOLFMQ_HOME
+
+sh ${WOLFMQ_HOME}/bin/runserver.sh com.wolfmq.registry.Registry $@
