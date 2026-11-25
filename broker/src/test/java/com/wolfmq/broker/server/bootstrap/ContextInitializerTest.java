@@ -3,7 +3,10 @@ package com.wolfmq.broker.server.bootstrap;
 import cn.coderule.common.convention.container.ApplicationContext;
 import cn.coderule.common.convention.container.EventBus;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -20,8 +23,9 @@ class ContextInitializerTest {
     }
 
     @Test
-    void testInitialize() throws IOException {
-        String[] args = {"-b", "broker.yml"};
+    void testInitialize(@TempDir Path tmpDir) throws IOException {
+        createBrokerConfig(tmpDir);
+        String[] args = {"-p", tmpDir.toString()};
         ContextInitializer initializer = new ContextInitializer(args, context);
 
         assertDoesNotThrow(initializer::initialize);
@@ -30,19 +34,25 @@ class ContextInitializerTest {
     }
 
     @Test
-    void testStaticInit() {
-        String[] args = {"-b", "broker.yml"};
+    void testStaticInit(@TempDir Path tmpDir) throws IOException {
+        createBrokerConfig(tmpDir);
+        String[] args = {"-p", tmpDir.toString()};
 
         assertDoesNotThrow(() -> ContextInitializer.init(args, context));
     }
 
     @Test
-    void testInitLibsRegistersEventBus() throws IOException {
-        String[] args = {"-b", "broker.yml"};
+    void testInitLibsRegistersEventBus(@TempDir Path tmpDir) throws IOException {
+        createBrokerConfig(tmpDir);
+        String[] args = {"-p", tmpDir.toString()};
         ContextInitializer initializer = new ContextInitializer(args, context);
         initializer.initialize();
 
         EventBus eventBus = context.getBean(EventBus.class);
         assertNotNull(eventBus);
+    }
+
+    private void createBrokerConfig(Path dir) throws IOException {
+        Files.writeString(dir.resolve("broker.yml"), "port: 8081\n");
     }
 }
