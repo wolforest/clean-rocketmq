@@ -21,7 +21,7 @@ public class BrokerConfigLoader {
 
     public BrokerConfig load() throws IOException {
         this.parseArgs();
-        config = YamlUtil.load(argument.getConfigFile(), BrokerConfig.class);
+        config = YamlUtil.load(argument.getBrokerConfig(), BrokerConfig.class);
 
         if (null == config) {
             throw new IllegalArgumentException("Fail to parse Config file");
@@ -41,7 +41,7 @@ public class BrokerConfigLoader {
 
         CommandLine cmd = new CommandLine(argument);
         cmd.setExecutionExceptionHandler(
-            (ex, commandLine, parseResult) -> {
+            (ex, _, _) -> {
                 throw new IllegalArgumentException(ex.getMessage());
             }
         );
