@@ -66,11 +66,27 @@ public class MessageService {
                 continue;
             }
 
+            setQueueOffset(messageBO, unit);
             result.addMessage(messageBO);
         }
 
         result.setStatusByMessageList();
         return result;
+    }
+
+    /**
+     * set queueOffset if need
+     *
+     * @param message messageBO
+     * @param queueUnit queueUnit
+     */
+    private void setQueueOffset(MessageBO message, QueueUnit queueUnit) {
+        long queueOffset = queueUnit.getQueueOffset();
+        if (message.getQueueOffset() == queueOffset) {
+            return;
+        }
+
+        message.setQueueOffset(queueOffset);
     }
 
 }
