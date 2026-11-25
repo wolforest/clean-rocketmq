@@ -1,6 +1,8 @@
 package com.wolfmq.store.server.bootstrap;
 
 import cn.coderule.common.convention.container.ApplicationContext;
+import com.wolfmq.common.config.cli.StoreArgument;
+import com.wolfmq.common.config.cli.StoreConfigLoader;
 import com.wolfmq.common.core.constant.ContextNamespace;
 import com.wolfmq.common.server.store.StoreState;
 import com.wolfmq.common.config.network.RpcClientConfig;
@@ -12,53 +14,38 @@ import com.wolfmq.common.config.business.TimerConfig;
 import com.wolfmq.common.config.business.TopicConfig;
 import com.wolfmq.common.config.store.IndexConfig;
 import com.wolfmq.common.config.store.MetaConfig;
+import java.io.IOException;
 
 public class ContextInitializer {
-    private final StoreArgument argument;
+    private final StoreConfigLoader configLoader;
     private final ApplicationContext context;
 
-    public static void init(StoreArgument argument, ApplicationContext context) {
-        ContextInitializer initializer = new ContextInitializer(argument, context);
+    public static void init(StoreConfigLoader configLoader, ApplicationContext context) throws IOException {
+        ContextInitializer initializer = new ContextInitializer(configLoader, context);
         initializer.initialize();
     }
 
-    public ContextInitializer(StoreArgument argument, ApplicationContext context) {
-        this.argument = argument;
+    public ContextInitializer(StoreConfigLoader configLoader, ApplicationContext context) {
+        this.configLoader = configLoader;
         this.context = context;
     }
 
-    public void initialize() {
-        this.argument.validate();
-
+    public void initialize() throws IOException {
         initializeConfig();
         initializeMonitor();
+
+        StoreState storeState = new StoreState();
+        context.register(storeState);
     }
 
-    private void initializeConfig() {
-        StoreConfig storeConfig = argument.getStoreConfig();
-        if (null == storeConfig) {
-            storeConfig = createDefaultConfig();
-        }
+    private void initializeConfig() throws IOException {
+        StoreConfig storeConfig = configLoader.load();
 
         context.register(storeConfig);
-        context.register(new StoreState(), StoreState.class);
-    }
-
-    private StoreConfig createDefaultConfig() {
-        StoreConfig storeConfig = new StoreConfig();
-        storeConfig.setMessage(new MessageConfig());
-        storeConfig.setTopic(new TopicConfig());
-        storeConfig.setCommit(new CommitConfig());
-        storeConfig.setConsumeQueue(new ConsumeQueueConfig());
-        storeConfig.setTimer(new TimerConfig());
-        storeConfig.setMeta(new MetaConfig());
-        storeConfig.setRpcClient(new RpcClientConfig());
-        storeConfig.setIndex(new IndexConfig());
-
-        return storeConfig;
     }
 
     private void initializeMonitor() {
+        StoreArgument argument = configLoader.getArgument();
         if (null == argument.getMonitorContext()) {
             return;
         }
