@@ -30,5 +30,6 @@ class ContextInitializerTest {
 
         StoreConfig registered = context.getBean(StoreConfig.class);
         assertNotNull(registered);
+        assertSame(storeConfig, registered, "the argument storeConfig should be registered as-is");
     }
 }

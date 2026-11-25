@@ -35,6 +35,16 @@ public class ContextInitializer {
     }
 
     private void initializeConfig() {
+        StoreConfig storeConfig = argument.getStoreConfig();
+        if (null == storeConfig) {
+            storeConfig = createDefaultConfig();
+        }
+
+        context.register(storeConfig);
+        context.register(new StoreState(), StoreState.class);
+    }
+
+    private StoreConfig createDefaultConfig() {
         StoreConfig storeConfig = new StoreConfig();
         storeConfig.setMessage(new MessageConfig());
         storeConfig.setTopic(new TopicConfig());
@@ -45,8 +55,7 @@ public class ContextInitializer {
         storeConfig.setRpcClient(new RpcClientConfig());
         storeConfig.setIndex(new IndexConfig());
 
-        context.register(storeConfig);
-        context.register(new StoreState(), StoreState.class);
+        return storeConfig;
     }
 
     private void initializeMonitor() {
