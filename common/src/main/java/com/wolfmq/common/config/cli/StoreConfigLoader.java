@@ -21,7 +21,7 @@ public class StoreConfigLoader {
 
     public StoreConfig load() throws IOException {
         this.parseArgs();
-        config = YamlUtil.load(argument.getConfigFile(), StoreConfig.class);
+        config = YamlUtil.load(argument.getStoreConfig(), StoreConfig.class);
 
         if (null == config) {
             throw new IllegalArgumentException("Fail to parse Config file");
@@ -41,7 +41,7 @@ public class StoreConfigLoader {
 
         CommandLine cmd = new CommandLine(argument);
         cmd.setExecutionExceptionHandler(
-            (ex, commandLine, parseResult) -> {
+            (ex, _, _) -> {
                 throw new IllegalArgumentException(ex.getMessage());
             }
         );
