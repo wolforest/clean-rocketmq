@@ -12,8 +12,8 @@ public class StoreArgument implements Serializable {
     @Option(names = {"-p", "--configPath"}, description = "config path")
     private String configPath;
 
-    @Option(names = {"-s", "--StoreConfig"}, description = "Store config file")
-    private String StoreConfig;
+    @Option(names = {"-s", "--storeConfig"}, description = "store config file")
+    private String storeConfig;
 
     @Option(names = {"-r", "--registry"}, description = "registry address: addr1,addr2,...")
     private String registry;
@@ -37,15 +37,15 @@ public class StoreArgument implements Serializable {
     }
 
     public String getStoreConfig() {
-        if (StringUtil.notBlank(StoreConfig)) {
-            return StoreConfig;
+        if (StringUtil.notBlank(storeConfig)) {
+            return storeConfig;
         }
 
-        StoreConfig = getConfigPath()
+        storeConfig = getConfigPath()
             + File.separator
             + CliConstants.STORE_CONFIG_FILE;
 
-        return StoreConfig;
+        return storeConfig;
     }
 
     public void validate() {
