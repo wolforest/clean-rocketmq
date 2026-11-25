@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -41,10 +42,16 @@ public class UnregisterService extends ServiceThread {
         }
     }
 
+    private static final long POLL_TIMEOUT_MS = 100;
+
     private void schedule() {
         try {
-
-            UnRegisterBrokerRequestHeader request = queue.take();
+            // poll with timeout instead of take(): blocking take() ignores the
+            // ServiceThread stop flag and makes shutdown hang for JOIN_TIME
+            UnRegisterBrokerRequestHeader request = queue.poll(POLL_TIMEOUT_MS, TimeUnit.MILLISECONDS);
+            if (null == request) {
+                return;
+            }
 
             Set<UnRegisterBrokerRequestHeader> requests = new HashSet<>();
             requests.add(request);
@@ -52,6 +59,8 @@ public class UnregisterService extends ServiceThread {
             queue.drainTo(requests);
 
             registry.unregister(requests);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
         } catch (Throwable t) {
             log.error("unregister store error", t);
         }
