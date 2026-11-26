@@ -1,5 +1,9 @@
 # Compiled class file
 .flattened-pom.xml
+pom.xml.tag
+pom.xml.next
+pom.xml.releaseBackup
+release.properties
 *.class
 target/
 crhttp/
