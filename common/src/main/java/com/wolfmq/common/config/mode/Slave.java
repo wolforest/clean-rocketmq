@@ -1,4 +1,4 @@
-package com.wolfmq.common.config.base.mode;
+package com.wolfmq.common.config.mode;
 
 import com.wolfmq.common.config.base.Common;
 import java.io.Serializable;

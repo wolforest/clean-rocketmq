@@ -1,4 +1,4 @@
-package com.wolfmq.common.config.base;
+package com.wolfmq.common.config.mode;
 
 import lombok.Getter;
 

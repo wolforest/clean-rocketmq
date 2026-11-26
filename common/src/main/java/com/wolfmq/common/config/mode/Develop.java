@@ -1,4 +1,4 @@
-package com.wolfmq.common.config.base.mode;
+package com.wolfmq.common.config.mode;
 
 import com.wolfmq.common.config.base.Common;
 import java.io.Serializable;
@@ -7,6 +7,6 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class Master extends Common implements Serializable {
-    protected Integer mmapFileSize = 1024 * 1024 * 1024;
+public class Develop extends Common implements Serializable {
+    private Integer mmapFileSize = 10 * 1024;
 }
