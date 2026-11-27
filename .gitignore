@@ -14,10 +14,12 @@ testhttp/
 
 rpc/src/main/java/apache/
 
+.agents
 .wolf
 .lingma
 .sisyphus
 .opencode
+skills-lock.json
 
 # Log file
 *.log
