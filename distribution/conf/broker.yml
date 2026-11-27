@@ -1,5 +1,17 @@
-# wolfmq broker configuration
-host: 0.0.0.0
+# wolfmq broker configuration, loaded by mqbroker.
+# Only the properties to override need to be listed here,
+# an unknown property makes the broker fail to start.
+
+# port the clients connect to
 port: 8081
-enableGrpc: true
-enableEmbedStore: true
+
+# host of the broker, it is written into the messages as the address of the broker.
+# default: the local ip, do not set it to 0.0.0.0
+# host: 192.168.1.10
+
+# register the broker at the registry
+# enableBrokerRegister: true
+# registryAddress: 127.0.0.1:9876
+
+# embed the store into the broker process (default), set it to false to use a remote store
+# enableEmbedStore: true

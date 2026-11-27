@@ -1,2 +1,14 @@
-# wolfmq store configuration
-port: 8082
+# wolfmq store configuration, loaded by the broker (enableEmbedStore) and by the store process.
+# Only the properties to override need to be listed here,
+# an unknown property makes the process fail to start.
+
+# port of the store rpc server
+port: 6888
+
+# directory of the store data (commitLog, consumeQueue, checkpoint)
+# default: <user.home>/mq
+# rootDir: /data/wolfmq/store
+
+# host of the store, it is the address registered at the registry.
+# default: the local ip, do not set it to 0.0.0.0
+# host: 192.168.1.10

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  logback configuration of the wolfmq processes.
+
+  It is enabled by runserver.sh / runbroker.sh (see bin/env.sh), which pass:
+    WOLFMQ_LOG_DIR         directory of the log files     default: ${user.home}/logs/wolfmq
+    WOLFMQ_LOG_NAME        log file name without suffix   default: wolfmq (the launcher sets broker / registry)
+    WOLFMQ_LOG_LEVEL       level written to the log file  default: INFO
+    WOLFMQ_CONSOLE_LEVEL   level written to the console   default: WARN
+  WOLFMQ_LOG_DIR, WOLFMQ_LOG_LEVEL and WOLFMQ_CONSOLE_LEVEL can also be set as
+  environment variables before the process is started.
+-->
+<configuration scan="true" scanPeriod="30 seconds">
+
+    <property name="LOG_DIR" value="${WOLFMQ_LOG_DIR:-${user.home}/logs/wolfmq}"/>
+    <property name="LOG_NAME" value="${WOLFMQ_LOG_NAME:-wolfmq}"/>
+    <property name="LOG_LEVEL" value="${WOLFMQ_LOG_LEVEL:-INFO}"/>
+    <property name="CONSOLE_LEVEL" value="${WOLFMQ_CONSOLE_LEVEL:-WARN}"/>
+
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_DIR}/${LOG_NAME}.log</file>
+        <append>true</append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_DIR}/${LOG_NAME}.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <maxFileSize>128MB</maxFileSize>
+            <maxHistory>10</maxHistory>
+            <totalSizeCap>2GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{60} - %msg%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <appender name="ASYNC_FILE" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="FILE"/>
+    </appender>
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{60} - %msg%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>${CONSOLE_LEVEL}</level>
+        </filter>
+    </appender>
+
+    <root level="${LOG_LEVEL}">
+        <appender-ref ref="ASYNC_FILE"/>
+        <appender-ref ref="CONSOLE"/>
+    </root>
+</configuration>
