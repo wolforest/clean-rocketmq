@@ -1,0 +1,77 @@
+#!/bin/sh
+
+# Quick start of the registry and the broker:
+#   sh bin/mqdev [-p <config directory>] [broker options]
+#
+# The config directory holds broker.yml, store.yml and registry.yml,
+# default: $WOLFMQ_HOME/conf
+#
+# The console output of the processes (WARN and ERROR) is written to
+# registry.out / broker.out in the current directory, the full logs to
+# $WOLFMQ_LOG_DIR (default: $HOME/logs/wolfmq).
+#
+# Stop: sh bin/mqshutdown broker && sh bin/mqshutdown registry
+
+if [ -z "$WOLFMQ_HOME" ] ; then
+  PRG="$0"
+
+  # need this for relative symlinks
+  while [ -h "$PRG" ] ; do
+    ls=`ls -ld "$PRG"`
+    link=`expr "$ls" : '.*-> \(.*\)$'`
+    if expr "$link" : '/.*' > /dev/null; then
+      PRG="$link"
+    else
+      PRG="`dirname "$PRG"`/$link"
+    fi
+  done
+
+  saveddir=`pwd`
+
+  WOLFMQ_HOME=`dirname "$PRG"`/..
+
+  # make it fully qualified
+  WOLFMQ_HOME=`cd "$WOLFMQ_HOME" && pwd`
+
+  cd "$saveddir"
+fi
+
+export WOLFMQ_HOME
+
+config_path=""
+while [ $# -gt 0 ]; do
+  case $1 in
+    -p|--configPath)
+      if [ $# -ge 2 ]; then
+          config_path="$2"
+          shift
+      fi
+      shift
+      ;;
+    *)
+      # pass the remaining options to the broker
+      break
+      ;;
+  esac
+done
+
+[ -z "$config_path" ] && config_path="${WOLFMQ_HOME}/conf"
+
+# make it fully qualified
+case "$config_path" in
+  /*) ;;
+  *) config_path="`pwd`/${config_path}" ;;
+esac
+
+#
+# Registry
+#
+nohup sh "${WOLFMQ_HOME}/bin/mqregistry" -p "${config_path}" > registry.out 2>&1 &
+
+#
+# Broker
+#
+nohup sh "${WOLFMQ_HOME}/bin/mqbroker" -p "${config_path}" "$@" > broker.out 2>&1 &
+
+echo "Start Registry and Broker Successfully, config: ${config_path}"
+echo "logs: ${WOLFMQ_LOG_DIR:-$HOME/logs/wolfmq}, console output: registry.out / broker.out"
