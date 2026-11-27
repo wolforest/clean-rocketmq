@@ -1,8 +1,13 @@
 #!/bin/sh
 
+# Start the registry:
+#   sh mqregistry [-p <config directory>] [options]
+# The config directory holds registry.yml, default: $WOLFMQ_HOME/conf
+
 if [ -z "$WOLFMQ_HOME" ] ; then
   PRG="$0"
 
+  # need this for relative symlinks
   while [ -h "$PRG" ] ; do
     ls=`ls -ld "$PRG"`
     link=`expr "$ls" : '.*-> \(.*\)$'`
@@ -17,6 +22,7 @@ if [ -z "$WOLFMQ_HOME" ] ; then
 
   WOLFMQ_HOME=`dirname "$PRG"`/..
 
+  # make it fully qualified
   WOLFMQ_HOME=`cd "$WOLFMQ_HOME" && pwd`
 
   cd "$saveddir"
@@ -24,31 +30,37 @@ fi
 
 export WOLFMQ_HOME
 
+. "${WOLFMQ_HOME}/bin/env.sh"
+
 other_args=" "
 config_path=""
 
 while [ $# -gt 0 ]; do
   case $1 in
     -p|--configPath)
+      [ $# -ge 2 ] || error_exit "option $1 needs a config directory"
       config_path="$2"
-      shift
       shift
       ;;
     *)
       other_args=${other_args}" "${1}
-      shift
       ;;
   esac
+  shift
 done
 
-if [ -z "$config_path" ] ; then
-  config_path="$WOLFMQ_HOME/conf"
-fi
+[ -z "$config_path" ] && config_path="${WOLFMQ_HOME}/conf"
 
 # make it fully qualified
 case "$config_path" in
   /*) ;;
-  *) config_path="$(pwd)/$config_path" ;;
+  *) config_path="`pwd`/${config_path}" ;;
 esac
 
-sh ${WOLFMQ_HOME}/bin/runserver.sh com.wolfmq.registry.Registry ${other_args} -p "${config_path}"
+[ -d "$config_path" ] || error_exit "config directory does not exist: ${config_path}"
+
+# the log file of the process is $WOLFMQ_LOG_DIR/registry.log
+export WOLFMQ_LOG_NAME=registry
+
+# exec: the JVM replaces this shell, so it is the process that mqshutdown finds
+exec sh "${WOLFMQ_HOME}/bin/runserver.sh" com.wolfmq.registry.Registry ${other_args} -p "${config_path}"
