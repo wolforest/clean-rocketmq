@@ -24,8 +24,18 @@
 
         <fileSet>
             <includes>
+                <include>benchmark/*</include>
+            </includes>
+            <fileMode>0755</fileMode>
+        </fileSet>
+
+        <fileSet>
+            <includes>
                 <include>bin/**</include>
             </includes>
+            <excludes>
+                <exclude>bin/*.md</exclude>
+            </excludes>
             <fileMode>0755</fileMode>
         </fileSet>
     </fileSets>
@@ -41,30 +51,38 @@
         </file>
     </files>
 
-    <moduleSets>
-        <moduleSet>
-            <useAllReactorProjects>true</useAllReactorProjects>
-            <includes>
-                <include>com.wolfmq:registry</include>
-                <include>com.wolfmq:broker</include>
-                <include>com.wolfmq:store</include>
-            </includes>
-            <binaries>
-                <outputDirectory>lib/</outputDirectory>
-                <!--
-                    wolfmq and cn.coderule both publish an artifact named "common";
-                    default naming (artifactId-version.jar) makes them overwrite
-                    each other in lib/, so prefix file names with the groupId.
-                -->
-                <outputFileNameMapping>${artifact.groupId}-${artifact.artifactId}-${artifact.version}.${artifact.extension}</outputFileNameMapping>
-                <unpack>false</unpack>
-                <dependencySets>
-                    <dependencySet>
-                        <outputDirectory>lib/</outputDirectory>
-                        <outputFileNameMapping>${artifact.groupId}-${artifact.artifactId}-${artifact.version}.${artifact.extension}</outputFileNameMapping>
-                    </dependencySet>
-                </dependencySets>
-            </binaries>
-        </moduleSet>
-    </moduleSets>
+    <!--
+      broker and registry with all their runtime dependencies.
+      It is resolved by Maven like any other dependency, so the lib directory is
+      complete as long as the modules are built (reactor or local repository).
+    -->
+    <dependencySets>
+        <dependencySet>
+            <outputDirectory>lib/</outputDirectory>
+            <!--
+              com.wolfmq:common and cn.coderule:common share the file name common-<version>.jar,
+              prefix the file name with the groupId so that they do not overwrite each other.
+            -->
+            <outputFileNameMapping>${artifact.groupId}-${artifact.artifactId}-${artifact.version}.${artifact.extension}</outputFileNameMapping>
+            <excludes>
+                <!-- test frameworks and build time only tools leaked by transitive dependencies -->
+                <exclude>org.junit.jupiter:*</exclude>
+                <exclude>org.junit.platform:*</exclude>
+                <exclude>junit:*</exclude>
+                <exclude>org.apiguardian:*</exclude>
+                <exclude>org.opentest4j:*</exclude>
+                <exclude>org.hamcrest:*</exclude>
+                <exclude>org.mockito:*</exclude>
+                <exclude>net.bytebuddy:*</exclude>
+                <exclude>org.objenesis:*</exclude>
+                <exclude>org.openjdk.jmh:*</exclude>
+                <exclude>net.sf.jopt-simple:*</exclude>
+                <exclude>org.apache.commons:commons-math3</exclude>
+                <exclude>org.projectlombok:lombok</exclude>
+                <exclude>com.google.errorprone:error_prone_annotations</exclude>
+                <exclude>org.jspecify:jspecify</exclude>
+                <exclude>org.codehaus.mojo:animal-sniffer-annotations</exclude>
+            </excludes>
+        </dependencySet>
+    </dependencySets>
 </assembly>
