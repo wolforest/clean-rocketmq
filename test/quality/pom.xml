@@ -31,7 +31,7 @@
 
         <dependency>
             <groupId>cn.coderule</groupId>
-            <artifactId>common</artifactId>
+            <artifactId>wolf-common</artifactId>
         </dependency>
 
         <dependency>
