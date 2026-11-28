@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>《Clean-RocketMQ 性能测试与调优实战》电子书目录、大纲与内容分布设计</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    html { scroll-behavior: smooth; }
+    .part-block.collapsed .part-body { display: none; }
+    @media print {
+      .no-print { display: none !important; }
+      .part-block.collapsed .part-body { display: flex !important; }
+    }
+  </style>
+</head>
+<body class="bg-[var(--background)] text-[var(--foreground)] antialiased m-0 p-0">
+  <div class="max-w-6xl mx-auto px-5 py-6 space-y-7">
+
+    <!-- Top Action Bar -->
+    <div class="no-print flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-[var(--border)]">
+      <div class="flex items-center gap-2.5">
+        <span class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-[var(--primary)] text-[var(--primary-foreground)] font-bold text-xs">BOOK</span>
+        <div>
+          <div class="font-bold text-sm leading-tight">Clean-RocketMQ 性能测试电子书蓝图</div>
+          <div class="text-xs text-[var(--muted-foreground)]">6 篇 · 18 章 · 4 附录 · 18~22 万字出版级规划</div>
+        </div>
+      </div>
+      <div class="flex flex-wrap items-center gap-2">
+        <span class="text-xs text-[var(--muted-foreground)] mr-1">写作进度：<strong id="progressLabel" class="text-[var(--primary)]">0%</strong></span>
+        <button id="downloadHtmlBtn" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-[var(--primary)] text-[var(--primary-foreground)] hover:opacity-90 cursor-pointer">
+          下载离线 HTML
+        </button>
+        <button onclick="window.print()" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-[var(--card)] border border-[var(--border)] text-[var(--foreground)] hover:border-[var(--primary)] cursor-pointer">
+          打印 / 导出 PDF
+        </button>
+      </div>
+    </div>
+
+    <!-- Hero -->
+    <header class="rounded-2xl bg-[var(--card)] border border-[var(--card-border)] p-6 space-y-5">
+      <div class="flex flex-wrap items-center justify-between gap-2">
+        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-[var(--sidebar)] border border-[var(--border)] text-[var(--primary)]">
+          Clean-RocketMQ (wolfmq) · 性能测试电子书总规划
+        </span>
+        <span class="text-xs text-[var(--muted-foreground)]">对应文档位置：<code class="font-mono">docs/book/rocket-performance.md</code></span>
+      </div>
+      <div>
+        <h1 class="text-2xl font-extrabold tracking-tight mb-2">《Clean-RocketMQ 性能测试与调优实战》</h1>
+        <p class="text-sm text-[var(--muted-foreground)] leading-relaxed">
+          副标题：<strong>从微基准到云原生集群的六层压测体系</strong>。以 Clean-RocketMQ 源码为靶机，贯通“方法论建基 → L1~L6 六层剥离压测 → 火焰图与 OS 联合剖析 → 源码级调优闭环 → CI 性能回归工程化”，既可作为项目权威性能白皮书，也可作为 Java 高并发中间件性能工程实战教材。
+        </p>
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div class="rounded-xl bg-[var(--sidebar)] border border-[var(--border)] p-3.5">
+          <div class="text-lg font-extrabold text-[var(--primary)]">6 篇 · 18 章</div>
+          <div class="text-xs text-[var(--muted-foreground)] mt-0.5">另配 4 个实战工具箱附录</div>
+        </div>
+        <div class="rounded-xl bg-[var(--sidebar)] border border-[var(--border)] p-3.5">
+          <div class="text-lg font-extrabold text-[var(--accent)]">18 ~ 22 万字</div>
+          <div class="text-xs text-[var(--muted-foreground)] mt-0.5">理论 + 源码 + 真实实验数据</div>
+        </div>
+        <div class="rounded-xl bg-[var(--sidebar)] border border-[var(--border)] p-3.5">
+          <div class="text-lg font-extrabold text-[var(--success)]">L1 ~ L6 全覆盖</div>
+          <div class="text-xs text-[var(--muted-foreground)] mt-0.5">JMH → 存储 → RPC → E2E → HA → 长稳</div>
+        </div>
+        <div class="rounded-xl bg-[var(--sidebar)] border border-[var(--border)] p-3.5">
+          <div class="text-lg font-extrabold text-[var(--warning)]">代码同步演进</div>
+          <div class="text-xs text-[var(--muted-foreground)] mt-0.5">绑定 test/{performance,e2e,stability}</div>
+        </div>
+      </div>
+
+      <nav class="no-print flex flex-wrap gap-2 pt-1">
+        <a href="#dist" class="text-xs px-2.5 py-1 rounded-md bg-[var(--sidebar)] border border-[var(--border)] text-[var(--foreground)] hover:border-[var(--primary)] no-underline">1. 内容分布配比</a>
+        <a href="#toc" class="text-xs px-2.5 py-1 rounded-md bg-[var(--sidebar)] border border-[var(--border)] text-[var(--foreground)] hover:border-[var(--primary)] no-underline">2. 六篇十八章完整大纲</a>
+        <a href="#appendix" class="text-xs px-2.5 py-1 rounded-md bg-[var(--sidebar)] border border-[var(--border)] text-[var(--foreground)] hover:border-[var(--primary)] no-underline">3. 四大附录</a>
+        <a href="#template" class="text-xs px-2.5 py-1 rounded-md bg-[var(--sidebar)] border border-[var(--border)] text-[var(--foreground)] hover:border-[var(--primary)] no-underline">4. 五段式写作体例</a>
+        <a href="#repo" class="text-xs px-2.5 py-1 rounded-md bg-[var(--sidebar)] border border-[var(--border)] text-[var(--foreground)] hover:border-[var(--primary)] no-underline">5. 仓库目录映射</a>
+      </nav>
+    </header>
+
+    <!-- Section 1: Content Distribution -->
+    <section id="dist" class="space-y-4">
+      <div class="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-[var(--border)]">
+        <h2 class="text-lg font-extrabold">01 · 全书内容分布与篇幅占比设计</h2>
+        <span class="text-xs text-[var(--muted-foreground)]">45% 篇幅聚焦存储引擎与端到端对标</span>
+      </div>
+
+      <div class="rounded-xl bg-[var(--card)] border border-[var(--card-border)] p-4 space-y-3 text-xs">
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-2 items-center pb-2.5 border-b border-[var(--border)]">
+          <div class="md:col-span-4"><strong class="text-sm">第一篇 · 方法论与基线环境</strong><div class="text-[var(--muted-foreground)]">第 1~3 章 · 准备阶段</div></div>
+          <div class="md:col-span-6 h-5 rounded-full bg-[var(--sidebar)] border border-[var(--border)] overflow-hidden">
+            <div class="h-full rounded-full flex items-center pl-2.5 font-bold" style="width:15%; min-width:46px; background:var(--chart-1, #0284c7); color:#ffffff;">15%</div>
+          </div>
+          <div class="md:col-span-2 md:text-right font-semibold text-[var(--muted-foreground)]">~3.0 万字</div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-2 items-center pb-2.5 border-b border-[var(--border)]">
+          <div class="md:col-span-4"><strong class="text-sm">第二篇 · 微基准与存储引擎</strong><div class="text-[var(--primary)] font-semibold">第 4~7 章 · L1 ~ L2 ★全书最硬核</div></div>
+          <div class="md:col-span-6 h-5 rounded-full bg-[var(--sidebar)] border border-[var(--border)] overflow-hidden">
+            <div class="h-full rounded-full flex items-center pl-2.5 font-bold" style="width:25%; background:var(--primary, #2563eb); color:#ffffff;">25%（CommitLog 分片核心）</div>
+          </div>
+          <div class="md:col-span-2 md:text-right font-semibold text-[var(--muted-foreground)]">~5.0 万字</div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-2 items-center pb-2.5 border-b border-[var(--border)]">
+          <div class="md:col-span-4"><strong class="text-sm">第三篇 · 网络与计算接入层</strong><div class="text-[var(--muted-foreground)]">第 8~9 章 · L3</div></div>
+          <div class="md:col-span-6 h-5 rounded-full bg-[var(--sidebar)] border border-[var(--border)] overflow-hidden">
+            <div class="h-full rounded-full flex items-center pl-2.5 font-bold" style="width:12%; min-width:46px; background:var(--accent, #7c3aed); color:#ffffff;">12%</div>
+          </div>
+          <div class="md:col-span-2 md:text-right font-semibold text-[var(--muted-foreground)]">~2.4 万字</div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-2 items-center pb-2.5 border-b border-[var(--border)]">
+          <div class="md:col-span-4"><strong class="text-sm">第四篇 · 端到端与横向对标</strong><div class="text-[var(--warning)] font-semibold">第 10~12 章 · L4 ★对标 RMQ 5.x</div></div>
+          <div class="md:col-span-6 h-5 rounded-full bg-[var(--sidebar)] border border-[var(--border)] overflow-hidden">
+            <div class="h-full rounded-full flex items-center pl-2.5 font-bold" style="width:20%; background:var(--warning, #d97706); color:#ffffff;">20%（OMB + 全特性）</div>
+          </div>
+          <div class="md:col-span-2 md:text-right font-semibold text-[var(--muted-foreground)]">~4.0 万字</div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-2 items-center pb-2.5 border-b border-[var(--border)]">
+          <div class="md:col-span-4"><strong class="text-sm">第五篇 · 集群 HA 与长稳混沌</strong><div class="text-[var(--muted-foreground)]">第 13~15 章 · L5 ~ L6</div></div>
+          <div class="md:col-span-6 h-5 rounded-full bg-[var(--sidebar)] border border-[var(--border)] overflow-hidden">
+            <div class="h-full rounded-full flex items-center pl-2.5 font-bold" style="width:14%; min-width:46px; background:var(--error, #dc2626); color:#ffffff;">14%</div>
+          </div>
+          <div class="md:col-span-2 md:text-right font-semibold text-[var(--muted-foreground)]">~2.8 万字</div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-2 items-center">
+          <div class="md:col-span-4"><strong class="text-sm">第六篇 · 剖析调优与工程化</strong><div class="text-[var(--muted-foreground)]">第 16~18 章 · 闭环治理</div></div>
+          <div class="md:col-span-6 h-5 rounded-full bg-[var(--sidebar)] border border-[var(--border)] overflow-hidden">
+            <div class="h-full rounded-full flex items-center pl-2.5 font-bold" style="width:14%; min-width:46px; background:var(--success, #059669); color:#ffffff;">14%</div>
+          </div>
+          <div class="md:col-span-2 md:text-right font-semibold text-[var(--muted-foreground)]">~2.8 万字</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 2: TOC -->
+    <section id="toc" class="space-y-4">
+      <div class="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-[var(--border)]">
+        <h2 class="text-lg font-extrabold">02 · 六篇十八章完整目录与逐章大纲</h2>
+        <div class="no-print flex items-center gap-2">
+          <button id="expandAllBtn" class="px-2.5 py-1 rounded-full text-xs font-semibold bg-[var(--card)] border border-[var(--border)] cursor-pointer hover:border-[var(--primary)]">全部展开</button>
+          <button id="collapseAllBtn" class="px-2.5 py-1 rounded-full text-xs font-semibold bg-[var(--card)] border border-[var(--border)] cursor-pointer hover:border-[var(--primary)]">全部折叠</button>
+        </div>
+      </div>
+
+      <div class="no-print">
+        <input id="searchInput" type="text" placeholder="搜索章节关键词（如 CommitLog、JMH、OMB、火焰图、HA、Pop、RocksDB）..." class="w-full px-3.5 py-2 rounded-xl bg-[var(--card)] border border-[var(--border)] text-xs text-[var(--foreground)] placeholder:text-[var(--placeholder)] outline-none focus:border-[var(--primary)]" />
+      </div>
+
+      <!-- Part 1 -->
+      <div class="part-block rounded-xl bg-[var(--card)] border border-[var(--card-border)] overflow-hidden">
+        <div class="part-header px-4 py-3 bg-[var(--sidebar)] border-b border-[var(--border)] flex flex-wrap items-center justify-between gap-2 cursor-pointer select-none">
+          <div class="font-extrabold text-sm">第一篇：性能测试方法论、基线环境与架构解构 <span class="ml-1.5 text-xs font-semibold text-[var(--primary)]">15% · 第 1~3 章</span></div>
+          <span class="text-xs text-[var(--muted-foreground)]">点击折叠/展开</span>
+        </div>
+        <div class="part-body p-4 flex flex-col gap-3 text-xs">
+          <div class="chapter-card rounded-lg border border-[var(--border)] border-l-4 border-l-[var(--primary)] p-3.5 space-y-1.5">
+            <label class="flex items-start gap-2 font-bold text-sm cursor-pointer"><input type="checkbox" class="mt-1 accent-[var(--primary)]" data-ch="c1"><span>第 1 章：消息队列性能测试的科学方法论</span></label>
+            <ul class="pl-6 space-y-1 text-[var(--muted-foreground)] list-disc">
+              <li><strong class="text-[var(--foreground)]">1.1 为什么 80% 的压测数据不可信？</strong> — 以 <code>CommitLogManagerBenchmark</code>（多线程耗时累加）与 <code>InsertBenchmark</code>（分子硬编码）做第一手失真案例复盘。</li>
+              <li><strong class="text-[var(--foreground)]">1.2 核心度量指标体系</strong> — TPS/MB/s、分位延迟（P50~P99.9/Max）、协调遗漏（Coordinated Omission）与 Open-loop 定速、HdrHistogram 原理。</li>
+              <li><strong class="text-[var(--foreground)]">1.3 分层剥离压测模型（L1~L6 金字塔）</strong> — 用短板转移模型阐明六层压测如何精准定界。</li>
+            </ul>
+          </div>
+
+          <div class="chapter-card rounded-lg border border-[var(--border)] border-l-4 border-l-[var(--primary)] p-3.5 space-y-1.5">
+            <label class="flex items-start gap-2 font-bold text-sm cursor-pointer"><input type="checkbox" class="mt-1 accent-[var(--primary)]" data-ch="c2"><span>第 2 章：Clean-RocketMQ 架构解构与性能热点地图</span></label>
+            <ul class="pl-6 space-y-1 text-[var(--muted-foreground)] list-disc">
+              <li><strong class="text-[var(--foreground)]">2.1 五大模块与核心数据流全景</strong> — <code>common</code> / <code>rpc</code> / <code>registry</code> / <code>store</code> / <code>broker</code> 职责边界与线程模型。</li>
+              <li><strong class="text-[var(--foreground)]">2.2 写入链路上的 5 个关键性能关口</strong> — gRPC/Protobuf → Broker <code>EnqueueService</code> → Store <code>EnqueueLock</code> → <code>CommitLogManager</code> 分片 → <code>DefaultFlushHandler</code>。</li>
+              <li><strong class="text-[var(--foreground)]">2.3 消费、派发与高级特性链路</strong> — <code>DispatchManager</code>、<code>DequeueService</code>（Pop/Ack/Renew/Revive/OrderLock）、<code>TimerWheel</code>、<code>TransactionBootstrap</code>。</li>
+              <li><strong class="text-[var(--foreground)]">2.4 存算一体（Embed）与存算分离（Remote）的性能边界</strong> — <code>StoreBootstrap</code> 双模式切换与演进边界。</li>
+            </ul>
+          </div>
+
+          <div class="chapter-card rounded-lg border border-[var(--border)] border-l-4 border-l-[var(--primary)] p-3.5 space-y-1.5">
+            <label class="flex items-start gap-2 font-bold text-sm cursor-pointer"><input type="checkbox" class="mt-1 accent-[var(--primary)]" data-ch="c3"><span>第 3 章：可复现的压测基线环境搭建</span></label>
+            <ul class="pl-6 space-y-1 text-[var(--muted-foreground)] list-disc">
+              <li><strong class="text-[var(--foreground)]">3.1 硬件拓扑与施压机隔离规范</strong> — 物理隔离、NVMe 队列深度、万兆网卡、关闭 CPU 节能与 NUMA 策略。</li>
+              <li><strong class="text-[var(--foreground)]">3.2 Linux 内核参数基线调优</strong> — PageCache 脏页比例（<code>vm.dirty_*</code>）、<code>vm.max_map_count</code>、FD 与 TCP 缓冲。</li>
+              <li><strong class="text-[var(--foreground)]">3.3 JVM 参数基线与预热纪律</strong> — JDK 21+（<code>--enable-preview</code>）G1 vs ZGC、<code>MaxDirectMemorySize</code>、JIT Warmup 与 PageCache 清理规范。</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Part 2 -->
+      <div class="part-block rounded-xl bg-[var(--card)] border border-[var(--card-border)] overflow-hidden">
+        <div class="part-header px-4 py-3 bg-[var(--sidebar)] border-b border-[var(--border)] flex flex-wrap items-center justify-between gap-2 cursor-pointer select-none">
+          <div class="font-extrabold text-sm">第二篇：底层微基准与存储引擎压测实战（L1 ~ L2） <span class="ml-1.5 text-xs font-semibold text-[var(--primary)]">25% · 第 4~7 章 ★核心</span></div>
+          <span class="text-xs text-[var(--muted-foreground)]">点击折叠/展开</span>
+        </div>
+        <div class="part-body p-4 flex flex-col gap-3 text-xs">
+          <div class="chapter-card rounded-lg border border-[var(--border)] border-l-4 border-l-[var(--success)] p-3.5 space-y-1.5">
+            <label class="flex items-start gap-2 font-bold text-sm cursor-pointer"><input type="checkbox" class="mt-1 accent-[var(--primary)]" data-ch="c4"><span>第 4 章：L1 核心原语微基准测试（JMH 实战）</span></label>
+            <ul class="pl-6 space-y-1 text-[var(--muted-foreground)] list-disc">
+              <li><strong class="text-[var(--foreground)]">4.1 搭建 JMH 工程体系（<code>test/performance</code>）</strong> — 消除死代码、防止常量折叠，结合 <code>-prof gc</code> 与 <code>-prof async</code>。</li>
+              <li><strong class="text-[var(--foreground)]">4.2 消息编解码与位点计算基准</strong> — <code>MessageEncoder/Decoder</code>（128B~64KB）与 <code>OffsetCodec</code> 分片位运算开销。</li>
+              <li><strong class="text-[var(--foreground)]">4.3 并发锁原语竞争测试</strong> — <code>CommitLogReentrantLock</code>、<code>EnqueueLock</code>、<code>DequeueLock</code> 1~32 线程退化曲线。</li>
+              <li><strong class="text-[var(--foreground)]">4.4 内存映射与堆外缓冲池基准</strong> — <code>DefaultMappedFileQueue</code> vs <code>TransientPool</code> 与 <code>AllocateMappedFileService</code> 预分配。</li>
+            </ul>
+          </div>
+
+          <div class="chapter-card rounded-lg border border-[var(--border)] border-l-4 border-l-[var(--primary)] p-3.5 space-y-1.5">
+            <label class="flex items-start gap-2 font-bold text-sm cursor-pointer"><input type="checkbox" class="mt-1 accent-[var(--primary)]" data-ch="c5"><span>第 5 章：L2 核心战役——CommitLog 分片扩展性实测</span></label>
+            <ul class="pl-6 space-y-1 text-[var(--muted-foreground)] list-disc">
+              <li><strong class="text-[var(--foreground)]">5.1 基准代码重构实战</strong> — 修复 <code>CommitLogManagerBenchmark</code> 与 <code>InsertBenchmark</code> 的墙钟计时、刷盘对齐与 <code>future.get()</code>。</li>
+              <li><strong class="text-[var(--foreground)]">5.2 分片数量扩展性实验（验证 5x+ 吞吐）</strong> — <code>shardingNumber = 1/2/4/8/核数</code> × 并发线程梯度，输出加速比曲线与 Lock 火焰图对比。</li>
+              <li><strong class="text-[var(--foreground)]">5.3 单盘 vs 多盘（<code>enableMultiDir</code>）与绑核（<code>bindShardingWithCpu</code>）</strong> — 区分锁上限与单盘带宽上限，验证绑核对 P99.9 毛刺收益。</li>
+            </ul>
+          </div>
+
+          <div class="chapter-card rounded-lg border border-[var(--border)] border-l-4 border-l-[var(--primary)] p-3.5 space-y-1.5">
+            <label class="flex items-start gap-2 font-bold text-sm cursor-pointer"><input type="checkbox" class="mt-1 accent-[var(--primary)]" data-ch="c6"><span>第 6 章：L2 持久化策略、写缓存与位点预分配开关评测</span></label>
+            <ul class="pl-6 space-y-1 text-[var(--muted-foreground)] list-disc">
+              <li><strong class="text-[var(--foreground)]">6.1 刷盘机制深度对比（<code>DefaultFlushHandler</code>）</strong> — <code>ASYNC</code> vs <code>SYNC</code>（<code>GroupFlusher</code> 组提交）帕累托曲线与 <code>enableWriteCache</code> 敏感性。</li>
+              <li><strong class="text-[var(--foreground)]">6.2 <code>enablePreAssignOffset</code> 开关收益量化</strong> — 热点单队列 vs 均衡多队列下的吞吐增益与可见延迟代价。</li>
+            </ul>
+          </div>
+
+          <div class="chapter-card rounded-lg border border-[var(--border)] border-l-4 border-l-[var(--primary)] p-3.5 space-y-1.5">
+            <label class="flex items-start gap-2 font-bold text-sm cursor-pointer"><input type="checkbox" class="mt-1 accent-[var(--primary)]" data-ch="c7"><span>第 7 章：L2 Store 域内完整闭环（入队 → 派发 → 索引 → 出队）</span></label>
+            <ul class="pl-6 space-y-1 text-[var(--muted-foreground)] list-disc">
+              <li><strong class="text-[var(--foreground)]">7.1 <code>DispatchManager</code> 异步派发追赶压测</strong> — 核验多分片高写入下默认 <code>dispatchThreads = 5</code> 是否形成 Dispatch Lag。</li>
+              <li><strong class="text-[var(--foreground)]">7.2 <code>ConsumeQueue</code> 对比：File Mmap vs RocksDB</strong> — 10 Topic 与 1,000+ Topic 随机小 IO 写放大、读延迟与恢复速度。</li>
+              <li><strong class="text-[var(--foreground)]">7.3 <code>DequeueService</code> 与 <code>TimerWheel</code> 组件压测</strong> — Pop + Checkpoint + InflightCounter 吞吐与时间轮惊群/离散到期精度。</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Part 3 -->
+      <div class="part-block rounded-xl bg-[var(--card)] border border-[var(--card-border)] overflow-hidden">
+        <div class="part-header px-4 py-3 bg-[var(--sidebar)] border-b border-[var(--border)] flex flex-wrap items-center justify-between gap-2 cursor-pointer select-none">
+          <div class="font-extrabold text-sm">第三篇：网络通信与计算接入层压测（L3） <span class="ml-1.5 text-xs font-semibold text-[var(--accent)]">12% · 第 8~9 章</span></div>
+          <span class="text-xs text-[var(--muted-foreground)]">点击折叠/展开</span>
+        </div>
+        <div class="part-body p-4 flex flex-col gap-3 text-xs">
+          <div class="chapter-card rounded-lg border border-[var(--border)] border-l-4 border-l-[var(--accent)] p-3.5 space-y-1.5">
+            <label class="flex items-start gap-2 font-bold text-sm cursor-pointer"><input type="checkbox" class="mt-1 accent-[var(--primary)]" data-ch="c8"><span>第 8 章：L3 底层 Netty RPC 与 Registry 性能边界</span></label>
+            <ul class="pl-6 space-y-1 text-[var(--muted-foreground)] list-disc">
+              <li><strong class="text-[var(--foreground)]">8.1 <code>rpc</code> 模块纯网络基准</strong> — <code>NettyClient/Server</code> 连接复用、128B~1MB 包长、Sync/Async/Oneway QPS 与 RTT。</li>
+              <li><strong class="text-[var(--foreground)]">8.2 <code>registry</code> 注册中心高并发压测</strong> — 大规模 Topic 路由拉取、高频 Store 心跳与变更锁争抢。</li>
+            </ul>
+          </div>
+
+          <div class="chapter-card rounded-lg border border-[var(--border)] border-l-4 border-l-[var(--accent)] p-3.5 space-y-1.5">
+            <label class="flex items-start gap-2 font-bold text-sm cursor-pointer"><input type="checkbox" class="mt-1 accent-[var(--primary)]" data-ch="c9"><span>第 9 章：L3 Broker 计算接入层天花板（Mock Store 压测）</span></label>
+            <ul class="pl-6 space-y-1 text-[var(--muted-foreground)] list-disc">
+              <li><strong class="text-[var(--foreground)]">9.1 构建无磁盘 I/O 的 Mock <code>MQFacade</code> Broker</strong> — 纯测 <code>GrpcServer(:8081)</code> + Protobuf + <code>producerThreadNum</code> 调度上限。</li>
+              <li><strong class="text-[var(--foreground)]">9.2 瓶颈转移分析：当存储快了 5 倍之后</strong> — 对比 L2 与 L3 曲线，评估 gRPC 与回调线程池是否成新短板。</li>
+              <li><strong class="text-[var(--foreground)]">9.3 EmbedStore vs RemoteStore 跨进程 RPC 损耗评测</strong> — 量化存算分离网络 RTT 与序列化 CPU 代价。</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Part 4 -->
+      <div class="part-block rounded-xl bg-[var(--card)] border border-[var(--card-border)] overflow-hidden">
+        <div class="part-header px-4 py-3 bg-[var(--sidebar)] border-b border-[var(--border)] flex flex-wrap items-center justify-between gap-2 cursor-pointer select-none">
+          <div class="font-extrabold text-sm">第四篇：端到端全场景压测与横向对标（L4） <span class="ml-1.5 text-xs font-semibold text-[var(--warning)]">20% · 第 10~12 章 ★重点</span></div>
+          <span class="text-xs text-[var(--muted-foreground)]">点击折叠/展开</span>
+        </div>
+        <div class="part-body p-4 flex flex-col gap-3 text-xs">
+          <div class="chapter-card rounded-lg border border-[var(--border)] border-l-4 border-l-[var(--warning)] p-3.5 space-y-1.5">
+            <label class="flex items-start gap-2 font-bold text-sm cursor-pointer"><input type="checkbox" class="mt-1 accent-[var(--primary)]" data-ch="c10"><span>第 10 章：L4 端到端压测框架升级与 OpenMessaging Benchmark 实战</span></label>
+            <ul class="pl-6 space-y-1 text-[var(--muted-foreground)] list-disc">
+              <li><strong class="text-[var(--foreground)]">10.1 重构 <code>test/e2e/benchmark</code> 套件</strong> — 复用 Producer、扩展异步/批量/Pop 消费与定速施压，修复 <code>Report</code> / <code>BenchmarkSuit</code> 统计缺陷。</li>
+              <li><strong class="text-[var(--foreground)]">10.2 接入 OpenMessaging Benchmark (OMB)</strong> — 复用 RocketMQ 5.x gRPC Driver 与标准 Workload，实现可复现压测与自动出图。</li>
+            </ul>
+          </div>
+
+          <div class="chapter-card rounded-lg border border-[var(--border)] border-l-4 border-l-[var(--warning)] p-3.5 space-y-1.5">
+            <label class="flex items-start gap-2 font-bold text-sm cursor-pointer"><input type="checkbox" class="mt-1 accent-[var(--primary)]" data-ch="c11"><span>第 11 章：L4 全业务场景性能画像（普通、冷热、Pop 与高级特性）</span></label>
+            <ul class="pl-6 space-y-1 text-[var(--muted-foreground)] list-disc">
+              <li><strong class="text-[var(--foreground)]">11.1 基础 Pub/Sub 场景矩阵</strong> — Sync/Async/Batch × 消息体大小（128B/1KB/4KB/64KB）× Topic/Queue 分布。</li>
+              <li><strong class="text-[var(--foreground)]">11.2 热读 vs 冷读混合压测</strong> — 实时追尾热读 vs 积压 50GB+ 回源随机冷读对前台写入 P99 的拖累。</li>
+              <li><strong class="text-[var(--foreground)]">11.3 Pop 消费全生命周期开销</strong> — Pop → Ack 基准 vs 叠加 Renew 续期、超时 Revive 重试的写放大。</li>
+              <li><strong class="text-[var(--foreground)]">11.4 三大高级特性性能衰减曲线</strong> — 顺序消息（FIFO 锁）、延时消息（Timer 到期误差 P99）、事务消息（TCC 写放大与回查压力）。</li>
+            </ul>
+          </div>
+
+          <div class="chapter-card rounded-lg border border-[var(--border)] border-l-4 border-l-[var(--warning)] p-3.5 space-y-1.5">
+            <label class="flex items-start gap-2 font-bold text-sm cursor-pointer"><input type="checkbox" class="mt-1 accent-[var(--primary)]" data-ch="c12"><span>第 12 章：同台竞技——Clean-RocketMQ vs Apache RocketMQ 5.x 横向对标</span></label>
+            <ul class="pl-6 space-y-1 text-[var(--muted-foreground)] list-disc">
+              <li><strong class="text-[var(--foreground)]">12.1 公平对标准则（Apples-to-Apples）</strong> — 对齐硬件、JVM、<code>FlushType</code>、SDK 与压测负载。</li>
+              <li><strong class="text-[var(--foreground)]">12.2 多维度对比实验与数据解读</strong> — 单分片默认模式对比 + 多分片与异步位点模式对比（量化核心领先幅度与边界）。</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Part 5 -->
+      <div class="part-block rounded-xl bg-[var(--card)] border border-[var(--card-border)] overflow-hidden">
+        <div class="part-header px-4 py-3 bg-[var(--sidebar)] border-b border-[var(--border)] flex flex-wrap items-center justify-between gap-2 cursor-pointer select-none">
+          <div class="font-extrabold text-sm">第五篇：集群高可用与长稳混沌压测（L5 ~ L6） <span class="ml-1.5 text-xs font-semibold text-[var(--error)]">14% · 第 13~15 章</span></div>
+          <span class="text-xs text-[var(--muted-foreground)]">点击折叠/展开</span>
+        </div>
+        <div class="part-body p-4 flex flex-col gap-3 text-xs">
+          <div class="chapter-card rounded-lg border border-[var(--border)] border-l-4 border-l-[var(--error)] p-3.5 space-y-1.5">
+            <label class="flex items-start gap-2 font-bold text-sm cursor-pointer"><input type="checkbox" class="mt-1 accent-[var(--primary)]" data-ch="c13"><span>第 13 章：L5 主从高可用（HA）复制性能测试</span></label>
+            <ul class="pl-6 space-y-1 text-[var(--muted-foreground)] list-disc">
+              <li><strong class="text-[var(--foreground)]">13.1 <code>HABootstrap</code> 与 <code>CommitLogSynchronizer</code> 压测</strong> — 对比单机、异步复制、同步复制的吞吐衰减与 P99 增量。</li>
+              <li><strong class="text-[var(--foreground)]">13.2 流控与分片复制瓶颈分析</strong> — 评测 <code>maxHaTransferBytesPerSecond</code>、<code>maxHaTransferSize</code> 与 <code>maxSlaveGap</code> 影响。</li>
+            </ul>
+          </div>
+
+          <div class="chapter-card rounded-lg border border-[var(--border)] border-l-4 border-l-[var(--error)] p-3.5 space-y-1.5">
+            <label class="flex items-start gap-2 font-bold text-sm cursor-pointer"><input type="checkbox" class="mt-1 accent-[var(--primary)]" data-ch="c14"><span>第 14 章：L5 多节点集群与存算分离水平扩展测试</span></label>
+            <ul class="pl-6 space-y-1 text-[var(--muted-foreground)] list-disc">
+              <li><strong class="text-[var(--foreground)]">14.1 集群水平扩展线性度实验</strong> — 1 → 2 → 4 → 8 节点扩容下的聚合吞吐线性度与路由均衡性。</li>
+              <li><strong class="text-[var(--foreground)]">14.2 存算分离独立扩缩容验证</strong> — 扩容无状态 Broker 破协议瓶颈 vs 扩容 Store 破磁盘瓶颈。</li>
+            </ul>
+          </div>
+
+          <div class="chapter-card rounded-lg border border-[var(--border)] border-l-4 border-l-[var(--error)] p-3.5 space-y-1.5">
+            <label class="flex items-start gap-2 font-bold text-sm cursor-pointer"><input type="checkbox" class="mt-1 accent-[var(--primary)]" data-ch="c15"><span>第 15 章：L6 长稳（Soak）、极限背压与混沌故障压测</span></label>
+            <ul class="pl-6 space-y-1 text-[var(--muted-foreground)] list-disc">
+              <li><strong class="text-[var(--foreground)]">15.1 24h~72h 恒定压力长稳测试（<code>test/stability</code>）</strong> — 堆内存、DirectMemory、Mmap 句柄与 GC 漂移监控。</li>
+              <li><strong class="text-[var(--foreground)]">15.2 磁盘水位、过期清理（<code>Retention</code>）与积压追赶</strong> — 周期性文件清理毛刺与海量积压追赶 I/O 争抢治理。</li>
+              <li><strong class="text-[var(--foreground)]">15.3 极限过载背压与故障恢复 SLA</strong> — 超阈值限流表现；<code>kill -9</code> 与 <code>tc</code> 网络故障后的 <code>Recovery</code> 耗时与零丢校验。</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Part 6 -->
+      <div class="part-block rounded-xl bg-[var(--card)] border border-[var(--card-border)] overflow-hidden">
+        <div class="part-header px-4 py-3 bg-[var(--sidebar)] border-b border-[var(--border)] flex flex-wrap items-center justify-between gap-2 cursor-pointer select-none">
+          <div class="font-extrabold text-sm">第六篇：瓶颈定位、源码级调优实战与性能工程化 <span class="ml-1.5 text-xs font-semibold text-[var(--success)]">14% · 第 16~18 章</span></div>
+          <span class="text-xs text-[var(--muted-foreground)]">点击折叠/展开</span>
+        </div>
+        <div class="part-body p-4 flex flex-col gap-3 text-xs">
+          <div class="chapter-card rounded-lg border border-[var(--border)] border-l-4 border-l-[var(--success)] p-3.5 space-y-1.5">
+            <label class="flex items-start gap-2 font-bold text-sm cursor-pointer"><input type="checkbox" class="mt-1 accent-[var(--primary)]" data-ch="c16"><span>第 16 章：三层联合诊断方法论（应用 + JVM + OS）</span></label>
+            <ul class="pl-6 space-y-1 text-[var(--muted-foreground)] list-disc">
+              <li><strong class="text-[var(--foreground)]">16.1 USE 与 RED 诊断框架落地</strong> — 构建 CPU/锁/GC/磁盘/脏页/网卡瓶颈决策树。</li>
+              <li><strong class="text-[var(--foreground)]">16.2 <code>async-profiler</code> 三大火焰图实战解读</strong> — CPU、Lock（锁争抢）、Alloc（分配与 GC）火焰图。</li>
+              <li><strong class="text-[var(--foreground)]">16.3 Linux 指标联动分析</strong> — <code>iostat</code> / <code>vmstat</code> / <code>Dirty</code> / <code>pidstat</code> / <code>sar</code> 联查周期性 P99.9 尖刺。</li>
+            </ul>
+          </div>
+
+          <div class="chapter-card rounded-lg border border-[var(--border)] border-l-4 border-l-[var(--success)] p-3.5 space-y-1.5">
+            <label class="flex items-start gap-2 font-bold text-sm cursor-pointer"><input type="checkbox" class="mt-1 accent-[var(--primary)]" data-ch="c17"><span>第 17 章：Clean-RocketMQ 典型性能调优案例复盘</span></label>
+            <ul class="pl-6 space-y-1 text-[var(--muted-foreground)] list-disc">
+              <li><strong class="text-[var(--foreground)]">案例 1：高并发写锁争抢优化</strong> — 定位 <code>CommitLogReentrantLock</code> / <code>EnqueueLock</code> 热点并量化分片提速。</li>
+              <li><strong class="text-[var(--foreground)]">案例 2：P99.9 长尾毛刺治理</strong> — 排查 OS 脏页集中刷盘、GC 停顿与 Mmap 文件切换抖动。</li>
+              <li><strong class="text-[var(--foreground)]">案例 3：Broker gRPC 接入与对象分配减负</strong> — 减少热路径 <code>MessageBO</code>/<code>ByteBuffer</code> 拷贝与线程切换。</li>
+            </ul>
+          </div>
+
+          <div class="chapter-card rounded-lg border border-[var(--border)] border-l-4 border-l-[var(--success)] p-3.5 space-y-1.5">
+            <label class="flex items-start gap-2 font-bold text-sm cursor-pointer"><input type="checkbox" class="mt-1 accent-[var(--primary)]" data-ch="c18"><span>第 18 章：性能测试工程化、CI 回归门禁与报告规范</span></label>
+            <ul class="pl-6 space-y-1 text-[var(--muted-foreground)] list-disc">
+              <li><strong class="text-[var(--foreground)]">18.1 自动化压测流水线</strong> — L1/L2 轻量基准接入 PR / Nightly CI，设吞吐跌落 &gt; 5% 或 P99 上涨 &gt; 10% 红线告警。</li>
+              <li><strong class="text-[var(--foreground)]">18.2 标准化性能测试报告模板</strong> — 环境指纹、配置快照、对照组、分位数据、火焰图证据链与行动项。</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 3: Appendix -->
+    <section id="appendix" class="space-y-3">
+      <div class="pb-2 border-b border-[var(--border)]">
+        <h2 class="text-lg font-extrabold">03 · 四大附录工具箱（开箱即用）</h2>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+        <div class="rounded-xl bg-[var(--card)] border border-[var(--card-border)] p-4 space-y-1">
+          <div class="font-bold text-sm">附录 A：全量性能配置参数速查表</div>
+          <p class="text-[var(--muted-foreground)]">汇总 <code>BrokerConfig</code>、<code>StoreConfig</code>、<code>CommitConfig</code>、<code>ConsumeQueueConfig</code> 默认值、推荐值与风险说明。</p>
+        </div>
+        <div class="rounded-xl bg-[var(--card)] border border-[var(--card-border)] p-4 space-y-1">
+          <div class="font-bold text-sm">附录 B：Linux 内核与 JVM 基线脚本集</div>
+          <p class="text-[var(--muted-foreground)]">一键环境核验脚本、<code>sysctl</code> 模板、JVM 启动参数及全自动 OS + 火焰图采集脚本。</p>
+        </div>
+        <div class="rounded-xl bg-[var(--card)] border border-[var(--card-border)] p-4 space-y-1">
+          <div class="font-bold text-sm">附录 C：性能测试防失真自查清单（20 条）</div>
+          <p class="text-[var(--muted-foreground)]">时钟统计、刷盘对齐、施压端瓶颈、协调遗漏、PageCache 预热清理等强制检查项。</p>
+        </div>
+        <div class="rounded-xl bg-[var(--card)] border border-[var(--card-border)] p-4 space-y-1">
+          <div class="font-bold text-sm">附录 D：配套代码索引与运行指南</div>
+          <p class="text-[var(--muted-foreground)]">按章节列出 <code>test/performance</code>、<code>test/e2e</code>、<code>test/stability</code> 所有可执行类的命令与参数。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 4: 5-step Template -->
+    <section id="template" class="space-y-3">
+      <div class="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-[var(--border)]">
+        <h2 class="text-lg font-extrabold">04 · 实战章节统一“五段式”写作体例</h2>
+        <span class="text-xs text-[var(--muted-foreground)]">第 4 ~ 15 章统一结构</span>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 text-xs">
+        <div class="rounded-xl bg-[var(--card)] border border-[var(--card-border)] p-3.5 space-y-1.5">
+          <span class="inline-flex items-center justify-center w-6 h-6 rounded-md bg-[var(--primary)] text-[var(--primary-foreground)] font-bold">1</span>
+          <div class="font-bold text-sm">目标与核心假设</div>
+          <p class="text-[var(--muted-foreground)]">明确本章要回答的 1~3 个量化问题与实验假设。</p>
+        </div>
+        <div class="rounded-xl bg-[var(--card)] border border-[var(--card-border)] p-3.5 space-y-1.5">
+          <span class="inline-flex items-center justify-center w-6 h-6 rounded-md bg-[var(--primary)] text-[var(--primary-foreground)] font-bold">2</span>
+          <div class="font-bold text-sm">源码链路透视</div>
+          <p class="text-[var(--muted-foreground)]">调用链图示，直指具体类、锁粒度、线程与内存模型。</p>
+        </div>
+        <div class="rounded-xl bg-[var(--card)] border border-[var(--card-border)] p-3.5 space-y-1.5">
+          <span class="inline-flex items-center justify-center w-6 h-6 rounded-md bg-[var(--primary)] text-[var(--primary-foreground)] font-bold">3</span>
+          <div class="font-bold text-sm">实验与压测代码</div>
+          <p class="text-[var(--muted-foreground)]">控制变量矩阵 + 可运行在 <code>test/*</code> 下的代码片段。</p>
+        </div>
+        <div class="rounded-xl bg-[var(--card)] border border-[var(--card-border)] p-3.5 space-y-1.5">
+          <span class="inline-flex items-center justify-center w-6 h-6 rounded-md bg-[var(--primary)] text-[var(--primary-foreground)] font-bold">4</span>
+          <div class="font-bold text-sm">数据与火焰图剖析</div>
+          <p class="text-[var(--muted-foreground)]">吞吐曲线、HdrHistogram 分位表、火焰图与 OS 证据。</p>
+        </div>
+        <div class="rounded-xl bg-[var(--card)] border border-[var(--card-border)] p-3.5 space-y-1.5">
+          <span class="inline-flex items-center justify-center w-6 h-6 rounded-md bg-[var(--primary)] text-[var(--primary-foreground)] font-bold">5</span>
+          <div class="font-bold text-sm">调优结论与避坑</div>
+          <p class="text-[var(--muted-foreground)]">可复用配置准则、收益边界与常见误区总结。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 5: Repo Mapping -->
+    <section id="repo" class="space-y-3">
+      <div class="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-[var(--border)]">
+        <h2 class="text-lg font-extrabold">05 · 电子书与仓库目录映射设计</h2>
+        <button class="no-print copy-btn px-2.5 py-1 rounded-md bg-[var(--card)] border border-[var(--border)] text-xs font-semibold cursor-pointer hover:border-[var(--primary)]" data-copy="repoTree">复制目录结构</button>
+      </div>
+      <pre id="repoTree" class="p-4 rounded-xl bg-[var(--sidebar)] border border-[var(--border)] text-xs font-mono overflow-x-auto leading-relaxed text-[var(--code-foreground)]">clean-rocketmq/
+├── docs/book/
+│   ├── rocket-performance.md               # 电子书总目录与写作进度追踪（对齐 rocketmq-analyze.md）
+│   └── performance/                        # 按篇/章拆分 Markdown 源文件（可接入 VitePress / mdBook）
+│       ├── part1-methodology/              # 第 1~3 章：方法论、热点地图、基线环境
+│       ├── part2-storage-l1-l2/            # 第 4~7 章：JMH、CommitLog 分片、刷盘、Dispatch/CQ
+│       ├── part3-network-l3/               # 第 8~9 章：Netty RPC、Registry、Mock Store Broker
+│       ├── part4-e2e-l4/                   # 第 10~12 章：E2E/OMB、全场景画像、对标 RMQ 5.x
+│       ├── part5-cluster-stability-l5-l6/  # 第 13~15 章：HA、存算分离集群、长稳与混沌
+│       ├── part6-tuning-engineering/       # 第 16~18 章：火焰图诊断、调优复盘、CI 门禁
+│       └── appendix/                       # 附录 A~D + 火焰图与曲线图资源 img/
+├── test/
+│   ├── performance/                        # 承载第 4~9 章（L1 JMH + L2 Store + L3 RPC/Mock Broker）
+│   ├── e2e/                                # 承载第 10~12 章（升级版 L4 E2E Benchmark + OMB 配置）
+│   └── stability/                          # 承载第 15 章（L6 长稳、积压追赶与混沌注入脚本）</pre>
+    </section>
+
+    <footer class="pt-3 border-t border-[var(--border)] flex flex-wrap justify-between gap-2 text-xs text-[var(--muted-foreground)]">
+      <span>《Clean-RocketMQ 性能测试与调优实战》电子书规划蓝图</span>
+      <span>本地工作区副本：<code>docs/book/clean-rocketmq-performance-ebook-blueprint.html</code></span>
+    </footer>
+  </div>
+
+  <script>
+    // Accordion
+    const parts = document.querySelectorAll('.part-block');
+    parts.forEach(p => {
+      p.querySelector('.part-header').addEventListener('click', () => p.classList.toggle('collapsed'));
+    });
+    document.getElementById('expandAllBtn').addEventListener('click', () => parts.forEach(p => p.classList.remove('collapsed')));
+    document.getElementById('collapseAllBtn').addEventListener('click', () => parts.forEach(p => p.classList.add('collapsed')));
+
+    // Search
+    const searchInput = document.getElementById('searchInput');
+    searchInput.addEventListener('input', () => {
+      const q = searchInput.value.trim().toLowerCase();
+      parts.forEach(part => {
+        let count = 0;
+        part.querySelectorAll('.chapter-card').forEach(card => {
+          const match = !q || card.innerText.toLowerCase().includes(q);
+          card.classList.toggle('hidden', !match);
+          if (match) count++;
+        });
+        if (q && count > 0) part.classList.remove('collapsed');
+        part.style.display = count === 0 ? 'none' : '';
+      });
+    });
+
+    // Checklist progress
+    const cbs = document.querySelectorAll('input[type="checkbox"][data-ch]');
+    const pLabel = document.getElementById('progressLabel');
+    const key = 'crmq-ebook-artifact-progress';
+    const state = JSON.parse(localStorage.getItem(key) || '{}');
+    function syncProgress() {
+      let done = 0;
+      cbs.forEach(c => { if (c.checked) done++; });
+      pLabel.innerText = `${Math.round((done / cbs.length) * 100)}% (${done}/${cbs.length} 章)`;
+    }
+    cbs.forEach(c => {
+      if (state[c.dataset.ch]) c.checked = true;
+      c.addEventListener('change', () => {
+        state[c.dataset.ch] = c.checked;
+        localStorage.setItem(key, JSON.stringify(state));
+        syncProgress();
+      });
+    });
+    syncProgress();
+
+    // Copy button
+    document.querySelectorAll('.copy-btn').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const txt = document.getElementById(btn.dataset.copy).innerText;
+        try {
+          await navigator.clipboard.writeText(txt);
+          const old = btn.innerText;
+          btn.innerText = '已复制 ✓';
+          setTimeout(() => btn.innerText = old, 1500);
+        } catch {
+          btn.innerText = '复制失败';
+        }
+      });
+    });
+
+    // Offline self-contained HTML export (resolves host theme vars & strips external CDN)
+    document.getElementById('downloadHtmlBtn').addEventListener('click', () => {
+      const clone = document.documentElement.cloneNode(true);
+      clone.querySelectorAll('script[src]').forEach(s => s.remove());
+      clone.querySelectorAll('style#exported-theme-vars').forEach(s => s.remove());
+
+      const cs = getComputedStyle(document.documentElement);
+      const defaults = {
+        '--background': '#f8fafc',
+        '--content': '#ffffff',
+        '--card': '#ffffff',
+        '--sidebar': '#f1f5f9',
+        '--border': '#cbd5e1',
+        '--card-border': '#e2e8f0',
+        '--foreground': '#0f172a',
+        '--muted-foreground': '#475569',
+        '--placeholder': '#94a3b8',
+        '--code-foreground': '#0f172a',
+        '--primary': '#2563eb',
+        '--primary-foreground': '#ffffff',
+        '--secondary': '#e2e8f0',
+        '--secondary-foreground': '#0f172a',
+        '--accent': '#7c3aed',
+        '--link': '#2563eb',
+        '--success': '#059669',
+        '--warning': '#d97706',
+        '--error': '#dc2626',
+        '--chart-1': '#0284c7'
+      };
+      const varLines = Object.entries(defaults).map(([k, fb]) => {
+        const v = cs.getPropertyValue(k).trim();
+        return `  ${k}: ${v || fb};`;
+      }).join('\n');
+
+      const styleEl = document.createElement('style');
+      styleEl.id = 'exported-theme-vars';
+      styleEl.textContent = `:root {\n${varLines}\n}\nbody { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; font-size: 14px; }`;
+      const head = clone.querySelector('head');
+      if (head) head.insertBefore(styleEl, head.firstChild);
+
+      const html = '<!DOCTYPE html>\n' + clone.outerHTML;
+      const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'clean-rocketmq-performance-ebook-blueprint.html';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    });
+  </script>
+</body>
+</html>

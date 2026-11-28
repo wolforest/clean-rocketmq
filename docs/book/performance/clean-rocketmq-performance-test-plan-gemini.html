@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Clean-RocketMQ 架构梳理与六层性能测试体系方案</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    html { scroll-behavior: smooth; }
+    .pyr-item { transition: transform 0.15s ease, opacity 0.15s ease; }
+    .pyr-item:hover { transform: translateY(-2px); }
+    .pyr-item.selected { outline: 2px solid var(--foreground); outline-offset: 2px; }
+    .layer-card.highlight { box-shadow: 0 0 0 2px var(--primary); }
+    @media print {
+      .no-print { display: none !important; }
+    }
+  </style>
+</head>
+<body class="bg-[var(--background)] text-[var(--foreground)] antialiased m-0 p-0">
+  <div class="max-w-6xl mx-auto px-5 py-6 space-y-8">
+
+    <!-- Top Action Bar -->
+    <div class="no-print flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-[var(--border)]">
+      <div class="flex items-center gap-2.5">
+        <span class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-[var(--primary)] text-[var(--primary-foreground)] font-bold text-xs">MQ</span>
+        <div>
+          <div class="font-bold text-sm leading-tight">Clean-RocketMQ 性能测试方案</div>
+          <div class="text-xs text-[var(--muted-foreground)]">基于仓库源码梳理 · 支持侧栏预览与离线导出</div>
+        </div>
+      </div>
+      <div class="flex flex-wrap items-center gap-2">
+        <button id="downloadHtmlBtn" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-[var(--primary)] text-[var(--primary-foreground)] hover:opacity-90 cursor-pointer">
+          下载 HTML 文件
+        </button>
+        <button onclick="window.print()" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-[var(--card)] border border-[var(--border)] text-[var(--foreground)] hover:border-[var(--primary)] cursor-pointer">
+          打印 / 导出 PDF
+        </button>
+      </div>
+    </div>
+
+    <!-- Hero -->
+    <header class="rounded-2xl bg-[var(--card)] border border-[var(--card-border)] p-6 space-y-5">
+      <div class="flex flex-wrap items-center justify-between gap-2">
+        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-[var(--sidebar)] border border-[var(--border)] text-[var(--primary)]">
+          Clean-RocketMQ (wolfmq) · 源码级性能测试体系
+        </span>
+        <span class="text-xs text-[var(--muted-foreground)]">Checklist 进度：<strong id="progressText" class="text-[var(--primary)]">0%</strong></span>
+      </div>
+      <div>
+        <h1 class="text-2xl font-extrabold tracking-tight mb-2">Clean-RocketMQ 架构梳理与六层性能测试体系</h1>
+        <p class="text-sm text-[var(--muted-foreground)] leading-relaxed">
+          紧贴 <code class="px-1.5 py-0.5 rounded bg-[var(--sidebar)] border border-[var(--border)] text-xs font-mono">broker</code> /
+          <code class="px-1.5 py-0.5 rounded bg-[var(--sidebar)] border border-[var(--border)] text-xs font-mono">store</code> /
+          <code class="px-1.5 py-0.5 rounded bg-[var(--sidebar)] border border-[var(--border)] text-xs font-mono">rpc</code> /
+          <code class="px-1.5 py-0.5 rounded bg-[var(--sidebar)] border border-[var(--border)] text-xs font-mono">registry</code> /
+          <code class="px-1.5 py-0.5 rounded bg-[var(--sidebar)] border border-[var(--border)] text-xs font-mono">common</code> 源码实现，
+          系统拆解 CommitLog 分片、异步位点分配、多刷盘策略、Pop 消费与存算分离链路，构建 L1~L6 六层性能测试框架，并定位现有 Benchmark 代码中的失真缺陷与修复路径。
+        </p>
+      </div>
+
+      <!-- KPI Cards -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div class="rounded-xl bg-[var(--sidebar)] border border-[var(--border)] p-3.5">
+          <div class="text-lg font-extrabold text-[var(--primary)]">5 大模块</div>
+          <div class="text-xs text-[var(--muted-foreground)] mt-0.5">common · rpc · registry · store · broker</div>
+        </div>
+        <div class="rounded-xl bg-[var(--sidebar)] border border-[var(--border)] p-3.5">
+          <div class="text-lg font-extrabold text-[var(--accent)]">6 层压测</div>
+          <div class="text-xs text-[var(--muted-foreground)] mt-0.5">L1 微基准 → L6 长稳混沌</div>
+        </div>
+        <div class="rounded-xl bg-[var(--sidebar)] border border-[var(--border)] p-3.5">
+          <div class="text-lg font-extrabold text-[var(--error)]">4 处审计项</div>
+          <div class="text-xs text-[var(--muted-foreground)] mt-0.5">定位现有基准计时/对比失真</div>
+        </div>
+        <div class="rounded-xl bg-[var(--sidebar)] border border-[var(--border)] p-3.5">
+          <div class="text-lg font-extrabold text-[var(--success)]">4 阶段落地</div>
+          <div class="text-xs text-[var(--muted-foreground)] mt-0.5">由底向上剥离瓶颈 · 对标 RMQ 5.x</div>
+        </div>
+      </div>
+
+      <!-- Quick Jump Nav -->
+      <nav class="no-print flex flex-wrap gap-2 pt-1">
+        <a href="#arch" class="text-xs px-2.5 py-1 rounded-md bg-[var(--sidebar)] border border-[var(--border)] text-[var(--foreground)] hover:border-[var(--primary)] no-underline">1. 架构与核心链路</a>
+        <a href="#layers" class="text-xs px-2.5 py-1 rounded-md bg-[var(--sidebar)] border border-[var(--border)] text-[var(--foreground)] hover:border-[var(--primary)] no-underline">2. 六层性能测试体系</a>
+        <a href="#audit" class="text-xs px-2.5 py-1 rounded-md bg-[var(--sidebar)] border border-[var(--border)] text-[var(--foreground)] hover:border-[var(--primary)] no-underline">3. 现有代码缺陷审计</a>
+        <a href="#matrix" class="text-xs px-2.5 py-1 rounded-md bg-[var(--sidebar)] border border-[var(--border)] text-[var(--foreground)] hover:border-[var(--primary)] no-underline">4. 控制变量矩阵</a>
+        <a href="#observability" class="text-xs px-2.5 py-1 rounded-md bg-[var(--sidebar)] border border-[var(--border)] text-[var(--foreground)] hover:border-[var(--primary)] no-underline">5. 监控与火焰图</a>
+        <a href="#roadmap" class="text-xs px-2.5 py-1 rounded-md bg-[var(--sidebar)] border border-[var(--border)] text-[var(--foreground)] hover:border-[var(--primary)] no-underline">6. 四阶段路线图</a>
+      </nav>
+    </header>
+
+    <!-- Section 1: Architecture -->
+    <section id="arch" class="space-y-4">
+      <div class="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-[var(--border)]">
+        <h2 class="text-lg font-extrabold">01 · 架构与核心性能链路梳理</h2>
+        <span class="text-xs px-2 py-0.5 rounded bg-[var(--sidebar)] border border-[var(--border)] text-[var(--primary)] font-semibold">DDD 分层 · 存算分离演进</span>
+      </div>
+
+      <!-- SVG Diagram -->
+      <div class="rounded-xl bg-[var(--card)] border border-[var(--card-border)] p-4 overflow-x-auto">
+        <svg viewBox="0 0 1040 350" class="w-full min-w-[780px] h-auto" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 1 L 10 5 L 0 9 z" fill="var(--muted-foreground, #64748b)" />
+            </marker>
+            <marker id="arr-p" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 1 L 10 5 L 0 9 z" fill="var(--primary, #2563eb)" />
+            </marker>
+          </defs>
+
+          <!-- Zones -->
+          <rect x="10" y="12" width="170" height="325" rx="10" fill="var(--sidebar, #eff6ff)" stroke="var(--primary, #2563eb)" stroke-width="1.4" />
+          <text x="95" y="34" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--primary, #1d4ed8)">Client / 施压端</text>
+
+          <rect x="204" y="12" width="282" height="325" rx="10" fill="var(--sidebar, #f5f3ff)" stroke="var(--accent, #7c3aed)" stroke-width="1.4" />
+          <text x="345" y="34" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--accent, #6d28d9)">Broker 计算层 (broker)</text>
+
+          <rect x="510" y="12" width="520" height="248" rx="10" fill="var(--sidebar, #ecfdf5)" stroke="var(--success, #059669)" stroke-width="1.4" />
+          <text x="770" y="34" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--success, #047857)">Store 存储引擎层 (store)</text>
+
+          <rect x="510" y="274" width="520" height="63" rx="10" fill="var(--sidebar, #fffbeb)" stroke="var(--warning, #d97706)" stroke-width="1.4" />
+          <text x="528" y="298" font-size="12" font-weight="700" fill="var(--warning, #b45309)">Registry 注册中心 (registry :9876) &amp; HA 主从同步 (:10912)</text>
+          <text x="528" y="319" font-size="11" fill="var(--muted-foreground, #475569)">StoreRegister / RouteLoader / HABootstrap / CommitLogSynchronizer (流控 · 同步/异步复制)</text>
+
+          <!-- Clients -->
+          <rect x="24" y="54" width="142" height="56" rx="8" fill="var(--card, #ffffff)" stroke="var(--border, #cbd5e1)" />
+          <text x="95" y="77" text-anchor="middle" font-size="12" font-weight="700" fill="var(--foreground, #0f172a)">Producer (5.x)</text>
+          <text x="95" y="95" text-anchor="middle" font-size="11" fill="var(--muted-foreground, #475569)">Sync / Async / Batch</text>
+
+          <rect x="24" y="130" width="142" height="56" rx="8" fill="var(--card, #ffffff)" stroke="var(--border, #cbd5e1)" />
+          <text x="95" y="153" text-anchor="middle" font-size="12" font-weight="700" fill="var(--foreground, #0f172a)">Consumer (Pop)</text>
+          <text x="95" y="171" text-anchor="middle" font-size="11" fill="var(--muted-foreground, #475569)">Pop / Ack / Renew</text>
+
+          <rect x="24" y="206" width="142" height="56" rx="8" fill="var(--card, #ffffff)" stroke="var(--border, #cbd5e1)" />
+          <text x="95" y="229" text-anchor="middle" font-size="12" font-weight="700" fill="var(--foreground, #0f172a)">特性客户端</text>
+          <text x="95" y="247" text-anchor="middle" font-size="11" fill="var(--muted-foreground, #475569)">FIFO · Delay · TCC</text>
+
+          <rect x="24" y="280" width="142" height="40" rx="8" fill="var(--card, #ffffff)" stroke="var(--primary, #2563eb)" stroke-dasharray="4 3" />
+          <text x="95" y="304" text-anchor="middle" font-size="11" font-weight="600" fill="var(--primary, #1d4ed8)">L4 / L5 / OMB 入口</text>
+
+          <!-- Broker -->
+          <rect x="218" y="54" width="254" height="50" rx="8" fill="var(--card, #ffffff)" stroke="var(--border, #cbd5e1)" />
+          <text x="345" y="75" text-anchor="middle" font-size="12" font-weight="700" fill="var(--foreground, #0f172a)">GrpcServer (:8081) · Protobuf</text>
+          <text x="345" y="93" text-anchor="middle" font-size="10.5" fill="var(--muted-foreground, #475569)">默认开启 (Remoting RPC :8080 预留未注册)</text>
+
+          <rect x="218" y="118" width="120" height="64" rx="8" fill="var(--card, #ffffff)" stroke="var(--border, #cbd5e1)" />
+          <text x="278" y="139" text-anchor="middle" font-size="12" font-weight="700" fill="var(--foreground, #0f172a)">Producer 域</text>
+          <text x="278" y="156" text-anchor="middle" font-size="10.5" fill="var(--muted-foreground, #475569)">EnqueueService</text>
+          <text x="278" y="171" text-anchor="middle" font-size="10.5" fill="var(--muted-foreground, #475569)">producerThreadNum</text>
+
+          <rect x="352" y="118" width="120" height="64" rx="8" fill="var(--card, #ffffff)" stroke="var(--border, #cbd5e1)" />
+          <text x="412" y="139" text-anchor="middle" font-size="12" font-weight="700" fill="var(--foreground, #0f172a)">Consumer 域</text>
+          <text x="412" y="156" text-anchor="middle" font-size="10.5" fill="var(--muted-foreground, #475569)">Pop / Ack / Revive</text>
+          <text x="412" y="171" text-anchor="middle" font-size="10.5" fill="var(--muted-foreground, #475569)">Receipt / Renew</text>
+
+          <rect x="218" y="196" width="254" height="44" rx="8" fill="var(--card, #ffffff)" stroke="var(--border, #cbd5e1)" />
+          <text x="345" y="216" text-anchor="middle" font-size="11.5" font-weight="700" fill="var(--foreground, #0f172a)">Transaction (TCC/回查) · Timer 调度</text>
+          <text x="345" y="232" text-anchor="middle" font-size="10.5" fill="var(--muted-foreground, #475569)">TimerTaskScanner / TransactionBootstrap</text>
+
+          <rect x="218" y="254" width="120" height="66" rx="8" fill="var(--card, #ffffff)" stroke="var(--accent, #7c3aed)" />
+          <text x="278" y="275" text-anchor="middle" font-size="11.5" font-weight="700" fill="var(--accent, #6d28d9)">EmbedStore</text>
+          <text x="278" y="292" text-anchor="middle" font-size="10.5" fill="var(--muted-foreground, #475569)">进程内直调 (默认)</text>
+          <text x="278" y="308" text-anchor="middle" font-size="10.5" fill="var(--muted-foreground, #475569)">零网络损耗</text>
+
+          <rect x="352" y="254" width="120" height="66" rx="8" fill="var(--card, #ffffff)" stroke="var(--accent, #7c3aed)" stroke-dasharray="4 3" />
+          <text x="412" y="275" text-anchor="middle" font-size="11.5" font-weight="700" fill="var(--accent, #6d28d9)">RemoteStore</text>
+          <text x="412" y="292" text-anchor="middle" font-size="10.5" fill="var(--muted-foreground, #475569)">Netty RPC (:6888)</text>
+          <text x="412" y="308" text-anchor="middle" font-size="10.5" fill="var(--muted-foreground, #475569)">存算分离 (演进中)</text>
+
+          <!-- Store -->
+          <rect x="526" y="54" width="160" height="84" rx="8" fill="var(--card, #ffffff)" stroke="var(--border, #cbd5e1)" />
+          <text x="606" y="74" text-anchor="middle" font-size="12" font-weight="700" fill="var(--foreground, #0f172a)">EnqueueService</text>
+          <text x="606" y="91" text-anchor="middle" font-size="10.5" fill="var(--muted-foreground, #475569)">EnqueueLock (按队列)</text>
+          <text x="606" y="107" text-anchor="middle" font-size="10.5" fill="var(--muted-foreground, #475569)">enablePreAssignOffset</text>
+          <text x="606" y="124" text-anchor="middle" font-size="10.5" font-weight="600" fill="var(--success, #059669)">热点锁关键开关</text>
+
+          <rect x="704" y="54" width="174" height="84" rx="8" fill="var(--card, #ffffff)" stroke="var(--success, #059669)" stroke-width="2" />
+          <text x="791" y="74" text-anchor="middle" font-size="12" font-weight="800" fill="var(--success, #047857)">CommitLogManager</text>
+          <text x="791" y="91" text-anchor="middle" font-size="10.5" fill="var(--foreground, #0f172a)">多分片 FileCommitLog[0..N]</text>
+          <text x="791" y="107" text-anchor="middle" font-size="10.5" fill="var(--muted-foreground, #475569)">OffsetCodec · Mmap/Pool</text>
+          <text x="791" y="124" text-anchor="middle" font-size="10.5" font-weight="700" fill="var(--success, #047857)">★ 5x+ 吞吐核心引擎</text>
+
+          <rect x="896" y="54" width="120" height="84" rx="8" fill="var(--card, #ffffff)" stroke="var(--border, #cbd5e1)" />
+          <text x="956" y="75" text-anchor="middle" font-size="11.5" font-weight="700" fill="var(--foreground, #0f172a)">FlushHandler</text>
+          <text x="956" y="92" text-anchor="middle" font-size="10.5" fill="var(--muted-foreground, #475569)">GroupFlusher</text>
+          <text x="956" y="108" text-anchor="middle" font-size="10.5" fill="var(--muted-foreground, #475569)">IntervalFlusher</text>
+          <text x="956" y="124" text-anchor="middle" font-size="10.5" fill="var(--muted-foreground, #475569)">WriteCache</text>
+
+          <rect x="526" y="156" width="160" height="84" rx="8" fill="var(--card, #ffffff)" stroke="var(--border, #cbd5e1)" />
+          <text x="606" y="177" text-anchor="middle" font-size="12" font-weight="700" fill="var(--foreground, #0f172a)">DequeueService</text>
+          <text x="606" y="194" text-anchor="middle" font-size="10.5" fill="var(--muted-foreground, #475569)">DequeueLock · OrderLock</text>
+          <text x="606" y="210" text-anchor="middle" font-size="10.5" fill="var(--muted-foreground, #475569)">InflightCounter · PopCP</text>
+          <text x="606" y="226" text-anchor="middle" font-size="10.5" fill="var(--muted-foreground, #475569)">AckService · Offset</text>
+
+          <rect x="704" y="156" width="174" height="84" rx="8" fill="var(--card, #ffffff)" stroke="var(--border, #cbd5e1)" />
+          <text x="791" y="177" text-anchor="middle" font-size="12" font-weight="700" fill="var(--foreground, #0f172a)">DispatchManager</text>
+          <text x="791" y="194" text-anchor="middle" font-size="10.5" fill="var(--muted-foreground, #475569)">dispatchThreads (默认 5)</text>
+          <text x="791" y="210" text-anchor="middle" font-size="10.5" fill="var(--muted-foreground, #475569)">异步分发建索引</text>
+          <text x="791" y="226" text-anchor="middle" font-size="10.5" font-weight="600" fill="var(--warning, #d97706)">需盯 Dispatch Lag</text>
+
+          <rect x="896" y="156" width="120" height="84" rx="8" fill="var(--card, #ffffff)" stroke="var(--border, #cbd5e1)" />
+          <text x="956" y="177" text-anchor="middle" font-size="11.5" font-weight="700" fill="var(--foreground, #0f172a)">索引与定时</text>
+          <text x="956" y="194" text-anchor="middle" font-size="10.5" fill="var(--muted-foreground, #475569)">ConsumeQueue</text>
+          <text x="956" y="210" text-anchor="middle" font-size="10.5" fill="var(--muted-foreground, #475569)">(File / RocksDB)</text>
+          <text x="956" y="226" text-anchor="middle" font-size="10.5" fill="var(--muted-foreground, #475569)">Index · TimerWheel</text>
+
+          <!-- Arrows -->
+          <line x1="166" y1="82" x2="215" y2="79" stroke="var(--primary, #2563eb)" stroke-width="1.6" marker-end="url(#arr-p)" />
+          <line x1="166" y1="158" x2="215" y2="90" stroke="var(--primary, #2563eb)" stroke-width="1.4" marker-end="url(#arr-p)" />
+          <line x1="345" y1="104" x2="285" y2="116" stroke="var(--muted-foreground, #64748b)" stroke-width="1.4" marker-end="url(#arr)" />
+          <line x1="345" y1="104" x2="405" y2="116" stroke="var(--muted-foreground, #64748b)" stroke-width="1.4" marker-end="url(#arr)" />
+          <line x1="472" y1="286" x2="523" y2="98" stroke="var(--primary, #2563eb)" stroke-width="1.6" marker-end="url(#arr-p)" />
+          <line x1="472" y1="286" x2="523" y2="198" stroke="var(--muted-foreground, #64748b)" stroke-width="1.4" marker-end="url(#arr)" />
+          <line x1="686" y1="96" x2="701" y2="96" stroke="var(--muted-foreground, #64748b)" stroke-width="1.6" marker-end="url(#arr)" />
+          <line x1="878" y1="96" x2="893" y2="96" stroke="var(--muted-foreground, #64748b)" stroke-width="1.6" marker-end="url(#arr)" />
+          <line x1="791" y1="138" x2="791" y2="153" stroke="var(--muted-foreground, #64748b)" stroke-width="1.6" marker-end="url(#arr)" />
+          <line x1="878" y1="198" x2="893" y2="198" stroke="var(--muted-foreground, #64748b)" stroke-width="1.6" marker-end="url(#arr)" />
+          <line x1="704" y1="208" x2="689" y2="208" stroke="var(--muted-foreground, #64748b)" stroke-width="1.4" marker-end="url(#arr)" />
+        </svg>
+        <div class="text-xs text-[var(--muted-foreground)] text-center mt-2">图 1：Clean-RocketMQ 端到端写入、异步派发与 Pop 消费核心链路</div>
+      </div>
+
+      <!-- Key Config Table -->
+      <div class="rounded-xl bg-[var(--card)] border border-[var(--card-border)] overflow-x-auto">
+        <table class="w-full text-left border-collapse text-xs">
+          <thead>
+            <tr class="bg-[var(--sidebar)] border-b border-[var(--border)]">
+              <th class="p-3 font-bold">关键配置 / 特性</th>
+              <th class="p-3 font-bold">源码位置</th>
+              <th class="p-3 font-bold">默认值</th>
+              <th class="p-3 font-bold">性能影响与压测关注点</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-[var(--border)]">
+            <tr>
+              <td class="p-3 font-semibold">CommitLog 分片<br><code class="font-mono text-[var(--primary)]">shardingNumber</code></td>
+              <td class="p-3 font-mono text-[var(--muted-foreground)]">CommitConfig.java<br>CommitLogManager.java</td>
+              <td class="p-3 font-mono">SHARDING=false<br>SHARDING_NUM=2</td>
+              <td class="p-3 text-[var(--muted-foreground)]">打破单 CommitLog 锁竞争的核心机制；重点验证 1/2/4/8 分片在单盘与多盘（<code>enableMultiDir</code>）下的线性扩展性。</td>
+            </tr>
+            <tr>
+              <td class="p-3 font-semibold">刷盘与写缓存<br><code class="font-mono text-[var(--primary)]">flushType / WriteCache</code></td>
+              <td class="p-3 font-mono text-[var(--muted-foreground)]">ConfigAttribute.java<br>DefaultFlushHandler.java</td>
+              <td class="p-3 font-mono">FlushType.SYNC<br>WriteCache=false</td>
+              <td class="p-3 text-[var(--muted-foreground)]">默认启用 SYNC 组提交（GroupFlusher）；与原生 RocketMQ 对标时必须先对齐 SYNC/ASYNC 与堆外缓存。</td>
+            </tr>
+            <tr>
+              <td class="p-3 font-semibold">队列位点预分配<br><code class="font-mono text-[var(--primary)]">enablePreAssignOffset</code></td>
+              <td class="p-3 font-mono text-[var(--muted-foreground)]">StoreConfig.java<br>store/.../EnqueueService</td>
+              <td class="p-3 font-mono">true</td>
+              <td class="p-3 text-[var(--muted-foreground)]">开启时写入前按 (topic, queueId) 加 <code>EnqueueLock</code>；关闭后异步分配，可释放热点队列锁竞争。</td>
+            </tr>
+            <tr>
+              <td class="p-3 font-semibold">存算部署模式<br><code class="font-mono text-[var(--primary)]">Embed / Remote</code></td>
+              <td class="p-3 font-mono text-[var(--muted-foreground)]">BrokerConfig.java<br>StoreBootstrap.java</td>
+              <td class="p-3 font-mono">Embed=true<br>Remote=false</td>
+              <td class="p-3 text-[var(--muted-foreground)]">当前默认进程内直调（零网络损耗）；Store RPC (:6888) 已注册元信息/Consume/Timer，收发远程化演进中。</td>
+            </tr>
+            <tr>
+              <td class="p-3 font-semibold">接入协议与线程池<br><code class="font-mono text-[var(--primary)]">Grpc / ThreadNum</code></td>
+              <td class="p-3 font-mono text-[var(--muted-foreground)]">BrokerConfig.java<br>GrpcBootstrap.java</td>
+              <td class="p-3 font-mono">Grpc=true (:8081)<br>Rpc=false</td>
+              <td class="p-3 text-[var(--muted-foreground)]">对外唯一启用协议为 gRPC（兼容 RMQ 5.x 客户端）；CommitLog 分片提速后，gRPC 序列化与线程池易成新瓶颈。</td>
+            </tr>
+            <tr>
+              <td class="p-3 font-semibold">异步派发与索引<br><code class="font-mono text-[var(--primary)]">dispatchThreads / RocksDB</code></td>
+              <td class="p-3 font-mono text-[var(--muted-foreground)]">CommitConfig.java<br>ConsumeQueueConfig.java</td>
+              <td class="p-3 font-mono">threads=5<br>RocksDB=false</td>
+              <td class="p-3 text-[var(--muted-foreground)]">高吞吐写入下需紧盯 CommitLog 到 ConsumeQueue 的 Dispatch Lag，并对比 File vs RocksDB 索引性能。</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Section 2: 6 Layers -->
+    <section id="layers" class="space-y-4">
+      <div class="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-[var(--border)]">
+        <h2 class="text-lg font-extrabold">02 · 六层性能测试体系（L1 ~ L6）</h2>
+        <div class="no-print flex flex-wrap gap-1.5" id="priorityFilter">
+          <button class="filter-btn px-2.5 py-1 rounded-full text-xs font-semibold bg-[var(--primary)] text-[var(--primary-foreground)] cursor-pointer" data-filter="all">全部 6 层</button>
+          <button class="filter-btn px-2.5 py-1 rounded-full text-xs font-semibold bg-[var(--card)] border border-[var(--border)] text-[var(--muted-foreground)] cursor-pointer" data-filter="p0">P0 立即落地</button>
+          <button class="filter-btn px-2.5 py-1 rounded-full text-xs font-semibold bg-[var(--card)] border border-[var(--border)] text-[var(--muted-foreground)] cursor-pointer" data-filter="p1">P1 紧随推进</button>
+          <button class="filter-btn px-2.5 py-1 rounded-full text-xs font-semibold bg-[var(--card)] border border-[var(--border)] text-[var(--muted-foreground)] cursor-pointer" data-filter="p2">P2 随演进补齐</button>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
+        <!-- Interactive Pyramid -->
+        <div class="lg:col-span-4 rounded-xl bg-[var(--card)] border border-[var(--card-border)] p-4 flex flex-col items-center gap-2">
+          <div class="text-xs font-semibold text-[var(--muted-foreground)] mb-1">点击任意层级高亮定位</div>
+          <div class="pyr-item w-[56%] rounded-lg px-2 py-2 text-center cursor-pointer border border-[var(--error)] bg-[var(--sidebar)]" data-target="layer-6">
+            <div class="text-xs font-bold text-[var(--error)]">L6 长稳与混沌</div>
+            <div class="text-xs text-[var(--muted-foreground)]">24h Soak · 积压冷读</div>
+          </div>
+          <div class="pyr-item w-[65%] rounded-lg px-2 py-2 text-center cursor-pointer border border-[var(--warning)] bg-[var(--sidebar)]" data-target="layer-5">
+            <div class="text-xs font-bold text-[var(--warning)]">L5 集群与 HA 扩展</div>
+            <div class="text-xs text-[var(--muted-foreground)]">主从复制 · 存算分离</div>
+          </div>
+          <div class="pyr-item w-[74%] rounded-lg px-2 py-2 text-center cursor-pointer border border-[var(--warning)] bg-[var(--sidebar)]" data-target="layer-4">
+            <div class="text-xs font-bold text-[var(--foreground)]">L4 单机端到端业务</div>
+            <div class="text-xs text-[var(--muted-foreground)]">5.x SDK · Pub/Pop/Delay/Tx</div>
+          </div>
+          <div class="pyr-item w-[83%] rounded-lg px-2 py-2 text-center cursor-pointer border border-[var(--accent)] bg-[var(--sidebar)]" data-target="layer-3">
+            <div class="text-xs font-bold text-[var(--accent)]">L3 网络与协议接入</div>
+            <div class="text-xs text-[var(--muted-foreground)]">RPC · gRPC(Mock) · Registry</div>
+          </div>
+          <div class="pyr-item w-[92%] rounded-lg px-2 py-2 text-center cursor-pointer border border-[var(--primary)] bg-[var(--sidebar)]" data-target="layer-2">
+            <div class="text-xs font-bold text-[var(--primary)]">L2 存储引擎组件</div>
+            <div class="text-xs text-[var(--muted-foreground)]">CommitLog 分片 · Flush · CQ</div>
+          </div>
+          <div class="pyr-item w-full rounded-lg px-2 py-2 text-center cursor-pointer border border-[var(--success)] bg-[var(--sidebar)]" data-target="layer-1">
+            <div class="text-xs font-bold text-[var(--success)]">L1 微基准与核心原语</div>
+            <div class="text-xs text-[var(--muted-foreground)]">JMH · 编解码 · 锁 · Mmap</div>
+          </div>
+        </div>
+
+        <!-- Layer Detail Cards -->
+        <div class="lg:col-span-8 space-y-3">
+          <div class="layer-card rounded-xl bg-[var(--card)] border border-[var(--card-border)] border-l-4 border-l-[var(--success)] p-4" id="layer-1" data-priority="p0">
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-1.5">
+              <h3 class="text-sm font-extrabold">L1：核心原语与微基准层（Micro-benchmark）</h3>
+              <span class="text-xs font-bold px-2 py-0.5 rounded-full bg-[var(--sidebar)] text-[var(--error)] border border-[var(--error)]">P0 立即落地</span>
+            </div>
+            <p class="text-xs text-[var(--muted-foreground)] mb-2.5">剥离 I/O 与网络，在纳秒/微秒级量化 CPU 热点、对象分配与锁竞争，消除 JIT/GC 干扰。</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5 text-xs">
+              <div class="p-2.5 rounded-lg bg-[var(--sidebar)] border border-[var(--border)]">
+                <div class="font-bold text-[var(--muted-foreground)] mb-1">覆盖核心类</div>
+                <code>MessageEncoder/Decoder</code>、<code>OffsetCodec</code>、<code>EnqueueLock/DequeueLock/CommitLogReentrantLock</code>、<code>DefaultMappedFileQueue</code>（Mmap vs <code>TransientPool</code>）、<code>TimerWheel</code>
+              </div>
+              <div class="p-2.5 rounded-lg bg-[var(--sidebar)] border border-[var(--border)]">
+                <div class="font-bold text-[var(--muted-foreground)] mb-1">工具与归口</div>
+                <strong>JMH</strong>（<code>test/performance</code>），配合 <code>-prof gc</code> 与 <code>-prof async</code> 排查伪共享与内存拷贝。
+              </div>
+            </div>
+          </div>
+
+          <div class="layer-card rounded-xl bg-[var(--card)] border border-[var(--card-border)] border-l-4 border-l-[var(--primary)] p-4" id="layer-2" data-priority="p0">
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-1.5">
+              <h3 class="text-sm font-extrabold">L2：存储引擎组件层（Store 域内闭环）</h3>
+              <span class="text-xs font-bold px-2 py-0.5 rounded-full bg-[var(--sidebar)] text-[var(--error)] border border-[var(--error)]">P0 核心卖点验证</span>
+            </div>
+            <p class="text-xs text-[var(--muted-foreground)] mb-2.5">直接驱动 Store 领域层，量化存储极限，重点验证“CommitLog 分片 5x+ 吞吐”与后台派发追赶能力。</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5 text-xs">
+              <div class="p-2.5 rounded-lg bg-[var(--sidebar)] border border-[var(--border)]">
+                <div class="font-bold text-[var(--muted-foreground)] mb-1">核心测试维度</div>
+                ① <code>CommitLogManager</code> 1/2/4/8 分片 × 线程数 × 单/多盘<br>
+                ② <code>SYNC</code>(GroupFlusher) vs <code>ASYNC</code> vs <code>WriteCache</code><br>
+                ③ <code>EnqueueService</code>(<code>enablePreAssignOffset</code>) → <code>DispatchManager</code> → <code>ConsumeQueue</code> → <code>DequeueService</code>
+              </div>
+              <div class="p-2.5 rounded-lg bg-[var(--sidebar)] border border-[var(--border)]">
+                <div class="font-bold text-[var(--muted-foreground)] mb-1">工具与归口</div>
+                重构现有 <code>commitlog/benchmark</code> 并沉淀至 <code>test/performance</code>，接入 <strong>HdrHistogram</strong> 输出 P99/P99.9。
+              </div>
+            </div>
+          </div>
+
+          <div class="layer-card rounded-xl bg-[var(--card)] border border-[var(--card-border)] border-l-4 border-l-[var(--accent)] p-4" id="layer-3" data-priority="p1">
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-1.5">
+              <h3 class="text-sm font-extrabold">L3：网络通信与协议接入层（RPC / gRPC / Registry）</h3>
+              <span class="text-xs font-bold px-2 py-0.5 rounded-full bg-[var(--sidebar)] text-[var(--warning)] border border-[var(--warning)]">P1 定位上移瓶颈</span>
+            </div>
+            <p class="text-xs text-[var(--muted-foreground)] mb-2.5">剥离磁盘 I/O 测出计算层与网络层天花板，确认 Broker 能否喂饱多分片存储。</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5 text-xs">
+              <div class="p-2.5 rounded-lg bg-[var(--sidebar)] border border-[var(--border)]">
+                <div class="font-bold text-[var(--muted-foreground)] mb-1">核心测试维度</div>
+                ① Mock <code>MQFacade</code> 测 Broker gRPC 编解码与 <code>producerThreadNum</code> 上限<br>
+                ② <code>rpc</code> 模块 Netty 收发 QPS/RTT；<code>registry</code> 高并发路由拉取<br>
+                ③ 存算分离下 Embed vs Remote RPC 延迟差
+              </div>
+              <div class="p-2.5 rounded-lg bg-[var(--sidebar)] border border-[var(--border)]">
+                <div class="font-bold text-[var(--muted-foreground)] mb-1">工具与归口</div>
+                <code>test/performance</code> 独立 Mock Store Broker 与 Netty RPC 压测程序。
+              </div>
+            </div>
+          </div>
+
+          <div class="layer-card rounded-xl bg-[var(--card)] border border-[var(--card-border)] border-l-4 border-l-[var(--warning)] p-4" id="layer-4" data-priority="p0">
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-1.5">
+              <h3 class="text-sm font-extrabold">L4：单节点端到端业务层（Broker + EmbedStore）</h3>
+              <span class="text-xs font-bold px-2 py-0.5 rounded-full bg-[var(--sidebar)] text-[var(--error)] border border-[var(--error)]">P0 对标 RMQ 5.x</span>
+            </div>
+            <p class="text-xs text-[var(--muted-foreground)] mb-2.5">通过标准 <code>rocketmq-client-java</code> 5.x 直连 Broker(:8081)，评估全业务场景真实吞吐与端到端延迟。</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5 text-xs">
+              <div class="p-2.5 rounded-lg bg-[var(--sidebar)] border border-[var(--border)]">
+                <div class="font-bold text-[var(--muted-foreground)] mb-1">业务场景</div>
+                ① 普通消息：Sync/Async/Batch、热读 vs 积压冷读<br>
+                ② Pop 全闭环：Pop → Ack → Renew → 超时 Revive<br>
+                ③ 特性衰减：FIFO 顺序锁、Timer 延时误差、TCC 事务与回查
+              </div>
+              <div class="p-2.5 rounded-lg bg-[var(--sidebar)] border border-[var(--border)]">
+                <div class="font-bold text-[var(--muted-foreground)] mb-1">工具与归口</div>
+                升级 <code>test/e2e/benchmark</code>（Open-loop 定速 + HdrHistogram），或接入 <strong>OpenMessaging Benchmark (OMB)</strong>。
+              </div>
+            </div>
+          </div>
+
+          <div class="layer-card rounded-xl bg-[var(--card)] border border-[var(--card-border)] border-l-4 border-l-[var(--warning)] p-4" id="layer-5" data-priority="p2">
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-1.5">
+              <h3 class="text-sm font-extrabold">L5：集群与高可用扩展层（HA 主从 / 存算分离集群）</h3>
+              <span class="text-xs font-bold px-2 py-0.5 rounded-full bg-[var(--sidebar)] text-[var(--accent)] border border-[var(--accent)]">P2 随架构演进</span>
+            </div>
+            <p class="text-xs text-[var(--muted-foreground)] mb-2.5">评估主从复制对写吞吐/P99 的影响，以及多 Broker + 多 Store 水平扩容线性度。</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5 text-xs">
+              <div class="p-2.5 rounded-lg bg-[var(--sidebar)] border border-[var(--border)]">
+                <div class="font-bold text-[var(--muted-foreground)] mb-1">测试重点</div>
+                <code>enableHA=true</code> 下 <code>CommitLogSynchronizer</code> 同步/异步复制、<code>maxHaTransferBytesPerSecond</code> 流控、多节点存算分离扩展。
+              </div>
+              <div class="p-2.5 rounded-lg bg-[var(--sidebar)] border border-[var(--border)]">
+                <div class="font-bold text-[var(--muted-foreground)] mb-1">工具与归口</div>
+                多机集群 + 分布式施压机（OMB Worker / 多实例压测端）。
+              </div>
+            </div>
+          </div>
+
+          <div class="layer-card rounded-xl bg-[var(--card)] border border-[var(--card-border)] border-l-4 border-l-[var(--error)] p-4" id="layer-6" data-priority="p1">
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-1.5">
+              <h3 class="text-sm font-extrabold">L6：长稳、极限与混沌压测层（Soak / Stress / Chaos）</h3>
+              <span class="text-xs font-bold px-2 py-0.5 rounded-full bg-[var(--sidebar)] text-[var(--warning)] border border-[var(--warning)]">P1 生产准入必备</span>
+            </div>
+            <p class="text-xs text-[var(--muted-foreground)] mb-2.5">发现短测无法暴露的泄漏、毛刺与恢复 SLA 问题。</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5 text-xs">
+              <div class="p-2.5 rounded-lg bg-[var(--sidebar)] border border-[var(--border)]">
+                <div class="font-bold text-[var(--muted-foreground)] mb-1">测试重点</div>
+                24h~72h 稳态压测（DirectMemory/Mmap 泄漏）、50GB+ 积压追赶（写+随机冷读争抢）、<code>Retention</code> 清理抖动、<code>kill -9</code> 恢复耗时。
+              </div>
+              <div class="p-2.5 rounded-lg bg-[var(--sidebar)] border border-[var(--border)]">
+                <div class="font-bold text-[var(--muted-foreground)] mb-1">工具与归口</div>
+                <code>test/stability</code>，配合 <code>tc</code> 网络延迟、磁盘限速与故障注入脚本。
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 3: Audit -->
+    <section id="audit" class="space-y-3">
+      <div class="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-[var(--border)]">
+        <h2 class="text-lg font-extrabold">03 · 现有压测资产审计与缺陷诊断</h2>
+        <span class="text-xs font-bold px-2 py-0.5 rounded bg-[var(--sidebar)] text-[var(--error)] border border-[var(--error)]">正式跑数前务必先修复</span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+        <div class="rounded-xl bg-[var(--card)] border border-[var(--card-border)] p-4 space-y-2">
+          <div class="flex items-center justify-between gap-2">
+            <code class="text-xs font-bold text-[var(--error)]">CommitLogManagerBenchmark.java</code>
+            <span class="text-xs font-semibold text-[var(--error)]">3 处失真</span>
+          </div>
+          <ul class="text-xs text-[var(--muted-foreground)] list-disc pl-4 space-y-1.5">
+            <li><strong>多线程耗时被累加（L361/L392/L426）：</strong> <code>totalTime.addAndGet(end - start)</code> 将各线程耗时求和当分母，多线程吞吐被人为除以线程数；应改为外层墙钟时间。</li>
+            <li><strong>刷盘基准不对等（L495 vs L458）：</strong> 单 <code>FileCommitLog</code> 用 <code>EmptyFlushHandler</code>，而分片版走默认 <code>SYNC</code> 刷盘。</li>
+            <li><strong>未等落盘完成（L389）：</strong> <code>runMultiThreadBenchmarkWithTopics</code> 未调 <code>future.get()</code>。</li>
+          </ul>
+        </div>
+
+        <div class="rounded-xl bg-[var(--card)] border border-[var(--card-border)] p-4 space-y-2">
+          <div class="flex items-center justify-between gap-2">
+            <code class="text-xs font-bold text-[var(--error)]">InsertBenchmark.java</code>
+            <span class="text-xs font-semibold text-[var(--error)]">公式错误</span>
+          </div>
+          <ul class="text-xs text-[var(--muted-foreground)] list-disc pl-4 space-y-1.5">
+            <li><strong>分子硬编码不匹配（L80/L105 &amp; L121/L148）：</strong> 每线程写入 <code>500,000</code> 条，总条数应为 <code>500,000L * cpuNumber</code>，但打印吞吐时写死了 <code>1000000</code> 和 <code>100000L * cpuNumber</code>。</li>
+            <li><strong>无预热统计：</strong> 缺少 JIT Warmup 与多轮均值/方差收敛机制。</li>
+          </ul>
+        </div>
+
+        <div class="rounded-xl bg-[var(--card)] border border-[var(--card-border)] p-4 space-y-2">
+          <div class="flex items-center justify-between gap-2">
+            <code class="text-xs font-bold text-[var(--warning)]">test/e2e/.../benchmark/</code>
+            <span class="text-xs font-semibold text-[var(--warning)]">功能局限 + 小 Bug</span>
+          </div>
+          <ul class="text-xs text-[var(--muted-foreground)] list-disc pl-4 space-y-1.5">
+            <li><strong>场景单一：</strong> 只有同步单条 <code>producer.send</code>，缺异步、批量、Pop 消费、延时、事务基准。</li>
+            <li><strong>客户端过重：</strong> <code>ProduceBenchmarkSuit</code> 每线程独立 <code>buildProducer</code> 并建删 Topic，高并发下施压端先成瓶颈。</li>
+            <li><strong>延迟缺失 &amp; 符号反写：</strong> <code>Report.java</code> 的 <code>maxRT/averageRT</code> 未埋点（缺 HdrHistogram）；<code>BenchmarkSuit.java#L77</code> 取 <code>endTime</code> 时 <code>&gt;</code> 写反。</li>
+          </ul>
+        </div>
+
+        <div class="rounded-xl bg-[var(--card)] border border-[var(--card-border)] p-4 space-y-2">
+          <div class="flex items-center justify-between gap-2">
+            <code class="text-xs font-bold text-[var(--success)]">test/performance &amp; test/stability</code>
+            <span class="text-xs font-semibold text-[var(--success)]">骨架就绪</span>
+          </div>
+          <p class="text-xs text-[var(--muted-foreground)] leading-relaxed">
+            两者均已在 <code>test/pom.xml</code> 声明并引入 <code>store</code>、<code>broker</code>、<code>rocketmq-client-java</code>，目前为空模块，建议直接作为 <strong>L1~L3（performance）</strong> 与 <strong>L6（stability）</strong> 的标准工程归口。
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 4: Matrix -->
+    <section id="matrix" class="space-y-3">
+      <div class="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-[var(--border)]">
+        <h2 class="text-lg font-extrabold">04 · 控制变量测试矩阵</h2>
+        <span class="text-xs text-[var(--muted-foreground)]">切换维度查看正交实验配置</span>
+      </div>
+
+      <div class="rounded-xl bg-[var(--card)] border border-[var(--card-border)] p-4 space-y-3">
+        <div class="flex flex-wrap gap-1.5 border-b border-[var(--border)] pb-2.5" id="matrixTabs">
+          <button class="tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-[var(--primary)] text-[var(--primary-foreground)] cursor-pointer" data-tab="t-shard">CommitLog 分片</button>
+          <button class="tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-[var(--sidebar)] text-[var(--muted-foreground)] cursor-pointer" data-tab="t-flush">刷盘与写路径</button>
+          <button class="tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-[var(--sidebar)] text-[var(--muted-foreground)] cursor-pointer" data-tab="t-size">消息体大小</button>
+          <button class="tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-[var(--sidebar)] text-[var(--muted-foreground)] cursor-pointer" data-tab="t-queue">队列与冷热读写</button>
+          <button class="tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-[var(--sidebar)] text-[var(--muted-foreground)] cursor-pointer" data-tab="t-feat">高级特性衰减</button>
+        </div>
+
+        <div class="tab-panel" id="t-shard">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse text-xs">
+              <thead><tr class="bg-[var(--sidebar)] border-b border-[var(--border)]"><th class="p-2.5">变量</th><th class="p-2.5">测试梯度</th><th class="p-2.5">核心指标</th><th class="p-2.5">预期结论</th></tr></thead>
+              <tbody class="divide-y divide-[var(--border)]">
+                <tr><td class="p-2.5 font-mono">shardingNumber</td><td class="p-2.5">1 / 2 / 4 / 8 / CPU核数</td><td class="p-2.5">写 TPS、MB/s、Lock 火焰图</td><td class="p-2.5 text-[var(--muted-foreground)]">绘制分片加速比曲线，定位收益递减拐点</td></tr>
+                <tr><td class="p-2.5 font-mono">enableMultiDir</td><td class="p-2.5">单 NVMe vs 2/4 独立 NVMe</td><td class="p-2.5">iostat wMB/s、w_await、%util</td><td class="p-2.5 text-[var(--muted-foreground)]">区分单盘带宽打满与多盘并行线性扩展上限</td></tr>
+                <tr><td class="p-2.5 font-mono">bindShardingWithCpu</td><td class="p-2.5">true vs false</td><td class="p-2.5">上下文切换、P99/P99.9 抖动</td><td class="p-2.5 text-[var(--muted-foreground)]">验证分片绑核对长尾延迟的改善幅度</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="tab-panel hidden" id="t-flush">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse text-xs">
+              <thead><tr class="bg-[var(--sidebar)] border-b border-[var(--border)]"><th class="p-2.5">开关</th><th class="p-2.5">对比组</th><th class="p-2.5">核心指标</th><th class="p-2.5">验证目的</th></tr></thead>
+              <tbody class="divide-y divide-[var(--border)]">
+                <tr><td class="p-2.5 font-mono">FlushType</td><td class="p-2.5">ASYNC vs SYNC (16/64/256 并发)</td><td class="p-2.5">TPS、P50/P99、fsync 批大小</td><td class="p-2.5 text-[var(--muted-foreground)]">寻找 GroupFlusher 组提交的吞吐/延迟最优区间</td></tr>
+                <tr><td class="p-2.5 font-mono">WriteCache / TransientPool</td><td class="p-2.5">false vs true</td><td class="p-2.5">P99.9 毛刺、脏页堆积、DirectMemory</td><td class="p-2.5 text-[var(--muted-foreground)]">验证读写分离下减少 PageCache 锁竞争效果</td></tr>
+                <tr><td class="p-2.5 font-mono">enablePreAssignOffset</td><td class="p-2.5">true vs false</td><td class="p-2.5">热点单队列 TPS、EnqueueLock、Dispatch Lag</td><td class="p-2.5 text-[var(--muted-foreground)]">量化去队列锁带来的写增益与可见性延迟代价</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="tab-panel hidden" id="t-size">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse text-xs">
+              <thead><tr class="bg-[var(--sidebar)] border-b border-[var(--border)]"><th class="p-2.5">消息体大小</th><th class="p-2.5">业务画像</th><th class="p-2.5">瓶颈资源</th><th class="p-2.5">关注重点</th></tr></thead>
+              <tbody class="divide-y divide-[var(--border)]">
+                <tr><td class="p-2.5 font-mono font-bold">128 B</td><td class="p-2.5">心跳/状态事件</td><td class="p-2.5">CPU / 锁 / gRPC 帧头</td><td class="p-2.5 text-[var(--muted-foreground)]">极限 msg/s 与 Protobuf/MessageEncoder CPU 占比</td></tr>
+                <tr><td class="p-2.5 font-mono font-bold">1 KB</td><td class="p-2.5">通用微服务/订单</td><td class="p-2.5">CPU 与 I/O 均衡</td><td class="p-2.5 text-[var(--muted-foreground)]">对标原生 Apache RocketMQ 5.x 的基准档</td></tr>
+                <tr><td class="p-2.5 font-mono font-bold">4 KB</td><td class="p-2.5">对齐 OS PageSize</td><td class="p-2.5">PageCache / 刷盘</td><td class="p-2.5 text-[var(--muted-foreground)]">单次 force 吞吐与 minFlushPages 调优</td></tr>
+                <tr><td class="p-2.5 font-mono font-bold">64 KB+</td><td class="p-2.5">大报文/快照</td><td class="p-2.5">网卡/磁盘带宽、GC</td><td class="p-2.5 text-[var(--muted-foreground)]">MB/s 带宽极限与 ByteBuffer YoungGC 压力</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="tab-panel hidden" id="t-queue">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse text-xs">
+              <thead><tr class="bg-[var(--sidebar)] border-b border-[var(--border)]"><th class="p-2.5">维度</th><th class="p-2.5">配置组合</th><th class="p-2.5">压测目的</th></tr></thead>
+              <tbody class="divide-y divide-[var(--border)]">
+                <tr><td class="p-2.5 font-semibold">热点 vs 均衡</td><td class="p-2.5">1 Topic×1 Queue vs 10 Topic×16 Queue</td><td class="p-2.5 text-[var(--muted-foreground)]">检验 EnqueueLock/DequeueLock 在极端热点下的退化</td></tr>
+                <tr><td class="p-2.5 font-semibold">多 Topic 膨胀</td><td class="p-2.5">1,000+ Topic</td><td class="p-2.5 text-[var(--muted-foreground)]">检验 ConsumeQueue 文件句柄数与随机小 IO 压力</td></tr>
+                <tr><td class="p-2.5 font-semibold">热读 vs 冷读</td><td class="p-2.5">实时消费 vs 积压 50GB+ 后消费</td><td class="p-2.5 text-[var(--muted-foreground)]">验证冷读回源读盘对前台顺序写 P99 的拖累</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="tab-panel hidden" id="t-feat">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse text-xs">
+              <thead><tr class="bg-[var(--sidebar)] border-b border-[var(--border)]"><th class="p-2.5">特性</th><th class="p-2.5">测试模型</th><th class="p-2.5">核心指标</th></tr></thead>
+              <tbody class="divide-y divide-[var(--border)]">
+                <tr><td class="p-2.5 font-semibold">顺序消息 (FIFO)</td><td class="p-2.5">按 MessageGroup 哈希发送 + Pop 顺序消费</td><td class="p-2.5 text-[var(--muted-foreground)]">ConsumeOrderService 锁冲突率、单 Group 上限、队头阻塞</td></tr>
+                <tr><td class="p-2.5 font-semibold">延时消息 (Timer)</td><td class="p-2.5">集中同秒到期（惊群） vs 随机 1s~24h 到期</td><td class="p-2.5 text-[var(--muted-foreground)]">调度触发误差（实际 - 预期 P99）、TimerWheel 扫描 CPU</td></tr>
+                <tr><td class="p-2.5 font-semibold">事务消息 (TCC)</td><td class="p-2.5">Half → Commit/Rollback，混入 1%~5% 异常回查</td><td class="p-2.5 text-[var(--muted-foreground)]">相对普通消息的吞吐衰减比、回查扫描延迟</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 5: Observability -->
+    <section id="observability" class="space-y-3">
+      <div class="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-[var(--border)]">
+        <h2 class="text-lg font-extrabold">05 · 三层监控指标与火焰图剖析</h2>
+        <span class="text-xs font-semibold text-[var(--success)]">测出数据 + 定界瓶颈</span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3.5 text-xs">
+        <div class="rounded-xl bg-[var(--card)] border border-[var(--card-border)] p-4 space-y-2">
+          <h3 class="text-sm font-bold">1. 业务与延迟指标</h3>
+          <ul class="text-[var(--muted-foreground)] list-disc pl-4 space-y-1">
+            <li>TPS（msg/s）、带宽（MB/s）、错误/超时率</li>
+            <li><strong>HdrHistogram</strong> 统计 Send RT &amp; Pub→Sub RT 的 P50 / P95 / P99 / P99.9 / Max</li>
+            <li>内部水位：Dispatch Lag、队列深度、Pop InflightCounter</li>
+            <li>Open-loop 定速模式，避免 Coordinated Omission 延迟失真</li>
+          </ul>
+        </div>
+        <div class="rounded-xl bg-[var(--card)] border border-[var(--card-border)] p-4 space-y-2">
+          <h3 class="text-sm font-bold">2. JVM 与火焰图剖析</h3>
+          <ul class="text-[var(--muted-foreground)] list-disc pl-4 space-y-1">
+            <li><strong>CPU 火焰图：</strong>Protobuf、<code>MessageEncoder</code>、CRC32、Netty 调度</li>
+            <li><strong>Lock 火焰图：</strong>直观验证 <code>CommitLogReentrantLock</code> 分片前后与 <code>EnqueueLock</code> 争抢</li>
+            <li><strong>Alloc &amp; GC：</strong>排查 <code>MessageBO</code>/<code>ByteBuffer</code> 分配抖动与 DirectMemory</li>
+          </ul>
+        </div>
+        <div class="rounded-xl bg-[var(--card)] border border-[var(--card-border)] p-4 space-y-2">
+          <h3 class="text-sm font-bold">3. OS 与硬件层指标</h3>
+          <ul class="text-[var(--muted-foreground)] list-disc pl-4 space-y-1">
+            <li>磁盘：<code>wMB/s</code>、<code>rMB/s</code>、<code>w_await</code>、<code>%util</code></li>
+            <li>PageCache：<code>/proc/meminfo</code> 的 <code>Dirty</code> / <code>Writeback</code>（定位脏页毛刺）</li>
+            <li>CPU/网络：核心均衡、上下文切换、软中断与网卡丢包</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="rounded-xl bg-[var(--card)] border border-[var(--card-border)] p-4 space-y-2.5">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold">压测现场诊断命令速查</span>
+          <button class="no-print copy-btn px-2.5 py-1 rounded bg-[var(--sidebar)] border border-[var(--border)] text-xs font-semibold cursor-pointer" data-copy="diagCmd">复制命令</button>
+        </div>
+        <pre id="diagCmd" class="p-3 rounded-lg bg-[var(--sidebar)] border border-[var(--border)] text-xs font-mono overflow-x-auto leading-relaxed text-[var(--code-foreground)]"># 1. async-profiler 采集 CPU / Lock / Alloc 火焰图（60s）
+./asprof -d 60 -e cpu   -f cpu-flame.html   &lt;broker_pid&gt;
+./asprof -d 60 -e lock  -f lock-flame.html  &lt;broker_pid&gt;
+./asprof -d 60 -e alloc -f alloc-flame.html &lt;broker_pid&gt;
+
+# 2. Linux OS 磁盘 / 脏页 / 上下文切换实时观测
+iostat -xz 1
+watch -n 1 "grep -E 'Dirty|Writeback' /proc/meminfo"
+pidstat -w -u -p &lt;broker_pid&gt; 1
+sar -n DEV 1</pre>
+      </div>
+    </section>
+
+    <!-- Section 6: Roadmap -->
+    <section id="roadmap" class="space-y-3">
+      <div class="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-[var(--border)]">
+        <h2 class="text-lg font-extrabold">06 · 四阶段落地执行路线图</h2>
+        <span class="text-xs text-[var(--muted-foreground)]">可勾选跟踪落地进度</span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5 text-xs">
+        <div class="rounded-xl bg-[var(--card)] border border-[var(--card-border)] p-4 space-y-2">
+          <h3 class="text-sm font-bold"><span class="inline-flex items-center justify-center w-5 h-5 rounded bg-[var(--primary)] text-[var(--primary-foreground)] text-xs mr-1.5">1</span>修基建、建 L1/L2 存储基线</h3>
+          <div class="space-y-1.5 text-[var(--muted-foreground)]">
+            <label class="flex items-start gap-2 cursor-pointer"><input type="checkbox" class="mt-0.5 accent-[var(--primary)]" data-id="r1"><span>修复 <code>CommitLogManagerBenchmark</code> 墙钟计时、<code>future.get()</code> 与刷盘对齐</span></label>
+            <label class="flex items-start gap-2 cursor-pointer"><input type="checkbox" class="mt-0.5 accent-[var(--primary)]" data-id="r2"><span>修复 <code>InsertBenchmark</code> 并发吞吐分子计算错误</span></label>
+            <label class="flex items-start gap-2 cursor-pointer"><input type="checkbox" class="mt-0.5 accent-[var(--primary)]" data-id="r3"><span>在 <code>test/performance</code> 引入 JMH 与 HdrHistogram，跑通 L1 + L2 分片基线</span></label>
+          </div>
+        </div>
+
+        <div class="rounded-xl bg-[var(--card)] border border-[var(--card-border)] p-4 space-y-2">
+          <h3 class="text-sm font-bold"><span class="inline-flex items-center justify-center w-5 h-5 rounded bg-[var(--primary)] text-[var(--primary-foreground)] text-xs mr-1.5">2</span>剥离计算层、测 L3 协议上限</h3>
+          <div class="space-y-1.5 text-[var(--muted-foreground)]">
+            <label class="flex items-start gap-2 cursor-pointer"><input type="checkbox" class="mt-0.5 accent-[var(--primary)]" data-id="r4"><span>Mock <code>MQFacade</code> 压出 Broker gRPC 与 Protobuf 转换纯处理上限</span></label>
+            <label class="flex items-start gap-2 cursor-pointer"><input type="checkbox" class="mt-0.5 accent-[var(--primary)]" data-id="r5"><span>压测 <code>rpc</code> Netty 通信与 <code>registry</code> 路由查询，并核验 <code>DispatchManager</code> 极限</span></label>
+          </div>
+        </div>
+
+        <div class="rounded-xl bg-[var(--card)] border border-[var(--card-border)] p-4 space-y-2">
+          <h3 class="text-sm font-bold"><span class="inline-flex items-center justify-center w-5 h-5 rounded bg-[var(--primary)] text-[var(--primary-foreground)] text-xs mr-1.5">3</span>L4 端到端全场景对标 RMQ 5.x</h3>
+          <div class="space-y-1.5 text-[var(--muted-foreground)]">
+            <label class="flex items-start gap-2 cursor-pointer"><input type="checkbox" class="mt-0.5 accent-[var(--primary)]" data-id="r6"><span>改造 <code>test/e2e/benchmark</code> 或接入 OMB，覆盖异步/批量/Pop/冷热读写</span></label>
+            <label class="flex items-start gap-2 cursor-pointer"><input type="checkbox" class="mt-0.5 accent-[var(--primary)]" data-id="r7"><span>补齐 FIFO 顺序、Timer 延时精度、TCC 事务衰减，并与原生 RocketMQ 5.x 同配置对标</span></label>
+          </div>
+        </div>
+
+        <div class="rounded-xl bg-[var(--card)] border border-[var(--card-border)] p-4 space-y-2">
+          <h3 class="text-sm font-bold"><span class="inline-flex items-center justify-center w-5 h-5 rounded bg-[var(--primary)] text-[var(--primary-foreground)] text-xs mr-1.5">4</span>L6 长稳与 L5 集群高可用</h3>
+          <div class="space-y-1.5 text-[var(--muted-foreground)]">
+            <label class="flex items-start gap-2 cursor-pointer"><input type="checkbox" class="mt-0.5 accent-[var(--primary)]" data-id="r8"><span>在 <code>test/stability</code> 跑 24h+ 稳态压测、50GB+ 积压追赶与 <code>kill -9</code> 恢复耗时</span></label>
+            <label class="flex items-start gap-2 cursor-pointer"><input type="checkbox" class="mt-0.5 accent-[var(--primary)]" data-id="r9"><span>随 HA 与 <code>RemoteStore</code> 完善，补齐主从同步复制与存算分离多节点扩展压测</span></label>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="pt-4 border-t border-[var(--border)] flex flex-wrap justify-between gap-2 text-xs text-[var(--muted-foreground)]">
+      <span>Clean-RocketMQ 性能测试架构与落地方案</span>
+      <span>本地工作区副本：<code>docs/test/cn/clean-rocketmq-performance-test-plan.html</code></span>
+    </footer>
+  </div>
+
+  <script>
+    // Priority filter
+    const filterBtns = document.querySelectorAll('#priorityFilter .filter-btn');
+    const layerCards = document.querySelectorAll('.layer-card');
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterBtns.forEach(b => {
+          b.className = 'filter-btn px-2.5 py-1 rounded-full text-xs font-semibold bg-[var(--card)] border border-[var(--border)] text-[var(--muted-foreground)] cursor-pointer';
+        });
+        btn.className = 'filter-btn px-2.5 py-1 rounded-full text-xs font-semibold bg-[var(--primary)] text-[var(--primary-foreground)] cursor-pointer';
+        const f = btn.dataset.filter;
+        layerCards.forEach(c => {
+          c.classList.toggle('hidden', f !== 'all' && c.dataset.priority !== f);
+        });
+      });
+    });
+
+    // Pyramid click
+    const pyrItems = document.querySelectorAll('.pyr-item');
+    pyrItems.forEach(item => {
+      item.addEventListener('click', () => {
+        pyrItems.forEach(p => p.classList.remove('selected'));
+        item.classList.add('selected');
+        layerCards.forEach(c => c.classList.remove('hidden', 'highlight'));
+        const el = document.getElementById(item.dataset.target);
+        if (el) {
+          el.classList.add('highlight');
+          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      });
+    });
+
+    // Matrix tabs
+    const tabBtns = document.querySelectorAll('#matrixTabs .tab-btn');
+    const tabPanels = document.querySelectorAll('.tab-panel');
+    tabBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        tabBtns.forEach(b => {
+          b.className = 'tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-[var(--sidebar)] text-[var(--muted-foreground)] cursor-pointer';
+        });
+        btn.className = 'tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-[var(--primary)] text-[var(--primary-foreground)] cursor-pointer';
+        tabPanels.forEach(p => p.classList.add('hidden'));
+        document.getElementById(btn.dataset.tab).classList.remove('hidden');
+      });
+    });
+
+    // Copy command
+    document.querySelectorAll('.copy-btn').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const txt = document.getElementById(btn.dataset.copy).innerText;
+        try {
+          await navigator.clipboard.writeText(txt);
+          const old = btn.innerText;
+          btn.innerText = '已复制 ✓';
+          setTimeout(() => btn.innerText = old, 1500);
+        } catch {
+          btn.innerText = '复制失败';
+        }
+      });
+    });
+
+    // Checklist progress
+    const cbs = document.querySelectorAll('input[type="checkbox"][data-id]');
+    const pText = document.getElementById('progressText');
+    const key = 'crmq-perf-artifact-checklist';
+    const state = JSON.parse(localStorage.getItem(key) || '{}');
+    function syncProgress() {
+      let done = 0;
+      cbs.forEach(c => { if (c.checked) done++; });
+      pText.innerText = `${Math.round((done / cbs.length) * 100)}% (${done}/${cbs.length})`;
+    }
+    cbs.forEach(c => {
+      if (state[c.dataset.id]) c.checked = true;
+      c.addEventListener('change', () => {
+        state[c.dataset.id] = c.checked;
+        localStorage.setItem(key, JSON.stringify(state));
+        syncProgress();
+      });
+    });
+    syncProgress();
+
+    // Download standalone self-contained HTML (resolves host theme variables & removes external CDN)
+    document.getElementById('downloadHtmlBtn').addEventListener('click', () => {
+      const clone = document.documentElement.cloneNode(true);
+      // Remove external Tailwind CDN script (compiled styles are already inlined in <style> tags)
+      clone.querySelectorAll('script[src]').forEach(s => s.remove());
+      // Remove host-injected or duplicate export styles if any
+      clone.querySelectorAll('style#exported-theme-vars').forEach(s => s.remove());
+
+      // Snapshot resolved CSS variables from host, with crisp light-theme fallbacks
+      const cs = getComputedStyle(document.documentElement);
+      const defaults = {
+        '--background': '#f8fafc',
+        '--content': '#ffffff',
+        '--card': '#ffffff',
+        '--sidebar': '#f1f5f9',
+        '--border': '#cbd5e1',
+        '--card-border': '#e2e8f0',
+        '--foreground': '#0f172a',
+        '--muted-foreground': '#475569',
+        '--placeholder': '#94a3b8',
+        '--code-foreground': '#0f172a',
+        '--primary': '#2563eb',
+        '--primary-foreground': '#ffffff',
+        '--secondary': '#e2e8f0',
+        '--secondary-foreground': '#0f172a',
+        '--accent': '#7c3aed',
+        '--link': '#2563eb',
+        '--success': '#059669',
+        '--warning': '#d97706',
+        '--error': '#dc2626'
+      };
+      const varLines = Object.entries(defaults).map(([k, fallback]) => {
+        const v = cs.getPropertyValue(k).trim();
+        return `  ${k}: ${v || fallback};`;
+      }).join('\n');
+
+      const styleEl = document.createElement('style');
+      styleEl.id = 'exported-theme-vars';
+      styleEl.textContent = `:root {\n${varLines}\n}\nbody { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; font-size: 14px; }`;
+      const head = clone.querySelector('head');
+      if (head) head.insertBefore(styleEl, head.firstChild);
+
+      const html = '<!DOCTYPE html>\n' + clone.outerHTML;
+      const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'clean-rocketmq-performance-test-plan.html';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    });
+  </script>
+</body>
+</html>
