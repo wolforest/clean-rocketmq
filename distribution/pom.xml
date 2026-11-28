@@ -10,7 +10,7 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>distribution</artifactId>
+    <artifactId>wolfmq-distribution</artifactId>
     <packaging>pom</packaging>
 
     <properties>
@@ -20,11 +20,11 @@
     <dependencies>
         <dependency>
             <groupId>com.wolfmq</groupId>
-            <artifactId>broker</artifactId>
+            <artifactId>wolfmq-broker</artifactId>
         </dependency>
         <dependency>
             <groupId>com.wolfmq</groupId>
-            <artifactId>registry</artifactId>
+            <artifactId>wolfmq-registry</artifactId>
         </dependency>
     </dependencies>
 

@@ -10,7 +10,7 @@
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>mini-kv</artifactId>
+    <artifactId>wolfmq-mini-kv</artifactId>
     <version>${revision}</version>
 
     <properties>

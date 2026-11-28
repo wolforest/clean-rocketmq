@@ -11,7 +11,7 @@
     </parent>
 
     <groupId>com.wolfmq.test</groupId>
-    <artifactId>e2e</artifactId>
+    <artifactId>wolfmq-e2e</artifactId>
     <version>${revision}</version>
 
     <properties>

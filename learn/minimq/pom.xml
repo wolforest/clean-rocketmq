@@ -10,7 +10,7 @@
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>mini-mq</artifactId>
+    <artifactId>wolfmq-mini-mq</artifactId>
     <version>${revision}</version>
 
     <properties>

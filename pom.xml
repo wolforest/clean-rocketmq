@@ -36,27 +36,27 @@
         <dependencies>
             <dependency>
                 <groupId>com.wolfmq</groupId>
-                <artifactId>common</artifactId>
+                <artifactId>wolfmq-common</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.wolfmq</groupId>
-                <artifactId>rpc</artifactId>
+                <artifactId>wolfmq-rpc</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.wolfmq</groupId>
-                <artifactId>registry</artifactId>
+                <artifactId>wolfmq-registry</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.wolfmq</groupId>
-                <artifactId>broker</artifactId>
+                <artifactId>wolfmq-broker</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.wolfmq</groupId>
-                <artifactId>store</artifactId>
+                <artifactId>wolfmq-store</artifactId>
                 <version>${revision}</version>
             </dependency>
 

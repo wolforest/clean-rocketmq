@@ -10,7 +10,7 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>test</artifactId>
+    <artifactId>wolfmq-test</artifactId>
     <version>${revision}</version>
     <packaging>pom</packaging>
 

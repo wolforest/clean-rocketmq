@@ -10,7 +10,7 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>rpc</artifactId>
+    <artifactId>wolfmq-rpc</artifactId>
     <version>${revision}</version>
 
     <properties>
@@ -22,7 +22,7 @@
     <dependencies>
         <dependency>
             <groupId>com.wolfmq</groupId>
-            <artifactId>common</artifactId>
+            <artifactId>wolfmq-common</artifactId>
         </dependency>
 
         <dependency>

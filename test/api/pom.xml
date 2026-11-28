@@ -11,7 +11,7 @@
     </parent>
 
     <groupId>com.wolfmq.test</groupId>
-    <artifactId>api</artifactId>
+    <artifactId>wolfmq-api</artifactId>
     <version>${revision}</version>
 
     <properties>
@@ -21,7 +21,7 @@
     <dependencies>
         <dependency>
             <groupId>com.wolfmq</groupId>
-            <artifactId>broker</artifactId>
+            <artifactId>wolfmq-broker</artifactId>
         </dependency>
 
         <dependency>

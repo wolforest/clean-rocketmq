@@ -10,7 +10,7 @@
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>performance</artifactId>
+    <artifactId>wolfmq-performance</artifactId>
 
     <properties>
         <project.root>${basedir}/../..</project.root>
@@ -19,12 +19,12 @@
     <dependencies>
         <dependency>
             <groupId>com.wolfmq</groupId>
-            <artifactId>store</artifactId>
+            <artifactId>wolfmq-store</artifactId>
         </dependency>
 
         <dependency>
             <groupId>com.wolfmq</groupId>
-            <artifactId>broker</artifactId>
+            <artifactId>wolfmq-broker</artifactId>
         </dependency>
 
         <dependency>
