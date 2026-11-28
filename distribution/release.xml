@@ -59,11 +59,6 @@
     <dependencySets>
         <dependencySet>
             <outputDirectory>lib/</outputDirectory>
-            <!--
-              com.wolfmq:common and cn.coderule:common share the file name common-<version>.jar,
-              prefix the file name with the groupId so that they do not overwrite each other.
-            -->
-            <outputFileNameMapping>${artifact.groupId}-${artifact.artifactId}-${artifact.version}.${artifact.extension}</outputFileNameMapping>
             <excludes>
                 <!-- test frameworks and build time only tools leaked by transitive dependencies -->
                 <exclude>org.junit.jupiter:*</exclude>
